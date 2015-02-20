@@ -2,11 +2,12 @@ var gulp = require('gulp');
 var uglify = require('gulp-uglifyjs');
 var deleteFiles = require('del');
 var sass = require('gulp-sass');
+var filelog = require('gulp-filelog');
 
 var environment;
 var repoRoot = __dirname + '/';
-var govukToolkitSCSS = repoRoot + 'node_modules/govuk_frontend_toolkit/stylesheets';
-var dmToolkitSCSS = repoRoot + 'digitalmarketplace-frontend-toolkit/scss';
+var govukToolkitRoot = repoRoot + 'node_modules/govuk_frontend_toolkit/';
+var dmToolkitRoot = repoRoot + 'digital_marketplace_frontend_toolkit/';
 var assetsFolder = repoRoot + 'app/assets';
 var staticFolder = repoRoot + 'app/static';
 var govukTemplateAssetsFolder = repoRoot + 'govuk_template/assets';
@@ -32,13 +33,22 @@ var sassOptions = {
   development: {
     outputStyle: 'expanded',
     lineNumbers: true,
-    includePaths: [govukToolkitSCSS, dmToolkitSCSS],
-    sourceComments: true
+    includePaths: [
+      assetsFolder + '/scss',
+      govukToolkitRoot + '/stylesheets',
+      dmToolkitRoot + '/toolkit/scss'
+    ],
+    sourceComments: true,
+    errLogToConsole: true
   },
   production: {
     outputStyle: 'compressed',
     lineNumbers: true,
-    includePaths: [govukToolkitSCSS, dmToolkitSCSS]
+    includePaths: [
+      assetsFolder + '/scss',
+      govukToolkitRoot + '/stylesheets',
+      dmToolkitRoot + '/toolkit/scss'
+    ],
   },
 };
 
@@ -70,6 +80,7 @@ gulp.task('clean', function () {
 
 gulp.task('sass', function () {
   var stream = gulp.src(cssSourceGlob)
+    .pipe(filelog('Compressing SCSS files'))
     .pipe(sass(sassOptions[environment]))
     .on('error', function (err) {
       console.log(err.message);
@@ -87,6 +98,7 @@ gulp.task('js', function () {
   // produce full array of JS files from vendor + local scripts
   jsFiles = jsVendorFiles.concat(jsSourceFiles);
   var stream = gulp.src(jsFiles)
+    .pipe(filelog('Compressing JavaScript files'))
     .pipe(uglify(
       jsDistributionFile, 
       uglifyOptions[environment]
@@ -115,13 +127,22 @@ gulp.task('copy_template_assets:javascripts', function () {
     .pipe(gulp.dest(staticFolder + '/javascripts'))
 });
 
+gulp.task('copy_dm_toolkit_assets:images', function () {
+  return gulp.src(dmToolkitRoot + '/images/**/*', { base : dmToolkitRoot + '/images' })
+    .pipe(gulp.dest(staticFolder + '/images'))
+});
+
 gulp.task('copy_template_assets', function () {
    gulp.start('copy_template_assets:stylesheets');
    gulp.start('copy_template_assets:images');
    gulp.start('copy_template_assets:javascripts');
 });
 
-gulp.task('watch', ['build'], function () {
+gulp.task('copy_dm_toolkit_assets', function () {
+  gulp.start('copy_dm_toolkit_assets:images');
+});
+
+gulp.task('watch', ['build:development'], function () {
   var jsWatcher = gulp.watch([ assetsFolder + '/**/*.js' ], ['js']);
   var cssWatcher = gulp.watch([ assetsFolder + '/**/*.scss' ], ['sass']);
   var notice = function (event) {
@@ -136,6 +157,7 @@ gulp.task('build:development', ['clean'], function () {
   environment = 'development';
   gulp.start('sass', 'js');
   gulp.start('copy_template_assets');
+  gulp.start('copy_dm_toolkit_assets');
 });
 
 gulp.task('build:production', ['clean'], function () {
