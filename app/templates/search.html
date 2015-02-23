@@ -1,0 +1,31 @@
+{% extends "_base_page.html" %}
+
+{% block main_content %}
+<header class="page-heading">
+  <h1>Search results</h1>
+</header>
+<div class="grid-row">
+  <div class="column-one-third">
+  </div>
+  <div class="column-two-thirds">
+    {% for service in services %}
+    <div class="search-result">
+      <h2 class="search-result-title">
+          <a href="#">{{ service.serviceName }}</a>
+      </h1>
+      <p class="search-result-supplier">
+        Supplier name goes here
+      </p>
+      <p class="search-result-excerpt">
+        {{ service.serviceSummary }}
+      </p>
+      <ul aria-label="tags" class="search-result-metadata">
+        <li class="search-result-metadata-item">
+          {{ service.lot }}
+        </li>
+      </ul>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

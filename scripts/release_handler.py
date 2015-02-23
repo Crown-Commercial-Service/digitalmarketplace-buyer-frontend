@@ -5,7 +5,6 @@ import shutil
 import tarfile
 import re
 
-
 class ReleaseHandler(object):
     version_filenames = {
         "govuk_template": "VERSION",

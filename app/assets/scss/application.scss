@@ -1,4 +1,15 @@
+@import "_phase_banner.scss";
+@import "_grid_layout.scss";
+
 // Path to assets for use with file-url()
 $path: "../images/compressed/";
 
+#wrapper {
+  @extend %site-width-container;
+}
+
 @import "_footer.scss";
+@import "_page-headings.scss";
+@import "_search-result.scss";
+
+@import "_grids.scss";

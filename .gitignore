@@ -5,6 +5,7 @@
 .DS_store
 venv
 node_modules
+npm-debug.log
 app/static/*
 govuk_template
 digital_marketplace_frontend_toolkit
