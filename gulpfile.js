@@ -6,20 +6,18 @@ var filelog = require('gulp-filelog');
 
 var environment;
 var repoRoot = __dirname + '/';
-var govukToolkitRoot = repoRoot + 'node_modules/govuk_frontend_toolkit/';
-var dmToolkitRoot = repoRoot + 'digital_marketplace_frontend_toolkit/';
+var govukToolkitRoot = repoRoot + 'node_modules/govuk_frontend_toolkit';
+var dmToolkitRoot = repoRoot + 'digital_marketplace_frontend_toolkit/toolkit';
 var assetsFolder = repoRoot + 'app/assets';
 var staticFolder = repoRoot + 'app/static';
 var govukTemplateAssetsFolder = repoRoot + 'govuk_template/assets';
 
 // JavaScript paths
 var jsVendorFiles = [
-  assetsFolder + '/javascripts/vendor/jquery-1.11.0.js',
-  assetsFolder + '/javascripts/vendor/hogan-3.0.2.min.js'
+  assetsFolder + '/javascripts/vendor/jquery-1.11.0.js'
 ];
 var jsSourceFiles = [
-  assetsFolder + '/javascripts/test1.js',
-  assetsFolder + '/javascripts/test2.js'
+  dmToolkitRoot + '/toolkit/javascripts/multi-selects.js'
 ];
 var jsDistributionFolder = staticFolder + '/javascripts';
 var jsDistributionFile = 'application.js';
@@ -36,7 +34,7 @@ var sassOptions = {
     includePaths: [
       assetsFolder + '/scss',
       govukToolkitRoot + '/stylesheets',
-      dmToolkitRoot + '/toolkit/scss'
+      dmToolkitRoot + '/scss'
     ],
     sourceComments: true,
     errLogToConsole: true
@@ -47,7 +45,7 @@ var sassOptions = {
     includePaths: [
       assetsFolder + '/scss',
       govukToolkitRoot + '/stylesheets',
-      dmToolkitRoot + '/toolkit/scss'
+      dmToolkitRoot + '/scss'
     ],
   },
 };

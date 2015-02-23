@@ -2,7 +2,7 @@
 @import "_grid_layout.scss";
 
 // Path to assets for use with file-url()
-$path: "../images/compressed/";
+$path: "/static/";
 
 #wrapper {
   @extend %site-width-container;
@@ -11,5 +11,6 @@ $path: "../images/compressed/";
 @import "_footer.scss";
 @import "_page-headings.scss";
 @import "_search-result.scss";
+@import "forms/_multi-select.scss";
 
 @import "_grids.scss";
