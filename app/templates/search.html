@@ -4,58 +4,13 @@
 <header class="page-heading">
   <h1>Search results</h1>
 </header>
-<form action="/" method="get">
+<form action="/search/filters" method="get">
   <div class="grid-row">
     <div class="column-one-third">
-      <div class="filter checkbox-filter js-openable-filter closed">
-        <div class="head">
-          <span class="legend">Multi-select</span>
-          <div class="controls">
-            <a class="clear-selected js-hidden">clear</a>
-            <div class="toggle"></div>
-          </div>
-        </div>
-        <div class="checkbox-container">
-          <div class='js-auto-height-inner'>
-            <label for='filter-2-option-1'>
-              <input type="checkbox" name="filter-2" option="option-1" id="filter-2-option-1"  aria-controls="js-search-results-info" />
-              Filter 2, option 1
-            </label>
-            <label for='filter-2-option-2'>
-              <input type="checkbox" name="filter-2" option="option-2" id="filter-2-option-2"  aria-controls="js-search-results-info" />
-              Filter 2, option 2
-            </label>
-            <label for='filter-2-option-3'>
-              <input type="checkbox" name="filter-2" option="option-3" id="filter-2-option-3"  aria-controls="js-search-results-info" />
-              Filter 2, option 3
-            </label>
-            <label for='filter-2-option-4'>
-              <input type="checkbox" name="filter-2" option="option-4" id="filter-2-option-4"  aria-controls="js-search-results-info" />
-              Filter 2, option 4
-            </label>
-          </div>
-        </div>
-      </div>
+    {% include '_search_filters.html' %}
     </div>
     <div class="column-two-thirds">
-      {% for service in services %}
-      <div class="search-result">
-        <h2 class="search-result-title">
-            <a href="#">{{ service.serviceName }}</a>
-        </h1>
-        <p class="search-result-supplier">
-          Supplier name goes here
-        </p>
-        <p class="search-result-excerpt">
-          {{ service.serviceSummary }}
-        </p>
-        <ul aria-label="tags" class="search-result-metadata">
-          <li class="search-result-metadata-item">
-            {{ service.lot }}
-          </li>
-        </ul>
-      </div>
-      {% endfor %}
+    {% include '_search_results.html' %}
     </div>
   </div>
 </form>

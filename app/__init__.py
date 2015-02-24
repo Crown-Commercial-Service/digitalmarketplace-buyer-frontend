@@ -17,7 +17,44 @@ def create_app(config_name):
     from .main import main as main_blueprint
     application.register_blueprint(main_blueprint)
     main_blueprint.config = {
-        'BASE_TEMPLATE_DATA': application.config['BASE_TEMPLATE_DATA']
+        'BASE_TEMPLATE_DATA' : application.config['BASE_TEMPLATE_DATA'],
+        'SEARCH_FILTERS' : [
+            {
+                'legend' : 'Service features and management',
+                'filters' : [
+                    {
+                        'label' : 'Self-service provisioning supported',
+                        'name' : 'selfserviceprovisioning',
+                        'isBoolean' : True
+                    },
+                    {
+                        'label' : 'Offline working and syncing supported',
+                        'name' : 'offlineWorking',
+                        'isBoolean' : True
+                    },
+                    {
+                        'label' : 'Real-time management information available',
+                        'name' : 'analyticsAvailable',
+                        'isBoolean' : True
+                    },
+                    {
+                        'label' : 'Elastic cloud approach supported',
+                        'name' : 'elasticCloud',
+                        'isBoolean' : True
+                    },
+                    {
+                        'label' : 'Guaranteed resources defined',
+                        'name' : 'guaranteedResources',
+                        'isBoolean' : True
+                    },
+                    {
+                        'label' : 'Persistent storage supported',
+                        'name' : 'persistentStorage',
+                        'isBoolean' : True
+                    }
+                ]
+            }
+        ]
     }
 
     return application

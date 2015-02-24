@@ -28,6 +28,7 @@ def search(query):
     search_results_obj = SearchResults(response)
     template_data = get_template_data(main, {
         'title' : 'Search results',
+        'filter_groups' : search_results_obj.get_filter_groups(main),
         'services' : search_results_obj.get_results()['services']
     })
     return render_template('search.html', **template_data)
@@ -38,6 +39,7 @@ def search_with_lot(query, lot):
     search_results_obj = SearchResults(response)
     template_data = get_template_data(main, {
         'title' : 'Search results',
+        'filter_groups' : search_results_obj.get_filter_groups(main),
         'services' : search_results_obj.get_results()['services']
     })
     return render_template('search.html', **template_data)
@@ -48,6 +50,7 @@ def search_with_filters(query):
     search_results_obj = SearchResults(response)
     template_data = get_template_data(main, {
         'title' : 'Search results',
+        'filter_groups' : search_results_obj.get_filter_groups(main),
         'services' : search_results_obj.get_results()['services']
     })
     return render_template('search.html', **template_data)

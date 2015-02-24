@@ -28,3 +28,7 @@ class SearchResults(object):
             'services': self.get_services(),
             'total': self.get_total()
         }
+
+    def get_filter_groups(self, blueprint):
+        return blueprint.config['SEARCH_FILTERS']
+
