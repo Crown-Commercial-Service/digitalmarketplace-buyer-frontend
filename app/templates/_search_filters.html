@@ -1,3 +1,11 @@
+<div class="filter checkbox-filter">
+  <div class="head">
+    <label class="legend" for="keywords">
+      Keywords
+    </label>
+  </div>
+  <input class="filter-field-text" type="text" name="q" id="keywords" value="{{ search_keywords }}">
+</div>
 {% for filter_group in filter_groups %}
 <div class="filter checkbox-filter js-openable-filter closed">
   <div class="head">
@@ -12,7 +20,7 @@
       {% for filter in filter_group.filters %}
       <label for='{{ filter.id }}'>
         {% if filter.isBoolean %}
-        <input type="checkbox" name="{{ filter.name }}" id="{{ filter.id }}" value="True" aria-controls="js-search-results-info" />
+        <input type="checkbox" name="{{ filter.name }}" id="{{ filter.id }}" value="True" aria-controls="js-search-results-info" {% if filter.isSet %}checked="checked"{% endif %} />
         {% endif %}
         {{ filter.label }}
       </label>
@@ -21,4 +29,4 @@
   </div>
 {% endfor %}
 </div>
-<button class="button" type="submit">Search</button>
+<button class="button-save" type="submit">Filter</button>
