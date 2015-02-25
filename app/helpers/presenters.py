@@ -29,6 +29,18 @@ class SearchResults(object):
             'total': self.get_total()
         }
 
-    def get_filter_groups(self, blueprint):
-        return blueprint.config['SEARCH_FILTERS']
+    def get_filter_groups(self, blueprint=False, request_filters={}):
+        filter_groups = blueprint.config['SEARCH_FILTERS']
+        if request_filters:
+            filter_groups = self.__set_filter_states(filter_groups, request_filters)
+        return filter_groups
+
+    def __set_filter_states(self, filter_groups, request_filters):
+        for filter_group in filter_groups:
+            for filter in filter_group['filters']:
+                filter['isSet'] = False
+                if filter['name'] in request_filters:
+                    filter['isSet'] = True
+
+        return filter_groups
 

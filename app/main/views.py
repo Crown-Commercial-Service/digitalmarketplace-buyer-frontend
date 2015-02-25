@@ -9,6 +9,20 @@ def get_template_data(blueprint, view_data):
         template_data[key] = view_data[key];
     return template_data
 
+def get_filters_from_request(request):
+    # TODO: only use request arguments that map to recognised filters
+    filters = {}
+    for key in request.args:
+        if key != 'q':
+            filters[key] = request.args[key]
+    return filters
+
+def get_keywords_from_request(request):
+    if request.args['q']:
+        return request.args['q']
+    else:
+        return ""
+
 @main.route('/')
 def index():
     return "Hello, World!", 200
@@ -22,13 +36,16 @@ def get_service_by_id(service_id):
         abort(404, "Service ID '%s' can not be found" % service_id)
 
 
-@main.route('/search/<query>')
-def search(query):
-    response = models.search_for_service(query)
+@main.route('/search')
+def search():
+    search_keywords = get_keywords_from_request(request)
+    request_filters = get_filters_from_request(request)
+    response = models.search_for_service(keywords=search_keywords, filters=request_filters)
     search_results_obj = SearchResults(response)
     template_data = get_template_data(main, {
         'title' : 'Search results',
-        'filter_groups' : search_results_obj.get_filter_groups(main),
+        'search_keywords' : search_keywords,
+        'filter_groups' : search_results_obj.get_filter_groups(blueprint=main, request_filters=request_filters),
         'services' : search_results_obj.get_results()['services']
     })
     return render_template('search.html', **template_data)
@@ -54,10 +71,4 @@ def search_with_filters(query):
         'services' : search_results_obj.get_results()['services']
     })
     return render_template('search.html', **template_data)
-
-@main.route('/test')
-def test():
-    template_data = main.config['BASE_TEMPLATE_DATA']
-    template_data['title'] = 'test page'
-    return render_template('test.html', **template_data)
 
