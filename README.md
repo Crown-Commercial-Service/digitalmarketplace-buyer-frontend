@@ -56,10 +56,11 @@ Index G6 services into your local elasticsearch index:
 
 (Ideally we would use `api.digitalmarketplace.service.gov.uk` but CloudFront doesn't like the Python HTTP client.)
 
-### Run the tests\*
+### Run the tests
 
-\* There are no tests yet
-
+```
+./scripts/run_tests.sh
+```
 
 ### Run the development server
 
