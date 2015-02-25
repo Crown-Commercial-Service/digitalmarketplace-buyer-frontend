@@ -17,7 +17,8 @@ var jsVendorFiles = [
   assetsFolder + '/javascripts/vendor/jquery-1.11.0.js'
 ];
 var jsSourceFiles = [
-  dmToolkitRoot + '/toolkit/javascripts/multi-selects.js'
+  dmToolkitRoot + '/javascripts/multi-selects.js',
+  assetsFolder + '/javascripts/_onready.js'
 ];
 var jsDistributionFolder = staticFolder + '/javascripts';
 var jsDistributionFile = 'application.js';
