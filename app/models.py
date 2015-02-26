@@ -20,7 +20,7 @@ def get_service(service_id):
         raise Exception("DM_API_BEARER token is not set")
     if api_url is None:
         print('API URL must be supplied in DM_API_URL')
-        raise Exception("DM_API_URL token is not set")
+        raise Exception("DM_API_URL is not set")
     url = api_url + "/services/" + service_id
     response = requests.get(
         url,

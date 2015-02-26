@@ -20,7 +20,7 @@ def get_service_by_id(service_id):
 
 @main.route('/search/<query>')
 def search(query):
-    print dir(main)
+    print(dir(main))
     response = models.search_for_service(query)
     search_results_obj = SearchResults(response)
     return jsonify(search_results_obj.get_results())
