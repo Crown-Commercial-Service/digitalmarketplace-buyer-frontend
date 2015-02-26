@@ -50,13 +50,13 @@ class ReleaseHandler(object):
     def needs_update(self):
         current_version = self.get_current_version()
         if current_version is False:
-            print "No existing release for %s" % self.release_name
+            print("No existing release for %s" % self.release_name)
             return True
         elif current_version != self.required_version:
-            print "updating %s to required version" % self.release_name
+            print("updating %s to required version" % self.release_name)
             return True
         else:
-            print "%s matches required version; exiting" % self.release_name
+            print("%s matches required version; exiting" % self.release_name)
             return False
 
     def get_release_archive(self, release_name):
@@ -101,26 +101,26 @@ class ReleaseHandler(object):
         return self.template_dir
 
     def download_archive(self, temp_dir):
-        print "Download: %s (%s)" % (self.release_name, self.required_version)
+        print("Download: %s (%s)" % (self.release_name, self.required_version))
         temp_tarball_filename = os.path.join(temp_dir,
                                              self.required_release_filename)
         response = requests.get(self.required_release_url)
-        open(temp_tarball_filename, "w").write(response.content)
+        open(temp_tarball_filename, "wb").write(response.content)
 
     def extract_archive(self, temp_dir):
-        print "Extracting %s (%s) from tarball" % (
-            self.release_name, self.required_version)
+        print("Extracting %s (%s) from tarball" % (
+            self.release_name, self.required_version))
         tarball = os.path.join(temp_dir, self.required_release_filename)
         tar_obj = tarfile.open(tarball, "r:gz")
-        print "Extracting %s into %s" % (
-            self.required_release_filename, temp_dir)
+        print("Extracting %s into %s" % (
+            self.required_release_filename, temp_dir))
         tar_obj.extractall(temp_dir)
 
     def save_archive(self, temp_dir):
         downloaded_release_dir = os.path.join(temp_dir,
                                               self.required_release_dirname)
 
-        print "Saving the release to the '%s' dir" % self.release_name
+        print("Saving the release to the '%s' dir" % self.release_name)
         shutil.copytree(downloaded_release_dir, self.local_release_dir)
 
     def update_release(self):
