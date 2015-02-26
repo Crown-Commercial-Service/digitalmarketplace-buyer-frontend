@@ -7,7 +7,7 @@ class DependenciesHandler(object):
 
     dependencies = {
         "govuk_template": "0.12.0",
-        "digital_marketplace_frontend_toolkit": "1.0.3"
+        "digital_marketplace_frontend_toolkit": "1.1.0"
     }
 
     # public methods
