@@ -1,7 +1,10 @@
 from . import main
 from app import models
 from flask import abort, render_template, request, jsonify, Response
-from ..helpers.presenters import SearchResults
+from ..presenters.search_presenters import SearchResults, SearchFilters
+from ..helpers.search_helpers import (
+    get_keywords_from_request, get_template_data
+)
 
 
 @main.route('/')
@@ -18,30 +21,19 @@ def get_service_by_id(service_id):
         abort(404, "Service ID '%s' can not be found" % service_id)
 
 
-@main.route('/search/<query>')
-def search(query):
-    print(dir(main))
-    response = models.search_for_service(query)
+@main.route('/search')
+def search():
+    search_keywords = get_keywords_from_request(request)
+    search_filters_obj = SearchFilters(blueprint=main, request=request)
+    response = models.search_for_service(
+        keywords=search_keywords,
+        filters=search_filters_obj.get_request_filters()
+    )
     search_results_obj = SearchResults(response)
-    return jsonify(search_results_obj.get_results())
-
-
-@main.route('/search/<query>/<lot>')
-def search_with_lot(query, lot):
-    response = models.search_with_lot_filter(query, lot)
-    search_results_obj = SearchResults(response)
-    return jsonify(search_results_obj.get_results())
-
-
-@main.route('/search/<query>/filter')
-def search_with_filters(query):
-    response = models.search_with_filters(query, request.args)
-    search_results_obj = SearchResults(response)
-    return jsonify(search_results_obj.get_results())
-
-
-@main.route('/test')
-def test():
-    template_data = main.config['BASE_TEMPLATE_DATA']
-    template_data['title'] = 'test page'
-    return render_template('test.html', **template_data)
+    template_data = get_template_data(main, {
+        'title': 'Search results',
+        'search_keywords': search_keywords,
+        'filter_groups': search_filters_obj.get_filter_groups(),
+        'services': search_results_obj.get_results()['services']
+    })
+    return render_template('search.html', **template_data)

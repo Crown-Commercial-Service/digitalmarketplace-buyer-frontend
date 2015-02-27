@@ -31,7 +31,7 @@ def get_service(service_id):
     return strip_services_wrapper(response.content)
 
 
-def search_for_service(query, start_from=0, size=10):
+def search_without_filters(query, start_from=0, size=10):
     res = es.search(index="services",
                     body={
                         "from": start_from, "size": size,
@@ -109,3 +109,13 @@ def search_with_filters(query, args, start_from=0, size=10):
                     }
                     )
     return res
+
+
+def search_for_service(keywords="", filters={}, start_from=0, size=10):
+    query = keywords
+    if "lot" in filters:
+        return search_with_lot_filter(query, filters["lot"], start_from, size)
+    elif filters:
+        return search_with_filters(query, filters, start_from, size)
+    else:
+        return search_without_filters(query, start_from, size)

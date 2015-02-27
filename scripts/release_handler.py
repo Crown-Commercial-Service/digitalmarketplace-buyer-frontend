@@ -121,6 +121,8 @@ class ReleaseHandler(object):
                                               self.required_release_dirname)
 
         print("Saving the release to the '%s' dir" % self.release_name)
+        if os.path.isdir(self.local_release_dir):
+            shutil.rmtree(self.local_release_dir)
         shutil.copytree(downloaded_release_dir, self.local_release_dir)
 
     def update_release(self):

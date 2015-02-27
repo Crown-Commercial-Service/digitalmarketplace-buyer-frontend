@@ -1,4 +1,25 @@
-// Path to assets for use with file-url()
-$path: "../images/compressed/";
+@import "_phase_banner.scss";
+@import "_grid_layout.scss";
+@import "_typography.scss";
 
+// Path to assets for use with file-url()
+$path: "/static/";
+
+#wrapper {
+  @extend %site-width-container;
+}
+
+@import "_buttons.scss";
 @import "_footer.scss";
+@import "_page-headings.scss";
+@import "_search-result.scss";
+@import "forms/_multi-select.scss";
+
+.filter-field-text {
+  @include core-16;
+  @include box-sizing(border-box);
+  width: 100%;
+  padding: 5px;
+}
+
+@import "_grids.scss";
