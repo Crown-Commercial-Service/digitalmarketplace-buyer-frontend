@@ -3,7 +3,7 @@
 @import "_typography.scss";
 
 // Path to assets for use with file-url()
-$path: "/static/";
+$path: "/static/images/";
 
 #wrapper {
   @extend %site-width-container;
