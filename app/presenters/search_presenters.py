@@ -1,8 +1,10 @@
 import os
 import json
 
+
 class SearchResults(object):
-    """Provides access to elasticsearch search results formatted as view data"""
+    """Provides access to elasticsearch search results formatted as view data
+    """
 
     def __init__(self, results_dict):
         self.lots = {
@@ -17,7 +19,7 @@ class SearchResults(object):
         for raw_result in results:
             result = {}
             for field in raw_result['fields']:
-              result[field] = raw_result['fields'][field][0]
+                result[field] = raw_result['fields'][field][0]
 
             result['lot'] = self.lots[result['lot']]
             self.results.append(result)
@@ -30,18 +32,21 @@ class SearchResults(object):
     def get_total(self):
         """Returns the total number of services in the search results"""
 
-        return { 'total' : self.total }
+        return {'total': self.total}
 
     def get_results(self):
-        """Returns an object containing all services in the search results and their total number"""
+        """Returns an object containing all services in the search results and
+        their total number"""
 
         return {
-            'services' : self.get_services(),
-            'total' : self.get_total()
+            'services': self.get_services(),
+            'total': self.get_total()
         }
 
+
 class SearchFilters(object):
-    """Provides access to the filters for a search based on request parameters"""
+    """Provides access to the filters for a search based on request parameters
+    """
 
     def __init__(self, blueprint=False, request={}):
         self.filter_groups = blueprint.config['SEARCH_FILTERS']
@@ -77,5 +82,3 @@ class SearchFilters(object):
                 filter['isSet'] = False
                 if filter['name'] in self.request_filters:
                     filter['isSet'] = True
-
-

@@ -30,6 +30,7 @@ def get_service(service_id):
     )
     return strip_services_wrapper(response.content)
 
+
 def search_without_filters(query, start_from=0, size=10):
     res = es.search(index="services",
                     body={
@@ -108,6 +109,7 @@ def search_with_filters(query, args, start_from=0, size=10):
                     }
                     )
     return res
+
 
 def search_for_service(keywords="", filters={}, start_from=0, size=10):
     query = keywords
