@@ -18,6 +18,12 @@ def create_app(config_name):
     application.register_blueprint(main_blueprint)
     main_blueprint.config = {
         'BASE_TEMPLATE_DATA': application.config['BASE_TEMPLATE_DATA'],
+        'LOTS': {
+            'IaaS': 'Infrastructure as a Service',
+            'PaaS': 'Platform as a Service',
+            'SaaS': 'Software as a Service',
+            'SCS': 'Specialist Cloud Services'
+        },
         'SEARCH_FILTERS': [
             {
                 'legend': 'Service features and management',

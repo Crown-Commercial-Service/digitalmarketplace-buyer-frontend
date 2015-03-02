@@ -1,0 +1,14 @@
+{% from 'macros/_breadcrumb.html' import breadcrumb %}
+
+{% extends "_base_page.html" %}
+
+{% block breadcrumb %}
+  {{ breadcrumb(crumbs) }}
+{% endblock %}
+
+{% block main_content %}
+<header class="page-heading">
+  <h1>{{ title }}</h1>
+</header>
+<p>{{ service.serviceSummary }}</p>
+{% endblock %}

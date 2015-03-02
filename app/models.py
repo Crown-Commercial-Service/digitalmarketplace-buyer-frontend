@@ -30,7 +30,7 @@ def handle_api_errors(response):
 
 def strip_services_wrapper(content):
     content_json = json.loads(content)
-    return json.dumps(content_json["services"])
+    return content_json["services"]
 
 
 def get_service(service_id):
