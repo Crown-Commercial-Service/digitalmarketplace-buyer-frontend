@@ -68,7 +68,7 @@ Index G6 services into your local elasticsearch index:
 python application.py runserver
 ```
 
-Use the app at [http://127.0.0.1:5000/](http://127.0.0.1:5000/)
+The buyer app runs on port 5002. Use the app at [http://127.0.0.1:5002/](http://127.0.0.1:5002/)
 
 ## Front-end
 
