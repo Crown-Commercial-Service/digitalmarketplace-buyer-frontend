@@ -101,4 +101,4 @@ npm install
 - `npm run frontend-build:watch` (watch all frontend files & rebuild when anything changes)
 - `npm run frontend-install` (install all non-NPM dependancies)
 
-Note: `npm run frontend-install` is run as a post-install task after you run `npm install`.
+Note: `npm run frontend-install` is run automatically as a post-install task when you run `npm install`.
