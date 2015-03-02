@@ -7,10 +7,10 @@ var filelog = require('gulp-filelog');
 var environment;
 var repoRoot = __dirname + '/';
 var govukToolkitRoot = repoRoot + 'node_modules/govuk_frontend_toolkit';
-var dmToolkitRoot = repoRoot + 'digital_marketplace_frontend_toolkit/toolkit';
+var dmToolkitRoot = repoRoot + 'bower_components/digitalmarketplace_frontend_toolkit/toolkit';
 var assetsFolder = repoRoot + 'app/assets';
 var staticFolder = repoRoot + 'app/static';
-var govukTemplateAssetsFolder = repoRoot + 'govuk_template/assets';
+var govukTemplateAssetsFolder = repoRoot + 'bower_components/govuk_template/assets';
 
 // JavaScript paths
 var jsVendorFiles = [
@@ -163,4 +163,5 @@ gulp.task('build:production', ['clean'], function () {
   environment = 'production';
   gulp.start('sass', 'js');
   gulp.start('copy_template_assets');
+  gulp.start('copy_dm_toolkit_assets');
 });
