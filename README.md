@@ -92,29 +92,13 @@ To install the required Node modules, type:
 npm install
 ```
 
-#### Non-NPM dependencies
+## Frontend tasks
 
-Running `npm install` will also install all the required dependencies not available as NPM modules. At present this is:
+[NPM](https://www.npmjs.org/) is used for all frontend build tasks. The commands available are:
 
-- the [Digital Marketplace front-end toolkit](https://github.com/alphagov/digitalmarketplace-frontend-toolkit)
-- the [GOVUK Template](https://github.com/alphagov/govuk_template)
+- `npm run frontend-build:development` (compile the frontend files for development)
+- `npm run frontend-build:production` (compile the frontend files for production)
+- `npm run frontend-build:watch` (watch all frontend files & rebuild when anything changes)
+- `npm run frontend-install` (install all non-NPM dependancies)
 
-These dependencies are installed by the `./scripts/install_frontend_dependencies.py` script which is run after the NPM modules are installed.
-
-### Static asset locations
-
-The base static asset files should be kept in `app/assets`. The results of compilation are put into `app/static`.
-
-You can compile the assets in 2 modes: 'development' and 'production' like so:
-
-#### Compiling for development
-
-```
-node_modules/gulp/bin/gulp.js build:development
-```
-
-#### Compiling for production 
-
-```
-node_modules/gulp/bin/gulp.js build:production
-```
+Note: `npm run frontend-install` is run automatically as a post-install task when you run `npm install`.
