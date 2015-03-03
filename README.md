@@ -68,9 +68,10 @@ Index G6 services into your local elasticsearch index:
 
 To run the Buyer Frontend App for local development you can use the convenient run 
 script, which sets the required environment variables to defaults if they have
-not already been set: 
+not already been set:
+
 ```
-./run_buyer_frontend.sh
+./run_app.sh
 ```
 
 More generally, the command to start the server is:
