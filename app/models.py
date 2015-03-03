@@ -5,7 +5,7 @@ from flask import json
 
 api_url = os.getenv('DM_API_URL')
 api_access_token = os.getenv('DM_API_BEARER')
-search_url = os.getenv('DM_SEARCH_API_URL')
+search_url = os.getenv('DM_SEARCH_API_URL') + "/search"
 search_access_token = os.getenv('DM_SEARCH_API_BEARER')
 
 if api_access_token is None:
@@ -39,9 +39,10 @@ def get_service(service_id):
 
 
 def search_without_filters(query, start_from=0, size=10):
-    url = search_url + "/search?q=" + query
+    payload = {'q': query}
     response = requests.get(
-        url,
+        search_url,
+        params=payload,
         headers={
             "authorization": "Bearer {}".format(search_access_token)
         }
@@ -50,12 +51,12 @@ def search_without_filters(query, start_from=0, size=10):
 
 
 def search_with_filters(query, filters, start_from=0, size=10):
-    filter_string = ""
+    payload = {'q': query}
     for k, v in filters.iteritems():
-        filter_string = filter_string + "&" + k + "=" + v.lower()
-    url = search_url + "/search?q=" + query + filter_string
+        payload[k] = v
     response = requests.get(
-        url,
+        search_url,
+        params=payload,
         headers={
             "authorization": "Bearer {}".format(search_access_token)
         }
