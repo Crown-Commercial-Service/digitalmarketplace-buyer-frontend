@@ -38,7 +38,7 @@ def get_service(service_id):
     return strip_services_wrapper(response.content)
 
 
-def search_without_filters(query, start_from=0, size=10):
+def search_without_filters(query):
     payload = {'q': query}
     response = requests.get(
         search_url,
@@ -50,7 +50,7 @@ def search_without_filters(query, start_from=0, size=10):
     return response.content
 
 
-def search_with_filters(query, filters, start_from=0, size=10):
+def search_with_filters(query, filters):
     payload = {'q': query}
     for k, v in filters.iteritems():
         payload[k] = v
@@ -64,9 +64,9 @@ def search_with_filters(query, filters, start_from=0, size=10):
     return response.content
 
 
-def search_for_service(keywords="", filters={}, start_from=0, size=10):
+def search_for_service(keywords="", filters={}):
     query = keywords
     if filters:
-        return search_with_filters(query, filters, start_from, size)
+        return search_with_filters(query, filters)
     else:
-        return search_without_filters(query, start_from, size)
+        return search_without_filters(query)
