@@ -1,6 +1,6 @@
-# Digital Marketplace Thermos
+# Digital Marketplace Buyer Frontend
 
-Experimental frontend spike for Digital Marketplace.
+Frontend buyer application for the digital marketplace.
 
 - Python app, based on the [Flask framework](http://flask.pocoo.org/)
 
