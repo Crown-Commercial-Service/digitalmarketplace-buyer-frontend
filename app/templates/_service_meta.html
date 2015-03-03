@@ -1,0 +1,35 @@
+{% if service.priceString is defined %}
+<p class='price'>
+    {{ service.priceString }}
+</p>
+{% endif %}
+<ul class='price-caveats'>
+  <li>
+    {% if service.vatIncluded is defined %}
+      Including VAT
+    {% elif %}
+      Excluding VAT
+    {% endif %}
+  </li>
+  {% if service.educationPricing is defined %}
+  <li>
+      Education pricing available
+  </li>
+  {% endif %}
+  {% if service.terminationCost is defined %}
+  <li>
+      Termination costs apply
+  </li>
+  <li>
+  {% endif %}
+  {% if service.trialOrFreeOption is defined %}
+  <li>
+    {{ service.trialOrFreeOption }}
+  </li>
+  {% endif %}
+  {% service.minimumContractPeriod is defined %}
+  <li>
+    Minimum contract period: {{ service.minimumContractPeriod }}
+  </li>
+  {% endif %}
+</ul>

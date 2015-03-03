@@ -8,6 +8,8 @@ from ..helpers.search_helpers import (
 )
 from ..exceptions import AuthException
 from ..helpers.service_helpers import get_lot_name_from_acronym
+import json
+from ..presenters.service_presenters import Service
 
 
 @main.route('/')
@@ -19,18 +21,23 @@ def index():
 def get_service_by_id(service_id):
     try:
         service = models.get_service(service_id)
+        service_view_data = Service(service)
         breadcrumb = [
             {'text': get_lot_name_from_acronym(main, service['lot'])}
         ]
         template_data = get_template_data(main, {
             'title': service['serviceName'],
             'crumbs' : breadcrumb,
-            'service' : service
+            'service': service_view_data.get_service_info(),
+            'features': service_view_data.get_service_features(),
+            'benefits': service_view_data.get_service_benefits(),
+            'attributes': service_view_data.get_service_attributes()
         })
         return render_template('service.html', **template_data)
     except AuthException as e:
         abort(500, "Application error")
     except KeyError:
+        print "KeyError called"
         abort(404, "Service ID '%s' can not be found" % service_id)
 
 
