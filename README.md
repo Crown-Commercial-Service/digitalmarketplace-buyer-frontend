@@ -19,12 +19,14 @@ brew update
 brew install elasticsearch
 ```
 
-Set the required environment variables (for dev use local API instance if you 
-have it running):
+Set the required environment variables (for dev use local API instances if you 
+have them running):
 
 ```
-export DM_API_URL=https://api.digitalmarketplace.service.gov.uk
+export DM_API_URL=http://localhost:5000
 export DM_API_BEARER=<bearer_token>
+export DM_SEARCH_API_URL=http://localhost:5001
+export DM_SEARCH_API_BEARER=<bearer_token>
 ```
 
 ### Create and activate the virtual environment
@@ -64,11 +66,19 @@ Index G6 services into your local elasticsearch index:
 
 ### Run the development server
 
+To run the Buyer Frontend App for local development you can use the convenient run 
+script, which sets the required environment variables to defaults if they have
+not already been set: 
+```
+./run_buyer_frontend.sh
+```
+
+More generally, the command to start the server is:
 ```
 python application.py runserver
 ```
 
-The buyer app runs on port 5002. Use the app at [http://127.0.0.1:5002/](http://127.0.0.1:5002/)
+The buyer app runs on port 5002 by default. Use the app at [http://127.0.0.1:5002/](http://127.0.0.1:5002/)
 
 ## Front-end
 
