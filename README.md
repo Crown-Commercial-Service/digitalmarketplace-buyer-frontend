@@ -1,6 +1,6 @@
-# Digital Marketplace Thermos
+# Digital Marketplace Buyer Frontend
 
-Experimental frontend spike for Digital Marketplace.
+Frontend buyer application for the digital marketplace.
 
 - Python app, based on the [Flask framework](http://flask.pocoo.org/)
 
@@ -12,19 +12,14 @@ Install [Virtualenv](https://virtualenv.pypa.io/en/latest/)
 sudo easy_install virtualenv
 ```
 
-Install [elasticsearch](http://www.elasticsearch.org/)
+Set the required environment variables (for dev use local API instances if you 
+have them running):
 
 ```
-brew update
-brew install elasticsearch
-```
-
-Set the required environment variables (for dev use local API instance if you 
-have it running):
-
-```
-export DM_API_URL=https://api.digitalmarketplace.service.gov.uk
+export DM_API_URL=http://localhost:5000
 export DM_API_BEARER=<bearer_token>
+export DM_SEARCH_API_URL=http://localhost:5001
+export DM_SEARCH_API_BEARER=<bearer_token>
 ```
 
 ### Create and activate the virtual environment
@@ -40,22 +35,6 @@ Install new Python dependencies with pip
 
 ```pip install -r requirements.txt```
 
-### Insert G6 services into elasticsearch index
-
-Start elasticsearch
-
-```
-elasticsearch
-```
-
-Index G6 services into your local elasticsearch index:
-
-```
-./scripts/index-g6-in-elasticsearch.py http://localhost:9200/services https://api-origin.digitalmarketplace.service.gov.uk/services <api_bearer_token>
-```
-
-(Ideally we would use `api.digitalmarketplace.service.gov.uk` but CloudFront doesn't like the Python HTTP client.)
-
 ### Run the tests
 
 ```
@@ -64,11 +43,20 @@ Index G6 services into your local elasticsearch index:
 
 ### Run the development server
 
+To run the Buyer Frontend App for local development you can use the convenient run 
+script, which sets the required environment variables to defaults if they have
+not already been set:
+
+```
+./run_app.sh
+```
+
+More generally, the command to start the server is:
 ```
 python application.py runserver
 ```
 
-The buyer app runs on port 5002. Use the app at [http://127.0.0.1:5002/](http://127.0.0.1:5002/)
+The buyer app runs on port 5002 by default. Use the app at [http://127.0.0.1:5002/](http://127.0.0.1:5002/)
 
 ## Front-end
 
