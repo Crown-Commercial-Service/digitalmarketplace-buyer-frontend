@@ -12,13 +12,6 @@ Install [Virtualenv](https://virtualenv.pypa.io/en/latest/)
 sudo easy_install virtualenv
 ```
 
-Install [elasticsearch](http://www.elasticsearch.org/)
-
-```
-brew update
-brew install elasticsearch
-```
-
 Set the required environment variables (for dev use local API instances if you 
 have them running):
 
@@ -41,22 +34,6 @@ source ./venv/bin/activate
 Install new Python dependencies with pip
 
 ```pip install -r requirements.txt```
-
-### Insert G6 services into elasticsearch index
-
-Start elasticsearch
-
-```
-elasticsearch
-```
-
-Index G6 services into your local elasticsearch index:
-
-```
-./scripts/index-g6-in-elasticsearch.py http://localhost:9200/services https://api-origin.digitalmarketplace.service.gov.uk/services <api_bearer_token>
-```
-
-(Ideally we would use `api.digitalmarketplace.service.gov.uk` but CloudFront doesn't like the Python HTTP client.)
 
 ### Run the tests
 
