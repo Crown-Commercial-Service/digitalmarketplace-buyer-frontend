@@ -1,6 +1,4 @@
 *.pyc
-.idea/*
-*.iml
 .vimrc
 .DS_store
 venv
