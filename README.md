@@ -17,9 +17,9 @@ have them running):
 
 ```
 export DM_API_URL=http://localhost:5000
-export DM_API_BEARER=<bearer_token>
+export DM_BUYER_FRONTEND_API_AUTH_TOKEN=<auth_token>
 export DM_SEARCH_API_URL=http://localhost:5001
-export DM_SEARCH_API_BEARER=<bearer_token>
+export DM_BUYER_FRONTEND_SEARCH_API_AUTH_TOKEN=<auth_token>
 ```
 
 ### Create and activate the virtual environment
