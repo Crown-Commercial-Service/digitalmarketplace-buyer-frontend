@@ -1,7 +1,7 @@
 import json
 from . import main
 from app import models
-from flask import abort, render_template, request, jsonify, Response
+from flask import abort, render_template, request, Response
 from ..presenters.search_presenters import SearchFilters
 from ..helpers.search_helpers import (
     get_keywords_from_request, get_template_data
@@ -26,8 +26,8 @@ def get_service_by_id(service_id):
 def search():
     search_keywords = get_keywords_from_request(request)
     search_filters_obj = SearchFilters(blueprint=main, request=request)
-    response = models.search_for_service(
-        keywords=search_keywords,
+    response = models.search_for_services(
+        query=search_keywords,
         filters=search_filters_obj.get_request_filters()
     )
     search_results_json = json.loads(response)

@@ -38,19 +38,7 @@ def get_service(service_id):
     return strip_services_wrapper(response.content)
 
 
-def search_without_filters(query):
-    payload = {'q': query}
-    response = requests.get(
-        search_url,
-        params=payload,
-        headers={
-            "authorization": "Bearer {}".format(search_access_token)
-        }
-    )
-    return response.content
-
-
-def search_with_filters(query, filters):
+def search_for_services(query="", filters={}):
     payload = {'q': query}
     for k, v in filters.iteritems():
         payload[k] = v
@@ -62,11 +50,3 @@ def search_with_filters(query, filters):
         }
     )
     return response.content
-
-
-def search_for_service(keywords="", filters={}):
-    query = keywords
-    if filters:
-        return search_with_filters(query, filters)
-    else:
-        return search_without_filters(query)
