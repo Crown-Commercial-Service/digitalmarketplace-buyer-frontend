@@ -12,15 +12,25 @@ Install [Virtualenv](https://virtualenv.pypa.io/en/latest/)
 sudo easy_install virtualenv
 ```
 
-Set the required environment variables (for dev use local API instances if you 
-have them running):
+The buyer frontend app requires access to both the API (for service pages) and
+to the search API (for search results). The location and access tokens for 
+these services is set with environment variables.
+
+
+For development you can either point the environment variables to use the 
+preview environment's `API` and `Search API` boxes, or use local API instances if 
+you have them running:
 
 ```
 export DM_API_URL=http://localhost:5000
-export DM_BUYER_FRONTEND_API_AUTH_TOKEN=<auth_token>
+export DM_BUYER_FRONTEND_API_AUTH_TOKEN=<auth_token_accepted_by_api>
 export DM_SEARCH_API_URL=http://localhost:5001
-export DM_BUYER_FRONTEND_SEARCH_API_AUTH_TOKEN=<auth_token>
+export DM_BUYER_FRONTEND_SEARCH_API_AUTH_TOKEN=<auth_token_accepted_by_search_api>
 ```
+
+Where `DM_BUYER_FRONTEND_API_AUTH_TOKEN` is a token accepted by the Data API 
+instance pointed to by `DM_API_URL`, and `DM_BUYER_FRONTEND_SEARCH_API_AUTH_TOKEN` 
+is a token accepted by the Search API instance pointed to by `DM_SEARCH_API_URL`.
 
 ### Create and activate the virtual environment
 
