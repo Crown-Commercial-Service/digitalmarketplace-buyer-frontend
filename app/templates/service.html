@@ -13,56 +13,8 @@
 </header>
 <div class="grid-row">
   <div class="column-two-thirds">
-    <p>{{ service.serviceSummary }}</p>
-    <h2>Features</h2>
-    <ul>
-    {% for feature in features %}
-      <li>{{ feature }}</li>
-    {% endfor %}
-    </ul>
-    <h2>Benefits</h2>
-    <ul>
-    {% for benefit in benefits %}
-      <li>{{ benefit }}</li>
-    {% endfor %}
-    </ul>
-    {% for attributeGrouping in attributes %}
-     <h2 class="summary-item-heading">
-      {{ attributeGrouping.name }}
-    </h2>
-    <table class="summary-item-body">
-      <thead class="summary-item-field-headings">
-        <tr>
-          <th scope="col">
-            Name
-          </th>
-          <th scope="col">
-            Content
-          </th>
-        </tr>
-      </thead>
-      <tbody class="summary-item">
-        {% for row in attributeGrouping.rows %}
-        <tr class="summary-item-row">
-          <td class="summary-item-field-name">
-            <span>{{ row.key }}</span>
-          </td>
-          <td class="summary-item-field-content">
-            {% if row.type == 'list' %}
-              <ul>
-              {% for valueItem in row.value %}
-                <li>{{ valueItem }}</li>
-              {% endfor %}
-              </ul>
-            {% else %}
-              {{ row.value }}
-            {% endif %}
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table> 
-    {% endfor %}
+    {% include '_service_summary_features_and_benefits.html' %}
+    {% include '_service_attributes.html' %}
   </div>
   <div class="column-one-third">
   </div>

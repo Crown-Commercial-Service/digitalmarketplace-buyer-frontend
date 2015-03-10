@@ -1,0 +1,13 @@
+<p>{{ service.serviceSummary }}</p>
+<h2>Features</h2>
+<ul>
+{% for feature in features %}
+  <li>{{ feature }}</li>
+{% endfor %}
+</ul>
+<h2>Benefits</h2>
+<ul>
+{% for benefit in benefits %}
+  <li>{{ benefit }}</li>
+{% endfor %}
+</ul>
