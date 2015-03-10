@@ -6,6 +6,7 @@ from ..presenters.search_presenters import SearchFilters
 from ..helpers.search_helpers import (
     get_keywords_from_request, get_template_data
 )
+from ..exceptions import AuthException
 
 
 @main.route('/')
@@ -18,6 +19,8 @@ def get_service_by_id(service_id):
     try:
         service = models.get_service(service_id)
         return Response(service, mimetype='application/json')
+    except AuthException as e:
+        abort(500, "Application error")
     except KeyError:
         abort(404, "Service ID '%s' can not be found" % service_id)
 
