@@ -1,0 +1,29 @@
+// styles specific to service pages
+
+.service-summary-lede,
+.service-summary-features-and-benefits {
+  @include core-19;
+}
+
+.service-summary-lede {
+  margin: 0;
+}
+
+.service-summary-heading {
+  @include core-24;
+  font-weight: bold;
+  position: relative;
+  padding: 35px 25% 0 0;
+  margin: 0 0 10px 0;
+  @include box-sizing(border-box);
+}
+
+.service-summary-features-and-benefits {
+  margin: 0;
+  padding-left: 0;
+
+  li {
+    list-style-type: disc;
+    margin-bottom: 10px;
+  }
+}

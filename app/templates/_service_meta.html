@@ -1,35 +1,42 @@
-{% if service.priceString is defined %}
-<p class='price'>
-    {{ service.priceString }}
-</p>
-{% endif %}
-<ul class='price-caveats'>
-  <li>
-    {% if service.vatIncluded is defined %}
-      Including VAT
-    {% elif %}
-      Excluding VAT
-    {% endif %}
-  </li>
-  {% if service.educationPricing is defined %}
-  <li>
-      Education pricing available
-  </li>
-  {% endif %}
-  {% if service.terminationCost is defined %}
-  <li>
-      Termination costs apply
-  </li>
-  <li>
-  {% endif %}
-  {% if service.trialOrFreeOption is defined %}
-  <li>
-    {{ service.trialOrFreeOption }}
-  </li>
-  {% endif %}
-  {% service.minimumContractPeriod is defined %}
-  <li>
-    Minimum contract period: {{ service.minimumContractPeriod }}
-  </li>
-  {% endif %}
+<p class="price">{{ meta.price }}</p>
+<ul class="caveats">
+{% for caveat in meta.priceCaveats %}
+  <li>{{ caveat }}</li>
+{% endfor %}
 </ul>
+<ul class="documents">
+{% for document in meta.documents %}
+  <li>
+    <a href="{{ document.url }}">
+      <span class='document-icon'>{{ document.extension }}<span> document:</span></span>
+      {{ document.name }}
+    </a>
+  </li>
+{% endfor %}
+</ul>
+<dl class="service-id">
+  <dt>Service ID</dt>
+  <dd>
+  {% for group in meta.serviceId %}
+    <span>{{ group }}</span>
+  {% endfor %}
+  </dd>
+</dl>
+<div>
+  <div role="button" class="details-control accordionTitle" data-accordion-label-closed="▶" data-accordion-label-open="▼" data-event-category="Interact with contact information" data-event-label="Fastnet International Ltd">
+    <span class="summary">Contact Fastnet International Ltd</span>
+  </div>
+  <div class="details-indent accordionTarget">
+    <ul>
+      <li>
+        {{ meta.contact.name }}
+      </li>
+      <li>
+        {{ meta.contact.phone }}
+      </li>
+      <li>
+        <a href="mailto:{{ meta.contact.email }}" data-event-category="Email a supplier" data-event-label="Fastnet International Ltd">{{ meta.contact.email }}</a>
+      </li>
+    </ul>
+  </div>
+</div>

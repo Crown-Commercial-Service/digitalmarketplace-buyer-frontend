@@ -16,6 +16,7 @@ $path: "/static/images/";
 @import "_search-result.scss";
 @import "forms/_multi-select.scss";
 @import "forms/_summary.scss";
+@import "_service-page.scss";
 
 .filter-field-text {
   @include core-16;

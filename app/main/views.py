@@ -31,13 +31,13 @@ def get_service_by_id(service_id):
             'service': service_view_data.get_service_info(),
             'features': service_view_data.get_service_features(),
             'benefits': service_view_data.get_service_benefits(),
-            'attributes': service_view_data.get_service_attributes()
+            'attributes': service_view_data.get_service_attributes(),
+            'meta': service_view_data.get_service_meta()
         })
         return render_template('service.html', **template_data)
     except AuthException as e:
         abort(500, "Application error")
     except KeyError:
-        print "KeyError called"
         abort(404, "Service ID '%s' can not be found" % service_id)
 
 

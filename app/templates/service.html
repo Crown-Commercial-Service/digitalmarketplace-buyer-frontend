@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block main_content %}
-<header class="page-heading page-heading-with-context">
+<header class="page-heading page-heading-with-context page-heading-smaller">
   <p class="context">{{ service.supplierName }}
   <h1>{{ title }}</h1>
 </header>
@@ -17,6 +17,7 @@
     {% include '_service_attributes.html' %}
   </div>
   <div class="column-one-third">
+    {% include '_service_meta.html' %}
   </div>
 </div>
 {% endblock %}
