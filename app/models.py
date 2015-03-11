@@ -1,7 +1,6 @@
 import requests
 import os
 from flask import json
-from elasticsearch import Elasticsearch
 from exceptions import AuthException
 
 
