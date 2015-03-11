@@ -1,7 +1,7 @@
 import requests
 import os
 from flask import json
-from exceptions import AuthException
+from .exceptions import AuthException
 
 
 api_url = os.getenv('DM_API_URL')
