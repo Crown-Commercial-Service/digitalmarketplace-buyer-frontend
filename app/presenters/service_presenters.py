@@ -250,7 +250,7 @@ class Meta(object):
 
     def _get_document_extension(self, document_url):
         url_object = urlparse(document_url)
-        return os.path.splitext(url_object.path)[1]
+        return os.path.splitext(url_object.path)[1].split('.')[1]
 
 
     def _if_both_keys_or_either(self, service_data, keys=[], values={}):
