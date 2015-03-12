@@ -1,6 +1,6 @@
 <h2 class="visuallyhidden">Pricing</h2>
 <p class="price">{{ meta.price }}</p>
-<ul class="caveats">
+<ul class="price-caveats">
 {% for caveat in meta.priceCaveats %}
   <li>{{ caveat }}</li>
 {% endfor %}
@@ -16,10 +16,12 @@
   </li>
 {% endfor %}
 </ul>
-<h2 class="service-id visuallyhidden">Service ID</h2>
+<h2 class="service-id-heading">Service ID</h2>
+<p class="service-id">
 {% for group in meta.serviceId %}
   <span>{{ group }}</span>
 {% endfor %}
+</p>
 <div>
   <div role="button" class="details-control accordionTitle" data-accordion-label-closed="▶" data-accordion-label-open="▼" data-event-category="Interact with contact information" data-event-label="Fastnet International Ltd">
     <h2 class="summary">Contact Fastnet International Ltd</h2>

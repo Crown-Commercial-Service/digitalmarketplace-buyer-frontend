@@ -1,5 +1,13 @@
 // styles specific to service pages
 
+%sub-heading {
+  @include core-24;
+  font-weight: bold;
+  padding: 35px 25% 0 0;
+  margin: 0 0 10px 0;
+  @include box-sizing(border-box);
+}
+
 .service-summary-lede,
 .service-summary-features-and-benefits {
   @include core-19;
@@ -10,12 +18,7 @@
 }
 
 .service-summary-heading {
-  @include core-24;
-  font-weight: bold;
-  position: relative;
-  padding: 35px 25% 0 0;
-  margin: 0 0 10px 0;
-  @include box-sizing(border-box);
+  @extend %sub-heading;
 }
 
 .service-summary-features-and-benefits {
@@ -27,3 +30,33 @@
     margin-bottom: 10px;
   }
 }
+
+.price {
+  @extend %sub-heading;
+}
+
+.price-caveats {
+  @include core-19;
+  color: $grey-1;
+  padding-left: 0;
+  list-style-type: none;
+
+  li {
+    margin-bottom: 5px;
+  }
+}
+
+.service-id-heading {
+  @include core-19;
+  margin-bottom: 5px;
+}
+
+.service-id {
+  @include core-16;
+  @include inline-block;
+  background: $highlight-colour;
+  padding: 2px 6px;
+  border: 1px dotted $grey-3;
+  margin: 0 4px 0 0;
+}
+
