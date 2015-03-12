@@ -1,6 +1,7 @@
 import requests
 import os
 from flask import json
+from .exceptions import AuthException
 
 
 api_url = os.getenv('DM_API_URL')
@@ -22,6 +23,11 @@ if search_url is None:
     raise Exception("DM_SEARCH_API_URL is not set")
 
 
+def handle_api_errors(response):
+    if (response.status_code == 403):
+        raise AuthException("API authentication failed")
+
+
 def strip_services_wrapper(content):
     content_json = json.loads(content)
     return json.dumps(content_json["services"])
@@ -35,7 +41,9 @@ def get_service(service_id):
             "authorization": "Bearer {}".format(api_access_token)
         }
     )
-    return strip_services_wrapper(response.content)
+    handle_api_errors(response)
+    response_content = strip_services_wrapper(response.content)
+    return response_content
 
 
 def search_for_services(query="", filters={}):
