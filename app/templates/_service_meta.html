@@ -1,42 +1,43 @@
-<h2 class="visuallyhidden">Pricing</h2>
-<p class="price">{{ meta.price }}</p>
-<ul class="price-caveats">
-{% for caveat in meta.priceCaveats %}
-  <li>{{ caveat }}</li>
-{% endfor %}
-</ul>
-<h2 class="visuallyhidden">Service documents</h2>
-<ul class="document-list">
-{% for document in meta.documents %}
-  <li class="document-list-item">
-    <a href="{{ document.url }}" class="document-link-with-icon">
-      <span class='document-icon'>{{ document.extension }}<span> document:</span></span>
-      {{ document.name }}
-    </a>
-  </li>
-{% endfor %}
-</ul>
-<h2 class="service-id-heading">Service ID</h2>
-<p class="service-id">
-{% for group in meta.serviceId %}
-  <span>{{ group }}</span>
-{% endfor %}
-</p>
-<div>
-  <div role="button" class="details-control accordionTitle" data-accordion-label-closed="▶" data-accordion-label-open="▼" data-event-category="Interact with contact information" data-event-label="Fastnet International Ltd">
-    <h2 class="summary">Contact Fastnet International Ltd</h2>
-  </div>
-  <div class="details-indent accordionTarget">
-    <ul>
-      <li>
-        {{ meta.contact.name }}
-      </li>
-      <li>
-        {{ meta.contact.phone }}
-      </li>
-      <li>
-        <a href="mailto:{{ meta.contact.email }}" data-event-category="Email a supplier" data-event-label="Fastnet International Ltd">{{ meta.contact.email }}</a>
-      </li>
-    </ul>
-  </div>
+<div id="meta">
+  <h2 class="visuallyhidden">Pricing</h2>
+  <p class="price">{{ meta.price }}</p>
+  <ul class="price-caveats">
+  {% for caveat in meta.priceCaveats %}
+    <li>{{ caveat }}</li>
+  {% endfor %}
+  </ul>
+  <h2 class="visuallyhidden">Service documents</h2>
+  <ul class="document-list">
+  {% for document in meta.documents %}
+    <li class="document-list-item">
+      <a href="{{ document.url }}" class="document-link-with-icon">
+        <span class='document-icon'>{{ document.extension }}<span> document:</span></span>
+        {{ document.name }}
+      </a>
+    </li>
+  {% endfor %}
+  </ul>
+  <h2 class="service-id-heading">Service ID</h2>
+  <p class="service-id">
+  {% for group in meta.serviceId %}
+    <span>{{ group }}</span>
+  {% endfor %}
+  </p>
+  <h2 class="visuallyhidden">Contact details</h2>
+  <details class="contact">
+    <summary class="summary">Contact Fastnet International Ltd</summary>
+    <div class="indented">
+      <ul>
+        <li>
+          {{ meta.contact.name }}
+        </li>
+        <li>
+          {{ meta.contact.phone }}
+        </li>
+        <li>
+          <a href="mailto:{{ meta.contact.email }}" data-event-category="Email a supplier" data-event-label="Fastnet International Ltd">{{ meta.contact.email }}</a>
+        </li>
+      </ul>
+    </div>
+  </details>
 </div>

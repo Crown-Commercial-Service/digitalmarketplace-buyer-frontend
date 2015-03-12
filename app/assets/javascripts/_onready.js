@@ -10,4 +10,9 @@
       filters[0].open();
     }
   }
+
+  $('details').details();
+  if (!$.fn.details.support) {
+    $('html').addClass('no-details');
+  }
 })(window);
