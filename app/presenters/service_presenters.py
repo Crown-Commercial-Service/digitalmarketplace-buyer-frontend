@@ -14,10 +14,10 @@ class Service(object):
         self.serviceSummary = service_data['serviceSummary']
         self.features = service_data['serviceFeatures']
         self.benefits = service_data['serviceBenefits']
-        self.attributes = self.get_service_attributes(service_data)
-        self.meta = self.get_service_meta(service_data)
+        self.attributes = self._get_service_attributes(service_data)
+        self.meta = self._get_service_meta(service_data)
 
-    def get_service_attributes(self, service_data):
+    def _get_service_attributes(self, service_data):
         attribute_groups = []
         for group in mappings:
             attribute_group = {
@@ -29,7 +29,7 @@ class Service(object):
 
         return attribute_groups
 
-    def get_service_meta(self, service_data):
+    def _get_service_meta(self, service_data):
         return Meta(service_data)
 
     def _get_rows(self, group, service_data):
@@ -42,18 +42,23 @@ class Service(object):
             except KeyError:
                 continue
             data_value = attribute.get_data_value()
-            current_row = {
-                'key': row['key'],
-                'value': data_value,
-                'type': attribute.get_data_type(data_value)
-            }
+            data_type = attribute.get_data_type(data_value)
+            if data_type is not False:
+                current_row = {
+                    'key': row['key'],
+                    'value': data_value,
+                    'type': data_type
+                }
 
-            rows.append(current_row)
+                rows.append(current_row)
 
         return rows
 
 
 class Attribute(object):
+    """Wrapper to handle accessing an attribute in service_data
+        Assumes 'service_data' is set as a static attribute"""
+
     def __init__(self, key):
         """Returns if the attribute key points to a row in the service data"""
         self.key = key
@@ -63,16 +68,19 @@ class Attribute(object):
 
     def get_data_type(self, value):
         """Gets the type of the value parameter"""
-        value_type = type(value)
-        if value_type is str:
+        if isinstance(value, basestring):
             return 'string'
-        elif value_type is list:
+        elif isinstance(value, bool):
+            return 'boolean'
+        elif isinstance(value, int):
+            return 'integer'
+        elif isinstance(value, float):
+            return 'float'
+        elif isinstance(value, list):
             return 'list'
         elif self._is_function(value):
             return 'function'
-        elif value_type is bool:
-            return 'boolean'
-        elif value_type is dict:
+        elif isinstance(value, dict):
             return 'dictionary'
         else:
             return False
@@ -93,9 +101,9 @@ class Attribute(object):
         value_format = self.get_data_type(value)
         if value_format is 'boolean':
             if value:
-                return 'Yes'
+                return u'Yes'
             else:
-                return 'No'
+                return u'No'
         elif value_format is 'dictionary':
             return self.format(value['value'])
         else:
@@ -135,17 +143,22 @@ class Meta(object):
             'serviceDefinitionDocument',
             'termsAndConditionsDocument'
         ]
+        names = [
+            'Pricing',
+            'SFIA rate card',
+            'Service definition',
+            'Terms and conditions'
+        ]
         documents = []
-        for key in keys:
-            document_name = key
-            document_url = key + 'URL'
-            if document_name in service_data:
-                extension = self._get_document_extension(
-                    service_data[document_url]
-                )
+        for idx, key in enumerate(keys):
+            name_key = keys[idx]
+            url_key = name_key + 'URL'
+            if name_key in service_data:
+                url = service_data[url_key]
+                extension = self._get_document_extension(url)
                 documents.append({
-                    'name':  service_data[document_name],
-                    'url': service_data[document_url],
+                    'name':  names[idx],
+                    'url': url,
                     'extension': extension
                 })
         return documents
