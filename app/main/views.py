@@ -26,13 +26,8 @@ def get_service_by_id(service_id):
             {'text': get_lot_name_from_acronym(main, service['lot'])}
         ]
         template_data = get_template_data(main, {
-            'title': service['serviceName'],
-            'crumbs' : breadcrumb,
-            'service': service_view_data.get_service_info(),
-            'features': service_view_data.get_service_features(),
-            'benefits': service_view_data.get_service_benefits(),
-            'attributes': service_view_data.get_service_attributes(),
-            'meta': service_view_data.get_service_meta()
+            'crumbs': breadcrumb,
+            'service': service_view_data
         })
         return render_template('service.html', **template_data)
     except AuthException as e:

@@ -180,7 +180,9 @@ mappings = [
         'name': u'Data storage',
         'rows': [
             {
-                'key': u'Datacentres adhere to EU Code of Conduct for Operations',
+                'key': (
+                    u'Datacentres adhere to EU Code of Conduct for Operations'
+                ),
                 'value': 'datacentresEUCode'
             },
             {
@@ -192,7 +194,9 @@ mappings = [
                 'value': 'datacentreTier'
             },
             {
-                'key': u'Backup, disaster recovery and resilience plan in place',
+                'key': (
+                    u'Backup, disaster recovery and resilience plan in place'
+                ),
                 'value': 'dataBackupRecovery'
             },
             {
@@ -451,12 +455,12 @@ mappings = [
         'name': u'External interface protection',
         'rows': [
             {
-              'key': u'Onboarding guidance provided',
-              'value': 'onboardingGuidance'
+                'key': u'Onboarding guidance provided',
+                'value': 'onboardingGuidance'
             },
             {
-              'key': u'Interconnection method provided',
-              'value': 'interconnectionMethods'
+                'key': u'Interconnection method provided',
+                'value': 'interconnectionMethods'
             }
         ]
     },
@@ -464,8 +468,8 @@ mappings = [
         'name': u'Secure service administration',
         'rows': [
             {
-              'key': u'Service management model',
-              'value': 'serviceManagementModel'
+                'key': u'Service management model',
+                'value': 'serviceManagementModel'
             }
         ]
     },
@@ -473,8 +477,8 @@ mappings = [
         'name': u'Audit information provision to consumers',
         'rows': [
             {
-              'key': u'Audit information provided',
-              'value': 'auditInformationProvided'
+                'key': u'Audit information provided',
+                'value': 'auditInformationProvided'
             }
         ]
     },
@@ -482,16 +486,16 @@ mappings = [
         'name': u'Secure use of the service by the customer',
         'rows': [
             {
-              'key': u'Device access method',
-              'value': 'deviceAccessMethod'
+                'key': u'Device access method',
+                'value': 'deviceAccessMethod'
             },
             {
-              'key': u'Service configuration guidance',
-              'value': 'serviceConfigurationGuidance'
+                'key': u'Service configuration guidance',
+                'value': 'serviceConfigurationGuidance'
             },
             {
-              'key': u'Training',
-              'value': 'trainingProvided'
+                'key': u'Training',
+                'value': 'trainingProvided'
             }
         ]
     }

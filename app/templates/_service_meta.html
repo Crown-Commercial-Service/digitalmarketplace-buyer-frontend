@@ -1,14 +1,14 @@
 <div id="meta">
   <h2 class="visuallyhidden">Pricing</h2>
-  <p class="price">{{ meta.price }}</p>
+  <p class="price">{{ service.meta.price }}</p>
   <ul class="price-caveats">
-  {% for caveat in meta.priceCaveats %}
+  {% for caveat in service.meta.priceCaveats %}
     <li>{{ caveat }}</li>
   {% endfor %}
   </ul>
   <h2 class="visuallyhidden">Service documents</h2>
   <ul class="document-list">
-  {% for document in meta.documents %}
+  {% for document in service.meta.documents %}
     <li class="document-list-item">
       <a href="{{ document.url }}" class="document-link-with-icon">
         <span class='document-icon'>{{ document.extension }}<span> document:</span></span>
@@ -19,7 +19,7 @@
   </ul>
   <h2 class="service-id-heading">Service ID</h2>
   <p class="service-id">
-  {% for group in meta.serviceId %}
+  {% for group in service.meta.serviceId %}
     <span>{{ group }}</span>
   {% endfor %}
   </p>
@@ -29,13 +29,13 @@
     <div class="indented">
       <ul>
         <li>
-          {{ meta.contact.name }}
+          {{ service.meta.contact.name }}
         </li>
         <li>
-          {{ meta.contact.phone }}
+          {{ service.meta.contact.phone }}
         </li>
         <li>
-          <a href="mailto:{{ meta.contact.email }}" data-event-category="Email a supplier" data-event-label="Fastnet International Ltd">{{ meta.contact.email }}</a>
+          <a href="mailto:{{ service.meta.contact.email }}" data-event-category="Email a supplier" data-event-label="Fastnet International Ltd">{{ service.meta.contact.email }}</a>
         </li>
       </ul>
     </div>
