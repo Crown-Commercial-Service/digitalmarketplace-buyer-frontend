@@ -117,69 +117,68 @@ class TestService(unittest.TestCase):
 class TestAttribute(unittest.TestCase):
     def setUp(self):
         self.fixture = _get_fixture_data()['services']
-        Attribute.service_data = self.fixture
 
     def tearDown(self):
         pass
 
     def test_Attribute_works_if_the_key_is_in_service_data(self):
         try:
-            attribute = Attribute('supportAvailability')
+            attribute = Attribute('supportAvailability', self.fixture)
         except KeyError:
             self.fail("'supportAvailability' key should be in service data")
 
     def test_Attribute_fails_if_the_key_isnt_in_service_data(self):
         key_error_raised = False
         try:
-            attribute = Attribute('downtime')
+            attribute = Attribute('downtime', self.fixture)
         except KeyError:
             key_error_raised = True
         self.assertTrue(key_error_raised)
 
     def test_get_data_value_retrieves_correct_value(self):
-        attribute = Attribute('supportAvailability')
+        attribute = Attribute('supportAvailability', self.fixture)
         self.assertEqual(
             attribute.get_data_value(),
             '24/7, 365 days a year'
         )
 
     def test_get_data_type_recognises_strings(self):
-        attribute = Attribute('supportAvailability')
+        attribute = Attribute('supportAvailability', self.fixture)
         self.assertEqual(
             attribute.get_data_type('24x7x365 with UK based engineers'),
             'string'
         )
 
     def test_get_data_type_recognises_floats(self):
-        attribute = Attribute('supportAvailability')
+        attribute = Attribute('supportAvailability', self.fixture)
         self.assertEqual(
             attribute.get_data_type(99.99),
             'float'
         )
 
     def test_get_data_type_recognises_integer(self):
-        attribute = Attribute('supportAvailability')
+        attribute = Attribute('supportAvailability', self.fixture)
         self.assertEqual(
             attribute.get_data_type(99),
             'integer'
         )
 
     def test_get_data_type_recognises_unicode_strings(self):
-        attribute = Attribute('supportAvailability')
+        attribute = Attribute('supportAvailability', self.fixture)
         self.assertEqual(
             attribute.get_data_type(u'24x7x365 with UK based engineers'),
             'string'
         )
 
     def test_get_data_type_recognises_lists(self):
-        attribute = Attribute('supportAvailability')
+        attribute = Attribute('supportAvailability', self.fixture)
         self.assertEqual(
             attribute.get_data_type([1, 2]),
             'list'
         )
 
     def test_get_data_type_recognises_functions(self):
-        attribute = Attribute('supportAvailability')
+        attribute = Attribute('supportAvailability', self.fixture)
 
         def _func():
             pass
@@ -190,14 +189,14 @@ class TestAttribute(unittest.TestCase):
         )
 
     def test_get_data_type_recognises_booleans(self):
-        attribute = Attribute('supportAvailability')
+        attribute = Attribute('supportAvailability', self.fixture)
         self.assertEqual(
             attribute.get_data_type(True),
             'boolean'
         )
 
     def test_get_data_type_recognises_dictionaries(self):
-        attribute = Attribute('supportAvailability')
+        attribute = Attribute('supportAvailability', self.fixture)
         dictionary = {
             "assurance": "Service provider assertion",
             "value": True
@@ -205,19 +204,19 @@ class TestAttribute(unittest.TestCase):
         self.assertEqual(attribute.get_data_type(dictionary), 'dictionary')
 
     def test_get_data_type_returns_false_for_unrecognised_type(self):
-        attribute = Attribute('supportAvailability')
+        attribute = Attribute('supportAvailability', self.fixture)
         self.assertFalse(attribute.get_data_type(('name', 'address')))
 
     def test_format_returns_yes_for_true_boolean(self):
-        attribute = Attribute('supportAvailability')
+        attribute = Attribute('supportAvailability', self.fixture)
         self.assertEqual(attribute.format(True), 'Yes')
 
     def test_format_returns_no_for_true_boolean(self):
-        attribute = Attribute('supportAvailability')
+        attribute = Attribute('supportAvailability', self.fixture)
         self.assertEqual(attribute.format(False), 'No')
 
     def test_format_can_handle_a_dictionary_for_an_assurance_field(self):
-        attribute = Attribute('serviceManagementModel')
+        attribute = Attribute('serviceManagementModel', self.fixture)
         dictionary = {
             'assurance': u'Service provider assertion',
             'value': (
@@ -231,7 +230,7 @@ class TestAttribute(unittest.TestCase):
 
     def test_format_returns_None_string_for_a_empty_list(self):
         # The service API returns empty lists as [ "None" ]
-        attribute = Attribute('vendorCertifications')
+        attribute = Attribute('vendorCertifications', self.fixture)
         self.assertEqual(attribute.format(["None"]), "None")
 
 

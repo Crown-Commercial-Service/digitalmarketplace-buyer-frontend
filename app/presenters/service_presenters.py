@@ -34,11 +34,10 @@ class Service(object):
 
     def _get_rows(self, group, service_data):
         rows = []
-        Attribute.service_data = service_data
 
         for row in group:
             try:
-                attribute = Attribute(row['value'])
+                attribute = Attribute(row['value'], service_data)
             except KeyError:
                 continue
             data_value = attribute.get_data_value()
@@ -56,12 +55,12 @@ class Service(object):
 
 
 class Attribute(object):
-    """Wrapper to handle accessing an attribute in service_data
-        Assumes 'service_data' is set as a static attribute"""
+    """Wrapper to handle accessing an attribute in service_data"""
 
-    def __init__(self, key):
+    def __init__(self, key, service_data):
         """Returns if the attribute key points to a row in the service data"""
         self.key = key
+        self.service_data = service_data
         self.key_type = self.get_data_type(key)
         if self.__key_maps_to_data() is False:
             raise KeyError("Attribute key not found in service data")
@@ -89,9 +88,9 @@ class Attribute(object):
         """Get the value for the attribute key in the service data"""
         if hasattr(self, 'data_value') is False:
             if self.key_type is 'function':
-                data_value = self.key(Attribute.service_data)
+                data_value = self.key(self.service_data)
             else:
-                data_value = Attribute.service_data[self.key]
+                data_value = self.service_data[self.key]
             self.data_value = self.format(data_value)
             self.data_type = self.get_data_type(data_value)
         return self.data_value
@@ -116,9 +115,9 @@ class Attribute(object):
 
     def __key_maps_to_data(self):
         if self.get_data_type(self.key) is 'function':
-            return self.key(Attribute.service_data) is True
+            return self.key(self.service_data) is True
         else:
-            return self.key in Attribute.service_data
+            return self.key in self.service_data
 
 
 class Meta(object):
