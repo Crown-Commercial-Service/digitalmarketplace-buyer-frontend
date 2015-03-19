@@ -4,6 +4,10 @@
   @extend %grid-row;
 }
 
+.column-one-whole {
+  @include grid-column( 1 );
+}
+
 .column-one-third {
   @include grid-column( 1/3 );
 }

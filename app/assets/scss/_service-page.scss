@@ -41,6 +41,32 @@
   }
 }
 
+table.summary-item-body tbody td {
+  float: left;
+
+  @include media(tablet) {
+    float: none;
+  }
+
+  &.summary-item-field-name {
+    width: 100%;
+
+    @include media(tablet) {
+      width: 50%;
+    }
+  }
+
+  &.summary-item-field-content {
+    padding-left: $gutter-half;
+    width: auto;
+
+    @include media(tablet) {
+      padding-left: 25px;
+      width: 50%;
+    }
+  }
+}
+
 .price {
   @extend %sub-heading;
   margin-top: 35px;
