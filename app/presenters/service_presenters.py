@@ -92,8 +92,8 @@ class Attribute(object):
                 data_value = self.key(Attribute.service_data)
             else:
                 data_value = Attribute.service_data[self.key]
-            self.data_type = self.get_data_type(data_value)
             self.data_value = self.format(data_value)
+            self.data_type = self.get_data_type(data_value)
         return self.data_value
 
     def format(self, value):
@@ -104,6 +104,8 @@ class Attribute(object):
                 return u'Yes'
             else:
                 return u'No'
+        elif (value_format is 'list') and (value[0] == 'None'):
+            return u'None'
         elif value_format is 'dictionary':
             return self.format(value['value'])
         else:

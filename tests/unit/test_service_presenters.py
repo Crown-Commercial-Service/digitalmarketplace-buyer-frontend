@@ -229,6 +229,11 @@ class TestAttribute(unittest.TestCase):
             u'Dedicated devices for multiple community service management'
         )
 
+    def test_format_returns_None_string_for_a_empty_list(self):
+        # The service API returns empty lists as [ "None" ]
+        attribute = Attribute('vendorCertifications')
+        self.assertEqual(attribute.format(["None"]), "None")
+
 
 class TestMeta(unittest.TestCase):
     def setUp(self):
