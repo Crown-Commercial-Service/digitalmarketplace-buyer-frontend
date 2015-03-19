@@ -67,7 +67,7 @@ class Attribute(object):
 
     def get_data_type(self, value):
         """Gets the type of the value parameter"""
-        if isinstance(value, basestring):
+        if self._is_string(value):
             return 'string'
         elif isinstance(value, bool):
             return 'boolean'
@@ -110,8 +110,14 @@ class Attribute(object):
         else:
             return value
 
-    def _is_function(self, function):
-        return hasattr(function, '__call__')
+    def _is_string(self, var):
+        try:
+            return isinstance(var, basestring)
+        except NameError:
+            return isinstance(var, str)
+
+    def _is_function(self, var):
+        return hasattr(var, '__call__')
 
     def __key_maps_to_data(self):
         if self.get_data_type(self.key) is 'function':
