@@ -1,3 +1,4 @@
+import os, re
 import json
 from . import main
 from app import models
@@ -6,6 +7,7 @@ from ..presenters.search_presenters import SearchFilters
 from ..helpers.search_helpers import (
     get_keywords_from_request, get_template_data
 )
+from ..helpers.content import ContentLoader
 from ..exceptions import AuthException
 from ..helpers.service_helpers import get_lot_name_from_acronym
 import json
@@ -38,6 +40,15 @@ def get_service_by_id(service_id):
 
 @main.route('/search')
 def search():
+    content_manifest = os.path.abspath(os.path.join(
+        os.path.dirname(__file__),
+        "../helpers/content_manifest.yml"
+    ))
+    content_directory = os.path.abspath(os.path.join(
+        os.path.dirname(__file__),
+        "../../bower_components/digital-marketplace-ssp-content/g6"
+    ))
+    content = ContentLoader(content_manifest, content_directory)
     search_keywords = get_keywords_from_request(request)
     search_filters_obj = SearchFilters(blueprint=main, request=request)
     response = models.search_for_services(
