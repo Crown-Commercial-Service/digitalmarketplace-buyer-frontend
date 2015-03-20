@@ -1,0 +1,34 @@
+-
+  name: Pricing
+  questions:
+    - freeOption
+    - trialOption
+-
+  name: Minimum contract period
+  questions:
+    - minimumContractPeriod
+-
+  name: Service management
+  questions:
+    - serviceOnboarding
+    - serviceOffboarding
+    - dataExtractionRemoval
+    - datacentresEUCode
+    - dataBackupRecovery
+    - selfServiceProvisioning
+    - provisioningTime
+    - supportForThirdParties
+-
+  name: Data centre tier
+  questions:
+    - datacentreTier
+-
+  name: Networks the service is directly connected to
+  questions:
+    - networksConnected
+-
+  name: Interoperability
+  questions:
+    - apiAccess
+    - openStandardsSupported
+    - openSource

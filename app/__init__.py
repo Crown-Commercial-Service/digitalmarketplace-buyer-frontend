@@ -3,6 +3,9 @@ from flask.ext.bootstrap import Bootstrap
 from config import config
 from dmutils import apiclient, logging
 
+from .helpers.questions import QuestionsLoader
+from .presenters.search_presenters import SearchFilters
+
 
 bootstrap = Bootstrap()
 data_api_client = apiclient.DataAPIClient()
@@ -14,6 +17,13 @@ def create_app(config_name):
     application = Flask(__name__)
     application.config.from_object(config[config_name])
     config[config_name].init_app(application)
+    g6_questions = QuestionsLoader(
+        manifest="app/helpers/questions_manifest.yml",
+        questions_dir="bower_components/digital-marketplace-ssp-content/g6/"
+    )
+    filter_groups = SearchFilters.get_filter_groups_from_questions(
+        g6_questions.sections
+    )
 
     bootstrap.init_app(application)
     logging.init_app(application)
@@ -33,43 +43,7 @@ def create_app(config_name):
             'SaaS': 'Software as a Service',
             'SCS': 'Specialist Cloud Services'
         },
-        'SEARCH_FILTERS': [
-            {
-                'legend': 'Service features and management',
-                'filters': [
-                    {
-                        'label': 'Self-service provisioning supported',
-                        'name': 'selfserviceprovisioning',
-                        'isBoolean': True
-                    },
-                    {
-                        'label': 'Offline working and syncing supported',
-                        'name': 'offlineWorking',
-                        'isBoolean': True
-                    },
-                    {
-                        'label': 'Real-time management information available',
-                        'name': 'analyticsAvailable',
-                        'isBoolean': True
-                    },
-                    {
-                        'label': 'Elastic cloud approach supported',
-                        'name': 'elasticCloud',
-                        'isBoolean': True
-                    },
-                    {
-                        'label': 'Guaranteed resources defined',
-                        'name': 'guaranteedResources',
-                        'isBoolean': True
-                    },
-                    {
-                        'label': 'Persistent storage supported',
-                        'name': 'persistentStorage',
-                        'isBoolean': True
-                    }
-                ]
-            }
-        ]
+        'FILTER_GROUPS': filter_groups
     }
 
     return application

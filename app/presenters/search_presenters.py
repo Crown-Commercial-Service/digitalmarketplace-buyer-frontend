@@ -2,21 +2,57 @@ class SearchFilters(object):
     """Provides access to the filters for a search based on request parameters
     """
 
+    @staticmethod
+    def get_filters_from_boolean_question(question):
+        # boolean questions have no options as 'Yes' or 'No' is
+        # implied
+        return [{
+            'label': question['question'],
+            'name': question['id'],
+            'id': question['id']
+        }]
+
+    @staticmethod
+    def get_filters_from_question_with_options(question):
+        filter_group = []
+        for index, option in enumerate(question['options']):
+            filter_group.append({
+                'label': option['label'],
+                'name': question['id'] + '[]',
+                'id': '%s-%s' % (question['id'], str(index))
+            })
+        return filter_group
+
+    @staticmethod
+    def get_filter_groups_from_questions(question_sections):
+        filter_groups = []
+        get_filter_for = {
+            'boolean': SearchFilters.get_filters_from_boolean_question,
+            'options': SearchFilters.get_filters_from_question_with_options
+        }
+        for section in question_sections:
+            filter_group = {
+                'label': section['name'],
+                'depends_on_lots': section['depends_on_lots']
+            }
+            for question in section['questions']:
+                questionType = question['type']
+                if (questionType == 'boolean') or (questionType == 'text'):
+                    filter_group['filters'] = get_filter_for['boolean'](
+                        question
+                    )
+                else:
+                    filter_group['filters'] = get_filter_for['options'](
+                        question
+                    )
+            filter_groups.append(filter_group)
+        return filter_groups
+
     def __init__(self, blueprint=False, request={}):
-        self.filter_groups = blueprint.config['SEARCH_FILTERS']
+        self.filter_groups = blueprint.config['FILTER_GROUPS']
         self.request_filters = self.__get_filters_from_request(request)
         if self.request_filters:
             self.__set_filter_states()
-
-    def get_filter_groups(self):
-        """Returns the filters for the search in their groups"""
-
-        return self.filter_groups
-
-    def get_request_filters(self):
-        """Returns the filters for the search from the request parameters"""
-
-        return self.request_filters
 
     def __get_filters_from_request(self, request):
         """Returns the filters applied to a search from the request object"""
@@ -30,9 +66,8 @@ class SearchFilters(object):
 
     def __set_filter_states(self):
         """Sets a flag on each filter to mark it as set or not"""
-
         for filter_group in self.filter_groups:
             for filter in filter_group['filters']:
-                filter['isSet'] = False
-                if filter['name'] in self.request_filters:
-                    filter['isSet'] = True
+                filter['isSet'] = (
+                    filter['name'] in self.request_filters
+                )
