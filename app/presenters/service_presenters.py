@@ -103,10 +103,12 @@ class Attribute(object):
                 return u'Yes'
             else:
                 return u'No'
-        elif (value_format is 'list') and (value[0] == 'None'):
-            return u'None'
         elif value_format is 'dictionary':
             return self.format(value['value'])
+        elif (value_format is 'list') and (len(value) == 0):
+            return ''
+        elif (value_format is 'list') and (len(value) == 1):
+            return self.format(value[0])
         else:
             return value
 
