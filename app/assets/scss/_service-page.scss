@@ -13,6 +13,10 @@
   padding-left: 0;
 }
 
+.service-attributes {
+  padding-bottom: (3 * $gutter);
+}
+
 .service-summary-lede,
 .service-summary-features-and-benefits {
   @include core-19;
@@ -63,6 +67,10 @@ table.summary-item-body tbody td {
     @include media(tablet) {
       padding-left: 25px;
       width: 50%;
+    }
+
+    li {
+      margin-bottom: 5px;
     }
   }
 }
