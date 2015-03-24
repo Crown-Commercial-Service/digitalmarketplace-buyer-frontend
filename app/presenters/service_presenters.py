@@ -158,7 +158,7 @@ class Attribute(object):
 
     def __key_maps_to_data(self):
         if self.get_data_type(self.key) is 'function':
-            return self.key(self.service_data) is True
+            return self.key(self.service_data) is not False
         else:
             return self.key in self.service_data
 

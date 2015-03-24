@@ -171,6 +171,33 @@ class TestAttribute(unittest.TestCase):
             key_error_raised = True
         self.assertTrue(key_error_raised)
 
+    def test_Attribute_fails_if_key_is_a_function_that_returns_false(self):
+        key_error_raised = False
+
+        def func(service_data):
+            return False
+
+        try:
+            attribute = Attribute(func, self.fixture)
+        except KeyError:
+            key_error_raised = True
+        self.assertTrue(key_error_raised)
+
+    def test_Attribute_fails_if_key_is_a_function_that_returns_a_value(self):
+        key_error_raised = False
+
+        def func(service_data):
+            return {
+                'value': 'No',
+                'assurance': 'Service provider assertion'
+            }
+
+        try:
+            attribute = Attribute(func, self.fixture)
+        except KeyError:
+            key_error_raised = True
+        self.assertFalse(key_error_raised)
+
     def test_get_data_value_retrieves_correct_value(self):
         attribute = Attribute('supportAvailability', self.fixture)
         self.assertEqual(
