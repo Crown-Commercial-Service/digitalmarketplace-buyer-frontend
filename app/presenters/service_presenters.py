@@ -48,6 +48,11 @@ class Service(object):
                     'value': data_value,
                     'type': data_type
                 }
+                if hasattr(attribute, 'assurance'):
+                    current_row = attribute.add_assurance_to_row(
+                        attribute.assurance,
+                        current_row
+                    )
 
                 rows.append(current_row)
 
@@ -64,6 +69,8 @@ class Attribute(object):
         self.key_type = self.get_data_type(key)
         if self.__key_maps_to_data() is False:
             raise KeyError("Attribute key not found in service data")
+        else:
+            self._set_assurance()
 
     def get_data_type(self, value):
         """Gets the type of the value parameter"""
@@ -103,14 +110,42 @@ class Attribute(object):
                 return u'Yes'
             else:
                 return u'No'
-        elif value_format is 'dictionary':
-            return self.format(value['value'])
         elif (value_format is 'list') and (len(value) == 0):
             return ''
         elif (value_format is 'list') and (len(value) == 1):
             return self.format(value[0])
         else:
             return value
+
+    def add_assurance_to_row(self, assurance, row_object):
+        if row_object['type'] == 'list':
+            row_object = self._add_assurance_to_list(row_object)
+            return row_object
+        else:
+            row_object = self._add_assurance_to_string(row_object)
+            return row_object
+
+    def _add_assurance_to_list(self, row_object):
+        if self.assurance != 'Service provider assertion':
+            row_object['assuranceCaveat'] = (
+                u'Assured by %s' % self.assurance.lower()
+            )
+        return row_object
+
+    def _add_assurance_to_string(self, row_object):
+        if self.assurance != 'Service provider assertion':
+            row_object['value'] = u'%s, assured by %s' % (
+                row_object['value'],
+                self.assurance.lower()
+            )
+        return row_object
+
+    def _set_assurance(self):
+        data_value = self.get_data_value()
+        if 'assurance' in data_value:
+            self.assurance = data_value['assurance']
+            self.data_value = self.format(data_value['value'])
+            self.data_type = self.get_data_type(self.data_value)
 
     def _is_string(self, var):
         try:

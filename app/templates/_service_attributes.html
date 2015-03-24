@@ -26,6 +26,9 @@
             <li>{{ valueItem }}</li>
           {% endfor %}
           </ul>
+          {% if row.assuranceCaveat %}
+            {{ row.assuranceCaveat }}
+          {% endif %}
         {% else %}
           {{ row.value }}
         {% endif %}

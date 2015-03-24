@@ -113,6 +113,42 @@ class TestService(unittest.TestCase):
                     if row['key'] == 'serviceManagementModel':
                         self.assertEqual(row['type'], 'dictonary')
 
+    def test_attributes_with_assurance_in_the_fields_add_it_correctly(self):
+        service = Service(self.fixture)
+        for group in service.attributes:
+            if group['name'] == 'Data-in-transit protection':
+                for row in group['rows']:
+                    # string with bespoke assurance caveat
+                    if row['key'] == 'Data protection between services':
+                        self.assertEqual(
+                            row['value'],
+                            (
+                                u'No encryption, assured by ' +
+                                u'independent validation of assertion'
+                            )
+                        )
+                    # string with standard assurance caveat
+                    if row['key'] == 'Data protection within service':
+                        self.assertEqual(
+                            row['value'],
+                            u'No encryption'
+                        )
+
+    def test_attributes_with_assurance_for_a_list_value_has_a_caveat(self):
+        service = Service(self.fixture)
+        for group in service.attributes:
+            if group['name'] == 'Asset protection and resilience':
+                for row in group['rows']:
+                    # list with bespoke assurance caveat
+                    if row['key'] == 'Data management location':
+                        self.assertEqual(
+                            row['assuranceCaveat'],
+                            u'Assured by independent validation of assertion'
+                        )
+                    # list with standard assurance caveat
+                    if row['key'] == 'Data management location':
+                        self.assertIn('assuranceCaveat', row)
+
 
 class TestAttribute(unittest.TestCase):
     def setUp(self):
@@ -214,19 +250,6 @@ class TestAttribute(unittest.TestCase):
     def test_format_returns_no_for_true_boolean(self):
         attribute = Attribute('supportAvailability', self.fixture)
         self.assertEqual(attribute.format(False), 'No')
-
-    def test_format_can_handle_a_dictionary_for_an_assurance_field(self):
-        attribute = Attribute('serviceManagementModel', self.fixture)
-        dictionary = {
-            'assurance': u'Service provider assertion',
-            'value': (
-                u'Dedicated devices for multiple community service management'
-            )
-        }
-        self.assertEqual(
-            attribute.format(dictionary),
-            u'Dedicated devices for multiple community service management'
-        )
 
     def test_format_returns_empty_string_for_a_empty_list(self):
         # The service API returns empty lists as [ "None" ]

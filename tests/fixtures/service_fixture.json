@@ -28,13 +28,14 @@
     "dataBackupRecovery": true,
     "dataExtractionRemoval": true,
     "dataManagementLocations": {
-      "assurance": "Service provider assertion",
+      "assurance": "Independent validation of assertion",
       "value": [
-        "UK"
+        "UK",
+        "USA - Safe Harbor"
       ]
     },
     "dataProtectionBetweenServices": {
-      "assurance": "Service provider assertion",
+      "assurance": "Independent validation of assertion",
       "value": [
         "No encryption"
       ]
@@ -70,7 +71,8 @@
     "datacentreLocations": {
       "assurance": "Service provider assertion",
       "value": [
-        "UK"
+        "UK",
+        "USA - Safe Harbor"
       ]
     },
     "datacentreProtectionDisclosure": {
