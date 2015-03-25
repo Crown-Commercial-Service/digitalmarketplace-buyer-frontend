@@ -265,14 +265,20 @@ class Meta(object):
         return os.path.splitext(url_object.path)[1].split('.')[1]
 
     def _if_both_keys_or_either(self, service_data, keys=[], values={}):
+        def is_not_false(key):
+            if (key in service_data) and (service_data[key] is True):
+                return True
+            else:
+                return False
+
         caveat = ''
-        if (service_data[keys[0]] is True) and (service_data[keys[1]] is True):
+        if is_not_false(keys[0]) and is_not_false(keys[1]):
             caveat = values['if_both']
-        elif (service_data[keys[0]] is True):
+        elif is_not_false(keys[0]):
             caveat = values['if_first']
-        elif (service_data[keys[1]] is True):
+        elif is_not_false(keys[1]):
             caveat = values['if_second']
-        else:
+        else:  # neither is set or True
             caveat = values['if_neither']
         return caveat
 

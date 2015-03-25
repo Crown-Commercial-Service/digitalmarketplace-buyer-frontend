@@ -372,30 +372,69 @@ class TestMeta(unittest.TestCase):
     def test_vat_status_is_correct(self):
         # if VAT is not included
         price_caveats = self.meta.get_price_caveats(self.fixture)
-        self.assertTrue('Excluding VAT' in price_caveats)
+        self.assertIn('Excluding VAT', price_caveats)
         # if VAT is included
         self.fixture['vatIncluded'] = True
         price_caveats = self.meta.get_price_caveats(self.fixture)
-        self.assertTrue('Including VAT' in price_caveats)
+        self.assertIn('Including VAT', price_caveats)
 
     def test_education_pricing_status_is_correct(self):
         # if Education pricing is included
         price_caveats = self.meta.get_price_caveats(self.fixture)
-        self.assertTrue('Education pricing available' in price_caveats)
+        self.assertIn('Education pricing available', price_caveats)
         # if Education pricing is excluded
         self.fixture['educationPricing'] = False
         price_caveats = self.meta.get_price_caveats(self.fixture)
-        self.assertFalse('Education pricing available' in price_caveats)
+        self.assertNotIn('Education pricing available', price_caveats)
 
     def test_termination_costs_status_is_correct(self):
         # if Termination costs are excluded
         price_caveats = self.meta.get_price_caveats(self.fixture)
-        self.assertFalse('Termination costs apply' in price_caveats)
+        self.assertNotIn('Termination costs apply', price_caveats)
         # if Termination costs are included
         self.fixture['terminationCost'] = True
         price_caveats = self.meta.get_price_caveats(self.fixture)
-        self.assertTrue('Termination costs apply' in price_caveats)
+        self.assertIn('Termination costs apply', price_caveats)
+        # if the question wasn't asked
+        del self.fixture['terminationCost']
+        price_caveats = self.meta.get_price_caveats(self.fixture)
+        self.assertNotIn('Termination costs apply', price_caveats)
 
     def test_minimum_contract_status_is_correct(self):
         price_caveats = self.meta.get_price_caveats(self.fixture)
-        self.assertTrue('Minimum contract period: Month' in price_caveats)
+        self.assertIn('Minimum contract period: Month', price_caveats)
+
+    def test_options_are_correct_if_both_false(self):
+        price_caveats = self.meta.get_price_caveats(self.fixture)
+        self.assertNotIn('Trial and free options available', price_caveats)
+        self.assertNotIn('Trial option available', price_caveats)
+        self.assertNotIn('Free option available', price_caveats)
+
+    def test_options_are_correct_if_free_is_false_and_trial_true(self):
+        self.fixture['trialOption'] = True
+        price_caveats = self.meta.get_price_caveats(self.fixture)
+        self.assertNotIn('Trial and free options available', price_caveats)
+        self.assertNotIn('Free option available', price_caveats)
+        self.assertIn('Trial option available', price_caveats)
+
+    def test_options_are_correct_if_free_is_true_and_trial_false(self):
+        self.fixture['freeOption'] = True
+        price_caveats = self.meta.get_price_caveats(self.fixture)
+        self.assertNotIn('Trial and free options available', price_caveats)
+        self.assertNotIn('Trial option available', price_caveats)
+        self.assertIn('Free option available', price_caveats)
+
+    def test_options_are_correct_if_free_is_true_and_trial_false(self):
+        self.fixture['freeOption'] = True
+        price_caveats = self.meta.get_price_caveats(self.fixture)
+        self.assertNotIn('Trial and free options available', price_caveats)
+        self.assertNotIn('Trial option available', price_caveats)
+        self.assertIn('Free option available', price_caveats)
+
+    def test_options_are_correct_if_both_are_not_set(self):
+        del self.fixture['freeOption']
+        del self.fixture['trialOption']
+        price_caveats = self.meta.get_price_caveats(self.fixture)
+        self.assertNotIn('Trial and free options available', price_caveats)
+        self.assertNotIn('Trial option available', price_caveats)
+        self.assertNotIn('Free option available', price_caveats)
