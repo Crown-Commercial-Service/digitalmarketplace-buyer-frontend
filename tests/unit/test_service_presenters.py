@@ -32,6 +32,11 @@ class TestService(unittest.TestCase):
             self.service.supplierName, self.fixture['supplierName']
         )
 
+    def test_Service_works_if_supplierName_is_not_set(self):
+        del self.fixture['supplierName']
+        self.service = Service(self.fixture)
+        self.assertFalse(hasattr(self.service, 'supplierName'))
+
     def test_features_attributes_are_correctly_set(self):
         self.assertEquals(len(self.service.features), 6)
 

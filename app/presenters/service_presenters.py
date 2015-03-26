@@ -10,7 +10,8 @@ except ImportError:
 class Service(object):
     def __init__(self, service_data):
         self.title = service_data['serviceName']
-        self.supplierName = service_data['supplierName']
+        if 'supplierName' in service_data:
+            self.supplierName = service_data['supplierName']
         self.serviceSummary = service_data['serviceSummary']
         self.features = service_data['serviceFeatures']
         self.benefits = service_data['serviceBenefits']
@@ -67,7 +68,7 @@ class Attribute(object):
         self.key = key
         self.service_data = service_data
         self.key_type = self.get_data_type(key)
-        if self.__key_maps_to_data() is False:
+        if self._key_maps_to_data() is False:
             raise KeyError("Attribute key not found in service data")
         else:
             self._set_assurance()
@@ -156,7 +157,7 @@ class Attribute(object):
     def _is_function(self, var):
         return hasattr(var, '__call__')
 
-    def __key_maps_to_data(self):
+    def _key_maps_to_data(self):
         if self.get_data_type(self.key) is 'function':
             return self.key(self.service_data) is not False
         else:
