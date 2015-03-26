@@ -7,10 +7,14 @@
 {% endblock %}
 
 {% block main_content %}
-<header class="page-heading page-heading-with-context page-heading-smaller">
-  <p class="context">{{ service.supplierName }}
-  <h1>{{ service.title }}</h1>
-</header>
+<div class="grid-row">
+  <div class="column-two-thirds">
+    <header class="page-heading page-heading-with-context page-heading-smaller">
+      <p class="context">{{ service.supplierName }}
+      <h1>{{ service.title }}</h1>
+    </header>
+  </div>
+</div>
 <div class="grid-row">
   <div class="column-two-thirds">
     {% include '_service_summary_features_and_benefits.html' %}
