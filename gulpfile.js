@@ -6,15 +6,18 @@ var filelog = require('gulp-filelog');
 
 var environment;
 var repoRoot = __dirname + '/';
-var govukToolkitRoot = repoRoot + 'node_modules/govuk_frontend_toolkit';
-var dmToolkitRoot = repoRoot + 'bower_components/digitalmarketplace_frontend_toolkit/toolkit';
+var bowerRoot = repoRoot + 'bower_components';
+var npmRoot = repoRoot + 'node_modules';
+var govukToolkitRoot = npmRoot + '/govuk_frontend_toolkit';
+var dmToolkitRoot = bowerRoot + '/digitalmarketplace_frontend_toolkit/toolkit';
 var assetsFolder = repoRoot + 'app/assets';
 var staticFolder = repoRoot + 'app/static';
 var govukTemplateAssetsFolder = repoRoot + 'bower_components/govuk_template/assets';
 
 // JavaScript paths
 var jsVendorFiles = [
-  assetsFolder + '/javascripts/vendor/jquery-1.11.0.js'
+  bowerRoot + '/jquery/dist/jquery.js',
+  bowerRoot + '/jquery-details/jquery.details.js'
 ];
 var jsSourceFiles = [
   dmToolkitRoot + '/javascripts/multi-selects.js',
@@ -59,22 +62,33 @@ var uglifyOptions = {
       semicolons: true,
       comments: true,
       indent_level: 2
-    }
+    },
+    compress: false
   },
   production: {
     mangle: true
   }
 };
 
-gulp.task('clean', function () {
+gulp.task('clean', function (cb) {
+  var fileTypes = [];
+  var complete = function (fileType) {
+    fileTypes.push(fileType);
+    if (fileTypes.length == 2) {
+      cb();
+    }
+  };
   var logOutputFor = function (fileType) {
     return function (err, paths) {
-      console.log('Deleted the following ' + fileType + ' files:\n', paths.join('\n'));
+      if (paths !== undefined) {
+        console.log('Deleted the following ' + fileType + ' files:\n', paths.join('\n'));
+      }
+      complete(fileType);
     };
   };
 
-  deleteFiles(jsDistributionFolder + '/*.js', logOutputFor('JavaScript'));
-  deleteFiles(cssDistributionFolder + '/*.css', logOutputFor('CSS'));
+  deleteFiles(jsDistributionFolder + '/**/*', logOutputFor('JavaScript'));
+  deleteFiles(cssDistributionFolder + '/**/*', logOutputFor('CSS'));
 });
 
 gulp.task('sass', function () {
@@ -112,34 +126,67 @@ gulp.task('js', function () {
 });
 
 gulp.task('copy_template_assets:stylesheets', function () {
-  return gulp.src(govukTemplateAssetsFolder + '/stylesheets/**/*', { base : govukTemplateAssetsFolder + '/stylesheets' })
+  stream = gulp.src(govukTemplateAssetsFolder + '/stylesheets/**/*', { base : govukTemplateAssetsFolder + '/stylesheets' })
     .pipe(gulp.dest(staticFolder + '/stylesheets'))
+
+  stream.on('end', function () {
+    console.log('Copied CSS assets from the govuk template');
+  });
+
+  return stream;
 });
 
 gulp.task('copy_template_assets:images', function () {
-  return gulp.src(govukTemplateAssetsFolder + '/images/**/*', { base : govukTemplateAssetsFolder + '/images' })
+  stream = gulp.src(govukTemplateAssetsFolder + '/images/**/*', { base : govukTemplateAssetsFolder + '/images' })
     .pipe(gulp.dest(staticFolder + '/images'))
+
+  stream.on('end', function () {
+    console.log('Copied image assets from the govuk template');
+  });
+
+  return stream;
 });
 
 gulp.task('copy_template_assets:javascripts', function () {
-  return gulp.src(govukTemplateAssetsFolder + '/javascripts/**/*', { base : govukTemplateAssetsFolder + '/javascripts' })
+  stream = gulp.src(govukTemplateAssetsFolder + '/javascripts/**/*', { base : govukTemplateAssetsFolder + '/javascripts' })
     .pipe(gulp.dest(staticFolder + '/javascripts'))
+
+  stream.on('end', function () {
+    console.log('Copied JS assets from the govuk template');
+  });
+
+  return stream;
 });
 
 gulp.task('copy_dm_toolkit_assets:images', function () {
-  return gulp.src(dmToolkitRoot + '/images/**/*', { base : dmToolkitRoot + '/images' })
+  stream = gulp.src(dmToolkitRoot + '/images/**/*', { base : dmToolkitRoot + '/images' })
     .pipe(gulp.dest(staticFolder + '/images'))
+
+  stream.on('end', function () {
+    console.log('Copied image assets from the digital marketplace front-end toolkit');
+  });
+
+  return stream;
 });
 
-gulp.task('copy_template_assets', function () {
-   gulp.start('copy_template_assets:stylesheets');
-   gulp.start('copy_template_assets:images');
-   gulp.start('copy_template_assets:javascripts');
+gulp.task('copy_template_assets', [
+  'copy_template_assets:stylesheets',
+  'copy_template_assets:images',
+  'copy_template_assets:javascripts'
+]);
+
+gulp.task('copy:images', function () {
+  stream = gulp.src(assetsFolder + '/images/**/*', { base : assetsFolder + '/images' })
+    .pipe(gulp.dest(staticFolder + '/images'))
+
+  stream.on('end', function () {
+    console.log('Copied image assets into static folder');
+  });
+
+  return stream;
 });
 
-gulp.task('copy_dm_toolkit_assets', function () {
-  gulp.start('copy_dm_toolkit_assets:images');
-});
+gulp.task('copy_dm_toolkit_assets', ['copy_dm_toolkit_assets:images']);
 
 gulp.task('watch', ['build:development'], function () {
   var jsWatcher = gulp.watch([ assetsFolder + '/**/*.js' ], ['js']);
@@ -152,16 +199,28 @@ gulp.task('watch', ['build:development'], function () {
   jsWatcher.on('change', notice); 
 });
 
-gulp.task('build:development', ['clean'], function () {
+gulp.task('set_environment_to_development', function (cb) {
   environment = 'development';
+  cb();
+});
+
+gulp.task('set_environment_to_production', function (cb) {
+  environment = 'production';
+  cb();
+});
+
+gulp.task('copy_and_compile', ['sass', 'js', 'copy_template_assets', 'copy_dm_toolkit_assets']);
+
+gulp.task('build:development', ['set_environment_to_development', 'clean'], function () {
   gulp.start('sass', 'js');
+  gulp.start('copy:images');
   gulp.start('copy_template_assets');
   gulp.start('copy_dm_toolkit_assets');
 });
 
-gulp.task('build:production', ['clean'], function () {
-  environment = 'production';
+gulp.task('build:production', ['set_environment_to_production', 'clean'], function () {
   gulp.start('sass', 'js');
+  gulp.start('copy:images');
   gulp.start('copy_template_assets');
   gulp.start('copy_dm_toolkit_assets');
 });

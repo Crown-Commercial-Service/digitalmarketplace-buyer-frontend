@@ -1,0 +1,13 @@
+<p class="service-summary-lede">{{ service.serviceSummary }}</p>
+<h2 class="service-summary-heading">Features</h2>
+<ul class="service-summary-features-and-benefits">
+{% for feature in service.features %}
+  <li>{{ feature }}</li>
+{% endfor %}
+</ul>
+<h2 class="service-summary-heading">Benefits</h2>
+<ul class="service-summary-features-and-benefits">
+{% for benefit in service.benefits %}
+  <li>{{ benefit }}</li>
+{% endfor %}
+</ul>

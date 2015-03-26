@@ -1,0 +1,335 @@
+{
+  "services": {
+    "analyticsAvailable": true,
+    "apiAccess": false,
+    "apiType": "RESTful",
+    "auditInformationProvided": {
+      "assurance": "Service provider assertion",
+      "value": "Data made available by negotiation"
+    },
+    "changeImpactAssessment": {
+      "assurance": "Service provider assertion",
+      "value": true
+    },
+    "cloudDeploymentModel": {
+      "assurance": "Service provider assertion",
+      "value": "Public cloud"
+    },
+    "configurationTracking": {
+      "assurance": "Service provider assertion",
+      "value": true
+    },
+    "dataAtRestProtections": {
+      "assurance": "Service provider assertion",
+      "value": [
+        "Secure containers, racks or cages"
+      ]
+    },
+    "dataBackupRecovery": true,
+    "dataExtractionRemoval": true,
+    "dataManagementLocations": {
+      "assurance": "Independent validation of assertion",
+      "value": [
+        "UK",
+        "USA - Safe Harbor"
+      ]
+    },
+    "dataProtectionBetweenServices": {
+      "assurance": "Independent validation of assertion",
+      "value": [
+        "No encryption"
+      ]
+    },
+    "dataProtectionBetweenUserAndService": {
+      "assurance": "Service provider assertion",
+      "value": [
+        "VPN using TLS, version 1.2 or later"
+      ]
+    },
+    "dataProtectionWithinService": {
+      "assurance": "Service provider assertion",
+      "value": [
+        "No encryption"
+      ]
+    },
+    "dataRedundantEquipmentAccountsRevoked": {
+      "assurance": "Service provider assertion",
+      "value": true
+    },
+    "dataSecureDeletion": {
+      "assurance": "CESG-assured components",
+      "value": "Other erasure process"
+    },
+    "dataSecureEquipmentDisposal": {
+      "assurance": "Service provider assertion",
+      "value": true
+    },
+    "dataStorageMediaDisposal": {
+      "assurance": "Service provider assertion",
+      "value": "Other secure erasure process"
+    },
+    "datacentreLocations": {
+      "assurance": "Service provider assertion",
+      "value": [
+        "UK",
+        "USA - Safe Harbor"
+      ]
+    },
+    "datacentreProtectionDisclosure": {
+      "assurance": "Service provider assertion",
+      "value": true
+    },
+    "datacentreTier": "TIA-942 Tier 3",
+    "datacentresEUCode": true,
+    "datacentresSpecifyLocation": true,
+    "deprovisioningTime": "2 working days",
+    "deviceAccessMethod": {
+      "assurance": "Service provider assertion",
+      "value": [
+        "Unknown devices"
+      ]
+    },
+    "educationPricing": true,
+    "elasticCloud": true,
+    "eventMonitoring": {
+      "assurance": "Service provider assertion",
+      "value": true
+    },
+    "freeOption": false,
+    "governanceFramework": {
+      "assurance": "Service provider assertion",
+      "value": false
+    },
+    "guaranteedResources": true,
+    "hardwareSoftwareVerification": {
+      "assurance": "Service provider assertion",
+      "value": true
+    },
+    "id": 1234567890123456,
+    "identityAuthenticationControls": {
+      "assurance": "Service provider assertion",
+      "value": [
+        "Username and strong password/passphrase enforcement"
+      ]
+    },
+    "incidentDefinitionPublished": {
+      "assurance": "Service provider assertion",
+      "value": true
+    },
+    "incidentEscalation": true,
+    "incidentManagementProcess": {
+      "assurance": "Service provider assertion",
+      "value": true
+    },
+    "incidentManagementReporting": {
+      "assurance": "Service provider assertion",
+      "value": true
+    },
+    "interconnectionMethods": {
+      "assurance": "Service provider assertion",
+      "value": [
+        "Private WAN"
+      ]
+    },
+    "lastCompleted": "2015-03-17T10:15:05Z",
+    "lastCompletedByEmail": "info@company.co.uk",
+    "lastUpdated": "2015-03-17T10:18:23Z",
+    "lastUpdatedByEmail": "info@company.co.uk",
+    "legalJurisdiction": {
+      "assurance": "Service provider assertion",
+      "value": "UK"
+    },
+    "links": [
+      {
+        "href": "https://api.digitalmarketplace.service.gov.uk/services/1234567890123456",
+        "rel": "self"
+      }
+    ],
+    "lot": "IaaS",
+    "managementInterfaceProtection": {
+      "assurance": "Service provider assertion",
+      "value": true
+    },
+    "minimumContractPeriod": "Month",
+    "networksConnected": [
+      "Internet"
+    ],
+    "offlineWorking": false,
+    "onboardingGuidance": {
+      "assurance": "Service provider assertion",
+      "value": true
+    },
+    "openSource": false,
+    "openStandardsSupported": true,
+    "otherConsumers": {
+      "assurance": "Service provider assertion",
+      "value": "Anyone - public"
+    },
+    "persistentStorage": true,
+    "personnelSecurityChecks": {
+      "assurance": "Service provider assertion",
+      "value": [
+        "Employment checks"
+      ]
+    },
+    "priceInterval": "Month",
+    "priceMin": 85,
+    "priceString": "\u00a85 per year",
+    "priceUnit": "Single website",
+    "pricingDocument": "Blogging platform Pricing Document.pdf",
+    "pricingDocumentURL": "https://assets.digitalmarketplace.service.gov.uk/documents/123456/1234567890123456-pricing-document.pdf",
+    "provisioningTime": "2 hours",
+    "restrictAdministratorPermissions": {
+      "assurance": "Service provider assertion",
+      "value": true
+    },
+    "secureConfigurationManagement": {
+      "assurance": "Service provider assertion",
+      "value": true
+    },
+    "secureDesign": {
+      "assurance": "Service provider assertion",
+      "value": true
+    },
+    "secureDevelopment": {
+      "assurance": "Service provider assertion",
+      "value": true
+    },
+    "selfServiceProvisioning": false,
+    "serviceAvailabilityPercentage": {
+      "assurance": "Service provider assertion",
+      "value": 99.999
+    },
+    "serviceBenefits": [
+      "Lets you create beautiful and powerful blogs",
+      "Domain personalised to your brand",
+      "SEO gets your site in front of Google, Bing and others",
+      "Your questions answered whenever you need",
+      "No restrictions on how you build your site",
+      "Tried and tested and trusted by thousands"
+    ],
+    "serviceConfigurationGuidance": {
+      "assurance": "Service provider assertion",
+      "value": true
+    },
+    "serviceDefinitionDocument": "Blogging platform service definition.pdf",
+    "serviceDefinitionDocumentURL": "https://assets.digitalmarketplace.service.gov.uk/documents/123456/1234567890123456-service-definition-document.pdf",
+    "serviceFeatures": [
+      "Easy to use",
+      "Choose your own domain name",
+      "SEO friendly",
+      "24/7 support",
+      "Full customisation",
+      "Already powering 23% of the internet"
+    ],
+    "serviceManagementModel": {
+      "assurance": "Service provider assertion",
+      "value": [
+        "Dedicated devices for multiple community service management"
+      ]
+    },
+    "serviceName": "Blogging platform",
+    "serviceOffboarding": true,
+    "serviceOnboarding": true,
+    "serviceSummary": "Blogging platform is a free and open-source blogging tool and a content management system CMS based on PHP and MySQL. Features include a plugin architecture and a template system.",
+    "serviceTypes": [
+      "Compute",
+      "Storage"
+    ],
+    "servicesManagementSeparation": {
+      "assurance": "Service provider assertion",
+      "value": true
+    },
+    "servicesSeparation": {
+      "assurance": "Service provider assertion",
+      "value": true
+    },
+    "sfiaRateDocument": "Blogging platform SFIA.pdf",
+    "sfiaRateDocumentURL": "https://assets.digitalmarketplace.service.gov.uk/documents/123456/1234567890123456-sfia-rate-card.pdf",
+    "supplierId": 123456,
+    "supplierName": "Blogging platform supplier ltd",
+    "supportAvailability": "24/7, 365 days a year",
+    "supportForThirdParties": true,
+    "supportResponseTime": "Normally 1 hour as standard, up to a maximum of 4 hours",
+    "supportTypes": [
+      "Service desk",
+      "Email",
+      "Phone"
+    ],
+    "supportedBrowsers": [
+      "Internet Explorer 9",
+      "Internet Explorer 10+",
+      "Firefox",
+      "Chrome",
+      "Safari",
+      "Opera"
+    ],
+    "supportedDevices": [
+      "PC",
+      "Mac",
+      "Smartphone",
+      "Tablet"
+    ],
+    "terminationCost": false,
+    "termsAndConditionsDocument": "Blogging platform Terms and Conditions.pdf",
+    "termsAndConditionsDocumentURL": "https://assets.digitalmarketplace.service.gov.uk/documents/123456/1234567890123456-terms-and-conditions.pdf",
+    "thirdPartyComplianceMonitoring": {
+      "assurance": "Service provider assertion",
+      "value": false
+    },
+    "thirdPartyDataSharingInformation": {
+      "assurance": "Service provider assertion",
+      "value": true
+    },
+    "thirdPartyRiskAssessment": {
+      "assurance": "Service provider assertion",
+      "value": true
+    },
+    "thirdPartySecurityRequirements": {
+      "assurance": "Service provider assertion",
+      "value": true
+    },
+    "title": "Blogging platform",
+    "trainingProvided": {
+      "assurance": "Service provider assertion",
+      "value": true
+    },
+    "trialOption": false,
+    "userAccessControlManagement": {
+      "assurance": "Service provider assertion",
+      "value": true
+    },
+    "userAuthenticateManagement": {
+      "assurance": "Service provider assertion",
+      "value": true
+    },
+    "userAuthenticateSupport": {
+      "assurance": "Service provider assertion",
+      "value": true
+    },
+    "vatIncluded": false,
+    "vendorCertifications": [
+      "None"
+    ],
+    "vulnerabilityAssessment": {
+      "assurance": "Service provider assertion",
+      "value": true
+    },
+    "vulnerabilityMitigationPrioritisation": {
+      "assurance": "Service provider assertion",
+      "value": true
+    },
+    "vulnerabilityMonitoring": {
+      "assurance": "Service provider assertion",
+      "value": true
+    },
+    "vulnerabilityTimescales": {
+      "assurance": "Service provider assertion",
+      "value": true
+    },
+    "vulnerabilityTracking": {
+      "assurance": "Service provider assertion",
+      "value": true
+    }
+  }
+}

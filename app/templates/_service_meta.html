@@ -1,0 +1,43 @@
+<div id="meta">
+  <h2 class="visuallyhidden">Pricing</h2>
+  <p class="price">{{ service.meta.price }}</p>
+  <ul class="price-caveats">
+  {% for caveat in service.meta.priceCaveats %}
+    <li>{{ caveat }}</li>
+  {% endfor %}
+  </ul>
+  <h2 class="visuallyhidden">Service documents</h2>
+  <ul class="document-list">
+  {% for document in service.meta.documents %}
+    <li class="document-list-item">
+      <a href="{{ document.url }}" class="document-link-with-icon">
+        <span class='document-icon'>{{ document.extension }}<span> document:</span></span>
+        {{ document.name }}
+      </a>
+    </li>
+  {% endfor %}
+  </ul>
+  <h2 class="service-id-heading">Service ID</h2>
+  <p class="service-id">
+  {% for group in service.meta.serviceId %}
+    <span>{{ group }}</span>
+  {% endfor %}
+  </p>
+  <h2 class="visuallyhidden">Contact details</h2>
+  <details class="contact">
+    <summary class="summary">Contact Fastnet International Ltd</summary>
+    <div class="indented">
+      <ul>
+        <li>
+          {{ service.meta.contact.name }}
+        </li>
+        <li>
+          {{ service.meta.contact.phone }}
+        </li>
+        <li>
+          <a href="mailto:{{ service.meta.contact.email }}" data-event-category="Email a supplier" data-event-label="Fastnet International Ltd">{{ service.meta.contact.email }}</a>
+        </li>
+      </ul>
+    </div>
+  </details>
+</div>

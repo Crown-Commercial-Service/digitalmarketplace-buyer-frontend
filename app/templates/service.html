@@ -1,0 +1,32 @@
+{% from 'macros/_breadcrumb.html' import breadcrumb %}
+
+{% extends "_base_page.html" %}
+
+{% block breadcrumb %}
+  {{ breadcrumb(crumbs) }}
+{% endblock %}
+
+{% block main_content %}
+<div class="grid-row">
+  <div class="column-two-thirds">
+    <header class="page-heading page-heading-with-context page-heading-smaller">
+      <p class="context">{{ service.supplierName }}
+      <h1>{{ service.title }}</h1>
+    </header>
+  </div>
+</div>
+<div class="grid-row">
+  <div class="column-two-thirds">
+    {% include '_service_summary_features_and_benefits.html' %}
+  </div>
+  <div class="column-one-third">
+    {% include '_service_meta.html' %}
+  </div>
+</div>
+<div class="grid-row service-attributes">
+  <div class="column-one-whole">
+    {% include '_service_attributes.html' %}
+    <a href="#content" class="return-to-top">Return to top ↑</a>
+  </div>
+</div>
+{% endblock %}
