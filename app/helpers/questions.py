@@ -4,7 +4,9 @@ import re
 import os
 
 
-class ContentLoader(object):
+class QuestionsLoader(object):
+    """Interface to the question data from
+       https://github.com/alphagov/digital-marketplace-ssp-content/g6"""
 
     def __init__(self, manifest, content_directory):
 
