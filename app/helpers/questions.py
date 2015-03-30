@@ -3,6 +3,8 @@ import inflection
 import re
 import os
 
+from collections import OrderedDict
+
 
 class QuestionsLoader(object):
     """Interface to the question data from
@@ -40,26 +42,36 @@ class QuestionsLoader(object):
             question_content["id"] = question
 
             # wrong way to do it? question should be shown by default.
-            question_content["depends_on_lots"] = (
+            question_content["dependsOnLots"] = (
                 self.__get_dependent_lots__(question_content["dependsOnLots"])
             ) if "dependsOnLots" in question_content else (
                 ["saas", "paas", "iaas", "scs"]
             )
 
+            question_content = self.__remove_unused_keys__(question_content)
             self._question_cache[question] = question_content
 
         return self._question_cache[question]
+
+    def __remove_unused_keys__(self, question):
+        del question['fields']
+        del question['validationNotAnswered']
+        return question
 
     def __populate_section__(self, section):
         section["questions"] = [
             self.get_question(q) for q in section["questions"]
         ]
         all_dependencies = [
-            q["depends_on_lots"] for q in section["questions"]
+            q["dependsOnLots"] for q in section["questions"]
         ]
-        section["depends_on_lots"] = [
+        section["dependsOnLots"] = [
             y for x in all_dependencies for y in x  # flatten array
         ]
+        # remove non-unique lots
+        section["dependsOnLots"] = list(
+            OrderedDict.fromkeys(section["dependsOnLots"])
+        )
         section["id"] = self.__make_id__(section["name"])
         return section
 
