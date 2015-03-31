@@ -54,8 +54,18 @@ class QuestionsLoader(object):
         return self._question_cache[question]
 
     def __remove_unused_keys__(self, question):
-        del question['fields']
-        del question['validationNotAnswered']
+        keys = [
+            'filterLabel',
+            'requirements',
+            'hint',
+            'assuranceApproach',
+            'filters',
+            'mockAnswer',
+            'validations'
+        ]
+        for key in keys:
+            if key in question:
+                del question[key]
         return question
 
     def __populate_section__(self, section):
