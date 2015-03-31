@@ -7,7 +7,7 @@
       - "analyticsAvailable"
       - "elasticCloud"
       - "guaranteedResources"
-      - "persistantStorage"
+      - "persistentStorage"
   -
     name: "Minimum service availability, eg 99.9%"
     questions:
@@ -50,7 +50,7 @@
   -
     name: "Data protection within service"
     questions:
-      - "dataProtctionWithinService"
+      - "dataProtectionWithinService"
   -
     name: "Data protection between services"
     questions:
@@ -68,7 +68,7 @@
   -
     name: "Data-at-rest protection"
     questions:
-      - "dataAtRestProtection"
+      - "dataAtRestProtections"
   -
     name: "Storage media disposal"
     questions:
