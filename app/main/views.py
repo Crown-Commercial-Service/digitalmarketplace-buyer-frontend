@@ -1,4 +1,5 @@
-import os, re
+import os
+import re
 import json
 
 from . import main
@@ -47,7 +48,7 @@ def search():
         query=search_keywords,
         filters=search_filters_obj.get_request_filters()
     )
-    search_results_json = json.loads(response)
+    search_results_json = response
     template_data = get_template_data(main, {
         'title': 'Search results',
         'search_keywords': search_keywords,
@@ -55,6 +56,7 @@ def search():
         'services': search_results_json['services']
     })
     return render_template('search.html', **template_data)
+
 
 def _get_questions():
     question_sections_manifest = os.path.abspath(os.path.join(
@@ -66,4 +68,3 @@ def _get_questions():
         "../../bower_components/digital-marketplace-ssp-content/g6"
     ))
     return QuestionsLoader(question_sections_manifest, questions_directory)
-    

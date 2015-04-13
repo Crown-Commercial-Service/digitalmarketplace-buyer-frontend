@@ -57,4 +57,4 @@ def search_for_services(query="", filters={}):
             "authorization": "Bearer {}".format(search_access_token)
         }
     )
-    return response.content
+    return response.json()
