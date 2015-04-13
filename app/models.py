@@ -48,7 +48,7 @@ def get_service(service_id):
 
 def search_for_services(query="", filters={}):
     payload = {'q': query}
-    for k, v in filters.iteritems():
+    for k, v in filters.items():
         payload[k] = v
     response = requests.get(
         search_url,
