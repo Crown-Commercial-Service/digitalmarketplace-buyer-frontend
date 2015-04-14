@@ -15,13 +15,17 @@ $path: "/static/images/";
 @import "_footer.scss";
 @import "_page-headings.scss";
 @import "_search-result.scss";
-@import "forms/_option-select.scss";
+@import "forms/_multi-select.scss";
 @import "forms/_summary.scss";
 @import "_document.scss";
-@import "_search-result.scss";
-
 @import "_service-page.scss";
-@import "_search-page.scss";
+
+.filter-field-text {
+  @include core-16;
+  @include box-sizing(border-box);
+  width: 100%;
+  padding: 5px;
+}
 
 .return-to-top {
   display: block;
