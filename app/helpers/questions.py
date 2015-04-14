@@ -10,13 +10,14 @@ class QuestionsLoader(object):
     """Interface to the question data from
        https://github.com/alphagov/digital-marketplace-ssp-content/g6"""
 
-    def __init__(self, manifest, content_directory):
+    def __init__(self, manifest, content_directory, unused_keys=[]):
 
         with open(manifest, "r") as file:
             section_order = yaml.load(file)
 
         self._directory = content_directory
         self._question_cache = {}
+        self._unused_keys = unused_keys
         self.sections = [
             self.__populate_section__(s) for s in section_order
         ]
@@ -54,16 +55,7 @@ class QuestionsLoader(object):
         return self._question_cache[question]
 
     def __remove_unused_keys__(self, question):
-        keys = [
-            'filterLabel',
-            'requirements',
-            'hint',
-            'assuranceApproach',
-            'filters',
-            'mockAnswer',
-            'validations'
-        ]
-        for key in keys:
+        for key in self._unused_keys:
             if key in question:
                 del question[key]
         return question

@@ -1,6 +1,7 @@
 from flask import Flask
 from flask.ext.bootstrap import Bootstrap
 from config import config
+from .helpers.questions import QuestionsLoader
 
 
 bootstrap = Bootstrap()
@@ -11,6 +12,18 @@ def create_app(config_name):
     application = Flask(__name__)
     application.config.from_object(config[config_name])
     config[config_name].init_app(application)
+    questions = QuestionsLoader(
+        "app/helpers/content_manifest.yml",
+        "bower_components/digital-marketplace-ssp-content/g6/",
+        [
+            'requirements',
+            'hint',
+            'assuranceApproach',
+            'filters',
+            'mockAnswer',
+            'validations'
+        ]
+    )
 
     bootstrap.init_app(application)
 
@@ -24,43 +37,7 @@ def create_app(config_name):
             'SaaS': 'Software as a Service',
             'SCS': 'Specialist Cloud Services'
         },
-        'SEARCH_FILTERS': [
-            {
-                'legend': 'Service features and management',
-                'filters': [
-                    {
-                        'label': 'Self-service provisioning supported',
-                        'name': 'selfserviceprovisioning',
-                        'isBoolean': True
-                    },
-                    {
-                        'label': 'Offline working and syncing supported',
-                        'name': 'offlineWorking',
-                        'isBoolean': True
-                    },
-                    {
-                        'label': 'Real-time management information available',
-                        'name': 'analyticsAvailable',
-                        'isBoolean': True
-                    },
-                    {
-                        'label': 'Elastic cloud approach supported',
-                        'name': 'elasticCloud',
-                        'isBoolean': True
-                    },
-                    {
-                        'label': 'Guaranteed resources defined',
-                        'name': 'guaranteedResources',
-                        'isBoolean': True
-                    },
-                    {
-                        'label': 'Persistent storage supported',
-                        'name': 'persistentStorage',
-                        'isBoolean': True
-                    }
-                ]
-            }
-        ]
+        'SEARCH_FILTERS': questions.sections
     }
 
     return application
