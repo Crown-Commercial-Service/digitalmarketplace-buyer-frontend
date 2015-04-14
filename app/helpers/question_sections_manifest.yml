@@ -1,0 +1,103 @@
+---
+  -
+    name: "Service features and management"
+    questions:
+      - "selfServiceProvisioning"
+      - "offlineWorking"
+      - "analyticsAvailable"
+      - "elasticCloud"
+      - "guaranteedResources"
+      - "persistentStorage"
+  -
+    name: "Minimum service availability, eg 99.9%"
+    questions:
+      - "serviceAvailabilityPercentage"
+  -
+    name: "Interoperability"
+    questions:
+      - "openSource"
+      - "apiAccess"
+      - "openStandardsSupported"
+  -
+    name: "Supported browsers and devices"
+    questions:
+      - "supportedBrowsers"
+      - "supportedDevices"
+  -
+    name: "Identity and authentication"
+    questions:
+      - "identityAuthenticationControls"
+  -
+    name: "Networks the service is directly connected to"
+    questions:
+      - "networksConnected"
+  -
+    name: "Type of consumer sharing the service"
+    questions:
+      - "otherConsumers"
+  -
+    name: "Cloud deployment model"
+    questions:
+      - "cloudDeploymentModel"
+  -
+    name: "Interconnection method"
+    questions:
+      - "interconnectionMethods"
+  -
+    name: "Data protection between user device and service"
+    questions:
+      - "dataProtectionBetweenUserAndService"
+  -
+    name: "Data protection within service"
+    questions:
+      - "dataProtectionWithinService"
+  -
+    name: "Data protection between services"
+    questions:
+      - "dataProtectionBetweenServices"
+  -
+    name: "Datacentre features"
+    questions:
+      - "datacentresSpecifyLocation"
+      - "datacentreLocations"
+      - "datacentreTier"
+  -
+    name: "Data management location"
+    questions:
+      - "dataManagementLocations"
+  -
+    name: "Data-at-rest protection"
+    questions:
+      - "dataAtRestProtections"
+  -
+    name: "Storage media disposal"
+    questions:
+      - "dataStorageMediaDisposal"
+  -
+    name: "Secure data deletion"
+    questions:
+      - "dataSecureDeletion"
+  -
+    name: "Personnel security checks"
+    questions:
+      - "personnelSecurityChecks"
+  -
+    name: "Secure service administration"
+    questions:
+      - "serviceManagementModel"
+  -
+    name: "Audit information provided to consumers"
+    questions:
+      - "auditInformationProvided"
+  -
+    name: "Minimum contract period"
+    questions:
+      - "minimumContractPeriod"
+  -
+    name: "Support"
+    questions:
+      - "supportTypes"
+      - "supportForThirdParties"
+      - "incidentEscalation"
+      - "serviceOnboarding"
+      - "serviceOffboarding"
