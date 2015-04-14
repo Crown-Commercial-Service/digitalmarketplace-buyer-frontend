@@ -14,7 +14,15 @@ def create_app(config_name):
     config[config_name].init_app(application)
     questions = QuestionsLoader(
         "app/helpers/content_manifest.yml",
-        "bower_components/digital-marketplace-ssp-content/g6/"
+        "bower_components/digital-marketplace-ssp-content/g6/",
+        [
+            'requirements',
+            'hint',
+            'assuranceApproach',
+            'filters',
+            'mockAnswer',
+            'validations'
+        ]
     )
 
     bootstrap.init_app(application)
