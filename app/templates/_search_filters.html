@@ -18,10 +18,32 @@
   <div class="checkbox-container">
     <div class='js-auto-height-inner'>
       {% for filter in filter_group.questions %}
-      <label for='{{ filter.id }}'>
-        <input type="checkbox" name="{{ filter.id }}" id="{{ filter.id }}" value="True" aria-controls="js-search-results-info" {% if filter.isSet %}checked="checked"{% endif %} />
-        {{ filter.filterLabel }}
-      </label>
+        {% if filter['type'] == 'boolean' %}
+          <label for='{{ filter.id }}'>
+            <input type="checkbox" name="{{ filter.id }}" id="{{ filter.id }}" value="True" aria-controls="js-search-results-info" {% if filter.isSet %}checked="checked"{% endif %} />
+            {{ filter.filterLabel }}
+          </label>
+        {% endif %}
+        {% if filter['type'] == 'checkboxes' or filter['type'] == 'checkboxes' %}
+          {% for option in filter.options %}
+            {% if option.filterLabel %}
+              <label for='{{ filter.id }}-{{ loop.index }}'>
+                <input type="checkbox" name="{{ filter.id }}" id="{{ filter.id }}-{{ loop.index }}" value="True" aria-controls="js-search-results-info" {% if filter.isSet %}checked="checked"{% endif %} />
+                {{ option.filterLabel }}
+              </label>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+        {% if filter['type'] == 'radio' or filter['type'] == 'radios' %}
+          {% for option in filter.options %}
+            {% if option.filterLabel %}
+              <label for='{{ filter.id }}-{{ loop.index }}'>
+                <input type="checkbox" name="{{ filter.id }}" id="{{ filter.id }}-{{ loop.index }}" value="True" aria-controls="js-search-results-info" {% if filter.isSet %}checked="checked"{% endif %} />
+                {{ option.filterLabel }}
+              </label>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
       {% endfor %}
     </div>
   </div>
