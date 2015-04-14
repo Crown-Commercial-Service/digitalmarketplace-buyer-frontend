@@ -30,8 +30,9 @@ class SearchFilters(object):
 
     def __set_filter_states(self):
         """Sets a flag on each filter to mark it as set or not"""
-        for g_index, filter_group in enumerate(self.filter_groups):
-            for q_index, question in enumerate(filter_group['questions']):
-                self.filter_groups[g_index]['questions'][q_index]['isSet'] = (
-                    question['id'] in self.request_filters
-                )
+
+        for filter_group in self.filter_groups:
+            for filter in filter_group['filters']:
+                filter['isSet'] = False
+                if filter['name'] in self.request_filters:
+                    filter['isSet'] = True

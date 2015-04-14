@@ -20,7 +20,7 @@ var jsVendorFiles = [
   bowerRoot + '/jquery-details/jquery.details.js'
 ];
 var jsSourceFiles = [
-  dmToolkitRoot + '/javascripts/option-select.js',
+  dmToolkitRoot + '/javascripts/multi-selects.js',
   assetsFolder + '/javascripts/_onready.js'
 ];
 var jsDistributionFolder = staticFolder + '/javascripts';
@@ -113,7 +113,7 @@ gulp.task('js', function () {
   var stream = gulp.src(jsFiles)
     .pipe(filelog('Compressing JavaScript files'))
     .pipe(uglify(
-      jsDistributionFile,
+      jsDistributionFile, 
       uglifyOptions[environment]
     ))
     .pipe(gulp.dest(jsDistributionFolder));
@@ -195,8 +195,8 @@ gulp.task('watch', ['build:development'], function () {
     console.log('File ' + event.path + ' was ' + event.type + ' running tasks...');
   }
 
-  cssWatcher.on('change', notice);
-  jsWatcher.on('change', notice);
+  cssWatcher.on('change', notice); 
+  jsWatcher.on('change', notice); 
 });
 
 gulp.task('set_environment_to_development', function (cb) {
