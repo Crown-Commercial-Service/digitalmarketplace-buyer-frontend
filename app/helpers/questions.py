@@ -41,6 +41,8 @@ class QuestionsLoader(object):
 
             question_content["id"] = question
 
+            print(question_content)
+
             # wrong way to do it? question should be shown by default.
             question_content["dependsOnLots"] = (
                 self.__get_dependent_lots__(question_content["dependsOnLots"])
@@ -55,7 +57,6 @@ class QuestionsLoader(object):
 
     def __remove_unused_keys__(self, question):
         keys = [
-            'filterLabel',
             'requirements',
             'hint',
             'assuranceApproach',
