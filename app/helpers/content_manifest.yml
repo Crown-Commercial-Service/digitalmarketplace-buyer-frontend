@@ -1,4 +1,9 @@
 -
-  name: Service attributes
+  name: Service features and management
   questions:
+    - selfServiceProvisioning
+    - offlineWorking
+    - analyticsAvailable
     - elasticCloud
+    - guaranteedResources
+    - persistentStorage

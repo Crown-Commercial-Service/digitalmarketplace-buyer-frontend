@@ -9,7 +9,7 @@
 {% for filter_group in filter_groups %}
 <div class="filter checkbox-filter js-openable-filter closed">
   <div class="head">
-    <span class="legend">{{ filter_group.legend }}</span>
+    <span class="legend">{{ filter_group.name }}</span>
     <div class="controls">
       <a class="clear-selected js-hidden">clear</a>
       <div class="toggle"></div>
@@ -17,12 +17,10 @@
   </div>
   <div class="checkbox-container">
     <div class='js-auto-height-inner'>
-      {% for filter in filter_group.filters %}
+      {% for filter in filter_group.questions %}
       <label for='{{ filter.id }}'>
-        {% if filter.isBoolean %}
-        <input type="checkbox" name="{{ filter.name }}" id="{{ filter.id }}" value="True" aria-controls="js-search-results-info" {% if filter.isSet %}checked="checked"{% endif %} />
-        {% endif %}
-        {{ filter.label }}
+        <input type="checkbox" name="{{ filter.id }}" id="{{ filter.id }}" value="True" aria-controls="js-search-results-info" {% if filter.isSet %}checked="checked"{% endif %} />
+        {{ filter.filterLabel }}
       </label>
       {% endfor %}
     </div>

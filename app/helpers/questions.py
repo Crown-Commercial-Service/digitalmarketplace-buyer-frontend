@@ -55,7 +55,6 @@ class QuestionsLoader(object):
 
     def __remove_unused_keys__(self, question):
         keys = [
-            'filterLabel',
             'requirements',
             'hint',
             'assuranceApproach',
