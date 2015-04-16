@@ -1,3 +1,4 @@
+{% from 'macros/_filter_options.html' import radio, checkbox %}
 <div class="govuk-option-select">
   <div class="container-head">
     <label class="option-select-label" for="keywords">
@@ -15,28 +16,19 @@
     <div class='js-auto-height-inner'>
       {% for filter in filter_group.questions %}
         {% if filter['type'] == 'boolean' %}
-          <label for='{{ filter.id }}'>
-            <input type="checkbox" name="{{ filter.id }}" id="{{ filter.id }}" value="True" aria-controls="js-search-results-info" {% if filter.isSet %}checked="checked"{% endif %} />
-            {{ filter.filterLabel }}
-          </label>
+          {{ checkbox(filter.filterLabel, filter.id, filter.id, filter.isSet, 'js-search-results.info') }}
         {% endif %}
         {% if filter['type'] == 'checkboxes' or filter['type'] == 'checkboxes' %}
           {% for option in filter.options %}
             {% if option.filterLabel %}
-              <label for='{{ filter.id }}-{{ loop.index }}'>
-                <input type="checkbox" name="{{ filter.id }}" id="{{ filter.id }}-{{ loop.index }}" value="True" aria-controls="js-search-results-info" {% if filter.isSet %}checked="checked"{% endif %} />
-                {{ option.filterLabel }}
-              </label>
+              {{ checkbox(option.filterLabel, '%s--%s' % (filter.id, loop.index), '%s--%s' % (filter.id, loop.index), filter.isSet, 'js-search-results.info') }}
             {% endif %}
           {% endfor %}
         {% endif %}
         {% if filter['type'] == 'radio' or filter['type'] == 'radios' %}
           {% for option in filter.options %}
             {% if option.filterLabel %}
-              <label for='{{ filter.id }}-{{ loop.index }}'>
-                <input type="checkbox" name="{{ filter.id }}" id="{{ filter.id }}-{{ loop.index }}" value="True" aria-controls="js-search-results-info" {% if filter.isSet %}checked="checked"{% endif %} />
-                {{ option.filterLabel }}
-              </label>
+              {{ radio(option.filterLabel, '%s--%s' % (filter.id, loop.index), '%s--%s' % (filter.id, loop.index), filter.isSet, 'js-search-results.info') }}
             {% endif %}
           {% endfor %}
         {% endif %}
