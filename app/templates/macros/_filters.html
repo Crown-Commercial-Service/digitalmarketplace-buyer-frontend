@@ -1,10 +1,3 @@
-{% macro radio(label, name, id, checked, results_container_id) -%}
-<label for='{{ id }}'>
-  <input type="radio" name="{{ id }}" id="{{ id }}" value="True" aria-controls="{{ results_container_id }}" {% if isSet %}checked="checked"{% endif %} />
-  {{ label }}
-</label>
-{%- endmacro %}
-
 {% macro checkbox(label, name, id, checked, results_container_id) -%}
 <label for='{{ id }}'>
   <input type="checkbox" name="{{ id }}" id="{{ id }}" value="True" aria-controls="{{ results_container_id }}" {% if isSet %}checked="checked"{% endif %} />
