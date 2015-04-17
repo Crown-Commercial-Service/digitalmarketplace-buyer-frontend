@@ -1,4 +1,4 @@
-{% from 'macros/_filter_options.html' import radio, checkbox %}
+{% from 'macros/_filters.html' import checkbox %}
 <div class="govuk-option-select">
   <div class="container-head">
     <label class="option-select-label" for="keywords">
@@ -10,28 +10,12 @@
 {% for filter_group in filter_groups %}
 <div class="govuk-option-select">
   <div class="container-head js-container-head">
-    <div class="option-select-label">{{ filter_group.name }}</div>
+    <div class="option-select-label">{{ filter_group.label }}</div>
   </div>
   <div class="options-container">
     <div class='js-auto-height-inner'>
-      {% for filter in filter_group.questions %}
-        {% if filter['type'] == 'boolean' %}
-          {{ checkbox(filter.filterLabel, filter.id, filter.id, filter.isSet, 'js-search-results.info') }}
-        {% endif %}
-        {% if filter['type'] == 'checkboxes' or filter['type'] == 'checkboxes' %}
-          {% for option in filter.options %}
-            {% if option.filterLabel %}
-              {{ checkbox(option.filterLabel, '%s--%s' % (filter.id, loop.index), '%s--%s' % (filter.id, loop.index), filter.isSet, 'js-search-results.info') }}
-            {% endif %}
-          {% endfor %}
-        {% endif %}
-        {% if filter['type'] == 'radio' or filter['type'] == 'radios' %}
-          {% for option in filter.options %}
-            {% if option.filterLabel %}
-              {{ radio(option.filterLabel, '%s--%s' % (filter.id, loop.index), '%s--%s' % (filter.id, loop.index), filter.isSet, 'js-search-results.info') }}
-            {% endif %}
-          {% endfor %}
-        {% endif %}
+      {% for filter in filter_group.filters %}
+        {{ checkbox(filter.label, filter.name, filter.id, filter.isSet, 'js-search-results.info') }}
       {% endfor %}
     </div>
   </div>
