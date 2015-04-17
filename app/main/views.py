@@ -68,7 +68,7 @@ def search():
         'title': 'Search results',
         'search_keywords': search_keywords,
         'filter_groups': search_filters_obj.filter_groups,
-        'services': search_results_json['services']
+        'services': search_results_json['search']['services']
     })
     return render_template('search.html', **template_data)
 

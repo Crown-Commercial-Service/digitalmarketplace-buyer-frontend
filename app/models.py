@@ -1,13 +1,16 @@
 import requests
 import os
+import urlparse
 from flask import json
 from .exceptions import AuthException
 
 
 api_url = os.getenv('DM_API_URL')
 api_access_token = os.getenv('DM_BUYER_FRONTEND_API_AUTH_TOKEN')
-search_api_url = os.getenv('DM_SEARCH_API_URL')
-search_url = search_api_url + "/search"
+search_url = urlparse.urljoin(
+    os.getenv('DM_SEARCH_API_URL'),
+    'g-cloud/services/search'
+)
 search_access_token = os.getenv('DM_BUYER_FRONTEND_SEARCH_API_AUTH_TOKEN')
 
 if api_access_token is None:
@@ -51,6 +54,7 @@ def search_for_services(query="", filters={}):
     payload = {'q': query}
     for k, v in filters.items():
         payload[k] = v
+    '''
     response = requests.get(
         search_url,
         params=payload,
@@ -59,3 +63,15 @@ def search_for_services(query="", filters={}):
         }
     )
     return response.json()
+    '''
+
+    search_results_stub_path = os.path.abspath(
+        os.path.join(
+            os.path.dirname(__file__),
+            "..", 
+            "tests", 
+            "fixtures",
+            "search_results.json"
+        )
+    )
+    return json.load(open(search_results_stub_path))
