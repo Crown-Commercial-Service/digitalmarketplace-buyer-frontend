@@ -1,0 +1,70 @@
+{% from 'macros/_breadcrumb.html' import breadcrumb %}
+{% extends "_base_page.html" %}
+
+{% block breadcrumb %}
+  {{ breadcrumb(crumbs) }}
+{% endblock %}
+
+{% block main_content %}
+
+<div class="index-page">
+  <header class="page-heading">
+    <h1>
+      Cloud technology and support
+    </h1>
+  </header>
+  <div class="grid-row">
+    <form action="/search" method="get" class="search-box column-two-thirds">
+        <input type="text" class="text-box" name="q">
+        <button type="submit" class="button-save">
+          Show services
+        </button>
+    </form>
+  </div>
+  <ul class="browse-list">
+    <li class="browse-list-item">
+      <a href="/search?lot=saas" class="browse-list-item-link">
+          Software as a Service
+      </a>
+      <p class="browse-list-item-body">
+          Find applications or services that are run over the internet or in the cloud
+      </p>
+      <p class="browse-list-item-subtext">
+          eg accounting tools or email
+      </p>
+    </li>
+    <li class="browse-list-item">
+      <a href="/search?lot=paas" class="browse-list-item-link">
+          Platform as a Service
+      </a>
+      <p class="browse-list-item-body">
+        Find platforms that provide a basis for building other services and applications
+      </p>
+    </li>
+    <li class="browse-list-item">
+      <a href="/search?lot=iaas" class="browse-list-item-link">
+          Infrastructure as a Service
+      </a>
+      <p class="browse-list-item-body">
+        Find networks, hosting facilities and servers on which platforms and software depend
+      </p>
+      <p class="browse-list-item-subtext">
+          eg hosting or content delivery network
+      </p>
+    </li>
+    <li class="browse-list-item">
+      <a href="/search?lot=scs" class="browse-list-item-link">
+          Specialist Cloud Services
+      </a>
+      <p class="browse-list-item-body">
+        Find help with cloud management and deployment
+      </p>
+      <p class="browse-list-item-subtext">
+        eg IT health checks or data migrations
+      </p>
+    </li>
+  </ul>
+
+</div>
+
+{% endblock %}

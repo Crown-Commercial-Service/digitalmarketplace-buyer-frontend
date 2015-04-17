@@ -1,3 +1,5 @@
+# coding=utf-8
+
 import json
 from . import main
 from app import models
@@ -14,7 +16,22 @@ from ..presenters.service_presenters import Service
 
 @main.route('/')
 def index():
-    return "Hello, World!", 200
+    template_data = get_template_data(main, {
+        'title': 'Digital Marketplace'
+    })
+    return render_template('index.html', **template_data)
+
+
+@main.route('/g-cloud')
+def index_g_cloud():
+    breadcrumb = [
+        {'text': 'Cloud technology and support'}
+    ]
+    template_data = get_template_data(main, {
+        'title': 'Cloud technology and support – Digital Marketplace',
+        'crumbs': breadcrumb
+    })
+    return render_template('index-g-cloud.html', **template_data)
 
 
 @main.route('/service/<service_id>')
