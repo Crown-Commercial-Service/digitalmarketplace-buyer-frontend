@@ -6,11 +6,11 @@ class SearchFilters(object):
     def get_filters_from_boolean_question(question):
         # boolean questions have no options as 'Yes' or 'No' is
         # implied
-        return [{
+        return {
             'label': question['question'],
             'name': question['id'],
             'id': question['id']
-        }]
+        }
 
     @staticmethod
     def get_filters_from_question_with_options(question):
@@ -33,26 +33,29 @@ class SearchFilters(object):
         for section in question_sections:
             filter_group = {
                 'label': section['name'],
-                'depends_on_lots': section['depends_on_lots']
+                'depends_on_lots': section['depends_on_lots'],
+                'filters': []
             }
             for question in section['questions']:
                 questionType = question['type']
                 if (questionType == 'boolean') or (questionType == 'text'):
-                    filter_group['filters'] = get_filter_for['boolean'](
+                    filter_group['filters'].append(get_filter_for['boolean'](
                         question
-                    )
+                    ))
                 else:
+                    # if the 1st question has options, they will become the
+                    # filters and it's details will define the group
                     filter_group['filters'] = get_filter_for['options'](
                         question
                     )
+                    break
             filter_groups.append(filter_group)
         return filter_groups
 
     def __init__(self, blueprint=False, request={}):
         self.filter_groups = blueprint.config['FILTER_GROUPS']
         self.request_filters = self.__get_filters_from_request(request)
-        if self.request_filters:
-            self.__set_filter_states()
+        self.__set_filter_states()
 
     def __get_filters_from_request(self, request):
         """Returns the filters applied to a search from the request object"""
@@ -68,6 +71,7 @@ class SearchFilters(object):
         """Sets a flag on each filter to mark it as set or not"""
         for filter_group in self.filter_groups:
             for filter in filter_group['filters']:
-                filter['isSet'] = (
-                    filter['name'] in self.request_filters
-                )
+                if self.request_filters:
+                    filter['isSet'] = (
+                        filter['name'] in self.request_filters
+                    )
