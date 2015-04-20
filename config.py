@@ -4,7 +4,13 @@ import jinja2
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 
-class Config:
+class Config(object):
+    DEBUG = False
+    BASE_TEMPLATE_DATA = {
+        'asset_path': '/static/',
+        'header_class': 'with-proposition'
+    }
+
     @staticmethod
     def init_app(app):
         repo_root = os.path.abspath(os.path.dirname(__file__))
@@ -18,14 +24,18 @@ class Config:
         app.jinja_loader = jinja_loader
 
 
-class DevelopmentConfig(Config):
-    DEBUG = True,
-    BASE_TEMPLATE_DATA = {
-        'asset_path': '/static/',
-        'header_class': 'with-proposition'
-    }
+class Development(Config):
+    DEBUG = True
+
+
+class Live(Config):
+    DEBUG = False
+
 
 config = {
-    'default': DevelopmentConfig,
-    'test': DevelopmentConfig
+    'development': Development,
+    'preview': Development,
+    'staging': Live,
+    'production': Live,
+    'test': Development,
 }
