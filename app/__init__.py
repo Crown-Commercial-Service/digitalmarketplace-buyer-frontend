@@ -2,6 +2,9 @@ from flask import Flask
 from flask.ext.bootstrap import Bootstrap
 from config import config
 
+from .main import main as main_blueprint
+from .status import status as status_blueprint
+
 
 bootstrap = Bootstrap()
 
@@ -14,7 +17,7 @@ def create_app(config_name):
 
     bootstrap.init_app(application)
 
-    from .main import main as main_blueprint
+    application.register_blueprint(status_blueprint)
     application.register_blueprint(main_blueprint)
     main_blueprint.config = {
         'BASE_TEMPLATE_DATA': application.config['BASE_TEMPLATE_DATA'],
