@@ -1,4 +1,13 @@
-{% from 'macros/_filters.html' import checkbox %}
+{% from 'macros/_filters.html' import checkbox, lot_filters %}
+<ul>
+{% for lot in lots %}
+  {% if lot.isActive %}
+    <li>{{ lot.label }}</li>
+  {% else %}
+    <li><a href="{{ lot.url }}">{{ lot.label }}</a></li>
+  {% endif %}
+{% endfor %}
+</ul>
 <div class="govuk-option-select">
   <div class="container-head">
     <label class="option-select-label" for="keywords">
