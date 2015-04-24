@@ -1,6 +1,7 @@
 from flask import Flask
 from flask.ext.bootstrap import Bootstrap
 from config import config
+from dmutils import logging
 
 from .main import main as main_blueprint
 from .status import status as status_blueprint
@@ -16,6 +17,7 @@ def create_app(config_name):
     config[config_name].init_app(application)
 
     bootstrap.init_app(application)
+    logging.init_app(application)
 
     application.register_blueprint(status_blueprint)
     application.register_blueprint(main_blueprint)
