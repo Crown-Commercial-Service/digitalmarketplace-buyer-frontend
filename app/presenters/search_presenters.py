@@ -9,7 +9,10 @@ class SearchFilters(object):
         return {
             'label': question['question'],
             'name': question['id'],
-            'id': question['id']
+            'id': question['id'],
+            'lots': [lot.strip() for lot in (
+                question['dependsOnLots'].lower().split(",")
+            )]
         }
 
     @staticmethod
@@ -19,7 +22,10 @@ class SearchFilters(object):
             filter_group.append({
                 'label': option['label'],
                 'name': question['id'] + '[]',
-                'id': '%s-%s' % (question['id'], str(index))
+                'id': '%s-%s' % (question['id'], str(index)),
+                'lots': [lot.strip() for lot in (
+                    question['dependsOnLots'].lower().split(",")
+                )]
             })
         return filter_group
 
@@ -56,7 +62,32 @@ class SearchFilters(object):
         self.filter_groups = blueprint.config['FILTER_GROUPS']
         self.request_filters = self.__get_filters_from_request(request)
         self.lot_filters = self.__get_lot_filters_from_request(request)
+        self.__sift_filters_based_on_lot(request.args.get('lot', 'all'))
         self.__set_filter_states()
+
+    def __sift_filters_based_on_lot(self, lot):
+        sifted_groups = []
+        lots = ['saas', 'paas', 'iaas', 'scs']
+
+        def _filter_is_in_all_lots(filter):
+            for lot in lots:
+                if lot not in filter['lots']:
+                    return False
+            return True
+
+        for filter_group in self.filter_groups:
+            sifted_group = filter_group.copy()
+            sifted_group['filters'] = []
+            for index, filter in enumerate(filter_group['filters']):
+                if (lot == 'all'):
+                    if _filter_is_in_all_lots(filter):
+                        sifted_group['filters'].append(filter)
+                else: # lot is singular
+                    if lot in filter['lots']:
+                        sifted_group['filters'].append(filter)
+            if len(sifted_group['filters']) > 0:
+                sifted_groups.append(sifted_group)
+        self.filter_groups = sifted_groups
 
     def __get_lot_filters_from_request(self, request):
         """Returns data to construct lot filters from"""
