@@ -8,7 +8,6 @@ from collections import OrderedDict
 
 class QuestionsLoader(object):
 
-
     def __init__(self,
                  manifest='questions_manifest.yml',
                  questions_dir=''):
@@ -16,7 +15,7 @@ class QuestionsLoader(object):
         with open(manifest, "r") as file:
             section_order = yaml.load(file)
 
-        self._directory = questions_dir 
+        self._directory = questions_dir
         self._question_cache = {}
         self.sections = [
             self.__populate_section__(s) for s in section_order

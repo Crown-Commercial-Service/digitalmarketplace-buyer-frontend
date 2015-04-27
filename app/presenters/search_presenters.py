@@ -82,7 +82,7 @@ class SearchFilters(object):
                 if (lot == 'all'):
                     if _filter_is_in_all_lots(filter):
                         sifted_group['filters'].append(filter)
-                else: # lot is singular
+                else:  # lot is singular
                     if lot in filter['lots']:
                         sifted_group['filters'].append(filter)
             if len(sifted_group['filters']) > 0:
@@ -133,7 +133,7 @@ class SearchFilters(object):
                 'url': _get_url(keywords=keywords, lot='scs')
             }
         ]
-        if current_lot != None:
+        if current_lot is not None:
             lot_filters[lot_names.index(current_lot)]['isActive'] = True
         return lot_filters
 
@@ -145,7 +145,7 @@ class SearchFilters(object):
         for key in request.args:
             if key != 'q':
                 arg_value = request.args.get(key, None)
-                if arg_value != None:
+                if arg_value is not None:
                     filters[key] = arg_value
         return filters
 
