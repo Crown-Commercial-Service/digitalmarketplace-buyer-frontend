@@ -68,8 +68,8 @@ def search_for_services(query="", filters={}):
     search_results_stub_path = os.path.abspath(
         os.path.join(
             os.path.dirname(__file__),
-            "..", 
-            "tests", 
+            "..",
+            "tests",
             "fixtures",
             "search_results.json"
         )
