@@ -6,7 +6,8 @@ from .exceptions import AuthException
 
 api_url = os.getenv('DM_API_URL')
 api_access_token = os.getenv('DM_BUYER_FRONTEND_API_AUTH_TOKEN')
-search_url = os.getenv('DM_SEARCH_API_URL') + "/search"
+search_api_url = os.getenv('DM_SEARCH_API_URL')
+search_url = search_api_url + "/search"
 search_access_token = os.getenv('DM_BUYER_FRONTEND_SEARCH_API_AUTH_TOKEN')
 
 if api_access_token is None:
@@ -31,6 +32,19 @@ def handle_api_errors(response):
 def strip_services_wrapper(content):
     content_json = json.loads(content)
     return content_json["services"]
+
+
+def get_data_api_status():
+    return requests.get(
+        api_url + '/_status',
+    )
+
+
+def get_search_api_status():
+    # Might be the wrong url - os.getenv('DM_SEARCH_API_URL') + "/search"
+    return requests.get(
+        search_api_url + '/_status',
+    )
 
 
 def get_service(service_id):
