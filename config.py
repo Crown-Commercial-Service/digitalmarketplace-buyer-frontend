@@ -11,6 +11,12 @@ class Config(object):
         'header_class': 'with-proposition'
     }
 
+    DM_DATA_API_URL = "http://localhost:5000"
+    DM_DATA_API_AUTH_TOKEN = None
+    DM_SEARCH_API_URL = "http://localhost:5001"
+    DM_SEARCH_API_AUTH_TOKEN = None
+    ES_ENABLED = True
+
     # Logging
     DM_LOG_LEVEL = 'DEBUG'
     DM_APP_NAME = 'buyer-frontend'
