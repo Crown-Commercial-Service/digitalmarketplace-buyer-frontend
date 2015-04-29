@@ -1,0 +1,35 @@
+-
+  name: Pricing
+  questions:
+    - freeOption
+    - trialOption
+    - educationPricing
+    - terminationCost
+-
+  name: Minimum contract period
+  questions:
+    - minimumContractPeriod
+-
+  name: Service management
+  questions:
+    - dataExtractionRemoval
+    - datacentresEUCode
+    - dataBackupRecovery
+    - selfServiceProvisioning
+    - supportForThirdParties
+-
+  name: Networks the service is directly connected to
+  questions:
+    - networksConnected
+-
+  name: Interoperability
+  questions:
+    - apiAccess
+    - openStandardsSupported
+    - openSource
+-
+  name: Cloud features 
+  questions:
+    - persistentStorage
+    - guaranteedResources
+    - elasticCloud

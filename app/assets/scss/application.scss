@@ -23,13 +23,7 @@ $path: "/static/images/";
 
 @import "_service-page.scss";
 @import "_index-page.scss";
-
-.filter-field-text {
-  @include core-16;
-  @include box-sizing(border-box);
-  width: 100%;
-  padding: 5px;
-}
+@import "_search-page.scss";
 
 .return-to-top {
   display: block;

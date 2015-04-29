@@ -1,0 +1,29 @@
+.search-page-filters {
+  .lot-filters {
+    h3 {
+      @include bold-19;
+    }
+
+    ul {
+      list-style: none;
+      padding-left: 0;
+      margin: 5px 0 $gutter;
+    }
+  }
+
+  .govuk-option-select {
+    margin-bottom: $gutter;
+  }
+
+  .option-select-label {
+    display: block;
+  }
+
+  .filter-field-text {
+    @include core-16;
+    @include box-sizing(border-box);
+    width: 100%;
+    padding: 5px;
+    border: 1px solid $border-colour;
+  }
+}
