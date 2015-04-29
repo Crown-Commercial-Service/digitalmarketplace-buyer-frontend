@@ -1,7 +1,18 @@
 .search-page-filters {
+  .lot-filters {
+    h3 {
+      @include bold-19;
+    }
+
+    ul {
+      list-style: none;
+      padding-left: 0;
+      margin: 5px 0 $gutter;
+    }
+  }
 
   .govuk-option-select {
-    margin-bottom: 30px;
+    margin-bottom: $gutter;
   }
 
   .option-select-label {
@@ -15,5 +26,4 @@
     padding: 5px;
     border: 1px solid $border-colour;
   }
-
 }
