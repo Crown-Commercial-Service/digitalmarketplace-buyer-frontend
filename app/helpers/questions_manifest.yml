@@ -3,6 +3,8 @@
   questions:
     - freeOption
     - trialOption
+    - educationPricing
+    - terminationCost
 -
   name: Minimum contract period
   questions:
@@ -10,18 +12,11 @@
 -
   name: Service management
   questions:
-    - serviceOnboarding
-    - serviceOffboarding
     - dataExtractionRemoval
     - datacentresEUCode
     - dataBackupRecovery
     - selfServiceProvisioning
-    - provisioningTime
     - supportForThirdParties
--
-  name: Data centre tier
-  questions:
-    - datacentreTier
 -
   name: Networks the service is directly connected to
   questions:
@@ -32,3 +27,9 @@
     - apiAccess
     - openStandardsSupported
     - openSource
+-
+  name: Cloud features 
+  questions:
+    - persistentStorage
+    - guaranteedResources
+    - elasticCloud
