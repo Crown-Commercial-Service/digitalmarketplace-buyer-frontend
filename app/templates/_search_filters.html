@@ -16,6 +16,9 @@
   </div>
   <input class="filter-field-text" type="text" name="q" id="keywords" value="{{ search_keywords }}">
 </div>
+{% if current_lot %}
+<input type="hidden" name="lot" value="{{ current_lot }}" />
+{% endif %}
 {% for filter_group in filter_groups %}
 <div class="govuk-option-select">
   <div class="container-head js-container-head">

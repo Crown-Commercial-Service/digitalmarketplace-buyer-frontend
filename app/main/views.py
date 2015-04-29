@@ -66,6 +66,7 @@ def search():
     search_results_json = response
     template_data = get_template_data(main, {
         'title': 'Search results',
+        'current_lot': SearchFilters.get_current_lot(request),
         'lots': search_filters_obj.lot_filters,
         'search_keywords': search_keywords,
         'filter_groups': search_filters_obj.filter_groups,
