@@ -3,7 +3,7 @@ class SearchFilters(object):
     """
 
     @staticmethod
-    def get_filters_from_boolean_question(question):
+    def get_filters_from_default_question(question):
         # boolean questions have no options as 'Yes' or 'No' is
         # implied
         return {
@@ -33,7 +33,9 @@ class SearchFilters(object):
     def get_filter_groups_from_questions(question_sections):
         filter_groups = []
         get_filter_for = {
-            'boolean': SearchFilters.get_filters_from_boolean_question,
+            'boolean': SearchFilters.get_filters_from_default_question,
+            'text': SearchFilters.get_filters_from_default_question,
+            'pricing': SearchFilters.get_filters_from_default_question,
             'options': SearchFilters.get_filters_from_question_with_options
         }
         for section in question_sections:
@@ -44,8 +46,16 @@ class SearchFilters(object):
             }
             for question in section['questions']:
                 questionType = question['type']
-                if (questionType == 'boolean') or (questionType == 'text'):
+                if questionType == 'boolean':
                     filter_group['filters'].append(get_filter_for['boolean'](
+                        question
+                    ))
+                elif questionType == 'text':
+                    filter_group['filters'].append(get_filter_for['text'](
+                        question
+                    ))
+                elif questionType == 'pricing':
+                    filter_group['filters'].append(get_filter_for['pricing'](
                         question
                     ))
                 else:
