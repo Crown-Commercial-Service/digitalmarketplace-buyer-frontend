@@ -1,4 +1,10 @@
 -
+  name: Categories
+  questions:
+    - serviceTypesSCS
+    - serviceTypesSaaS
+    - serviceTypesIaaS
+-
   name: Pricing
   questions:
     - freeOption
