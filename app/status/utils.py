@@ -1,5 +1,4 @@
 import os
-import json
 from requests.exceptions import ConnectionError
 
 
@@ -25,4 +24,4 @@ def return_response_from_api_status_call(api_status_call):
 
 
 def return_json_or_none(response):
-    return None if response is None else json.loads(response.get_data())
+    return None if response is None else response.json()

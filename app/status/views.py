@@ -31,8 +31,8 @@ def status():
         return jsonify(
             status="ok",
             version=utils.get_version_label(),
-            api_status=json.loads(api_response.get_data()),
-            search_api_status=json.loads(api_response.get_data())
+            api_status=api_response.json(),
+            search_api_status=search_api_response.json()
         )
 
     message = "Error connecting to the " \
