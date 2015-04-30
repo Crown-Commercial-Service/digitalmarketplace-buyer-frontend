@@ -12,17 +12,12 @@ def get_version_label():
         return None
 
 
-def return_result_of_api_status_call(function_call):
-
-    api_status = "error"
+def return_response_from_api_status_call(api_status_call):
 
     try:
-        api_status_response = function_call()
-
-        if api_status_response.status_code is 200:
-            api_status = "ok"
+        return api_status_call()
 
     except ConnectionError:
         pass
 
-    return api_status
+    return None

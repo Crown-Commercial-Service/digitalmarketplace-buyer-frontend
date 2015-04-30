@@ -34,7 +34,7 @@ def strip_services_wrapper(content):
     return content_json["services"]
 
 
-def get_data_api_status():
+def get_api_status():
     return requests.get(
         api_url + '/_status',
     )
