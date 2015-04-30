@@ -44,7 +44,7 @@ class Live(Config):
     DEBUG = False
 
 
-config = {
+configs = {
     'development': Development,
     'preview': Live,
     'staging': Live,

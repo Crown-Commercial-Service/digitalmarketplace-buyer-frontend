@@ -1,7 +1,7 @@
 from flask import Flask
 from flask.ext.bootstrap import Bootstrap
-from config import config
-from dmutils import logging, apiclient
+from config import configs
+from dmutils import logging, apiclient, config
 
 
 bootstrap = Bootstrap()
@@ -12,11 +12,12 @@ search_api_client = apiclient.SearchAPIClient()
 def create_app(config_name):
 
     application = Flask(__name__)
-    application.config.from_object(config[config_name])
-    config[config_name].init_app(application)
+    application.config.from_object(configs[config_name])
 
-    bootstrap.init_app(application)
+    config.init_app(application)
+    configs[config_name].init_app(application)
     logging.init_app(application)
+    bootstrap.init_app(application)
     data_api_client.init_app(application)
     search_api_client.init_app(application)
 
@@ -24,6 +25,7 @@ def create_app(config_name):
     application.register_blueprint(status_blueprint)
     from .main import main as main_blueprint
     application.register_blueprint(main_blueprint)
+
     main_blueprint.config = {
         'BASE_TEMPLATE_DATA': application.config['BASE_TEMPLATE_DATA'],
         'LOTS': {
