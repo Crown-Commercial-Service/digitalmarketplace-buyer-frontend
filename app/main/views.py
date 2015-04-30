@@ -54,7 +54,7 @@ def search():
     search_filters_obj = SearchFilters(blueprint=main, request=request)
     services = search_api_client.search_services(
         query=search_keywords,
-        filters=search_filters_obj.get_request_filters())
+        filters=search_filters_obj.get_request_filters())['services']
 
     template_data = get_template_data(main, {
         'title': 'Search results',
