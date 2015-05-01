@@ -13,7 +13,6 @@ search_api_client = apiclient.SearchAPIClient()
 
 
 def create_app(config_name):
-
     application = Flask(__name__)
     application.config.from_object(config[config_name])
     config[config_name].init_app(application)
@@ -35,6 +34,7 @@ def create_app(config_name):
 
     application.register_blueprint(status_blueprint)
     application.register_blueprint(main_blueprint)
+
     main_blueprint.config = {
         'BASE_TEMPLATE_DATA': application.config['BASE_TEMPLATE_DATA'],
         'LOTS': {

@@ -1,12 +1,9 @@
 # coding=utf-8
 
 import os
-import re
-import json
-
 from . import main
 from app import models
-from flask import abort, render_template, request, Response
+from flask import json, abort, render_template, request
 from ..presenters.search_presenters import SearchFilters
 from ..presenters.service_presenters import Service
 from ..helpers.search_helpers import (
@@ -14,7 +11,7 @@ from ..helpers.search_helpers import (
 )
 from ..helpers.service_helpers import get_lot_name_from_acronym
 from ..exceptions import AuthException
-
+from .. import search_api_client
 
 @main.route('/')
 def index():
@@ -63,14 +60,14 @@ def search():
         query=search_keywords,
         filters=search_filters_obj.request_filters
     )
-    search_results_json = response
+
     template_data = get_template_data(main, {
         'title': 'Search results',
         'current_lot': SearchFilters.get_current_lot(request),
         'lots': search_filters_obj.lot_filters,
         'search_keywords': search_keywords,
         'filter_groups': search_filters_obj.filter_groups,
-        'services': search_results_json['search']['services']
+        'services': response['search']['services']
     })
     return render_template('search.html', **template_data)
 

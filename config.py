@@ -19,11 +19,17 @@ class Config(object):
     # This is just a placeholder
     ES_ENABLED = None
 
-    # Logging
+    # Search API
+    DM_SEARCH_API_URL = "http://localhost:5001"
+    DM_SEARCH_API_AUTH_TOKEN = "myToken"
+    ES_ENABLED = True
+
+    # LOGGING
     DM_LOG_LEVEL = 'DEBUG'
     DM_APP_NAME = 'buyer-frontend'
     DM_LOG_PATH = '/var/log/digitalmarketplace/application.log'
     DM_DOWNSTREAM_REQUEST_ID_HEADER = 'X-Amz-Cf-Id'
+
 
     @staticmethod
     def init_app(app):
