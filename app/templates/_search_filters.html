@@ -30,7 +30,7 @@
   <div class="options-container">
     <div class='js-auto-height-inner'>
       {% for filter in filter_group.filters %}
-        {{ checkbox(filter.label, filter.name, filter.id, filter.isSet, 'js-search-results.info') }}
+        {{ checkbox(filter.label, filter.name, filter.id, filter.value, filter.isSet, 'js-search-results.info') }}
       {% endfor %}
     </div>
   </div>

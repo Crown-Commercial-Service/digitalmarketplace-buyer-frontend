@@ -1,5 +1,5 @@
 import requests
-import os
+
 try:
     import urlparse
 except ImportError:
@@ -32,6 +32,24 @@ def get_service(service_id):
     return response_content
 
 
-def search_for_services(query="", filters={}):
-    print filters
-    return search_api_client.search(query, filters['lot'])
+def search_for_services(args):
+    return search_api_client.search(_convert_multidict_to_request_payload(args))
+
+
+def _convert_multidict_to_request_payload(args):
+    """
+        minimumContractPeriod is an OR filter - the only one currently
+        needs to be a comma separated string NOT multiple key/value pairs
+    """
+    payload = {}
+    for query_arg in args.iterlists():
+        if query_arg[0] == "q":
+            payload[query_arg[0]] = query_arg[1][0]
+        elif query_arg[0] == "minimumContractPeriod":
+            payload["filter_" + query_arg[0]] = ",".join(query_arg[1])
+        elif len(query_arg[1]) == 1:
+            payload["filter_" + query_arg[0]] = query_arg[1][0]
+        else:
+            payload["filter_" + query_arg[0]] = query_arg[1]
+
+    return payload

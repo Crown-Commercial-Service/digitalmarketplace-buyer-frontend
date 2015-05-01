@@ -18,6 +18,7 @@ class SearchFilters(object):
             'label': question['question'],
             'name': question['id'],
             'id': question['id'],
+            'value': 'true',
             'lots': [lot.strip() for lot in (
                 question['dependsOnLots'].lower().split(",")
             )]
@@ -29,8 +30,9 @@ class SearchFilters(object):
         for index, option in enumerate(question['options']):
             filter_group.append({
                 'label': option['label'],
-                'name': question['id'] + '[]',
-                'id': '%s-%s' % (question['id'], str(index)),
+                'name': question['id'],
+                'id': question['id'] + option['label'].lower(),
+                'value': option['label'].lower(),
                 'lots': [lot.strip() for lot in (
                     question['dependsOnLots'].lower().split(",")
                 )]

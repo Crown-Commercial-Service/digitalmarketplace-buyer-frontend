@@ -56,10 +56,14 @@ def get_service_by_id(service_id):
 def search():
     search_keywords = get_keywords_from_request(request)
     search_filters_obj = SearchFilters(blueprint=main, request=request)
+
+    # print search_filters_obj.request_filters
+
     response = models.search_for_services(
-        query=search_keywords,
-        filters=search_filters_obj.request_filters
+        request.args
     )
+
+    print search_filters_obj.filter_groups
 
     template_data = get_template_data(main, {
         'title': 'Search results',
