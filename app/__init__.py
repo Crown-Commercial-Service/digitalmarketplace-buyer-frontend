@@ -1,8 +1,7 @@
 from flask import Flask
 from flask.ext.bootstrap import Bootstrap
-from config import config
-from dmutils import apiclient, logging
-
+from config import configs
+from dmutils import apiclient, logging, config
 from .helpers.questions import QuestionsLoader
 from .presenters.search_presenters import SearchFilters
 
@@ -14,8 +13,9 @@ search_api_client = apiclient.SearchAPIClient()
 
 def create_app(config_name):
     application = Flask(__name__)
-    application.config.from_object(config[config_name])
-    config[config_name].init_app(application)
+    application.config.from_object(configs[config_name])
+    configs[config_name].init_app(application)
+    config.init_app(application)
     g6_questions = QuestionsLoader(
         manifest="app/helpers/questions_manifest.yml",
         questions_dir="bower_components/digital-marketplace-ssp-content/g6/"

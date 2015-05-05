@@ -24,6 +24,9 @@ class Config(object):
     DM_SEARCH_API_AUTH_TOKEN = "myToken"
     ES_ENABLED = True
 
+    DM_DATA_API_URL = "http://localhost:5000"
+    DM_DATA_API_AUTH_TOKEN = "myToken"
+
     # LOGGING
     DM_LOG_LEVEL = 'DEBUG'
     DM_APP_NAME = 'buyer-frontend'
@@ -51,7 +54,7 @@ class Live(Config):
     DEBUG = False
 
 
-config = {
+configs = {
     'development': Development,
     'preview': Live,
     'staging': Live,
