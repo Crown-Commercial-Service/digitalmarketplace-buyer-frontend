@@ -1,3 +1,6 @@
+from werkzeug.datastructures import MultiDict
+
+
 class SearchFilters(object):
     """Provides access to the filters for a search based on request parameters
     """
@@ -161,12 +164,8 @@ class SearchFilters(object):
         """Returns the filters applied to a search from the request object"""
 
         # TODO: only use request arguments that map to recognised filters
-        filters = {}
-        for key in request.args:
-            if key != 'q':
-                arg_value = request.args.get(key, None)
-                if arg_value is not None:
-                    filters[key] = arg_value
+        filters = MultiDict(request.args.copy())
+        filters.poplist('q')
         return filters
 
     def __set_filter_states(self):
@@ -174,6 +173,12 @@ class SearchFilters(object):
         for filter_group in self.filter_groups:
             for filter in filter_group['filters']:
                 if self.request_filters:
-                    filter['isSet'] = (
-                        filter['name'] in self.request_filters
+                    filter['isSet'] = False
+                    param_values = self.request_filters.getlist(
+                        filter['name'],
+                        type=str
                     )
+                    if len(param_values) > 0:
+                        filter['isSet'] = (
+                            filter['value'] in param_values
+                        )
