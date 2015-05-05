@@ -16,6 +16,10 @@
     - selfServiceProvisioning
     - supportForThirdParties
 -
+  name: Datacentre tier
+  questions:
+    - datacentreTier
+-
   name: Networks the service is directly connected to
   questions:
     - networksConnected
@@ -25,9 +29,3 @@
     - apiAccess
     - openStandardsSupported
     - openSource
--
-  name: Cloud features 
-  questions:
-    - persistentStorage
-    - guaranteedResources
-    - elasticCloud
