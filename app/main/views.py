@@ -13,6 +13,7 @@ from ..helpers.service_helpers import get_lot_name_from_acronym
 from ..exceptions import AuthException
 from .. import search_api_client
 
+
 @main.route('/')
 def index():
     template_data = get_template_data(main, {

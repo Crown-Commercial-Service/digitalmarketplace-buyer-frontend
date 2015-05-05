@@ -33,7 +33,9 @@ def get_service(service_id):
 
 
 def search_for_services(args):
-    return search_api_client.search(_convert_multidict_to_request_payload(args))
+    return search_api_client.search(
+        _convert_multidict_to_request_payload(args)
+    )
 
 
 def _convert_multidict_to_request_payload(args):
