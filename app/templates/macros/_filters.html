@@ -1,6 +1,6 @@
 {% macro checkbox(label, name, id, value, checked, results_container_id) -%}
 <label for='{{ id }}'>
-  <input type="checkbox" name="{{ name }}" id="{{ id }}" value="{{ value }}" aria-controls="{{ results_container_id }}" {% if isSet %}checked="checked"{% endif %} />
+  <input type="checkbox" name="{{ name }}" id="{{ id }}" value="{{ value }}" aria-controls="{{ results_container_id }}" {% if checked %}checked="checked"{% endif %} />
   {{ label }}
 </label>
 {%- endmacro %}
