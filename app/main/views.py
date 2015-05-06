@@ -9,7 +9,6 @@ from ..helpers.search_helpers import (
     get_keywords_from_request, get_template_data
 )
 from ..helpers.service_helpers import get_lot_name_from_acronym
-from ..helpers.questions import QuestionsLoader
 from ..exceptions import AuthException
 from .. import search_api_client, data_api_client
 
@@ -70,15 +69,3 @@ def search():
         'services': response['services']
     })
     return render_template('search.html', **template_data)
-
-
-def _get_questions():
-    question_sections_manifest = os.path.abspath(os.path.join(
-        os.path.dirname(__file__),
-        "../helpers/question_sections_manifest.yml"
-    ))
-    questions_directory = os.path.abspath(os.path.join(
-        os.path.dirname(__file__),
-        "../../bower_components/digital-marketplace-ssp-content/g6"
-    ))
-    return QuestionsLoader(question_sections_manifest, questions_directory)
