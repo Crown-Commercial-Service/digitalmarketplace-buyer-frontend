@@ -58,7 +58,7 @@ def search():
     search_filters_obj = SearchFilters(blueprint=main, request=request)
 
     response = search_api_client.search_services(
-        **dict(request.args.iterlists()))
+        **dict([a for a in request.args.lists()]))
 
     template_data = get_template_data(main, {
         'title': 'Search results',
