@@ -4,8 +4,8 @@ from flask import json
 from .exceptions import AuthException
 
 
-api_url = os.getenv('DM_API_URL')
-api_access_token = os.getenv('DM_BUYER_FRONTEND_API_AUTH_TOKEN')
+api_url = os.getenv('DM_DATA_API_URL')
+api_access_token = os.getenv('DM_DATA_API_AUTH_TOKEN')
 search_url = os.getenv('DM_SEARCH_API_URL') + "/search"
 search_access_token = os.getenv('DM_BUYER_FRONTEND_SEARCH_API_AUTH_TOKEN')
 

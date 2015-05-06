@@ -1,8 +1,99 @@
 {% extends "_base_page.html" %}
 
 {% block main_content %}
-<header class="page-heading">
-  <h1>Supplier details</h1>
-</header>
+
+{% include '_warning.html' %}
+
+<div class="grid-row">
+    <div class="column-two-thirds">
+        <header class="page-heading-smaller">
+            <p class="context">
+                Digitalmarketplace Supplier
+            </p>
+
+            <h1>{{ supplier.name }}</h1>
+        </header>
+    </div>
+</div>
+
+
+<div class="grid-row">
+    <div class="column-two-thirds">
+        <p class="hint summary-item-no-content">
+            {{ supplier.description }}
+        </p>
+        {% if supplier.clients %}
+        <h2>Clients</h2>
+        {% for client in supplier.clients %}
+        {{ client }},
+        {% endfor %}
+        {% endif %}
+
+        {% if services %}
+        <h2>{{ services_count }} service(s)</h2>
+
+        {% for lot in services.keys() %}
+        {% if services[lot] %}
+        <h2>{{ lot }}</h2>
+        {% for service in services[lot] %}
+        <div class="search-result">
+            <h2 class="search-result-title">
+                <a href="/service/{{ service.id }}">{{ service.serviceName }}</a>
+            </h2>
+
+            <p class="search-result-excerpt">
+                {% if service.serviceSummary|length > 500 %}
+                {{ service.serviceSummary[:500] }}
+                {% else %}
+                {{ service.serviceSummary }}
+                {% endif %}
+            </p>
+            <ul aria-label="tags" class="search-result-metadata">
+                <li class="search-result-metadata-item">
+                    {{ service.frameworkName }}
+                </li>
+            </ul>
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endfor %}
+        {% else %}
+        <h2 class="summary-item-heading first-summary-item-heading">No active services</h2>
+        {% endif %}
+    </div>
+    <div class="column-one-third">
+        <details class="contact">
+            <summary class="summary">Contact {{ supplier.name }}</summary>
+            <div class="indented">
+                <ul>
+                    <li>
+                        {{ supplier.contactInformation[0].contactName }}
+                    </li>
+                    <li>
+                        {{ supplier.contactInformation[0].phoneNumber }}
+                    </li>
+                    <li>
+                        <a href="mailto:{{ supplier.contactInformation[0].email }}"
+                           data-event-category="Email a supplier"
+                           data-event-label="Fastnet International Ltd">{{ supplier.contactInformation[0].email }}</a>
+                    </li>
+                    <li>
+                        {{ supplier.contactInformation[0].address1 }}
+                    </li>
+                    <li>
+                        {{ supplier.contactInformation[0].address2 }}
+                    </li>
+                    <li>
+                        {{ supplier.contactInformation[0].country }}
+                    </li>
+                    <li>
+                        {{ supplier.contactInformation[0].postcode }}
+                    </li>
+                </ul>
+            </div>
+        </details>
+    </div>
+</div>
 
 {% endblock %}
+

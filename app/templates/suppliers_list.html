@@ -1,8 +1,51 @@
 {% extends "_base_page.html" %}
 
 {% block main_content %}
+
+{% include '_warning.html' %}
+
 <header class="page-heading">
-  <h1>Supplier list</h1>
+    <h1>Supplier A to Z listing</h1>
 </header>
+
+<div id="global-breadcrumb" class="header-context">
+    <nav>
+        <ol class="group" role="breadcrumbs">
+            {% for item in nav %}
+            <li>
+                <a class="home" href="/suppliers?prefix={{ item }}">{{ item }}</a>
+            </li>
+            {% endfor %}
+            <li>
+                <a class="home" href="/suppliers?prefix=other">#</a>
+            </li>
+        </ol>
+    </nav>
+</div>
+
+
+<header class="page-heading page-heading-with-context">
+    <p class="context">Found {{ count }}</p>
+
+    <h1>{{ prefix }}</h1>
+</header>
+
+
+{% for supplier in suppliers %}
+<div class="search-result">
+    <h2 class="search-result-title">
+        <a href="/suppliers/{{ supplier.id }}">{{ supplier.name}}</a>
+    </h2>
+
+    <p class="search-result-excerpt">
+        {% if supplier.description|length > 500 %}
+        {{ supplier.description[:500] }}
+        {% else %}
+        {{ supplier.description }}
+        {% endif %}
+    </p>
+</div>
+{% endfor %}
+
 
 {% endblock %}

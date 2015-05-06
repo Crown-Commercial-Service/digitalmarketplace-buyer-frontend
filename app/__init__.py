@@ -1,23 +1,23 @@
 from flask import Flask
 from flask.ext.bootstrap import Bootstrap
 from config import config
-from dmutils import logging
-
-from .main import main as main_blueprint
-from .status import status as status_blueprint
-
+from dmutils import logging, apiclient
 
 bootstrap = Bootstrap()
+data_api_client = apiclient.DataAPIClient()
 
 
 def create_app(config_name):
-
     application = Flask(__name__)
     application.config.from_object(config[config_name])
     config[config_name].init_app(application)
 
+    from .main import main as main_blueprint
+    from .status import status as status_blueprint
+
     bootstrap.init_app(application)
     logging.init_app(application)
+    data_api_client.init_app(application)
 
     application.register_blueprint(status_blueprint)
     application.register_blueprint(main_blueprint)

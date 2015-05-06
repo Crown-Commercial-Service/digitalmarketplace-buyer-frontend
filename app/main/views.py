@@ -49,7 +49,8 @@ def get_service_by_id(service_id):
         return render_template('service.html', **template_data)
     except AuthException as e:
         abort(500, "Application error")
-    except KeyError:
+    except KeyError as e:
+        print e
         abort(404, "Service ID '%s' can not be found" % service_id)
 
 

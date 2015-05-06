@@ -13,8 +13,10 @@ class Service(object):
         if 'supplierName' in service_data:
             self.supplierName = service_data['supplierName']
         self.serviceSummary = service_data['serviceSummary']
-        self.features = service_data['serviceFeatures']
-        self.benefits = service_data['serviceBenefits']
+        if 'serviceBenefits' in service_data:
+            self.benefits = service_data['serviceBenefits']
+        if 'serviceFeatures' in service_data:
+            self.features = service_data['serviceFeatures']
         self.attributes = self._get_service_attributes(service_data)
         self.meta = self._get_service_meta(service_data)
 

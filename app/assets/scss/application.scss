@@ -10,6 +10,7 @@ $path: "/static/images/";
   @extend %site-width-container;
 }
 
+@import "_notification-banners.scss";
 @import "_buttons.scss";
 @import "_breadcrumb.scss";
 @import "_footer.scss";
