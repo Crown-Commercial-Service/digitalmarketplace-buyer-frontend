@@ -1,32 +1,39 @@
-<div class="filter checkbox-filter">
-  <div class="head">
-    <label class="legend" for="keywords">
+<div class="lot-filters">
+  <h3>Choose a category</h3>
+  {% from 'macros/_filters.html' import checkbox, lot_filters %}
+  <ul>
+  {% for lot in lots %}
+    {% if lot.isActive %}
+      <li>{{ lot.label }}</li>
+    {% else %}
+      <li><a href="{{ lot.url }}">{{ lot.label }}</a></li>
+    {% endif %}
+  {% endfor %}
+  </ul>
+</div>
+<div class="govuk-option-select">
+  <div class="container-head">
+    <label class="option-select-label" for="keywords">
       Keywords
     </label>
   </div>
   <input class="filter-field-text" type="text" name="q" id="keywords" value="{{ search_keywords }}">
 </div>
+{% if current_lot %}
+<input type="hidden" name="lot" value="{{ current_lot }}" />
+{% endif %}
 {% for filter_group in filter_groups %}
-<div class="filter checkbox-filter js-openable-filter closed">
-  <div class="head">
-    <span class="legend">{{ filter_group.legend }}</span>
-    <div class="controls">
-      <a class="clear-selected js-hidden">clear</a>
-      <div class="toggle"></div>
-    </div>
+<div class="govuk-option-select">
+  <div class="container-head js-container-head">
+    <div class="option-select-label">{{ filter_group.label }}</div>
   </div>
-  <div class="checkbox-container">
+  <div class="options-container">
     <div class='js-auto-height-inner'>
       {% for filter in filter_group.filters %}
-      <label for='{{ filter.id }}'>
-        {% if filter.isBoolean %}
-        <input type="checkbox" name="{{ filter.name }}" id="{{ filter.id }}" value="True" aria-controls="js-search-results-info" {% if filter.isSet %}checked="checked"{% endif %} />
-        {% endif %}
-        {{ filter.label }}
-      </label>
+        {{ checkbox(filter.label, filter.name, filter.id, filter.value, filter.isSet, 'js-search-results.info') }}
       {% endfor %}
     </div>
   </div>
-{% endfor %}
 </div>
+{% endfor %}
 <button class="button-save" type="submit">Filter</button>

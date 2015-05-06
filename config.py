@@ -19,7 +19,15 @@ class Config(object):
     # This is just a placeholder
     ES_ENABLED = None
 
-    # Logging
+    # Search API
+    DM_SEARCH_API_URL = "http://localhost:5001"
+    DM_SEARCH_API_AUTH_TOKEN = "myToken"
+    ES_ENABLED = True
+
+    DM_DATA_API_URL = "http://localhost:5000"
+    DM_DATA_API_AUTH_TOKEN = "myToken"
+
+    # LOGGING
     DM_LOG_LEVEL = 'DEBUG'
     DM_APP_NAME = 'buyer-frontend'
     DM_LOG_PATH = '/var/log/digitalmarketplace/application.log'
@@ -46,7 +54,7 @@ class Live(Config):
     DEBUG = False
 
 
-config = {
+configs = {
     'development': Development,
     'preview': Live,
     'staging': Live,

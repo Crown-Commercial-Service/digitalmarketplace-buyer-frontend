@@ -1,31 +1,16 @@
 import requests
-import os
+
+try:
+    import urlparse
+except ImportError:
+    from urllib import parse as urlparse
 from flask import json
 from .exceptions import AuthException
-
-
-api_url = os.getenv('DM_API_URL')
-api_access_token = os.getenv('DM_BUYER_FRONTEND_API_AUTH_TOKEN')
-search_api_url = os.getenv('DM_SEARCH_API_URL')
-search_url = search_api_url + "/search"
-search_access_token = os.getenv('DM_BUYER_FRONTEND_SEARCH_API_AUTH_TOKEN')
-
-if api_access_token is None:
-    print('Token must be supplied in DM_BUYER_FRONTEND_API_AUTH_TOKEN')
-    raise Exception("DM_BUYER_FRONTEND_API_AUTH_TOKEN token is not set")
-if api_url is None:
-    print('API URL must be supplied in DM_API_URL')
-    raise Exception("DM_API_URL is not set")
-if search_access_token is None:
-    print('Token must be supplied in DM_BUYER_FRONTEND_SEARCH_API_AUTH_TOKEN')
-    raise Exception("DM_BUYER_FRONTEND_SEARCH_API_AUTH_TOKEN token is not set")
-if search_url is None:
-    print('Search API URL must be supplied in DM_SEARCH_API_URL')
-    raise Exception("DM_SEARCH_API_URL is not set")
+from . import search_api_client
 
 
 def handle_api_errors(response):
-    if (response.status_code == 403):
+    if response.status_code == 403:
         raise AuthException("API authentication failed")
 
 
@@ -35,11 +20,11 @@ def strip_services_wrapper(content):
 
 
 def get_service(service_id):
-    url = api_url + "/services/" + service_id
+    url = "http://localhost:5000/services/" + service_id
     response = requests.get(
         url,
         headers={
-            "authorization": "Bearer {}".format(api_access_token)
+            "authorization": "Bearer myToken"
         }
     )
     handle_api_errors(response)
@@ -47,15 +32,26 @@ def get_service(service_id):
     return response_content
 
 
-def search_for_services(query="", filters={}):
-    payload = {'q': query}
-    for k, v in filters.iteritems():
-        payload[k] = v
-    response = requests.get(
-        search_url,
-        params=payload,
-        headers={
-            "authorization": "Bearer {}".format(search_access_token)
-        }
+def search_for_services(args):
+    return search_api_client.search(
+        _convert_multidict_to_request_payload(args)
     )
-    return response.content
+
+
+def _convert_multidict_to_request_payload(args):
+    """
+        minimumContractPeriod is an OR filter - the only one currently
+        needs to be a comma separated string NOT multiple key/value pairs
+    """
+    payload = {}
+    for query_arg in args.iterlists():
+        if query_arg[0] == "q":
+            payload[query_arg[0]] = query_arg[1][0]
+        elif query_arg[0] == "minimumContractPeriod":
+            payload["filter_" + query_arg[0]] = ",".join(query_arg[1])
+        elif len(query_arg[1]) == 1:
+            payload["filter_" + query_arg[0]] = query_arg[1][0]
+        else:
+            payload["filter_" + query_arg[0]] = query_arg[1]
+
+    return payload
