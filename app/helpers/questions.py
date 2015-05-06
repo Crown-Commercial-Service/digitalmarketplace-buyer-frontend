@@ -18,7 +18,7 @@ class QuestionsLoader(object):
         self._directory = questions_dir
         self._question_cache = {}
         self.sections = [
-            self.__populate_section__(s) for s in section_order
+            self._populate_section_(s) for s in section_order
         ]
 
     def get_section(self, requested_section):
@@ -44,7 +44,7 @@ class QuestionsLoader(object):
 
             # wrong way to do it? question should be shown by default.
             question_content["depends_on_lots"] = (
-                self.__get_dependent_lots__(question_content["dependsOnLots"])
+                self._get_dependent_lots_(question_content["dependsOnLots"])
             ) if "dependsOnLots" in question_content else (
                 ["saas", "paas", "iaas", "scs"]
             )
@@ -53,7 +53,7 @@ class QuestionsLoader(object):
 
         return self._question_cache[question]
 
-    def __populate_section__(self, section):
+    def _populate_section_(self, section):
         section["questions"] = [
             self.get_question(q) for q in section["questions"]
         ]
@@ -63,15 +63,15 @@ class QuestionsLoader(object):
         section["depends_on_lots"] = [
             y for x in all_dependencies for y in x  # flatten array
         ]
-        section["id"] = self.__make_id__(section["name"])
+        section["id"] = self._make_id_(section["name"])
         return section
 
-    def __make_id__(self, name):
+    def _make_id_(self, name):
         return inflection.underscore(
             re.sub("\s", "_", name)
         )
 
-    def __get_dependent_lots__(self, dependent_lots_as_string):
+    def _get_dependent_lots_(self, dependent_lots_as_string):
         return [
             x.strip() for x in dependent_lots_as_string.lower().split(",")
         ]
