@@ -1,4 +1,5 @@
 from werkzeug.datastructures import MultiDict
+from ..helpers.questions import QuestionsLoader
 
 
 class SearchFilters(object):
@@ -43,7 +44,7 @@ class SearchFilters(object):
         return filter_group
 
     @staticmethod
-    def get_filter_groups_from_questions(question_sections):
+    def get_filter_groups_from_questions(manifest=None, questions_dir=None):
         filter_groups = []
         get_filter_for = {
             'boolean': SearchFilters.get_filters_from_default_question,
@@ -51,7 +52,11 @@ class SearchFilters(object):
             'pricing': SearchFilters.get_filters_from_default_question,
             'options': SearchFilters.get_filters_from_question_with_options
         }
-        for section in question_sections:
+        g6_questions = QuestionsLoader(
+            manifest=manifest,
+            questions_dir=questions_dir
+        )
+        for section in g6_questions.sections:
             filter_group = {
                 'label': section['name'],
                 'depends_on_lots': section['depends_on_lots'],

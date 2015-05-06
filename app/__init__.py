@@ -16,12 +16,9 @@ def create_app(config_name):
     application.config.from_object(configs[config_name])
     configs[config_name].init_app(application)
     config.init_app(application)
-    g6_questions = QuestionsLoader(
+    filter_groups = SearchFilters.get_filter_groups_from_questions(
         manifest="app/helpers/questions_manifest.yml",
         questions_dir="bower_components/digital-marketplace-ssp-content/g6/"
-    )
-    filter_groups = SearchFilters.get_filter_groups_from_questions(
-        g6_questions.sections
     )
 
     bootstrap.init_app(application)
