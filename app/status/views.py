@@ -1,20 +1,19 @@
 from flask import jsonify, current_app
-import json
 
 from . import status
 from . import utils
-from .. import models
+from .. import data_api_client, search_api_client
 
 
 @status.route('/_status')
 def status():
 
     api_response = utils.return_response_from_api_status_call(
-        models.get_api_status
+        data_api_client.get_status
     )
 
     search_api_response = utils.return_response_from_api_status_call(
-        models.get_search_api_status
+        search_api_client.get_status
     )
 
     apis_with_errors = []
@@ -35,9 +34,9 @@ def status():
             search_api_status=search_api_response.json()
         )
 
-    message = "Error connecting to the " \
-              + (" and the ".join(apis_with_errors)) \
-              + "."
+    message = "Error connecting to the {}.".format(
+        " and the ".join(apis_with_errors)
+    )
 
     current_app.logger.error(message)
 

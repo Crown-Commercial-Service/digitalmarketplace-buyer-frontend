@@ -34,19 +34,6 @@ def strip_services_wrapper(content):
     return content_json["services"]
 
 
-def get_api_status():
-    return requests.get(
-        api_url + '/_status',
-    )
-
-
-def get_search_api_status():
-    # Might be the wrong url - os.getenv('DM_SEARCH_API_URL') + "/search"
-    return requests.get(
-        search_api_url + '/_status',
-    )
-
-
 def get_service(service_id):
     url = api_url + "/services/" + service_id
     response = requests.get(
