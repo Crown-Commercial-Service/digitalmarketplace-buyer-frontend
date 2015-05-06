@@ -10,6 +10,14 @@ class Config(object):
         'asset_path': '/static/',
         'header_class': 'with-proposition'
     }
+    DM_DATA_API_URL = os.getenv('DM_API_URL')
+    DM_DATA_API_AUTH_TOKEN = os.getenv('DM_BUYER_FRONTEND_API_AUTH_TOKEN')
+    DM_SEARCH_API_URL = os.getenv('DM_SEARCH_API_URL')
+    DM_SEARCH_API_AUTH_TOKEN = os.getenv(
+        'DM_BUYER_FRONTEND_SEARCH_API_AUTH_TOKEN'
+    )
+    # This is just a placeholder
+    ES_ENABLED = None
 
     # Logging
     DM_LOG_LEVEL = 'DEBUG'

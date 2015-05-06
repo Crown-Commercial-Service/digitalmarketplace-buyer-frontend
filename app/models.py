@@ -6,7 +6,8 @@ from .exceptions import AuthException
 
 api_url = os.getenv('DM_API_URL')
 api_access_token = os.getenv('DM_BUYER_FRONTEND_API_AUTH_TOKEN')
-search_url = os.getenv('DM_SEARCH_API_URL') + "/search"
+search_api_url = os.getenv('DM_SEARCH_API_URL')
+search_url = search_api_url + "/search"
 search_access_token = os.getenv('DM_BUYER_FRONTEND_SEARCH_API_AUTH_TOKEN')
 
 if api_access_token is None:

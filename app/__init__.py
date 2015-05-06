@@ -1,13 +1,12 @@
 from flask import Flask
 from flask.ext.bootstrap import Bootstrap
 from config import config
-from dmutils import logging
-
-from .main import main as main_blueprint
-from .status import status as status_blueprint
+from dmutils import apiclient, logging
 
 
 bootstrap = Bootstrap()
+data_api_client = apiclient.DataAPIClient()
+search_api_client = apiclient.SearchAPIClient()
 
 
 def create_app(config_name):
@@ -18,6 +17,11 @@ def create_app(config_name):
 
     bootstrap.init_app(application)
     logging.init_app(application)
+    data_api_client.init_app(application)
+    search_api_client.init_app(application)
+
+    from .main import main as main_blueprint
+    from .status import status as status_blueprint
 
     application.register_blueprint(status_blueprint)
     application.register_blueprint(main_blueprint)
