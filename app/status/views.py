@@ -1,4 +1,4 @@
-from flask import jsonify, current_app
+from flask import jsonify
 
 from . import status
 from . import utils
@@ -8,42 +8,39 @@ from .. import data_api_client, search_api_client
 @status.route('/_status')
 def status():
 
-    api_response = utils.return_response_from_api_status_call(
-        data_api_client.get_status
-    )
-
-    search_api_response = utils.return_response_from_api_status_call(
-        search_api_client.get_status
-    )
+    apis = [
+        {
+            'name': '(Data) API',
+            'key': 'api_status',
+            'status': data_api_client.get_status()
+        }, {
+            'name': 'Search API',
+            'key': 'search_api_status',
+            'status': search_api_client.get_status()
+        }
+    ]
 
     apis_with_errors = []
 
-    if api_response is None or api_response.status_code != 200:
-        apis_with_errors.append("(Data) API")
+    for api in apis:
+        if api['status'] is None or api['status']['status'] != "ok":
+            apis_with_errors.append(api['name'])
 
-    if search_api_response is None \
-            or search_api_response.status_code != 200:
-        apis_with_errors.append("Search API")
-
-    # if no errors found, return everything
+    # if no errors found, return as is.  Else, return an error and a message
     if not apis_with_errors:
         return jsonify(
+            {api['key']: api['status'] for api in apis},
             status="ok",
             version=utils.get_version_label(),
-            api_status=api_response.json(),
-            search_api_status=search_api_response.json()
         )
 
     message = "Error connecting to the {}.".format(
         " and the ".join(apis_with_errors)
     )
 
-    current_app.logger.error(message)
-
     return jsonify(
+        {api['key']: api['status'] for api in apis},
         status="error",
         version=utils.get_version_label(),
-        api_status=utils.return_json_or_none(api_response),
-        search_api_status=utils.return_json_or_none(search_api_response),
         message=message,
     ), 500

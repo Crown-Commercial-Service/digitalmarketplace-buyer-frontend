@@ -1,29 +1,34 @@
 import json
 from ..helpers import BaseApplicationTest
-from requests import Response
 
 import mock
-from nose.tools import assert_equal, assert_in
+from nose.tools import assert_equal
 
 
 class TestStatus(BaseApplicationTest):
+
     def setup(self):
         super(TestStatus, self).setup()
 
-        self._api_response = mock.patch(
-            'app.status.utils.return_response_from_api_status_call',
+        self._data_api_client = mock.patch(
+            'app.status.views.data_api_client'
+        ).start()
+        self._search_api_client = mock.patch(
+            'app.status.views.search_api_client'
         ).start()
 
     def teardown(self):
-        self._api_response.stop()
+        self._data_api_client.stop()
+        self._search_api_client.stop()
 
     def test_status_ok(self):
-        api_response = Response()
-        api_response.status_code = 200
-        api_response._content = json.dumps({
+        self._data_api_client.get_status.return_value = {
             'status': 'ok'
-        }).encode('utf-8')
-        self._api_response.return_value = api_response
+        }
+
+        self._search_api_client.get_status.return_value = {
+            'status': 'ok'
+        }
 
         status_response = self.client.get('/_status')
         assert_equal(200, status_response.status_code)
@@ -34,32 +39,64 @@ class TestStatus(BaseApplicationTest):
         assert_equal(
             "ok", "{}".format(json_data['search_api_status']['status']))
 
-    def test_status_api_responses_return_500(self):
-        api_response = Response()
-        api_response.status_code = 500
-        api_response._content = json.dumps({
-            'status': 'error'
-        }).encode('utf-8')
-        self._api_response.return_value = api_response
+    def test_status_error_in_one_upstream_api(self):
+        self._data_api_client.get_status.return_value = {
+            'status': 'error',
+            'app_version': None,
+            'message': 'Cannot connect to Database'
+        }
 
-        status_response = self.client.get('/_status')
-        assert_equal(500, status_response.status_code)
+        self._search_api_client.get_status.return_value = {
+            'status': 'ok'
+        }
 
-        json_data = json.loads(status_response.get_data().decode('utf-8'))
-        assert_equal(
-            "error", "{}".format(json_data['api_status']['status']))
-        assert_equal(
-            "error", "{}".format(json_data['search_api_status']['status']))
-        assert_in(
-            "Error connecting to", "{}".format(json_data['message']))
+        response = self.client.get('/_status')
+        assert_equal(500, response.status_code)
 
-    def test_status_api_responses_are_none(self):
-        self._api_response.return_value = None
+        json_data = json.loads(response.get_data().decode('utf-8'))
 
-        status_response = self.client.get('/_status')
-        assert_equal(500, status_response.status_code)
+        assert_equal("error", "{}".format(json_data['status']))
+        assert_equal("error", "{}".format(json_data['api_status']['status']))
+        assert_equal("ok", "{}".format(
+            json_data['search_api_status']['status']))
 
-        json_data = json.loads(status_response.get_data().decode('utf-8'))
-        assert_equal(None, json_data['api_status'])
-        assert_equal(None, json_data['search_api_status'])
-        assert_in("Error connecting to", "{}".format(json_data['message']))
+    def test_status_no_response_in_one_upstream_api(self):
+
+        self._data_api_client.get_status.return_value = {
+            'status': 'ok'
+        }
+
+        self._search_api_client.get_status.return_value = None
+
+        response = self.client.get('/_status')
+        assert_equal(500, response.status_code)
+
+        json_data = json.loads(response.get_data().decode('utf-8'))
+
+        assert_equal("error", "{}".format(json_data['status']))
+        assert_equal("ok", "{}".format(json_data['api_status']['status']))
+        assert_equal(None, json_data.get('search_api_status'))
+
+    def test_status_error_in_two_upstream_apis(self):
+
+        self._data_api_client.get_status.return_value = {
+            'status': 'error',
+            'app_version': None,
+            'message': 'Cannot connect to Database'
+        }
+
+        self._search_api_client.get_status.return_value = {
+            'status': 'error',
+            'app_version': None,
+            'message': 'Cannot connect to elasticsearch'
+        }
+
+        response = self.client.get('/_status')
+        assert_equal(500, response.status_code)
+
+        json_data = json.loads(response.get_data().decode('utf-8'))
+
+        assert_equal("error", "{}".format(json_data['status']))
+        assert_equal("error", "{}".format(json_data['api_status']['status']))
+        assert_equal("error", "{}".format(
+            json_data['search_api_status']['status']))

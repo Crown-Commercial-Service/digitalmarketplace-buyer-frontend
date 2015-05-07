@@ -17,7 +17,7 @@ class Config(object):
         'DM_BUYER_FRONTEND_SEARCH_API_AUTH_TOKEN'
     )
     # This is just a placeholder
-    ES_ENABLED = None
+    ES_ENABLED = True
 
     # Search API
     DM_SEARCH_API_URL = "http://localhost:5001"
