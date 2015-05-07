@@ -1,9 +1,9 @@
 {
   "services": [
     {
-      "serviceSummary": "Fastly <em>CDN</em> (Content Delivery Network) speeds up delivery of your website and its content to your",
+      "serviceSummary": "Fastly CDN (Content Delivery Network) speeds up delivery of your website and its content to your users. When your client clicks on your site requesting a piece of information, we want them to feel your speed of delivery. No waiting. We want them to get to your closest point of presence\u2014in milliseconds\u2014to get what they want. Fastly delivers the world's only real-time content delivery network. At Fastly we think slow is unacceptable. Fastly enables a next-generation of businesses to give their users the best online and mobile experience. The patent-pending Fastly Caching Software delivers static, dynamic and streaming content with the lowest recorded time to first byte.",
       "id": "4-G4-0871-001",
-      "serviceName": "Fastly <em>CDN</em>",
+      "serviceName": "Fastly CDN",
       "lot": "SaaS",
       "highlight": {
         "serviceSummary": [
@@ -16,9 +16,9 @@
       "supplierName": "Fastly UK Limited"
     },
     {
-      "serviceSummary": "Verizon Digital Media Services (VDMS) <em>CDN</em> dramatically improves the performance and security of web",
+      "serviceSummary": "Verizon Digital Media Services (VDMS) CDN dramatically improves the performance and security of web and mobile applications, real-time transactions, and other dynamic content. Built upon our global content delivery network, it combines best practice optimizations with platform enhancements to bring significant improvements to the speed and availability of dynamic content. Static content can be seamlessly cached as well with industry leading cache hit ratio \u2013 delivering a perfect solution for optimizing sites where static and dynamic content coexist.\rWe provide enhanced network visibility and control which help improve the performance and reliability of web and IP based applications.  VDMS is the content and application acceleration industry's first and only solution that cloaks a Web site from the public Internet, an approach designed to increase Web security without compromising performance. SiteShield protects the origin by effectively removing it from the Internet-accessible IP address space, adding an additional layer of security protection while still ensuring that content is delivered quickly and without fail, regardless of end user location. SiteShield is designed to complement the existing infrastructure that protects a site's origin and leverages our advanced site acceleration technologies and global Intelligent Platform.\rThis service additionally allows web sites to be rendered for mobile devices without any modification of the customer's web site, this is an optional service as part of this product.",
       "id": "5-G3-0279-010",
-      "serviceName": "<em>CDN</em> VDMS",
+      "serviceName": "CDN VDMS",
       "lot": "SaaS",
       "highlight": {
         "serviceSummary": [
@@ -62,7 +62,13 @@
         "Swift cluster highly fault-tolerant"
       ],
       "id": "6308913213341696",
-      "serviceBenefits": "Integrated with <em>CDN</em>"
+      "serviceBenefits": [
+        "Simple API",
+        "Secure storage",
+        "Constantly Available",
+        "Integrated with CDN",
+        "Unlimited capacity"
+      ]
     },
     {
       "serviceSummary": "Swift Object Storage delivers unlimited storage capacity automatically, with no limit to the size of the files that can be uploaded. On demand and fully scalable and flexible, with data stored in the UK. This service can be used as the storage layer for a number of third party applications.",
@@ -96,7 +102,13 @@
         "Swift cluster highly fault-tolerant "
       ],
       "id": "6256050982354944",
-      "serviceBenefits": "Integrated with <em>CDN</em> "
+      "serviceBenefits": [
+        "Simple API ",
+        "Secure storage ",
+        "Constantly Available ",
+        "Integrated with CDN ",
+        "Unlimited capacity "
+      ]
     },
     {
       "serviceSummary": "Swift Object Storage delivers unlimited storage capacity automatically, with no limit to the size of the files that can be uploaded. On demand and fully scalable and flexible, with data stored in the UK. This service can be used as the storage layer for a number of third party applications. ",
@@ -130,7 +142,13 @@
         "Swift cluster highly fault-tolerant "
       ],
       "id": "6610722511388672",
-      "serviceBenefits": "Integrated with <em>CDN</em> "
+      "serviceBenefits": [
+        "Simple API ",
+        "Secure storage ",
+        "Constantly Available ",
+        "Integrated with CDN ",
+        "Unlimited capacity "
+      ]
     },
     {
       "serviceSummary": "The service cost-effectively mitigates risk posed by highly sophisticated, massive DDoS attacks through the application of proven anomaly detection technology. Available as an \u201con-demand\u201d or \u201calways-on\u201d solution and backed by proven SLAs, Level 3 DDoS Mitigation service cost effectively protects against most known forms of Layer 3 \u2013 7 attacks",
@@ -146,7 +164,18 @@
           "DDoS mitigation, <em>CDN</em> network, MSS services from the network operator"
         ]
       },
-      "serviceFeatures": "DDoS mitigation, <em>CDN</em> network, MSS services from the network operator",
+      "serviceFeatures": [
+        "Threat Monitoring 24 x 7 365 globally deployed SOC Infrastructure",
+        "8 Global Scrubbing Centres, with 3 more planned in 2015",
+        "4.5 Tbps attack ingestion and 1 Tbps of scrubbing capacity",
+        "Command and control server takedown capability without involving third parties",
+        "Flexible deployment options including GRE tunnelling for router based protection",
+        "A minimum /30 IP address range needed to implement service",
+        "DDoS mitigation, CDN network, MSS services from the network operator",
+        "We own the network and the DDoS mitigation service",
+        "A managed service charged through recurring costs, without system purchase",
+        "Best of class SLAs for unmatched threat protection"
+      ],
       "id": "6283857112334336",
       "serviceBenefits": [
         "In house threat research and monitoring",
@@ -162,7 +191,7 @@
       ]
     },
     {
-      "serviceSummary": " Baycloud Systems or in a suitable Content Delivery Network (<em>CDN</em>) such as the Windows Azure <em>CDN</em>. The<br /> <em>CDN</em> improves performance by caching content at locations closest to visitors to customer\u2019s websites<br />. The Windows Azure <em>CDN</em> is a managed service that is operated by Microsoft and has a 99.99% monthly",
+      "serviceSummary": "CookieQ is a hosted service that can helps website publishers manage user consent or permissions across multiple web domains. Customers can configure it so that users are presented with a cookie \"opt-in\" panel or button and optional reminder banner to website visitors. CookieQ was the original solution released in May 2011 to the requirement for consent to cookies laid out in Regulation 6 of the Privacy and Electronic Communications Regulations 2011. The product has been enhanced with feedback from customers and now offers a complete consent platform capable of meeting any compliance requirements for consent management and communication. Consent can be managed in any number of multiple categories, using arbitrary names and fully configurable by the customer. For example consent indications such as Tracking=no, AnalyticsCookies=yes, DataCollection=yes can be stored for a particular use and communicated to any web domains that have been allocated by a \u201cdashboard\u201d customer facility. Data used to register consent such as current state, revocation period etc. is stored entirely within the user\u2019s browser and not simply in a domain specific cookie. Action on consent refusal in certain categories such as cookie and local storage removal can be entirely handled by CookieQ, so that no cookie placement is required, or alternatively session cookies can be used to signal consent status to particular web domain servers. Cookies or local storage used \u201cstrictly to support a service requested by the user\u201d do not need to be automatically removed. For the small number of browsers that do not support localStorage CookieQ stores the consent data in secure cloud storage. CookieQ uses Microsoft Windows Azure Storage tables for this. Microsoft guarantees that this information is replicated 3 times within the same data centre for resiliency against hardware failure and again replicated in another geographically separated data centre to provide additional data durability in the case of a major disaster. This platform can be configured either to offer an explicit opt-in mechanism whereby cookies & local storage are removed from their browser if the visitor has not opted in for particular customer defined or standard categories, or as an \"implied consent\" mechanism where cookies will not be removed by default but visitors can explicitly withdraw their consent whenever they wish. The styling and text of buttons and panels is completely configurable by the user, although various pre-baked styles are offered. Customers can design their own panels and banners retaining the look & feel of their website\u2019s branding using standard techniques such as declarative HTML or using JavaScript libraries such as jQuery, or we can design these User Interface elements for them. The service can be configured so that a user visiting a website with the W3C standard Do Not Track header signal set in their browser will be given a specific default such as Tracking=no, overriding any implied consent if that is in operation. Analytics services such as Google Analytics are specifically supported whereby they can continue to be used without the need to collect user identifying data or enable it to be sent to a third party not under the jurisdiction of European Data Protection or Privacy law. Once consent has been obtained it can be applied across any number of web domains owned by the same data controller. This means that if the Government explains a single privacy and cookie storage policy to a visitor a positive indication of consent will immediately be available to the servers of all its other website domains. A \"dashboard\" feature allows the customer to manage the consent settings on all its websites instantly without needing to take down servers, and only needs to install a single line script snippet on every site. Implicit, explicit or no consent can be controlled by the dashboard or by automatic geo-location based on the visitor's source IP address. The service now supports the W3C Tracking Protection Working Group (Do Not Track) consent API and has a built in tag management facility (or can support other external services such as the Google Tag Management service) to conditionally display third-party content contingent on a user's consent for storage or tracking. The service also includes a exhaustive and detailed report of client-side and server-side http cookies, 3rd party cookies, flash cookies, local storage and other information. CookieQ is an off-the-shelf solution but if further customisation or technical consultancy is required then this can be supplied. The CookieQ web application is hosted in the Microsoft Azure infrastructure, in Northern Europe data centres located in Dublin, Ireland and Amsterdam, The Netherlands. This hosting allows Baycloud to rapidly deploy new server instances to meet peak demands on the CookieQ website. Baycloud will ensure that enough roles are deployed so that over 7 days the CookieQ button, and the data registering consent for storage, can be rendered within an average of 500ms seconds to a browser used to visit a website implementing the CookieQ Service. Static files such as the CookieQ stylesheet files and the external files containing the CookieQ proprietary JavaScript are held on hosted servers managed by Baycloud Systems or in a suitable Content Delivery Network (CDN) such as the Windows Azure CDN. The CDN improves performance by caching content at locations closest to visitors to customer\u2019s websites. The Windows Azure CDN is a managed service that is operated by Microsoft and has a 99.99% monthly SLA. Customers are give authentication credentials so that they can login to the http://cookieq.com site and configure their implementation and manage all the domains in one place.",
       "id": "4-G1-0340-001",
       "serviceName": "CookieQ",
       "lot": "SaaS",
@@ -176,7 +205,7 @@
       "supplierName": "Baycloud Systems Limited"
     },
     {
-      "serviceSummary": " caching (<em>CDN</em>, front-end optimization, and more) and protection (WAF, DDOS, and more), provisioned",
+      "serviceSummary": "CloudFlare makes your website run faster, protects your website from attack, and improves overall availability. CloudFlare's website acceleration and security operate as a global reverse proxy with caching (CDN, front-end optimization, and more) and protection (WAF, DDOS, and more), provisioned with a simple network change to DNS. CloudFlare includes all the services described in the Service Description, at no additional charge, though focused here on the Web Application Firewall (WAF). Enterprise-class security by CloudFlare CloudFlare's WAF stops attacks at the network edge, protecting your website from common web threats and specialized attacks before they reach your servers. It covers both desktop and mobile websites and applications, delivering: * Automatic protection from diverse threats, with strong defaults and customization * Lightning-fast performance, with instant global updates * Easy set-up with no hardware, software or tuning required Running on our global network, CloudFlare\u2019s WAF eliminates the headaches with setting up, tuning and maintaining your own WAF. Getting started is simple and takes about 5 minutes. CloudFlare\u2019s Web Application Firewall (WAF) automatically protects your website from these types of attacks: SQL injection Cross-site scripting (XSS) Cross-site request forgery (CSRF) Comment spam Distributed Denial of Service (DDoS) attacks The CloudFlare WAF engine runs the OWASP ModSecurity Core Rule Set by default, making sure you\u2019re protected against the OWASP Top 10 common vulnerabilities, and CloudFlare rule sets. We also make it easy to customize the WAF and extend your protection further. You can instantly integrate rule sets developed by industry experts (additional fees may apply) or write your own custom rules (available for Business and Enterprise customers). With our easy-to-use web interface, you choose how aggressively you want security settings enforced based on your business needs, easily see which attacks have been blocked and turn off rules that might generate false positives based on your custom application. CloudFlare provides service to more than 1 million websites, enabled via self-service, with extra attention and configuration available for Enterprise customers with custom needs. Predictable and affordable pricing Pricing is detailed in the attached pricing plan, which is very similar to the public pricing at https://www.cloudflare.com/plans For one simple, all-inclusive price, CloudFlare offers a range of security, performance and availability features. You decide which features you want to turn on or off. No overages, no bandwidth charges ever. CloudFlare\u2019s pricing provides customers with the peace of mind of a predictable and affordable monthly fee. We do not charge on bandwidth and you\u2019ll never be charged overages. No set-up or integration expenses, no hidden fees. There are no additional expenses beyond the subscription fee for the CloudFlare service. Setting up and maintaining CloudFlare can also be done without any professional services help. Infrastructure and bandwidth savings. There is no hardware or software to set-up, maintain or tune, plus you save bandwidth from all the bad traffic prevented from reaching your server.",
       "serviceTypes": [
         "Business intelligence and analytics",
         "Marketing",
@@ -193,7 +222,7 @@
       "id": "4-G4-1270-002"
     },
     {
-      "serviceSummary": " caching (<em>CDN</em>, front-end optimization, and more) and protection (WAF, DDOS, and more), provisioned",
+      "serviceSummary": "CloudFlare makes your website run faster, protects your website from attack, and improves overall availability. CloudFlare's website acceleration and security operate as a global reverse proxy with caching (CDN, front-end optimization, and more) and protection (WAF, DDOS, and more), provisioned with a simple network change to DNS. CloudFlare includes all the services described in the Service Description, at no additional charge, though focused here on the Web Application Firewall (WAF). Enterprise-class security by CloudFlare CloudFlare's WAF stops attacks at the network edge, protecting your website from common web threats and specialized attacks before they reach your servers. It covers both desktop and mobile websites and applications, delivering: * Automatic protection from diverse threats, with strong defaults and customization * Lightning-fast performance, with instant global updates * Easy set-up with no hardware, software or tuning required Running on our global network, CloudFlare\u2019s WAF eliminates the headaches with setting up, tuning and maintaining your own WAF. Getting started is simple and takes about 5 minutes. CloudFlare\u2019s Web Application Firewall (WAF) automatically protects your website from these types of attacks: SQL injection Cross-site scripting (XSS) Cross-site request forgery (CSRF) Comment spam Distributed Denial of Service (DDoS) attacks The CloudFlare WAF engine runs the OWASP ModSecurity Core Rule Set by default, making sure you\u2019re protected against the OWASP Top 10 common vulnerabilities, and CloudFlare rule sets. We also make it easy to customize the WAF and extend your protection further. You can instantly integrate rule sets developed by industry experts (additional fees may apply) or write your own custom rules (available for Business and Enterprise customers). With our easy-to-use web interface, you choose how aggressively you want security settings enforced based on your business needs, easily see which attacks have been blocked and turn off rules that might generate false positives based on your custom application. CloudFlare provides service to more than 1 million websites, enabled via self-service, with extra attention and configuration available for Enterprise customers with custom needs. Predictable and affordable pricing Pricing is detailed in the attached pricing plan, which is very similar to the public pricing at https://www.cloudflare.com/plans For one simple, all-inclusive price, CloudFlare offers a range of security, performance and availability features. You decide which features you want to turn on or off. No overages, no bandwidth charges ever. CloudFlare\u2019s pricing provides customers with the peace of mind of a predictable and affordable monthly fee. We do not charge on bandwidth and you\u2019ll never be charged overages. No set-up or integration expenses, no hidden fees. There are no additional expenses beyond the subscription fee for the CloudFlare service. Setting up and maintaining CloudFlare can also be done without any professional services help. Infrastructure and bandwidth savings. There is no hardware or software to set-up, maintain or tune, plus you save bandwidth from all the bad traffic prevented from reaching your server.",
       "serviceTypes": [
         "Business intelligence and analytics",
         "Marketing",
@@ -215,5 +244,5 @@
     "filter_lot": "saas"
   },
   "total": 9,
-  "took": 22
+  "took": 13
 }
