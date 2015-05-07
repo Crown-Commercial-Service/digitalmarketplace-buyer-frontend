@@ -1,0 +1,219 @@
+{
+  "services": [
+    {
+      "serviceSummary": "Fastly <em>CDN</em> (Content Delivery Network) speeds up delivery of your website and its content to your",
+      "id": "4-G4-0871-001",
+      "serviceName": "Fastly <em>CDN</em>",
+      "lot": "SaaS",
+      "highlight": {
+        "serviceSummary": [
+          "Fastly <em>CDN</em> (Content Delivery Network) speeds up delivery of your website and its content to your"
+        ],
+        "serviceName": [
+          "Fastly <em>CDN</em>"
+        ]
+      },
+      "supplierName": "Fastly UK Limited"
+    },
+    {
+      "serviceSummary": "Verizon Digital Media Services (VDMS) <em>CDN</em> dramatically improves the performance and security of web",
+      "id": "5-G3-0279-010",
+      "serviceName": "<em>CDN</em> VDMS",
+      "lot": "SaaS",
+      "highlight": {
+        "serviceSummary": [
+          "Verizon Digital Media Services (VDMS) <em>CDN</em> dramatically improves the performance and security of web"
+        ],
+        "serviceName": [
+          "<em>CDN</em> VDMS"
+        ]
+      },
+      "supplierName": "Verizon UK Ltd"
+    },
+    {
+      "serviceSummary": "Swift Object Storage delivers unlimited storage capacity automatically, with no limit to the size of the files that can be uploaded. On demand and fully scalable and flexible, with data stored in the UK. This service can be used as the storage layer for a number of third party applications.",
+      "serviceTypes": [
+        "Accounting and finance",
+        "Collaboration",
+        "Creative and design",
+        "Data management",
+        "Electronic document and records management (EDRM)",
+        "IT management",
+        "Legal",
+        "Libraries",
+        "Marketing",
+        "Operations management",
+        "Project management and planning",
+        "Schools and education"
+      ],
+      "supplierName": "iomart Group Plc",
+      "serviceName": "iomart | Swift Cloud Storage",
+      "lot": "SaaS",
+      "highlight": {
+        "serviceBenefits": [
+          "Integrated with <em>CDN</em>"
+        ]
+      },
+      "serviceFeatures": [
+        "Proxy  coordinating storage servers",
+        "Internal REST-ful API",
+        "SQLite databases on disk",
+        "Auditors run in the background ",
+        "Swift cluster highly fault-tolerant"
+      ],
+      "id": "6308913213341696",
+      "serviceBenefits": "Integrated with <em>CDN</em>"
+    },
+    {
+      "serviceSummary": "Swift Object Storage delivers unlimited storage capacity automatically, with no limit to the size of the files that can be uploaded. On demand and fully scalable and flexible, with data stored in the UK. This service can be used as the storage layer for a number of third party applications.",
+      "serviceTypes": [
+        "Accounting and finance",
+        "Collaboration",
+        "Creative and design",
+        "Data management",
+        "Electronic document and records management (EDRM)",
+        "IT management",
+        "Legal",
+        "Libraries",
+        "Marketing",
+        "Operations management",
+        "Project management and planning",
+        "Schools and education"
+      ],
+      "supplierName": "Capito",
+      "serviceName": "Swift Cloud Openstack Object Storage",
+      "lot": "SaaS",
+      "highlight": {
+        "serviceBenefits": [
+          "Integrated with <em>CDN</em> "
+        ]
+      },
+      "serviceFeatures": [
+        "Proxy coordinating storage servers ",
+        "Internal REST-ful API ",
+        "SQLite databases on disk ",
+        "Auditors run in the background ",
+        "Swift cluster highly fault-tolerant "
+      ],
+      "id": "6256050982354944",
+      "serviceBenefits": "Integrated with <em>CDN</em> "
+    },
+    {
+      "serviceSummary": "Swift Object Storage delivers unlimited storage capacity automatically, with no limit to the size of the files that can be uploaded. On demand and fully scalable and flexible, with data stored in the UK. This service can be used as the storage layer for a number of third party applications. ",
+      "serviceTypes": [
+        "Accounting and finance",
+        "Collaboration",
+        "Creative and design",
+        "Data management",
+        "Electronic document and records management (EDRM)",
+        "IT management",
+        "Legal",
+        "Libraries",
+        "Marketing",
+        "Operations management",
+        "Project management and planning",
+        "Schools and education"
+      ],
+      "supplierName": "Storm Technologies",
+      "serviceName": "iomart | Swift Cloud Storage ",
+      "lot": "SaaS",
+      "highlight": {
+        "serviceBenefits": [
+          "Integrated with <em>CDN</em> "
+        ]
+      },
+      "serviceFeatures": [
+        "Proxy coordinating storage servers",
+        "Internal REST-ful API ",
+        "SQLite databases on disk ",
+        "Auditors run in the background ",
+        "Swift cluster highly fault-tolerant "
+      ],
+      "id": "6610722511388672",
+      "serviceBenefits": "Integrated with <em>CDN</em> "
+    },
+    {
+      "serviceSummary": "The service cost-effectively mitigates risk posed by highly sophisticated, massive DDoS attacks through the application of proven anomaly detection technology. Available as an \u201con-demand\u201d or \u201calways-on\u201d solution and backed by proven SLAs, Level 3 DDoS Mitigation service cost effectively protects against most known forms of Layer 3 \u2013 7 attacks",
+      "serviceTypes": [
+        "Security",
+        "Telecoms"
+      ],
+      "supplierName": "Level 3 Communications Limited",
+      "serviceName": "DDoS Prevention",
+      "lot": "SaaS",
+      "highlight": {
+        "serviceFeatures": [
+          "DDoS mitigation, <em>CDN</em> network, MSS services from the network operator"
+        ]
+      },
+      "serviceFeatures": "DDoS mitigation, <em>CDN</em> network, MSS services from the network operator",
+      "id": "6283857112334336",
+      "serviceBenefits": [
+        "In house threat research and monitoring",
+        "Improved user experience Lower latency service for cleaned traffic",
+        "Minimise business impact - faster take down of command sites",
+        "One Solution protects all your services \u2013 Carrier agnostic",
+        "No requirement to allocate a new IP address range",
+        "Full suite of services, no 3rd party involvement",
+        "Service is typically 30-50% less than others  ",
+        "Eliminating costs of monitoring and managing",
+        "Peace of mind",
+        "Handle volumetric attacks via world\u2019s largest Network"
+      ]
+    },
+    {
+      "serviceSummary": " Baycloud Systems or in a suitable Content Delivery Network (<em>CDN</em>) such as the Windows Azure <em>CDN</em>. The<br /> <em>CDN</em> improves performance by caching content at locations closest to visitors to customer\u2019s websites<br />. The Windows Azure <em>CDN</em> is a managed service that is operated by Microsoft and has a 99.99% monthly",
+      "id": "4-G1-0340-001",
+      "serviceName": "CookieQ",
+      "lot": "SaaS",
+      "highlight": {
+        "serviceSummary": [
+          " Baycloud Systems or in a suitable Content Delivery Network (<em>CDN</em>) such as the Windows Azure <em>CDN</em>. The",
+          " <em>CDN</em> improves performance by caching content at locations closest to visitors to customer\u2019s websites",
+          ". The Windows Azure <em>CDN</em> is a managed service that is operated by Microsoft and has a 99.99% monthly"
+        ]
+      },
+      "supplierName": "Baycloud Systems Limited"
+    },
+    {
+      "serviceSummary": " caching (<em>CDN</em>, front-end optimization, and more) and protection (WAF, DDOS, and more), provisioned",
+      "serviceTypes": [
+        "Business intelligence and analytics",
+        "Marketing",
+        "IT management"
+      ],
+      "supplierName": "CloudFlare, Inc.",
+      "serviceName": "CloudFlare - Web Application Firewall (WAF)",
+      "lot": "SaaS",
+      "highlight": {
+        "serviceSummary": [
+          " caching (<em>CDN</em>, front-end optimization, and more) and protection (WAF, DDOS, and more), provisioned"
+        ]
+      },
+      "id": "4-G4-1270-002"
+    },
+    {
+      "serviceSummary": " caching (<em>CDN</em>, front-end optimization, and more) and protection (WAF, DDOS, and more), provisioned",
+      "serviceTypes": [
+        "Business intelligence and analytics",
+        "Marketing",
+        "IT management"
+      ],
+      "supplierName": "CloudFlare, Inc.",
+      "serviceName": "CloudFlare - Web Application Firewall (WAF)",
+      "lot": "SaaS",
+      "highlight": {
+        "serviceSummary": [
+          " caching (<em>CDN</em>, front-end optimization, and more) and protection (WAF, DDOS, and more), provisioned"
+        ]
+      },
+      "id": "5-G4-1270-002"
+    }
+  ],
+  "query": {
+    "q": "CDN",
+    "filter_lot": "saas"
+  },
+  "total": 9,
+  "took": 22
+}
