@@ -73,8 +73,6 @@ class TestSearchResults(unittest.TestCase):
         result_with_service_name_highlight = self._get_service_result_by_id(
             search_results_instance.search_results, '5-G3-0279-010'
         )
-        print "result_with_service_name_highlight:"
-        print result_with_service_name_highlight
         self.assertEquals(
             result_with_service_name_highlight['serviceName'],
             "CDN VDMS"

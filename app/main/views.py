@@ -60,9 +60,6 @@ def search():
         **dict([a for a in request.args.lists()]))
     search_results_obj = SearchResults(response)
 
-    # import json
-    # print json.dumps(response, indent=2)
-
     template_data = get_template_data(main, {
         'title': 'Search results',
         'current_lot': SearchFilters.get_current_lot(request),
