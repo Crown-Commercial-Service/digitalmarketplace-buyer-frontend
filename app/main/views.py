@@ -3,7 +3,7 @@
 import os
 from . import main
 from flask import abort, render_template, request
-from ..presenters.search_presenters import SearchFilters
+from ..presenters.search_presenters import SearchFilters, SearchResults
 from ..presenters.service_presenters import Service
 from ..helpers.search_helpers import (
     get_keywords_from_request, get_template_data
@@ -56,9 +56,12 @@ def get_service_by_id(service_id):
 def search():
     search_keywords = get_keywords_from_request(request)
     search_filters_obj = SearchFilters(blueprint=main, request=request)
-
     response = search_api_client.search_services(
         **dict([a for a in request.args.lists()]))
+    search_results_obj = SearchResults(response)
+
+    # import json
+    # print json.dumps(response, indent=2)
 
     template_data = get_template_data(main, {
         'title': 'Search results',
@@ -66,6 +69,6 @@ def search():
         'lots': search_filters_obj.lot_filters,
         'search_keywords': search_keywords,
         'filter_groups': search_filters_obj.filter_groups,
-        'services': response['services']
+        'services': search_results_obj.search_results
     })
     return render_template('search.html', **template_data)

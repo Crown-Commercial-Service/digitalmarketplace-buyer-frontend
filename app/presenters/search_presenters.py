@@ -195,3 +195,10 @@ class SearchFilters(object):
                         filter['isSet'] = (
                             filter['value'] in param_values
                         )
+
+
+class SearchResults(object):
+    """Provides access to the search results information"""
+
+    def __init__(self, response):
+        self.search_results = response['services']
