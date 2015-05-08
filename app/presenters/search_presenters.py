@@ -38,10 +38,11 @@ class SearchFilters(object):
         else:
             filter_name = question['id']
         for option in question['options']:
+            filter_id = option['label'].lower().replace(' ', '-')
             filter = {
                 'label': option['label'],
                 'name': filter_name,
-                'id': '%s-%s' % (filter_name, option['label'].lower()),
+                'id': '%s-%s' % (filter_name, filter_id),
                 'value': option['label'].lower(),
                 'lots': [lot.strip() for lot in (
                     question['dependsOnLots'].lower().split(",")
