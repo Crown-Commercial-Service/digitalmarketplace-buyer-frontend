@@ -68,13 +68,11 @@ class SearchFilters(object):
             # if the 1st question has options, they will become the
             # filters and it's details will define the group
             if question['type'] in questions_with_options:
-                filters = (
-                    filters +
+                filters += \
                     SearchFilters.get_filters_from_question_with_options(
                         question,
                         len(filters)
                     )
-                )
             else:
                 filters.append(
                     SearchFilters.get_filters_from_default_question(
