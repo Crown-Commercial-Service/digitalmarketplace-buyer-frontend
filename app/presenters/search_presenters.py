@@ -1,3 +1,4 @@
+import re
 from werkzeug.datastructures import MultiDict
 from ..helpers.questions import QuestionsLoader
 
@@ -29,33 +30,57 @@ class SearchFilters(object):
         }
 
     @staticmethod
-    def get_filters_from_question_with_options(question):
+    def get_filters_from_question_with_options(question, index):
         filter_group = []
-        for index, option in enumerate(question['options']):
-            filter_group.append({
+
+        if re.match('^serviceTypes(SCS|SaaS|IaaS)', question['id']):
+            filter_name = 'serviceTypes'
+        else:
+            filter_name = question['id']
+        for option in question['options']:
+            filter_id = option['label'].lower().replace(' ', '-')
+            filter = {
                 'label': option['label'],
-                'name': question['id'],
-                'id': question['id'] + option['label'].lower(),
+                'name': filter_name,
+                'id': '%s-%s' % (filter_name, filter_id),
                 'value': option['label'].lower(),
                 'lots': [lot.strip() for lot in (
                     question['dependsOnLots'].lower().split(",")
                 )]
-            })
+            }
+            filter_group.append(filter)
+            index = index + 1
         return filter_group
 
     @staticmethod
-    def get_filter_groups_from_questions(manifest=None, questions_dir=None):
+    def get_filter_groups_from_questions(manifest, questions_dir):
         filter_groups = []
-        get_filter_for = {
-            'boolean': SearchFilters.get_filters_from_default_question,
-            'text': SearchFilters.get_filters_from_default_question,
-            'pricing': SearchFilters.get_filters_from_default_question,
-            'options': SearchFilters.get_filters_from_question_with_options
-        }
         g6_questions = QuestionsLoader(
             manifest=manifest,
             questions_dir=questions_dir
         )
+
+        def add_filters_for_question(question, filters):
+            questions_with_options = [
+                'radios',
+                'checkboxes'
+            ]
+            # if the 1st question has options, they will become the
+            # filters and it's details will define the group
+            if question['type'] in questions_with_options:
+                filters += \
+                    SearchFilters.get_filters_from_question_with_options(
+                        question,
+                        len(filters)
+                    )
+            else:
+                filters.append(
+                    SearchFilters.get_filters_from_default_question(
+                        question
+                    )
+                )
+            return filters
+
         for section in g6_questions.sections:
             filter_group = {
                 'label': section['name'],
@@ -63,26 +88,9 @@ class SearchFilters(object):
                 'filters': []
             }
             for question in section['questions']:
-                questionType = question['type']
-                if questionType == 'boolean':
-                    filter_group['filters'].append(get_filter_for['boolean'](
-                        question
-                    ))
-                elif questionType == 'text':
-                    filter_group['filters'].append(get_filter_for['text'](
-                        question
-                    ))
-                elif questionType == 'pricing':
-                    filter_group['filters'].append(get_filter_for['pricing'](
-                        question
-                    ))
-                else:
-                    # if the 1st question has options, they will become the
-                    # filters and it's details will define the group
-                    filter_group['filters'] = get_filter_for['options'](
-                        question
-                    )
-                    break
+                filter_group['filters'] = add_filters_for_question(
+                    question=question, filters=filter_group['filters']
+                )
             filter_groups.append(filter_group)
         return filter_groups
 
