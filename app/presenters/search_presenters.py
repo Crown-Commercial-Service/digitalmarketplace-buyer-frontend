@@ -53,14 +53,14 @@ class SearchFilters(object):
         return filter_group
 
     @staticmethod
-    def get_filter_groups_from_questions(manifest=None, questions_dir=None):
+    def get_filter_groups_from_questions(manifest, questions_dir):
         filter_groups = []
         g6_questions = QuestionsLoader(
             manifest=manifest,
             questions_dir=questions_dir
         )
 
-        def add_filters_for_question(question=None, filters=None):
+        def add_filters_for_question(question, filters):
             questions_with_options = [
                 'radios',
                 'checkboxes'
