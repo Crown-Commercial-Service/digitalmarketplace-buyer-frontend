@@ -1,4 +1,5 @@
 import re
+from flask import Markup
 from werkzeug.datastructures import MultiDict
 from ..helpers.questions import QuestionsLoader
 
@@ -195,3 +196,19 @@ class SearchFilters(object):
                         filter['isSet'] = (
                             filter['value'] in param_values
                         )
+
+
+class SearchResults(object):
+    """Provides access to the search results information"""
+
+    def _add_highlighting(self):
+        for index, service in enumerate(self.search_results):
+            if 'highlight' in service:
+                if 'serviceSummary' in service['highlight']:
+                    self.search_results[index]['serviceSummary'] = Markup(
+                        ''.join(service['highlight']['serviceSummary'])
+                    )
+
+    def __init__(self, response):
+        self.search_results = response['services']
+        self._add_highlighting()

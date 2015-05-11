@@ -1,3 +1,5 @@
+@import "_search-result.scss";
+
 .search-page-filters {
   .lot-filters {
     h3 {
@@ -26,4 +28,5 @@
     padding: 5px;
     border: 1px solid $border-colour;
   }
+}
 }
