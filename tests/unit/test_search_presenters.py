@@ -77,3 +77,16 @@ class TestSearchResults(unittest.TestCase):
             result_with_service_name_highlight['serviceName'],
             "CDN VDMS"
         )
+
+
+class TestSearchSummary(unittest.TestCase):
+
+    def setUp(self):
+        self.fixture = _get_fixture_data()
+
+    def tearDown(self):
+        pass
+
+    def test_search_results_has_summary_set(self):
+        search_results_instance = SearchResults(self.fixture)
+        self.assertTrue(hasattr(search_results_instance, 'summary'))
