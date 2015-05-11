@@ -203,7 +203,7 @@ class SearchResults(object):
 
     def _add_highlighting(self):
         for index, service in enumerate(self.search_results):
-            if ('highlight' in service):
+            if 'highlight' in service:
                 if 'serviceSummary' in service['highlight']:
                     self.search_results[index]['serviceSummary'] = Markup(
                         ''.join(service['highlight']['serviceSummary'])
