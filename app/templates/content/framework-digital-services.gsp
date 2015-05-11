@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="layout" content="govuk"/>
+    <title>Digital Services framework – Digital Marketplace</title>
+  </head>
+  <body>
+    <div id="global-breadcrumb" class="breadcrumb-with-legacy-main">
+      <nav>
+        <ol class="group" role="breadcrumbs">
+          <li>
+            <a href="/">Digital Marketplace</a>
+          </li>
+          <li>
+            <a href="https://digitalservicesstore.service.gov.uk">Specialists to work on digital projects</a>
+          </li>
+          <li>
+            Framework information
+          </li>
+        </ol>
+      </nav>
+    </div>
+    <div id="publication" class="html-publications-show">
+
+      <header class="publication-header" id="contents"><div class="inner-block floated-children">
+      <div class="headings">
+      <p class="document-type">Digital Marketplace guidance</p>
+      <h1>Digital Services framework</h1>
+      </div>
+      <nav class="in-page-navigation"><h2>Contents</h2>
+      <ol>
+        <li><a href="#what-are-frameworks">What are frameworks?</a></li>
+        <li><a href="#frameworks-on-the-digital-marketplace">Frameworks on the Digital Marketplace</a></li>
+        <li><a href="#the-digital-services-framework">The Digital Services framework</a></li>
+        <li><a href="#submit-services-to-the-digital-services-framework">Submit services to the Digital Services framework</a></li>
+      </ol></nav>
+      </div>
+      </header>
+
+      <div class="block publication-content">
+      <div class="inner-block floated-children">
+      <div class="govspeak">
+
+      <h2 id="what-are-frameworks">
+      <span class="number">1. </span>What are frameworks?</h2>
+      <p>
+        Government frameworks are agreements between the government and suppliers. The basic terms of use are agreed by both parties following a formal <a href="http://www.ojeu.eu/" rel="external">Official Journal of the European Union (OJEU)</a> procurement process. This saves public sector organisations and suppliers the time and cost traditionally associated with individual procurement contracts. Buyers and suppliers still need to sign a ‘call-off contract’ for each service procured through a framework.
+      </p>
+
+
+      <h2 id="frameworks-on-the-digital-marketplace">
+      <span class="number">2. </span>Frameworks on the Digital Marketplace</h2>
+      <p>
+        Public sector organisations can use the Digital Marketplace to access services from 3 frameworks:
+      </p>
+      <ul>
+        <li>
+          the G-Cloud framework, which includes cloud technology and support (eg web hosting or IT health checks)
+        </li>
+        <li>
+          the Digital Services framework, which includes specialists for work on specific digital projects (eg technical architects and user researchers)
+        </li>
+        <li>
+          the Crown Hosting Data Centres framework, which provides access to physical datacentre space for legacy systems
+        </li>
+      </ul>
+
+
+
+
+
+
+
+
+
+
+      <h2 id="the-digital-services-framework">
+        <span class="number">3. </span>The Digital Services framework
+      </h2>
+      <p>
+        The Digital Services framework is an agreement between the government and suppliers who provide people for digital projects. Specialties listed under the framework include ‘user research’ and ‘content design and development’.
+      </p>
+      <p>
+        The basic terms of use are between the government and suppliers following a formal <a href="http://www.ojeu.eu">Official Journal of the European Union (OJEU)</a> procurement process. Suppliers on the Digital Services framework must:
+      </p>
+      <ul>
+        <li>
+          work in <a href="https://www.gov.uk/service-manual/agile/index.html">an agile way</a>
+        </li>
+        <li>
+          work according to guidance in the <a href="https://www.gov.uk/service-manual">Government Service Design Manual</a>
+        </li>
+        <li>
+          provide services that are <a href="https://www.gov.uk/service-manual/start">digital by default</a>
+        </li>
+      </ul>
+      <p>
+        There are over 170 suppliers on the Digital Services framework, who provide all or some of the following roles:
+      </p>
+      <table class="dss-table">
+        <thead><tr>
+        <th>Capabilities</th>
+              <th>Linked roles</th>
+            </tr></thead>
+        <tbody>
+        <tr>
+        <td>Software engineering and ongoing support</td>
+              <td>Developer, technical architect</td>
+            </tr>
+        <tr>
+        <td>Product development and service design</td>
+              <td>Product manager, business analyst</td>
+            </tr>
+        <tr>
+        <td>Agile delivery management</td>
+              <td>Delivery manager, product manager, business analyst</td>
+            </tr>
+        <tr>
+        <td>Front-end design and interaction design</td>
+              <td>Designer</td>
+            </tr>
+        <tr>
+        <td>Content design and development</td>
+              <td>Content designer</td>
+            </tr>
+        <tr>
+        <td>System administration and web operations</td>
+              <td>Web operations, security specialist, database specialist, network specialist</td>
+            </tr>
+        <tr>
+        <td>User research</td>
+              <td>Researcher</td>
+            </tr>
+        <tr>
+        <td>Embedding Agile</td>
+              <td>Agile coach</td>
+            </tr>
+        </tbody>
+      </table>
+      <p>
+        These roles and capabilities may change from iteration to iteration of the Digital Services framework.
+      </p>
+
+
+
+
+      <h2 id="submit-services-to-the-digital-services-framework">
+        <span class="number">4. </span>Submit services to the Digital Services framework
+      </h2>
+      <p>
+        You can apply to submit your services to the Digital Services framework when an <a href="http://www.google.com/url?q=http%3A%2F%2Fwww.ojeu.eu&amp;sa=D&amp;sntz=1&amp;usg=AFQjCNFCtRdMjOQV9-ViCXXermvKHlWr6A">Official Journal of the European Union (OJEU)</a> is open. On average, an OJEU will be open for 6 weeks, every 6 to 9 months. It will be published on <a href="http://ted.europa.eu">Tenders Electronic Daily</a>.
+     </p>
+     <p>
+        You’ll be asked to describe and show evidence of your capabilities when applying for a place on the framework. As part of this process, you’ll need to demonstrate that your methodology meets the <a href="https://www.gov.uk/service-manual">Government Service Design Manual</a> and the <a href="https://www.gov.uk/service-manual/digital-by-default">Digital by Default Service Standard</a> for new or redesigned digital services.
+      </p>
+      <p>
+        Applications to the framework are evaluated by Government Digital Service (GDS) subject matter experts covering all 8 digital capabilities.
+      </p>
+      <p>
+        A place on the framework is no guarantee of business to a supplier. For each digital project request for proposal (RFP) suppliers are invited to respond to, they’ll go through technical, cultural and commercial evaluation.
+      </p>
+      <p>
+        You can find the <a href="http://ccs-agreements.cabinetoffice.gov.uk/contracts/rm1043">Digital Services framework</a> agreement on the Crown Commercial Service (CCS) website.
+      </p>
+      <p>
+        If you need any more information about frameworks, please email <a href="mailto:enquiries@digitalmarketplace.service.gov.uk">enquiries@digitalmarketplace.service.gov.uk</a>
+      </p>
+
+
+
+
+    </div>
+  </body>
+</html>

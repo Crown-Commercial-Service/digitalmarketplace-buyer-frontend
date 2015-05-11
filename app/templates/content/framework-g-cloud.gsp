@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="layout" content="govuk"/>
+    <title>G-Cloud framework – Digital Marketplace</title>
+  </head>
+  <body>
+    <div id="global-breadcrumb" class="breadcrumb-with-legacy-main">
+      <nav>
+        <ol class="group" role="breadcrumbs">
+          <li>
+            <a href="/">Digital Marketplace</a>
+          </li>
+          <li>
+            <a href="/g-cloud">Cloud technology and support</a>
+          </li>
+          <li>
+            Framework information
+          </li>
+        </ol>
+      </nav>
+    </div>
+    <div id="publication" class="html-publications-show">
+
+      <header class="publication-header" id="contents"><div class="inner-block floated-children">
+      <div class="headings">
+      <p class="document-type">Digital Marketplace guidance</p>
+      <h1>G-Cloud framework</h1>
+      </div>
+      <nav class="in-page-navigation"><h2>Contents</h2>
+      <ol>
+        <li><a href="#what-are-frameworks">What are frameworks?</a></li>
+        <li><a href="#frameworks-on-the-digital-marketplace">Frameworks on the Digital Marketplace</a></li>
+        <li><a href="#the-g-cloud-framework">The G-Cloud framework</a></li>
+        <li><a href="#which-framework-agreement">Which framework agreement?</a></li>
+        <li><a href="#submit-services-to-the-G-Cloud-framework">Submit services to the G-Cloud framework</a></li>
+      </ol></nav>
+      </div>
+      </header>
+
+      <div class="block publication-content">
+      <div class="inner-block floated-children">
+      <div class="govspeak">
+
+      <h2 id="what-are-frameworks">
+      <span class="number">1. </span>What are frameworks?</h2>
+      <p>
+        Government frameworks are agreements between the government and suppliers. The basic terms of use are agreed by both parties following a formal <a href="http://www.ojeu.eu/" rel="external">Official Journal of the European Union (OJEU)</a> procurement process. This saves public sector organisations and suppliers the time and cost traditionally associated with individual procurement contracts. Buyers and suppliers still need to sign a ‘call-off contract’ for each service procured through a framework.
+      </p>
+
+
+      <h2 id="frameworks-on-the-digital-marketplace">
+      <span class="number">2. </span>Frameworks on the Digital Marketplace</h2>
+      <p>
+        Public sector organisations can use the Digital Marketplace to access services from 3 frameworks:
+      </p>
+      <ul>
+        <li>
+          the G-Cloud framework, which includes cloud technology and support (eg web hosting or IT health checks)
+        </li>
+        <li>
+          the Digital Services framework, which includes specialists for work on specific digital projects (eg technical architects and user researchers)
+        </li>
+        <li>
+          the Crown Hosting Data Centres framework, which provides access to physical datacentre space for legacy systems
+        </li>
+      </ul>
+
+
+
+
+
+
+
+
+
+
+      <h2 id="the-g-cloud-framework">
+        <span class="number">3. </span>The G-Cloud framework
+      </h2>
+      <p>
+        The G-Cloud framework is an agreement between the government and suppliers who provide cloud-based services. G-Cloud services are divided into four lots:
+      </p>
+      <ul>
+        <li>
+          <h4>Infrastructure as a Service</h4>
+          Infrastructure is the hardware that makes software work. It’s the networks, hosting facilities and servers on which platforms and software depend. Infrastructure as a Service (IaaS) is infrastructure you can order and run entirely over the internet, without having to pay for your own hardware.
+        </li>
+        <li>
+          <h4>Platform as a Service</h4>
+          Platform as a Service (PaaS) technologies are software platforms that provide a basis for building other services and applications. With PaaS, you can set up, order, pay for and manage platforms in the cloud.
+        </li>
+        <li>
+          <h4>Software as a Service</h4>
+          Software as a Service (SaaS) is an application or service that can be run over the internet or in the cloud. Examples of SaaS include web-based email services, customer relationship management (CRM) software and analytics tools.
+        </li>
+        <li>
+          <h4>Specialist Cloud Services</h4>
+          Specialist Cloud Services (SCS) support your transition to SaaS, PaaS and IaaS. Examples of SCS include cloud strategy, data transfer between providers or day-to-day support of cloud-based services.
+        </li>
+      </ul>
+
+
+
+
+      <h2 id="which-framework-agreement">
+        <span class="number">4. </span>Which framework agreement?
+      </h2>
+      <p>
+        Cloud services on the Digital Marketplace will be on either <a href="http://ccs.cabinetoffice.gov.uk/contracts/rm1557v">G-Cloud 5</a> or <a href="http://ccs-agreements.cabinetoffice.gov.uk/contracts/rm1557vi">G-Cloud 6</a>. G-Cloud 6 is the latest framework agreement.
+      </p>
+      <p>
+        If you’d like to buy technology services from another framework, please email <a href="mailto:enquiries@digitalmarketplace.service.gov.uk">enquiries@digitalmarketplace.service.gov.uk</a> or <a href="http://ccs-agreements.cabinetoffice.gov.uk/">find an agreement</a> on the Crown Commercial Service (CCS) website.
+      </p>
+
+
+
+
+      <h2 id="submit-services-to-the-G-Cloud-framework">
+        <span class="number">5. </span>Submit services to the G-Cloud framework
+      </h2>
+      <p>
+        Read <a href="/suppliers-guide/">the G-Cloud suppliers’ guide</a> to learn how to submit services to the G-Cloud framework.
+      </p>
+      <p>
+        If you need any more information about frameworks, please email <a href="mailto:enquiries@digitalmarketplace.service.gov.uk">enquiries@digitalmarketplace.service.gov.uk</a>
+      </p>
+
+
+
+    </div>
+  </body>
+</html>
