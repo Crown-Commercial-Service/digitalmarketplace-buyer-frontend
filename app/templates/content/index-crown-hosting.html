@@ -1,23 +1,12 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta name="layout" content="govuk"/>
-    <title>Crown Hosting</title>
-</head>
+{% from 'macros/_breadcrumb.html' import breadcrumb %}
+{% extends "_base_page.html" %}
 
-<body>
-    <div id="global-breadcrumb" class="breadcrumb-with-legacy-main">
-      <nav>
-        <ol class="group" role="breadcrumbs">
-          <li>
-            <a href="/">Digital Marketplace</a>
-          </li>
-          <li>
-            Physical datacentre space for legacy systems
-          </li>
-        </ol>
-      </nav>
-    </div>
+{% block breadcrumb %}
+  {{ breadcrumb(crumbs) }}
+{% endblock %}
+
+{% block main_content %}
+
     <div class='service-page crown-hosting' id='content'>
       <div class='title'>
         <header class="page-heading">
@@ -107,5 +96,5 @@
           Find out more about the <a href="/crown-hosting/framework">Crown Hosting Data Centres framework</a>.
         </p>
       </div>
-  </body>
-</html>
+
+{% endblock %}

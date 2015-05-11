@@ -1,24 +1,11 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta name="layout" content="govuk"/>
-<title>Digital Marketplace buyers' guide</title>
-</head>
+{% from 'macros/_breadcrumb.html' import breadcrumb %}
+{% extends "_base_page.html" %}
 
-<body>
-<div id="global-breadcrumb" class="header-context">
-<nav>
-<ol class="group" role="breadcrumbs">
-<li>
-<a href="${createLink(uri: '/')}">Home</a>
-</li>
-<li>
-<g:message code="home.menu.buyers-guide"/>
-</li>
-</ol>
-</nav>
-</div>
+{% block breadcrumb %}
+  {{ breadcrumb(crumbs) }}
+{% endblock %}
 
+{% block main_content %}
 
 <div id="publication" class="html-publications-show">
 
@@ -199,6 +186,4 @@ GDS holds the government’s <a href='https://www.gov.uk/service-manual/technolo
 </div>
 </div>
 
-
-</body>
-</html>
+{% endblock %}
