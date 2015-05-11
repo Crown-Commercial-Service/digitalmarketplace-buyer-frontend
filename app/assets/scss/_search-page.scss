@@ -1,3 +1,5 @@
+@import "_search-result.scss";
+
 .search-page-filters {
   .lot-filters {
     h3 {
@@ -27,10 +29,4 @@
     border: 1px solid $border-colour;
   }
 }
-
-.search-result-excerpt {
-  em {
-    font-style: normal;
-    background-color: $yellow-25;
-  }
 }
