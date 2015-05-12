@@ -209,6 +209,14 @@ class SearchResults(object):
                         ''.join(service['highlight']['serviceSummary'])
                     )
 
+    def _get_search_summary(self, results_total):
+        template = u"<span class='search-summary-count'>{}</span> {} found"
+        if int(results_total) < 2:
+            return Markup(template.format('1', u"result"))
+        else:
+            return Markup(template.format(results_total, u"results"))
+
     def __init__(self, response):
         self.search_results = response['services']
         self._add_highlighting()
+        self.summary = self._get_search_summary(response['total'])
