@@ -113,8 +113,37 @@ class SearchFilters(object):
             summary_rules = yaml.load(file)
         return summary_rules
 
+    def _get_group_name_from_filter_id(self, filter_id):
+        for group in self.filter_groups:
+            for filter in group['filters']:
+                if filter['name'] == filter_id:
+                    return group['label']
+        return False
+
+    def _get_filter_name_from_param(self, param_key, param_value):
+        for group in self.filter_groups:
+            for filter in group['filters']:
+                if param_value == u'true':
+                    if filter['name'] == param_key:
+                        return filter['label']
+                else:
+                    if filter['value'] == param_value:
+                        return filter['label']
+        return False
+
     def _get_search_summary(self):
         summary_rules = self._get_search_summary_rules()
+        summary_data = {}
+        for param in self.request_filters.iterlists():
+            param_key = param[0]
+            section = self._get_group_name_from_filter_id(param_key)
+            if section is not False:
+                param_values = [self._get_filter_name_from_param(param_key, value) for value in param[1]]
+                summary_data[section] = {
+                    'id': section,
+                    'filters': param_values
+                }
+        return ''
 
     def _sift_filters_based_on_lot(self, lot):
         sifted_groups = []

@@ -117,14 +117,14 @@ class TestSearchSummary(unittest.TestCase):
         search_results_instance = SearchResults(self.fixture)
         self.assertTrue(hasattr(search_results_instance, 'summary'))
 
-    def test_search_results_summary_with_multiple(self):
+    def test_search_summary_with_multiple(self):
         search_results_instance = SearchResults(self.fixture)
         self.assertEqual(
             search_results_instance.summary,
             Markup(
                 u"<span class='search-summary-count'>9</span> results found"))
 
-    def test_search_results_works_with_single(self):
+    def test_search_summary_works_with_single(self):
         single_result = self.fixture.copy()
         single_result['services'] = [single_result['services'][0]]
         single_result['meta']['total'] = '1'
