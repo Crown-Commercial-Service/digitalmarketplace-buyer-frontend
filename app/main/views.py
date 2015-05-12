@@ -228,6 +228,10 @@ def search():
         current_app.config["DM_SEARCH_PAGE_SIZE"],
         get_page_from_request(request)
     )
+    search_summary = SearchResults.get_search_summary(
+        response['meta']['total'],
+        search_filters_obj.request_filters,
+        search_filters_obj.filter_groups)
 
     breadcrumb = [
         {
@@ -249,10 +253,10 @@ def search():
         'search_keywords': search_keywords,
         'filter_groups': search_filters_obj.filter_groups,
         'services': search_results_obj.search_results,
-        'summary': search_results_obj.summary,
         'total': search_results_obj.total,
         'search_query': query_args_for_pagination(request.args),
         'pagination': pagination_config,
         'crumbs': breadcrumb,
+        'summary': search_summary
     })
     return render_template('search.html', **template_data)

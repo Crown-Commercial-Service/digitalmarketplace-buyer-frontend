@@ -22,22 +22,19 @@
   labelPreposition:
   filtersPreposition: where
   conjunction: of an
-  filters:
+  filtersRules:
   -
-    id: dataExtractionRemoval
+    id: Data extraction/removal plan in place
     preposition: they have a
   -
-    id: datacentresEUCode
+    id: Datacentres adhere to EU Code of Conduct for Operations
     preposition: their
   -
-    id: dataBackupRecovery
+    id: Backup, disaster recovery and resilience plan in place
     preposition: they have a
   -
-    id: selfServiceProvisioning
+    id: Self-service provisioning supported
     preposition: they have
-  -
-    id: supportForThirdParties
-    preposition:
 -
   id: Datacentre tier
   label: datacentre tiers

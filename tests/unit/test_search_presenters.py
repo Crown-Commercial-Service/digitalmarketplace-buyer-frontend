@@ -4,6 +4,8 @@ import unittest
 from nose.tools import assert_equal, assert_is_none
 
 from flask import Markup
+from mock import Mock
+from werkzeug.datastructures import MultiDict
 from app.presenters.search_presenters import SearchResults
 
 
@@ -104,33 +106,18 @@ class TestSearchResults(unittest.TestCase):
             "CDN VDMS"
         )
 
-
-class TestSearchSummary(unittest.TestCase):
-
-    def setUp(self):
-        self.fixture = _get_fixture_data()
-
-    def tearDown(self):
-        pass
-
-    def test_search_results_has_summary_set(self):
-        search_results_instance = SearchResults(self.fixture)
-        self.assertTrue(hasattr(search_results_instance, 'summary'))
-
-    def test_search_summary_with_multiple(self):
-        search_results_instance = SearchResults(self.fixture)
+    def test_search_summary_for_multiple_results(self):
         self.assertEqual(
-            search_results_instance.summary,
+            SearchResults.get_search_summary(9, MultiDict()),
             Markup(
                 u"<span class='search-summary-count'>9</span> results found"))
 
     def test_search_summary_works_with_single(self):
         single_result = self.fixture.copy()
         single_result['services'] = [single_result['services'][0]]
-        single_result['meta']['total'] = '1'
-        search_results_instance = SearchResults(single_result)
+        single_result['total'] = '1'
         self.assertEqual(
-            search_results_instance.summary,
+            SearchResults.get_search_summary(1, MultiDict),
             Markup(
                 u"<span class='search-summary-count'>1</span> result found"))
 
