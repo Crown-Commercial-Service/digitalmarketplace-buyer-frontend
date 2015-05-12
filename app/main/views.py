@@ -155,6 +155,17 @@ def suppliers_guide_g_cloud():
     )
 
 
+@main.route('/terms-and-conditions')
+def terms_and_conditions():
+    template_data = get_template_data(main, {
+        'title': 'Terms and conditions – Digital Marketplace',
+        'crumbs': []
+    })
+    return render_template(
+        'content/terms-and-conditions.html', **template_data
+    )
+
+
 @main.route('/service/<service_id>')
 def get_service_by_id(service_id):
     try:
