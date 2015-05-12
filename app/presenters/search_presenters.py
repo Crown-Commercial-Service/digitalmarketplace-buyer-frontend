@@ -1,4 +1,6 @@
+import os
 import re
+import yaml
 from flask import Markup
 from werkzeug.datastructures import MultiDict
 from ..helpers.questions import QuestionsLoader
@@ -95,8 +97,24 @@ class SearchFilters(object):
         self.filter_groups = blueprint.config['FILTER_GROUPS']
         self.request_filters = self._get_filters_from_request(request)
         self.lot_filters = self._get_lot_filters_from_request(request)
+        self.search_summary = self._get_search_summary()
         self._sift_filters_based_on_lot(request.args.get('lot', 'all'))
         self._set_filter_states()
+
+    def _get_search_summary_rules(self):
+        manifest_path = os.path.join(
+            os.path.dirname(__file__),
+            '..',
+            'helpers',
+            'search_summary_manifest.yml'
+        )
+
+        with open(manifest_path, 'r') as file:
+            summary_rules = yaml.load(file)
+        return summary_rules
+
+    def _get_search_summary(self):
+        summary_rules = self._get_search_summary_rules()
 
     def _sift_filters_based_on_lot(self, lot):
         sifted_groups = []
