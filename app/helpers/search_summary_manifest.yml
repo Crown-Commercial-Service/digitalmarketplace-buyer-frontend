@@ -1,25 +1,25 @@
 -
-  id: categories
+  id: Categories
   label: categories
   labelPreposition: under the
   filtersPreposition:
   conjunction: and
 -
-  id: pricing
+  id: Pricing
   label:
-  labelePreposition:
+  labelPreposition:
   filtersPreposition: with a
   conjunction: and a
 -
-  id: minimum_contract_period
-  label: Minimum contract period
-  namePreposition: with a
+  id: Minimum contract period
+  label: minimum contract period
+  labelPreposition: with a
   filtersPreposition: of an
   conjunction: of an
 -
-  id: service_management
-  name:
-  namePreposition:
+  id: Service management
+  label:
+  labelPreposition:
   filtersPreposition: where
   conjunction: of an
   filters:
@@ -39,20 +39,20 @@
     id: supportForThirdParties
     preposition:
 -
-  id: datacentre_tier
-  name: datacentre tiers
-  namePreposition: with
+  id: Datacentre tier
+  label: datacentre tiers
+  labelPreposition: with
   filtersPreposition: to the levels
   conjunction: and
 -
-  id: networks-the-service-is-directly-connected-to
-  name: directly connected to the networks\:
-  namePreposition:
+  id: Networks the service is directly connected to
+  label: "directly connected to the networks:"
+  labelPreposition:
   filtersPreposition:
   conjunction: and
 -
-  id: interoperability
-  name: 
-  namePreposition:
+  id: Interoperability
+  label: 
+  labelPreposition:
   filtersPreposition:
   conjunction: and
