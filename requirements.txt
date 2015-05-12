@@ -4,7 +4,7 @@ Flask-Script==2.0.5
 requests==2.5.1
 inflection==0.2.1
 pyyaml==3.11
--e git+https://github.com/alphagov/digitalmarketplace-utils.git@0.6.0#egg=digitalmarketplace-utils
+-e git+https://github.com/alphagov/digitalmarketplace-utils.git@0.10.2#egg=digitalmarketplace-utils
 
 # Required for SNI to work in requests
 pyOpenSSL==0.14
