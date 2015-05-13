@@ -39,7 +39,7 @@ def get_service_by_id(service_id):
         service = data_api_client.get_service(service_id)
         service_view_data = Service(service)
         breadcrumb = [
-            {'text': get_lot_name_from_acronym(main, service['lot'])}
+            {'text': get_lot_name_from_acronym(main, service_view_data.lot)}
         ]
         template_data = get_template_data(main, {
             'crumbs': breadcrumb,

@@ -18,22 +18,29 @@ def _get_fixture_data():
 class TestService(unittest.TestCase):
 
     def setUp(self):
-        self.fixture = _get_fixture_data()['services']
+        self.fixture = _get_fixture_data()
         self.service = Service(self.fixture)
 
     def tearDown(self):
         pass
 
     def test_title_attribute_is_set(self):
-        self.assertEquals(self.service.title, self.fixture['serviceName'])
+        self.assertEquals(
+            self.service.title,
+            self.fixture['services']['serviceName'])
+
+    def test_lot_attribute_is_set(self):
+        self.assertEquals(
+            self.service.lot,
+            self.fixture['services']['lot'])
 
     def test_supplierName_attribute_is_set(self):
         self.assertEquals(
-            self.service.supplierName, self.fixture['supplierName']
+            self.service.supplierName, self.fixture['services']['supplierName']
         )
 
     def test_Service_works_if_supplierName_is_not_set(self):
-        del self.fixture['supplierName']
+        del self.fixture['services']['supplierName']
         self.service = Service(self.fixture)
         self.assertFalse(hasattr(self.service, 'supplierName'))
 
@@ -84,7 +91,7 @@ class TestService(unittest.TestCase):
         })
 
     def test_the_support_attribute_group_is_not_there_if_no_attributes(self):
-        del self.fixture['openStandardsSupported']
+        del self.fixture['services']['openStandardsSupported']
         service = Service(self.fixture)
         for group in service.attributes:
             if group['name'] == 'Open standards':
