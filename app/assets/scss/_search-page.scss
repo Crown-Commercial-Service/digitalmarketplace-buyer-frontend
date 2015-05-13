@@ -1,4 +1,12 @@
-@import "_search-result.scss";
+@import "search/_search-summary.scss";
+
+.search-summary {
+  padding: 0 0 $gutter-half;
+  margin: 0 0 $gutter-half;
+  border-bottom: 1px solid $border-colour;
+}
+
+@import "search/_search-result.scss";
 
 em.search-result-highlighted-text {
   font-style: normal;

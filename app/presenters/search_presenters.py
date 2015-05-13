@@ -97,12 +97,12 @@ class SearchFilters(object):
 
     def __init__(self, blueprint=False, request={}):
         self.filter_groups = blueprint.config['FILTER_GROUPS']
-        self.request_filters = self.__get_filters_from_request(request)
-        self.lot_filters = self.__get_lot_filters_from_request(request)
-        self.__sift_filters_based_on_lot(request.args.get('lot', 'all'))
-        self.__set_filter_states()
+        self.request_filters = self._get_filters_from_request(request)
+        self.lot_filters = self._get_lot_filters_from_request(request)
+        self._sift_filters_based_on_lot(request.args.get('lot', 'all'))
+        self._set_filter_states()
 
-    def __sift_filters_based_on_lot(self, lot):
+    def _sift_filters_based_on_lot(self, lot):
         sifted_groups = []
         lots = ['saas', 'paas', 'iaas', 'scs']
 
@@ -126,7 +126,7 @@ class SearchFilters(object):
                 sifted_groups.append(sifted_group)
         self.filter_groups = sifted_groups
 
-    def __get_lot_filters_from_request(self, request):
+    def _get_lot_filters_from_request(self, request):
         """Returns data to construct lot filters from"""
 
         def _get_url(keywords=None, lot=None):
@@ -174,7 +174,7 @@ class SearchFilters(object):
             lot_filters[lot_names.index(current_lot)]['isActive'] = True
         return lot_filters
 
-    def __get_filters_from_request(self, request):
+    def _get_filters_from_request(self, request):
         """Returns the filters applied to a search from the request object"""
 
         # TODO: only use request arguments that map to recognised filters
@@ -182,7 +182,7 @@ class SearchFilters(object):
         filters.poplist('q')
         return filters
 
-    def __set_filter_states(self):
+    def _set_filter_states(self):
         """Sets a flag on each filter to mark it as set or not"""
         for filter_group in self.filter_groups:
             for filter in filter_group['filters']:
@@ -209,6 +209,14 @@ class SearchResults(object):
                         ''.join(service['highlight']['serviceSummary'])
                     )
 
+    def _get_search_summary(self, results_total):
+        template = u"<span class='search-summary-count'>{}</span> {} found"
+        if int(results_total) < 2:
+            return Markup(template.format('1', u"result"))
+        else:
+            return Markup(template.format(results_total, u"results"))
+
     def __init__(self, response):
         self.search_results = response['services']
         self._add_highlighting()
+        self.summary = self._get_search_summary(response['total'])

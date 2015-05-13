@@ -66,6 +66,7 @@ def search():
         'lots': search_filters_obj.lot_filters,
         'search_keywords': search_keywords,
         'filter_groups': search_filters_obj.filter_groups,
-        'services': search_results_obj.search_results
+        'services': search_results_obj.search_results,
+        'summary': search_results_obj.summary
     })
     return render_template('search.html', **template_data)

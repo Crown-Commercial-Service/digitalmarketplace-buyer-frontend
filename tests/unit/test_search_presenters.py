@@ -77,3 +77,33 @@ class TestSearchResults(unittest.TestCase):
             result_with_service_name_highlight['serviceName'],
             "CDN VDMS"
         )
+
+
+class TestSearchSummary(unittest.TestCase):
+
+    def setUp(self):
+        self.fixture = _get_fixture_data()
+
+    def tearDown(self):
+        pass
+
+    def test_search_results_has_summary_set(self):
+        search_results_instance = SearchResults(self.fixture)
+        self.assertTrue(hasattr(search_results_instance, 'summary'))
+
+    def test_search_results_summary_with_multiple(self):
+        search_results_instance = SearchResults(self.fixture)
+        self.assertEqual(
+            search_results_instance.summary,
+            Markup(
+                u"<span class='search-summary-count'>9</span> results found"))
+
+    def test_search_results_works_with_single(self):
+        single_result = self.fixture.copy()
+        single_result['services'] = [single_result['services'][0]]
+        single_result['total'] = '1'
+        search_results_instance = SearchResults(single_result)
+        self.assertEqual(
+            search_results_instance.summary,
+            Markup(
+                u"<span class='search-summary-count'>1</span> result found"))
