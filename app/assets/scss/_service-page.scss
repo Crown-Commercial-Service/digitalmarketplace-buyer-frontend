@@ -26,6 +26,11 @@
   margin: 0;
 }
 
+.service-summary-preamble {
+  @include copy-19;
+  margin-bottom: 10px;
+}
+
 .service-summary-heading {
   @extend %sub-heading;
   margin-top: 35px;

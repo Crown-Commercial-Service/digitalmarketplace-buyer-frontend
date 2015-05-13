@@ -8,7 +8,8 @@ except ImportError:
 
 
 class Service(object):
-    def __init__(self, service_data):
+    def __init__(self, service):
+        service_data = service['services']
         self.title = service_data['serviceName']
         if 'supplierName' in service_data:
             self.supplierName = service_data['supplierName']
@@ -17,6 +18,8 @@ class Service(object):
             self.benefits = service_data['serviceBenefits']
         if 'serviceFeatures' in service_data:
             self.features = service_data['serviceFeatures']
+        self.lot = service_data['lot']
+        self.benefits = service_data['serviceBenefits']
         self.attributes = self._get_service_attributes(service_data)
         self.meta = self._get_service_meta(service_data)
 

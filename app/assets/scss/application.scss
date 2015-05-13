@@ -8,6 +8,7 @@ $path: "/static/images/";
 
 #wrapper {
   @extend %site-width-container;
+  padding-bottom: $gutter * 2;
 }
 
 @import "_notification-banners.scss";
@@ -25,6 +26,7 @@ $path: "/static/images/";
 @import "_service-page.scss";
 @import "_index-page.scss";
 @import "_search-page.scss";
+@import "_publication.scss";
 
 .return-to-top {
   display: block;
