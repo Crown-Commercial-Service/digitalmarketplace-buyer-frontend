@@ -182,7 +182,6 @@ def get_service_by_id(service_id):
     except AuthException:
         abort(500, "Application error")
     except KeyError as e:
-        print e
         abort(404, "Service ID '%s' can not be found" % service_id)
 
 

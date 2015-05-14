@@ -3,6 +3,7 @@
     <h2 class="search-result-title">
         <a href="/service/{{ service.id }}">{{ service.serviceName }}</a>
     </h2>
+
     <p class="search-result-supplier">
         {{ service.supplierName }}
     </p>
@@ -16,6 +17,10 @@
         </li>
         <li class="search-result-metadata-item">
             {{ service.frameworkName }}
+        </li>
+        {% for serviceType in service.serviceTypes %}
+        <li class="search-result-metadata-item">{{ serviceType }}</li>
+        {% endfor %}
         </li>
     </ul>
 </div>

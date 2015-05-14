@@ -19,7 +19,6 @@ class Service(object):
         if 'serviceFeatures' in service_data:
             self.features = service_data['serviceFeatures']
         self.lot = service_data['lot']
-        self.benefits = service_data['serviceBenefits']
         self.attributes = self._get_service_attributes(service_data)
         self.meta = self._get_service_meta(service_data)
 
