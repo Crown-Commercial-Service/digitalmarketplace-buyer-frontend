@@ -3,7 +3,6 @@ import json
 import unittest
 
 from flask import Markup
-from mock import Mock
 from app.presenters.search_presenters import SearchResults
 
 
