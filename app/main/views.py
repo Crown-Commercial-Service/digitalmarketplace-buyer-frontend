@@ -190,7 +190,7 @@ def search():
     search_keywords = get_keywords_from_request(request)
     search_filters_obj = SearchFilters(blueprint=main, request=request)
     response = search_api_client.search_services(
-        **dict([a for a in request.args.lists()]))
+        **dict(request.args.lists()))
     search_results_obj = SearchResults(response)
 
     template_data = get_template_data(main, {
