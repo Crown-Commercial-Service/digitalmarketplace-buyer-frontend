@@ -1,0 +1,100 @@
+{% from 'macros/_breadcrumb.html' import breadcrumb %}
+{% extends "_base_page.html" %}
+
+{% block breadcrumb %}
+  {{ breadcrumb(crumbs) }}
+{% endblock %}
+
+{% block main_content %}
+
+    <div class="grid-row">
+      <div class="column-two-thirds">
+        <header class="page-heading">
+          <h1>
+            Physical datacentre space for legacy systems
+          </h1>
+        </header>
+      </div>
+      <div class="column-two-thirds">
+        <p class="service-summary-lede">
+          The Crown Hosting Data Centres framework is available to all central
+          government departments, arm’s length bodies and the wider public sector.
+        </p>
+        <p class="service-summary-lede">
+          Contact <a href="mailto:crownhosting@cabinetoffice.gov.uk">crownhosting@cabinetoffice.gov.uk</a>
+          to discuss datacentre hosting for your legacy systems.
+        </p>
+        <h2 class='summary-item-heading'>
+          Features
+        </h2>
+        <p class="service-summary-preamble">
+          The Crown Hosting service offers:
+        </p>
+        <ul class='service-summary-features-and-benefits'>
+          <li>
+            mission-critical datacentres for legacy systems
+          </li>
+          <li>
+            a flexible, pay-for-what-you-use model
+          </li>
+          <li>
+            secure facilities
+          </li>
+          <li>
+            power uptime availability that exceeds Tier III+
+          </li>
+          <li>
+            leading environmental performance
+          </li>
+        </ul>
+        <h2 class='summary-item-heading'>
+          Benefits
+        </h2>
+        <p class="service-summary-preamble">
+          The framework benefits the government by offering:
+        </p>
+        <ul class='service-summary-features-and-benefits'>
+          <li>
+            easy access to colocated, secure datacentres with no minimum volume commitment
+          </li>
+          <li>
+            cost savings (because government demand for datacentre space is aggregated)
+          </li>
+          <li>
+            time savings (because there’s no need to manage multiple supplier tenders)
+          </li>
+          <li>
+            simple, transparent ‘pay-for-what-you-use’ pricing so usage  can be scaled as required
+          </li>
+          <li>
+            choice of duration commitments that can be ended early without charge
+          </li>
+          <li>
+            volume rebates as volumes rise
+          </li>
+          <li>
+            robust performance including 99.999% power uptime
+          </li>
+          <li>
+            strong step-in rights for government to ensure continuity of service if required
+          </li>
+        </ul>
+      </div>
+      <div class="column-one-third">
+        <h2>
+          Contact
+        </h2>
+        <p>
+          <strong>Office of the Chief Technology Officer</strong>
+        </p>
+        <p>
+          <a href="mailto:crownhosting@cabinetoffice.gov.uk">crownhosting@cabinetoffice.gov.uk</a>
+        </p>
+      </div>
+      <div class="column-two-thirds">
+        <p class="service-summary-lede">
+          Find out more about the <a href="/crown-hosting/framework">Crown Hosting Data Centres framework</a>.
+        </p>
+      </div>
+
+{% endblock %}

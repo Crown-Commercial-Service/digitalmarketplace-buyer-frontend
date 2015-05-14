@@ -1,18 +1,22 @@
 {% for service in services %}
 <div class="search-result">
   <h2 class="search-result-title">
-      <a href="/services/{{ service.id }}">{{ service.serviceName }}</a>
-  </h1>
-  <p class="search-result-supplier">
-     {{ service.supplierName }}
-  </p>
-  <p class="search-result-excerpt">
-    {{ service.serviceSummary }}
-  </p>
-  <ul aria-label="tags" class="search-result-metadata">
-    <li class="search-result-metadata-item">
-      {{ service.lot }}
-    </li>
-  </ul>
+        <a href="/services/{{ service.id }}">{{ service.serviceName }}</a>
+    </h2>
+    <p class="search-result-supplier">
+        {{ service.supplierName }}
+    </p>
+
+    <p class="search-result-excerpt">
+        {{ service.serviceSummary }}
+    </p>
+    <ul aria-label="tags" class="search-result-metadata">
+        <li class="search-result-metadata-item">
+            {{ service.lot }}
+        </li>
+        <li class="search-result-metadata-item">
+            {{ service.frameworkName }}
+        </li>
+    </ul>
 </div>
 {% endfor %}
