@@ -1,7 +1,7 @@
 
 import mock
 from nose.tools import assert_equal, assert_true
-from tests.helpers import BaseApplicationTest
+from ...helpers import BaseApplicationTest
 
 
 class TestServicePage(BaseApplicationTest):
@@ -24,4 +24,4 @@ class TestServicePage(BaseApplicationTest):
 
         res = self.client.get('/services/1234567890123456')
         assert_equal(200, res.status_code)
-        assert_equal("/services/1234567890123456", res.url)
+        assert_true("<h1>Blogging platform</h1>" in res.get_data(as_text=True))

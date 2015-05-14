@@ -22,4 +22,6 @@ class TestSearchResults(BaseApplicationTest):
 
         res = self.client.get('/search?q=email')
         assert_equal(200, res.status_code)
-        assert_true("/services/5-G3-0279-01" in res.get_data(as_text=True))
+        assert_true(
+            '<a href="/services/5-G3-0279-010">CDN VDMS</a>'
+            in res.get_data(as_text=True))
