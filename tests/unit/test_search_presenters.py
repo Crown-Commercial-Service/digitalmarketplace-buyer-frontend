@@ -101,7 +101,7 @@ class TestSearchSummary(unittest.TestCase):
     def test_search_results_works_with_single(self):
         single_result = self.fixture.copy()
         single_result['services'] = [single_result['services'][0]]
-        single_result['total'] = '1'
+        single_result['meta']['total'] = '1'
         search_results_instance = SearchResults(single_result)
         self.assertEqual(
             search_results_instance.summary,
