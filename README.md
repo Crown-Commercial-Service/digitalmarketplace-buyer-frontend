@@ -22,14 +22,14 @@ preview environment's `API` and `Search API` boxes, or use local API instances i
 you have them running:
 
 ```
-export DM_API_URL=http://localhost:5000
-export DM_BUYER_FRONTEND_API_AUTH_TOKEN=<auth_token_accepted_by_api>
+export DM_DATA_API_URL=http://localhost:5000
+export DM_DATA_API_AUTH_TOKEN=<auth_token_accepted_by_api>
 export DM_SEARCH_API_URL=http://localhost:5001
-export DM_BUYER_FRONTEND_SEARCH_API_AUTH_TOKEN=<auth_token_accepted_by_search_api>
+export DM_SEARCH_API_AUTH_TOKEN=<auth_token_accepted_by_search_api>
 ```
 
-Where `DM_BUYER_FRONTEND_API_AUTH_TOKEN` is a token accepted by the Data API 
-instance pointed to by `DM_API_URL`, and `DM_BUYER_FRONTEND_SEARCH_API_AUTH_TOKEN` 
+Where `DM_DATA_API_AUTH_TOKEN` is a token accepted by the Data API 
+instance pointed to by `DM_API_URL`, and `DM_SEARCH_API_AUTH_TOKEN` 
 is a token accepted by the Search API instance pointed to by `DM_SEARCH_API_URL`.
 
 ### Create and activate the virtual environment

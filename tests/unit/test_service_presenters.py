@@ -34,20 +34,27 @@ class TestService(unittest.TestCase):
             self.service.lot,
             self.fixture['services']['lot'])
 
-    def test_supplierName_attribute_is_set(self):
-        self.assertEquals(
-            self.service.supplierName, self.fixture['services']['supplierName']
-        )
-
     def test_Service_works_if_supplierName_is_not_set(self):
         del self.fixture['services']['supplierName']
         self.service = Service(self.fixture)
         self.assertFalse(hasattr(self.service, 'supplierName'))
 
+    def test_Service_works_if_serviceFeatures_is_not_set(self):
+        del self.fixture['services']['serviceFeatures']
+        self.service = Service(self.fixture)
+        self.assertFalse(hasattr(self.service, 'features'))
+
+    def test_Service_works_if_serviceBenefits_is_not_set(self):
+        del self.fixture['services']['serviceBenefits']
+        self.service = Service(self.fixture)
+        self.assertFalse(hasattr(self.service, 'benefits'))
+
     def test_features_attributes_are_correctly_set(self):
+        self.assertTrue(hasattr(self.service, 'features'))
         self.assertEquals(len(self.service.features), 6)
 
     def test_benefits_attributes_are_correctly_set(self):
+        self.assertTrue(hasattr(self.service, 'benefits'))
         self.assertEquals(len(self.service.benefits), 6)
 
     def test_attributes_are_correctly_set(self):

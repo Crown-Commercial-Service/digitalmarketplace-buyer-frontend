@@ -8,15 +8,23 @@ except ImportError:
 
 
 class Service(object):
+    def _add_as_attribute_if_key_exists(self, key, service_data):
+        if key[0] in service_data:
+            setattr(self, key[1], service_data[key[0]])
+
     def __init__(self, service):
         service_data = service['services']
+        # required attributes directly mapped to service_data values
         self.title = service_data['serviceName']
-        if 'supplierName' in service_data:
-            self.supplierName = service_data['supplierName']
         self.serviceSummary = service_data['serviceSummary']
-        self.features = service_data['serviceFeatures']
         self.lot = service_data['lot']
-        self.benefits = service_data['serviceBenefits']
+        # optional attributes directly mapped to service_data values
+        for key in [
+            ('supplierName', 'supplierName'),
+            ('serviceFeatures', 'features'),
+            ('serviceBenefits', 'benefits')
+        ]:
+            self._add_as_attribute_if_key_exists(key, service_data)
         self.attributes = self._get_service_attributes(service_data)
         self.meta = self._get_service_meta(service_data)
 
