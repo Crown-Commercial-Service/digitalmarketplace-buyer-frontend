@@ -1,6 +1,5 @@
 # coding=utf-8
 
-import os
 from . import main
 from flask import abort, render_template, request, redirect, url_for
 from ..presenters.search_presenters import SearchFilters, SearchResults
@@ -166,7 +165,7 @@ def terms_and_conditions():
     )
 
 
-@main.route('/service/<service_id>')
+@main.route('/services/<service_id>')
 def get_service_by_id(service_id):
     try:
         service = data_api_client.get_service(service_id)
