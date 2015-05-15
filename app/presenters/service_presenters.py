@@ -179,9 +179,11 @@ class Meta(object):
         self.documents = self.get_documents(service_data)
 
     def get_service_id(self, service_data):
-        return re.findall(
-            '....', str(service_data['id'])
-        )
+        id = service_data['id']
+        if re.findall("[a-zA-Z]", str(id)):
+            return [id]
+        else:
+            return re.findall("....", str(id))
 
     def get_documents(self, service_data):
         keys = [
