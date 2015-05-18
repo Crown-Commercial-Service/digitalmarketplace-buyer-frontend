@@ -1,55 +1,84 @@
 -
   id: Categories
-  label: categories
-  labelPreposition: under the
+  labelPreposition: in the
+  label:
+    singlar: category
+    plural: categories
   filtersPreposition:
+  filterRules:
   conjunction: and
 -
   id: Pricing
-  label:
   labelPreposition:
+  label:
   filtersPreposition: with a
-  conjunction: and a
--
-  id: Minimum contract period
-  label: minimum contract period
-  labelPreposition: with a
-  filtersPreposition: of an
-  conjunction: of an
--
-  id: Service management
-  label:
-  labelPreposition:
-  filtersPreposition: where
-  conjunction: of an
-  filtersRules:
-  -
-    id: Data extraction/removal plan in place
-    preposition: they have a
-  -
-    id: Datacentres adhere to EU Code of Conduct for Operations
-    preposition: their
-  -
-    id: Backup, disaster recovery and resilience plan in place
-    preposition: they have a
-  -
-    id: Self-service provisioning supported
-    preposition: they have
--
-  id: Datacentre tier
-  label: datacentre tiers
-  labelPreposition: with
-  filtersPreposition: to the levels
+  filterRules:
   conjunction: and
 -
-  id: Networks the service is directly connected to
-  label: "directly connected to the networks:"
+  id: Minimum contract period
+  labelPreposition: with a
+  label:
+    singular: minimum contract period
+    plural: minimum contract period
+  filtersPreposition: of
+  filterRules:
+  -
+    preposition: an
+    id: Hour
+  -
+    preposition: a
+    id: Day
+  -
+    preposition: a
+    id: Month
+  -
+    preposition: a  
+    id: Year
+  -
+    preposition:
+    id: Other
+  conjunction: or
+-
+  id: Service management
   labelPreposition:
+  label:
+  filtersPreposition: where
+  filterRules:
+  -
+    preposition: there is a
+    id: Data extraction/removal plan in place
+  -
+    preposition: the
+    id: Datacentres adhere to EU Code of Conduct for Operations
+  -
+    preposition: there is a
+    id: Backup, disaster recovery and resilience plan in place
+  -
+    preposition: there is
+    id: Self-service provisioning supported
+  conjunction: and
+-
+  id: Datacentre tier
+  labelPreposition: with a
+  label:
+    singular: datacentre tier
+    plural: datacentre tier
+  filtersPreposition: of
+  filterRules:
+  conjunction: or
+-
+  id: Networks the service is directly connected to
+  labelPreposition:
+  label:
+    singular: directly connected to the network
+    plural: directly connected to the networks
   filtersPreposition:
+  filterRules:
   conjunction: and
 -
   id: Interoperability
+  labelPreposition: which have
   label: 
-  labelPreposition:
   filtersPreposition:
+  filterRules:
   conjunction: and

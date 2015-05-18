@@ -143,7 +143,7 @@ class TestSearchSummary(unittest.TestCase):
                 u"<span class='search-summary-count'>1</span> result found"))
 
     def test_search_summary_with_a_single_filter(self):
-        self.request_args.setlist(('serviceTypes', ['collaboration']))
+        self.request_args.setlist('serviceTypes', ['collaboration'])
         search_summary = SearchSummary(9, self.request_args, filter_groups)
         self.assertEqual(
             search_summary.markup(),
@@ -198,7 +198,7 @@ class TestSearchSummary(unittest.TestCase):
     def test_search_summary_with_three_filters(self):
         self.request_args.setlist(
             'serviceTypes',
-            ['collaboration', 'energy and environment',]
+            ['collaboration', 'energy and environment']
         )
         self.request_args.setlist(
             'datacentreTier',
