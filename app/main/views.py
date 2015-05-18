@@ -20,7 +20,7 @@ def index():
     return render_template('index.html', **template_data)
 
 
-@main.route('/g-cloud')
+@main.route('/g-cloud/')
 def index_g_cloud():
     breadcrumb = [
         {'text': 'Cloud technology and support'}
@@ -32,7 +32,7 @@ def index_g_cloud():
     return render_template('index-g-cloud.html', **template_data)
 
 
-@main.route('/g-cloud/framework')
+@main.route('/g-cloud/framework/')
 def framework_g_cloud():
     template_data = get_template_data(main, {
         'title': 'G-Cloud framework – Digital Marketplace',
@@ -49,7 +49,7 @@ def framework_g_cloud():
     return render_template('content/framework-g-cloud.html', **template_data)
 
 
-@main.route('/digital-services/framework')
+@main.route('/digital-services/framework/')
 def framework_digital_services():
     template_data = get_template_data(main, {
         'title': 'Digital Services framework – Digital Marketplace',
@@ -68,7 +68,7 @@ def framework_digital_services():
     )
 
 
-@main.route('/crown-hosting')
+@main.route('/crown-hosting/')
 def index_crown_hosting():
     template_data = get_template_data(main, {
         'title': 'Physical datacentre space for legacy systems – Digital Marketplace',  # noqa
@@ -79,7 +79,7 @@ def index_crown_hosting():
     return render_template('content/index-crown-hosting.html', **template_data)
 
 
-@main.route('/crown-hosting/framework')
+@main.route('/crown-hosting/framework/')
 def framework_crown_hosting():
     template_data = get_template_data(main, {
         'title': 'Crown Hosting Data Centres framework – Digital Marketplace',
@@ -98,7 +98,7 @@ def framework_crown_hosting():
     )
 
 
-@main.route('/buyers-guide')
+@main.route('/buyers-guide/')
 def buyers_guide():
     template_data = get_template_data(main, {
         'title': 'Buyers guide – Digital Marketplace',
@@ -111,12 +111,12 @@ def buyers_guide():
     return render_template('content/buyers-guide.html', **template_data)
 
 
-@main.route('/suppliers-guide')
+@main.route('/suppliers-guide/')
 def suppliers_guide():
     return redirect('/g-cloud/suppliers-guide', 301)
 
 
-@main.route('/g-cloud/buyers-guide')
+@main.route('/g-cloud/buyers-guide/')
 def buyers_guide_g_cloud():
     template_data = get_template_data(main, {
         'title': 'G-Cloud buyers\' guide – Digital Marketplace',
@@ -135,7 +135,7 @@ def buyers_guide_g_cloud():
     )
 
 
-@main.route('/g-cloud/suppliers-guide')
+@main.route('/g-cloud/suppliers-guide/')
 def suppliers_guide_g_cloud():
     template_data = get_template_data(main, {
         'title': 'G-Cloud suppliers\' guide – Digital Marketplace',
@@ -154,7 +154,7 @@ def suppliers_guide_g_cloud():
     )
 
 
-@main.route('/terms-and-conditions')
+@main.route('/terms-and-conditions/')
 def terms_and_conditions():
     template_data = get_template_data(main, {
         'title': 'Terms and conditions – Digital Marketplace',
@@ -165,7 +165,7 @@ def terms_and_conditions():
     )
 
 
-@main.route('/services/<service_id>')
+@main.route('/services/<service_id>/')
 def get_service_by_id(service_id):
     try:
         service = data_api_client.get_service(service_id)
@@ -184,7 +184,7 @@ def get_service_by_id(service_id):
         abort(404, "Service ID '%s' can not be found" % service_id)
 
 
-@main.route('/search')
+@main.route('/search/')
 def search():
     search_keywords = get_keywords_from_request(request)
     search_filters_obj = SearchFilters(blueprint=main, request=request)
