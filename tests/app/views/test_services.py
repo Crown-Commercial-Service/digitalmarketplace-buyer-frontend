@@ -22,6 +22,6 @@ class TestServicePage(BaseApplicationTest):
         self._data_api_client.get_service.return_value = \
             self.service
 
-        res = self.client.get('/services/1234567890123456')
+        res = self.client.get('/services/1234567890123456/')
         assert_equal(200, res.status_code)
         assert_true("<h1>Blogging platform</h1>" in res.get_data(as_text=True))

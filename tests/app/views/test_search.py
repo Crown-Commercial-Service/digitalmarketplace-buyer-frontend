@@ -20,8 +20,8 @@ class TestSearchResults(BaseApplicationTest):
         self._search_api_client.search_services.return_value = \
             self.search_results
 
-        res = self.client.get('/search?q=email')
+        res = self.client.get('/search/?q=email')
         assert_equal(200, res.status_code)
         assert_true(
-            '<a href="/services/5-G3-0279-010">CDN VDMS</a>'
+            '<a href="/services/5-G3-0279-010/">CDN VDMS</a>'
             in res.get_data(as_text=True))
