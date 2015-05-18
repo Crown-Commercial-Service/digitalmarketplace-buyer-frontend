@@ -211,7 +211,7 @@ class SearchResults(object):
 
     def _get_search_summary(self, results_total):
         template = u"<span class='search-summary-count'>{}</span> {} found"
-        if int(results_total) < 2:
+        if int(results_total) == 1:
             return Markup(template.format('1', u"result"))
         else:
             return Markup(template.format(results_total, u"results"))

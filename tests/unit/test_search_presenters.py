@@ -106,3 +106,13 @@ class TestSearchSummary(unittest.TestCase):
             search_results_instance.summary,
             Markup(
                 u"<span class='search-summary-count'>1</span> result found"))
+
+    def test_search_results_works_with_none(self):
+        empty_result = self.fixture.copy()
+        empty_result['services'] = []
+        empty_result['total'] = '0'
+        search_results_instance = SearchResults(empty_result)
+        self.assertEqual(
+            search_results_instance.summary,
+            Markup(
+                u"<span class='search-summary-count'>0</span> results found"))
