@@ -2,7 +2,7 @@
   id: Categories
   labelPreposition: in the
   label:
-    singlar: category
+    singular: category
     plural: categories
   filtersPreposition:
   filterRules:

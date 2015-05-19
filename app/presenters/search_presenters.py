@@ -222,20 +222,69 @@ class SearchResults(object):
 class SearchSummary(object):
     """Provides a paragraph summarising the search performed and results"""
 
-    def __init__(self, results_total, request_filters, filter_groups):
-        self.filters = self._group_request_filters(
-                request_filters,
-                filter_groups
-            )
-        print "self.filters:"
-        print self.filters
-        template = u"{} found"
-        if int(results_total) < 2:
-            self.total = '1'
-            self.sentence = Markup(template.format(u"result"))
+    COUNT_PRE_TAG = "<span class='search-summary-count'>"
+    COUNT_POST_TAG = "</span>"
+
+    @staticmethod
+    def write_parts_as_sentence(parts):
+        sentence = [part for part in parts if part is not None]
+        if len(sentence) > 0:
+            return u" ".join(sentence)
+
+    @staticmethod
+    def write_list_as_sentence(input_list, final_conjunction):
+        if len(input_list) == 1:
+            return u"{}".format(input_list[0])
         else:
-            self.total = results_total
-            self.sentence = Markup(template.format(u"result"))
+            start = input_list[0:-1]
+            end = input_list[-1]
+            formatted_conjunction = " {} ".format(final_conjunction)
+            return formatted_conjunction.join([u', '.join(start), end])
+
+    def __init__(self, results_total, request_filters, filter_groups):
+        template = u"{} found"
+        if int(results_total) == 1:
+            self.count = '1'
+            self.sentence = template.format(u"result")
+        else:
+            self.count = results_total
+            self.sentence = template.format(u"results")
+        self.filter_groups = self._group_request_filters(
+            request_filters,
+            filter_groups
+        )
+        self.filters_fragments = []
+        SummaryRules.load_rules()
+        for group_id, filters in self.filter_groups.items():
+            group_rules = SummaryRules(group_id)
+            if group_rules.exist is True:
+                self.filters_fragments.append(
+                    SummaryFragment(
+                        group_id=group_id,
+                        filters=filters,
+                        rules=group_rules)
+                )
+
+    def markup(self):
+
+        def _get_fragment_string(fragment):
+            return fragment.str()
+
+        parts = [self._get_starting_sentence()]
+        if len(self.filters_fragments) > 0:
+            fragment_strings = list(
+                map(_get_fragment_string, self.filters_fragments))
+            parts.append(SearchSummary.write_list_as_sentence(
+                fragment_strings, u"and"))
+        return Markup(u" ".join(parts))
+
+    def _get_starting_sentence(self):
+        return u"{}{}{} {}".format(
+            self.COUNT_PRE_TAG,
+            self.count,
+            self.COUNT_POST_TAG,
+            self.sentence
+        )
 
     def _group_request_filters(self, request_filters, filter_groups):
         """arranges the filters from the request into filter groups"""
@@ -271,125 +320,117 @@ class SearchSummary(object):
         groups = {}
         for filter_mapping in request_filters.lists():
             filter, values = filter_mapping
+            if filter == 'lot':
+                continue
             if _is_option(values):
                 group_name = _get_group_label_for_option(filter)
                 _add_filter_to_group(group_name, filter)
-            else: # filter is a group whose values are the options
-                group_name =_get_group_label_for_option(filter)
+            else:  # filter is a group whose values are the options
+                group_name = _get_group_label_for_option(filter)
                 groups[group_name] = [
                     _get_label_for_string_option(value) for value in values]
         return groups
 
-    def _get_search_summary_rules(self):
-        manifest_path = os.path.join(
+
+class SummaryRules(object):
+    """Provides access to the rules for a search summary fragment"""
+
+    _rules = {}
+    loaded = False
+
+    @staticmethod
+    def load_rules(manifest=os.path.join(
             os.path.dirname(__file__),
             '..',
             'helpers',
             'search_summary_manifest.yml'
+            )):
+
+        with open(manifest, 'r') as file:
+            summary_rules = yaml.load(file)
+        SummaryRules._rules = {rule['id']: rule for rule in summary_rules}
+        SummaryRules.loaded = True
+
+    def __init__(self, group_id):
+        self.exist = group_id in SummaryRules._rules
+        if self.exist is True:
+            self._rules = SummaryRules._rules[group_id]
+            if self.get('filterRules') is not None:
+                self.filter_rules_ids = [
+                    rule['id'] for rule in self._rules['filterRules']]
+
+    def get(self, key):
+        if key in self._rules:
+            return self._rules[key]
+
+    def add_filter_preposition(self, filter_id=None, filter_string=None):
+        preposition = self._get_filter_preposition(filter_id)
+        return SearchSummary.write_parts_as_sentence(
+            [preposition, filter_string])
+
+    def _get_filter_preposition(self, filter):
+        if hasattr(self, 'filter_rules_ids'):
+            index = self.filter_rules_ids.index(filter)
+            return self._rules['filterRules'][index]['preposition']
+
+
+class SummaryFragment(object):
+    """Provides access to a search summary fragment"""
+
+    PRE_TAG = u'<em>'
+    POST_TAG = u'</em>'
+    FINAL_CONJUNCTION = u'and'
+
+    def __init__(self, group_id, filters, rules):
+        self.rules = rules
+        self.form = 'singular'
+        if len(filters) > 1:
+            self.form = 'plural'
+        self.filters_string = self._get_filters_string(filters)
+        self.label_string = self._get_label()
+
+    def str(self):
+        return SearchSummary.write_parts_as_sentence(
+            [self.label_string, self.filters_string]
         )
 
-        with open(manifest_path, 'r') as file:
-            summary_rules = yaml.load(file)
-        return { rule['id']: rule for rule in summary_rules }
+    def _get_label(self):
+        preposition = self.rules.get('labelPreposition')
+        label = self.rules.get('label')
+        if label is not None:
+            return SearchSummary.write_parts_as_sentence(
+                [preposition, label[self.form]])
+        else:
+            return SearchSummary.write_parts_as_sentence(
+                [preposition, label])
 
-    def _join_group_filters(self, filters, conjunction, rules=None):
+    def _add_filters_string_preposition(self, filters_string):
+        preposition = self.rules.get('filtersPreposition')
+        return SearchSummary.write_parts_as_sentence(
+            [preposition, filters_string])
 
-        def _filter_with_rules(filter):
-            if rules is None:
-                return filter
-            if rules['id'] == filter:
-                return '{} {}'.format(rules['preposition'], filter)
-            # if no rules found
-            return unicode(filter)
+    def _get_filters_string(self, filters):
+        def _mark_up_filter(filter):
+            return u"{}{}{}".format(
+                SummaryFragment.PRE_TAG,
+                filter,
+                SummaryFragment.POST_TAG,
+            )
 
-        filters_string = u''
-        number_of_filters = len(filters)
-        last_index = number_of_filters - 1
-        if number_of_filters == 1:
-            return u' {}'.format(_filter_with_rules(filters[0]))
-        for index, filter in enumerate(filters):
-            if index == last_index:
-                filters_string += u'{} {}'.format(
-                    conjunction, _filter_with_rules(filter))
-            else:
-                filters_string += u', ' + _filter_with_rules(filter)
-        print "group filters:'{}".format(filters_string)
-        return u' {}'.format(filters_string)
-
-    def _get_search_summary(self, total):
-
-        def _get_summary_section(section_rules, section_filters):
-
-            def _format_piece(rule):
-                if rule is not None:
-                    return u' ' + rule
-                else:
-                    return u''
-
-            section_string = u''
-            for rule in ['labelPreposition', 'label', 'filtersPreposition']:
-                print "Adding rule value:'{}'".format(
-                    _format_piece(section_rules[rule]))
-                section_string = u'{}{}'.format(
-                    section_string, _format_piece(section_rules[rule]))
-            print "Section string before adding filters:'{}'"\
-                .format(section_string)
-            section_string = u'{}{}'.format(
-                section_string, self._join_group_filters(
-                    section_filters,
-                    section_rules['conjunction'], section_rules))
-            print "Section string after adding filters:'{}'"\
-                .format(section_string)
-            return section_string
-
-        def _get_summary_string_preposition():
-            if total > 0:
-                return u'{} services found'.format(unicode(total))
-            else:
-                return u'{} service found'.format(unicode(total))
-
-        def _get_summary_data_from_request_filters(request_filters):
-            summary_data = {}
-            print "params:"
-            print ""
-            for param in request_filters.iterlists():
-                print param
-                param_key = param[0]
-                section = self._get_group_name_from_filter_id(param_key)
-                if section is not False:
-                    print "Adding summary data for the '{}' section"\
-                        .format(section)
-                    param_values = [
-                        self._get_filter_name_from_param(
-                            param_key, value) for value in param[1]]
-                    summary_data[section] = {
-                        'id': section,
-                        'filters': param_values
-                    }
-            return summary_data
-
-        summary_rules = self._get_search_summary_rules()
-        summary_preposition = _get_summary_string_preposition()
-        summary_data = _get_summary_data_from_request_filters(
-            self.request_filters)
-
-        print "summary_rules:"
-        print summary_rules
-        print ""
-        print "summary_data:"
-        print summary_data
-        print ""
-
-        # turn summary data into a summary string
-        summary_string = summary_preposition
-        for group_rules in summary_rules:
-            if group_rules['id'] in summary_data:
-                print 'Adding section for {}'.format(group_rules['id'])
-                u'{}{}'.format(
-                    summary_string, _get_summary_section(
-                        group_rules,
-                        summary_data[group_rules['id']]['filters']))
-        print "summary_string:"
-        print summary_string
-        return ''
-
+        if self.rules.get('filterRules') is None:
+            filters = [_mark_up_filter(filter) for filter in filters]
+            filters_string = SearchSummary.write_list_as_sentence(
+                filters,
+                self.rules.get('conjunction'))
+        else:
+            processed_filters = []
+            for filter in filters:
+                if filter in self.rules.filter_rules_ids:
+                    filter_string = _mark_up_filter(filter)
+                    filter_string = self.rules.add_filter_preposition(
+                        filter_id=filter, filter_string=filter_string)
+                    processed_filters.append(filter_string)
+            filters_string = SearchSummary.write_list_as_sentence(
+                processed_filters,
+                self.rules.get('conjunction'))
+        return self._add_filters_string_preposition(filters_string)

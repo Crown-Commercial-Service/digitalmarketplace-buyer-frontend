@@ -6,7 +6,8 @@ from nose.tools import assert_equal, assert_is_none
 from flask import Markup
 from mock import Mock
 from werkzeug.datastructures import MultiDict
-from app.presenters.search_presenters import SearchResults, SearchSummary
+from app.presenters.search_presenters import (
+    SearchResults, SearchSummary, SummaryFragment, SummaryRules)
 
 
 def _get_fixture_data():
@@ -133,20 +134,37 @@ class TestSearchSummary(unittest.TestCase):
                 ['item1', 'item2', 'item3'], 'and'),
             u"item1, item2 and item3")
 
+    def test_write_parts_as_sentence_with_first_part_None(self):
+        self.assertEqual(
+            SearchSummary.write_parts_as_sentence(
+                [None, u"Hour"]),
+            u"Hour")
+
+    def test_write_parts_as_sentence_with_second_part_None(self):
+        self.assertEqual(
+            SearchSummary.write_parts_as_sentence(
+                [u"Hour", None]),
+            u"Hour")
+
+    def test_write_parts_as_sentence_with_both_parts_not_None(self):
+        self.assertEqual(
+            SearchSummary.write_parts_as_sentence(
+                [u"an", u"Hour"]),
+            u"an Hour")
+
     def test_search_summary_works_with_none(self):
-        empty_result = self.fixture.copy()
-        empty_result['services'] = []
-        empty_result['total'] = '0'
-        search_summary = SearchSummary(1, self.request_args, filter_groups)
+        search_summary = SearchSummary(0, self.request_args, filter_groups)
         self.assertEqual(
             search_summary.markup(),
             Markup(
                 u"<span class='search-summary-count'>0</span> results found"))
 
+    def test_search_summary_for_multiple_results(self):
+        search_summary = SearchSummary(9, self.request_args, filter_groups)
+        self.assertEqual(search_summary.markup(), Markup(
+            u"<span class='search-summary-count'>9</span> results found"))
+
     def test_search_summary_for_single_result(self):
-        single_result = self.fixture.copy()
-        single_result['services'] = [single_result['services'][0]]
-        single_result['total'] = '1'
         search_summary = SearchSummary(1, self.request_args, filter_groups)
         self.assertEqual(
             search_summary.markup(),
@@ -165,7 +183,7 @@ class TestSearchSummary(unittest.TestCase):
             search_summary.markup(),
             Markup(
                 u"<span class='search-summary-count'>9</span> results found" +
-                u" in the category <em>collaboration</em>"))
+                u" in the category <em>Collaboration</em>"))
 
     def test_search_summary_with_a_group_of_two_filters(self):
         self.request_args.setlist(
@@ -206,10 +224,10 @@ class TestSearchSummary(unittest.TestCase):
             search_summary.markup(),
             Markup(
                 u"<span class='search-summary-count'>9</span> results found" +
-                u" in the categories <em>collaboration</em> and" +
-                u" <em>Energy and environment</em> and" +
                 u" with a datacentre tier of <em>TIA-942 Tier 1" +
-                u" </em> or <em>Uptime Institute Tier 1</em>"))
+                u"</em> or <em>Uptime Institute Tier 1</em>" +
+                u" and in the categories <em>Collaboration</em> and" +
+                u" <em>Energy and environment</em>"))
 
     def test_search_summary_with_three_filters(self):
         self.request_args.setlist(
@@ -233,11 +251,64 @@ class TestSearchSummary(unittest.TestCase):
             search_summary.markup(),
             Markup(
                 u"<span class='search-summary-count'>9</span> results found" +
-                u" in the categories <em>collaboration</em> and" +
-                u" <em>Energy and environment</em>," +
                 u" with a datacentre tier of <em>TIA-942 Tier 1" +
-                u" </em> or <em>Uptime Institute Tier 1</em> and" +
-                u" with a <em>Free option</em> and a <em>Trial option</em>"))
+                u"</em> or <em>Uptime Institute Tier 1</em>," +
+                u" with a <em>Trial option</em> and <em>Free option</em>" +
+                u" and in the categories <em>Collaboration</em> and" +
+                u" <em>Energy and environment</em>"))
+
+
+class TestSummaryRules(unittest.TestCase):
+
+    def setUp(self):
+        if SummaryRules.loaded is False:
+            SummaryRules.load_rules(manifest=os.path.join(
+                os.path.dirname(__file__),
+                '..',
+                '..',
+                'app',
+                'helpers',
+                'search_summary_manifest.yml'
+            ))
+
+    def tearDown(self):
+        pass
+
+    def test_set_up_where_rules_do_not_exist(self):
+        summary_rules = SummaryRules('Sites')
+        self.assertFalse(summary_rules.exist)
+
+    def test_set_up_where_rules_do_exist(self):
+        summary_rules = SummaryRules('Categories')
+        self.assertTrue(summary_rules.exist)
+
+    def test_get_method_works_for_key_with_value(self):
+        summary_rules = SummaryRules('Categories')
+        self.assertEqual(summary_rules.get('conjunction'), 'and')
+
+    def test_get_method_works_for_empty_key(self):
+        summary_rules = SummaryRules('Categories')
+        self.assertEqual(summary_rules.get('filterRules'), None)
+
+    def test_filter_rules_ids_are_set_if_filterRules_exist(self):
+        summary_rules = SummaryRules('Minimum contract period')
+        self.assertTrue(hasattr(summary_rules, "filter_rules_ids"))
+        self.assertEqual(
+            summary_rules.filter_rules_ids,
+            ['Hour', 'Day', 'Month', 'Year', 'Other'])
+
+    def test_add_preposition_with_a_filter_that_has_one(self):
+        summary_rules = SummaryRules('Minimum contract period')
+        self.assertEqual(
+            u"an <em>Hour</em>", summary_rules.add_filter_preposition(
+                filter_id='Hour', filter_string=u"<em>Hour</em>"))
+
+    def test_add_preposition_with_a_filter_without_one(self):
+        summary_rules = SummaryRules('Pricing')
+        self.assertEqual(
+            u"<em>Trial option</em>", summary_rules.add_filter_preposition(
+                filter_id='Trial option',
+                filter_string=u"<em>Trial option</em>"))
 
 
 class TestSummaryFragment(unittest.TestCase):
@@ -246,6 +317,7 @@ class TestSummaryFragment(unittest.TestCase):
         return self.rules[key]
 
     def setUp(self):
+        self.rules_instance = SummaryRules('')
         self.rules_instance_mock = Mock()
         self.rules = {
             'id': 'Datacentre tier',
@@ -259,6 +331,22 @@ class TestSummaryFragment(unittest.TestCase):
 
     def tearDown(self):
         pass
+
+    def test_fragment_has_correct_form_for_a_single_filter(self):
+        id = 'Datacentre tier'
+        filters = ['TIA-942 Tier 1']
+        summary_fragment = SummaryFragment(
+            id, filters, self.rules_instance_mock)
+        self.assertTrue(hasattr(summary_fragment, 'form'))
+        self.assertEqual(summary_fragment.form, 'singular')
+
+    def test_fragment_has_correct_form_for_multiple_filters(self):
+        id = 'Datacentre tier'
+        filters = ['TIA-942 Tier 1', 'uptime institute tier 1']
+        summary_fragment = SummaryFragment(
+            id, filters, self.rules_instance_mock)
+        self.assertTrue(hasattr(summary_fragment, 'form'))
+        self.assertEqual(summary_fragment.form, 'plural')
 
     def test_fragment_with_no_label_and_single_filter(self):
         id = 'Datacentre tier'
@@ -294,7 +382,7 @@ class TestSummaryFragment(unittest.TestCase):
             u"datacentre tiers <em>TIA-942 Tier 1</em>" +
             u" or <em>uptime institute tier 1</em>")
 
-    def test_fragment_with_label_and_three_fitlers(self):
+    def test_fragment_with_label_and_three_filters(self):
         id = 'Datacentre tier'
         filters = [
             'TIA-942 Tier 1',
@@ -311,6 +399,37 @@ class TestSummaryFragment(unittest.TestCase):
             u"datacentre tiers <em>TIA-942 Tier 1</em>" +
             u", <em>uptime institute tier 1</em>" +
             u" or <em>uptime institute tier 2</em>")
+
+    def test_fragment_with_label_and_three_filters_with_prepositions(self):
+
+        def _add_preposition(filter_id=None, filter_string=None):
+            if filter_id == 'TIA-942 Tier 1':
+                preposition = 'with a'
+            elif filter_id == 'uptime institute tier 1':
+                preposition = 'met with a'
+            elif filter_id == 'uptime institute tier 2':
+                preposition = 'aligned with'
+            return u"{} {}".format(preposition, filter_string)
+
+        id = 'Datacentre tier'
+        filters = [
+            'TIA-942 Tier 1',
+            'uptime institute tier 1',
+            'uptime institute tier 2']
+        self.rules['label'] = {
+            'singular': 'datacentre tier',
+            'plural': 'datacentre tiers'
+        }
+        self.rules['filterRules'] = []  # filterRules just needs to be set
+        self.rules_instance_mock.filter_rules_ids = filters
+        self.rules_instance_mock.add_filter_preposition = _add_preposition
+        summary_fragment = SummaryFragment(
+            id, filters, self.rules_instance_mock)
+        self.assertEqual(
+            summary_fragment.str(),
+            u"datacentre tiers with a <em>TIA-942 Tier 1</em>" +
+            u", met with a <em>uptime institute tier 1</em>" +
+            u" or aligned with <em>uptime institute tier 2</em>")
 
 filter_groups = [
     {
