@@ -167,6 +167,14 @@ def terms_and_conditions():
 
 
 @main.route('/services/<service_id>')
+def redirect_service_page(service_id):
+    return redirect(url_for(
+        ".get_service_by_id",
+        service_id=service_id), code=301
+    )
+
+
+@main.route('/g-cloud/services/<service_id>')
 def get_service_by_id(service_id):
     try:
         service = data_api_client.get_service(service_id)
@@ -202,8 +210,16 @@ def get_service_by_id(service_id):
 
 
 @main.route('/search')
+def redirect_search():
+    return redirect(url_for(".search", **request.args), code=301)
+
+
+@main.route('/g-cloud/search')
 def search():
+    print "HERE"
     search_keywords = get_keywords_from_request(request)
+    print " KEY {}".format(search_keywords)
+    print " dONE"
     search_filters_obj = SearchFilters(blueprint=main, request=request)
     response = search_api_client.search_services(
         **dict([a for a in request.args.lists()]))

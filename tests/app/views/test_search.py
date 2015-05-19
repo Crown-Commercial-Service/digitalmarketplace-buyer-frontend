@@ -16,12 +16,30 @@ class TestSearchResults(BaseApplicationTest):
     def teardown(self):
         self._search_api_client.stop()
 
-    def test_search_page_results_service_links(self):
+    def test_search_page_redirect(self):
         self._search_api_client.search_services.return_value = \
             self.search_results
 
         res = self.client.get('/search?q=email')
+        assert_equal(301, res.status_code)
+        assert_equal('http://localhost/g-cloud/search?q=email', res.location)
+
+    def test_search_page_results_service_links(self):
+        self._search_api_client.search_services.return_value = \
+            self.search_results
+
+        res = self.client.get('/g-cloud/search?q=email')
         assert_equal(200, res.status_code)
         assert_true(
-            '<a href="/services/5-G3-0279-010">CDN VDMS</a>'
+            '<a href="/g-cloud/services/5-G3-0279-010">CDN VDMS</a>'
+            in res.get_data(as_text=True))
+
+    def test_search_page_form(self):
+        self._search_api_client.search_services.return_value = \
+            self.search_results
+
+        res = self.client.get('/g-cloud/search?q=email')
+        assert_equal(200, res.status_code)
+        assert_true(
+            '<form action="/g-cloud/search" method="get">'
             in res.get_data(as_text=True))

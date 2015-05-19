@@ -22,8 +22,19 @@ class TestServicePage(BaseApplicationTest):
     def teardown(self):
         self._data_api_client.stop()
 
-    def test_service_page_url(self):
+    def test_service_page_redirect(self):
+        self._data_api_client.get_service.return_value = \
+            self.service
 
+        res = self.client.get('/services/1234567890123456')
+        assert_equal(301, res.status_code)
+        assert_equal(
+            'http://localhost/g-cloud/services/1234567890123456',
+            res.location)
+
+    def test_service_page_url(self):
+        self._data_api_client.get_service.return_value = \
+            self.service
         service_id = self.service['services']['id']
 
         res = self.client.get('/services/{}'.format(service_id))
