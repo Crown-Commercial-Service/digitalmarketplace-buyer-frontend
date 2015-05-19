@@ -216,10 +216,7 @@ def redirect_search():
 
 @main.route('/g-cloud/search')
 def search():
-    print "HERE"
     search_keywords = get_keywords_from_request(request)
-    print " KEY {}".format(search_keywords)
-    print " dONE"
     search_filters_obj = SearchFilters(blueprint=main, request=request)
     response = search_api_client.search_services(
         **dict([a for a in request.args.lists()]))
