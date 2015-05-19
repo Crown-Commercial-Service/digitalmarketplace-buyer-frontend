@@ -186,6 +186,13 @@ class Meta(object):
         self.serviceId = self.get_service_id(service_data)
         self.documents = self.get_documents(service_data)
 
+    def set_contact_attribute(self, contactName, phone, email):
+        self.contact = {
+            'name': contactName,
+            'phone': phone,
+            'email': email
+        }
+
     def get_service_id(self, service_data):
         id = service_data['id']
         if re.findall("[a-zA-Z]", str(id)):

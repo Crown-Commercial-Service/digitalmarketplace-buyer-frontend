@@ -10,6 +10,7 @@ from ..helpers.search_helpers import (
 from ..helpers.service_helpers import get_lot_name_from_acronym
 from ..exceptions import AuthException
 from .. import search_api_client, data_api_client
+from dmutils.apiclient import HTTPError
 
 
 @main.route('/')
@@ -170,6 +171,22 @@ def get_service_by_id(service_id):
     try:
         service = data_api_client.get_service(service_id)
         service_view_data = Service(service)
+
+        try:
+            # get supplier data and add contact info to service object
+            supplier = data_api_client.get_supplier(
+                service['services']['supplierId']
+            )
+            supplier_data = supplier['suppliers']
+            service_view_data.meta.set_contact_attribute(
+                supplier_data['contactInformation'][0].get('contactName'),
+                supplier_data['contactInformation'][0].get('phoneNumber'),
+                supplier_data['contactInformation'][0].get('email')
+            )
+
+        except HTTPError as e:
+            abort(e.status_code)
+
         breadcrumb = [
             {'text': get_lot_name_from_acronym(main, service_view_data.lot)}
         ]
