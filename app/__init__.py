@@ -46,6 +46,15 @@ def create_app(config_name):
     @application.before_request
     def remove_trailing_slash():
         if request.path != '/' and request.path.endswith('/'):
-            return redirect(request.path[:-1], code=301)
+            if request.query_string:
+                return redirect(
+                    '{}?{}'.format(
+                        request.path[:-1],
+                        request.query_string.decode('utf-8')
+                    ),
+                    code=301
+                )
+            else:
+                return redirect(request.path[:-1], code=301)
 
     return application
