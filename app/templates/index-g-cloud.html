@@ -16,7 +16,7 @@
     </h1>
   </header>
   <div class="grid-row">
-    <form action="/search" method="get" class="search-box column-two-thirds">
+    <form action="{{ url_for('.search') }}" method="get" class="search-box column-two-thirds">
         <input type="text" class="text-box" name="q">
         <button type="submit" class="button-save">
           Show services
@@ -25,7 +25,7 @@
   </div>
   <ul class="browse-list">
     <li class="browse-list-item">
-      <a href="/search?q=&lot=saas" class="browse-list-item-link">
+      <a href="{{ url_for('.search', lot='saas') }}" class="browse-list-item-link">
           Software as a Service
       </a>
       <p class="browse-list-item-body">
@@ -36,7 +36,7 @@
       </p>
     </li>
     <li class="browse-list-item">
-      <a href="/search?q=&lot=paas" class="browse-list-item-link">
+      <a href="{{ url_for('.search', lot='paas') }}" class="browse-list-item-link">
           Platform as a Service
       </a>
       <p class="browse-list-item-body">
@@ -44,7 +44,7 @@
       </p>
     </li>
     <li class="browse-list-item">
-      <a href="/search?q=&lot=iaas" class="browse-list-item-link">
+      <a href="{{ url_for('.search', lot='iaas') }}" class="browse-list-item-link">
           Infrastructure as a Service
       </a>
       <p class="browse-list-item-body">
@@ -55,7 +55,7 @@
       </p>
     </li>
     <li class="browse-list-item">
-      <a href="/search?q=&lot=scs" class="browse-list-item-link">
+      <a href="{{ url_for('.search', lot='scs') }}" class="browse-list-item-link">
           Specialist Cloud Services
       </a>
       <p class="browse-list-item-body">

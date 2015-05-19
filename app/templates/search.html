@@ -6,7 +6,7 @@
 <header class="page-heading">
   <h1>Search results</h1>
 </header>
-<form action="/search" method="get">
+<form action="{{ url_for('.search') }}" method="get">
   <div class="grid-row">
     <div class="column-one-third search-page-filters">
     {% include '_search_filters.html' %}
