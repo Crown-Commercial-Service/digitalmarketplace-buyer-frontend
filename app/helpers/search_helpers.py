@@ -9,7 +9,7 @@ def get_template_data(blueprint, view_data):
 
 
 def get_keywords_from_request(request):
-    if request.args['q']:
+    if 'q' in request.args:
         return request.args['q']
     else:
         return ""
