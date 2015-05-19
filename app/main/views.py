@@ -258,6 +258,6 @@ def search():
         'search_query': query_args_for_pagination(request.args),
         'pagination': pagination_config,
         'crumbs': breadcrumb,
-        'summary': search_summary
+        'summary': search_summary.markup()
     })
     return render_template('search.html', **template_data)
