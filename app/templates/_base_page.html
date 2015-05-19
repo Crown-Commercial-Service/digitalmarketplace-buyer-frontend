@@ -19,8 +19,8 @@
   {% block breadcrumb %}{% endblock %}
   <div id="wrapper">
     <main id="content" role="main">
-      {% block main_content %}    
-      {% endblock %}    
+      {% block main_content %}
+      {% endblock %}
     </main>
   </div>
 {% endblock %}
@@ -29,7 +29,10 @@
   {% include "_footer_categories.html" %}
 {% endblock %}
 
+{% block footer_support_links %}
+  <a href="/terms-and-conditions" class="terms-and-conditions">Terms and conditions</a>
+{% endblock %}
+
 {% block body_end %}
   {% include "_javascripts.html" %}
 {% endblock %}
-
