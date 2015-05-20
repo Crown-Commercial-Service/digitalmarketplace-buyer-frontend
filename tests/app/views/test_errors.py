@@ -1,3 +1,5 @@
+# coding=utf-8
+
 import mock
 from nose.tools import assert_equal, assert_true
 from requests import ConnectionError
@@ -21,7 +23,15 @@ class TestErrors(BaseApplicationTest):
         res = self.client.get('/service/1234')
         assert_equal(404, res.status_code)
         assert_true(
-            'Page could not be found'
+            "Check you've entered the correct web "
+            "address or start again on the Digital Marketplace homepage."
+            in res.get_data(as_text=True))
+        assert_true(
+            "If you can't find what you're looking for, contact us at "
+            "<a href=\"mailto:enquiries@digitalmarketplace.service.gov.uk?"
+            "subject=Digital%20Marketplace%20feedback\" title=\"Please "
+            "send feedback to enquiries@digitalmarketplace.service.gov.uk\">"
+            "enquiries@digitalmarketplace.service.gov.uk</a>"
             in res.get_data(as_text=True))
 
     def test_500(self):
@@ -33,6 +43,8 @@ class TestErrors(BaseApplicationTest):
         res = self.client.get('/search?q=email')
         assert_equal(500, res.status_code)
         assert_true(
-            'An error has occurred'
+            "Sorry, we're experiencing technical difficulties"
             in res.get_data(as_text=True))
-
+        assert_true(
+            "Try again later."
+            in res.get_data(as_text=True))

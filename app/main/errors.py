@@ -8,7 +8,7 @@ from ..helpers.search_helpers import get_template_data
 @main.app_errorhandler(404)
 def page_not_found(e):
     template_data = get_template_data(main, {
-        'title': 'Cloud technology and support – Digital Marketplace'
+        'title': 'Page not found - 404'
     })
     return render_template("errors/404.html", **template_data), 404
 
@@ -16,6 +16,6 @@ def page_not_found(e):
 @main.app_errorhandler(500)
 def page_not_found(e):
     template_data = get_template_data(main, {
-        'title': 'Cloud technology and support – Digital Marketplace'
+        'title': 'We’re experiencing technical difficulties'
     })
     return render_template("errors/500.html", **template_data), 500
