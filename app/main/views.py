@@ -1,6 +1,8 @@
 # coding=utf-8
 
 from . import main
+from datetime import datetime
+from dmutils.deprecation import deprecated
 from flask import abort, render_template, request, redirect, url_for
 from ..presenters.search_presenters import SearchFilters, SearchResults
 from ..presenters.service_presenters import Service
@@ -167,6 +169,7 @@ def terms_and_conditions():
 
 
 @main.route('/services/<service_id>')
+@deprecated(dies_at=datetime(2016, 1, 1))
 def redirect_service_page(service_id):
     return redirect(url_for(
         ".get_service_by_id",
@@ -210,6 +213,7 @@ def get_service_by_id(service_id):
 
 
 @main.route('/search')
+@deprecated(dies_at=datetime(2016, 1, 1))
 def redirect_search():
     return redirect(url_for(".search", **request.args), code=301)
 
