@@ -1,7 +1,7 @@
 # coding=utf-8
 
 from . import main
-from flask import abort, render_template, request, redirect, url_for
+from flask import abort, render_template, request, redirect, url_for, jsonify
 from ..presenters.search_presenters import SearchFilters, SearchResults
 from ..presenters.service_presenters import Service
 from ..helpers.search_helpers import (
@@ -201,4 +201,7 @@ def search():
         'services': search_results_obj.search_results,
         'summary': search_results_obj.summary
     })
-    return render_template('search.html', **template_data)
+    if ('application/json' == request.headers.get("Accept", "")):
+        return jsonify(**template_data)
+    else:
+        return render_template('search.html', **template_data)
