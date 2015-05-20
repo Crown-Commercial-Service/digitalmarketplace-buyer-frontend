@@ -17,11 +17,13 @@ var govukTemplateAssetsFolder = repoRoot + 'bower_components/govuk_template/asse
 // JavaScript paths
 var jsVendorFiles = [
   bowerRoot + '/jquery/dist/jquery.js',
-  bowerRoot + '/jquery-details/jquery.details.js'
+  bowerRoot + '/jquery-details/jquery.details.js',
+  bowerRoot + '/hogan/web/builds/3.0.2/hogan-3.0.2.js',
 ];
 var jsSourceFiles = [
   dmToolkitRoot + '/javascripts/option-select.js',
-  assetsFolder + '/javascripts/_onready.js'
+  assetsFolder + '/javascripts/_onready.js',
+  assetsFolder + '/javascripts/_search_ajax.js'
 ];
 var jsDistributionFolder = staticFolder + '/javascripts';
 var jsDistributionFile = 'application.js';

@@ -186,6 +186,7 @@ def get_service_by_id(service_id):
 
 @main.route('/search')
 def search():
+    print(request.headers.get("Accept"))
     search_keywords = get_keywords_from_request(request)
     search_filters_obj = SearchFilters(blueprint=main, request=request)
     response = search_api_client.search_services(
@@ -201,7 +202,7 @@ def search():
         'services': search_results_obj.search_results,
         'summary': search_results_obj.summary
     })
-    if ('application/json' == request.headers.get("Accept", "")):
+    if ('XMLHttpRequest' == request.headers.get("X-Requested-With")):
         return jsonify(**template_data)
     else:
         return render_template('search.html', **template_data)
