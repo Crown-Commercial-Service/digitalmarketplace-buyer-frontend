@@ -201,11 +201,11 @@ class Meta(object):
             return re.findall("....", str(id))
 
     def get_documents(self, service_data):
-        keys = [
-            'pricingDocument',
-            'sfiaRateDocument',
-            'serviceDefinitionDocument',
-            'termsAndConditionsDocument'
+        url_keys = [
+            'pricingDocumentURL',
+            'sfiaRateDocumentURL',
+            'serviceDefinitionDocumentURL',
+            'termsAndConditionsDocumentURL'
         ]
         names = [
             'Pricing',
@@ -214,14 +214,13 @@ class Meta(object):
             'Terms and conditions'
         ]
         documents = []
-        for idx, key in enumerate(keys):
-            name_key = keys[idx]
-            url_key = name_key + 'URL'
-            if name_key in service_data:
-                url = service_data[url_key]
+        for index, url_key in enumerate(url_keys):
+            if url_key in service_data:
+                # Replace all runs of whitespace with a '%20'
+                url = re.sub(r"\s+", '%20', service_data[url_key])
                 extension = self._get_document_extension(url)
                 documents.append({
-                    'name':  names[idx],
+                    'name':  names[index],
                     'url': url,
                     'extension': extension
                 })
