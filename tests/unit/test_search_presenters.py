@@ -117,20 +117,31 @@ class TestSearchSummary(unittest.TestCase):
     def tearDown(self):
         pass
 
+    def test_write_list_as_sentence_with_one_item(self):
+        self.assertEqual(
+            SearchSummary.write_list_as_sentence(['item1'], 'and'),
+            u"item1")
+
+    def test_write_list_as_sentence_with_two_items(self):
+        self.assertEqual(
+            SearchSummary.write_list_as_sentence(['item1', 'item2'], 'and'),
+            u"item1 and item2")
+
+    def test_write_list_as_sentence_with_three_items(self):
+        self.assertEqual(
+            SearchSummary.write_list_as_sentence(
+                ['item1', 'item2', 'item3'], 'and'),
+            u"item1, item2 and item3")
+
     def test_search_summary_works_with_none(self):
         empty_result = self.fixture.copy()
         empty_result['services'] = []
         empty_result['total'] = '0'
-        search_results_instance = SearchResults(empty_result)
+        search_summary = SearchSummary(1, self.request_args, filter_groups)
         self.assertEqual(
-            search_results_instance.summary,
+            search_summary.markup(),
             Markup(
                 u"<span class='search-summary-count'>0</span> results found"))
-
-    def test_search_summary_for_multiple_results(self):
-        search_summary = SearchSummary(9, self.request_args, filter_groups)
-        self.assertEqual(search_summary.markup(), Markup(
-            u"<span class='search-summary-count'>9</span> results found"))
 
     def test_search_summary_for_single_result(self):
         single_result = self.fixture.copy()
@@ -141,6 +152,11 @@ class TestSearchSummary(unittest.TestCase):
             search_summary.markup(),
             Markup(
                 u"<span class='search-summary-count'>1</span> result found"))
+
+    def test_search_summary_for_multiple_results(self):
+        search_summary = SearchSummary(9, self.request_args, filter_groups)
+        self.assertEqual(search_summary.markup(), Markup(
+            u"<span class='search-summary-count'>9</span> results found"))
 
     def test_search_summary_with_a_single_filter(self):
         self.request_args.setlist('serviceTypes', ['collaboration'])
@@ -222,6 +238,79 @@ class TestSearchSummary(unittest.TestCase):
                 u" with a datacentre tier of <em>TIA-942 Tier 1" +
                 u" </em> or <em>Uptime Institute Tier 1</em> and" +
                 u" with a <em>Free option</em> and a <em>Trial option</em>"))
+
+
+class TestSummaryFragment(unittest.TestCase):
+
+    def _get_mock(self, key):
+        return self.rules[key]
+
+    def setUp(self):
+        self.rules_instance_mock = Mock()
+        self.rules = {
+            'id': 'Datacentre tier',
+            'labelPreposition': None,
+            'label': None,
+            'filtersPreposition': None,
+            'filterRules': None,
+            'conjunction': 'or'
+        }
+        self.rules_instance_mock.get = self._get_mock
+
+    def tearDown(self):
+        pass
+
+    def test_fragment_with_no_label_and_single_filter(self):
+        id = 'Datacentre tier'
+        filters = ['TIA-942 Tier 1']
+        summary_fragment = SummaryFragment(
+            id, filters, self.rules_instance_mock)
+        self.assertEqual(
+            summary_fragment.str(), u"<em>TIA-942 Tier 1</em>")
+
+    def test_fragment_with_label_and_one_filter(self):
+        id = 'Datacentre tier'
+        filters = ['TIA-942 Tier 1']
+        self.rules['label'] = {
+            'singular': 'datacentre tier',
+            'plural': 'datacentre tier'
+        }
+        summary_fragment = SummaryFragment(
+            id, filters, self.rules_instance_mock)
+        self.assertEqual(
+            summary_fragment.str(), u"datacentre tier <em>TIA-942 Tier 1</em>")
+
+    def test_fragment_with_label_and_two_filters(self):
+        id = 'Datacentre tier'
+        filters = ['TIA-942 Tier 1', 'uptime institute tier 1']
+        self.rules['label'] = {
+            'singular': 'datacentre tier',
+            'plural': 'datacentre tiers'
+        }
+        summary_fragment = SummaryFragment(
+            id, filters, self.rules_instance_mock)
+        self.assertEqual(
+            summary_fragment.str(),
+            u"datacentre tiers <em>TIA-942 Tier 1</em>" +
+            u" or <em>uptime institute tier 1</em>")
+
+    def test_fragment_with_label_and_three_fitlers(self):
+        id = 'Datacentre tier'
+        filters = [
+            'TIA-942 Tier 1',
+            'uptime institute tier 1',
+            'uptime institute tier 2']
+        self.rules['label'] = {
+            'singular': 'datacentre tier',
+            'plural': 'datacentre tiers'
+        }
+        summary_fragment = SummaryFragment(
+            id, filters, self.rules_instance_mock)
+        self.assertEqual(
+            summary_fragment.str(),
+            u"datacentre tiers <em>TIA-942 Tier 1</em>" +
+            u", <em>uptime institute tier 1</em>" +
+            u" or <em>uptime institute tier 2</em>")
 
 filter_groups = [
     {
