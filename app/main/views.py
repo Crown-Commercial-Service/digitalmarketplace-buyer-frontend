@@ -1,7 +1,7 @@
 # coding=utf-8
 
 from . import main
-from flask import abort, render_template, request, redirect, url_for
+from flask import abort, render_template, request, redirect, url_for, jsonify
 from ..presenters.search_presenters import SearchFilters, SearchResults
 from ..presenters.service_presenters import Service
 from ..helpers.search_helpers import (
@@ -203,6 +203,7 @@ def get_service_by_id(service_id):
 
 @main.route('/search')
 def search():
+    print(request.headers.get("Accept"))
     search_keywords = get_keywords_from_request(request)
     search_filters_obj = SearchFilters(blueprint=main, request=request)
     response = search_api_client.search_services(
@@ -218,4 +219,7 @@ def search():
         'services': search_results_obj.search_results,
         'summary': search_results_obj.summary
     })
-    return render_template('search.html', **template_data)
+    if ('XMLHttpRequest' == request.headers.get("X-Requested-With")):
+        return jsonify(**template_data)
+    else:
+        return render_template('search.html', **template_data)

@@ -20,12 +20,14 @@ var jsVendorFiles = [
   govukToolkitRoot + '/javascripts/govuk/analytics/google-analytics-universal-tracker.js',
   govukToolkitRoot + '/javascripts/govuk/analytics/google-analytics-classic-tracker.js',
   bowerRoot + '/jquery/dist/jquery.js',
-  bowerRoot + '/jquery-details/jquery.details.js'
+  bowerRoot + '/jquery-details/jquery.details.js',
+  bowerRoot + '/hogan/web/builds/3.0.2/hogan-3.0.2.js',
 ];
 var jsSourceFiles = [
   assetsFolder + '/javascripts/_analytics.js',
   dmToolkitRoot + '/javascripts/option-select.js',
-  assetsFolder + '/javascripts/_onready.js'
+  assetsFolder + '/javascripts/_onready.js',
+  assetsFolder + '/javascripts/_search_ajax.js'
 ];
 var jsDistributionFolder = staticFolder + '/javascripts';
 var jsDistributionFile = 'application.js';
