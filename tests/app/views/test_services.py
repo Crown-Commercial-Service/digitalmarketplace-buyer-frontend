@@ -13,7 +13,7 @@ class TestServicePage(BaseApplicationTest):
             'app.main.views.data_api_client'
         ).start()
 
-        self.service = self._get_service_fixture_data()
+        self.service = self._get_g5_service_fixture_data()
         self.supplier = self._get_supplier_fixture_data()
 
         self._data_api_client.get_service.return_value = self.service
