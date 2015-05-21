@@ -1,4 +1,3 @@
-<script type="text/javascript">
 (function() {
   "use strict";
   GOVUK.Tracker.load();
@@ -9,4 +8,3 @@
   });
   GOVUK.analytics.trackPageview();
 })();
-</script>

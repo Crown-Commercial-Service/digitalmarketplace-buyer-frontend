@@ -23,6 +23,7 @@ var jsVendorFiles = [
   bowerRoot + '/jquery-details/jquery.details.js'
 ];
 var jsSourceFiles = [
+  assetsFolder + '/javascripts/_analytics.js',
   dmToolkitRoot + '/javascripts/option-select.js',
   assetsFolder + '/javascripts/_onready.js'
 ];
