@@ -10,23 +10,26 @@ class BaseApplicationTest(object):
         self.client = self.app.test_client()
 
     @staticmethod
-    def _get_search_results_fixture_data():
+    def _get_fixture_data(fixture_filename):
         test_root = os.path.abspath(
             os.path.join(os.path.dirname(__file__), ".")
         )
         fixture_path = os.path.join(
-            test_root, 'fixtures', 'search_results_fixture.json'
+            test_root, 'fixtures', fixture_filename
         )
         with open(fixture_path) as fixture_file:
             return json.load(fixture_file)
 
     @staticmethod
+    def _get_search_results_fixture_data():
+        return BaseApplicationTest._get_fixture_data(
+            'search_results_fixture.json'
+        )
+
+    @staticmethod
     def _get_service_fixture_data():
-        test_root = os.path.abspath(
-            os.path.join(os.path.dirname(__file__), ".")
-        )
-        fixture_path = os.path.join(
-            test_root, 'fixtures', 'service_fixture.json'
-        )
-        with open(fixture_path) as fixture_file:
-            return json.load(fixture_file)
+        return BaseApplicationTest._get_fixture_data('service_fixture.json')
+
+    @staticmethod
+    def _get_supplier_fixture_data():
+        return BaseApplicationTest._get_fixture_data('supplier_fixture.json')
