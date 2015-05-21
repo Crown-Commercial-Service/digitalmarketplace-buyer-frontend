@@ -7,8 +7,8 @@ class TestApplication(BaseApplicationTest):
     def setup(self):
         super(TestApplication, self).setup()
 
-    def test_should_have_analytics_on_page(self):
-        res = self.client.get('/')
+    def test_analytics_code_should_be_in_javascript(self):
+        res = self.client.get('/static/javascripts/application.js')
         assert_equal(200, res.status_code)
         assert_true(
             'GOVUK.analytics.trackPageview'
