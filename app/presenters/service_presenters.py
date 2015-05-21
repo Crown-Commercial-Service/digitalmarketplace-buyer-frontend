@@ -216,14 +216,25 @@ class Meta(object):
         documents = []
         for index, url_key in enumerate(url_keys):
             if url_key in service_data:
-                # Replace all runs of whitespace with a '%20'
-                url = re.sub(r"\s+", '%20', service_data[url_key])
+                url = service_data[url_key]
                 extension = self._get_document_extension(url)
                 documents.append({
                     'name':  names[index],
-                    'url': url,
+                    'url': self._replace_whitespace(url, '%20'),
                     'extension': extension
                 })
+
+        # get additional documents, if they exist
+        if 'additionalDocumentURLs' in service_data:
+            for document_url in service_data['additionalDocumentURLs']:
+                extension = self._get_document_extension(document_url)
+                name = self._get_document_name_without_extension(document_url)
+                documents.append({
+                    'name':  name,
+                    'url': self._replace_whitespace(document_url, '%20'),
+                    'extension': extension
+                })
+
         return documents
 
     def get_price_caveats(self, service_data):
@@ -279,9 +290,17 @@ class Meta(object):
             caveats.append(options)
         return caveats
 
+    def _get_document_name_without_extension(self, document_url):
+        document_basename = os.path.basename(urlparse(document_url).path)
+        return os.path.splitext(document_basename)[0]
+
     def _get_document_extension(self, document_url):
         url_object = urlparse(document_url)
         return os.path.splitext(url_object.path)[1].split('.')[1]
+
+    def _replace_whitespace(self, string, replacement_substring):
+                # Replace all runs of whitespace with replacement_substring
+                return re.sub(r"\s+", replacement_substring, string)
 
     def _if_both_keys_or_either(self, service_data, keys=[], values={}):
         def is_not_false(key):

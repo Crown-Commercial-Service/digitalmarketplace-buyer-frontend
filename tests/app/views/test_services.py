@@ -55,9 +55,21 @@ class TestServicePage(BaseApplicationTest):
                 assert_true(
                     '<a href="{}" class="document-link-with-icon">'.format(
                         # Replace all runs of whitespace with a '%20'
-                        re.sub(r"\s+", '%20', service[url_key])
+                        self._replace_whitespace(service[url_key], '%20')
                     ) in res.get_data(as_text=True)
                 )
+
+        if 'additionalDocumentURLs' in service:
+            for document_url in service['additionalDocumentURLs']:
+                assert_true(
+                    '<a href="{}" class="document-link-with-icon">'.format(
+                        self._replace_whitespace(document_url, '%20')
+                    ) in res.get_data(as_text=True)
+                )
+
+    def _replace_whitespace(self, string, replacement_substring):
+            # Replace all runs of whitespace with replacement_substring
+            return re.sub(r"\s+", replacement_substring, string)
 
     def _assert_service_page_url(self):
 
