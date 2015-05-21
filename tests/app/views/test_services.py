@@ -1,5 +1,6 @@
 
 import mock
+import re
 from nose.tools import assert_equal, assert_true
 from ...helpers import BaseApplicationTest
 
@@ -13,33 +14,13 @@ class TestServicePage(BaseApplicationTest):
             'app.main.views.data_api_client'
         ).start()
 
-        self.service = self._get_g5_service_fixture_data()
         self.supplier = self._get_supplier_fixture_data()
-
-        self._data_api_client.get_service.return_value = self.service
         self._data_api_client.get_supplier.return_value = self.supplier
 
     def teardown(self):
         self._data_api_client.stop()
 
-    def test_service_page_redirect(self):
-        self._data_api_client.get_service.return_value = \
-            self.service
-
-        res = self.client.get('/services/1234567890123456')
-        assert_equal(301, res.status_code)
-        assert_equal(
-            'http://localhost/g-cloud/services/1234567890123456',
-            res.location)
-
-    def test_service_page_url(self):
-        self._data_api_client.get_service.return_value = \
-            self.service
-        service_id = self.service['services']['id']
-
-        res = self.client.get('/g-cloud/services/{}'.format(service_id))
-        assert_equal(200, res.status_code)
-        assert_true("<h1>Blogging platform</h1>" in res.get_data(as_text=True))
+    def _assert_contact_details(self, res):
 
         supplier_name = self.supplier['suppliers']['name']
         contact_info = self.supplier['suppliers']['contactInformation'][0]
@@ -56,3 +37,67 @@ class TestServicePage(BaseApplicationTest):
             assert_true(
                 "{}".format(contact_detail)
                 in res.get_data(as_text=True))
+
+    def _assert_document_links(self, res):
+
+        service = self.service['services']
+
+        # Hardcoded stuff comes from 'get_documents' in service_presenters.py
+        url_keys = [
+            'pricingDocumentURL',
+            'sfiaRateDocumentURL',
+            'serviceDefinitionDocumentURL',
+            'termsAndConditionsDocumentURL'
+        ]
+
+        for url_key in url_keys:
+            if url_key in self.service['services']:
+                assert_true(
+                    '<a href="{}" class="document-link-with-icon">'.format(
+                        # Replace all runs of whitespace with a '%20'
+                        re.sub(r"\s+", '%20', service[url_key])
+                    ) in res.get_data(as_text=True)
+                )
+
+    def _assert_service_page_url(self):
+
+        service_id = self.service['services']['id']
+        service_title = self.service['services']['title']
+
+        res = self.client.get('/g-cloud/services/{}'.format(service_id))
+        assert_equal(200, res.status_code)
+        assert_true(
+            "<h1>{}</h1>".format(service_title)
+            in res.get_data(as_text=True)
+        )
+
+        self._assert_contact_details(res)
+        self._assert_document_links(res)
+
+    def _assert_redirect_deprecated_service_page_url(self):
+        self._data_api_client.get_service.return_value = \
+            self.service
+
+        service_id = self.service['services']['id']
+
+        res = self.client.get('services/{}'.format(service_id))
+        assert_equal(301, res.status_code)
+        assert_equal(
+            'http://localhost/g-cloud/services/{}'.format(service_id),
+            res.location)
+
+    def test_g5_service_page_url(self):
+
+        self.service = self._get_g5_service_fixture_data()
+        self._data_api_client.get_service.return_value = self.service
+
+        self._assert_redirect_deprecated_service_page_url()
+        self._assert_service_page_url()
+
+    def test_g6_service_page_url(self):
+
+        self.service = self._get_g6_service_fixture_data()
+        self._data_api_client.get_service.return_value = self.service
+
+        self._assert_redirect_deprecated_service_page_url()
+        self._assert_service_page_url()
