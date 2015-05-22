@@ -2,19 +2,32 @@
 
 {% block page_title %}Search - Digital Marketplace{% endblock %}
 
+{% set valid_search = results_page <= total_pages %}
+
 {% block main_content %}
 <header class="page-heading">
-  <h1>Search results</h1>
+    {% if valid_search %}
+        <h1>Search results</h1>
+    {% else %}
+    <div class="banner-warning-without-action">
+        <p class="banner-message">
+            Invalid search
+        </p>
+    </div>
+    {% endif %}
 </header>
 <form action="{{ url_for('.search') }}" method="get">
-  <div class="grid-row">
-    <div class="column-one-third search-page-filters">
-    {% include '_search_filters.html' %}
+    <div class="grid-row">
+        <div class="column-one-third search-page-filters">
+            {% include '_search_filters.html' %}
+        </div>
+        <div class="column-two-thirds">
+            {% if valid_search %}
+            {% include '_search_summary.html' %}
+            {% include '_search_results.html' %}
+            {% include '_search_pagination.html' %}
+            {% endif %}
+        </div>
     </div>
-    <div class="column-two-thirds">
-    {% include '_search_summary.html' %}
-    {% include '_search_results.html' %}
-    </div>
-  </div>
 </form>
 {% endblock %}

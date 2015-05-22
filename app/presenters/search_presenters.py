@@ -220,3 +220,6 @@ class SearchResults(object):
         self.search_results = response['services']
         self._add_highlighting()
         self.summary = self._get_search_summary(response['total'])
+        self.total = response['total']
+        if 'page' in response['query']:
+            self.page = response['query']['page']

@@ -1,0 +1,3087 @@
+{
+  "query": {
+    "page": "20",
+    "q": "email"
+  },
+  "services": [
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4528242010619904",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "Service bespoke to individual requirements",
+        "Migrate desktop or mobile technologies",
+        "Safeguard client estates",
+        "Project planning for optimum rollout schedule and smooth implementation",
+        "Highly skilled, DBS checked technicians",
+        "Reduce costs",
+        "Reduce time invested in patch management",
+        "Lower maintenance costs",
+        "Microsoft Gold Partner",
+        "Go Live support and training"
+      ],
+      "serviceFeatures": [
+        "Supply of required new devices",
+        "Creation of new Master Schedule",
+        "Packaging Recycling",
+        "“Rolling” Deployment",
+        "Reimaging and application packaging",
+        "Refurbishment/upgrade of suitable existing devices",
+        "Certified WEEE disposal of retired devices"
+      ],
+      "serviceName": "Windows XP to Windows 7 Migration Service",
+      "serviceSummary": "Stone is a Microsoft Gold Partner. This service is based around migrating existing devices running Windows XP to Windows 7.  Migration of equipment will be undertaken by our highly skilled, DBS checked technicians. Although bespoke to individual requirements, services available include:\r\n\r\nSupply of new devices \r\nCertified disposal of retired devices \r\n\r\n",
+      "serviceTypes": [
+        "Implementation"
+      ],
+      "supplierName": "Stone Computers Limited"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4528307106217984",
+      "lot": "SaaS",
+      "serviceBenefits": [
+        "Transaction costs reduced through automation of services",
+        "Additional access channels and live updates. ",
+        "Direct integration to finance systems eliminates re-keying of data",
+        "Zipporah's search portal finds facilities that best suit a requirement",
+        "Intelligent workflow to guide and direct users to valid appointments ",
+        "Reduces missed calls and resource requirement",
+        "Online diary allows users to share immediate up-to-date information"
+      ],
+      "serviceFeatures": [
+        "Complete online booking capabilities",
+        "Full diary management",
+        "Manage all of your fees",
+        "Single and multiple bookings functionality",
+        "Daily/weekly/monthly calendar views ",
+        "Full reporting suite including financial, utilisation and bookings ",
+        "Facilitates payment methods; cash, cheque,  and online.",
+        "Management  booking type restrictions.",
+        "Handles complex rules in accordance with GRO"
+      ],
+      "serviceName": "Zipporah Advance - Registrars Core Diary Module",
+      "serviceSummary": "Effective core diary accessibility for all users, real time visibility of bookings,variable charging levels, public facing, browser based, ability to book births and deaths , easy integration with payments systems, comprehensive reporting.",
+      "serviceTypes": [
+        "IT management"
+      ],
+      "supplierName": "Zipporah Ltd"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4529780053508096",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "Greater access to technologies, expertise and range of services",
+        "Expertise for providing remote working and access to services",
+        "Remote servers offering instant bandwidth and flexibility",
+        "Our expertise offers simplified Disaster Recovery Processes",
+        "Instant, quick and easy software updates",
+        "Cost controls through low start up and on-going fees"
+      ],
+      "serviceFeatures": [
+        "Cloud feasibility assessments",
+        "Technology reviews",
+        "Application Reviews",
+        "Strategic plan development",
+        "Remediation planning & prioritisation",
+        "Migration proof of concepts - IaaS/PaaS/SaaS/Line of business applications",
+        "Security Assessments including CESG CLAS, RMADS",
+        "Service & System Integration planning, proving & implementation",
+        "Application & service migration to cloud environments",
+        "Technical and Information Assurance assessments "
+      ],
+      "serviceName": "Cloud Assessment, Cloud Transition, Cloud Migration, Cloud Implementation",
+      "serviceSummary": "Certes provides the expertise to move your organisation to cloud computing. Whether you need cloud feasibility assessments or technology and application reviews to plan your strategy (servers/infrastructure/databases/COTS); or migration, integration and implementation specialists to help you make the move, we provide the expertise for all of your cloud challenges",
+      "serviceTypes": [
+        "Implementation",
+        "Ongoing support",
+        "Planning",
+        "Testing",
+        "Training"
+      ],
+      "supplierName": "Certes Computing Limited"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4530362919157760",
+      "lot": "SaaS",
+      "serviceBenefits": [
+        "Automatic analysis data to provide you with actionable insights",
+        "Understand and predict events/trends",
+        "Run from UK based, accredited datacentre(s) maintaining privacy and security",
+        "Provides functionality of social media analysis tools in a real-time",
+        "Interacts, Facebook, Flickr, Google+, Newsgator, Twitter, Youtube"
+      ],
+      "serviceFeatures": [
+        "Access Control - create teams/groups of users with shared interest",
+        "Data Capture  - ability to define the datafeed location",
+        "Language filters and automatic translation",
+        "Semantic Search - advanced searches",
+        "Management Information - Users can produce analysis reports",
+        "Analysis - sentiment identification – advocate, positive, negative, aggressive"
+      ],
+      "serviceName": "Social Media Monitoring and Analytics Service",
+      "serviceSummary": "HP Social Media Monitoring and Analytics Service is offered as a SaaS offering enabling customers to better utilise social media channels and unstructured data to achieve enhanced business and operational outcomes for improved citizen engagement.",
+      "serviceTypes": [
+        "Business intelligence and analytics",
+        "Data management",
+        "Electronic document and records management (EDRM)",
+        "IT management",
+        "Operations management",
+        "Security"
+      ],
+      "supplierName": "HP Enterprise Services UK Ltd"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4530829300596736",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "Build a working prototype for your online community",
+        "Apply adjustments throughout project where necessary",
+        "Create feedback platform for stakeholders"
+      ],
+      "serviceFeatures": [
+        "Working prototype",
+        "Live style guide",
+        "Pattern Lab",
+        "Detailed prototype",
+        "Interactive prototype"
+      ],
+      "serviceName": "Live style guide",
+      "serviceSummary": "Live style guides are very detailed, realistic HTML/CSS versions of a prototype. Stakeholders can access and give feedback easily and they can be designed and updated as the project goes on, saving time and money. Also, they are live throughout the project and can be added to where needed.",
+      "serviceTypes": [
+        "Implementation",
+        "Planning"
+      ],
+      "supplierName": "BrightLemon"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4532265363177472",
+      "lot": "SaaS",
+      "serviceBenefits": [
+        "Easily share files with people inside and outside of organisations",
+        "Manage projects in a collaborative space",
+        "Reduce physical overheads by utilising Cloud for mail and calendar",
+        "Quickly access mail, meetings, calendars, chats, files",
+        "Collaboratively edit documents online with colleagues instantly"
+      ],
+      "serviceFeatures": [
+        "Collaborate online, share files, edit online and sync to device",
+        "chat, manage projects, network with potential clients, ",
+        "work with your e-mails and calendar, host meetings"
+      ],
+      "serviceName": "IBM Connections Cloud S1",
+      "serviceSummary": "The Connections Cloud offers professional grade e-mail, networking & collaboration tools and online meetings – all designed to let you work seamlessly with people inside and outside of your organisation. You can meet online, share files, chat, manage projects, network with potential clients and send and receive e-mail anywhere, anytime.",
+      "serviceTypes": [
+        "Collaboration"
+      ],
+      "supplierName": "IBM United Kingdom Ltd"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4533066307469312",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "Expertise of Cloud and on-premise complex Case Management solutions",
+        "Standardised industry best practice processes for HR Case Management",
+        "Leverages Certus Solutions Intellectual Property",
+        "On-going Support Service protecting customers investment",
+        "Configuration Warranty",
+        "Knowledge transfer through education and continuous training"
+      ],
+      "serviceFeatures": [
+        "Access to HR Case Management Subject Matter Experts",
+        "HR Case Management Business Analysis",
+        "Service Design (including Shared Services configuration)",
+        "Technical Design Authority and Technical Infrastructure design (Cloud, On-premise)",
+        "Technical Delivery (Microsoft .Net and Oracle Technology)",
+        "Testing Services",
+        "Service Transition Expertise (including on-boarding and off-boarding)",
+        "Helpdesk and On-going Support Services",
+        "PRINCE2 Compliant incorporating risk based delivery approach",
+        "Flexible utility based pricing"
+      ],
+      "serviceName": "HR Case Management Design & Delivery Services ",
+      "serviceSummary": "Tier 1 ERP on-premise and cloud solutions for Human Resources (HR) do not provide out of the box functionality for complex HR casework. Through extensive experience of HCM ERP implementations and Shared Services operations Certus has developed significant capability and expertise in providing effective scalable solutions in this area.",
+      "serviceTypes": [
+        "Implementation",
+        "Planning",
+        "Testing",
+        "Training"
+      ],
+      "supplierName": "Certus Solutions"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4533215045877760",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "Optimisation of legacy systems for greater productivity",
+        "focussed and reduced technology spend",
+        "Reduced costs of data storage and management ",
+        "Reduced policies and processes to Minimum Viable",
+        "increased productivity through search of linked legacy data sources",
+        "greatly reduced \"manual swivel chair\" interfaces",
+        "helps identify valuable data to reduce data quantities and storage",
+        "identify Minimum Viable Reduce",
+        "completely configurable",
+        "various defined and bespoke costing models"
+      ],
+      "serviceFeatures": [
+        "Grazing of web and other external data sources",
+        "Grazing of internal data sources ",
+        "simple clear expression of data relationships with emotions and maps",
+        "Cloud, local, hosted or aaS provision ",
+        "API version alone or full integrated system with various options",
+        "English, Arabic, Mandarin and multiple other languages",
+        "configurable Semantic Search and data analytics",
+        "Reports and Business Intelligence support "
+      ],
+      "serviceName": "Integrated Semantic Search and Data Analytics",
+      "serviceSummary": "The provision of the Google semantic search providers technology based upon the Cogiti API platform.   Allows grazing of data both internally and externally, within and without secure systems and high impact level, with east visualisations of relationships between data, of any sort, in multiple languages including Arabic and Chinese.",
+      "serviceTypes": [
+        "Implementation",
+        "Ongoing support",
+        "Planning",
+        "Testing",
+        "Training"
+      ],
+      "supplierName": "Glue Reply (a trading division of Reply Ltd.)"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4513276239020032",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "Right product to market first time",
+        "Delivery to market significantly faster",
+        "Inherent low defect rate",
+        "Enables rapid change",
+        "Increase in overall productivity",
+        "An all round boost to demonstrable quality"
+      ],
+      "serviceFeatures": [
+        "Driven by effective collaboration",
+        "Domain specific language",
+        "Human readable requirements",
+        "Use of consistent toolset",
+        "Test automation by default from first iteration",
+        "Single store code repository",
+        "Continuous Integration (CI) ",
+        "Living documentation for all to use"
+      ],
+      "serviceName": "Behaviour Driven Development (BDD) Testing Services",
+      "serviceSummary": "QAWorks will help drive your evolution to BDD processes and tools. Our approach focuses on the culture change, the design and implementation of test automation frameworks, performance profiling and session based exploratory testing; all supported by the continuous integration process. QAWorks encourage an open source environment.",
+      "serviceTypes": [
+        "Implementation",
+        "Ongoing support",
+        "Planning",
+        "Testing",
+        "Training"
+      ],
+      "supplierName": "QAWorks Limited"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4514513055383552",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "Wealth of experience and strong track record delivering technical assurance",
+        "Experience of assuring  portfolios of technology initiatives",
+        "Everything we do is driven by your business needs",
+        "Transparent and consistent decision making audit trail",
+        "Early visibility of solutions that may diverge from design principles",
+        "Ensures consistency, shared learning and understanding across delivery projects",
+        "Reduced risk of operational compromise by assuring solutions throughout delivery",
+        "Independent expert advice and guidance",
+        "Security cleared staff",
+        "We will work collaboratively with you, at your offices"
+      ],
+      "serviceFeatures": [
+        "Provide technical assurance throughout the solution development lifecycle.",
+        "Assure your solutions against your enterprise architecture",
+        "Assure your solutions against government guidelines, support Gateway Reviews",
+        "Assure designs and solution against functional requirements and NFRs",
+        "Assure that testing exercises functional requirements and solutions meet NFRs",
+        "Assure that solutions are secure",
+        "Assure that changes are fully understood ",
+        "Provide senior technical architects to provide independent advice and guidance",
+        "Safeguard against poor design by assurance against design principles",
+        "Considers the entire IT portfolio and strategic objectives"
+      ],
+      "serviceName": "Technical Assurance",
+      "serviceSummary": "Triad's technical assurance service will help your organisation assure that your portfolio of technical initiatives adhere to your Enterprise Architecture, Security Architecture, Solution Architectures, Design Principles and government standards and best practice. We will provide assurance through the solution development lifecycle so that deviations are identified and rectified early. ",
+      "serviceTypes": [
+        "Implementation",
+        "Ongoing support",
+        "Planning",
+        "Testing",
+        "Training"
+      ],
+      "supplierName": "Triad Consulting & Solutions"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4514646266478592",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "User messaging options",
+        "Intergrated email support"
+      ],
+      "serviceFeatures": [
+        "Integration of user's email",
+        "Notification emails"
+      ],
+      "serviceName": "Manage Email",
+      "serviceSummary": "Integration of email to enable documents to be emailed from the Store.",
+      "serviceTypes": [
+        "Implementation",
+        "Ongoing support",
+        "Planning",
+        "Testing",
+        "Training"
+      ],
+      "supplierName": "Clouded Networks"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4515916234620928",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "High first call resolution rate (FCR)",
+        "Service Level Agreement (SLA) monitoring",
+        "Low time to answer and abandon rates",
+        "User satisfaction survey for all calls",
+        "Able to supports desktops, tablets and mobile devices"
+      ],
+      "serviceFeatures": [
+        "Fully staffed UK based service desk",
+        "Self service portal functionality",
+        "Nationally accredited service desk",
+        "Remote support tools for remote resolution",
+        "Highly trained service desk staff",
+        "Continuous improvement programme in place",
+        "Knowledge base provides consistent resolutions to common issues",
+        "Rapid adoption processes for supporting new systems and hardware",
+        "Network, systems and hardware monitoring capability"
+      ],
+      "serviceName": "Service Desk for 1st line Cloud Support",
+      "serviceSummary": "The LHIS Service Desk provides an effective single point of contact for over 18,000 users to log, track and resolve service requests, incidents, problems and faults. This service offering is 1st line support to provide customer organisations with a service desk capability to track and monitor incidents, problems and changes. ",
+      "serviceTypes": [
+        "Implementation",
+        "Ongoing support"
+      ],
+      "supplierName": "Leicestershire Health Informatics Service"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4519835694268416",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "Participants will gain a comprehensive understanding of Agile best practice",
+        "PSM I Certification",
+        "Immersive, instructor led learning",
+        "Hands-on learning for complete understanding"
+      ],
+      "serviceFeatures": [
+        "All Agile Courses run by agile industry experts",
+        "Scrum for the Whole Team (two day course)",
+        "Agile Software Management (three day course)",
+        "Attendees will receive PSM I Certification",
+        "Hands-on sessions, ensuring complete understanding of Agile",
+        "Sessions include role play elements for immersive learning",
+        "Adaptable sessions, so each course is personalised to the group"
+      ],
+      "serviceName": "Agile Training (PSM I Certification & Agile Best Practice Training)",
+      "serviceSummary": "Agility is the ability to adapt quickly to changing conditions. In software development, as in business, this essential quality must be built into the processes we use. Learn to participate in, lead, or oversee agile projects with hands-on guidance from Clearvision's in house Agile expert.\r\n\r\nCourse details attached.",
+      "serviceTypes": [
+        "Implementation",
+        "Ongoing support",
+        "Training"
+      ],
+      "supplierName": "Clearvision CM"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4521509917818880",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "Faster integration of Validoc"
+      ],
+      "serviceFeatures": [
+        "Training in the use of the Validoc service",
+        "Mentoring in the use of the Validoc service",
+        "Consultancy in the use of the Validoc service",
+        "Integration of the Validoc service"
+      ],
+      "serviceName": "Validoc Consultancy",
+      "serviceSummary": "ICT consultancy, training and mentoring services to assist in implementation of Validoc service into customer systems.\r\n\r\n",
+      "serviceTypes": [
+        "Implementation",
+        "Ongoing support",
+        "Planning",
+        "Testing",
+        "Training"
+      ],
+      "supplierName": "The Agile Consultancy"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4521511796867072",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "Accountability for your digital activity",
+        "Website performance analysis",
+        "Channel evaluation",
+        "Definition of KPI's",
+        "Ongoing reporting mechanisms"
+      ],
+      "serviceFeatures": [
+        "Data auditing and tool set-up",
+        "Data mining and analysis",
+        "Objective & KPI review",
+        "Reporting and accountability"
+      ],
+      "serviceName": "Website Analytics",
+      "serviceSummary": "twentysix offers the full Website Analytics service from auditing, objective & KPI setting through to data analysis and reporting.  Our Analytics service is delivered by a team of Google Analytics qualified data focused individuals and our focus is on providing clarity and accountability for our clients.",
+      "serviceTypes": [
+        "Implementation",
+        "Ongoing support",
+        "Planning",
+        "Testing",
+        "Training"
+      ],
+      "supplierName": "twentysix Limited"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4521681154473984",
+      "lot": "SaaS",
+      "serviceBenefits": [
+        "Canopy manages the risks and complexity of the operational systems",
+        "Includes upgrades to new release versions at no additional charge",
+        "Allows customer data to be stored in their own region/country",
+        "Solution offers more flexibility with regard to different SLA requirements"
+      ],
+      "serviceFeatures": [
+        "Provides the core business capabilities of Exchange Server",
+        "Enables teams to work together to share critical business information",
+        "Is a next-generation communications service based on Microsoft Lync Server"
+      ],
+      "serviceName": "Canopy Anytime Collaboration and Communication SaaS (A3C)",
+      "serviceSummary": "Canopy Anytime Collaboration and Communication (A3C) is Canopy’s cloud based Unified Communication and Collaboration service based upon Microsoft technologies.\r\nA3C is offered in SaaS mode with a flexible per user, per month commercial model Secured infrastructure, SSO functionality, Portal for management, and delivered from reliable and secure Canopy datacenters.\r\n",
+      "serviceTypes": [
+        "Collaboration"
+      ],
+      "supplierName": "Canopy The Open Cloud Company UK Ltd"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4559089782751232",
+      "lot": "SaaS",
+      "serviceBenefits": [
+        "Fully integrated suite with 360 degree view of customer contacts",
+        "Omni-channel solution provides consistent responses across all channels",
+        "Rapid implementation provides quick time-to-value",
+        "Comprehensive knowledgebase speeds up responses and improves consistency",
+        "Web self-service and live chat improves service availability",
+        "Easily integrated with web sites and back-office systems",
+        "Enhances insight into customer service issues with comprehensive analytics",
+        "Increased agent effectiveness and quicker handling of service requests",
+        "Web self-service available in 34 languages"
+      ],
+      "serviceFeatures": [
+        "Multi-channel Contact Management in a unified employee desktop interface",
+        "Call Management with knowledgebase search and omnichannel contact history",
+        "Email Management with knowledgebase search, omni-channel contact history, response templates",
+        "Whitemail Management for letters, faxes and face-to-face contacts",
+        "Email and telephone outbound campaigns with templates and scripts",
+        "Live Chat and Virtual Assistant with contact history and knowledgebase",
+        "Web Self-service including personal accounts, FAQs, knowledgebase and web forms",
+        "Knowledgebase with natural language, knowledge guides and user specific content",
+        "Reporting and Analytics including dashboards, drill down and advanced options",
+        "Comprehensive API engine for integrations to external systems"
+      ],
+      "serviceName": "KANA Express",
+      "serviceSummary": "KANA Express offers omni-channel, customer service software for midsize organizations. Sophisticated yet simple to use, it is a complete suite of multi-channel contact management solutions. It provides anytime/anywhere access to all the features needed to easily create consistent customer experiences across all service channels from a single platform",
+      "serviceTypes": [
+        "Customer relationship management (CRM)"
+      ],
+      "supplierName": "KANA (Lagan Technologies)"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4559618667708416",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "Minimal internal and external security threats",
+        "Simple transformation and service integration process",
+        "Reduced delivery  costs",
+        "Alignment with GDS Design Manual",
+        "Reduced delivery lead time",
+        "Knowledge transfer to internal staff",
+        "Taking control of your network and information security management"
+      ],
+      "serviceFeatures": [
+        "Developing security policy, strategy and standards",
+        "Security controls, architecture,design using prince2,Agile (i.e. scrum) methods",
+        "Liaising with security vendors, suppliers and external resources",
+        "Maintaining security applications for end user computing and mobile devices",
+        "Providing support in infrastructure servers, storage and network service",
+        "Audit and review of the security policy and procedures",
+        "Classification, IL2, IL3, CLAS, Public Service Network (PSN)",
+        "Support end user, data centre, hybrid, private and public cloud"
+      ],
+      "serviceName": "Computer Network Internet Security Service",
+      "serviceSummary": "We supply CLAS and SC cleared security consultants to support projects across Infrastructure, Applications Development, Desktop and End User Computing, and Network and Internet Security in government, digital and financial sectors. We work in an agile manner using techniques like scrum to deliver results quickly\r\n",
+      "serviceTypes": [
+        "Implementation",
+        "Ongoing support",
+        "Planning"
+      ],
+      "supplierName": "Zeefix Consulting Limited"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4559743716687872",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "Helping you enable your business by tackling inefficiencies in delivery ",
+        "We can help setup and configure the right automation tools ",
+        "Providing experts to assist with cultural change and building capability ",
+        "Leverage DevOps and technology to achieve competitive advantage "
+      ],
+      "serviceFeatures": [
+        "Cloud and virtualization vendors and technology",
+        "Managing audit and regulatory requirements",
+        "Continuous delivery pipeline",
+        "Automation web, API and mobile testing",
+        "Embed Experts to provide technical knowledge and industry experience",
+        "Provide a strategy for building and configuring automated continuous delivery ",
+        "Provide team leadership, providing on-the-job mentoring to build capability"
+      ],
+      "serviceName": "Digital: DevOps Delivery",
+      "serviceSummary": "DevOps delivery is aimed at breaking down team silos, automating repetitive tasks and continuous delivery. As well as coaching your teams to understanding what DevOps means as a pre-cursor to adopting the DevOps approach.",
+      "serviceTypes": [
+        "Implementation"
+      ],
+      "supplierName": "North Highland (formerly Qedis Consulting Ltd)"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4559937703247872",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "cost effective",
+        "any supplier"
+      ],
+      "serviceFeatures": [
+        "Open book",
+        "transparent"
+      ],
+      "serviceName": "Cloud Platform Supply",
+      "serviceSummary": "Supplying all of those elements not included within the suppliers cloud service.",
+      "serviceTypes": [
+        "Implementation"
+      ],
+      "supplierName": "5NINES Data Centres Limited"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4563625268215808",
+      "lot": "IaaS",
+      "serviceBenefits": [
+        "Assessment ",
+        "Remediation ",
+        "Enablement ",
+        "Migration"
+      ],
+      "serviceFeatures": [
+        "AD and Network remediation ",
+        "Delegation Analysis ",
+        "Scheduling and communications ",
+        "Lotus Notes or GroupWise mail migration ",
+        "Lotus Domino/Notes based application migration ",
+        "Archive migration to Office 365"
+      ],
+      "serviceName": "Microsoft Office 365 Deployment and Migration Services",
+      "serviceSummary": "HP Microsoft Office 365 Deployment and Migration Services for Government (UK) delivers a volume based service for UK Public Sector Office 365 deployments and migration. HP assumes responsibility for provisioning, deployment and migration of your user estate, allowing a fast and low risk deployment and migration to an Office 365. ",
+      "serviceTypes": [
+        "Compute",
+        "Storage"
+      ],
+      "supplierName": "HP Enterprise Services UK Ltd"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4564961942568960",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "Reduces unplanned admissions and GP routine appointments. ",
+        "Reduces cost of supporting chronically ill or elderly patients. ",
+        "Interoperable platform, integrating other clinical systems and monitoring devices. ",
+        "Yecco’s mobile platform is available to citizens and professionals. ",
+        "Supports self-care, allows community and family to coordinate care.",
+        "Yecco co-creates and develops with local authorities for sustainability. ",
+        "Manages home safety and vitals through cloud enabled integrated technology. ",
+        "Fulfils Care Act obligations and NHS Five Year Forward plan. ",
+        "More cost effective solution than any other in the market.",
+        "Flexible system to allow rapid feature enhancements."
+      ],
+      "serviceFeatures": [
+        "Web based and available as IOS and Android Apps. ",
+        "Secure/encrypted storage of personal & medical information.",
+        "Patient portal enabling self-management of chronic conditions.",
+        "Shared calendar, timelines, photos, group and private message exchange. ",
+        "Cloud enabled sensors to manage disease and stratify patient risks. ",
+        "Video conferencing – 1 to 1 and multiple connections.  ",
+        "Incorporates EHR integration capability.",
+        "Interfaces to a range of clinical monitors for condition management.",
+        "Provides home safety monitoring at low cost for elderly.",
+        "Includes 4 safety sensors and 2 medical devices."
+      ],
+      "serviceName": "Yecco - YSMVSMHS2",
+      "serviceSummary": "This service, hosted in the UK, includes messaging, shared document storage, shared calendar, scheduling, a private and public timeline, support network configuration, video chat. The service includes a cloud Home Hub which enables a range of safety sensors and medical monitors to allow a person to self-manage and be monitored.",
+      "serviceTypes": [
+        "Implementation",
+        "Ongoing support"
+      ],
+      "supplierName": "Yecco Limited"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4550919681212416",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "Methods help to design and take ownership/accountability of the service",
+        "Rapid access to high calibre pre-screened talent ",
+        "Flexible resourcing approach that is scalable and can mobilise quickly",
+        " Fit for purpose solution bespoke for each client  ",
+        "Methods deliver cost savings through optimised processes, control and visibility  ",
+        "Dedicated account team and on or off-site management",
+        "Robust technical and security vetting processes (ISO 27001 accreditation) ",
+        " Comprehensive management reporting to ensure high quality supplier performance ",
+        "significant reduction in time-to-fill/hire and reduction in rogue spend",
+        "Proven and successful track record of supply to Public sector  "
+      ],
+      "serviceFeatures": [
+        "Best practice management techniques",
+        " Independent technology vendor selection",
+        "Full lifecycle management",
+        "End-to-end vendor / cost management,  performance information ",
+        " Dedicated Account team; Single contact to improve efficiency ",
+        " Underpinned by stringent process controls",
+        "Public sector/Government associate/contractor/interim pool access",
+        "Comprehensive management reporting ensures visibility/ control  ",
+        "Collaborative relationship/partnership approach ",
+        "Deep knowledge of Technology/Management recruitment   "
+      ],
+      "serviceName": "Methods Professional Services: Managed Recruitment Services ",
+      "serviceSummary": "Methods Managed Recruitment and Project Services programme provides an end-to-end management and delivery service designed to streamline the hiring process. Our team has the capability to assume responsibility for the entire recruitment lifecycle, optimising the hiring process and ensuring that customers achieve improvements in compliance, risk management and cost savings. \r\n",
+      "serviceTypes": [
+        "Implementation",
+        "Ongoing support",
+        "Planning",
+        "Testing",
+        "Training"
+      ],
+      "supplierName": "Methods Professional Services Ltd"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4553194067722240",
+      "lot": "SaaS",
+      "serviceBenefits": [
+        "A single contact centre of multiple channel communication.",
+        "OPEX pay per use model.",
+        "No need for infrastructure investment.",
+        "Highly secure withend user isolation from client network.",
+        "Monitors the service levels experienced for each user.",
+        "Monitor the resource consumption for each user.",
+        "Management info to enable switch to inexpensive e-channels."
+      ],
+      "serviceFeatures": [
+        "Fully hosted solution",
+        "Secure contact channels",
+        "Multiple contact formats- documents, mobile, text, fax etc.",
+        "Workflow",
+        "Integrated contact repository"
+      ],
+      "serviceName": "Scripta Multichannel Contact Centre (MCC)",
+      "serviceSummary": "Scripta MCC  is  a multichannel service for citizens to  contact public authorities via –email,fax,Mobile, web forms, txt & paper web upload. The  platform  passes the contact directly into LOB systems thereby offering a secure method of customer engagement. The service is a hosted multichannel platform plus hosted workflow and repository.",
+      "serviceTypes": [
+        "Accounting and finance",
+        "Business intelligence and analytics",
+        "Customer relationship management (CRM)",
+        "Electronic document and records management (EDRM)",
+        "IT management",
+        "Operations management"
+      ],
+      "supplierName": "Scripta Software Ltd"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4554396188803072",
+      "lot": "SaaS",
+      "serviceBenefits": [
+        "Ideal for self-service payments – without any staff involvement"
+      ],
+      "serviceFeatures": [
+        "Single kiosk deployment.",
+        "Card authorisation in real-time and also payments by cash.",
+        "No card details stored within the kiosk.",
+        "Full integration with Capita Payment Management Systems.",
+        "Immediate updating of on-site systems.",
+        "Fund validation configurable from within Capita Income Management."
+      ],
+      "serviceName": "Capita ePayment Smart Kiosk",
+      "serviceSummary": "Supports self-service payment by debit or credit card using an unattended touch-screen kiosk, either wall-mounted or on a free-standing pedestal. Available fully integrated with kiosks from a range of specialist partner organisations.",
+      "serviceTypes": [
+        "Accounting and finance"
+      ],
+      "supplierName": "Capita Business Services Ltd"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4555355333853184",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "Helps achieve your strategic goals",
+        "Helps maximize return on your investment",
+        "Helps minimize total cost of ownership",
+        "Support of project and stakeholder expectations",
+        "Support for project and industry standards"
+      ],
+      "serviceFeatures": [
+        "Use of standards (e.g., PRINCE2, PMBOK, IEEE, and CMMI)"
+      ],
+      "serviceName": "Risk Management",
+      "serviceSummary": "Services support the verification that processes in place to identify, quantify, track and mitigate project risks. Verifying existence of a risk tracking tool to document risks. Provides our own assessment and identification of potential risks to project and input on steps for mitigation and contingency plans for a realized risk.",
+      "serviceTypes": [
+        "Implementation",
+        "Ongoing support",
+        "Planning",
+        "Testing",
+        "Training"
+      ],
+      "supplierName": "PCG Advisory Services, Ltd"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4556694289907712",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "Impartial expert advice choosing the right tools, on budget",
+        "Ensuring the test capability satisfies the business objectives",
+        "Testing that ensures applications meet Digital by Default Service Standards",
+        "Testers screened to minimum BPSS level, higher clearance when required",
+        "The most efficient & cost-effective testing solution for any project",
+        "Independent validation that deliverables meet required quality, cost and timescales",
+        "Impartial expert advice choosing the right tools, on budget",
+        "Testing service that accomplishes what you need without extra costs",
+        "Full technical coverage across IT landscape – ERP to Web"
+      ],
+      "serviceFeatures": [
+        "Test Tool recommendation, proof of concept, training, implementation and strategy",
+        "Creation of test functions, teams, departments",
+        "Pan Government Experience, GDS Manual proficient",
+        "UK Based security screened resources, OnDemand, on/offsite",
+        "Manual and automation solutions, including scripting",
+        "Measured success; Test Governance, KPI’s, metrics and SLAs, cost control",
+        "OpenSource or proprietary tool solutions",
+        "Scalable, responsive service compatible with Agile and other methodologies",
+        "Expert Performance Testing Consultants with relevant technical knowledge"
+      ],
+      "serviceName": "Performance Testing",
+      "serviceSummary": "Performance Testing.  We use a range of performance test tools and expertise to create scenarios to ensure that internal and external applications, websites and platforms perform as intended, even at their busiest times.  We will evaluate your systems and recommend the best approach, in line with budgets, technology and timescales.",
+      "serviceTypes": [
+        "Implementation",
+        "Ongoing support",
+        "Planning",
+        "Testing",
+        "Training"
+      ],
+      "supplierName": "Centre4 Testing Limited"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4566538464002048",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "Accelerated Cloud Adoption through independent, experienced advice and project delivery",
+        "Understand impact and potential cloud adoption ROI on the organisation",
+        "Gain clear understanding of key application characteristics and dependencies ",
+        "Improved visibility and cost controls through cloud service management models",
+        "De-risked and phased approach to smooth transition into production operations",
+        "Ensure cloud benefits are met, through effective demand management",
+        "Bridge short term gaps in cloud service operations management",
+        "Improved match of vendor solutions against your organisation’s specific requirements ",
+        "Rapid project start-up using our standard migration processes and tools ",
+        "Knowledge share without the need for formal training"
+      ],
+      "serviceFeatures": [
+        "Defines cloud strategy, aligning your organisation, and produces cloud roadmap",
+        "Rapid application profiling to determine best approach for cloud transformation",
+        "Builds justification for change and RFP if required",
+        "Architects cloud solution for your environment (IAAS, PAAS, and PAAS)",
+        "Delivers transformation through application migration to the cloud",
+        "Bridges gap between existing and new cloud-based service",
+        "ITIL - based service definition and documented processes",
+        "Establishes effective governance and determines and deploys Service Level measurement",
+        "Knowledge share through formal shadowing and peer-to-peer networking",
+        "Backfill of existing team operations if required"
+      ],
+      "serviceName": "Accelerated Cloud Adoption Services for Enterprise Applications",
+      "serviceSummary": "Company85’s Accelerated Cloud Services enable the successful adoption and transition to cloud-related services faster, at a lower risk and cost and aligned with the organisation’s specific requirements.  Our services cover the full cloud lifecycle, the Enterprise Applications centric services focus on Cloud Readiness, Blueprinting, Adoption and Interim Operations Management (ITIL-based). ",
+      "serviceTypes": [
+        "Implementation",
+        "Planning"
+      ],
+      "supplierName": "Company85 LTD"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4568938276978688",
+      "lot": "SaaS",
+      "serviceBenefits": [
+        "Enhance business analytical tools with ANPR data"
+      ],
+      "serviceFeatures": [
+        "Push ANPR Data ro I2 system"
+      ],
+      "serviceName": "I2 Interface Service for Cloud ANPR Back Office",
+      "serviceSummary": "This services allows for extraction of data from a cloud hosted Cleartone ANPR Back Office to be pushed in near real time into a customer I2 system.",
+      "serviceTypes": [
+        "Business intelligence and analytics",
+        "Data management"
+      ],
+      "supplierName": "Cleartone Telecoms Limited"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4570210795257856",
+      "lot": "SaaS",
+      "serviceBenefits": [
+        "Identify the right CMS for your needs",
+        "Experience of multiple CMS Vendors",
+        "Experience of ASP.NET & PHP CMS Technologies",
+        "Tested, extensible platforms with regular updates",
+        "Plug and Go Architectures available for add-ons & modules",
+        "Easy to use, user-centric CMS Platforms",
+        "Global support on larger CMS Platforms"
+      ],
+      "serviceFeatures": [
+        "Content Management",
+        "Extensible Platforms",
+        "WYSIWIG editors",
+        "Media Management tools",
+        "Version Control",
+        "Workflow Management",
+        "Multiple Technologies",
+        "Integration Opportunities "
+      ],
+      "serviceName": "Content Management Systems",
+      "serviceSummary": "twentysix designs and builds website across the two major development\r\nplatforms, Microsoft .NET (ASP.NET) and LAMP (PHP.) We work with a\r\nnumber of CMS vendors and suppliers and will help the right CMS for you\r\nand your needs.",
+      "serviceTypes": [
+        "Business intelligence and analytics",
+        "Collaboration",
+        "Creative and design",
+        "Customer relationship management (CRM)",
+        "Data management",
+        "IT management",
+        "Libraries",
+        "Marketing",
+        "Operations management",
+        "Sales"
+      ],
+      "supplierName": "twentysix Limited"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4570471177650176",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "Can reduce risk of audit from vendors",
+        "Information can help with budget planning",
+        "A single view of the truth of your estate",
+        "View of the real cost of unmanaged software estate"
+      ],
+      "serviceFeatures": [
+        "Customised report detailing areas of risk in your estate",
+        "Customised recommendations report to help mitiagte risk",
+        "Detailed report of all installed applications",
+        "Analysis of Top 5 vendors based on spend and installation",
+        "Analysis of Top 5 installed applications per vendor"
+      ],
+      "serviceName": "SAM Risk Profiler & Publisher Analysis",
+      "serviceSummary": "Risk Profiler allows customers to analyse the risk in their environment from the top 5 vendors with the top 5 products installed, whilst also giving visibility into the usage of other publishers. The Risk Profiler provides you with a  framework to identify, govern, manage and optimise your software risks",
+      "serviceTypes": [
+        "Implementation",
+        "Ongoing support",
+        "Planning",
+        "Testing",
+        "Training"
+      ],
+      "supplierName": "SoftwareONE"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4570845074685952",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "Effective change management",
+        "Quicker to deploy migration process",
+        "Experienced training programme and skills",
+        "Deployment tools and documents",
+        "Common questions and support processes"
+      ],
+      "serviceFeatures": [
+        "Data migration from on-premise to cloud",
+        "Google Apps change management",
+        "Email migration",
+        "Integration design and implementaton",
+        "CloudPages design and integration",
+        "Training and Communications",
+        "Project and change management support",
+        "Infrastructure and mail routing design and implementation"
+      ],
+      "serviceName": "Google Apps Migration & Deployment Service",
+      "serviceSummary": "Cloud Technology Solutions are experts in assisting organisations migrate and deploy Cloud based solutions. As a leading supplier of cloud migration and cloud deployment services Cloud Technology Solutions have migrated over 1.4 million users globally on many of the largest and more complex migrations including public sector organisations.",
+      "serviceTypes": [
+        "Implementation",
+        "Ongoing support",
+        "Planning",
+        "Testing",
+        "Training"
+      ],
+      "supplierName": "Cloud Technology Solutions Ltd"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4504230568132608",
+      "lot": "PaaS",
+      "serviceBenefits": [
+        "Azure Cloud Services remove the need to manage server infrastructure. ",
+        "SQL enables you to rapidly scale applications into the cloud. ",
+        "Storage offers data including Blob, Table, Queue and Drive storage. ",
+        "VM’s enable you to deploy server images in the cloud. ",
+        "Websites enables you to deploy web applications on cloud infrastructure. "
+      ],
+      "serviceFeatures": [
+        "Provision Windows and Linux Virtual Machines and applications in minutes. ",
+        "Deploy, wide variety of applications for Android, iOS, and Windows ",
+        "SQL and NoSQL data services and built-in support ",
+        "Manage user accounts; synchronize with existing on-premises directories, and SSO",
+        "HDInsight to build Hadoop clusters to analyze data"
+      ],
+      "serviceName": "Microsoft Azure",
+      "serviceSummary": "Microsoft Azure is a cloud platform that enables you to quickly build, deploy, and manage solutions across a global network of Microsoft-managed data centres. \r\nIt is open and flexible—you can build applications using any language, tool, or framework. \r\n",
+      "supplierName": "XMA Limited"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4505276157788160",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "Independent:impartial advice on the IT market",
+        "Integrated whole lifecycle advice, ensuring a coherent and successful procurement",
+        "Lean based approaches, ensuring timely and quality procurements",
+        "Understanding of the market’s commercial positions leading to efficient dialogues",
+        "Access to large pool of experienced CIPs IT procurement experts",
+        "Market experts who ensure documentation is meaningful to the market",
+        "Commercial and business case expertise ensuring appropriate risk transfer",
+        "Continuous dedication to skills transfer and client coaching",
+        "Joined-up best practice experience across central and local Government ",
+        "Understanding of approvals process resulting in ‘decision ready’ products"
+      ],
+      "serviceFeatures": [
+        "IT multi-sourcing packaging strategies drawing on Cabinet Office best practice",
+        "Evidence based procurement strategies to support business cases and approvals",
+        "Tried and tested route maps for all regulated procurement routes",
+        "IT requirements development and validation and transition planning",
+        "Development of commercial schedules and procurement documents (including OJEU)",
+        "Design and implementation of quality and price evaluations (MEAT)",
+        "Procurement support including market engagement, project management and due diligence",
+        "Contract development, including cloud and new model services contract",
+        "Implementation and transition support, including contract management",
+        "Skills transfer and empowerment of the client procurement team"
+      ],
+      "serviceName": "Commercial and Procurement Support",
+      "serviceSummary": "We provide comprehensive commercial and procurement support throughout the cloud structured IT delivery lifecycle, from packaging and procurement strategies, to achieving the procurement and commercial and contract management. We support all procurement routes (framework, open, restricted, negotiated and competitive dialogue) and contracts (including the GLS services agreement).",
+      "serviceTypes": [
+        "Ongoing support",
+        "Planning",
+        "Testing"
+      ],
+      "supplierName": "PA Consulting Services Limited (UK)"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4503627016175616",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "SIRA-qualified CLAS-Consultant steers you through-the-process",
+        "Report can be presented to Accreditor-or-PGA by us",
+        "Experienced CLAS consultant-to-steer-you through-the-process",
+        "Provides-the-risks on infromation security control",
+        "Consultant-to-steer you-through the-process for-annual-completion of-the PSN-CoCo",
+        "SIRA qualified CLAS Consultant",
+        "Experienced IA Auditor qualified CLAS Consultant",
+        "Experience of SIEM solutions in Public&Private sectors",
+        "Quality assured report-setting- out recommendations-and-way-forward",
+        "Experienced CLAS-Consultant with-significant experience-as-accreditor"
+      ],
+      "serviceFeatures": [
+        "Threat-Assessment, Risk-Assessment, Risk-Treatment Plan, Documented support such-as-RMADS",
+        "System Operating Procedures (SyOps)",
+        "Experience with HMG requirements",
+        "Report setting out recommended approach",
+        "Interview based assessments with Information owners",
+        "Off-site development of a Risk Treatment Plan",
+        "Will work with the SIRO to achieve departmental aims",
+        "Impartial advisor",
+        "CLAS Ceritified",
+        "On-site ISO27001 Lead Auditor led assessments"
+      ],
+      "serviceName": "CLAS Services",
+      "serviceSummary": "NCC Group offer a full range of CLAS related services to-the-public sector and their suppliers from project inception to project go-live and continue into monitoring and maintenance. We advise our clients in-the supplier community how to achieve IL2-and-IL3 compliance and we offer-a-range of services to assist in-this process. ",
+      "serviceTypes": [
+        "Implementation",
+        "Ongoing support"
+      ],
+      "supplierName": "NCC Services Limited. Trading as NCC Group."
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4505769575710720",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "Delivering business outcomes",
+        "Extended value beyond labor arbitrage",
+        "Higher Performance",
+        "Increased Flexibility / Agility",
+        "Build platform and device agnostic",
+        "Comprehensive Application Security",
+        "Reduces application development and implementation risks"
+      ],
+      "serviceFeatures": [
+        "Adaptive to the ever changing technology trends",
+        "Are ready to be hosted on multiple platforms",
+        "Efficiently handle the security aspects of an enterprise application"
+      ],
+      "serviceName": "Applications Development for Cloud",
+      "serviceSummary": "HP Application Development for Cloud allows customers to create, customise, migrate, integrate and deploy new/legacy applications into the cloud. Through this process, efficiencies can be achieved whilst retaining security principles, and a flexibility to service delivery that embraces new and emerging technologies.",
+      "serviceTypes": [
+        "Implementation",
+        "Planning"
+      ],
+      "supplierName": "HP Enterprise Services UK Ltd"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4523923261620224",
+      "lot": "SaaS",
+      "serviceBenefits": [
+        "Internal and External Benchmarking ",
+        "Flexible local configuration allows evolution/enhancement of business processes",
+        "Configurability reduces training and facilitates implementation with stronger user ownership ",
+        "Task-based user interfaces reduce training requirements",
+        "Enables change to proactive management style ",
+        "Consolidated real time information minimising reporting problems caused by spreadsheets",
+        "Easy provision of graphics for reports/documents",
+        "High level of security",
+        "Highly flexible systems administration ",
+        "BI to drive operational improvements"
+      ],
+      "serviceFeatures": [
+        "Enterprise application",
+        "Service oriented architecture",
+        "Fully integrated and configurable modules",
+        "Browser, client server and mobile access",
+        "Real time graphical reporting",
+        "Operational dashboard",
+        "Graphics/data export",
+        "Customisable back-up service",
+        "Public and private cloud solutions",
+        "BI based on latest versions of SQL"
+      ],
+      "serviceName": "Invigilatis: Property Management Service",
+      "serviceSummary": "Supporting  sophisticated Property Management by reflecting relevant International standards created and maintained by OSCRE, users can share and benefit fully from each other’s wealth of knowledge about running their estates. Real time dashboards facilitate effective operational management and decision making by providing access to vital property data and floorplan views.",
+      "serviceTypes": [
+        "Accounting and finance",
+        "Business intelligence and analytics",
+        "Energy and environment",
+        "Operations management"
+      ],
+      "supplierName": "Invigilatis"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4527254411411456",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "Lean and efficient solution closely fit to departmental requirements",
+        "Scalable and Sustainable at a low marginal cost",
+        "No hidden costs due to platform vendor independence",
+        "Holistic approach encompassing people, process, technology, governance."
+      ],
+      "serviceFeatures": [
+        "Independence from platform vendors keeps us focused on client outcomes",
+        "Holistic approach encompassing windows, virtualisation, storage, compute, and network layers.",
+        "Deep experience in the problem space",
+        "Virtual Clarity Lean VDI approach",
+        "Our founding team created VMware’s VDI platform"
+      ],
+      "serviceName": "Desktop Virtualisation and VDI (Citrix or VMware)",
+      "serviceSummary": "Virtual Clarity has extensive experience in virtual Desktop as a Service (DaaS).  Consultants are skilled in lifecycle stages and technologies of virtual desktops, including Citrix and VMware desktop virtualisation products: XenApp, XenServer, Presentation Server, Xen desktop, secure gateway, app store, receiver, WMware horizon, view, thinapp, mirage, desktone, airwatch and others.",
+      "serviceTypes": [
+        "Implementation",
+        "Ongoing support",
+        "Planning",
+        "Testing",
+        "Training"
+      ],
+      "supplierName": "Virtual Clarity Limited"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4528167209402368",
+      "lot": "SaaS",
+      "serviceBenefits": [
+        "No more quotas with Google Drive for Work",
+        "Access your data from any device, anywhere, and at anytime",
+        "Collaboration and productivity platform built for teams",
+        "Google Apps is secure, easy to manage and extensible",
+        "Google Drive works with all your files, including Microsoft Office",
+        "Google Drive for Work supports files up-to 5TB in size",
+        "Keep data safe and in compliance",
+        "ISO 27001 and SSAE accredited",
+        "The Cabinet Office approved Google Apps for their OFFICIAL information",
+        "Google Apps for Work is simple, proven, and transformative"
+      ],
+      "serviceFeatures": [
+        "Google Mail: messaging in the cloud",
+        "Google Hangouts:  up to 15 way IM/Voice/video conferencing",
+        "Google Calendar:  schedule Hangouts, meetings, rooms, colleagues, and others",
+        "Google Contacts:  store all personal contacts and search the domain",
+        "Google Drive & Docs:  for real time productivity and collaboration ",
+        "Google Groups:  users can create email groups without involving IT",
+        "Google Sites:  create professional team sites quickly",
+        "Google Drive for Work:  unlimited storage",
+        "Google Drive for Work includes Google Vault",
+        "Mobile Device Management keeps corporate data secure and supports BYOD"
+      ],
+      "serviceName": "Google Drive for Work",
+      "serviceSummary": "Google Apps for Work contains: Google Mail; Calendar; Drive; Contacts; Groups; Sites; Hangouts.\r\n\r\nGoogle Drive for Work contains these same applications, and also includes unlimited storage, Google Vault, additional reporting & compliance options.  \r\n\r\nGoogle Vault lets you retain, search, and export your organisation's data for your eDiscovery and compliance needs.\r\n",
+      "serviceTypes": [
+        "Accounting and finance",
+        "Business intelligence and analytics",
+        "Collaboration",
+        "Creative and design",
+        "Customer relationship management (CRM)",
+        "Data management",
+        "Healthcare",
+        "Human resources and employee management",
+        "IT management",
+        "Marketing",
+        "Operations management",
+        "Project management and planning",
+        "Sales",
+        "Schools and education",
+        "Software development tools",
+        "Telecoms",
+        "Transport and logistics"
+      ],
+      "supplierName": "Appsbroker Consulting Ltd"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4534254503460864",
+      "lot": "SaaS",
+      "serviceBenefits": [
+        "Standards based, tokens can be bought anywhere to minimise costs",
+        "Most appropriate choice of authenticator for different users or applications",
+        "Google Authenticator is cost free to use",
+        "Freja Mobile provides authentication context and unbeatable user friendliness",
+        "Efficient low cost migration and ongoing management, lower helpdesk costs",
+        "Leverage existing 2FA investment, risk reduced and low resource migration",
+        "Easy to deploy and integrate",
+        "Easy management and control of credentials used with cloud applications",
+        "Simple integration with cloud applications including all mainstream vendors",
+        "Facilitates user efficiency by automating logon and removing multiple passwords"
+      ],
+      "serviceFeatures": [
+        "2-Factor Authentication using any OATH compliant tokens",
+        "Supports Hardware OTP Tokens, Soft tokens, Email and SMS tokens",
+        "Supports Google Authenticator soft token",
+        "Supports Freja Mobile soft token",
+        "Self-Service Portal for user self migration, enrolment and management",
+        "Supports gradual  migration from legacy 2FA systems such as RSA",
+        "Supports RADIUS and SOAP",
+        "Enables use of corporate credentials for cloud applications",
+        "Active Directory or Strong Authentication credentials for SAML2  capable application",
+        "Application portal enables web Single Sign-On"
+      ],
+      "serviceName": "ID ON DEMAND and IDP ON DEMAND - Strong Authentication, Cloud Authentication and web SSO",
+      "serviceSummary": "ID ON DEMAND provides a standards based platform, offering Strong Authentication (2-Factor Authentication) for IT access points, e.g. VPN’s, Outlook WEB access, SharePoint, etc.. \r\n\r\nIDP ON DEMAND is a SAML2 Identity Provider and webSSO service, enabling use of corporate credentials with cloud applications. \r\n\r\nServices can be taken individually or combined.",
+      "serviceTypes": [
+        "Security"
+      ],
+      "supplierName": "Verisec Ltd"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4535435384586240",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "Dedicated Service Manager and Service Management methodology included.",
+        "Tailor service to requirements: scale team up and down.",
+        "Experience delivering as part of Client-led or multi-vendor team.",
+        "Knowledge management and sharing included as part of service.",
+        "Consultants with government and sector experience.",
+        "Available anywhere in the United Kingdom."
+      ],
+      "serviceFeatures": [
+        "Delivered on-site or our Near-Shore development centre, or both.",
+        "Consultants work with our clients to identify all integration points.",
+        "Design and help select solutions for seamless integrations. ",
+        "Expertise to implement the final integration solution as designed. ",
+        "Expertise to manage and monitor integration. ",
+        "Technical expertise across Microsoft, IBM, Oracle, Java, open source, etc.",
+        "Resource Augmentation and Outsourced Service delivery options available."
+      ],
+      "serviceName": "Integration Services for Cloud Applications",
+      "serviceSummary": "System Dynamics Integration Services offer expertise in the identification, solution design and implementation of integration services for cloud applications, followed by design and implementation of monitoring services designed to ensure the business needs are addressed. ",
+      "serviceTypes": [
+        "Implementation",
+        "Ongoing support",
+        "Planning",
+        "Testing",
+        "Training"
+      ],
+      "supplierName": "System Dynamics UK Limited"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4538901758738432",
+      "lot": "SaaS",
+      "serviceBenefits": [
+        "Automatic validation, de-duplication, categorisation and migration",
+        "Identification of duplicate, redundant, obsolete and irrelevant data ",
+        "Interpretation of content by indexing using semantic and linguistic reasoning ",
+        "Data management can be stored in cloud or on premise",
+        "Automatic population of document libraries with existing relevant documents "
+      ],
+      "serviceFeatures": [
+        "Automatic validation, de-duplication, categorisation and migration ",
+        "Data management delivers reductions in operating costs",
+        "Accelerates migration to a single collaborative environment ",
+        "Enables legacy data management systems to be de-commissioned",
+        "Data management, categorisation, migration can result in enhanced user experience",
+        "More efficient data holdings",
+        "Improved data relevancy",
+        "Improved knowledge based productivity",
+        "Reduced corporate risk"
+      ],
+      "serviceName": "Data Consolidation - Datapoint (OFFICIAL-SENSITIVE) Data collection, data cleansing, data migration",
+      "serviceSummary": "Equiniti’s data management solution Datapoint with Automated Intelligence automates and manages the process of data cleansing, data categorising and data migrating data – either on SaaS data management, in cloud data categorising or a hybrid data management solution. ",
+      "serviceTypes": [
+        "Customer relationship management (CRM)",
+        "Data management",
+        "Electronic document and records management (EDRM)",
+        "Healthcare",
+        "IT management",
+        "Marketing",
+        "Operations management",
+        "Project management and planning",
+        "Schools and education"
+      ],
+      "supplierName": "Equiniti ICS Ltd."
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4542314378690560",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "Ability to build a team to address specific technological requirements",
+        "Single point of technical responsibility with a named Team Leader",
+        "Non-technical personnel named for project management and commercial aspects",
+        "Dedicated editorial team to ensure the highest quality deliverables",
+        "Offering a secure environment for delivery of specific projects"
+      ],
+      "serviceFeatures": [
+        "SC and DV CHECK Team personnel",
+        "Excellent track-record of delivering services to Government",
+        "Full SC project management wrap around",
+        "Covering IL0-IL6 environments",
+        "Full pre- and post-test consultancy services available ",
+        "Diverse skill set within the CHECK Team",
+        "Operated under the NPIA scheme for many years"
+      ],
+      "serviceName": "CESG CHECK IT Health Check (ITHC) / IT Security Health Check (ITSHC)",
+      "serviceSummary": "Portcullis has been a CHECK GREEN service provider for over 15 years with the ITHC/ITSHC service are delivered by one of the largest multidisciplinary CHECK Teams within the UK delivering successful projects across Government departments and Police Forces. ",
+      "serviceTypes": [
+        "Testing"
+      ],
+      "supplierName": "Portcullis Computer Security Ltd"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4543031504011264",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "Ideal for VersionOne implementation support",
+        "VersionOne implementation assessments and recommendations",
+        "VersionOne technical consulting including integration design and review",
+        "VersionOne report creation assistance"
+      ],
+      "serviceFeatures": [
+        "Remote 'phone and web-based consulting service",
+        "Pay as you go service",
+        "Purchased in 2, 4 or 8 hour time blocks"
+      ],
+      "serviceName": "VersionOne ExpertEXPRESS™ Consulting Services",
+      "serviceSummary": "Sometimes you just need a few hours of an agile expert’s time to ask questions, get guidance, and apply best practices. Get fast, easy access to our team with VersionOne® ExpertEXPRESS™, our remote phone- and web-based consulting service. All our consultants have significant hands-on experience with agile and VersionOne implementations. ",
+      "serviceTypes": [
+        "Implementation",
+        "Ongoing support",
+        "Planning"
+      ],
+      "supplierName": "VersionOne, Inc."
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4546089722052608",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "Securely on-board employees with robust checks and service integration",
+        "Ensure appropriate information access for employees",
+        "Ensure information access is based on continued permissions lifecycle",
+        "Implementation of Identity and Access Management technology in all forms",
+        "Oversight and management of Identity and Access Projects",
+        "Manage vendor selection processes, RFIs and RFPs",
+        "Strategic vision and deployment of identity information services"
+      ],
+      "serviceFeatures": [
+        "Identity Verification and Background Checking",
+        "Joiners, Movers and Leavers processes",
+        "Identity Governance services and solutions",
+        "Identity and Access Management technical implementation services",
+        "Identity and Access Management project and programme services",
+        "Vendor Management services",
+        "Identity and Access Management strategic advisory services"
+      ],
+      "serviceName": "Identity and Access Management ",
+      "serviceSummary": "Identity Methods provides Design, Development and Delivery solutions for the whole Identity and Access Management lifecycle.  Identity Management in all its forms is a complex and business process intensive activity.  Identity Methods helps to streamline these activities in to mature repeatable processes that are highly automated, secure and extensible.",
+      "serviceTypes": [
+        "Implementation",
+        "Planning",
+        "Testing"
+      ],
+      "supplierName": "Identity Methods Limited"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4547309249495040",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "Accelerate your DevOps transformation",
+        "Build infrastructure at scale with best-practices and techniques",
+        "Build a stack that matches your business constraints and needs",
+        "Bring better collaboration and productivity to your IT departments"
+      ],
+      "serviceFeatures": [
+        "Understand principles, benefits, and tools behind a DevOps culture",
+        "Resource provisioning, continuous integration/delivery, and automated application monitoring",
+        "Build modern applications that are self-healing and self-sustaining",
+        "Adopt deployment and rollback methods for provisioning cloud infrastructure",
+        "Review your current build and deployment processes",
+        "Define how to integrate DevOps automation into your environment",
+        "Classify applications and drive the adoption of DevOps practices"
+      ],
+      "serviceName": "DevOps Advisory Service",
+      "serviceSummary": "NETbuilder’s DevOps Advisory service enables your DevOps transformation by bringing industry principles and processes in-house. Our experts help you with every step of the journey building a culture of high IT performance for rapid deployment, monitoring and scaling of your applications which significantly reducing your time to market.",
+      "serviceTypes": [
+        "Implementation",
+        "Ongoing support",
+        "Planning",
+        "Testing"
+      ],
+      "supplierName": "NETbuilder Ltd"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4507201636925440",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "Manage users and assets more effectivly",
+        "Maintain compliance and policies"
+      ],
+      "serviceFeatures": [
+        "Clean up AD system",
+        "Control users and compliance"
+      ],
+      "serviceName": "Cloud SAM Active Directory Analysis ",
+      "serviceSummary": "Occasionally, companies have not updated their AD, Assets & Users are added to the system but not removed when retired. Therefore, any AD reports created need to be cleaned-up to achieve an accurate baseline assessment for control and governance. ",
+      "serviceTypes": [
+        "Implementation",
+        "Ongoing support",
+        "Planning",
+        "Testing",
+        "Training"
+      ],
+      "supplierName": "SoftwareONE"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4508744377434112",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "Prioritise investment in organisational change and IT systems and services",
+        "Align systems and services with business strategy, aims and objectives",
+        "Speed-up and substantiate decision-making ",
+        "Clear business model and understanding of organisational capabilities and shortcomings"
+      ],
+      "serviceFeatures": [
+        "Capability Modelling (TOGAF 1&2)",
+        "Business Analysis",
+        "Business process modelling for ‘As is’ and ‘to be’ ",
+        "Decision Support",
+        "Requirements Management"
+      ],
+      "serviceName": "Enterprise Architecture ",
+      "serviceSummary": "Through the use of enterprise analysis and architecture we help  organisations to understand the impact of its business and technology drivers, evaluate its options, and make informed decisions based on auditable data. ",
+      "serviceTypes": [
+        "Implementation",
+        "Ongoing support",
+        "Planning",
+        "Testing"
+      ],
+      "supplierName": "SA Group Ltd"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4512586158571520",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "Collaborative approach",
+        "Stakeholders needs are at the heart of the programme ",
+        "Requirements remain the focus of the programme",
+        "Appropriate behaviours, skills and thinking are established in culture",
+        "People understand their role in terms of expectations of them ",
+        "Communication is appropriate to all levels of the organisation",
+        "Appropriate functionality and features are delivered to people/teams",
+        "Training meets the needs of the Programme"
+      ],
+      "serviceFeatures": [
+        "Experienced and Dedicated ANPR delivery Team ",
+        "4-Step Approach – Consult, Design, Build, Manage",
+        "Design, implementation & management of reliable information security architectures ",
+        "Collaborative Approach to Design, Development, Configuration and Implementation",
+        "Tried and tested Integration approach",
+        "Established Migration tools and approach",
+        "Government Recognised Project Management Approaches",
+        "Focussed Stakeholder Analysis and Engagement",
+        "Requirements and Stakeholder Workshops ",
+        "ICT risk governance"
+      ],
+      "serviceName": "G-Cloud Onboarding Services for Selex ES ANPR Enterprise Operations Centre (EOC)",
+      "serviceSummary": "This ANPR Onboarding Service combined with the ANPR EOC ensures on time delivery of your ANPR needs including Project Management, Lifecycle Management, System Analysis, System Design, Data Analysis, Test Management, Testing, Integration, Migration, Training, System Accreditation Management, Training Solutions including Training Course Design and Training Delivery.",
+      "serviceTypes": [
+        "Implementation",
+        "Ongoing support",
+        "Planning",
+        "Testing",
+        "Training"
+      ],
+      "supplierName": "ProTech Computer Systems Ltd"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4580918954033152",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "Generation of a series of options through research/experience and workshops",
+        "Identification of a preferred option, with options on best value",
+        "Risk analysis carried out on the preferred option/a recommendation"
+      ],
+      "serviceFeatures": [
+        "Identification of the key criteria for the decision making",
+        "Definition of desirable requirements, weighted",
+        "Assessment of each option against the criteria",
+        "Understanding and documenting the minimum, mandatory requirements"
+      ],
+      "serviceName": "DATA CENTRE CONSULTANCY SERVICES",
+      "serviceSummary": "Trustmarque’s service is designed to assist customers who are embarking on creating or transitioning to a new Data Centre, or re-provisioning an existing Data Centre as a platform for private cloud services. ",
+      "serviceTypes": [
+        "Implementation",
+        "Ongoing support",
+        "Planning",
+        "Testing",
+        "Training"
+      ],
+      "supplierName": "Trustmarque Solutions Limited"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4582325287387136",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "Predictable and managed delivery of suppliers",
+        "Clear accountability for delivering of services across multiple suppliers",
+        "Release plans with scope, schedule, budget and benefits clearly defined",
+        "IT Transformation aligned to the Target Operating Model (TOM) development",
+        "A defined end-to-end service model that meets the business need",
+        "Maintaining service continuity through the transition effort",
+        "A release approach that allows for gated governance and flexibility",
+        "Rapid decision making and approvals  in a managed delivery structure",
+        "Identification of transition related cost savings ",
+        "Management and identification of security risks"
+      ],
+      "serviceFeatures": [
+        "Functional and Technical Design Authority",
+        "End to End Design and Development",
+        "Transition and Delivery Management",
+        "SIAM PPM and Service Conformance",
+        "IT Enabled Business Transformation",
+        "Business Analysis and Integration",
+        "Project Specification, Sourcing and Selection",
+        "Benefits Tracking and Reporting",
+        "Architecture Driven Agile",
+        "Full Documentation"
+      ],
+      "serviceName": " PwC Service Definition 9: G-Cloud Custom Application Development",
+      "serviceSummary": "PwC’s technical consultants will work with you to customise your Oracle Applications to fit a specific business process or third party system.  We can advise you on how the process and/or system can be changed or improved to conform to good practice. ",
+      "serviceTypes": [
+        "Implementation",
+        "Planning",
+        "Testing",
+        "Training"
+      ],
+      "supplierName": "PricewaterhouseCoopers (LLP) PwC"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4582555068137472",
+      "lot": "PaaS",
+      "serviceBenefits": [
+        "Activity Monitor of all task performed",
+        "Workflow Metadata"
+      ],
+      "serviceFeatures": [
+        "Graphical Workflow",
+        "Remote Access"
+      ],
+      "serviceName": "Manage Tasks",
+      "serviceSummary": "This service manages the Case Management/workflow functionality (This is deemed out of scope within the context of the digital Crown Court Project however this service will be made available as it is likely that the end-to-end solution will need to exploit a task or workflow system.)",
+      "supplierName": "Clouded Networks"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4583895450255360",
+      "lot": "SaaS",
+      "serviceBenefits": [
+        "AppClarity is the fastest way view software installed",
+        "Software procurement and inventory management is reconciled ",
+        "AppClarity is fast to install and easy to use, ",
+        "The business reduces cost by avoiding costly penalties ",
+        "AppClarity provides a single view into the software landscape",
+        "Reports are simple to understand and deliver actionable data"
+      ],
+      "serviceFeatures": [
+        " Enables an accurate picture of all deployed applications",
+        "Detects unused software it instantly analyses to determine its usage",
+        "Quickly identifies highlights used/occasionally used/not used software which is reportable",
+        "Automatically reclaims and recycles licenses - unused licenses ",
+        "Restricts the use of prohibited applications ",
+        "Manages software by region dependent on the organizational structure"
+      ],
+      "serviceName": "Bramble Hub 1E - AppClarity ",
+      "serviceSummary": "AppClarity, part of 1E’s SCCM suite,  gives you clear and simple visibility of your entire software estate, across servers and PC’s, identifying and quantifying all unused software, enabling you to make immediate reductions in software costs, providing the information you need to prepare for a software audit. ",
+      "serviceTypes": [
+        "Accounting and finance",
+        "Business intelligence and analytics",
+        "Customer relationship management (CRM)",
+        "Data management",
+        "Energy and environment",
+        "Healthcare",
+        "Human resources and employee management",
+        "IT management",
+        "Operations management",
+        "Project management and planning",
+        "Sales",
+        "Schools and education",
+        "Transport and logistics"
+      ],
+      "supplierName": "Bramble Hub Limited"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4586439194968064",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "Leverage familiar application to ensure strong user adoption",
+        "Supports entire business process encompassing, Sales, Marketing and Customer Services",
+        "Customer flexible choice to select deployment online, on-premise or combination",
+        "Business critical information always available anytime and from anywhere",
+        "Provides a guided clear process using pre-defined steps, best practice",
+        "Delivers real time business intelligence providing visibility of key performance",
+        "Designed to meet customer specific requirements ensuring business operational synergy",
+        "Leverage existing data sources ensuring accuracy and reduce data duplication",
+        "Enables users to easily stay connected on multiple devices ",
+        "Simple tools minimise implementation cycles and simplify database maintenance"
+      ],
+      "serviceFeatures": [
+        "Native Microsoft Outlook Integration",
+        "Intuitive Full Suite of CRM Functions",
+        "Choice of Deployment Platform",
+        "High Availability 99.9% uptime with SLA back up guarantees",
+        "Process Driven Interface",
+        "Real Time Insights",
+        "Customer Centric and Customisable",
+        "Large Scale Integration",
+        "Cross browser compatibility and free CRM mobile",
+        "Scalable Architecture"
+      ],
+      "serviceName": "CRM Consultancy",
+      "serviceSummary": "Our experts understand the vast capabilities of the CRM platform/online and have years of experience delivering tailored solutions that address specific business needs. We have deployed both large and small scale solutions (Marketing,  case/service management systems etc..) across a range of industry sectors. We understand it’s more than just technology.",
+      "serviceTypes": [
+        "Implementation",
+        "Testing",
+        "Training"
+      ],
+      "supplierName": "Corporate Project Solutions"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4587478333784064",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "To achieve the solution space quickly",
+        "Covers the core aspects of the application life-cycle",
+        "Requirement management through design, construction, testing & maintenance phases",
+        "Business process re-engineering, business analysis and service orientated architectures",
+        "Application and database design and re-engineering of embedded systems",
+        "Solving a complex environment"
+      ],
+      "serviceFeatures": [
+        "Modelling for all aspects of organisation architecture",
+        "Business Process Re-engineering"
+      ],
+      "serviceName": "G-Cloud Architecture & Modelling Service",
+      "serviceSummary": "Systems descriptions using Architecture provide a basis for modelling all aspects of organisational architecture, along with the ability to provide a foundation for designing and implementing new systems or changing existing systems (business or technical).",
+      "serviceTypes": [
+        "Implementation",
+        "Ongoing support",
+        "Planning",
+        "Training"
+      ],
+      "supplierName": "AsystsU"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4590658731900928",
+      "lot": "IaaS",
+      "serviceBenefits": [
+        "Mature, enterprise-class solution with standardized architecture and global service catalogue",
+        "Predefined configuration options can be tailored to client needs",
+        "Shared support/deployment model lowers build, run, and transition costs",
+        "“Evergreen model”  means technical architecture refresh already built-in",
+        "Rate card model for flexible scalability, shifting CapEx to OpEx ",
+        "DR testing with stringent adherence to RPO/RTO SLAs built-in",
+        "PCI-compliant extensions for applications that require this capability",
+        "Intellectual property protection not provided by public cloud options",
+        "End-to-end accountability for delivery, increasing efficiency in problem resolution ",
+        "Synergies with ACP optimize deployment of hybrid cloud solutions"
+      ],
+      "serviceFeatures": [
+        "Standardized performance tiers customizable to performance and capacity requirements ",
+        "VMware farm designed for VM migration and load balancing ",
+        "Enterprise storage technologies providing multiple performance tiers",
+        "Multi-site enterprise capabilities with multiple service offerings",
+        "Identical remote site with storage replication and virtualization",
+        "Disaster recovery tools to facilitate failover ",
+        "Network administration, load-balancing, and firewall services ",
+        "Patching, vulnerability, intrusion detection, and data encryption capabilities ",
+        "Agent-less monitoring for OS performance, hardware and incident management"
+      ],
+      "serviceName": "Accenture Private Cloud",
+      "serviceSummary": "Accenture Private Cloud is an end-to-end, enterprise class private cloud solution. Based on a standard global architecture and delivery model, it provides a secure, reliable, cost-competitive infrastructure platform to underpin IT and business operations.  It can be deployed as a standalone solution or as a component of Accenture Cloud Platform.",
+      "serviceTypes": [
+        "Compute",
+        "Storage"
+      ],
+      "supplierName": "Accenture (UK) Limited"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4599843183919104",
+      "lot": "IaaS",
+      "serviceBenefits": [
+        "Effective DR plan which requires no secondary-site or hardware investment",
+        "No need to hire new training specialists",
+        "Replication, failover, and recovery, at a significantly reduced price",
+        "Scalability to accommodate shifting requirements, pay only for whats needed",
+        "Enhanced recovery-times for business and mission-critical applications running on vSphere",
+        "Production-level support and SLAs backed by VMware"
+      ],
+      "serviceFeatures": [
+        "Self-service disaster recovery protection for virtual machines",
+        "Recovery point objectives (RPO) from 15 minutes to 24 hours",
+        "Automated failover testing, planned migrations and recovery",
+        "Elastic cloud compute and storage capacity",
+        "Support for offline data seeding",
+        "Private leased line network options",
+        "Flexible failover testing"
+      ],
+      "serviceName": "VMware vCloud Air Disaster Recovery",
+      "serviceSummary": "VMware vCloud Air Disaster Recovery is a recovery-as-a-service (RaaS) solution that offers VMware vSphere customers the ability to protect their onsite business and mission-critical workloads and recover them in the cloud in the event of a disaster or disruptive event.",
+      "serviceTypes": [
+        "Compute",
+        "Storage"
+      ],
+      "supplierName": "Phoenix Software Ltd"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4602953746874368",
+      "lot": "PaaS",
+      "serviceBenefits": [
+        "Advanced architecture eliminates most downtime scenarios",
+        "Supports true 24x7 availability and operation",
+        "Scales to citizen-scale or web-scale workloads",
+        "Open and commodity components provide lowest cost of ownership",
+        "Enterprise support assures production integrity",
+        "Single database for both transaction and warehousing reduces cost",
+        "Reduces costs ",
+        "Improves flexibility",
+        "Enhances user collaboration",
+        "Simplifies large scale roll out"
+      ],
+      "serviceFeatures": [
+        "Always-on distributed and redundant architecture",
+        "Fault tolerant from component to data centre level",
+        "Linear scalability to massive data and transaction volumes",
+        "Open source and commodity hardware",
+        "Enterprise support and security is built-in",
+        "Data architecture supports transaction and warehousing workloads"
+      ],
+      "serviceName": "Open Source Big Data Platform",
+      "serviceSummary": "Featuring redundant, distributed, fault-tolerant architecture with true nosql database, Open Source Big Data Platform resides in the FlyingBinary open-source and big-data suite, simplifying data integration, management, analysis and visualisation. The Apache Cassandra database supports true 24x7 operation, delivers huge transaction performance and scales simply and linearly.",
+      "supplierName": "FlyingBinary Ltd"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4603148899450880",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "15 years of experience in the education sector",
+        "Experts in solution design and hosting",
+        "Experts in data collection, management, and online publishing"
+      ],
+      "serviceFeatures": [
+        "Education-related data collection, management, validation, and processing",
+        "Bespoke solution development",
+        "Highly available, cloud-based hosting",
+        "Strategy and business analysis",
+        "Project management",
+        "Dedicated service desk support"
+      ],
+      "serviceName": "Education IT and Data Consultancy",
+      "serviceSummary": "As data specialists, we have over 15 years of experience in the collection, validation, enrichment, management, and processing of course and provider information within education. We provide project management, strategy and business analysis, solution design and development, cloud hosting and management, data collection, processing and management, and helpdesk support.",
+      "serviceTypes": [
+        "Implementation",
+        "Ongoing support",
+        "Planning",
+        "Testing",
+        "Training"
+      ],
+      "supplierName": "Hotcourses Limited"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4603613158572032",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "Assists with meeting compliance requirements",
+        "Enables PSN Code of Connection",
+        "Intelligently manages vulnerabilities",
+        "Reduces the risk of network downtime",
+        "Provides visability of an organisations current secure posture",
+        "Helps to justify security investments"
+      ],
+      "serviceFeatures": [
+        "External Network Testing",
+        "Internal Network Testing",
+        "OWASP Application Testing",
+        "Server/Desktop Build Reviews",
+        "Firewall Rulebase Reviews",
+        "Mobile Device Testing",
+        "Remote Access Testing",
+        "Wireless Network Testing"
+      ],
+      "serviceName": "PSN IT Health Check",
+      "serviceSummary": "Aristi's consultants are certified under Tiger Scheme to provide PSN compliant IT Health Check services which are necessary to achieve and maintain PSN Code of Connection. These services are designed to identify technical vulnerabilities in IT systems which may result in compromise of the information held on the systems.",
+      "serviceTypes": [
+        "Implementation",
+        "Ongoing support",
+        "Testing"
+      ],
+      "supplierName": "Aristi Limited"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4604918291759104",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "Provide transparency and clarity of your strategic initiatives",
+        "Drive better understanding of and improved engagement regarding Digital products",
+        "Reduce resistance to change, focused on a positive mind-set "
+      ],
+      "serviceFeatures": [
+        "Assess your Digital maturity ",
+        "Identify an overall maturity level (ranked on a scale)",
+        "Assess the readiness for change",
+        "Identify focus areas for improvement "
+      ],
+      "serviceName": "Digital: Maturity Assessment",
+      "serviceSummary": "A Digital Maturity Assessment is an independent high-level assessment of Product, User Experience, DevOps and Agile maturity and working practices for the organisation. North Highland and our team of Digital experts will provide recommendations on how to improve/transform working processes at a high-level.",
+      "serviceTypes": [
+        "Planning",
+        "Testing"
+      ],
+      "supplierName": "North Highland (formerly Qedis Consulting Ltd)"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4606082630549504",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "Success in executing similar support engagements",
+        "Deep familiarity with suitable open-source software alternatives",
+        "Years of active experience within Government sector IT implementations",
+        "Heavy focus on latest cloud software trends",
+        "Best Practise Implementation",
+        "Deep involvement during full lifecycle of Cloud Implementation project"
+      ],
+      "serviceFeatures": [
+        "Design of Technical Specifications against business requirements",
+        "User Requirements Documents (URD)",
+        "System Requirements Documents (SRD)",
+        "System Engineering Strategies",
+        "Recommendations regarding products  that are a best fit against requirements",
+        "Guidance on suitability of Cloud application to deliver technical requirements",
+        "Integrated test and Acceptance Management Plans"
+      ],
+      "serviceName": "Emeldi System Analysis",
+      "serviceSummary": "Delivery of System Analysis assuming a primary supporting role in the design, analysis, architecture, and implementation of government cloud programs, including technical design documentation, assessment of available applications (private cloud or commercial cloud) against technical requirements, and best practices in defining approach of transitioning application stack towards the cloud.",
+      "serviceTypes": [
+        "Planning"
+      ],
+      "supplierName": "Emeldi UK Ltd"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4607262874140672",
+      "lot": "SaaS",
+      "serviceBenefits": [
+        "Value: excellent price, quality and service delivery",
+        "Partnership working approach",
+        "UK hosted and supported service",
+        "Onsite implementation and training provided",
+        "Template guidelines and policies provided as part of implementation",
+        "Template guidelines and policies provided as part of implementation",
+        "Cost effective way to increase service reach without impacting capacity",
+        "Quick easy way to deliver contacts, releasing time to care",
+        "Manages risks of messaging conversations with vulnerable service users",
+        "Greater degree of information security than handset messaging "
+      ],
+      "serviceFeatures": [
+        "Secure SMS and IM messaging application for Healthcare",
+        "Automated out of hours safety responses to service users",
+        "User self-registration with checks",
+        "Evidence for audit or investigative procedures",
+        "Easy access record keeping transcripts",
+        "Web based solution does not require client install",
+        "Caseload and workflow management, tasking to colleagues",
+        "Caseload and workflow management, tasking to colleagues",
+        "Statistics and KPI monitoring",
+        "Training and implementation support provided"
+      ],
+      "serviceName": "ChatHealth",
+      "serviceSummary": "Instant and SMS messaging solution for secure Healthcare conversations providing safe and secure messaging between healthcare professionals and service users . Primarily focused on School Nurse Messaging the application is suitable for a range of Healthcare and Safeguarding applications. ",
+      "serviceTypes": [
+        "Collaboration",
+        "Healthcare",
+        "Schools and education"
+      ],
+      "supplierName": "Leicestershire Health Informatics Service"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4607325889363968",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "Personalised service delivery by an Executive Advisor ",
+        "Executive Client Manager who develops an individualised program ",
+        "Delivery to the member and their organisation",
+        "Unique insight into the CIO role ",
+        "Based on Executive Programs‘ 15 years of meeting CIOs' needs",
+        "Delivered through Cloud based Service",
+        "Role-relevant CIO research",
+        "Rich, CIO-specific online experience",
+        "CIO community including member-only events and networking opportunities"
+      ],
+      "serviceFeatures": [
+        "Executive Programs Research Reports ",
+        "Gartner for IT Executives Content and Research",
+        "Teleconferences hosted by Research Report Authors  ",
+        "Access to Gartner Core Research",
+        "Access to Gartner for IT Leaders content and role pages",
+        "Review Meetings",
+        "One Symposium/ITExpo Ticket ",
+        "CIO Research on Cloud Services & Technologies"
+      ],
+      "serviceName": "Cloud Digital Leadership: Gartner for IT Executives CIO Essentials (ITECIOESS)",
+      "serviceSummary": "The Gartner for IT Executives CIO Essentials service is intended to assist senior-level IT executives in operating their business.  The service provides a tailored service to assist  members with their key challenges and is focused on IaaS, PaaS, SaaS, cloud security IT cost optimisation through cloud.",
+      "serviceTypes": [
+        "Ongoing support"
+      ],
+      "supplierName": "Gartner UK Ltd."
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4623303033487360",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "Extensive vendor/technology selection experience brought to bear within your context",
+        "Understanding of what proposed solutions can, could, and will do",
+        "Ability to easily determine a supplier’s fit",
+        "Ability to make a realistic selection based upon suppliers’ submissions",
+        "Minimised risk of wasting valuable time on unsuitable suppliers",
+        "Minimised risk of suppliers not able to provide proper support ",
+        "Minimised risk of failing to realise intended benefits "
+      ],
+      "serviceFeatures": [
+        "In-depth interviews conducted with your team and other key stakeholders ",
+        "Review of your existing RFP, RFQ or ITT",
+        "RFx/ITT tuned to ensure practicality and clarity of suppliers’ responses",
+        "Covers a range of big data and analytics capabilities",
+        "Includes big data (e.g. Hadoop, NoSQL, streaming, RDBMS)",
+        "Includes predictive analytics platforms, and data discovery tools",
+        "Includes machine learning, cognitive computing and text mining",
+        "Includes data governance, quality and preparation"
+      ],
+      "serviceName": "Discovering and acting on insights in the cloud – RFP / RFQ / ITT Review ",
+      "serviceSummary": "A hastily-written RFP, RFQ or ITT for data analytics solutions in the cloud can lead to complications, delays and dissatisfaction all round. Bullet-proof yours, and approach shortlisted suppliers with a statement of requirements that leaves no room for ambiguity and makes sure that all parties understand what’s needed and when.",
+      "serviceTypes": [
+        "Implementation",
+        "Planning"
+      ],
+      "supplierName": "Macehiter Ward-Dutton Limited"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4625543261585408",
+      "lot": "IaaS",
+      "serviceBenefits": [
+        "Control and monitor who can access your data",
+        "Several methods for uploading and retrieving data",
+        "Flexible storage options",
+        "Low-cost reduced redundancy storage option",
+        "Encrypted endpoints and data at rest",
+        "Capabilities to manage the lifecycle of your data",
+        "Supports logging of request",
+        "Supports time limited access to objects",
+        "Cost monitoring and controls"
+      ],
+      "serviceFeatures": [
+        "Event notifications",
+        "Lifecycle management",
+        " Versioning - preserve, retrieve, and restore every version",
+        "Encryption",
+        "Access management",
+        "Programmatic access",
+        "Easy transfer",
+        "Flexible storage options",
+        "Designed for 99.999999999% durability",
+        "Reduced redundancy storage option"
+      ],
+      "serviceName": "Amazon Simple Storage Service (Amazon S3)",
+      "serviceSummary": "Amazon Simple Storage Service (Amazon S3) is storage for the internet. You can use it to store and retrieve any amount of data, at any time, from anywhere on the web. It provides you with secure, durable, highly-scalable object storage. You pay only for the storage you actually use. aws.amazon.com/s3/",
+      "serviceTypes": [
+        "Storage"
+      ],
+      "supplierName": "Amazon Web Services"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4626026579623936",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "Scale your business allowing for rapid expansion and growth ",
+        "Increase profit with lower operating costs and better procurement",
+        "Be agile, enabling a better response to emerging market trends ",
+        "Increase your workforce’s flexibility and make change management enforcement easier",
+        "Lower your business risk with less complexity",
+        "Reduced vendor dependency"
+      ],
+      "serviceFeatures": [
+        "Hardware and software requirements to support business processes and functions",
+        "Domain technology models",
+        "Logical deployment models",
+        "Logical network topology models",
+        "Physical network topology models"
+      ],
+      "serviceName": "Technology Architecture Service",
+      "serviceSummary": "NETbuilder is a specialist IT consultancy with a track record in Enterprise and Solution Architecture, helping customers to quickly and accurately understand their existing business strategy, architecture and operating models. NETbuilder architects are specialists in system design using modelling techniques, and have experience in the public and private sectors.",
+      "serviceTypes": [
+        "Implementation",
+        "Ongoing support",
+        "Planning",
+        "Testing"
+      ],
+      "supplierName": "NETbuilder Ltd"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4626456328011776",
+      "lot": "SaaS",
+      "serviceBenefits": [
+        "Patent pending routing technologies allow use in all global locations",
+        "Issue important messages to volunteers within seconds",
+        "PROTECT is already reference sited and vetted by governmnet clients",
+        "Keeps individuals informed and safe",
+        "Mobisoft are a UKTI approved partner",
+        "Mobisoft are a United Nations approved partner",
+        "Mobisoft are a British owned and operated company",
+        "Mobisoft recognised as the leading International SMS provider to governments",
+        "Global support infrastructure 24/7",
+        "Used by NHS, local and central government"
+      ],
+      "serviceFeatures": [
+        "International SMS platform",
+        "Works in areas where internet connectivity is not possible",
+        "PROTECT resides on a British government approved infrastructure",
+        "No infrastructure to install, everything is hosted by us",
+        "Issue a system send from your own mobile phone",
+        "The system can be deployed within 24hrs",
+        "ISO27001 approved infastructure",
+        "Ability to include attachments with your SMS",
+        "API to fully integrate with existing systems",
+        "Private secure SMS routes"
+      ],
+      "serviceName": "SMS: PROTECT volunteer messaging platform",
+      "serviceSummary": "A British government approved security messaging system, designed ground up in conjunction with Embassies, global international organisations and corporate multi-nationals. PROTECT is used to quickly provide information to staff via mobile SMS, keeping them informed of security issues. Used by: FCO, Embassies, DFID, UN, EU, local and central government",
+      "serviceTypes": [
+        "Accounting and finance",
+        "Business intelligence and analytics",
+        "Customer relationship management (CRM)",
+        "Energy and environment",
+        "Healthcare",
+        "Human resources and employee management",
+        "Marketing",
+        "Operations management",
+        "Schools and education",
+        "Security",
+        "Telecoms"
+      ],
+      "supplierName": "Mobisoft Corporation Ltd."
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4627767584882688",
+      "lot": "SaaS",
+      "serviceBenefits": [
+        "Train users on ANPR tools without risk to live system"
+      ],
+      "serviceFeatures": [
+        "Full ANPR Back Office for Training",
+        "Includes All Advanced Tools",
+        "1,000,000 reads of training data supplied",
+        "10 training hotlists supplied",
+        "10 user access licence included"
+      ],
+      "serviceName": "Cloud ANPR Back Office Training System Service",
+      "serviceSummary": "Utilising this service allows provision of a complete Cloud ANPR Back Office for user training only, including all the advanced tools and 10 client access licences and up to 1,000,000 reads of training data.\r\n\r\n(Limitations on use apply)\r\n\r\n",
+      "serviceTypes": [
+        "Business intelligence and analytics"
+      ],
+      "supplierName": "Cleartone Telecoms Limited"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4627897037881344",
+      "lot": "SaaS",
+      "serviceBenefits": [
+        "Effectively meets varying levels of demand on services",
+        "Provides consistent assessments regardless of staff background",
+        "Best practice advice within locally approved constraints",
+        "Easy to use for staff with client-specific outcomes",
+        "Configurable to meet local requirements",
+        "Detailed product/service specifications embedded - supporting staff judgement",
+        "Full record of assessment details maintained and accessible",
+        "Risk-managed based on many years of embedded professionals’ judgement",
+        "Optimises time spent in assessments by scarce professional resources",
+        "Helps individuals/public services minimise long-term care costs"
+      ],
+      "serviceFeatures": [
+        "Detailed Management reports, can be segmented by locality/advisor",
+        "Integrates with existing services",
+        "Minimal local IT implementation requirements",
+        "Supports demand management",
+        "Empowers staff across health and social care",
+        "Supports telephone assessments in contact centres",
+        "Analysis of suitability of equipment/services matched",
+        "Includes appointment administration tools",
+        "Managers/duty team can monitor/review all assessments"
+      ],
+      "serviceName": "SmartPackage level 3 - On-line self-help/self-management, peer and public sector staff assessments",
+      "serviceSummary": "ADL Smartcare’s level 3 package includes an on-line tool to help any member of staff to document and readily resolve an individual’s specific needs, where there is a staff-client relationship. Allows detailed analysis/understanding of suitability of equipment/services matched. Includes the services outlined in levels 1 and 2.",
+      "serviceTypes": [
+        "Business intelligence and analytics",
+        "Healthcare",
+        "Software development tools"
+      ],
+      "supplierName": "ADL Smartcare Limited"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4613132173443072",
+      "lot": "IaaS",
+      "serviceBenefits": [
+        "Predictable Fixed Cost Model",
+        "Dedicated Secure Platform (Hosted in Customer Data Centre)",
+        "Enterprise Class Performance ",
+        "Enterprise Visibility of Storage KPI's ",
+        "Virtualise Existing Storage Assets ",
+        "Reduce Existing Storage Footprint by 50% ",
+        "Non disruptive data migration (from any storage platform)"
+      ],
+      "serviceFeatures": [
+        "Fully managed on premise SAN solution",
+        "SLAs based on capacity and response times",
+        "Quarterly service reviews",
+        "Performance and Capacity Reviews",
+        "Pay As You Grow Elasticity",
+        "Service Catalogue Driven",
+        "24 x 7 Service Desk",
+        "Storage Analytics and KPI's (Daily, Weekly and Monthly Reports) ",
+        "Inbuilt Storage Optimisation and Data Footprint Reduction Features"
+      ],
+      "serviceName": "Helix Storage Enterprise",
+      "serviceSummary": "Helix Storage Enterprise is a fully managed SAN solution delivered as an On Premise Private Cloud.\r\n\r\nHelix Storage Enterprise is delivered  on a dedicated, fully integrated platform hosted either on premise or in a choice of secure 3rd Party data centres that offer 'Official' level security (at additional cost).\r\n\r\n\r\n\r\n",
+      "serviceTypes": [
+        "Storage"
+      ],
+      "supplierName": "Tectrade"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4616040042463232",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "Enhance your users Web experience",
+        "Adapt to changing Internet conditions to protect user experience",
+        "Reduce the complexity of delivering optimised web experiences",
+        "Offload capacity to the network to  reduce operational cost",
+        "Provide real-time visibility into the performance of complex cloud applications",
+        "Real-time failover between multiple network data centres for High Availabilty",
+        "Insight into individual end-user experiences",
+        "Consistent users experience over variable network conditions",
+        "Focus development efforts on business requirements rather than infrastructure",
+        "Portal based access for configuration and management"
+      ],
+      "serviceFeatures": [
+        "Accelerate Web & Application performance",
+        "Accelerate delivery of dynamic site content",
+        "Load balancing and routing of traffic within the Internet",
+        "Deliver faster site performance for highly interactive content",
+        "Scale capacity on demand to meet peak traffic",
+        "Mitigate traffic impact by addressing real-time Internet conditions",
+        "Granular, intelligent web page caching dynamic and personalized content",
+        "Increases efficiency at the TCP layer",
+        "Use predictive technology to speeds page load times",
+        "Front End Optimisation based on user device"
+      ],
+      "serviceName": "Atos Web Performance Services SCS",
+      "serviceSummary": "Atos Web Performance Services offers a range of capabulity to optimise and enhance the user experience of web applications and services delivered across the Internet. Adapting and enhancing content delivery based on user location, device and network can help give the best possible experience, supporting adoption and user satisfaction.",
+      "serviceTypes": [
+        "Implementation",
+        "Ongoing support",
+        "Planning"
+      ],
+      "supplierName": "Atos IT Services UK Ltd"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4617345670578176",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "Leading advice from CESG Listed Advisors (CLAS Consultants)",
+        "Clear PSN Migration Path identified",
+        "Cloud Service Security review and assessments",
+        "Informed and Assured SIRO"
+      ],
+      "serviceFeatures": [
+        "CESG Listed Advisor to Government (CLAS Consultant)",
+        "PSN Migration advice",
+        "IL3 to OFFICIAL advice and assurance",
+        "Information Assurance of Cloud Services",
+        "Supplier Security Assurance",
+        "Senior Information Risk Officer (SIRO) Advice Service",
+        "PSN IPED Assurance"
+      ],
+      "serviceName": "Security Architecture Design Review & Assurance (CLAS)",
+      "serviceSummary": "Providing technical and commercially aware CLAS certified IA security consultants who support and execute technical security architecture reviews.\r\n\r\nWe establish and manage complex service relationships; have advised on the largest and most complex programmes in government and have worked as advisors to G-Cloud IaaS providers, including PSN migrations IL3-OFFICIAL\r\n",
+      "serviceTypes": [
+        "Implementation",
+        "Ongoing support",
+        "Planning",
+        "Testing",
+        "Training"
+      ],
+      "supplierName": "VISIONIST"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4617616429678592",
+      "lot": "IaaS",
+      "serviceBenefits": [
+        "A secure single-tenanted, pooled resource, supporting Public Sector customers",
+        "Simple monthly pricing for the EPC Secure+ product and service",
+        "Proactive secure monitoring and support provided from the UK",
+        "Simple to use - Portal based self-service interface   ",
+        "Delivers robust and a secure converged infrastructure solution",
+        "Connectivity to a variety of networks including PSN ",
+        "Ability to scale to meet the customers’ business demands",
+        "Atos EPC Secure+ is delivered in an environmentally responsible manner",
+        "Pre-configured, hardened, secure configuration independently tested to meet OFFICIAL accreditation"
+      ],
+      "serviceFeatures": [
+        "UK Based Data Centres, resilient power, network, storage (Tier-4 infrastructure)",
+        "Dedicated, high performance Converged Infrastructure environment",
+        "Self-Service automation of VM deployment ",
+        "Security Check (SC) Cleared Support Staff",
+        "Support from a number of UK based geographic locations",
+        "Using PGA accredited secure tooling, monitoring and management infrastructure  ",
+        "GPG-13 compliant Protective Monitoring",
+        "Library of secure Operating System templates ",
+        "Service Availability is 99.95% ",
+        "Monthly subscription based service with no capital investment"
+      ],
+      "serviceName": "Atos Enterprise Private Cloud Secure+ IaaS",
+      "serviceSummary": "A highly tuned Private Cloud infrastructure environment based on industry leading and proven technology. Atos EPC Secure + is built upon pre-defined and integrated virtualisation, automation and orchestration workflows allowing your business to focus on meeting its end user demands of speed and performance.  ",
+      "serviceTypes": [
+        "Compute",
+        "Storage"
+      ],
+      "supplierName": "Atos IT Services UK Ltd"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4617648197337088",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "Assured secure access to meet accreditation",
+        "Assured security encryption to meet accreditation ",
+        "Remotely manage, add, change or delete restricted data",
+        "Assured App stores; more security and managing cyber threats ",
+        "Reduced time to productivity through experienced CLAS experience ",
+        "Check registered pen testing with reduced re-test cost",
+        "Assure your mobility environment not just the devices ",
+        "Identify & mitigate you mobility and cloud risks ",
+        "Future proof and defend your Cyber boundaries",
+        "The cost of recovery is always higher than prevention"
+      ],
+      "serviceFeatures": [
+        "CESG listed consultant and check registered pen testers",
+        "Expert in understanding mobility risks and mitigations",
+        "Assess and assure cloud services to mobile devices",
+        "Physical, procedural, regulatory and technical controls assessed",
+        "Prevention, disruption, tampering and destruction lifecycles assessed",
+        "Cyber essentials and cyber expert assessments ",
+        "Good practice guide 13 for protective monitoring",
+        "Good practice guide 8 for protecting external connections",
+        "Good practice guide 12 for virtualisation product and data separation",
+        "Device OEM, O/S, technology stack, cloud stack agnostic"
+      ],
+      "serviceName": "RMADS for cloud and mobility",
+      "serviceSummary": "Risk Management Document Set or RMADS can be provided by our in house CLAS consultants who are experienced in data at rest, data in transit and data to destination services on mobile solutions at OFFICIAL & OFFICIAL-SENSITIVE. We provide the baseline control set (BCS), the system overview and supporting evidence. ",
+      "serviceTypes": [
+        "Implementation",
+        "Ongoing support",
+        "Planning",
+        "Testing",
+        "Training"
+      ],
+      "supplierName": "Nine23Ltd"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4576738273132544",
+      "lot": "SaaS",
+      "serviceBenefits": [
+        "Ease of access and real-time speed of reporting",
+        "Monitor KPIs",
+        "React quicker to changing circumstances",
+        "See the big picture, without losing granularity",
+        "Integrate financial and non-financial data"
+      ],
+      "serviceFeatures": [
+        "Fully integrated performance profile from all an organisation's systems",
+        "High level, dynamic reporting",
+        "Unlimited drill-down capability",
+        "Ad hoc report creation",
+        "Cloud report hosting",
+        "Predictive analytics",
+        "Performance management",
+        "Automated workflow"
+      ],
+      "serviceName": "PI - Performance ",
+      "serviceSummary": "PI's Performance Management solution allows for the integration of both financial and non-financial metrics into a single holistic platform. This, coupled with capabilities in dynamic analysis, workflow technology and predictive analytics gives organisations the information that they need to understand and drive themselves forward.",
+      "serviceTypes": [
+        "Accounting and finance",
+        "Business intelligence and analytics",
+        "Collaboration",
+        "Creative and design",
+        "Data management",
+        "Electronic document and records management (EDRM)",
+        "Operations management",
+        "Project management and planning",
+        "Software development tools"
+      ],
+      "supplierName": "Pi Ltd"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4578169394823168",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "Compliance with Information Assurance, Security Frameworks and Standards ",
+        " Increased compliance/support in reducing risks to reputation damage",
+        "Costs/time efficiencies in delivering maintainable compliance and certification."
+      ],
+      "serviceFeatures": [
+        "ICT risk analysis ",
+        "Development and analysis of ICT security policies",
+        "Business risk analysis and business impact analysis ",
+        "Security health-checks, compliant policies, procedures and implementation",
+        "mplementation of Government security standards ",
+        "RMADS consultancy and support ",
+        "nformation Security Reviews",
+        "Development of policies and procedures  "
+      ],
+      "serviceName": "Methods Professional Services: Data Security Service",
+      "serviceSummary": "Methods Professional Services has a long-standing Information Security and Assurance practice providing the full range of specialist CLAS and security services, primarily to the Public Sector. We are adept at working with GPMS and GSC across all impact levels and classifications and a range of big data and information sources.\r\n",
+      "serviceTypes": [
+        "Implementation",
+        "Ongoing support",
+        "Planning",
+        "Testing",
+        "Training"
+      ],
+      "supplierName": "Methods Professional Services Ltd"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4579577028411392",
+      "lot": "SaaS",
+      "serviceBenefits": [
+        "Less Officer time spent on Form filling",
+        "Minimal Training Requirements",
+        "Minimizing duplication and input errors ",
+        "Instant Form propagation ",
+        "Full reporting and Intelligence",
+        "Fulfills \"Digital by Default\" requirement"
+      ],
+      "serviceFeatures": [
+        "Creation of custom forms ",
+        "Integration with Case Management Systems ",
+        "Creation of Electronic Case Files",
+        "Creation of MG Forms (Manual of Guidance)",
+        "Electronic case files for Courts and Tribunals",
+        "Automatic repagination for multi page Forms",
+        "Management of Defendant, Witness and Exhibit Information ",
+        "Validation of Data Entry including Dates, Numbers etc. ",
+        "Forms identical to physical paper ",
+        "Approval process for completed Forms "
+      ],
+      "serviceName": "Forms Manager ",
+      "serviceSummary": "Forms Manager provides a digital set of MG Forms and maintain within a Case Management system.  The system is designed to minimise repeated typing of common fields and minimise errors. The system is fully browser based, removing the need to deploying macros or other software on every PC.  ",
+      "serviceTypes": [
+        "Collaboration",
+        "Data management",
+        "Electronic document and records management (EDRM)",
+        "Legal",
+        "Security"
+      ],
+      "supplierName": "i2N Ltd"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4580213505654784",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "Ideal approach for financial, security or safety significance systems",
+        "Access to global pool of experienced independent testing professionals",
+        "Finding defects early greatly reduces potential financial risk",
+        "Cost savings through increased testing efficiency and effectiveness",
+        "Confidence that benefits achieved will realise or exceed expectations",
+        "Service based on organisational needs, budgets timeframes and scope",
+        "Strong track record of delivering successful testing providing confidence  ",
+        "Innovative test processes and techniques delivering leading edge solutions",
+        "Injection of new ideas, fresh perspectives on testing increasing understanding"
+      ],
+      "serviceFeatures": [
+        "Test team led by experienced and highly skilled Test Architect",
+        "Focus on potential insertion points of defects",
+        "End to end testing from scope definition to reporting",
+        "Testing new or changed systems’ interactions with integrated systems",
+        "Available in England, Scotland, Wales and Northern Ireland",
+        "Invaluable soft skills, engaging IT and Business team individuals",
+        "In-depth knowledge of system testing",
+        "Experienced in negative testing e.g. Web tests/data type attacks",
+        "Testing of the full unhappy path scenarios",
+        "Experienced in Exploratory Testing Techniques"
+      ],
+      "serviceName": "Sopra Forensic Testing Services",
+      "serviceSummary": "Sopra recommends forensic testing for Cloud applications as an ideal additional test phase for systems where the potential implications of failure are extremely serious.\r\nWe have a team of highly skilled testers with expertise in delivering a proven approach, which finds   defects earlier in the lifecycle, reducing potential financial risks.\r\n",
+      "serviceTypes": [
+        "Implementation",
+        "Planning",
+        "Testing"
+      ],
+      "supplierName": "Sopra Group"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4580555995742208",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "Get up to speed with Zendesk quickly",
+        "Understand Zendesk administration",
+        "Learn in the environment you feel most comfortable",
+        "Ask the Expert with a Q&A session",
+        "Option to personalise your learning experience with a bespoke session",
+        "Take away learning with free guides and manuals"
+      ],
+      "serviceFeatures": [
+        "Zendesk authorised partner training",
+        "Virtual or classroom based sessions",
+        "Admin and agent Zendesk training",
+        "Setup and configuration of Zendesk",
+        "Support optimization and workflow audits",
+        "Technical writing of your forum / Help Center articles",
+        "Q&A session"
+      ],
+      "serviceName": "Zendesk Training",
+      "serviceSummary": "Zendesk is the leading provider of proven, cloud-based help desk software. By utilising a Zendesk authorised trainer like Clearvision you can fast track your team to great customer service.\r\n\r\nIf your department are rolling out Zendesk we can help you get started quickly and help you solve common queries.",
+      "serviceTypes": [
+        "Implementation",
+        "Training"
+      ],
+      "supplierName": "Clearvision CM"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4607807865225216",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "Predictable and managed delivery of suppliers.",
+        "Clear accountability for delivering of services across multiple suppliers",
+        "Release plans with scope, schedule, budget and benefits clearly defined",
+        "IT Transformation aligned to the Target Operating Model (TOM) development",
+        "A defined End-to-End service model that meets the business need",
+        "Maintaining service continuity through the transition effort",
+        "A release approach that allows for gated governance and flexibility",
+        "Rapid decision making and approvals  in a managed delivery structure",
+        "Identification and management of transition related cost savings",
+        "Identification and management of security risks"
+      ],
+      "serviceFeatures": [
+        "Management of Functional and Technical Design Authority",
+        "Support for End to End Design and Development",
+        "Transition & Delivery Management",
+        "SIAM PPM and Service Conformance Management",
+        "Managing IT Enabled Business Transformation",
+        "Business Analysis, Integration and Approvals",
+        "Project Specification, Sourcing and Selection",
+        "SIAM Enterprise Architecture Design Management",
+        "Architecture Driven Agile",
+        "Management of Benefits Tracking and Reporting"
+      ],
+      "serviceName": "PwC Service Definition 2: G-Cloud Managing Change Services",
+      "serviceSummary": "Managing Change Services provides the processes, tools, people and capability to manage the change programme against the agreed business strategy.  \r\n\r\nThis service includes iterative management of the Technical Design through adherence to the Target Architecture and management of the releases through adherence to the Target Operating Model.",
+      "serviceTypes": [
+        "Implementation",
+        "Planning"
+      ],
+      "supplierName": "PricewaterhouseCoopers (LLP) PwC"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4608415603097600",
+      "lot": "SaaS",
+      "serviceBenefits": [
+        "Stop malicious or unwanted email from ever reaching your mailbox",
+        "Interactive digests from Outlook enable users to manage their quarantine",
+        "Support multiple business requirements using our granular policy engine",
+        "Personal block and permit lists reflect user preferences",
+        "user or policy invoked secure communication",
+        "Intelligent gateway learns your organizations communications patterns",
+        "Early alert/notification of possible email communication problems",
+        "Prevent unwanted information leaving your network via email",
+        "Centralise disclaimer and stationery management",
+        "Roles based Access Control to Support admin, helpdesk, user model"
+      ],
+      "serviceFeatures": [
+        "Always-on cloud-based security service",
+        "URL re-writing of links in emails for anti-spear-phishing",
+        "Realtime online track&trace, queue management policy application",
+        "Stops 99% of spam and 100% malware in the cloud",
+        "Granular content examination engine for DLP policy application",
+        "AD synchronization enables group policy setting",
+        "Document metadata stripping",
+        "Secure message delivery via TLS and Pull Based encryption portal",
+        "Disclaimer and legal notice management",
+        "Secure message delivery via TLS and Pull Based encryption portal"
+      ],
+      "serviceName": "Mimecast Email Security",
+      "serviceSummary": "Mimecast Email Security is a comprehensive cloud-based email security and compliance solution on the market today. Mimecast’s massively scalable mail transfer agent with multiple layers of malware and spam protection acts as your email bridgehead, stopping known and emerging email borne threats before they reach your network.",
+      "serviceTypes": [
+        "Data management",
+        "IT management",
+        "Security"
+      ],
+      "supplierName": "Bytes Software Services"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4611137538621440",
+      "lot": "PaaS",
+      "serviceBenefits": [
+        "Lower service delivery costs aligning requirements to Trustmarque’s Hybrid Cloud",
+        "Reduce or eliminate traditional licence and maintenance upgrade costs",
+        "Productivity improvements through high availability of the underlying platform",
+        "Rapid on-boarding and off-boarding including migration and transition services",
+        "Decreased deployment time for new resources and pre-built images",
+        "Dynamic scaling matches demand to minimise total cost of service",
+        "High availability and instant access for users across multiple locations",
+        "Protected customer data via high redundancy levels and stringent security",
+        "ISO27001 accredited, OFFICIAL, IL3 and IL4 hosting, UK datacentres",
+        "On-demand pricing for short term, un-planned or trial services"
+      ],
+      "serviceFeatures": [
+        "Managed applications including O/S, Middleware and runtime environments",
+        "Automated patching and updates with physical and software security",
+        "Hybrid Cloud services provides most cost effective solutions",
+        "High available capacity and built-in redundancy across data centres",
+        "Proven/established deployment processes support rapid On-boarding/Off-boarding",
+        "ISO20000 and ITILv3 service Management aligned with pro-active monitoring",
+        "Accreditations/Certifications include IL2, IL3, IL4, PSN and ISO27001",
+        "Fully managed environment with automated switching across servers/networks",
+        "Highly resilient infrastructure with no single point of failure",
+        "Private-cloud protecting the storage and transfer of the sensitive dat"
+      ],
+      "serviceName": "PLATFORM AS A SERVICE OFFICIAL (PAAS)",
+      "serviceSummary": "Trustmarque provides on-demand, configurable hosting, application and data services including a full range of OS (Windows, Linux),  Middleware (Biztalk, integration services) and runtime environments (.Net, Azure, LAMP stack). \r\nThese services, used by multiple government departments for OFFICIAL and OFFICIAL SENSITIVE hosting, are highly resilient, secure IL2- IL4 and PSN accredited.",
+      "supplierName": "Trustmarque Solutions Limited"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4612642320678912",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "Delivered to industry best practice in information and change management",
+        "Proven record of providing impartial and objective advice",
+        "Wide range of bespoke consulting services"
+      ],
+      "serviceFeatures": [
+        "Health checks",
+        "Strategy development",
+        "Process improvement and development",
+        "Technology selection and implementation"
+      ],
+      "serviceName": "EDRM",
+      "serviceSummary": "In-Form Consult (IFC) provides consulting expertise in the areas of information and records management, information governance, knowledge management, data management and enterprise solutions. We help you meet your needs with impartial and objective advice through each stage of a programme.\r\n",
+      "serviceTypes": [
+        "Implementation",
+        "Ongoing support",
+        "Planning",
+        "Testing",
+        "Training"
+      ],
+      "supplierName": "In-Form Consult Ltd"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4592287933792256",
+      "lot": "SaaS",
+      "serviceBenefits": [
+        "dartOCM ensures data received is accurate",
+        "E-requesting ensures you get the data you need",
+        "Removes the need for manual data entry at Lab reception",
+        "dartOCM reduces labour costs when processing specimens",
+        "Demand management prevents re-ordering of duplicate tests",
+        "Prompting ensures users provide additional clinical details",
+        "Test sets against clinic or condition removes adhoc test requesting",
+        "dartOCM promotes best practice when requesting tests",
+        "Diagnosis based ordering across all departments reduces requesting resource",
+        "Improved and accurate patient data means improved and accurate results"
+      ],
+      "serviceFeatures": [
+        "dartOCM is extremely easy to use ",
+        "Intuitive nature, reduces the need for extensive training ",
+        "dartOCM has proven high adoption rates from project commencement",
+        "Expandable nature of the system allows rollout across care sector",
+        "Proven track record of OCM deployment",
+        "dartOCM offers interoperability with GP systems",
+        "Flexible and configurable approach allows continued process improvements",
+        "HL7 interfacing into LIMS and RIS systems",
+        "Web based for easy and remote access",
+        "dartOCM will integrate with your PAS, EPR or Portal"
+      ],
+      "serviceName": "dartOCM",
+      "serviceSummary": "dartOCM is a browser-based order communications solution, designed to meet the needs of individual users, along with primary care and hospital departments.\r\nAccessed through a web browser, dartOCM can be used to order Pathology, Radiology, or other requests either remotely from a GP surgery or directly from the hospital wards.",
+      "serviceTypes": [
+        "Data management",
+        "Healthcare"
+      ],
+      "supplierName": "Ideagen PLC"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4592892005842944",
+      "lot": "SaaS",
+      "serviceBenefits": [
+        "Use of cloud tools, with an access point you control",
+        "One place to manage access to cloud tools",
+        "Get notified about events inside other cloud tools"
+      ],
+      "serviceFeatures": [
+        "Single Sign-on across your cloud tools",
+        "Personalised and targeted information based on role in organisation",
+        "Integrate the whole organisation - an internal activity aggregator",
+        "Share knowledge across the organisations hierarchy - the corporate brain"
+      ],
+      "serviceName": "Cloud based Social Intranet",
+      "serviceSummary": "Intranets are now collaborative and social. They used to be all about publishing internal news. Today they are all about interacting with coworkers and accessing the tools you and your organisation needs to get work done.\r\n",
+      "serviceTypes": [
+        "Collaboration",
+        "Data management",
+        "Electronic document and records management (EDRM)",
+        "Human resources and employee management",
+        "IT management",
+        "Security"
+      ],
+      "supplierName": "Worth Internet Systems"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4595940048502784",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "Statement of Recommended Practice Compliance",
+        "correctly recorded and properly maintained Fixed Asset records"
+      ],
+      "serviceFeatures": [
+        "Accounting in accordance with SORP will be automated in SAP"
+      ],
+      "serviceName": "Asset Revaluation Posting in Compliance with Statement of Recommended Practice (SORP)",
+      "serviceSummary": "The SORP provides specific guidelines for the usage of the revaluation reserve, which comes into operation through-out the whole life cycle of an asset. Under these guidelines the movements in valuations have to be managed at indi-vidual level for each asset.  ",
+      "serviceTypes": [
+        "Implementation",
+        "Ongoing support",
+        "Planning",
+        "Testing",
+        "Training"
+      ],
+      "supplierName": "NTT DATA UK Limited"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4598160320102400",
+      "lot": "SaaS",
+      "serviceBenefits": [
+        "Internal and External Benchmarking ",
+        "Flexible local configuration allows evolution/enhancement of business processes",
+        "Configurability reduces training and facilitates implementation with stronger user ownership ",
+        "Task-based user interfaces reduce training requirements",
+        "Enables change to proactive management style ",
+        "Consolidated real time information minimising reporting problems caused by spreadsheets",
+        "Easy provision of graphics for reports/documents",
+        "High level of security",
+        "Highly flexible systems administration ",
+        "BI to drive operational improvements"
+      ],
+      "serviceFeatures": [
+        "Enterprise application",
+        "Service oriented architecture",
+        "Fully integrated and configurable modules",
+        "Browser, client server and mobile access",
+        "Real time graphical reporting",
+        "Operational dashboard",
+        "Graphics/data export",
+        "Customisable back-up service",
+        "Public and private cloud solutions",
+        "BI based on latest versions of SQL"
+      ],
+      "serviceName": "Invigilatis: Estates and Facilities Management Service",
+      "serviceSummary": "Based on relevant operational standards e.g. ISO 55001, this solution enables users to benefit from each other’s wealth of knowledge about running their estates and facilities. Real time dashboards facilitate effective operational management and decision making by providing access to vital resource and asset information in an extensive BI suite. ",
+      "serviceTypes": [
+        "Accounting and finance",
+        "Business intelligence and analytics",
+        "Energy and environment",
+        "Operations management"
+      ],
+      "supplierName": "Invigilatis"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4572223356534784",
+      "lot": "SaaS",
+      "serviceBenefits": [
+        "Provides Single Point Activity to drive business understanding and engagement  ",
+        "Automation of high value business process drives value and ROI",
+        "Drives user engagement and adoption",
+        "Great user experience & mobile device support drives user engagement",
+        "Rich social tools delivered in an integrated and compliant manner ",
+        "Reduced setup costs allow greater focus on business engagement",
+        "“I want to” Automation empowers users and removes IT bottlenecks",
+        "Reduces SharePoint and Office 365 deployment costs up to 60%",
+        "Reduces SharePoint and Office 365 deployment time up to 90%",
+        "Reduce SharePoint and  O365 Online running costs up to 95% "
+      ],
+      "serviceFeatures": [
+        " Automates the deployment of Office 365 and SharePoint",
+        "Provides mobile user interface for Office 365 and SharePoint",
+        "Automates key business processes with Office 365",
+        "Provides self service capabilities ot Office 365 and SharePoint",
+        "Provides library of common processes for Office 365 and SharePoint",
+        "Supports serf service migration to Office 365 and SharePoint",
+        "Embeds governance policies for Office 365 and SharePoint",
+        "Provides and central activity centre for Office 365 and SharePoint"
+      ],
+      "serviceName": "FLEX",
+      "serviceSummary": "FLEX automates the deployment of Microsoft Office 365 and Microsoft SharePoint. FLEX is a collection of intellectual property: methods, prescriptive architecture, pre-built software baselines, template libraries and execution technology. FLEX is available online – on premise or Hybrid. ",
+      "serviceTypes": [
+        "Collaboration",
+        "Electronic document and records management (EDRM)",
+        "Human resources and employee management",
+        "Operations management",
+        "Project management and planning"
+      ],
+      "supplierName": "ICS Solutions Ltd"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4576237020250112",
+      "lot": "SaaS",
+      "serviceBenefits": [
+        "Information to know how resources are being used",
+        " Helps users accessing the same or multiple projects collaborate",
+        "Works with PC and mobile devices with web access",
+        "Easy to Use",
+        "Based on 25 years experience and development in public sector"
+      ],
+      "serviceFeatures": [
+        "Timebase provides stopwatch style time or timesheet recording facility ",
+        "Chargeable, non-chargeable, expense or income activity can be recorded",
+        "Timebase comes with a full set of pre-defined reports ",
+        "Administrators can create  own reports using wizard driven interface",
+        "Highly granular security model allows separate \"firewalled\" departments ",
+        "Allows you to record time against Fixed Fee’s and budgets ",
+        "Hosted on Windows Azure an ISO 27001 certified environment"
+      ],
+      "serviceName": "Timebase 247",
+      "serviceSummary": "Timebase time recording software is a comprehensive, easy-to-use, 100% web browser based system  giving consultants and service professionals at all levels the freedom to record their time using electronic time data capture or electronic time sheets. Time can be recorded using a variety of devices",
+      "serviceTypes": [
+        "Accounting and finance",
+        "Business intelligence and analytics",
+        "Data management"
+      ],
+      "supplierName": "Tricostar LLP"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4621318892814336",
+      "lot": "IaaS",
+      "serviceBenefits": [
+        "We design whole system infrastructures delivering stable, secure environments"
+      ],
+      "serviceFeatures": [
+        "Infrastructure design",
+        "Secure networks",
+        "Windows Migration",
+        "Exchange",
+        "Network & application monitoring 24/7/365",
+        "Security (RSA Certs, VPN)",
+        "Lease Lines / Internet / WIFI",
+        "Penetration Testing",
+        "Firewalls",
+        "Cabling"
+      ],
+      "serviceName": "IT Infrastructure and Networking",
+      "serviceSummary": "Nurved engineers are highly skilled and experienced in creating, developing and supporting complex IT networks. We can design whole system infrastructures capable of delivering stable and secure environments which are tailored to your business requirements.",
+      "serviceTypes": [
+        "Compute",
+        "Storage"
+      ],
+      "supplierName": "Nurved Consulting Ltd"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4622434107916288",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "Expertise in delivery leading to faster implementation"
+      ],
+      "serviceFeatures": [
+        "Assist in obtaining maximum benefit from the application"
+      ],
+      "serviceName": "Evidence.com",
+      "serviceSummary": "TSR Ltd supported by TASER International BV offers specialist cloud services to support the implementation and continued integration of Evidence.com.  These services are designed to make the set up, roll out, and integration of Evidence.com as seamless as possible",
+      "serviceTypes": [
+        "Implementation",
+        "Planning",
+        "Training"
+      ],
+      "supplierName": "Tactical Safety Responses Ltd"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4622772001046528",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "Delivers to time and budget",
+        "Increases the credibility of the project, and of the SRO",
+        "Demonstrates conformance with government policy",
+        "Ensures users are involved at the appropriate time"
+      ],
+      "serviceFeatures": [
+        "Project management tools and techniques eg. PRINCE, MSP",
+        "Risk management",
+        "Project assurance",
+        "Project reviews and health checks",
+        "Stakeholder analysis",
+        "Business case development",
+        "Communications strategy development"
+      ],
+      "serviceName": "Cloud Project Management",
+      "serviceSummary": "Addresses the project management of cloud service implementations. Many projects fail to deliver improvements to organisations because they focus on the implementation of the system, rather than on what that system will do for an organisation.",
+      "serviceTypes": [
+        "Implementation",
+        "Planning"
+      ],
+      "supplierName": "NTT DATA UK Limited"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4642950764036096",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "User Centric approach to design",
+        "Create enhanced user experiences",
+        "Bring your brand to life online",
+        "Tried and Tested UX and design metholody"
+      ],
+      "serviceFeatures": [
+        "User Centric Design",
+        "Wireframes",
+        "Design Concepts",
+        "Visual Designs",
+        "Digital Brand Guidelines"
+      ],
+      "serviceName": "User Centric Website Design",
+      "serviceSummary": "At twentysix we have vast experience in all stages of website design from user experience, through to design concepts and visual designs.  We adopt a user centric approach to website design and have a team of 20 highly skilled and creative UX specialists and designers.",
+      "serviceTypes": [
+        "Implementation",
+        "Ongoing support",
+        "Planning",
+        "Testing",
+        "Training"
+      ],
+      "supplierName": "twentysix Limited"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4643317849522176",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "Aligns applications and IT expenditure with business strategy and goals",
+        "Provides transparency to IT resource costs",
+        "Identifies application readiness and roadmap for cloud, SaaS, PaaS, IaaS",
+        "Reduces costs and optimises value through active infrastructure reduction",
+        "Supports reduced dependency on legacy and proprietary applications and platforms",
+        "Supports application migration, modernisation and open source improvement initiatives",
+        "Enables consolidation and rationalistion of applications and infrastructure",
+        "Eliminates functional duplication and waste through reduced system overlap",
+        "Supports legacy infrastructure retirement, decommissioning and elimination",
+        "Increases speed to deployment through promotion of agile infrastructures"
+      ],
+      "serviceFeatures": [
+        " Free Trial: Up to 5 days of free consultancy",
+        "Fixed or variable cost engagement models",
+        "Assessment of application usage, relevance, risk and cost of ownership",
+        "Assessment of proprietary application platforms, licences, interfaces and source code",
+        "Assessment of application functionality overlap and opportunities to consolidate",
+        "Identification of cloud, open source and cost reduction alternatives",
+        "Development of strategic application roadmaps",
+        "Suitable for individual applications to entire portfolios",
+        "Compatible with Service Design Manual: Discovery, Alpha, Beta, Live, Retirement",
+        "Delivers TIME categorisation of applications: Tolerate; Invest; Migrate; and Eliminate"
+      ],
+      "serviceName": "IT Lab Application Porfolio Management Service",
+      "serviceSummary": "As part of IT Lab’s Application Value Management Framework, the IT Lab Application Portfolio Management Service provides organisations with a clearer and more holistic understanding of the value proposition of a single application or a portfolio of applications, facilitating rationalisation and enabling migration to suitable cloud, SaaS, PaaS, IaaS platforms.",
+      "serviceTypes": [
+        "Planning"
+      ],
+      "supplierName": "IT Lab Limited"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4643382475358208",
+      "lot": "SaaS",
+      "serviceBenefits": [
+        "Authenticate access across numerous systems",
+        "Dynamic feed of user data",
+        "Enable Single Sign On for all systems",
+        "Maintain security policies whilst ensuring easy access",
+        "Allow users to maintain own profiles"
+      ],
+      "serviceFeatures": [
+        "Multiple Directories",
+        "User Brokering ",
+        "Dynamic Feedback",
+        "Authentication Options",
+        "Flexible "
+      ],
+      "serviceName": "Mvine for Identity Management",
+      "serviceSummary": "Mvine for Identity Management is a secure, flexible and proven platform for identity driven federations. Mediating between your access management systems and the outside world, enabling your security policies to extend their reach to systems outside the firewall.",
+      "serviceTypes": [
+        "Business intelligence and analytics",
+        "IT management",
+        "Operations management",
+        "Security"
+      ],
+      "supplierName": "Mvine Limited"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4643569935581184",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "Access to integration consultancy skills, business advice and guidance",
+        "Guidance in planning a strategy for integration with other platforms",
+        "Access to deep skills to support and/or provide integration",
+        "Minimise risks from incomplete or corrupted data damaging CRM integrity",
+        "Minimise time and risks by using different tools and methods"
+      ],
+      "serviceFeatures": [
+        "Determine whether Dynamics CRM Online fits your business needs",
+        "Assistance to design and implement a cloud hosted CRM solution",
+        "Analysis, design and implementation of Dynamics CRM-based business solutions",
+        "Specification and selection, documentation and project management",
+        "Integration of portal solutions with Dynamics CRM",
+        "Customisation of Dynamics CRM",
+        "Development, deployment, operation and user training",
+        "Full lifecycle project engagement",
+        "Use of Dynamics Sure Step Methodology"
+      ],
+      "serviceName": "Dynamics CRM Integration Services",
+      "serviceSummary": "Through the provision of this service Ashton Court will assist you to design and develop components for integration of Dynamics CRM Online with other business systems (e.g. Office 365 and applications hosted on Windows Azure, as well as internal and third party systems).",
+      "serviceTypes": [
+        "Implementation",
+        "Ongoing support",
+        "Planning",
+        "Testing",
+        "Training"
+      ],
+      "supplierName": "Ashton Court Group Ltd"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4644736799342592",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "Optimised business processes",
+        "Optimised use of Cloud services",
+        "Communicates clear understanding of your organisation’s business maturity ",
+        "Improved understanding and predictability of demand and resource peaks "
+      ],
+      "serviceFeatures": [
+        "Business process mapping and modelling",
+        "Techniques include Lean, Six Sigma, BPR, Value Stream Mapping",
+        "Uses MooD, BizzDesign, Sparx EA, Enterprise Architect, Archi, Systems Architect",
+        "Notations include UML & SysML, IDEF, BPMN, Archimate",
+        "Articulates the optimal operating model for the business",
+        "Workflow analysis",
+        "Provides graphical and pictorial views of your organisation’s processes "
+      ],
+      "serviceName": "Process Definition & Optimisation",
+      "serviceSummary": "Aligns your business processes with their required outputs through Process Definition and Optimisation (PDO) through analysis and improvement actions. Enables review and ongoing management using Business Process Mapping and Modelling (BPM) efficiently and effectively, linking workflows to organisational roles and responsibilities.",
+      "serviceTypes": [
+        "Ongoing support",
+        "Planning"
+      ],
+      "supplierName": "BMT Hi-Q Sigma Ltd"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4645009764646912",
+      "lot": "SaaS",
+      "serviceBenefits": [
+        "Pro-active management and monitoring of services for high availability",
+        "Built-in resilience and DR for service continuity",
+        "Provisioning and secure hosting keeps your data safe"
+      ],
+      "serviceFeatures": [
+        "Enhanced search",
+        "Integral data mining capability",
+        "Map-based interface",
+        "Camera sharing between forces",
+        "Mobile access"
+      ],
+      "serviceName": "Northgate ANPR Falcon-i SaaS",
+      "serviceSummary": "ANPR Falcon-i is Northgate Public Services' national Automatic Number Plate Recognition (ANPR) solution delivered to the majority of UK police forces. ANPR Falcon-i via Software as a Service (SaaS) is hosted at a secure data centre within the United Kingdom.",
+      "serviceTypes": [
+        "Business intelligence and analytics",
+        "Data management"
+      ],
+      "supplierName": "Northgate Information Solutions UK Limited"
+    },
+    {
+      "frameworkName": "G-Cloud 6",
+      "id": "4654166131605504",
+      "lot": "SCS",
+      "serviceBenefits": [
+        "A secure alternative to air gaps within multi-level security systems",
+        "Hardware enforced, uni-directional data transfer",
+        "Push data into multiple networks of differing security levels ",
+        "Ensure separation of the receiving systems, preventing data leakage ",
+        "Provids a highly reliable, low cost of operation solution",
+        "UK sovereign security product with SC cleared support team"
+      ],
+      "serviceFeatures": [
+        "Multi-tailed Multi-diodes enable secure cross domain data transfer",
+        "Provides fast, high assurance, guaranteed one way data flow",
+        "Typical deployments include patching multiple security tiers ",
+        "Provides a flexible solution with a vriety of interfaces",
+        "Easy to install and maintain"
+      ],
+      "serviceName": "SyBard Multi-Tailed, Multi-Diode",
+      "serviceSummary": "QinetiQ SyBard Diodes are designed to enable secure information exchange between different trust domains, integrating easily into network architectures. One or more of the connected domains can reside in a “cloud” environment. The Diodes provide fast, high integrity, guaranteed one-way data flow.",
+      "serviceTypes": [
+        "Implementation",
+        "Ongoing support"
+      ],
+      "supplierName": "QinetiQ Ltd"
+    }
+  ],
+  "took": 39,
+  "total": 19981
+}

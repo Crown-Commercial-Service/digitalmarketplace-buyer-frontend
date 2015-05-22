@@ -3,11 +3,13 @@
 from . import main
 from datetime import datetime
 from dmutils.deprecation import deprecated
-from flask import abort, render_template, request, redirect, url_for
+from flask import abort, render_template, request, redirect, \
+    url_for, current_app
 from ..presenters.search_presenters import SearchFilters, SearchResults
 from ..presenters.service_presenters import Service
 from ..helpers.search_helpers import (
-    get_keywords_from_request, get_template_data
+    get_keywords_from_request, get_template_data,
+    get_page_from_request, query_args_for_pagination, total_pages
 )
 from ..helpers.service_helpers import get_lot_name_from_acronym
 from ..exceptions import AuthException
@@ -221,6 +223,7 @@ def redirect_search():
 @main.route('/g-cloud/search')
 def search():
     search_keywords = get_keywords_from_request(request)
+    results_page = get_page_from_request(request)
     search_filters_obj = SearchFilters(blueprint=main, request=request)
     response = search_api_client.search_services(
         **dict([a for a in request.args.lists()]))
@@ -233,6 +236,11 @@ def search():
         'search_keywords': search_keywords,
         'filter_groups': search_filters_obj.filter_groups,
         'services': search_results_obj.search_results,
-        'summary': search_results_obj.summary
+        'summary': search_results_obj.summary,
+        'total': search_results_obj.total,
+        'results_page': results_page,
+        'total_pages': total_pages(search_results_obj.total,
+                                   current_app.config["DM_SEARCH_PAGE_SIZE"]),
+        'search_query': query_args_for_pagination(request.args)
     })
     return render_template('search.html', **template_data)
