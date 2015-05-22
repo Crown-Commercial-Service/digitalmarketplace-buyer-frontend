@@ -223,7 +223,6 @@ def redirect_search():
 @main.route('/g-cloud/search')
 def search():
     search_keywords = get_keywords_from_request(request)
-    results_page = get_page_from_request(request)
     search_filters_obj = SearchFilters(blueprint=main, request=request)
     response = search_api_client.search_services(
         **dict([a for a in request.args.lists()]))
@@ -231,7 +230,7 @@ def search():
     pagination_config = pagination(
         search_results_obj.total,
         current_app.config["DM_SEARCH_PAGE_SIZE"],
-        results_page
+        get_page_from_request(request)
     )
 
     template_data = get_template_data(main, {

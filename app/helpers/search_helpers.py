@@ -27,9 +27,8 @@ def get_page_from_request(request):
 
 def query_args_for_pagination(args):
     """
-    As request args is immutable and we need to change
-    page to make pagination work, strip it out to use a changed
-    query string in the pagination macro
+    To use url_for for pagination next/prev page links
+    We need to not have the current page in the query args
     :param request:
     :return request args without page
     """
