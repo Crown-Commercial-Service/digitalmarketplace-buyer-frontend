@@ -37,7 +37,7 @@ class TestServicePage(BaseApplicationTest):
             self.service
         service_id = self.service['services']['id']
 
-        res = self.client.get('/services/{}'.format(service_id))
+        res = self.client.get('/g-cloud/services/{}'.format(service_id))
         assert_equal(200, res.status_code)
         assert_true("<h1>Blogging platform</h1>" in res.get_data(as_text=True))
 

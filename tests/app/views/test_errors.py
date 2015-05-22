@@ -20,7 +20,7 @@ class TestErrors(BaseApplicationTest):
         self._search_api_client.stop()
 
     def test_404(self):
-        res = self.client.get('/service/1234')
+        res = self.client.get('/g-cloud/service/1234')
         assert_equal(404, res.status_code)
         assert_true(
             "Check you've entered the correct web "
@@ -40,7 +40,7 @@ class TestErrors(BaseApplicationTest):
             side_effect=ConnectionError('API is down')
         )
 
-        res = self.client.get('/search?q=email')
+        res = self.client.get('/g-cloud/search?q=email')
         assert_equal(500, res.status_code)
         assert_true(
             "Sorry, we're experiencing technical difficulties"
