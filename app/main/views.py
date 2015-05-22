@@ -159,6 +159,17 @@ def suppliers_guide_g_cloud():
     )
 
 
+@main.route('/cookies')
+def cookies():
+    template_data = get_template_data(main, {
+        'title': 'Cookies – Digital Marketplace',
+        'crumbs': []
+    })
+    return render_template(
+        'content/cookies.html', **template_data
+    )
+
+
 @main.route('/terms-and-conditions')
 def terms_and_conditions():
     template_data = get_template_data(main, {
