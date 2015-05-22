@@ -219,4 +219,4 @@ class SearchResults(object):
     def __init__(self, response):
         self.search_results = response['services']
         self._add_highlighting()
-        self.summary = self._get_search_summary(response['total'])
+        self.summary = self._get_search_summary(response['meta']['total'])

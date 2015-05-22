@@ -1,4 +1,12 @@
 {
+  "meta": {
+    "query": {
+      "q": "CDN",
+      "filter_lot": "saas"
+    },
+    "total": 9,
+    "took": 13
+  },
   "services": [
     {
       "serviceSummary": "Fastly CDN (Content Delivery Network) speeds up delivery of your website and its content to your users. When your client clicks on your site requesting a piece of information, we want them to feel your speed of delivery. No waiting. We want them to get to your closest point of presence\u2014in milliseconds\u2014to get what they want. Fastly delivers the world's only real-time content delivery network. At Fastly we think slow is unacceptable. Fastly enables a next-generation of businesses to give their users the best online and mobile experience. The patent-pending Fastly Caching Software delivers static, dynamic and streaming content with the lowest recorded time to first byte.",
@@ -238,11 +246,5 @@
       },
       "id": "5-G4-1270-002"
     }
-  ],
-  "query": {
-    "q": "CDN",
-    "filter_lot": "saas"
-  },
-  "total": 9,
-  "took": 13
+  ]
 }
