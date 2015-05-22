@@ -1,28 +1,20 @@
-
-{% if config["DM_SEARCH_PAGE_SIZE"] < total %}
+{% if pagination['show_pagination'] %}
 <ul class="previous-next-navigation">
 
-    {% if results_page is defined and results_page > 1%}
-    {% set previous = results_page - 1 %}
+    {% if pagination['show_prev'] %}
     <li class="previous">
-        <a href="{{ url_for('.search', page=previous, **search_query) }}">
+        <a href="{{ url_for('.search', page=pagination['prev_page'], **search_query) }}">
             Previous <span class="visuallyhidden">page</span>
-            <span class="page-numbers">{{ previous }} of {{ total_pages }}</span>
+            <span class="page-numbers">{{ pagination['prev_page'] }} of {{ pagination['total_pages'] }}</span>
         </a>
     </li>
     {% endif %}
 
-    {% if results_page is defined and results_page < total_pages %}
-
-    {% if results_page %}
-        {% set next = results_page + 1 %}
-    {% else %}
-        {% set next = 2 %}
-    {% endif %}
+    {% if pagination['show_next'] %}
     <li class="next">
-        <a href="{{ url_for('.search', page=next, **search_query) }}">
+        <a href="{{ url_for('.search', page=pagination['next_page'], **search_query) }}">
             Next <span class="visuallyhidden">page</span>
-            <span class="page-numbers">{{ next }} of {{ total_pages }}</span>
+            <span class="page-numbers">{{ pagination['next_page'] }} of {{ pagination['total_pages'] }}</span>
         </a>
     </li>
     {% endif %}

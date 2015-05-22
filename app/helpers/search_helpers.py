@@ -49,6 +49,30 @@ def total_pages(total, page_size):
         return None
 
 
+def pagination(num_services, page_size, page=None):
+    total = total_pages(num_services, page_size)
+    next_page = None
+    prev_page = None
+
+    if page and num_services > page_size:
+        next_page = page + 1
+    elif not page and num_services > page_size:
+        next_page = 2
+
+    if page and page > 1:
+        prev_page = page - 1
+
+    return {
+        "total_pages": total,
+        "pagination_error": page > total,
+        "show_pagination": num_services > page_size,
+        "show_prev": page > 1,
+        "show_next": total > 1 and page < total,
+        "next_page": next_page,
+        "prev_page": prev_page,
+    }
+
+
 def valid_page(page):
     """
     Valid pages are positive integers
