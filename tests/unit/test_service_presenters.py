@@ -9,7 +9,7 @@ def _get_fixture_data():
         os.path.join(os.path.dirname(__file__), "..")
     )
     fixture_path = os.path.join(
-        test_root, 'fixtures', 'service_fixture.json'
+        test_root, 'fixtures', 'g6_service_fixture.json'
     )
     with open(fixture_path) as fixture_file:
         return json.load(fixture_file)

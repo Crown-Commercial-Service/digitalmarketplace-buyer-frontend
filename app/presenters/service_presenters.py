@@ -201,11 +201,11 @@ class Meta(object):
             return re.findall("....", str(id))
 
     def get_documents(self, service_data):
-        keys = [
-            'pricingDocument',
-            'sfiaRateDocument',
-            'serviceDefinitionDocument',
-            'termsAndConditionsDocument'
+        url_keys = [
+            'pricingDocumentURL',
+            'sfiaRateDocumentURL',
+            'serviceDefinitionDocumentURL',
+            'termsAndConditionsDocumentURL'
         ]
         names = [
             'Pricing',
@@ -214,17 +214,27 @@ class Meta(object):
             'Terms and conditions'
         ]
         documents = []
-        for idx, key in enumerate(keys):
-            name_key = keys[idx]
-            url_key = name_key + 'URL'
-            if name_key in service_data:
+        for index, url_key in enumerate(url_keys):
+            if url_key in service_data:
                 url = service_data[url_key]
                 extension = self._get_document_extension(url)
                 documents.append({
-                    'name':  names[idx],
-                    'url': url,
+                    'name':  names[index],
+                    'url': self._replace_whitespace(url, '%20'),
                     'extension': extension
                 })
+
+        # get additional documents, if they exist
+        if 'additionalDocumentURLs' in service_data:
+            for document_url in service_data['additionalDocumentURLs']:
+                extension = self._get_document_extension(document_url)
+                name = self._get_document_name_without_extension(document_url)
+                documents.append({
+                    'name':  name,
+                    'url': self._replace_whitespace(document_url, '%20'),
+                    'extension': extension
+                })
+
         return documents
 
     def get_price_caveats(self, service_data):
@@ -280,9 +290,17 @@ class Meta(object):
             caveats.append(options)
         return caveats
 
+    def _get_document_name_without_extension(self, document_url):
+        document_basename = os.path.basename(urlparse(document_url).path)
+        return os.path.splitext(document_basename)[0]
+
     def _get_document_extension(self, document_url):
         url_object = urlparse(document_url)
         return os.path.splitext(url_object.path)[1].split('.')[1]
+
+    def _replace_whitespace(self, string, replacement_substring):
+                # Replace all runs of whitespace with replacement_substring
+                return re.sub(r"\s+", replacement_substring, string)
 
     def _if_both_keys_or_either(self, service_data, keys=[], values={}):
         def is_not_false(key):

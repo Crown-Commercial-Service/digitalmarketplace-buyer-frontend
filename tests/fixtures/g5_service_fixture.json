@@ -1,0 +1,46 @@
+{
+  "services": {
+    "id": "5-G2-0123-456",
+    "serviceName": "Blogging platform",
+    "title": "Blogging platform",
+    "serviceSummary": "Blogging platform is a free and open-source blogging tool and a content management system CMS based on PHP and MySQL. Features include a plugin architecture and a template system.",
+    "priceMin": 85,
+    "priceUnit": "Single website",
+    "priceString": "\u00a85 per year",
+    "supplierId": 123456,
+    "supplierName": "Example Company Limited",
+    "status": "published",
+    "lot": "IaaS",
+    "serviceTypes": [
+      "Compute",
+      "Storage"
+    ],
+    "minimumContractPeriod": "Month",
+    "freeOption": false,
+    "trialOption": false,
+    "terminationCost": false,
+    "networksConnected": [
+      "Internet"
+    ],
+    "apiAccess": false,
+    "openStandardsSupported": true,
+    "openSource": false,
+    "serviceOffboarding": true,
+    "serviceOnboarding": true,
+    "dataExtractionRemoval": true,
+    "datacentresEUCode": true,
+    "datacentreTier": "TIA-942 Tier 3",
+    "dataBackupRecovery": true,
+    "selfServiceProvisioning": false,
+    "supportForThirdParties": true,
+    "educationPricing": true,
+    "pricingDocumentURL": "http://assets-production.govstore.service.gov.uk/G5/Supplier/someId/Pricing Document.docx",
+    "serviceDefinitionDocumentURL": "http://assets-production.govstore.service.gov.uk/G5/Supplier/someId/Service Definition.docx",
+    "sfiaRateDocumentURL": "http://assets-production.govstore.service.gov.uk/G5/Supplier/someId/Rate card.docx",
+    "termsAndConditionsDocumentURL": "http://assets-production.govstore.service.gov.uk/G5/Supplier/someId/TandC_data_collection.doc",
+    "additionalDocumentURLs": [
+      "http://assets-production.govstore.service.gov.uk/G5/Supplier/someId/Appendix 1.pdf",
+      "http://assets-production.govstore.service.gov.uk/G5/Supplier/someId/Appendix 2.pdf"
+    ]
+  }
+}
