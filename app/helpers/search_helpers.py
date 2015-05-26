@@ -70,7 +70,9 @@ def pagination(num_services, page_size, page=None):
     if page and page > 1:
         show_prev = True
 
-    if (page is None and total > 1) or (total > 1 and page < total):
+    if page and (total > 1 and page < total):
+        show_next = True
+    elif not page and total > 1:
         show_next = True
 
     return {
