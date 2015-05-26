@@ -63,7 +63,10 @@ class TestSearchResults(BaseApplicationTest):
         res = self.client.get('/g-cloud/search?lot=saas')
         assert_equal(200, res.status_code)
         assert_false(
-            'previous-next-navigation'
+            '<li class="next">'
+            in res.get_data(as_text=True))
+        assert_false(
+            '<li class="previous">'
             in res.get_data(as_text=True))
 
     def test_should_render_pagination_link_on_first_results_page(self):

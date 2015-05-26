@@ -4,22 +4,6 @@ from werkzeug.datastructures import MultiDict
 from app.helpers import search_helpers
 
 
-def test_should_show_pagination():
-    assert_true(search_helpers.pagination(101, 100)["show_pagination"])
-
-
-def test_should_hide_pagination():
-    assert_false(search_helpers.pagination(99, 100)["show_pagination"])
-
-
-def test_should_indicate_valid_page():
-    assert_false(search_helpers.pagination(101, 100, 2)["pagination_error"])
-
-
-def test_should_indicate_invalid_page():
-    assert_true(search_helpers.pagination(101, 100, 3)["pagination_error"])
-
-
 def test_should_hide_both_next_and_prev_if_less_services_than_page():
     assert_false(search_helpers.pagination(50, 100)["show_prev"])
     assert_false(search_helpers.pagination(50, 100)["show_next"])
@@ -33,6 +17,10 @@ def test_should_show_prev_if_after_page_one():
     assert_true(search_helpers.pagination(101, 100, 2)["show_prev"])
 
 
+def test_should_show_prev_if_last_page():
+    assert_true(search_helpers.pagination(201, 100, 2)["show_prev"])
+
+
 def test_show_next():
     assert_true(search_helpers.pagination(101, 100,)["show_next"])
     assert_true(search_helpers.pagination(101, 100, 1)["show_next"])
@@ -40,6 +28,10 @@ def test_show_next():
 
 def test_hide_next_if_last_page():
     assert_false(search_helpers.pagination(101, 100, 2)["show_next"])
+
+
+def test_show_prev_as_last_page_if_too_big_page():
+    assert_true(search_helpers.pagination(101, 100, 20)["show_prev"])
 
 
 def test_set_total_pages():

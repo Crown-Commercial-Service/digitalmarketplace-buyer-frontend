@@ -61,9 +61,11 @@ def pagination(num_services, page_size, page=None):
     if page and page > 1:
         prev_page = page - 1
 
+    if page and page > total:
+        prev_page = total
+
     return {
         "total_pages": total,
-        "show_pagination": (num_services > page_size) and (page < total),
         "show_prev": page > 1,
         "show_next": total > 1 and page < total,
         "next_page": next_page,
