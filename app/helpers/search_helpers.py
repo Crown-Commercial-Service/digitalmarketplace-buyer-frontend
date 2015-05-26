@@ -64,13 +64,22 @@ def pagination(num_services, page_size, page=None):
     if page and page > total:
         prev_page = total
 
+    show_prev = False
+    show_next = False
+
+    if page > 1:
+        show_prev = True
+
+    if total > 1 and page < total:
+        show_next = True
+
     return {
         "total_pages": total,
-        "show_prev": page > 1,
-        "show_next": total > 1 and page < total,
+        "show_prev": show_prev,
+        "show_next": show_next,
         "next_page": next_page,
         "prev_page": prev_page,
-    }
+        }
 
 
 def valid_page(page):
