@@ -159,11 +159,6 @@ class TestSearchSummary(unittest.TestCase):
             Markup(
                 u"<span class='search-summary-count'>0</span> results found"))
 
-    def test_search_summary_for_multiple_results(self):
-        search_summary = SearchSummary(9, self.request_args, filter_groups)
-        self.assertEqual(search_summary.markup(), Markup(
-            u"<span class='search-summary-count'>9</span> results found"))
-
     def test_search_summary_for_single_result(self):
         search_summary = SearchSummary(1, self.request_args, filter_groups)
         self.assertEqual(
@@ -229,7 +224,7 @@ class TestSearchSummary(unittest.TestCase):
                 u" and in the categories <em>Collaboration</em> and" +
                 u" <em>Energy and environment</em>"))
 
-    def test_search_summary_with_three_filters(self):
+    def test_search_summary_with_three_filter_groups(self):
         self.request_args.setlist(
             'serviceTypes',
             ['collaboration', 'energy and environment']
@@ -256,6 +251,31 @@ class TestSearchSummary(unittest.TestCase):
                 u" with a <em>Trial option</em> and <em>Free option</em>" +
                 u" and in the categories <em>Collaboration</em> and" +
                 u" <em>Energy and environment</em>"))
+
+    def test_search_summary_orders_filter_groups_as_in_manifest(self):
+        self.request_args.setlist(
+            'serviceTypes',
+            ['collaboration', 'energy and environment']
+        )
+        self.request_args.setlist(
+            'datacentreTier',
+            ['tia-942 tier 1', 'uptime institute tier 1']
+        )
+        self.request_args.setlist(
+            'freeOption',
+            ['true']
+        )
+        self.request_args.setlist(
+            'trialOption',
+            ['true']
+        )
+        search_summary = SearchSummary(9, self.request_args, filter_groups)
+        correct_order = [
+            'Categories', 'Pricing', 'Datacentre Tier'
+        ]
+        order_of_groups_of_filters = [
+            fragment.id for fragment in search_summary.filters_fragments]
+        self.assertEqual(order_of_groups_of_filters, correct_order)
 
 
 class TestSummaryRules(unittest.TestCase):
