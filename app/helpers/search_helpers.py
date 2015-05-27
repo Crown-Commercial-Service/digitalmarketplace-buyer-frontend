@@ -64,7 +64,7 @@ def pagination(num_services, page_size, page=None):
         # prev page is page - 1 OR last page if page beyond upper bound
         if page > 1:
             prev_page = page - 1
-        elif page > total_num_pages:
+        if page > total_num_pages:
             prev_page = total_num_pages
 
         # show previous link if after page 1

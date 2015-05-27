@@ -46,10 +46,11 @@ def test_should_set_next_page():
     assert_equal(search_helpers.pagination(201, 100, 2)["next_page"], 3)
 
 
-def test_should_set_next_page():
+def test_should_set_prev_page():
     assert_equal(search_helpers.pagination(99, 100)["prev_page"], None)
     assert_equal(search_helpers.pagination(101, 100, 2)["prev_page"], 1)
     assert_equal(search_helpers.pagination(301, 100, 3)["prev_page"], 2)
+    assert_equal(search_helpers.pagination(301, 100, 100)["prev_page"], 4)
 
 
 def test_should_strip_page_from_multidict():
