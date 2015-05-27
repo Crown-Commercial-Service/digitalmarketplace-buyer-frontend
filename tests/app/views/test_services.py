@@ -92,10 +92,13 @@ class TestServicePage(BaseApplicationTest):
 
         service_id = self.service['services']['id']
 
-        res = self.client.get('services/{}'.format(service_id))
+        service_id_string = "{}".format(service_id)
+        res = self.client.get('service/{}'.format(service_id_string.lower()))
         assert_equal(301, res.status_code)
         assert_equal(
-            'http://localhost/g-cloud/services/{}'.format(service_id),
+            'http://localhost/g-cloud/services/{}'.format(
+                service_id_string.upper()
+            ),
             res.location)
 
     def test_g5_service_page_url(self):
