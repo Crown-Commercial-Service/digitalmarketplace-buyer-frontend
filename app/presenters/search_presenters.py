@@ -4,6 +4,7 @@ import yaml
 from flask import Markup
 from werkzeug.datastructures import MultiDict
 from ..helpers.questions import QuestionsLoader
+from ..helpers.search_helpers import get_lot_label
 
 
 class SearchFilters(object):
@@ -226,6 +227,8 @@ class SearchSummary(object):
     COUNT_POST_TAG = "</span>"
     KEYWORDS_PRE_TAG = "<em>"
     KEYWORDS_POST_TAG = "</em>"
+    LOT_PRE_TAG = '<em>'
+    LOT_POST_TAG = '</em>'
 
     @staticmethod
     def write_parts_as_sentence(parts):
@@ -264,18 +267,23 @@ class SearchSummary(object):
                 )
 
     def _set_initial_sentence(self, results_total, request_args):
-        template = u"{} found containing {}"
+        template = u"{} found containing {} in {}"
         keywords = u"{}&ldquo;{}&rdquo;{}".format(
             SearchSummary.KEYWORDS_PRE_TAG,
             request_args.get('q', '', type=str),
             SearchSummary.KEYWORDS_POST_TAG
         )
+        lot = u"{}{}{}".format(
+            SearchSummary.LOT_PRE_TAG,
+            get_lot_label(request_args.get('lot', 'all', type=str)),
+            SearchSummary.LOT_POST_TAG
+        )
         if int(results_total) == 1:
             self.count = '1'
-            self.sentence = template.format(u"result", keywords)
+            self.sentence = template.format(u"result", keywords, lot)
         else:
             self.count = results_total
-            self.sentence = template.format(u"results", keywords)
+            self.sentence = template.format(u"results", keywords, lot)
 
     def markup(self):
 
