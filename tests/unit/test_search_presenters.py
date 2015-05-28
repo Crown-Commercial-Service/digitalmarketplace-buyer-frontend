@@ -159,8 +159,8 @@ class TestSearchSummary(unittest.TestCase):
         self.assertEqual(
             search_summary.markup(),
             Markup(
-                u"<span class='search-summary-count'>1</span> results found" +
-                u" containing &ldquo;email&rdquo;"))
+                u"<span class='search-summary-count'>1</span> result found" +
+                u" containing <em>&ldquo;email&rdquo;</em>"))
 
     def test_search_summary_works_with_blank_keywords(self):
         self.request_args.setlist('q', [''])
@@ -168,8 +168,8 @@ class TestSearchSummary(unittest.TestCase):
         self.assertEqual(
             search_summary.markup(),
             Markup(
-                u"<span class='search-summary-count'>1</span> results found" +
-                u" containing &ldquo;&rdquo;"))
+                u"<span class='search-summary-count'>1</span> result found" +
+                u" containing <em>&ldquo;&rdquo;</em>"))
 
     def test_search_summary_works_with_none(self):
         search_summary = SearchSummary(0, self.request_args, filter_groups)
@@ -177,7 +177,7 @@ class TestSearchSummary(unittest.TestCase):
             search_summary.markup(),
             Markup(
                 u"<span class='search-summary-count'>0</span> results found" +
-                u" containing &ldquo;email&rdquo;"))
+                u" containing <em>&ldquo;email&rdquo;</em>"))
 
     def test_search_summary_for_single_result(self):
         search_summary = SearchSummary(1, self.request_args, filter_groups)
@@ -185,13 +185,13 @@ class TestSearchSummary(unittest.TestCase):
             search_summary.markup(),
             Markup(
                 u"<span class='search-summary-count'>1</span> result found" +
-                u" containing &ldquo;email&rdquo;"))
+                u" containing <em>&ldquo;email&rdquo;</em>"))
 
     def test_search_summary_for_multiple_results(self):
         search_summary = SearchSummary(9, self.request_args, filter_groups)
         self.assertEqual(search_summary.markup(), Markup(
             u"<span class='search-summary-count'>9</span> results found" +
-            u" containing &ldquo;email&rdquo;"))
+            u" containing <em>&ldquo;email&rdquo;</em>"))
 
     def test_search_summary_with_a_single_filter(self):
         self.request_args.setlist('serviceTypes', ['collaboration'])
@@ -200,7 +200,7 @@ class TestSearchSummary(unittest.TestCase):
             search_summary.markup(),
             Markup(
                 u"<span class='search-summary-count'>9</span> results found" +
-                u" containing &ldquo;email&rdquo;" +
+                u" containing <em>&ldquo;email&rdquo;</em>" +
                 u" in the category <em>Collaboration</em>"))
 
     def test_search_summary_with_a_group_of_two_filters(self):
@@ -212,7 +212,7 @@ class TestSearchSummary(unittest.TestCase):
             search_summary.markup(),
             Markup(
                 u"<span class='search-summary-count'>9</span> results found" +
-                u" containing &ldquo;email&rdquo;" +
+                u" containing <em>&ldquo;email&rdquo;</em>" +
                 u" in the categories <em>Collaboration</em> and" +
                 u" <em>Energy and environment</em>"))
 
@@ -226,7 +226,7 @@ class TestSearchSummary(unittest.TestCase):
             search_summary.markup(),
             Markup(
                 u"<span class='search-summary-count'>9</span> results found" +
-                u" containing &ldquo;email&rdquo;" +
+                u" containing <em>&ldquo;email&rdquo;</em>" +
                 u" in the categories <em>Collaboration</em>," +
                 u" <em>Energy and environment</em> and <em>Healthcare</em>"))
 
@@ -244,7 +244,7 @@ class TestSearchSummary(unittest.TestCase):
             search_summary.markup(),
             Markup(
                 u"<span class='search-summary-count'>9</span> results found" +
-                u" containing &ldquo;email&rdquo;" +
+                u" containing <em>&ldquo;email&rdquo;</em>" +
                 u" with a datacentre tier of <em>TIA-942 Tier 1" +
                 u"</em> or <em>Uptime Institute Tier 1</em>" +
                 u" and in the categories <em>Collaboration</em> and" +
@@ -272,7 +272,7 @@ class TestSearchSummary(unittest.TestCase):
             search_summary.markup(),
             Markup(
                 u"<span class='search-summary-count'>9</span> results found" +
-                u" containing &ldquo;email&rdquo;" +
+                u" containing <em>&ldquo;email&rdquo;</em>" +
                 u" with a datacentre tier of <em>TIA-942 Tier 1" +
                 u"</em> or <em>Uptime Institute Tier 1</em>," +
                 u" with a <em>Trial option</em> and <em>Free option</em>" +

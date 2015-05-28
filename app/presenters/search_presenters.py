@@ -224,6 +224,8 @@ class SearchSummary(object):
 
     COUNT_PRE_TAG = "<span class='search-summary-count'>"
     COUNT_POST_TAG = "</span>"
+    KEYWORDS_PRE_TAG = "<em>"
+    KEYWORDS_POST_TAG = "</em>"
 
     @staticmethod
     def write_parts_as_sentence(parts):
@@ -241,16 +243,10 @@ class SearchSummary(object):
             formatted_conjunction = " {} ".format(final_conjunction)
             return formatted_conjunction.join([u', '.join(start), end])
 
-    def __init__(self, results_total, request_filters, filter_groups):
-        template = u"{} found"
-        if int(results_total) == 1:
-            self.count = '1'
-            self.sentence = template.format(u"result")
-        else:
-            self.count = results_total
-            self.sentence = template.format(u"results")
+    def __init__(self, results_total, request_args, filter_groups):
+        self._set_initial_sentence(results_total, request_args)
         self.filter_groups = self._group_request_filters(
-            request_filters,
+            request_args,
             filter_groups
         )
         self.filters_fragments = []
@@ -264,6 +260,27 @@ class SearchSummary(object):
                         filters=filters,
                         rules=group_rules)
                 )
+
+    def _set_initial_sentence(self, results_total, request_args):
+
+        def _format_arg(arg):
+            if len(arg) > 0:
+                return arg[0]
+            else:
+                return u""
+
+        template = u"{} found containing {}"
+        keywords = u"{}&ldquo;{}&rdquo;{}".format(
+            SearchSummary.KEYWORDS_PRE_TAG,
+            _format_arg(request_args.get('q', [], type=list)),
+            SearchSummary.KEYWORDS_POST_TAG
+        )
+        if int(results_total) == 1:
+            self.count = '1'
+            self.sentence = template.format(u"result", keywords)
+        else:
+            self.count = results_total
+            self.sentence = template.format(u"results", keywords)
 
     def markup(self):
 
@@ -286,7 +303,7 @@ class SearchSummary(object):
             self.sentence
         )
 
-    def _group_request_filters(self, request_filters, filter_groups):
+    def _group_request_filters(self, request_args, filter_groups):
         """arranges the filters from the request into filter groups"""
 
         def _is_option(values):
@@ -318,7 +335,7 @@ class SearchSummary(object):
                 groups[group_name].append(option_label)
 
         groups = {}
-        for filter_mapping in request_filters.lists():
+        for filter_mapping in request_args.lists():
             filter, values = filter_mapping
             if filter == 'lot' or filter == 'q':
                 continue

@@ -231,7 +231,7 @@ def search():
     )
     search_summary = SearchResults.get_search_summary(
         response['meta']['total'],
-        search_filters_obj.request_filters,
+        request.args,
         search_filters_obj.filter_groups)
 
     breadcrumb = [
