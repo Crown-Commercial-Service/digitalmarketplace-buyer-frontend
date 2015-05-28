@@ -1,7 +1,12 @@
 {
-  "query": {
-    "page": "20",
-    "q": "email"
+    "meta": {
+    "query": {
+      "q": "CDN",
+      "filter_lot": "saas",
+      "page": "20"
+    },
+    "total": 19981,
+    "took": 13
   },
   "services": [
     {
