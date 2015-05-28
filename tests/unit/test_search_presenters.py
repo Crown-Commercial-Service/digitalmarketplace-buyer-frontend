@@ -245,10 +245,10 @@ class TestSearchSummary(unittest.TestCase):
             Markup(
                 u"<span class='search-summary-count'>9</span> results found" +
                 u" containing <em>&ldquo;email&rdquo;</em>" +
+                u" in the categories <em>Collaboration</em> and" +
+                u" <em>Energy and environment</em> and"
                 u" with a datacentre tier of <em>TIA-942 Tier 1" +
-                u"</em> or <em>Uptime Institute Tier 1</em>" +
-                u" and in the categories <em>Collaboration</em> and" +
-                u" <em>Energy and environment</em>"))
+                u"</em> or <em>Uptime Institute Tier 1</em>"))
 
     def test_search_summary_with_three_filter_groups(self):
         self.request_args.setlist(
@@ -273,11 +273,11 @@ class TestSearchSummary(unittest.TestCase):
             Markup(
                 u"<span class='search-summary-count'>9</span> results found" +
                 u" containing <em>&ldquo;email&rdquo;</em>" +
+                u" in the categories <em>Collaboration</em> and" +
+                u" <em>Energy and environment</em>," +
+                u" with a <em>Trial option</em> and <em>Free option</em> and" +
                 u" with a datacentre tier of <em>TIA-942 Tier 1" +
-                u"</em> or <em>Uptime Institute Tier 1</em>," +
-                u" with a <em>Trial option</em> and <em>Free option</em>" +
-                u" and in the categories <em>Collaboration</em> and" +
-                u" <em>Energy and environment</em>"))
+                u"</em> or <em>Uptime Institute Tier 1</em>"))
 
     def test_search_summary_orders_filter_groups_as_in_manifest(self):
         self.request_args.setlist(
@@ -298,7 +298,7 @@ class TestSearchSummary(unittest.TestCase):
         )
         search_summary = SearchSummary(9, self.request_args, filter_groups)
         correct_order = [
-            'Categories', 'Pricing', 'Datacentre Tier'
+            'Categories', 'Pricing', 'Datacentre tier'
         ]
         order_of_groups_of_filters = [
             fragment.id for fragment in search_summary.filters_fragments]

@@ -251,7 +251,9 @@ class SearchSummary(object):
         )
         self.filters_fragments = []
         SummaryRules.load_rules()
-        for group_id, filters in self.filter_groups.items():
+        for group in self.filter_groups:
+            group_id = group[0]
+            filters = group[1]
             group_rules = SummaryRules(group_id)
             if group_rules.exist is True:
                 self.filters_fragments.append(
@@ -334,6 +336,14 @@ class SearchSummary(object):
             else:
                 groups[group_name].append(option_label)
 
+        def _sort_groups(groups):
+            sorted_groups = []
+            filter_group_order = [group['label'] for group in filter_groups]
+            for group in filter_group_order:
+                if group in groups:
+                    sorted_groups.append((group, groups[group]))
+            return sorted_groups
+
         groups = {}
         for filter_mapping in request_args.lists():
             filter, values = filter_mapping
@@ -346,7 +356,7 @@ class SearchSummary(object):
                 group_name = _get_group_label_for_option(filter)
                 groups[group_name] = [
                     _get_label_for_string_option(value) for value in values]
-        return groups
+        return _sort_groups(groups)
 
 
 class SummaryRules(object):
