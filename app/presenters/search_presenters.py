@@ -219,7 +219,7 @@ class SearchResults(object):
     def __init__(self, response):
         self.search_results = response['services']
         self._add_highlighting()
-        self.summary = self._get_search_summary(response['total'])
-        self.total = response['total']
-        if 'page' in response['query']:
-            self.page = response['query']['page']
+        self.summary = self._get_search_summary(response['meta']['total'])
+        self.total = response['meta']['total']
+        if 'page' in response['meta']['query']:
+            self.page = response['meta']['query']['page']
