@@ -4,17 +4,18 @@
 
 {% block main_content %}
 <header class="page-heading">
-  <h1>Search results</h1>
+        <h1>Search results</h1>
 </header>
 <form action="{{ url_for('.search') }}" method="get">
-  <div class="grid-row">
-    <div class="column-one-third search-page-filters">
-    {% include '_search_filters.html' %}
+    <div class="grid-row">
+        <div class="column-one-third search-page-filters">
+            {% include '_search_filters.html' %}
+        </div>
+        <div class="column-two-thirds">
+            {% include '_search_summary.html' %}
+            {% include '_search_results.html' %}
+            {% include '_search_pagination.html' %}
+        </div>
     </div>
-    <div class="column-two-thirds">
-    {% include '_search_summary.html' %}
-    {% include '_search_results.html' %}
-    </div>
-  </div>
 </form>
 {% endblock %}

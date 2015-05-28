@@ -1,6 +1,7 @@
 import os
 import json
 import unittest
+from nose.tools import assert_equal, assert_is_none
 
 from flask import Markup
 from app.presenters.search_presenters import SearchResults
@@ -17,6 +18,17 @@ def _get_fixture_data():
         return json.load(fixture_file)
 
 
+def _get_fixture_multiple_pages_data():
+    test_root = os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "..")
+    )
+    fixture_path = os.path.join(
+        test_root, 'fixtures', 'search_results_multiple_pages_fixture.json'
+    )
+    with open(fixture_path) as fixture_file:
+        return json.load(fixture_file)
+
+
 class TestSearchResults(unittest.TestCase):
 
     def _get_service_result_by_id(self, results, id):
@@ -27,6 +39,7 @@ class TestSearchResults(unittest.TestCase):
 
     def setUp(self):
         self.fixture = _get_fixture_data()
+        self.multiple_pages_fixture = _get_fixture_multiple_pages_data()
         self.service = SearchResults(self.fixture)
 
     def tearDown(self):
@@ -35,6 +48,20 @@ class TestSearchResults(unittest.TestCase):
     def test_search_results_is_set(self):
         search_results_instance = SearchResults(self.fixture)
         self.assertTrue(hasattr(search_results_instance, 'search_results'))
+
+    def test_search_results_total_is_set(self):
+        search_results_instance = SearchResults(self.fixture)
+        self.assertTrue(hasattr(search_results_instance, 'total'))
+        assert_equal(search_results_instance.total, 9)
+
+    def test_search_results_page_is_not_set(self):
+        search_results_instance = SearchResults(self.fixture)
+        self.assertFalse(hasattr(search_results_instance, 'page'))
+
+    def test_search_results_page_is_set(self):
+        search_results_instance = SearchResults(self.multiple_pages_fixture)
+        self.assertTrue(hasattr(search_results_instance, 'page'))
+        assert_equal(search_results_instance.page, "20")
 
     def test_highlighting_for_one_line_summary(self):
         search_results_instance = SearchResults(self.fixture)

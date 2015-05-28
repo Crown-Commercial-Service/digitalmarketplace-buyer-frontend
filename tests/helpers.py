@@ -27,6 +27,12 @@ class BaseApplicationTest(object):
         )
 
     @staticmethod
+    def _get_search_results_multiple_page_fixture_data():
+        return BaseApplicationTest._get_fixture_data(
+            'search_results_multiple_pages_fixture.json'
+        )
+
+    @staticmethod
     def _get_g5_service_fixture_data():
         return BaseApplicationTest._get_fixture_data('g5_service_fixture.json')
 
