@@ -320,7 +320,7 @@ class SearchSummary(object):
         groups = {}
         for filter_mapping in request_filters.lists():
             filter, values = filter_mapping
-            if filter == 'lot':
+            if filter == 'lot' or filter == 'q':
                 continue
             if _is_option(values):
                 group_name = _get_group_label_for_option(filter)
@@ -382,6 +382,7 @@ class SummaryFragment(object):
     FINAL_CONJUNCTION = u'and'
 
     def __init__(self, group_id, filters, rules):
+        self.id = group_id
         self.rules = rules
         self.form = 'singular'
         if len(filters) > 1:
