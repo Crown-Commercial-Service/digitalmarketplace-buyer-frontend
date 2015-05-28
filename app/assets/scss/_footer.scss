@@ -87,13 +87,20 @@
 
   }
 
-  .footer-meta .footer-meta-inner .open-government-licence p {
-
-    padding-bottom: 0;
-
-    a {
-      font-size: 16px;
+  .footer-meta .footer-meta-inner {
+    a[rel='external'] {
+      @include external-link-16;
     }
+
+    .open-government-licence p {
+
+      padding-bottom: 0;
+
+      a {
+        font-size: 16px;
+      }
+    }
+
   }
 
 }
