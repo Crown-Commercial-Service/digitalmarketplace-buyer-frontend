@@ -264,17 +264,10 @@ class SearchSummary(object):
                 )
 
     def _set_initial_sentence(self, results_total, request_args):
-
-        def _format_arg(arg):
-            if len(arg) > 0:
-                return arg[0]
-            else:
-                return u""
-
         template = u"{} found containing {}"
         keywords = u"{}&ldquo;{}&rdquo;{}".format(
             SearchSummary.KEYWORDS_PRE_TAG,
-            _format_arg(request_args.get('q', [], type=list)),
+            request_args.get('q', '', type=str),
             SearchSummary.KEYWORDS_POST_TAG
         )
         if int(results_total) == 1:

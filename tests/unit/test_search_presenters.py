@@ -114,8 +114,8 @@ class TestSearchSummary(unittest.TestCase):
         self.fixture = _get_fixture_data()
         self.search_results = SearchResults(self.fixture)
         self.request_args = MultiDict([
-            ('lot', ['saas']),
-            ('q', ['email'])])
+            ('lot', 'saas'),
+            ('q', 'email')])
 
     def tearDown(self):
         pass
