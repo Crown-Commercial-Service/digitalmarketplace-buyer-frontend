@@ -1,5 +1,5 @@
 <p class="service-summary-lede">{{ service.serviceSummary }}</p>
-{% if service.features%}
+{% if service.features %}
 <h2 class="service-summary-heading">Features</h2>
 <ul class="service-summary-features-and-benefits">
 {% for feature in service.features %}
@@ -7,7 +7,7 @@
 {% endfor %}
 </ul>
 {% endif %}
-{% if service.benefits%}
+{% if service.benefits %}
 <h2 class="service-summary-heading">Benefits</h2>
 <ul class="service-summary-features-and-benefits">
     {% for benefit in service.benefits %}
@@ -15,3 +15,4 @@
 {% endfor %}
 {% endif %}
 </ul>
+{% endif %}

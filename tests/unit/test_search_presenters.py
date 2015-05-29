@@ -1,9 +1,9 @@
 import os
 import json
 import unittest
+from nose.tools import assert_equal, assert_is_none
 
 from flask import Markup
-from mock import Mock
 from app.presenters.search_presenters import SearchResults
 
 
@@ -13,6 +13,17 @@ def _get_fixture_data():
     )
     fixture_path = os.path.join(
         test_root, 'fixtures', 'search_results_fixture.json'
+    )
+    with open(fixture_path) as fixture_file:
+        return json.load(fixture_file)
+
+
+def _get_fixture_multiple_pages_data():
+    test_root = os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "..")
+    )
+    fixture_path = os.path.join(
+        test_root, 'fixtures', 'search_results_multiple_pages_fixture.json'
     )
     with open(fixture_path) as fixture_file:
         return json.load(fixture_file)
@@ -28,6 +39,7 @@ class TestSearchResults(unittest.TestCase):
 
     def setUp(self):
         self.fixture = _get_fixture_data()
+        self.multiple_pages_fixture = _get_fixture_multiple_pages_data()
         self.service = SearchResults(self.fixture)
 
     def tearDown(self):
@@ -36,6 +48,20 @@ class TestSearchResults(unittest.TestCase):
     def test_search_results_is_set(self):
         search_results_instance = SearchResults(self.fixture)
         self.assertTrue(hasattr(search_results_instance, 'search_results'))
+
+    def test_search_results_total_is_set(self):
+        search_results_instance = SearchResults(self.fixture)
+        self.assertTrue(hasattr(search_results_instance, 'total'))
+        assert_equal(search_results_instance.total, 9)
+
+    def test_search_results_page_is_not_set(self):
+        search_results_instance = SearchResults(self.fixture)
+        self.assertFalse(hasattr(search_results_instance, 'page'))
+
+    def test_search_results_page_is_set(self):
+        search_results_instance = SearchResults(self.multiple_pages_fixture)
+        self.assertTrue(hasattr(search_results_instance, 'page'))
+        assert_equal(search_results_instance.page, "20")
 
     def test_highlighting_for_one_line_summary(self):
         search_results_instance = SearchResults(self.fixture)
@@ -101,9 +127,19 @@ class TestSearchSummary(unittest.TestCase):
     def test_search_results_works_with_single(self):
         single_result = self.fixture.copy()
         single_result['services'] = [single_result['services'][0]]
-        single_result['total'] = '1'
+        single_result['meta']['total'] = '1'
         search_results_instance = SearchResults(single_result)
         self.assertEqual(
             search_results_instance.summary,
             Markup(
                 u"<span class='search-summary-count'>1</span> result found"))
+
+    def test_search_results_works_with_none(self):
+        empty_result = self.fixture.copy()
+        empty_result['services'] = []
+        empty_result['meta']['total'] = '0'
+        search_results_instance = SearchResults(empty_result)
+        self.assertEqual(
+            search_results_instance.summary,
+            Markup(
+                u"<span class='search-summary-count'>0</span> results found"))

@@ -16,10 +16,14 @@ var govukTemplateAssetsFolder = repoRoot + 'bower_components/govuk_template/asse
 
 // JavaScript paths
 var jsVendorFiles = [
+  govukToolkitRoot + '/javascripts/govuk/analytics/tracker.js',
+  govukToolkitRoot + '/javascripts/govuk/analytics/google-analytics-universal-tracker.js',
+  govukToolkitRoot + '/javascripts/govuk/analytics/google-analytics-classic-tracker.js',
   bowerRoot + '/jquery/dist/jquery.js',
   bowerRoot + '/jquery-details/jquery.details.js'
 ];
 var jsSourceFiles = [
+  assetsFolder + '/javascripts/_analytics.js',
   dmToolkitRoot + '/javascripts/option-select.js',
   assetsFolder + '/javascripts/_onready.js'
 ];

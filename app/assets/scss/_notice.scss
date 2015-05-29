@@ -1,0 +1,40 @@
+.application-notice,
+.advisory.minor,
+.form-download,
+.subscribe {
+  padding: 0.25em 0 0.25em 3.5em;
+}
+
+.application-notice {
+  padding: 0.1em 0 0.1em 1em;
+}
+
+.help-notice p,
+.info-notice p,
+.subscribe p {
+  padding-right: 4em;
+}
+
+.info-notice {
+  background: none;
+  border-left: 10px solid $border-colour;
+  margin-bottom: 1em;
+  @extend %contain-floats;
+
+  p {
+    padding: 0 1em 0 0;
+  }
+
+  a[rel="external"] {
+    display: inline;
+  }
+}
+
+.help-notice p {
+  padding: 0 1em 0 2em;
+}
+
+p + .help-notice,
+p + .info-notice {
+  margin-top: 2em;
+}

@@ -8,17 +8,23 @@ except ImportError:
 
 
 class Service(object):
+    def _add_as_attribute_if_key_exists(self, key, service_data):
+        if key[0] in service_data:
+            setattr(self, key[1], service_data[key[0]])
+
     def __init__(self, service):
         service_data = service['services']
+        # required attributes directly mapped to service_data values
         self.title = service_data['serviceName']
-        if 'supplierName' in service_data:
-            self.supplierName = service_data['supplierName']
         self.serviceSummary = service_data['serviceSummary']
-        if 'serviceBenefits' in service_data:
-            self.benefits = service_data['serviceBenefits']
-        if 'serviceFeatures' in service_data:
-            self.features = service_data['serviceFeatures']
         self.lot = service_data['lot']
+        # optional attributes directly mapped to service_data values
+        for key in [
+            ('supplierName', 'supplierName'),
+            ('serviceFeatures', 'features'),
+            ('serviceBenefits', 'benefits')
+        ]:
+            self._add_as_attribute_if_key_exists(key, service_data)
         self.attributes = self._get_service_attributes(service_data)
         self.meta = self._get_service_meta(service_data)
 
@@ -180,17 +186,26 @@ class Meta(object):
         self.serviceId = self.get_service_id(service_data)
         self.documents = self.get_documents(service_data)
 
+    def set_contact_attribute(self, contactName, phone, email):
+        self.contact = {
+            'name': contactName,
+            'phone': phone,
+            'email': email
+        }
+
     def get_service_id(self, service_data):
-        return re.findall(
-            '....', str(service_data['id'])
-        )
+        id = service_data['id']
+        if re.findall("[a-zA-Z]", str(id)):
+            return [id]
+        else:
+            return re.findall("....", str(id))
 
     def get_documents(self, service_data):
-        keys = [
-            'pricingDocument',
-            'sfiaRateDocument',
-            'serviceDefinitionDocument',
-            'termsAndConditionsDocument'
+        url_keys = [
+            'pricingDocumentURL',
+            'sfiaRateDocumentURL',
+            'serviceDefinitionDocumentURL',
+            'termsAndConditionsDocumentURL'
         ]
         names = [
             'Pricing',
@@ -199,17 +214,27 @@ class Meta(object):
             'Terms and conditions'
         ]
         documents = []
-        for idx, key in enumerate(keys):
-            name_key = keys[idx]
-            url_key = name_key + 'URL'
-            if name_key in service_data:
+        for index, url_key in enumerate(url_keys):
+            if url_key in service_data:
                 url = service_data[url_key]
                 extension = self._get_document_extension(url)
                 documents.append({
-                    'name':  names[idx],
-                    'url': url,
+                    'name':  names[index],
+                    'url': self._replace_whitespace(url, '%20'),
                     'extension': extension
                 })
+
+        # get additional documents, if they exist
+        if 'additionalDocumentURLs' in service_data:
+            for document_url in service_data['additionalDocumentURLs']:
+                extension = self._get_document_extension(document_url)
+                name = self._get_document_name_without_extension(document_url)
+                documents.append({
+                    'name':  name,
+                    'url': self._replace_whitespace(document_url, '%20'),
+                    'extension': extension
+                })
+
         return documents
 
     def get_price_caveats(self, service_data):
@@ -265,9 +290,17 @@ class Meta(object):
             caveats.append(options)
         return caveats
 
+    def _get_document_name_without_extension(self, document_url):
+        document_basename = os.path.basename(urlparse(document_url).path)
+        return os.path.splitext(document_basename)[0]
+
     def _get_document_extension(self, document_url):
         url_object = urlparse(document_url)
         return os.path.splitext(url_object.path)[1].split('.')[1]
+
+    def _replace_whitespace(self, string, replacement_substring):
+                # Replace all runs of whitespace with replacement_substring
+                return re.sub(r"\s+", replacement_substring, string)
 
     def _if_both_keys_or_either(self, service_data, keys=[], values={}):
         def is_not_false(key):

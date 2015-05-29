@@ -49,7 +49,7 @@
         margin-top: $gutter-half;
 
       }
-    
+
       li {
         display: block;
         margin-bottom: 5px;
@@ -77,13 +77,30 @@
 
   }
 
-  .footer-meta .footer-meta-inner .open-government-licence p {
+  .footer-meta {
 
-    padding-bottom: 0;
-
-    a {
-      font-size: 16px;
+    .terms-and-conditions {
+      display: block;
+      @include core-16;
+      margin: 0 0 20px 0;
     }
+
+  }
+
+  .footer-meta .footer-meta-inner {
+    a[rel='external'] {
+      @include external-link-16;
+    }
+
+    .open-government-licence p {
+
+      padding-bottom: 0;
+
+      a {
+        font-size: 16px;
+      }
+    }
+
   }
 
 }

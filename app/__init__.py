@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request, redirect
 from flask.ext.bootstrap import Bootstrap
 from config import configs
 from dmutils import apiclient, logging, config
@@ -42,5 +42,19 @@ def create_app(config_name):
         },
         'FILTER_GROUPS': filter_groups
     }
+
+    @application.before_request
+    def remove_trailing_slash():
+        if request.path != '/' and request.path.endswith('/'):
+            if request.query_string:
+                return redirect(
+                    '{}?{}'.format(
+                        request.path[:-1],
+                        request.query_string.decode('utf-8')
+                    ),
+                    code=301
+                )
+            else:
+                return redirect(request.path[:-1], code=301)
 
     return application

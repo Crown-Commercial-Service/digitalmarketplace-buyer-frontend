@@ -25,14 +25,14 @@
   </p>
   <h2 class="visuallyhidden">Contact details</h2>
   <details class="contact">
-    <summary class="summary">Contact Fastnet International Ltd</summary>
+    <summary class="summary">Contact {{ service.supplierName }}</summary>
     <div class="indented">
       <ul>
         <li>
           {{ service.meta.contact.name }}
         </li>
         <li>
-          {{ service.meta.contact.phone }}
+          {{ service.meta.contact.phone if service.meta.contact.phone }}
         </li>
         <li>
           <a href="mailto:{{ service.meta.contact.email }}" data-event-category="Email a supplier" data-event-label="Fastnet International Ltd">{{ service.meta.contact.email }}</a>

@@ -1,7 +1,7 @@
 {% for service in services %}
 <div class="search-result">
-    <h2 class="search-result-title">
-        <a href="/service/{{ service.id }}">{{ service.serviceName }}</a>
+  <h2 class="search-result-title">
+        <a href="{{ url_for('.get_service_by_id', service_id=service.id) }}">{{ service.serviceName }}</a>
     </h2>
 
     <p class="search-result-supplier">
@@ -13,7 +13,17 @@
     </p>
     <ul aria-label="tags" class="search-result-metadata">
         <li class="search-result-metadata-item">
-            {{ service.lot }}
+        {% if service.lot == 'SaaS' %}
+            Software as a Service
+        {% elif service.lot == 'PaaS' %}
+            Platform as a Service
+        {% elif service.lot == 'IaaS' %}
+            Infrastructure as a Service
+        {% elif service.lot == 'SCS' %}
+            Specialist Cloud Services
+        {% else %}
+            Lot: {{ service.lot }}
+        {% endif %}
         </li>
         <li class="search-result-metadata-item">
             {{ service.frameworkName }}

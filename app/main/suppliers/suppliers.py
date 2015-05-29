@@ -23,8 +23,10 @@ def suppliers_list_by_prefix():
 
 @main.route('/suppliers/<supplier_id>')
 def suppliers_details(supplier_id):
-    supplier = data_api_client.get_supplier(supplier_id=supplier_id)["suppliers"]
-    services = data_api_client.find_services(supplier_id=supplier_id)["services"]
+    supplier = data_api_client.get_supplier(
+        supplier_id=supplier_id)["suppliers"]
+    services = data_api_client.find_services(
+        supplier_id=supplier_id)["services"]
 
     grouped_by_lot = {
         'IaaS': [],
@@ -46,5 +48,3 @@ def suppliers_details(supplier_id):
         services=grouped_by_lot,
         services_count=len(services),
         **template_data)
-
-
