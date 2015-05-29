@@ -1,5 +1,6 @@
 {
   "services": {
+    "status": "published",
     "analyticsAvailable": true,
     "apiAccess": false,
     "apiType": "RESTful",

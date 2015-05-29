@@ -110,9 +110,26 @@ class TestServicePage(BaseApplicationTest):
         self._assert_service_page_url()
 
     def test_g6_service_page_url(self):
-
         self.service = self._get_g6_service_fixture_data()
         self._data_api_client.get_service.return_value = self.service
 
         self._assert_redirect_deprecated_service_page_url()
         self._assert_service_page_url()
+
+    def test_enabled_service_not_displayed(self):
+        self.service = self._get_g6_service_fixture_data()
+        self.service['services']['status'] = 'enabled'
+        self._data_api_client.get_service.return_value = \
+            self.service
+        service_id = self.service['services']['id']
+        res = self.client.get('/g-cloud/services/{}'.format(service_id))
+        assert_equal(404, res.status_code)
+
+    def test_disabled_service_not_displayed(self):
+        self.service = self._get_g6_service_fixture_data()
+        self.service['services']['status'] = 'disabled'
+        self._data_api_client.get_service.return_value = \
+            self.service
+        service_id = self.service['services']['id']
+        res = self.client.get('/g-cloud/services/{}'.format(service_id))
+        assert_equal(404, res.status_code)
