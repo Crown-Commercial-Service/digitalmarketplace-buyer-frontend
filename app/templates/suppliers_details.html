@@ -28,8 +28,10 @@
         {{ client }},
         {% endfor %}
         {% endif %}
-	<hr/>
-        {% if services %}
+	
+	<hr />
+        
+	{% if services %}
         <h2>{{ services_count }} service(s)</h2>
 
         {% for lot in services.keys() %}
