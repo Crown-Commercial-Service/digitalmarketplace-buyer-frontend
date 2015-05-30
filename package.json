@@ -3,7 +3,7 @@
   "description" : "Front end application for the Digital Marketplace",
   "version" : "0.0.1",
   "private" : true,
-  "engine" : "node >= 0.10.0",
+  "engines" : "node >= 0.10.0",
   "dependencies" : {
     "bower": "1.4.1",
     "gulp" : "3.8.7",
@@ -19,6 +19,6 @@
     "frontend-build:development" : "./node_modules/gulp/bin/gulp.js build:development",
     "frontend-build:production" : "./node_modules/gulp/bin/gulp.js build:production",
     "frontend-build:watch" : "./node_modules/gulp/bin/gulp.js watch",
-    "postinstall": "npm run frontend-install"
+    "postinstall": "npm run frontend-install; npm run frontend-build:production"
   }
 }
