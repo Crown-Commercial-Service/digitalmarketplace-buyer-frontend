@@ -3,7 +3,7 @@
   "description" : "Front end application for the Digital Marketplace",
   "version" : "0.0.1",
   "private" : true,
-  "engines" : "node >= 0.10.0",
+  "engine" : "node >= 0.10.0",
   "dependencies" : {
     "bower": "1.4.1",
     "gulp" : "3.8.7",
