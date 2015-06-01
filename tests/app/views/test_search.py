@@ -1,6 +1,11 @@
 import mock
+import re
 from nose.tools import assert_equal, assert_true, assert_false
 from ...helpers import BaseApplicationTest
+
+
+def find_pagination_links(res_data):
+    return re.findall(r'<a href="(/g-cloud/search\?[^"]+)"', res_data)
 
 
 class TestSearchResults(BaseApplicationTest):
@@ -84,9 +89,10 @@ class TestSearchResults(BaseApplicationTest):
         assert_true(
             '<li class="next">'
             in res.get_data(as_text=True))
-        assert_true(
-            '<a href="/g-cloud/search?page=2&amp;lot=saas">'
-            in res.get_data(as_text=True))
+
+        (next_link,) = find_pagination_links(res.get_data(as_text=True))
+        assert_true('page=2' in next_link)
+        assert_true('lot=saas' in next_link)
 
     def test_should_render_pagination_link_on_second_results_page(self):
         self._search_api_client.search_services.return_value = \
@@ -103,12 +109,14 @@ class TestSearchResults(BaseApplicationTest):
         assert_true(
             '<li class="next">'
             in res.get_data(as_text=True))
-        assert_true(
-            '<a href="/g-cloud/search?page=1&amp;lot=saas">'
-            in res.get_data(as_text=True))
-        assert_true(
-            '<a href="/g-cloud/search?page=3&amp;lot=saas">'
-            in res.get_data(as_text=True))
+
+        (prev_link, next_link) = find_pagination_links(
+            res.get_data(as_text=True))
+
+        assert_true('page=1' in prev_link)
+        assert_true('lot=saas' in prev_link)
+        assert_true('page=3' in next_link)
+        assert_true('lot=saas' in next_link)
 
     def test_should_render_total_pages_on_pagination_links(self):
         self._search_api_client.search_services.return_value = \
@@ -141,6 +149,7 @@ class TestSearchResults(BaseApplicationTest):
         assert_false(
             '<li class="next">'
             in res.get_data(as_text=True))
-        assert_true(
-            '<a href="/g-cloud/search?page=199&amp;lot=saas">'
-            in res.get_data(as_text=True))
+
+        (prev_link,) = find_pagination_links(res.get_data(as_text=True))
+        assert_true('page=199' in prev_link)
+        assert_true('lot=saas' in prev_link)
