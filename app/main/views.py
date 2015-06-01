@@ -232,10 +232,10 @@ def search():
     )
 
     breadcrumb = [
-            {
-                'text': 'Cloud technology and support',
-                'link': url_for('.index_g_cloud')
-            }
+        {
+            'text': 'Cloud technology and support',
+            'link': url_for('.index_g_cloud')
+        }
     ]
 
     template_data = get_template_data(main, {
