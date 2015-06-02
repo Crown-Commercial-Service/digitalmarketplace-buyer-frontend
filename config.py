@@ -49,8 +49,14 @@ class Config(object):
         app.jinja_loader = jinja_loader
 
 
+class Test(Config):
+    DEBUG = True
+
+
 class Development(Config):
     DEBUG = True
+
+    DM_SEARCH_PAGE_SIZE = 5
 
 
 class Live(Config):
@@ -62,5 +68,5 @@ configs = {
     'preview': Live,
     'staging': Live,
     'production': Live,
-    'test': Development,
+    'test': Test,
 }
