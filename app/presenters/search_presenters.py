@@ -398,7 +398,10 @@ class SummaryRules(object):
 
     def _get_filter_preposition(self, filter):
         if hasattr(self, 'filter_rules_ids'):
-            index = self.filter_rules_ids.index(filter)
+            try:
+                index = self.filter_rules_ids.index(filter)
+            except:
+                return None
             return self._rules['filterRules'][index]['preposition']
 
 

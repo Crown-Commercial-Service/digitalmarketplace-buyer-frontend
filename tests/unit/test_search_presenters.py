@@ -370,12 +370,25 @@ class TestSummaryRules(unittest.TestCase):
             u"an <em>Hour</em>", summary_rules.add_filter_preposition(
                 filter_id='Hour', filter_string=u"<em>Hour</em>"))
 
-    def test_add_preposition_with_a_filter_without_one(self):
+    def test_add_preposition_with_a_filter_without_any_for_its_group(self):
         summary_rules = SummaryRules('Pricing')
         self.assertEqual(
             u"<em>Trial option</em>", summary_rules.add_filter_preposition(
                 filter_id='Trial option',
                 filter_string=u"<em>Trial option</em>"))
+
+    def test_add_preposition_with_a_filter_without_in_a_group_with_some(self):
+        SummaryRules._rules['Minimum contract period']['filterRules'].remove({
+            'preposition': 'an',
+            'id': 'Hour'
+        })
+        summary_rules = SummaryRules('Minimum contract period')
+        self.assertEqual(
+            u"<em>Hour</em>", summary_rules.add_filter_preposition(
+                filter_id='Hour',
+                filter_string=u"<em>Hour</em>"))
+        # Make SummaryRules to reload its data
+        SummaryRules.loaded = False
 
 
 class TestSummaryFragment(unittest.TestCase):
