@@ -56,6 +56,9 @@
   -
     preposition: there is
     id: Self-service provisioning supported
+  -
+    preposition: there is
+    id: Support accessible to any third-party suppliers
   conjunction: and
 -
   id: Datacentre tier
