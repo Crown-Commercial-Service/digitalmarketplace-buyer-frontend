@@ -2,7 +2,7 @@
 import mock
 import re
 from lxml import html
-from nose.tools import assert_equal, assert_true, assert_in
+from nose.tools import assert_equal, assert_in
 from ...helpers import BaseApplicationTest
 
 
