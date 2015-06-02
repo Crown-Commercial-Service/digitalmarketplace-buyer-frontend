@@ -44,9 +44,6 @@ def framework_g_cloud():
             {
                 'text': 'Cloud technology and support',
                 'link': url_for('.index_g_cloud')
-            },
-            {
-                'text': 'G-Cloud framework',
             }
         ]
     })
@@ -60,9 +57,6 @@ def framework_digital_services():
             {
                 'text': 'Specialists to work on digital projects',
                 'link': 'https://digitalservicesstore.service.gov.uk'
-            },
-            {
-                'text': 'Digital Services framework',
             }
         ]
     })
@@ -76,7 +70,7 @@ def index_crown_hosting():
     template_data = get_template_data(main, {
         'crumbs': [
             {
-                'text': 'Physical datacentre space for legacy systems',
+                'text': 'Physical datacentre space for legacy systems'
             }
         ]
     })
@@ -90,9 +84,6 @@ def framework_crown_hosting():
             {
                 'text': 'Physical datacentre space for legacy systems',
                 'link': url_for('.index_crown_hosting')
-            },
-            {
-                'text': 'Crown Hosting Data Centres framework',
             }
         ]
     })
@@ -104,11 +95,7 @@ def framework_crown_hosting():
 @main.route('/buyers-guide')
 def buyers_guide():
     template_data = get_template_data(main, {
-        'crumbs': [
-            {
-                'text': 'Buyers\' guide',
-            }
-        ]
+        'crumbs': []
     })
     return render_template('content/buyers-guide.html', **template_data)
 
@@ -125,9 +112,6 @@ def buyers_guide_g_cloud():
             {
                 'text': 'Cloud technology and support',
                 'link': url_for('.index_g_cloud')
-            },
-            {
-                'text': 'G-Cloud buyers\' guide',
             }
         ]
     })
@@ -143,9 +127,6 @@ def suppliers_guide_g_cloud():
             {
                 'text': 'Cloud technology and support',
                 'link': url_for('.index_g_cloud')
-            },
-            {
-                'text': 'G-Cloud suppliers\' guide'
             }
         ]
     })
@@ -157,11 +138,7 @@ def suppliers_guide_g_cloud():
 @main.route('/cookies')
 def cookies():
     template_data = get_template_data(main, {
-        'crumbs': [
-            {
-                'text': 'Cookies'
-            }
-        ]
+        'crumbs': []
     })
     return render_template(
         'content/cookies.html', **template_data
@@ -171,11 +148,7 @@ def cookies():
 @main.route('/terms-and-conditions')
 def terms_and_conditions():
     template_data = get_template_data(main, {
-        'crumbs': [
-            {
-                'text': 'Terms and conditions'
-            }
-        ]
+        'crumbs': []
     })
     return render_template(
         'content/terms-and-conditions.html', **template_data
@@ -224,9 +197,6 @@ def get_service_by_id(service_id):
             {
                 'text': get_lot_name_from_acronym(main, service_view_data.lot),
                 'link': url_for('.search', lot=service_view_data.lot.lower())
-            },
-            {
-                'text': service_view_data.title
             }
         ]
         template_data = get_template_data(main, {
@@ -263,13 +233,14 @@ def search():
         {
             'text': 'Cloud technology and support',
             'link': url_for('.index_g_cloud')
-        },
-        {
-            'text': get_lot_name_from_acronym(
-                main, SearchFilters.get_current_lot(request)
-            )
         }
     ]
+
+    if SearchFilters.get_current_lot(request):
+        breadcrumb.append({
+            'text': get_lot_name_from_acronym(
+                main, SearchFilters.get_current_lot(request))
+        })
 
     template_data = get_template_data(main, {
         'title': 'Search results',

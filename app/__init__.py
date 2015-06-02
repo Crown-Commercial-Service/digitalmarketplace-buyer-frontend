@@ -35,10 +35,10 @@ def create_app(config_name):
     main_blueprint.config = {
         'BASE_TEMPLATE_DATA': application.config['BASE_TEMPLATE_DATA'],
         'LOTS': {
-            'IaaS': 'Infrastructure as a Service',
-            'PaaS': 'Platform as a Service',
-            'SaaS': 'Software as a Service',
-            'SCS': 'Specialist Cloud Services'
+            'iaas': 'Infrastructure as a Service',
+            'paas': 'Platform as a Service',
+            'saas': 'Software as a Service',
+            'scs': 'Specialist Cloud Services'
         },
         'FILTER_GROUPS': filter_groups
     }
