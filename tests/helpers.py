@@ -2,6 +2,7 @@ from __future__ import absolute_import
 import os
 from app import create_app
 import json
+import re
 
 
 class BaseApplicationTest(object):
@@ -43,3 +44,13 @@ class BaseApplicationTest(object):
     @staticmethod
     def _get_supplier_fixture_data():
         return BaseApplicationTest._get_fixture_data('supplier_fixture.json')
+
+    @staticmethod
+    def _get_suppliers_by_prefix_fixture_data():
+        return BaseApplicationTest._get_fixture_data(
+            'suppliers_by_prefix_fixture.json')
+
+    @staticmethod
+    def _strip_whitespace(whitespace_in_this):
+        return re.sub(r"\s+", "",
+                      whitespace_in_this, flags=re.UNICODE)

@@ -17,7 +17,7 @@
             </li>
             {% endfor %}
             <li>
-                <a class="home" href="/suppliers?prefix=other">#</a>
+                <a class="home" href="/suppliers?prefix=other">other</a>
             </li>
         </ol>
     </nav>
@@ -25,7 +25,7 @@
 
 
 <header class="page-heading page-heading-with-context">
-    <p class="context">Found {{ count }}</p>
+    <p class="context">Suppliers by prefix:</p>
 
     <h1>{{ prefix }}</h1>
 </header>
@@ -38,14 +38,11 @@
     </h2>
 
     <p class="search-result-excerpt">
-        {% if supplier.description|length > 500 %}
-        {{ supplier.description[:500] }}
-        {% else %}
         {{ supplier.description }}
-        {% endif %}
     </p>
 </div>
 {% endfor %}
 
+{% include '_supplier_pagination.html' %}
 
 {% endblock %}

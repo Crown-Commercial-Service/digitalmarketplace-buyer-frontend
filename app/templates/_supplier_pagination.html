@@ -1,0 +1,20 @@
+<nav role="navigation">
+    <ul class="previous-next-navigation">
+
+        {% if pagination['prev'] %}
+        <li class="previous">
+            <a href="{{ url_for('.suppliers_list_by_prefix', **pagination['prev']) }}">
+                Previous <span class="visuallyhidden">page</span>
+            </a>
+        </li>
+        {% endif %}
+
+        {% if pagination['next'] %}
+        <li class="next">
+            <a href="{{ url_for('.suppliers_list_by_prefix', **pagination['next']) }}">
+                Next <span class="visuallyhidden">page</span>
+            </a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>

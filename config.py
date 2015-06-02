@@ -16,7 +16,7 @@ class Config(object):
     DM_SEARCH_API_AUTH_TOKEN = os.getenv(
         'DM_BUYER_FRONTEND_SEARCH_API_AUTH_TOKEN'
     )
-    # matches search api
+    # matches api(s)
     DM_SEARCH_PAGE_SIZE = 100
 
     # This is just a placeholder
