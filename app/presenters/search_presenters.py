@@ -223,10 +223,10 @@ class SearchResults(object):
 class SearchSummary(object):
     """Provides a paragraph summarising the search performed and results"""
 
-    COUNT_PRE_TAG = "<span class='search-summary-count'>"
-    COUNT_POST_TAG = "</span>"
-    KEYWORDS_PRE_TAG = "<em>"
-    KEYWORDS_POST_TAG = "</em>"
+    COUNT_PRE_TAG = '<span class="search-summary-count">'
+    COUNT_POST_TAG = '</span>'
+    KEYWORDS_PRE_TAG = '<em>'
+    KEYWORDS_POST_TAG = '</em>'
     LOT_PRE_TAG = '<em>'
     LOT_POST_TAG = '</em>'
 
