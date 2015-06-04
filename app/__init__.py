@@ -1,7 +1,7 @@
 from flask import Flask, request, redirect
 from flask.ext.bootstrap import Bootstrap
 from config import configs
-from dmutils import apiclient, logging, config
+from dmutils import apiclient, init_app, flask_featureflags
 from .helpers.questions import QuestionsLoader
 from .presenters.search_presenters import SearchFilters
 
@@ -9,22 +9,25 @@ from .presenters.search_presenters import SearchFilters
 bootstrap = Bootstrap()
 data_api_client = apiclient.DataAPIClient()
 search_api_client = apiclient.SearchAPIClient()
+feature_flags = flask_featureflags.FeatureFlag()
 
 
 def create_app(config_name):
     application = Flask(__name__)
-    application.config.from_object(configs[config_name])
-    configs[config_name].init_app(application)
-    config.init_app(application)
+
+    init_app(
+        application,
+        configs[config_name],
+        bootstrap=bootstrap,
+        data_api_client=data_api_client,
+        feature_flags=feature_flags,
+        search_api_client=search_api_client
+    )
+
     filter_groups = SearchFilters.get_filter_groups_from_questions(
         manifest="app/helpers/questions_manifest.yml",
         questions_dir="bower_components/digital-marketplace-ssp-content/g6/"
     )
-
-    bootstrap.init_app(application)
-    logging.init_app(application)
-    data_api_client.init_app(application)
-    search_api_client.init_app(application)
 
     from .main import main as main_blueprint
     from .status import status as status_blueprint
