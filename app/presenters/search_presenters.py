@@ -10,11 +10,7 @@ class SearchFilters(object):
 
     @staticmethod
     def get_current_lot(request):
-        current_lot = request.args.get('lot', None)
-        if current_lot is not None:
-            return current_lot
-        else:
-            return False
+        return request.args.get('lot', None)
 
     @staticmethod
     def get_filters_from_default_question(question):

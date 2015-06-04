@@ -1,6 +1,12 @@
+{% from 'macros/_breadcrumb.html' import breadcrumb %}
+
 {% extends "_base_page.html" %}
 
 {% block page_title %}Search - Digital Marketplace{% endblock %}
+
+{% block breadcrumb %}
+  {{ breadcrumb(crumbs) }}
+{% endblock %}
 
 {% block main_content %}
 <header class="page-heading">

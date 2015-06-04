@@ -27,12 +27,12 @@ def index():
 
 @main.route('/g-cloud')
 def index_g_cloud():
-    breadcrumb = [
-        {'text': 'Cloud technology and support'}
-    ]
     template_data = get_template_data(main, {
-        'title': 'Cloud technology and support – Digital Marketplace',
-        'crumbs': breadcrumb
+        'crumbs':  [
+            {
+                'text': 'Cloud technology and support',
+            }
+        ]
     })
     return render_template('index-g-cloud.html', **template_data)
 
@@ -40,15 +40,11 @@ def index_g_cloud():
 @main.route('/g-cloud/framework')
 def framework_g_cloud():
     template_data = get_template_data(main, {
-        'title': 'G-Cloud framework – Digital Marketplace',
         'crumbs': [
             {
                 'text': 'Cloud technology and support',
                 'link': url_for('.index_g_cloud')
-            },
-            {
-                'text': 'Framework information'
-            },
+            }
         ]
     })
     return render_template('content/framework-g-cloud.html', **template_data)
@@ -57,15 +53,11 @@ def framework_g_cloud():
 @main.route('/digital-services/framework')
 def framework_digital_services():
     template_data = get_template_data(main, {
-        'title': 'Digital Services framework – Digital Marketplace',
         'crumbs': [
             {
                 'text': 'Specialists to work on digital projects',
                 'link': 'https://digitalservicesstore.service.gov.uk'
-            },
-            {
-                'text': 'Framework information'
-            },
+            }
         ]
     })
     return render_template(
@@ -76,9 +68,10 @@ def framework_digital_services():
 @main.route('/crown-hosting')
 def index_crown_hosting():
     template_data = get_template_data(main, {
-        'title': 'Physical datacentre space for legacy systems – Digital Marketplace',  # noqa
         'crumbs': [
-            {'text': 'Physical datacentre space for legacy systems'}
+            {
+                'text': 'Physical datacentre space for legacy systems'
+            }
         ]
     })
     return render_template('content/index-crown-hosting.html', **template_data)
@@ -87,15 +80,11 @@ def index_crown_hosting():
 @main.route('/crown-hosting/framework')
 def framework_crown_hosting():
     template_data = get_template_data(main, {
-        'title': 'Crown Hosting Data Centres framework – Digital Marketplace',
         'crumbs': [
             {
                 'text': 'Physical datacentre space for legacy systems',
                 'link': url_for('.index_crown_hosting')
-            },
-            {
-                'text': 'Framework information'
-            },
+            }
         ]
     })
     return render_template(
@@ -106,12 +95,7 @@ def framework_crown_hosting():
 @main.route('/buyers-guide')
 def buyers_guide():
     template_data = get_template_data(main, {
-        'title': 'Buyers guide – Digital Marketplace',
-        'crumbs': [
-            {
-                'text': 'Buyers\' guide'
-            }
-        ]
+        'crumbs': []
     })
     return render_template('content/buyers-guide.html', **template_data)
 
@@ -124,14 +108,10 @@ def suppliers_guide():
 @main.route('/g-cloud/buyers-guide')
 def buyers_guide_g_cloud():
     template_data = get_template_data(main, {
-        'title': 'G-Cloud buyers\' guide – Digital Marketplace',
         'crumbs': [
             {
                 'text': 'Cloud technology and support',
                 'link': url_for('.index_g_cloud')
-            },
-            {
-                'text': 'Buyers\' guide'
             }
         ]
     })
@@ -143,14 +123,10 @@ def buyers_guide_g_cloud():
 @main.route('/g-cloud/suppliers-guide')
 def suppliers_guide_g_cloud():
     template_data = get_template_data(main, {
-        'title': 'G-Cloud suppliers\' guide – Digital Marketplace',
         'crumbs': [
             {
                 'text': 'Cloud technology and support',
                 'link': url_for('.index_g_cloud')
-            },
-            {
-                'text': 'Suppliers\' guide'
             }
         ]
     })
@@ -162,7 +138,6 @@ def suppliers_guide_g_cloud():
 @main.route('/cookies')
 def cookies():
     template_data = get_template_data(main, {
-        'title': 'Cookies – Digital Marketplace',
         'crumbs': []
     })
     return render_template(
@@ -173,7 +148,6 @@ def cookies():
 @main.route('/terms-and-conditions')
 def terms_and_conditions():
     template_data = get_template_data(main, {
-        'title': 'Terms and conditions – Digital Marketplace',
         'crumbs': []
     })
     return render_template(
@@ -216,7 +190,14 @@ def get_service_by_id(service_id):
             abort(e.status_code)
 
         breadcrumb = [
-            {'text': get_lot_name_from_acronym(main, service_view_data.lot)}
+            {
+                'text': 'Cloud technology and support',
+                'link': url_for('.index_g_cloud')
+            },
+            {
+                'text': get_lot_name_from_acronym(main, service_view_data.lot),
+                'link': url_for('.search', lot=service_view_data.lot.lower())
+            }
         ]
         template_data = get_template_data(main, {
             'crumbs': breadcrumb,
@@ -248,6 +229,19 @@ def search():
         get_page_from_request(request)
     )
 
+    breadcrumb = [
+        {
+            'text': 'Cloud technology and support',
+            'link': url_for('.index_g_cloud')
+        }
+    ]
+
+    if SearchFilters.get_current_lot(request):
+        breadcrumb.append({
+            'text': get_lot_name_from_acronym(
+                main, SearchFilters.get_current_lot(request))
+        })
+
     template_data = get_template_data(main, {
         'title': 'Search results',
         'current_lot': SearchFilters.get_current_lot(request),
@@ -259,5 +253,6 @@ def search():
         'total': search_results_obj.total,
         'search_query': query_args_for_pagination(request.args),
         'pagination': pagination_config,
+        'crumbs': breadcrumb,
     })
     return render_template('search.html', **template_data)
