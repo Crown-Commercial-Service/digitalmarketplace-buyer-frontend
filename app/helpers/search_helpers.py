@@ -54,10 +54,10 @@ def query_args_for_pagination(args):
 
 
 def total_pages(total, page_size):
-    if total:
+    if int(total) > 1:
         return int(ceil(float(total) / page_size))
     else:
-        return None
+        return 1
 
 
 def pagination(num_services, page_size, page=None):
