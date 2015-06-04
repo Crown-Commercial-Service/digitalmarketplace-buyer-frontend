@@ -290,7 +290,7 @@ class SearchSummary(object):
         def _get_fragment_string(fragment):
             return fragment.str()
 
-        parts = [self._get_starting_sentence()]
+        parts = [self.get_starting_sentence()]
         if len(self.filters_fragments) > 0:
             fragment_strings = list(
                 map(_get_fragment_string, self.filters_fragments))
@@ -298,7 +298,7 @@ class SearchSummary(object):
                 fragment_strings, u"and"))
         return Markup(u" ".join(parts))
 
-    def _get_starting_sentence(self):
+    def get_starting_sentence(self):
         return u"{}{}{} {}".format(
             self.COUNT_PRE_TAG,
             self.count,
@@ -418,13 +418,19 @@ class SummaryFragment(object):
         self.form = 'singular'
         if len(filters) > 1:
             self.form = 'plural'
-        self.filters_string = self._get_filters_string(filters)
+        self.filters = self._get_filters(filters)
+        self.filters_preposition = self.rules.get('filtersPreposition')
         self.label_string = self._get_label()
 
     def str(self):
-        return SearchSummary.write_parts_as_sentence(
-            [self.label_string, self.filters_string]
+        filters_string = SearchSummary.write_list_as_sentence(
+            self.filters, self.rules.get('conjunction')
         )
+        return SearchSummary.write_parts_as_sentence([
+            self.label_string,
+            self.rules.get('filtersPreposition'),
+            filters_string
+        ])
 
     def _get_label(self):
         preposition = self.rules.get('labelPreposition')
@@ -436,12 +442,7 @@ class SummaryFragment(object):
             return SearchSummary.write_parts_as_sentence(
                 [preposition, label])
 
-    def _add_filters_string_preposition(self, filters_string):
-        preposition = self.rules.get('filtersPreposition')
-        return SearchSummary.write_parts_as_sentence(
-            [preposition, filters_string])
-
-    def _get_filters_string(self, filters):
+    def _get_filters(self, filters):
         def _mark_up_filter(filter):
             return u"{}{}{}".format(
                 SummaryFragment.PRE_TAG,
@@ -449,20 +450,15 @@ class SummaryFragment(object):
                 SummaryFragment.POST_TAG,
             )
 
+        processed_filters = []
         if self.rules.get('filterRules') is None:
-            filters = [_mark_up_filter(filter) for filter in filters]
-            filters_string = SearchSummary.write_list_as_sentence(
-                filters,
-                self.rules.get('conjunction'))
+            processed_filters = [_mark_up_filter(filter) for filter in filters]
+            return processed_filters
         else:
-            processed_filters = []
             for filter in filters:
                 if filter in self.rules.filter_rules_ids:
                     filter_string = _mark_up_filter(filter)
                     filter_string = self.rules.add_filter_preposition(
                         filter_id=filter, filter_string=filter_string)
                     processed_filters.append(filter_string)
-            filters_string = SearchSummary.write_list_as_sentence(
-                processed_filters,
-                self.rules.get('conjunction'))
-        return self._add_filters_string_preposition(filters_string)
+        return processed_filters

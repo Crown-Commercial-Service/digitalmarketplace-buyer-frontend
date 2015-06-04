@@ -155,98 +155,63 @@ class TestSearchSummary(unittest.TestCase):
             u"an Hour")
 
     def test_search_summary_works_with_keywords(self):
-        search_summary = SearchSummary(1, self.request_args, filter_groups)
-        self.assertEqual(
-            search_summary.markup(),
-            Markup(
-                u"<span class='search-summary-count'>1</span> result found" +
-                u" containing <em>&ldquo;email&rdquo;</em>" +
-                u" in <em>Software as a Service</em>"))
+        search_summary = SearchSummary('1', self.request_args, filter_groups)
+        self.assertEqual(search_summary.count, '1')
+        self.assertEqual(search_summary.sentence, (
+            u"result found containing <em>&ldquo;email&rdquo;</em>" +
+            u" in <em>Software as a Service</em>"))
+        self.assertEqual(len(search_summary.filters_fragments), 0)
 
     def test_search_summary_works_with_blank_keywords(self):
         self.request_args.setlist('q', [''])
-        search_summary = SearchSummary(1, self.request_args, filter_groups)
-        self.assertEqual(
-            search_summary.markup(),
-            Markup(
-                u"<span class='search-summary-count'>1</span> result found" +
-                u" containing <em>&ldquo;&rdquo;</em>" +
-                u" in <em>Software as a Service</em>"))
+        search_summary = SearchSummary('1', self.request_args, filter_groups)
+        self.assertEqual(search_summary.count, '1')
+        self.assertEqual(search_summary.sentence, (
+            u"result found containing <em>&ldquo;&rdquo;</em>" +
+            u" in <em>Software as a Service</em>"))
+        self.assertEqual(len(search_summary.filters_fragments), 0)
 
     def test_search_summary_works_with_a_different_lot(self):
         self.request_args.setlist('lot', ['iaas'])
-        search_summary = SearchSummary(1, self.request_args, filter_groups)
-        self.assertEqual(
-            search_summary.markup(),
-            Markup(
-                u"<span class='search-summary-count'>1</span> result found" +
-                u" containing <em>&ldquo;email&rdquo;</em>" +
-                u" in <em>Infrastructure as a Service</em>"))
+        search_summary = SearchSummary('1', self.request_args, filter_groups)
+        self.assertEqual(search_summary.count, '1')
+        self.assertEqual(search_summary.sentence, (
+            u"result found containing <em>&ldquo;email&rdquo;</em>" +
+            u" in <em>Infrastructure as a Service</em>"))
+        self.assertEqual(len(search_summary.filters_fragments), 0)
 
-    def test_search_summary_works_with_none(self):
-        search_summary = SearchSummary(0, self.request_args, filter_groups)
-        self.assertEqual(
-            search_summary.markup(),
-            Markup(
-                u"<span class='search-summary-count'>0</span> results found" +
-                u" containing <em>&ldquo;email&rdquo;</em>" +
-                u" in <em>Software as a Service</em>"))
-
-    def test_search_summary_for_single_result(self):
-        search_summary = SearchSummary(1, self.request_args, filter_groups)
-        self.assertEqual(
-            search_summary.markup(),
-            Markup(
-                u"<span class='search-summary-count'>1</span> result found" +
-                u" containing <em>&ldquo;email&rdquo;</em>" +
-                u" in <em>Software as a Service</em>"))
-
-    def test_search_summary_for_multiple_results(self):
-        search_summary = SearchSummary(9, self.request_args, filter_groups)
-        self.assertEqual(search_summary.markup(), Markup(
-            u"<span class='search-summary-count'>9</span> results found" +
-            u" containing <em>&ldquo;email&rdquo;</em>" +
+    def test_search_summary_works_with_no_results(self):
+        search_summary = SearchSummary('0', self.request_args, filter_groups)
+        self.assertEqual(search_summary.count, '0')
+        self.assertEqual(search_summary.sentence, (
+            u"results found containing <em>&ldquo;email&rdquo;</em>" +
             u" in <em>Software as a Service</em>"))
+        self.assertEqual(len(search_summary.filters_fragments), 0)
 
-    def test_search_summary_with_a_single_filter(self):
+    def test_search_summary_works_with_single_result(self):
+        search_summary = SearchSummary(1, self.request_args, filter_groups)
+        self.assertEqual(search_summary.count, '1')
+        self.assertEqual(search_summary.sentence, (
+            u"result found containing <em>&ldquo;email&rdquo;</em>" +
+            u" in <em>Software as a Service</em>"))
+        self.assertEqual(len(search_summary.filters_fragments), 0)
+
+    def test_search_summary_works_with_multiple_results(self):
+        search_summary = SearchSummary('9', self.request_args, filter_groups)
+        self.assertEqual(search_summary.count, '9')
+        self.assertEqual(search_summary.sentence, (
+            u"results found containing <em>&ldquo;email&rdquo;</em>" +
+            u" in <em>Software as a Service</em>"))
+        self.assertEqual(len(search_summary.filters_fragments), 0)
+
+    def test_search_summary_with_a_single_filter_group(self):
         self.request_args.setlist('serviceTypes', ['collaboration'])
-        search_summary = SearchSummary(9, self.request_args, filter_groups)
-        self.assertEqual(
-            search_summary.markup(),
-            Markup(
-                u"<span class='search-summary-count'>9</span> results found" +
-                u" containing <em>&ldquo;email&rdquo;</em>" +
-                u" in <em>Software as a Service</em>" +
-                u" in the category <em>Collaboration</em>"))
-
-    def test_search_summary_with_a_group_of_two_filters(self):
-        self.request_args.setlist(
-            'serviceTypes',
-            ['collaboration', 'energy and environment'])
-        search_summary = SearchSummary(9, self.request_args, filter_groups)
-        self.assertEqual(
-            search_summary.markup(),
-            Markup(
-                u"<span class='search-summary-count'>9</span> results found" +
-                u" containing <em>&ldquo;email&rdquo;</em>" +
-                u" in <em>Software as a Service</em>" +
-                u" in the categories <em>Collaboration</em> and" +
-                u" <em>Energy and environment</em>"))
-
-    def test_search_summary_with_a_group_of_three_filters(self):
-        self.request_args.setlist(
-            'serviceTypes',
-            ['collaboration', 'energy and environment', 'healthcare']
-        )
-        search_summary = SearchSummary(9, self.request_args, filter_groups)
-        self.assertEqual(
-            search_summary.markup(),
-            Markup(
-                u"<span class='search-summary-count'>9</span> results found" +
-                u" containing <em>&ldquo;email&rdquo;</em>" +
-                u" in <em>Software as a Service</em>" +
-                u" in the categories <em>Collaboration</em>," +
-                u" <em>Energy and environment</em> and <em>Healthcare</em>"))
+        search_summary = SearchSummary('9', self.request_args, filter_groups)
+        self.assertEqual(search_summary.count, '9')
+        self.assertEqual(search_summary.sentence, (
+            u"results found containing <em>&ldquo;email&rdquo;</em>" +
+            u" in <em>Software as a Service</em>"))
+        self.assertEqual(len(search_summary.filters_fragments), 1)
 
     def test_search_summary_with_two_filter_groups(self):
         self.request_args.setlist(
@@ -257,17 +222,12 @@ class TestSearchSummary(unittest.TestCase):
             'datacentreTier',
             ['tia-942 tier 1', 'uptime institute tier 1']
         )
-        search_summary = SearchSummary(9, self.request_args, filter_groups)
-        self.assertEqual(
-            search_summary.markup(),
-            Markup(
-                u"<span class='search-summary-count'>9</span> results found" +
-                u" containing <em>&ldquo;email&rdquo;</em>" +
-                u" in <em>Software as a Service</em>" +
-                u" in the categories <em>Collaboration</em> and" +
-                u" <em>Energy and environment</em> and"
-                u" with a datacentre tier of <em>TIA-942 Tier 1" +
-                u"</em> or <em>Uptime Institute Tier 1</em>"))
+        search_summary = SearchSummary('9', self.request_args, filter_groups)
+        self.assertEqual(search_summary.count, '9')
+        self.assertEqual(search_summary.sentence, (
+            u"results found containing <em>&ldquo;email&rdquo;</em>" +
+            u" in <em>Software as a Service</em>"))
+        self.assertEqual(len(search_summary.filters_fragments), 2)
 
     def test_search_summary_with_three_filter_groups(self):
         self.request_args.setlist(
@@ -286,18 +246,12 @@ class TestSearchSummary(unittest.TestCase):
             'trialOption',
             ['true']
         )
-        search_summary = SearchSummary(9, self.request_args, filter_groups)
-        self.assertEqual(
-            search_summary.markup(),
-            Markup(
-                u"<span class='search-summary-count'>9</span> results found" +
-                u" containing <em>&ldquo;email&rdquo;</em>" +
-                u" in <em>Software as a Service</em>" +
-                u" in the categories <em>Collaboration</em> and" +
-                u" <em>Energy and environment</em>," +
-                u" with a <em>Trial option</em> and <em>Free option</em> and" +
-                u" with a datacentre tier of <em>TIA-942 Tier 1" +
-                u"</em> or <em>Uptime Institute Tier 1</em>"))
+        search_summary = SearchSummary('9', self.request_args, filter_groups)
+        self.assertEqual(search_summary.count, '9')
+        self.assertEqual(search_summary.sentence, (
+            u"results found containing <em>&ldquo;email&rdquo;</em>" +
+            u" in <em>Software as a Service</em>"))
+        self.assertEqual(len(search_summary.filters_fragments), 3)
 
     def test_search_summary_orders_filter_groups_as_in_manifest(self):
         self.request_args.setlist(
@@ -316,13 +270,49 @@ class TestSearchSummary(unittest.TestCase):
             'trialOption',
             ['true']
         )
-        search_summary = SearchSummary(9, self.request_args, filter_groups)
+        search_summary = SearchSummary('9', self.request_args, filter_groups)
         correct_order = [
             'Categories', 'Pricing', 'Datacentre tier'
         ]
         order_of_groups_of_filters = [
             fragment.id for fragment in search_summary.filters_fragments]
         self.assertEqual(order_of_groups_of_filters, correct_order)
+
+    def test_get_starting_sentence_works(self):
+        search_summary = SearchSummary('9', self.request_args, filter_groups)
+        search_summary.count = '9'
+        search_summary.COUNT_PRE_TAG = '<em>'
+        search_summary.COUNT_POST_TAG = '</em>'
+        search_summary.sentence = (
+            u"results found containing <em>&ldquo;email&rdquo;</em>" +
+            u" in <em>Software as a Service</em>")
+        self.assertEqual(search_summary.get_starting_sentence(), (
+            u"<em>9</em> results found containing" +
+            u" <em>&ldquo;email&rdquo;</em> in" +
+            u" <em>Software as a Service</em>"))
+
+    def test_markup_method_works_with_no_fragments(self):
+        def get_starting_sentence():
+            return u"5 results found"
+
+        search_summary = SearchSummary(9, self.request_args, filter_groups)
+        search_summary.get_starting_sentence = get_starting_sentence
+        search_summary.filters_fragments = []
+        self.assertEqual(
+            search_summary.markup(),
+            Markup(u"5 results found"))
+
+    def test_markup_method_works_with_fragments(self):
+        def get_starting_sentence():
+            return u"5 results found"
+
+        fragment = Mock(**{"str.return_value": u"with option1 and option2"})
+        search_summary = SearchSummary(9, self.request_args, filter_groups)
+        search_summary.get_starting_sentence = get_starting_sentence
+        search_summary.filters_fragments = [fragment]
+        self.assertEqual(
+            search_summary.markup(),
+            Markup(u"5 results found with option1 and option2"))
 
 
 class TestSummaryRules(unittest.TestCase):
@@ -510,6 +500,17 @@ class TestSummaryFragment(unittest.TestCase):
             u"datacentre tiers with a <em>TIA-942 Tier 1</em>" +
             u", met with a <em>uptime institute tier 1</em>" +
             u" or aligned with <em>uptime institute tier 2</em>")
+
+    def test_str_method_works(self):
+        id = 'Datacentre tier'
+        filters = ['TIA-942 Tier 1']
+        summary_fragment = SummaryFragment(
+            id, filters, self.rules_instance_mock)
+        summary_fragment.label_string = u"categories"
+        summary_fragment.filters = [u"FreeOption"]
+        self.rules['filtersPreposition'] = 'with'
+        self.assertEqual(summary_fragment.str(), u"categories with FreeOption")
+
 
 filter_groups = [
     {
