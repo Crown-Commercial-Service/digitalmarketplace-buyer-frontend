@@ -33,6 +33,10 @@ class BaseApplicationTest(object):
         )
 
     @staticmethod
+    def _get_g4_service_fixture_data():
+        return BaseApplicationTest._get_fixture_data('g4_service_fixture.json')
+
+    @staticmethod
     def _get_g5_service_fixture_data():
         return BaseApplicationTest._get_fixture_data('g5_service_fixture.json')
 

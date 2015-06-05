@@ -2,7 +2,7 @@
 import mock
 import re
 from lxml import html
-from nose.tools import assert_equal, assert_in
+from nose.tools import assert_equal, assert_in, assert_false
 from ...helpers import BaseApplicationTest
 
 
@@ -173,3 +173,23 @@ class TestServicePage(BaseApplicationTest):
         service_id = self.service['services']['id']
         res = self.client.get('/g-cloud/services/{}'.format(service_id))
         assert_equal(404, res.status_code)
+
+    def test_certifications_section_not_displayed_if_service_has_none(self):
+        self.service = self._get_g6_service_fixture_data()
+        self.service['services']['vendorCertifications'] = []
+        self._data_api_client.get_service.return_value = self.service
+        service_id = self.service['services']['id']
+
+        res = self.client.get('/g-cloud/services/{}'.format(service_id))
+        assert_equal(200, res.status_code)
+
+        document = html.fromstring(res.get_data(as_text=True))
+
+        attribute_headings = document.xpath(
+            '//div[@id="wrapper"]//div[@class="grid-row service-attributes"]' +
+            '//h2/text()')
+
+        attribute_headings = [
+            heading.strip() for heading in attribute_headings]
+
+        assert_false('Certifications' in attribute_headings)
