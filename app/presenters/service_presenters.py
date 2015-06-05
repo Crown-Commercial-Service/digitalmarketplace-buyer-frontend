@@ -53,19 +53,20 @@ class Service(object):
                 continue
             data_value = attribute.get_data_value()
             data_type = attribute.get_data_type(data_value)
-            if data_type is not False:
-                current_row = {
-                    'key': row['key'],
-                    'value': data_value,
-                    'type': data_type
-                }
-                if hasattr(attribute, 'assurance'):
-                    current_row = attribute.add_assurance_to_row(
-                        attribute.assurance,
-                        current_row
-                    )
+            if data_type is not False and \
+                    attribute.is_empty_certifications_field() is False:
+                    current_row = {
+                        'key': row['key'],
+                        'value': data_value,
+                        'type': data_type
+                    }
+                    if hasattr(attribute, 'assurance'):
+                        current_row = attribute.add_assurance_to_row(
+                            attribute.assurance,
+                            current_row
+                        )
 
-                rows.append(current_row)
+                    rows.append(current_row)
 
         return rows
 
@@ -135,6 +136,16 @@ class Attribute(object):
         else:
             row_object = self._add_assurance_to_string(row_object)
             return row_object
+
+    def is_empty_certifications_field(self):
+        if self.key != 'vendorCertifications':
+            return False
+
+        value = self.service_data[self.key]
+        if len(value) == 0:
+            return True
+        else:
+            return False
 
     def _add_assurance_to_list(self, row_object):
         if self.assurance != 'Service provider assertion':
