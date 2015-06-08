@@ -176,8 +176,7 @@ class TestSearchResults(BaseApplicationTest):
         summary = find_search_summary(res.get_data(as_text=True))[0]
         assert_true(
             '<span class="search-summary-count">0</span> results found' +
-            ' containing <em></em> in' +
-            ' <em>Software as a Service</em>' in summary)
+            ' in <em>Software as a Service</em>' in summary)
 
     def test_should_render_summary_for_1_result_in_SaaS_no_keywords(self):
         return_value = self.search_results_multiple_page
@@ -190,8 +189,7 @@ class TestSearchResults(BaseApplicationTest):
         summary = find_search_summary(res.get_data(as_text=True))[0]
         assert_true(
             '<span class="search-summary-count">1</span> result found' +
-            ' containing <em></em> in' +
-            ' <em>Software as a Service</em>' in summary)
+            ' in <em>Software as a Service</em>' in summary)
 
     def test_should_render_summary_for_1_result_in_IaaS_no_keywords(self):
         return_value = self.search_results_multiple_page
@@ -204,8 +202,7 @@ class TestSearchResults(BaseApplicationTest):
         summary = find_search_summary(res.get_data(as_text=True))[0]
         assert_true(
             '<span class="search-summary-count">1</span> result found' +
-            ' containing <em></em> in' +
-            ' <em>Infrastructure as a Service</em>' in summary)
+            ' in <em>Infrastructure as a Service</em>' in summary)
 
     def test_should_render_summary_for_1_result_in_SaaS_with_keywords(self):
         return_value = self.search_results_multiple_page

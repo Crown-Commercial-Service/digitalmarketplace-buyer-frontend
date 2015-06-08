@@ -173,7 +173,7 @@ class TestSearchSummary(unittest.TestCase):
         search_summary = SearchSummary('1', self.request_args, filter_groups)
         self.assertEqual(search_summary.count, '1')
         self.assertEqual(search_summary.sentence, (
-            u"result found containing <em></em>" +
+            u"result found" +
             u" in <em>Software as a Service</em>"))
         self.assertEqual(len(search_summary.filters_fragments), 0)
 

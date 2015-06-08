@@ -267,12 +267,7 @@ class SearchSummary(object):
                 )
 
     def _set_initial_sentence(self, results_total, request_args):
-        template = u"{} found containing {} in {}"
-        keywords = u"{}{}{}".format(
-            SearchSummary.KEYWORDS_PRE_TAG,
-            request_args.get('q', '', type=str),
-            SearchSummary.KEYWORDS_POST_TAG
-        )
+        keywords = request_args.get('q', '', type=str)
         lot = u"{}{}{}".format(
             SearchSummary.LOT_PRE_TAG,
             get_lot_label(request_args.get('lot', 'all', type=str)),
@@ -280,10 +275,19 @@ class SearchSummary(object):
         )
         if int(results_total) == 1:
             self.count = '1'
-            self.sentence = template.format(u"result", keywords, lot)
+            count_string = 'result found'
         else:
-            self.count = results_total
-            self.sentence = template.format(u"results", keywords, lot)
+            self.count = str(results_total)
+            count_string = u"results found"
+        if keywords != '':
+            self.sentence = u"{} containing {}{}{} in {}".format(
+                count_string,
+                SearchSummary.KEYWORDS_PRE_TAG,
+                keywords,
+                SearchSummary.KEYWORDS_POST_TAG,
+                lot)
+        else:
+            self.sentence = u"{} in {}".format(count_string, lot)
 
     def markup(self):
 
