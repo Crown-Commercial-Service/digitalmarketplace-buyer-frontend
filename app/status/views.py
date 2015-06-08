@@ -2,12 +2,13 @@ from flask import jsonify, current_app
 
 from . import status
 from .. import data_api_client, search_api_client
-from dmutils.status import get_version_label, get_flags
+from dmutils.status import get_flags
 
 
 @status.route('/_status')
 def status():
 
+    version = current_app.config['VERSION']
     apis = [
         {
             'name': '(Data) API',
@@ -31,7 +32,7 @@ def status():
         return jsonify(
             {api['key']: api['status'] for api in apis},
             status="ok",
-            version=get_version_label(),
+            version=version,
             flags=get_flags(current_app)
         )
 
@@ -42,7 +43,7 @@ def status():
     return jsonify(
         {api['key']: api['status'] for api in apis},
         status="error",
-        version=get_version_label(),
+        version=version,
         message=message,
         flags=get_flags(current_app)
     ), 500
