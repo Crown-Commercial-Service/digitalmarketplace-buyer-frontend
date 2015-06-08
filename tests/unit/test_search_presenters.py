@@ -164,7 +164,7 @@ class TestSearchSummary(unittest.TestCase):
         search_summary = SearchSummary('1', self.request_args, filter_groups)
         self.assertEqual(search_summary.count, '1')
         self.assertEqual(search_summary.sentence, (
-            u"result found containing <em>&ldquo;email&rdquo;</em>" +
+            u"result found containing <em>email</em>" +
             u" in <em>Software as a Service</em>"))
         self.assertEqual(len(search_summary.filters_fragments), 0)
 
@@ -173,7 +173,7 @@ class TestSearchSummary(unittest.TestCase):
         search_summary = SearchSummary('1', self.request_args, filter_groups)
         self.assertEqual(search_summary.count, '1')
         self.assertEqual(search_summary.sentence, (
-            u"result found containing <em>&ldquo;&rdquo;</em>" +
+            u"result found containing <em></em>" +
             u" in <em>Software as a Service</em>"))
         self.assertEqual(len(search_summary.filters_fragments), 0)
 
@@ -182,7 +182,7 @@ class TestSearchSummary(unittest.TestCase):
         search_summary = SearchSummary('1', self.request_args, filter_groups)
         self.assertEqual(search_summary.count, '1')
         self.assertEqual(search_summary.sentence, (
-            u"result found containing <em>&ldquo;email&rdquo;</em>" +
+            u"result found containing <em>email</em>" +
             u" in <em>Infrastructure as a Service</em>"))
         self.assertEqual(len(search_summary.filters_fragments), 0)
 
@@ -190,7 +190,7 @@ class TestSearchSummary(unittest.TestCase):
         search_summary = SearchSummary('0', self.request_args, filter_groups)
         self.assertEqual(search_summary.count, '0')
         self.assertEqual(search_summary.sentence, (
-            u"results found containing <em>&ldquo;email&rdquo;</em>" +
+            u"results found containing <em>email</em>" +
             u" in <em>Software as a Service</em>"))
         self.assertEqual(len(search_summary.filters_fragments), 0)
 
@@ -198,7 +198,7 @@ class TestSearchSummary(unittest.TestCase):
         search_summary = SearchSummary(1, self.request_args, filter_groups)
         self.assertEqual(search_summary.count, '1')
         self.assertEqual(search_summary.sentence, (
-            u"result found containing <em>&ldquo;email&rdquo;</em>" +
+            u"result found containing <em>email</em>" +
             u" in <em>Software as a Service</em>"))
         self.assertEqual(len(search_summary.filters_fragments), 0)
 
@@ -206,7 +206,7 @@ class TestSearchSummary(unittest.TestCase):
         search_summary = SearchSummary('9', self.request_args, filter_groups)
         self.assertEqual(search_summary.count, '9')
         self.assertEqual(search_summary.sentence, (
-            u"results found containing <em>&ldquo;email&rdquo;</em>" +
+            u"results found containing <em>email</em>" +
             u" in <em>Software as a Service</em>"))
         self.assertEqual(len(search_summary.filters_fragments), 0)
 
@@ -215,7 +215,7 @@ class TestSearchSummary(unittest.TestCase):
         search_summary = SearchSummary('9', self.request_args, filter_groups)
         self.assertEqual(search_summary.count, '9')
         self.assertEqual(search_summary.sentence, (
-            u"results found containing <em>&ldquo;email&rdquo;</em>" +
+            u"results found containing <em>email</em>" +
             u" in <em>Software as a Service</em>"))
         self.assertEqual(len(search_summary.filters_fragments), 1)
 
@@ -231,7 +231,7 @@ class TestSearchSummary(unittest.TestCase):
         search_summary = SearchSummary('9', self.request_args, filter_groups)
         self.assertEqual(search_summary.count, '9')
         self.assertEqual(search_summary.sentence, (
-            u"results found containing <em>&ldquo;email&rdquo;</em>" +
+            u"results found containing <em>email</em>" +
             u" in <em>Software as a Service</em>"))
         self.assertEqual(len(search_summary.filters_fragments), 2)
 
@@ -255,7 +255,7 @@ class TestSearchSummary(unittest.TestCase):
         search_summary = SearchSummary('9', self.request_args, filter_groups)
         self.assertEqual(search_summary.count, '9')
         self.assertEqual(search_summary.sentence, (
-            u"results found containing <em>&ldquo;email&rdquo;</em>" +
+            u"results found containing <em>email</em>" +
             u" in <em>Software as a Service</em>"))
         self.assertEqual(len(search_summary.filters_fragments), 3)
 
@@ -290,11 +290,11 @@ class TestSearchSummary(unittest.TestCase):
         search_summary.COUNT_PRE_TAG = '<em>'
         search_summary.COUNT_POST_TAG = '</em>'
         search_summary.sentence = (
-            u"results found containing <em>&ldquo;email&rdquo;</em>" +
+            u"results found containing <em>email</em>" +
             u" in <em>Software as a Service</em>")
         self.assertEqual(search_summary.get_starting_sentence(), (
             u"<em>9</em> results found containing" +
-            u" <em>&ldquo;email&rdquo;</em> in" +
+            u" <em>email</em> in" +
             u" <em>Software as a Service</em>"))
 
     def test_markup_method_works_with_no_fragments(self):

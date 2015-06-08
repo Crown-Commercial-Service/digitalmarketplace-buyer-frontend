@@ -176,7 +176,7 @@ class TestSearchResults(BaseApplicationTest):
         summary = find_search_summary(res.get_data(as_text=True))[0]
         assert_true(
             '<span class="search-summary-count">0</span> results found' +
-            ' containing <em>&ldquo;&rdquo;</em> in' +
+            ' containing <em></em> in' +
             ' <em>Software as a Service</em>' in summary)
 
     def test_should_render_summary_for_1_result_in_SaaS_no_keywords(self):
@@ -190,7 +190,7 @@ class TestSearchResults(BaseApplicationTest):
         summary = find_search_summary(res.get_data(as_text=True))[0]
         assert_true(
             '<span class="search-summary-count">1</span> result found' +
-            ' containing <em>&ldquo;&rdquo;</em> in' +
+            ' containing <em></em> in' +
             ' <em>Software as a Service</em>' in summary)
 
     def test_should_render_summary_for_1_result_in_IaaS_no_keywords(self):
@@ -204,7 +204,7 @@ class TestSearchResults(BaseApplicationTest):
         summary = find_search_summary(res.get_data(as_text=True))[0]
         assert_true(
             '<span class="search-summary-count">1</span> result found' +
-            ' containing <em>&ldquo;&rdquo;</em> in' +
+            ' containing <em></em> in' +
             ' <em>Infrastructure as a Service</em>' in summary)
 
     def test_should_render_summary_for_1_result_in_SaaS_with_keywords(self):
@@ -218,7 +218,7 @@ class TestSearchResults(BaseApplicationTest):
         summary = find_search_summary(res.get_data(as_text=True))[0]
         assert_true(
             '<span class="search-summary-count">1</span> result found' +
-            ' containing <em>&ldquo;email&rdquo;</em> in' +
+            ' containing <em>email</em> in' +
             ' <em>Software as a Service</em>' in summary)
 
     def test_should_render_summary_with_a_group_of_1_boolean_filter(self):
@@ -233,7 +233,7 @@ class TestSearchResults(BaseApplicationTest):
         summary = find_search_summary(res.get_data(as_text=True))[0]
         assert_true(
             '<span class="search-summary-count">1</span> result found' +
-            ' containing <em>&ldquo;email&rdquo;</em> in' +
+            ' containing <em>email</em> in' +
             ' <em>Software as a Service</em>' +
             ' with a <em>Free option</em>' in summary)
 
@@ -250,7 +250,7 @@ class TestSearchResults(BaseApplicationTest):
         summary = find_search_summary(res.get_data(as_text=True))[0]
         assert_true(
             '<span class="search-summary-count">1</span> result found' +
-            ' containing <em>&ldquo;email&rdquo;</em> in' +
+            ' containing <em>email</em> in' +
             ' <em>Software as a Service</em>' +
             ' with a ' in summary)
         assert_true('<em>Free option</em>' in summary)
@@ -268,7 +268,7 @@ class TestSearchResults(BaseApplicationTest):
         summary = find_search_summary(res.get_data(as_text=True))[0]
         assert_true(
             '<span class="search-summary-count">1</span> result found' +
-            ' containing <em>&ldquo;email&rdquo;</em> in' +
+            ' containing <em>email</em> in' +
             ' <em>Software as a Service</em>' +
             ' with a minimum contract period of an <em>Hour</em>'
             in summary)
@@ -286,7 +286,7 @@ class TestSearchResults(BaseApplicationTest):
         summary = find_search_summary(res.get_data(as_text=True))[0]
         assert_true(
             '<span class="search-summary-count">1</span> result found' +
-            ' containing <em>&ldquo;email&rdquo;</em> in' +
+            ' containing <em>email</em> in' +
             ' <em>Software as a Service</em>' +
             ' with a minimum contract period of ' in summary)
         assert_true('an <em>Hour</em>' in summary)
@@ -305,7 +305,7 @@ class TestSearchResults(BaseApplicationTest):
         summary = find_search_summary(res.get_data(as_text=True))[0]
         assert_true(
             '<span class="search-summary-count">1</span> result found' +
-            ' containing <em>&ldquo;email&rdquo;</em> in' +
+            ' containing <em>email</em> in' +
             ' <em>Software as a Service</em>' in summary)
         assert_true('with a <em>Free option</em>' in summary)
         assert_true('with a minimum contract period of' in summary)
@@ -326,7 +326,7 @@ class TestSearchResults(BaseApplicationTest):
         summary = find_search_summary(res.get_data(as_text=True))[0]
         assert_true(
             '<span class="search-summary-count">1</span> result found' +
-            ' containing <em>&ldquo;email&rdquo;</em> in' +
+            ' containing <em>email</em> in' +
             ' <em>Software as a Service</em>' in summary)
         assert_true('with a <em>Free option</em>' in summary)
         assert_true('with a minimum contract period of' in summary)

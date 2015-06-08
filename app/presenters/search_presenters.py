@@ -268,7 +268,7 @@ class SearchSummary(object):
 
     def _set_initial_sentence(self, results_total, request_args):
         template = u"{} found containing {} in {}"
-        keywords = u"{}&ldquo;{}&rdquo;{}".format(
+        keywords = u"{}{}{}".format(
             SearchSummary.KEYWORDS_PRE_TAG,
             request_args.get('q', '', type=str),
             SearchSummary.KEYWORDS_POST_TAG
