@@ -12,7 +12,7 @@ from ..helpers.search_helpers import (
     get_keywords_from_request, get_template_data, pagination,
     get_page_from_request, query_args_for_pagination, total_pages
 )
-from ..helpers.service_helpers import get_lot_name_from_acronym
+from ..helpers.shared_helpers import get_label_for_lot_param
 from ..exceptions import AuthException
 from .. import search_api_client, data_api_client
 from dmutils.apiclient import HTTPError
@@ -196,7 +196,7 @@ def get_service_by_id(service_id):
                 'link': url_for('.index_g_cloud')
             },
             {
-                'text': get_lot_name_from_acronym(main, service_view_data.lot),
+                'text': get_label_for_lot_param(service_view_data.lot.lower()),
                 'link': url_for('.search', lot=service_view_data.lot.lower())
             }
         ]
@@ -243,8 +243,8 @@ def search():
 
     if SearchFilters.get_current_lot(request):
         breadcrumb.append({
-            'text': get_lot_name_from_acronym(
-                main, SearchFilters.get_current_lot(request))
+            'text': get_label_for_lot_param(
+                SearchFilters.get_current_lot(request))
         })
 
     template_data = get_template_data(main, {

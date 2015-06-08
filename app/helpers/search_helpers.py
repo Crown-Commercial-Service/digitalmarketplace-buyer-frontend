@@ -1,18 +1,6 @@
 from math import ceil
 
 
-def get_lot_label(lot_param_value):
-    lots = {
-        'saas': u'Software as a Service',
-        'paas': u'Platform as a Service',
-        'iaas': u'Infrastructure as a Service',
-        'scs': u'Specialist Cloud Services',
-        'all': u'All categories'
-    }
-    if lot_param_value in lots:
-        return lots[lot_param_value]
-
-
 def get_template_data(blueprint, view_data):
     """Returns a single object holding the base template data with the view
        data added"""

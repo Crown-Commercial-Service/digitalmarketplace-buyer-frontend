@@ -4,7 +4,7 @@ import yaml
 from flask import Markup
 from werkzeug.datastructures import MultiDict
 from ..helpers.questions import QuestionsLoader
-from ..helpers.search_helpers import get_lot_label
+from ..helpers.shared_helpers import get_label_for_lot_param
 
 
 class SearchFilters(object):
@@ -270,7 +270,7 @@ class SearchSummary(object):
         keywords = request_args.get('q', '', type=str)
         lot = u"{}{}{}".format(
             SearchSummary.LOT_PRE_TAG,
-            get_lot_label(request_args.get('lot', 'all', type=str)),
+            get_label_for_lot_param(request_args.get('lot', 'all', type=str)),
             SearchSummary.LOT_POST_TAG
         )
         if int(results_total) == 1:
