@@ -298,14 +298,24 @@ class TestAttribute(unittest.TestCase):
         self.assertEqual(attribute.format(False), 'No')
 
     def test_format_returns_empty_string_for_a_empty_list(self):
-        # The service API returns empty lists as [ "None" ]
-        attribute = Attribute('vendorCertifications', self.fixture)
+        self.fixture['supportedDevices'] = []
+        attribute = Attribute('supportedDevices', self.fixture)
         self.assertEqual(attribute.format([]), "")
 
     def test_format_returns_the_first_item_for_a_list_with_one_item(self):
-        # The service API returns empty lists as [ "None" ]
+        self.fixture['supportedDevices'] = ['PC']
+        attribute = Attribute('supportedDevices', self.fixture)
+        self.assertEqual(attribute.format(["PC"]), "PC")
+
+    def test_is_empty_certifications_field_works_with_empty_list(self):
+        self.fixture['vendorCertifications'] = []
         attribute = Attribute('vendorCertifications', self.fixture)
-        self.assertEqual(attribute.format(["None"]), "None")
+        self.assertEqual(attribute.is_empty_certifications_field(), True)
+
+    def test_is_empty_certifications_field_works_with_full_list(self):
+        self.fixture['vendorCertifications'] = ['Not applicable']
+        attribute = Attribute('vendorCertifications', self.fixture)
+        self.assertEqual(attribute.is_empty_certifications_field(), False)
 
 
 class TestMeta(unittest.TestCase):
