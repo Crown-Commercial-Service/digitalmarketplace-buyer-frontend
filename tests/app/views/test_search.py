@@ -1,11 +1,17 @@
 import mock
 import re
+import json
 from nose.tools import assert_equal, assert_true, assert_false
 from ...helpers import BaseApplicationTest
 
 
 def find_pagination_links(res_data):
     return re.findall(r'<a href="(/g-cloud/search\?[^"]+)"', res_data)
+
+
+def find_search_summary(res_data):
+    return re.findall(
+        r'<span class="search-summary-count">.+</span>[^\n]+', res_data)
 
 
 class TestSearchResults(BaseApplicationTest):
@@ -153,3 +159,175 @@ class TestSearchResults(BaseApplicationTest):
         (prev_link,) = find_pagination_links(res.get_data(as_text=True))
         assert_true('page=199' in prev_link)
         assert_true('lot=saas' in prev_link)
+
+    def test_should_render_summary_for_0_results_in_SaaS_no_keywords(self):
+        self._search_api_client.search_services.return_value = {
+            "services": [],
+            "meta": {
+                "query": {},
+                "total": 0,
+                "took": 3
+            },
+            "links": {}
+        }
+
+        res = self.client.get('/g-cloud/search?lot=saas')
+        assert_equal(200, res.status_code)
+        summary = find_search_summary(res.get_data(as_text=True))[0]
+        assert_true(
+            '<span class="search-summary-count">0</span> results found' +
+            ' in <em>Software as a Service</em>' in summary)
+
+    def test_should_render_summary_for_1_result_in_SaaS_no_keywords(self):
+        return_value = self.search_results_multiple_page
+        return_value["services"] = [return_value["services"][0]]
+        return_value["meta"]["total"] = 1
+        self._search_api_client.search_services.return_value = return_value
+
+        res = self.client.get('/g-cloud/search?lot=saas')
+        assert_equal(200, res.status_code)
+        summary = find_search_summary(res.get_data(as_text=True))[0]
+        assert_true(
+            '<span class="search-summary-count">1</span> result found' +
+            ' in <em>Software as a Service</em>' in summary)
+
+    def test_should_render_summary_for_1_result_in_IaaS_no_keywords(self):
+        return_value = self.search_results_multiple_page
+        return_value["services"] = [return_value["services"][0]]
+        return_value["meta"]["total"] = 1
+        self._search_api_client.search_services.return_value = return_value
+
+        res = self.client.get('/g-cloud/search?lot=iaas')
+        assert_equal(200, res.status_code)
+        summary = find_search_summary(res.get_data(as_text=True))[0]
+        assert_true(
+            '<span class="search-summary-count">1</span> result found' +
+            ' in <em>Infrastructure as a Service</em>' in summary)
+
+    def test_should_render_summary_for_1_result_in_SaaS_with_keywords(self):
+        return_value = self.search_results_multiple_page
+        return_value["services"] = [return_value["services"][0]]
+        return_value["meta"]["total"] = 1
+        self._search_api_client.search_services.return_value = return_value
+
+        res = self.client.get('/g-cloud/search?q=email&lot=saas')
+        assert_equal(200, res.status_code)
+        summary = find_search_summary(res.get_data(as_text=True))[0]
+        assert_true(
+            '<span class="search-summary-count">1</span> result found' +
+            ' containing <em>email</em> in' +
+            ' <em>Software as a Service</em>' in summary)
+
+    def test_should_render_summary_with_a_group_of_1_boolean_filter(self):
+        return_value = self.search_results_multiple_page
+        return_value["services"] = [return_value["services"][0]]
+        return_value["meta"]["total"] = 1
+        self._search_api_client.search_services.return_value = return_value
+
+        res = self.client.get(
+            '/g-cloud/search?q=email&lot=saas&freeOption=true')
+        assert_equal(200, res.status_code)
+        summary = find_search_summary(res.get_data(as_text=True))[0]
+        assert_true(
+            '<span class="search-summary-count">1</span> result found' +
+            ' containing <em>email</em> in' +
+            ' <em>Software as a Service</em>' +
+            ' with a <em>Free option</em>' in summary)
+
+    def test_should_render_summary_with_a_group_of_2_boolean_filters(self):
+        return_value = self.search_results_multiple_page
+        return_value["services"] = [return_value["services"][0]]
+        return_value["meta"]["total"] = 1
+        self._search_api_client.search_services.return_value = return_value
+
+        res = self.client.get(
+            '/g-cloud/search?q=email&lot=saas&freeOption=true' +
+            '&trialOption=true')
+        assert_equal(200, res.status_code)
+        summary = find_search_summary(res.get_data(as_text=True))[0]
+        assert_true(
+            '<span class="search-summary-count">1</span> result found' +
+            ' containing <em>email</em> in' +
+            ' <em>Software as a Service</em>' +
+            ' with a ' in summary)
+        assert_true('<em>Free option</em>' in summary)
+        assert_true('<em>Trial option</em>' in summary)
+
+    def test_should_render_summary_with_a_group_of_1_array_filter(self):
+        return_value = self.search_results_multiple_page
+        return_value["services"] = [return_value["services"][0]]
+        return_value["meta"]["total"] = 1
+        self._search_api_client.search_services.return_value = return_value
+
+        res = self.client.get(
+            '/g-cloud/search?q=email&lot=saas&minimumContractPeriod=hour')
+        assert_equal(200, res.status_code)
+        summary = find_search_summary(res.get_data(as_text=True))[0]
+        assert_true(
+            '<span class="search-summary-count">1</span> result found' +
+            ' containing <em>email</em> in' +
+            ' <em>Software as a Service</em>' +
+            ' with a minimum contract period of an <em>Hour</em>'
+            in summary)
+
+    def test_should_render_summary_with_a_group_of_2_array_filters(self):
+        return_value = self.search_results_multiple_page
+        return_value["services"] = [return_value["services"][0]]
+        return_value["meta"]["total"] = 1
+        self._search_api_client.search_services.return_value = return_value
+
+        res = self.client.get(
+            '/g-cloud/search?q=email&lot=saas&minimumContractPeriod=hour' +
+            '&minimumContractPeriod=day')
+        assert_equal(200, res.status_code)
+        summary = find_search_summary(res.get_data(as_text=True))[0]
+        assert_true(
+            '<span class="search-summary-count">1</span> result found' +
+            ' containing <em>email</em> in' +
+            ' <em>Software as a Service</em>' +
+            ' with a minimum contract period of ' in summary)
+        assert_true('an <em>Hour</em>' in summary)
+        assert_true('a <em>Day</em>' in summary)
+
+    def test_should_render_summary_with_2_groups_of_filters(self):
+        return_value = self.search_results_multiple_page
+        return_value["services"] = [return_value["services"][0]]
+        return_value["meta"]["total"] = 1
+        self._search_api_client.search_services.return_value = return_value
+
+        res = self.client.get(
+            '/g-cloud/search?q=email&lot=saas&freeOption=true' +
+            '&minimumContractPeriod=hour&minimumContractPeriod=day')
+        assert_equal(200, res.status_code)
+        summary = find_search_summary(res.get_data(as_text=True))[0]
+        assert_true(
+            '<span class="search-summary-count">1</span> result found' +
+            ' containing <em>email</em> in' +
+            ' <em>Software as a Service</em>' in summary)
+        assert_true('with a <em>Free option</em>' in summary)
+        assert_true('with a minimum contract period of' in summary)
+        assert_true('an <em>Hour</em>' in summary)
+        assert_true('a <em>Day</em>' in summary)
+
+    def test_should_render_summary_with_3_groups_of_filters(self):
+        return_value = self.search_results_multiple_page
+        return_value["services"] = [return_value["services"][0]]
+        return_value["meta"]["total"] = 1
+        self._search_api_client.search_services.return_value = return_value
+
+        res = self.client.get(
+            '/g-cloud/search?q=email&lot=saas&freeOption=true' +
+            '&minimumContractPeriod=hour&minimumContractPeriod=day' +
+            '&datacentreTier=tia-942+tier+1')
+        assert_equal(200, res.status_code)
+        summary = find_search_summary(res.get_data(as_text=True))[0]
+        assert_true(
+            '<span class="search-summary-count">1</span> result found' +
+            ' containing <em>email</em> in' +
+            ' <em>Software as a Service</em>' in summary)
+        assert_true('with a <em>Free option</em>' in summary)
+        assert_true('with a minimum contract period of' in summary)
+        assert_true('an <em>Hour</em>' in summary)
+        assert_true('a <em>Day</em>' in summary)
+        assert_true('with a datacentre tier of' in summary)
+        assert_true('<em>TIA-942 Tier 1</em>' in summary)

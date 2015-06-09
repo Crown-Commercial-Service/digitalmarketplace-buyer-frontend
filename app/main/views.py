@@ -1,5 +1,6 @@
 # coding=utf-8
 
+import os
 from . import main
 from datetime import datetime
 from dmutils.deprecation import deprecated
@@ -11,7 +12,7 @@ from ..helpers.search_helpers import (
     get_keywords_from_request, get_template_data, pagination,
     get_page_from_request, query_args_for_pagination, total_pages
 )
-from ..helpers.service_helpers import get_lot_name_from_acronym
+from ..helpers.shared_helpers import get_label_for_lot_param
 from ..exceptions import AuthException
 from .. import search_api_client, data_api_client
 from dmutils.apiclient import HTTPError
@@ -195,7 +196,7 @@ def get_service_by_id(service_id):
                 'link': url_for('.index_g_cloud')
             },
             {
-                'text': get_lot_name_from_acronym(main, service_view_data.lot),
+                'text': get_label_for_lot_param(service_view_data.lot.lower()),
                 'link': url_for('.search', lot=service_view_data.lot.lower())
             }
         ]
@@ -228,6 +229,10 @@ def search():
         current_app.config["DM_SEARCH_PAGE_SIZE"],
         get_page_from_request(request)
     )
+    search_summary = SearchResults.get_search_summary(
+        response['meta']['total'],
+        request.args,
+        search_filters_obj.filter_groups)
 
     breadcrumb = [
         {
@@ -238,8 +243,8 @@ def search():
 
     if SearchFilters.get_current_lot(request):
         breadcrumb.append({
-            'text': get_lot_name_from_acronym(
-                main, SearchFilters.get_current_lot(request))
+            'text': get_label_for_lot_param(
+                SearchFilters.get_current_lot(request))
         })
 
     template_data = get_template_data(main, {
@@ -249,10 +254,10 @@ def search():
         'search_keywords': search_keywords,
         'filter_groups': search_filters_obj.filter_groups,
         'services': search_results_obj.search_results,
-        'summary': search_results_obj.summary,
         'total': search_results_obj.total,
         'search_query': query_args_for_pagination(request.args),
         'pagination': pagination_config,
         'crumbs': breadcrumb,
+        'summary': search_summary.markup()
     })
     return render_template('search.html', **template_data)

@@ -4,6 +4,11 @@
   padding: 0 0 $gutter-half;
   margin: 0 0 $gutter-half;
   border-bottom: 1px solid $border-colour;
+
+  em {
+    font-style: normal;
+    font-weight: bold;
+  }
 }
 
 @import "search/_search-result.scss";
