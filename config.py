@@ -40,10 +40,7 @@ class Config(object):
     def init_app(app):
         repo_root = os.path.abspath(os.path.dirname(__file__))
         template_folders = [
-            os.path.join(repo_root, 'app/templates'),
-            os.path.join(
-                repo_root, 'bower_components/govuk_template/views/layouts'
-            )
+            os.path.join(repo_root, 'app/templates')
         ]
         jinja_loader = jinja2.FileSystemLoader(template_folders)
         app.jinja_loader = jinja_loader
