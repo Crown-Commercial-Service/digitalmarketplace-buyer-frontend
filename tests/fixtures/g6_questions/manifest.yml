@@ -1,0 +1,13 @@
+-
+  name: Booleans example
+  questions:
+    - booleanExample1
+    - booleanExample2
+-
+  name: Checkboxes example
+  questions:
+    - checkboxesExample
+-
+  name: Radios example
+  questions:
+    - radiosExample

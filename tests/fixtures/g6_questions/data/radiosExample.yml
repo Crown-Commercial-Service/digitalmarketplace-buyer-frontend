@@ -1,0 +1,14 @@
+dependsOnLots: 'SaaS, PaaS, IaaS'
+type: radios
+options:
+    -
+        label: "Option 1"
+        filterLabel: "Option 1"
+    -
+        label: "Option 2"
+        filterLabel: "Option 2"
+validations:
+  -
+    name: answer_required
+    message: 'This question requires an answer.'
+question: 'Choose one option'

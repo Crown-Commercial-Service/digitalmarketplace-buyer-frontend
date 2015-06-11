@@ -1,0 +1,8 @@
+dependsOnLots: 'SaaS, PaaS, IaaS'
+type: boolean
+filterLabel: 'Option 2'
+validations:
+  -
+    name: answer_required
+    message: 'This question requires an answer.'
+question: 'Option 2'

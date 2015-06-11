@@ -1,0 +1,6 @@
+dependsOnLots: 'SaaS, PaaS, IaaS'
+hint: 'Enter all the parts of the answer'
+listItemName: 'certification example'
+type: list
+addthing: 'Add another part'
+question: 'Enter your answer'
