@@ -2,7 +2,6 @@ from flask import Flask, request, redirect
 from flask.ext.bootstrap import Bootstrap
 from config import configs
 from dmutils import apiclient, init_app, flask_featureflags
-from .helpers.questions import QuestionsLoader
 from .presenters.search_presenters import SearchFilters
 
 
@@ -26,7 +25,7 @@ def create_app(config_name):
 
     filter_groups = SearchFilters.get_filter_groups_from_questions(
         manifest="app/helpers/questions_manifest.yml",
-        questions_dir="bower_components/digital-marketplace-ssp-content/g6/"
+        questions_dir="app/content/g6/"
     )
 
     from .main import main as main_blueprint
