@@ -121,15 +121,15 @@ gulp.task('js', function () {
   return stream;
 });
 
-function copyFactory(what, base, destination) {
+function copyFactory(resourceName, sourceFolder, targetFolder) {
 
   return function() {
 
     return gulp
-      .src(base + "/**/*", { base: base })
-      .pipe(gulp.dest(destination))
+      .src(sourceFolder + "/**/*", { base: sourceFolder })
+      .pipe(gulp.dest(targetFolder))
       .on('end', function () {
-        console.log('📂  Copied ' + what);
+        console.log('📂  Copied ' + resourceName);
       });
 
   };
@@ -140,7 +140,8 @@ gulp.task(
   'copy:template_assets:stylesheets',
   copyFactory(
     "GOV.UK template stylesheets",
-    govukTemplateAssetsFolder + '/stylesheets', staticFolder + '/stylesheets'
+    govukTemplateAssetsFolder + '/stylesheets',
+    staticFolder + '/stylesheets'
   )
 );
 
@@ -148,7 +149,8 @@ gulp.task(
   'copy:template_assets:images',
   copyFactory(
     "GOV.UK template images",
-    govukTemplateAssetsFolder + '/images', staticFolder + '/images'
+    govukTemplateAssetsFolder + '/images',
+    staticFolder + '/images'
   )
 );
 
@@ -156,7 +158,8 @@ gulp.task(
   'copy:template_assets:javascripts',
   copyFactory(
     'GOV.UK template Javascript files',
-    govukTemplateAssetsFolder + '/javascripts', staticFolder + '/javascripts'
+    govukTemplateAssetsFolder + '/javascripts',
+    staticFolder + '/javascripts'
   )
 );
 
@@ -164,7 +167,8 @@ gulp.task(
   'copy:dm_toolkit_assets:stylesheets',
   copyFactory(
     "stylesheets from the Digital Marketplace frontend toolkit",
-    dmToolkitRoot + '/scss', 'app/assets/scss/toolkit'
+    dmToolkitRoot + '/scss',
+    'app/assets/scss/toolkit'
   )
 );
 
@@ -172,7 +176,8 @@ gulp.task(
   'copy:dm_toolkit_assets:images',
   copyFactory(
     "images from the Digital Marketplace frontend toolkit",
-    dmToolkitRoot + '/images', staticFolder + '/images'
+    dmToolkitRoot + '/images',
+    staticFolder + '/images'
   )
 );
 
@@ -180,7 +185,8 @@ gulp.task(
   'copy:dm_toolkit_assets:templates',
   copyFactory(
     "templates from the Digital Marketplace frontend toolkit",
-    dmToolkitRoot + '/templates', 'app/templates/toolkit'
+    dmToolkitRoot + '/templates',
+    'app/templates/toolkit'
   )
 );
 
@@ -188,7 +194,8 @@ gulp.task(
   'copy:images',
   copyFactory(
     "image assets from app to static folder",
-    assetsFolder + '/images', staticFolder + '/images'
+    assetsFolder + '/images',
+    staticFolder + '/images'
   )
 );
 
@@ -196,7 +203,8 @@ gulp.task(
   'copy:govuk_template',
   copyFactory(
     "GOV.UK template into app folder",
-    govukTemplateLayoutsFolder, 'app/templates/govuk'
+    govukTemplateLayoutsFolder,
+    'app/templates/govuk'
   )
 );
 
