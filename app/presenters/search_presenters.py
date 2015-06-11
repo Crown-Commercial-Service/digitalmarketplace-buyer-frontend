@@ -3,7 +3,7 @@ import re
 import yaml
 from flask import Markup
 from werkzeug.datastructures import MultiDict
-from ..helpers.questions import QuestionsLoader
+from dmutils.content_loader import ContentLoader
 from ..helpers.shared_helpers import get_label_for_lot_param
 
 
@@ -55,9 +55,9 @@ class SearchFilters(object):
     @staticmethod
     def get_filter_groups_from_questions(manifest, questions_dir):
         filter_groups = []
-        g6_questions = QuestionsLoader(
-            manifest=manifest,
-            questions_dir=questions_dir
+        g6_questions = ContentLoader(
+            manifest,
+            questions_dir
         )
 
         def add_filters_for_question(question, filters):
