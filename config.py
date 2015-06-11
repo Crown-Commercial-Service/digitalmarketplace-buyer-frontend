@@ -1,10 +1,15 @@
 import os
 import jinja2
+from dmutils.status import enabled_since, get_version_label
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 
 class Config(object):
+
+    VERSION = get_version_label(
+        os.path.abspath(os.path.dirname(__file__))
+    )
     DEBUG = False
     BASE_TEMPLATE_DATA = {
         'asset_path': '/static/',
@@ -35,6 +40,9 @@ class Config(object):
     DM_APP_NAME = 'buyer-frontend'
     DM_LOG_PATH = '/var/log/digitalmarketplace/application.log'
     DM_DOWNSTREAM_REQUEST_ID_HEADER = 'X-Amz-Cf-Id'
+
+    # Feature Flags
+    RAISE_ERROR_ON_MISSING_FEATURES = True
 
     @staticmethod
     def init_app(app):
