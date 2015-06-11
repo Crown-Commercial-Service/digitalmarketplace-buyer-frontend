@@ -90,7 +90,7 @@ class SearchFilters(object):
             filter_groups.append(filter_group)
         return filter_groups
 
-    def __init__(self, blueprint=False, request={}):
+    def __init__(self, blueprint=None, request=None):
         self.filter_groups = blueprint.config['FILTER_GROUPS']
         self.request_filters = self._get_filters_from_request(request)
         self.lot_filters = self._get_lot_filters_from_request(request)
