@@ -321,6 +321,113 @@ class TestSearchSummary(unittest.TestCase):
             Markup(u"5 results found with option1 and option2"))
 
 
+class TestSearchFilters(unittest.TestCase):
+
+    maxDiff = None
+
+    def setup(self):
+        pass
+
+    def tearDown(self):
+        pass
+
+    def _get_filter_group_by_label(self, filter_groups, label):
+        for filter_group in filter_groups:
+            if filter_group['label'] == label:
+                return filter_group
+
+    def test_get_filter_groups_from_questions_with_radio_filters(self):
+        filter_groups = SearchFilters.get_filter_groups_from_questions(
+            manifest="tests/fixtures/g6_questions/manifest.yml",
+            questions_dir="tests/fixtures/g6_questions/data/"
+        )
+        radios_filter_group = self._get_filter_group_by_label(
+            filter_groups,
+            'Radios example'
+        )
+        self.assertEqual({
+            'label': 'Radios example',
+            'depends_on_lots': ['saas', 'paas', 'iaas'],
+            'filters': [
+                {
+                    'label': 'Option 1',
+                    'name': 'radiosExample',
+                    'id': 'radiosExample-option-1',
+                    'value': 'option 1',
+                    'lots': ['saas', 'paas', 'iaas']
+                },
+                {
+                    'label': 'Option 2',
+                    'name': 'radiosExample',
+                    'id': 'radiosExample-option-2',
+                    'value': 'option 2',
+                    'lots': ['saas', 'paas', 'iaas']
+                }
+            ]
+        }, radios_filter_group)
+
+    def test_get_filter_groups_from_questions_with_checkbox_filters(self):
+        filter_groups = SearchFilters.get_filter_groups_from_questions(
+            manifest="tests/fixtures/g6_questions/manifest.yml",
+            questions_dir="tests/fixtures/g6_questions/data/"
+        )
+        checkboxes_filter_group = self._get_filter_group_by_label(
+            filter_groups,
+            'Checkboxes example'
+        )
+        self.assertEqual({
+            'label': 'Checkboxes example',
+            'depends_on_lots': ['saas', 'paas', 'iaas'],
+            'filters': [
+                {
+                    'label': 'Option 1',
+                    'name': 'checkboxesExample',
+                    'id': 'checkboxesExample-option-1',
+                    'value': 'option 1',
+                    'lots': ['saas', 'paas', 'iaas']
+                },
+                {
+                    'label': 'Option 2',
+                    'name': 'checkboxesExample',
+                    'id': 'checkboxesExample-option-2',
+                    'value': 'option 2',
+                    'lots': ['saas', 'paas', 'iaas']
+                }
+            ]
+        }, checkboxes_filter_group)
+
+    def test_get_filter_groups_from_questions_with_boolean_filters(self):
+        filter_groups = SearchFilters.get_filter_groups_from_questions(
+            manifest="tests/fixtures/g6_questions/manifest.yml",
+            questions_dir="tests/fixtures/g6_questions/data/"
+        )
+        booleans_filter_group = self._get_filter_group_by_label(
+            filter_groups,
+            'Booleans example'
+        )
+        self.assertEqual({
+            'label': 'Booleans example',
+            'depends_on_lots': [
+                'saas', 'paas', 'iaas', 'saas', 'paas', 'iaas'],
+            'filters': [
+                {
+                    'label': 'Option 1',
+                    'name': 'booleanExample1',
+                    'id': 'booleanExample1',
+                    'value': 'true',
+                    'lots': ['saas', 'paas', 'iaas']
+                },
+                {
+                    'label': 'Option 2',
+                    'name': 'booleanExample2',
+                    'id': 'booleanExample2',
+                    'value': 'true',
+                    'lots': ['saas', 'paas', 'iaas']
+                }
+            ]
+        }, booleans_filter_group)
+
+
 class TestSummaryRules(unittest.TestCase):
 
     def setUp(self):
