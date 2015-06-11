@@ -61,13 +61,9 @@ class SearchFilters(object):
         )
 
         def add_filters_for_question(question, filters):
-            questions_with_options = [
-                'radios',
-                'checkboxes'
-            ]
             # if the 1st question has options, they will become the
-            # filters and it's details will define the group
-            if question['type'] in questions_with_options:
+            # filters and it's label will become the group label
+            if question['type'] in ['radios', 'checkboxes']:
                 filters += \
                     SearchFilters.get_filters_from_question_with_options(
                         question,
@@ -176,9 +172,9 @@ class SearchFilters(object):
     def _get_filters_from_request(self, request):
         """Returns the filters applied to a search from the request object"""
 
-        # TODO: only use request arguments that map to recognised filters
         filters = MultiDict(request.args.copy())
         filters.poplist('q')
+        filters.poplist('lot')
         return filters
 
     def _set_filter_states(self):
@@ -201,8 +197,8 @@ class SearchResults(object):
     """Provides access to the search results information"""
 
     @staticmethod
-    def get_search_summary(results_total, request_filters, filter_groups):
-        return SearchSummary(results_total, request_filters, filter_groups)
+    def get_search_summary(results_total, request_args, filter_groups):
+        return SearchSummary(results_total, request_args, filter_groups)
 
     def _add_highlighting(self):
         for index, service in enumerate(self.search_results):
