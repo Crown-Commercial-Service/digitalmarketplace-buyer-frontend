@@ -12,4 +12,3 @@ class TestApplication(BaseApplicationTest):
         assert_true(
             'trackPageview'
             in res.get_data(as_text=True))
-        assert_in('DENY', res.headers['X-Frame-Options'])
