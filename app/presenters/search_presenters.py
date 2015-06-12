@@ -131,9 +131,9 @@ class SearchFilters(object):
             if lot is not None:
                 params.append('lot=' + lot)
             if len(params) == 0:
-                return '/search'
+                return '/g-cloud/search'
             else:
-                return '/search?' + '&'.join(params)
+                return '/g-cloud/search?' + '&'.join(params)
 
         lot_names = ['all', 'saas', 'paas', 'iaas', 'scs']
         current_lot = request.args.get('lot', 'all')
@@ -181,16 +181,15 @@ class SearchFilters(object):
         """Sets a flag on each filter to mark it as set or not"""
         for filter_group in self.filter_groups:
             for filter in filter_group['filters']:
-                if self.request_filters:
-                    filter['checked'] = False
-                    param_values = self.request_filters.getlist(
-                        filter['name'],
-                        type=str
+                filter['checked'] = False
+                param_values = self.request_filters.getlist(
+                    filter['name'],
+                    type=str
+                )
+                if len(param_values) > 0:
+                    filter['checked'] = (
+                        filter['value'] in param_values
                     )
-                    if len(param_values) > 0:
-                        filter['checked'] = (
-                            filter['value'] in param_values
-                        )
 
 
 class SearchResults(object):
