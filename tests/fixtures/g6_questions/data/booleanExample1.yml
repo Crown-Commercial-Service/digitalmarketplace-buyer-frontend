@@ -1,4 +1,4 @@
-dependsOnLots: 'SaaS, PaaS, IaaS'
+dependsOnLots: 'SaaS, PaaS' 
 type: boolean
 filterLabel: 'Option 1'
 validations:
