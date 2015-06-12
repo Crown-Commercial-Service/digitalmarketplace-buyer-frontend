@@ -1,4 +1,4 @@
-from nose.tools import assert_equal, assert_true
+from nose.tools import assert_equal, assert_true, assert_in
 from ...helpers import BaseApplicationTest
 
 
@@ -12,3 +12,4 @@ class TestApplication(BaseApplicationTest):
         assert_true(
             'trackPageview'
             in res.get_data(as_text=True))
+        assert_in('DENY', res.headers['X-Frame-Options'])
