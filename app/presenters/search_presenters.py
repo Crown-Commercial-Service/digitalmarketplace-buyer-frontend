@@ -42,7 +42,7 @@ class SearchFilters(object):
             filter = {
                 'label': option['label'],
                 'name': filter_name,
-                'id': filter_id,
+                'id': '{}-{}'.format(filter_name, filter_id),
                 'value': option['label'].lower(),
                 'lots': [lot.strip() for lot in (
                     question['dependsOnLots'].lower().split(",")
@@ -61,13 +61,9 @@ class SearchFilters(object):
         )
 
         def add_filters_for_question(question, filters):
-            questions_with_options = [
-                'radios',
-                'checkboxes'
-            ]
             # if the 1st question has options, they will become the
-            # filters and it's details will define the group
-            if question['type'] in questions_with_options:
+            # filters and it's label will become the group label
+            if question['type'] in ['radios', 'checkboxes']:
                 filters += \
                     SearchFilters.get_filters_from_question_with_options(
                         question,
@@ -94,7 +90,7 @@ class SearchFilters(object):
             filter_groups.append(filter_group)
         return filter_groups
 
-    def __init__(self, blueprint=False, request={}):
+    def __init__(self, blueprint=None, request=None):
         self.filter_groups = blueprint.config['FILTER_GROUPS']
         self.request_filters = self._get_filters_from_request(request)
         self.lot_filters = self._get_lot_filters_from_request(request)
@@ -135,9 +131,9 @@ class SearchFilters(object):
             if lot is not None:
                 params.append('lot=' + lot)
             if len(params) == 0:
-                return '/search'
+                return '/g-cloud/search'
             else:
-                return '/search?' + '&'.join(params)
+                return '/g-cloud/search?' + '&'.join(params)
 
         lot_names = ['all', 'saas', 'paas', 'iaas', 'scs']
         current_lot = request.args.get('lot', 'all')
@@ -176,33 +172,32 @@ class SearchFilters(object):
     def _get_filters_from_request(self, request):
         """Returns the filters applied to a search from the request object"""
 
-        # TODO: only use request arguments that map to recognised filters
         filters = MultiDict(request.args.copy())
         filters.poplist('q')
+        filters.poplist('lot')
         return filters
 
     def _set_filter_states(self):
         """Sets a flag on each filter to mark it as set or not"""
         for filter_group in self.filter_groups:
             for filter in filter_group['filters']:
-                if self.request_filters:
-                    filter['checked'] = False
-                    param_values = self.request_filters.getlist(
-                        filter['name'],
-                        type=str
+                filter['checked'] = False
+                param_values = self.request_filters.getlist(
+                    filter['name'],
+                    type=str
+                )
+                if len(param_values) > 0:
+                    filter['checked'] = (
+                        filter['value'] in param_values
                     )
-                    if len(param_values) > 0:
-                        filter['checked'] = (
-                            filter['value'] in param_values
-                        )
 
 
 class SearchResults(object):
     """Provides access to the search results information"""
 
     @staticmethod
-    def get_search_summary(results_total, request_filters, filter_groups):
-        return SearchSummary(results_total, request_filters, filter_groups)
+    def get_search_summary(results_total, request_args, filter_groups):
+        return SearchSummary(results_total, request_args, filter_groups)
 
     def _add_highlighting(self):
         for index, service in enumerate(self.search_results):

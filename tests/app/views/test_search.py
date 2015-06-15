@@ -6,7 +6,10 @@ from ...helpers import BaseApplicationTest
 
 
 def find_pagination_links(res_data):
-    return re.findall(r'<a href="(/g-cloud/search\?[^"]+)"', res_data)
+    return re.findall(
+        '<li class="[next|previous]+">[^<]+<a\ href="(/g-cloud/search\?[^"]+)',
+        res_data,
+        re.MULTILINE)
 
 
 def find_search_summary(res_data):
@@ -115,7 +118,6 @@ class TestSearchResults(BaseApplicationTest):
         assert_true(
             '<li class="next">'
             in res.get_data(as_text=True))
-
         (prev_link, next_link) = find_pagination_links(
             res.get_data(as_text=True))
 
