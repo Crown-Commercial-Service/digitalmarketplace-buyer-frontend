@@ -34,18 +34,20 @@ class TestServicePage(BaseApplicationTest):
         contact_info = self.supplier['suppliers']['contactInformation'][0]
 
         meta = document.xpath('//div[@id="meta"]')[0]
-        contact_heading = meta.xpath('//details/summary/text()')[0]
-        lis = [li.text_content().strip() for li in meta.xpath('//details//li')]
+        contact_heading = meta.xpath('//div/p[@class="contact-details-organisation"]/span/text()')[0]  # noqa
+        ps = [
+            p.text_content().strip()
+            for p in meta.xpath('//div[@class="contact-details"]//p')
+        ]
 
-        assert_equal("Contact {}".format(supplier_name), contact_heading)
+        assert_equal(supplier_name, contact_heading)
 
         for contact_detail in [
             contact_info['contactName'],
             contact_info['phoneNumber'],
             contact_info['email']
         ]:
-
-            assert_in("{}".format(contact_detail), lis)
+            assert_in("{}".format(contact_detail), ps)
 
     def _assert_document_links(self, document):
 
