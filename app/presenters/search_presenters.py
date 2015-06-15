@@ -42,7 +42,7 @@ class SearchFilters(object):
             filter = {
                 'label': option['label'],
                 'name': filter_name,
-                'id': filter_id,
+                'id': '{}-{}'.format(filter_name, filter_id),
                 'value': option['label'].lower(),
                 'lots': [lot.strip() for lot in (
                     question['dependsOnLots'].lower().split(",")

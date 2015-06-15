@@ -482,7 +482,7 @@ class TestSearchFilters(unittest.TestCase):
                     'saas', 'paas', 'saas', 'paas'],
                 'filters': [
                     {
-                        'isSet': False,
+                        'checked': False,
                         'label': 'Option 1',
                         'name': 'booleanExample1',
                         'id': 'booleanExample1',
@@ -490,7 +490,7 @@ class TestSearchFilters(unittest.TestCase):
                         'lots': ['saas', 'paas']
                     },
                     {
-                        'isSet': False,
+                        'checked': False,
                         'label': 'Option 2',
                         'name': 'booleanExample2',
                         'id': 'booleanExample2',
@@ -521,7 +521,7 @@ class TestSearchFilters(unittest.TestCase):
                     'saas', 'paas', 'saas', 'paas'],
                 'filters': [
                     {
-                        'isSet': True,
+                        'checked': True,
                         'label': 'Option 1',
                         'name': 'booleanExample1',
                         'id': 'booleanExample1',
@@ -529,7 +529,7 @@ class TestSearchFilters(unittest.TestCase):
                         'lots': ['saas', 'paas']
                     },
                     {
-                        'isSet': False,
+                        'checked': False,
                         'label': 'Option 2',
                         'name': 'booleanExample2',
                         'id': 'booleanExample2',
