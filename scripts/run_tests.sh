@@ -11,7 +11,7 @@ export DM_BUYER_FRONTEND_API_AUTH_TOKEN=${DM_BUYER_FRONTEND_API_AUTH_TOKEN:=myTo
 export DM_SEARCH_API_URL=${DM_SEARCH_API_URL:=http://localhost:5001}
 export DM_BUYER_FRONTEND_SEARCH_API_AUTH_TOKEN=${DM_BUYER_FRONTEND_SEARCH_API_AUTH_TOKEN:=myToken}
 
-echo "Environment variables in use:" 
+echo "Environment variables in use:"
 env | grep DM_
 
 set -o pipefail
@@ -29,11 +29,11 @@ function display_result {
   fi
 }
 
-# Build front-end static assets
-npm run frontend-build:production
+npm run --silent frontend-build:production
+display_result $? 1 "Build of front end static assets"
 
 pep8 .
-display_result $? 1 "Code style check"
+display_result $? 2 "Code style check"
 
 nosetests -v -s --with-doctest
-display_result $? 2 "Unit tests"
+display_result $? 3 "Unit tests"
