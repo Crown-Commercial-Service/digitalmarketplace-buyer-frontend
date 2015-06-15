@@ -42,7 +42,7 @@ class SearchFilters(object):
             filter = {
                 'label': option['label'],
                 'name': filter_name,
-                'id': '%s-%s' % (filter_name, filter_id),
+                'id': filter_id,
                 'value': option['label'].lower(),
                 'lots': [lot.strip() for lot in (
                     question['dependsOnLots'].lower().split(",")
@@ -186,13 +186,13 @@ class SearchFilters(object):
         for filter_group in self.filter_groups:
             for filter in filter_group['filters']:
                 if self.request_filters:
-                    filter['isSet'] = False
+                    filter['checked'] = False
                     param_values = self.request_filters.getlist(
                         filter['name'],
                         type=str
                     )
                     if len(param_values) > 0:
-                        filter['isSet'] = (
+                        filter['checked'] = (
                             filter['value'] in param_values
                         )
 
