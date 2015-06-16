@@ -23,21 +23,14 @@
     <span>{{ group }}</span>
   {% endfor %}
   </p>
-  <h2 class="visuallyhidden">Contact details</h2>
-  <details class="contact">
-    <summary class="summary">Contact {{ service.supplierName }}</summary>
-    <div class="indented">
-      <ul>
-        <li>
-          {{ service.meta.contact.name }}
-        </li>
-        <li>
-          {{ service.meta.contact.phone if service.meta.contact.phone }}
-        </li>
-        <li>
-          <a href="mailto:{{ service.meta.contact.email }}" data-event-category="Email a supplier" data-event-label="Fastnet International Ltd">{{ service.meta.contact.email }}</a>
-        </li>
-      </ul>
-    </div>
-  </details>
+  {%
+    with
+    organisation_type="supplier",
+    organisation=service.supplierName,
+    telephone=service.meta.contact.phone or None,
+    contact_name=service.meta.contact.name,
+    email_address=service.meta.contact.email
+  %}
+    {% include "toolkit/contact-details.html" %}
+  {% endwith %}
 </div>
