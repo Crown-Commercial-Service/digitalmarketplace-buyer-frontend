@@ -1,4 +1,4 @@
-from nose.tools import assert_equal, assert_true
+from nose.tools import assert_equal, assert_true, assert_in
 from ...helpers import BaseApplicationTest
 
 
@@ -10,5 +10,5 @@ class TestApplication(BaseApplicationTest):
         res = self.client.get('/static/javascripts/application.js')
         assert_equal(200, res.status_code)
         assert_true(
-            'GOVUK.analytics.trackPageview'
+            'trackPageview'
             in res.get_data(as_text=True))

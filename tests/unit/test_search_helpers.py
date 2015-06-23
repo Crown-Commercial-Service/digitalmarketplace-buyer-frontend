@@ -4,6 +4,11 @@ from werkzeug.datastructures import MultiDict
 from app.helpers import search_helpers
 
 
+def test_should_hide_both_next_and_prev_if_no_services():
+    assert_false(search_helpers.pagination(0, 100)["show_prev"])
+    assert_false(search_helpers.pagination(0, 100)["show_next"])
+
+
 def test_should_hide_both_next_and_prev_if_less_services_than_page():
     assert_false(search_helpers.pagination(50, 100)["show_prev"])
     assert_false(search_helpers.pagination(50, 100)["show_next"])
@@ -71,8 +76,7 @@ def test_should_calculate_correct_page_total():
         (200, 2),
         (201, 3),
         (1001, 11),
-        (0, None),
-        (None, None)
+        (0, 1)
     ]
 
     for test, expected in cases:

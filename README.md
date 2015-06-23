@@ -68,6 +68,11 @@ python application.py runserver
 
 The buyer app runs on port 5002 by default. Use the app at [http://127.0.0.1:5002/](http://127.0.0.1:5002/)
 
+### Using FeatureFlags
+
+To use feature flags, check out the documentation in (the README of)
+[digitalmarketplace-utils](https://github.com/alphagov/digitalmarketplace-utils#using-featureflags).
+
 ## Front-end
 
 Front-end code (both development and production) is compiled using [Node](http://nodejs.org/) and [Gulp](http://gulpjs.com/).
@@ -100,3 +105,4 @@ npm install
 - `npm run frontend-install` (install all non-NPM dependancies)
 
 Note: `npm run frontend-install` is run automatically as a post-install task when you run `npm install`.
+
