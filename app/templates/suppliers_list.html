@@ -5,28 +5,22 @@
 {% include '_warning.html' %}
 
 <header class="page-heading">
-    <h1>Supplier A to Z listing</h1>
+    <h1>G-Cloud supplier A to Z</h1>
 </header>
 
-<div id="global-breadcrumb" class="header-context">
+<div id="global-atoz-navigation" class="header-context">
     <nav>
-        <ol class="group" role="breadcrumbs">
+            <ol class="group" role="breadcrumbs">
             {% for item in nav %}
-            <li>
-                <a class="home" href="/suppliers?prefix={{ item }}">{{ item }}</a>
-            </li>
+                <li><a class="home" href="{{ url_for('main.suppliers_list_by_prefix', prefix=item)}}">{{ item }}</a></li>
             {% endfor %}
-            <li>
-                <a class="home" href="/suppliers?prefix=other">other</a>
-            </li>
-        </ol>
+                <li><a class="home" href="{{ url_for('main.suppliers_list_by_prefix', prefix=123) }}">123</a></li>
+            </ol>
     </nav>
 </div>
 
 
 <header class="page-heading page-heading-with-context">
-    <p class="context">Suppliers by prefix:</p>
-
     <h1>{{ prefix }}</h1>
 </header>
 
@@ -34,7 +28,7 @@
 {% for supplier in suppliers %}
 <div class="search-result">
     <h2 class="search-result-title">
-        <a href="/suppliers/{{ supplier.id }}">{{ supplier.name}}</a>
+        <a href="{{ url_for('main.suppliers_details', supplier_id=supplier.id)}}">{{ supplier.name}}</a>
     </h2>
 
     <p class="search-result-excerpt">

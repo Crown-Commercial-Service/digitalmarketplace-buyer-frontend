@@ -55,6 +55,16 @@ class BaseApplicationTest(object):
             'suppliers_by_prefix_fixture.json')
 
     @staticmethod
+    def _get_suppliers_by_prefix_fixture_data_page_2():
+        return BaseApplicationTest._get_fixture_data(
+            'suppliers_by_prefix_fixture_page_2.json')
+
+    @staticmethod
+    def _get_suppliers_by_prefix_fixture_with_next_and_prev():
+        return BaseApplicationTest._get_fixture_data(
+            'suppliers_by_prefix_fixture_page_with_next_and_prev.json')
+
+    @staticmethod
     def _strip_whitespace(whitespace_in_this):
         return re.sub(r"\s+", "",
                       whitespace_in_this, flags=re.UNICODE)

@@ -16,56 +16,19 @@
     </div>
 </div>
 
-
 <div class="grid-row">
     <div class="column-two-thirds">
         <p class="hint summary-item-no-content">
             {{ supplier.description }}
         </p>
         {% if supplier.clients %}
-        <h2>Clients</h2>
-        {% for client in supplier.clients %}
-        {{ client }},
-        {% endfor %}
-        {% endif %}
-	
-	<hr />
-        
-	{% if services %}
-        <h2>{{ services_count }} service(s)</h2>
-
-        {% for lot in services.keys() %}
-        {% if services[lot] %}
-        <h2>{{ lot }}</h2>
-        {% for service in services[lot] %}
-        <div class="search-result">
-            <h2 class="search-result-title">
-                <a href="/service/{{ service.id }}">{{ service.serviceName }}</a>
-            </h2>
-
-            <p class="search-result-excerpt">
-                {% if service.serviceSummary|length > 500 %}
-                {{ service.serviceSummary[:500] }}
-                {% else %}
-                {{ service.serviceSummary }}
-                {% endif %}
-            </p>
-            <ul aria-label="tags" class="search-result-metadata">
-                <li class="search-result-metadata-item">
-                    {{ service.frameworkName }}
-                </li>
-            </ul>
-        </div>
-        {% endfor %}
-        {% endif %}
-        {% endfor %}
-        {% else %}
-        <h2 class="summary-item-heading first-summary-item-heading">No active services</h2>
+            <h2>Clients</h2>
+            {{ ", ".join(supplier.clients) }}
         {% endif %}
     </div>
+
     <div class="column-one-third">
         <details class="contact">
-            <summary class="summary">Contact {{ supplier.name }}</summary>
             <div class="indented">
                 <ul>
                     <li>

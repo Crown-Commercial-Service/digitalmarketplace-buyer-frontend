@@ -1,7 +1,8 @@
 {
   "links": {
-    "next": "http://localhost:5000/suppliers?prefix=A&page=2"
-  }, 
+    "prev": "http://localhost:5000/suppliers?prefix=A&page=1",
+    "next": "http://localhost:5000/suppliers?prefix=A&page=3"
+  },
   "suppliers": [
     {
       "clients": [], 
