@@ -200,14 +200,11 @@ class TestSuppliersPage(BaseApplicationTest):
     def test_should_show_warning_message_on_supplier_details(self):
         res = self.client.get('/g-cloud/supplier/92191')
         assert_equal(200, res.status_code)
-
+        # TEST ZERO SERVICES SUPPLIERS NOT SHOWN
+        # TEST SUPPLIER DETAILS PAGE
         assert_true(
             '<strong>This page is for information only</strong><br/>Services should be chosen using your requirements.'  # noqa
             in res.get_data(as_text=True))
         assert_true(
             'Please use the <a href="https://www.digitalmarketplace.service.gov.uk/buyers-guide/">buyers guide</a> for help.'  # noqa
             in res.get_data(as_text=True))
-
-
-    # TEST ZERO SERVICES SUPPLIERS NOT SHOWN
-    # TEST SUPPLIER DETAILS PAGE

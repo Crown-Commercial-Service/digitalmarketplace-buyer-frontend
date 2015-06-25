@@ -10,7 +10,6 @@ data_api_client = apiclient.DataAPIClient()
 search_api_client = apiclient.SearchAPIClient()
 feature_flags = flask_featureflags.FeatureFlag()
 
-
 def create_app(config_name):
     application = Flask(__name__)
 
