@@ -23,7 +23,7 @@ mappings = [
                 'value': 'supportForThirdParties'
             },
             {
-                'key': u'Support availablility',
+                'key': u'Support availability',
                 'value': 'supportAvailability'
             },
             {
