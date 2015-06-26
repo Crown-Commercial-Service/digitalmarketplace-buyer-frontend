@@ -4,13 +4,12 @@ import unittest
 from mock import Mock
 from dmutils.content_loader import ContentLoader
 from werkzeug.datastructures import MultiDict
-from app.presenters.search_presenters import get_filters_from_request, filters_for_lot
 
 
 questions_builder = ContentLoader(
-        "app/helpers/questions_manifest.yml",
-        "tests/fixtures/g6_questions/data/"
-    ).get_builder()
+    "app/helpers/questions_manifest.yml",
+    "tests/fixtures/g6_questions/data/"
+).get_builder()
 
 
 def _get_fixture_data():

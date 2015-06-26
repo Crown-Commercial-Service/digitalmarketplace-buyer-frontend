@@ -2,19 +2,9 @@ import os
 import json
 import unittest
 from nose.tools import assert_equal
-from nose.plugins.skip import SkipTest
 
 from flask import Markup
-from mock import Mock
-from werkzeug.datastructures import MultiDict
-from app.presenters.search_presenters import (
-    SearchResults, SearchSummary, SearchFilters, SummaryFragment, SummaryRules)
-
-
-filter_groups = SearchFilters.get_filter_groups_from_questions(
-    manifest="app/helpers/questions_manifest.yml",
-    questions_dir="bower_components/digital-marketplace-ssp-content/g6/"
-)
+from app.presenters.search_results import SearchResults
 
 
 def _get_fixture_data():

@@ -7,7 +7,8 @@ from mock import Mock
 from werkzeug.datastructures import MultiDict
 from app.presenters.search_presenters import filters_for_lot
 from app.presenters.search_results import SearchResults
-from app.presenters.search_summary import SearchSummary, SummaryRules, SummaryFragment
+from app.presenters.search_summary import SearchSummary, \
+    SummaryRules, SummaryFragment
 from dmutils.content_loader import ContentLoader
 
 
@@ -18,6 +19,7 @@ filter_groups = filters_for_lot(
         "bower_components/digital-marketplace-ssp-content/g6/"
     ).get_builder()
 )
+
 
 def _get_fixture_data():
     test_root = os.path.abspath(
