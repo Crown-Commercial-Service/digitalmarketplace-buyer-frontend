@@ -222,7 +222,10 @@ def redirect_search():
 
 @main.route('/g-cloud/search')
 def search():
-    filters = filters_for_lot(request.args.get("lot", "all"), blueprint=main)
+    filters = filters_for_lot(
+        request.args.get("lot", "all"),
+        main.config['QUESTIONS_BUILDER']
+    )
 
     search_keywords = get_keywords_from_request(request)
 

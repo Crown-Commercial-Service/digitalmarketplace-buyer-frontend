@@ -2,9 +2,8 @@ from werkzeug.datastructures import MultiDict
 from dmutils.formats import lot_to_lot_case
 
 
-def filters_for_lot(lot, blueprint):
+def filters_for_lot(lot, builder):
 
-    builder = blueprint.config['QUESTIONS_BUILDER']
     filters = []
     if lot == 'all':
         sections = builder.filter(
