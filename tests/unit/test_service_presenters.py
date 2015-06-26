@@ -77,7 +77,7 @@ class TestService(unittest.TestCase):
                     'value': u'Yes'
                 },
                 {
-                    'key': u'Support availablility',
+                    'key': u'Support availability',
                     'type': 'string',
                     'value': u'24/7, 365 days a year'
                 },
