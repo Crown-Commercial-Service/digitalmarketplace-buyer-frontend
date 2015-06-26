@@ -6,16 +6,19 @@ from datetime import datetime
 from dmutils.deprecation import deprecated
 from flask import abort, render_template, request, redirect, \
     url_for, current_app
-from ..presenters.search_presenters import SearchFilters, SearchResults
+from ..presenters.search_presenters import filters_for_lot, \
+    get_current_lot, set_filter_states
+from ..presenters.search_results import SearchResults
 from ..presenters.service_presenters import Service
 from ..helpers.search_helpers import (
     get_keywords_from_request, get_template_data, pagination,
-    get_page_from_request, query_args_for_pagination, total_pages
+    get_page_from_request, query_args_for_pagination
 )
-from ..helpers.shared_helpers import get_label_for_lot_param
+from dmutils.formats import get_label_for_lot_param
 from ..exceptions import AuthException
 from .. import search_api_client, data_api_client
 from dmutils.apiclient import HTTPError
+from dmutils.formats import LOTS
 
 
 @main.route('/')
@@ -219,8 +222,10 @@ def redirect_search():
 
 @main.route('/g-cloud/search')
 def search():
+    filters = filters_for_lot(request.args.get("lot", "all"), blueprint=main)
+
     search_keywords = get_keywords_from_request(request)
-    search_filters_obj = SearchFilters(blueprint=main, request=request)
+
     response = search_api_client.search_services(
         **dict([a for a in request.args.lists()]))
     search_results_obj = SearchResults(response)
@@ -232,7 +237,8 @@ def search():
     search_summary = SearchResults.get_search_summary(
         response['meta']['total'],
         request.args,
-        search_filters_obj.filter_groups)
+        filters
+    )
 
     breadcrumb = [
         {
@@ -241,23 +247,26 @@ def search():
         }
     ]
 
-    if SearchFilters.get_current_lot(request):
+    label = get_label_for_lot_param(get_current_lot(request))
+    if label:
         breadcrumb.append({
             'text': get_label_for_lot_param(
-                SearchFilters.get_current_lot(request))
+                get_current_lot(request))
         })
+
+    set_filter_states(filters, request)
 
     template_data = get_template_data(main, {
         'title': 'Search results',
-        'current_lot': SearchFilters.get_current_lot(request),
-        'lots': search_filters_obj.lot_filters,
+        'current_lot': get_current_lot(request),
+        'lots': LOTS,
         'search_keywords': search_keywords,
-        'filter_groups': search_filters_obj.filter_groups,
         'services': search_results_obj.search_results,
         'total': search_results_obj.total,
         'search_query': query_args_for_pagination(request.args),
         'pagination': pagination_config,
         'crumbs': breadcrumb,
-        'summary': search_summary.markup()
+        'summary': search_summary.markup(),
+        'filters': filters
     })
     return render_template('search.html', **template_data)

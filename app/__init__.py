@@ -2,7 +2,7 @@ from flask import Flask, request, redirect
 from flask.ext.bootstrap import Bootstrap
 from config import configs
 from dmutils import apiclient, init_app, flask_featureflags
-from .presenters.search_presenters import SearchFilters
+from dmutils.content_loader import ContentLoader
 
 
 bootstrap = Bootstrap()
@@ -23,10 +23,10 @@ def create_app(config_name):
         search_api_client=search_api_client
     )
 
-    filter_groups = SearchFilters.get_filter_groups_from_questions(
-        manifest="app/helpers/questions_manifest.yml",
-        questions_dir="app/content/g6/"
-    )
+    questions_builder = ContentLoader(
+        "app/helpers/questions_manifest.yml",
+        "app/content/g6/"
+    ).get_builder()
 
     from .main import main as main_blueprint
     from .status import status as status_blueprint
@@ -36,7 +36,7 @@ def create_app(config_name):
 
     main_blueprint.config = {
         'BASE_TEMPLATE_DATA': application.config['BASE_TEMPLATE_DATA'],
-        'FILTER_GROUPS': filter_groups
+        'QUESTIONS_BUILDER': questions_builder
     }
 
     @application.before_request
