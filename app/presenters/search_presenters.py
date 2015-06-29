@@ -1,11 +1,9 @@
-from werkzeug.datastructures import MultiDict
 from dmutils.formats import lot_to_lot_case
+from ..helpers.search_helpers import get_filters_from_request
 
 
-def filters_for_lot(lot, builder):
-
-    filters = []
-    if lot == 'all':
+def sections_for_lot(lot, builder):
+    if lot is None or lot == 'all':
         sections = builder.filter(
             {'lot': 'IaaS'}).filter(
             {'lot': 'PaaS'}).filter(
@@ -14,47 +12,50 @@ def filters_for_lot(lot, builder):
     else:
         sections = builder.filter({'lot': lot_to_lot_case(lot)}).sections
 
+    return sections
+
+
+def filters_for_lot(lot, builder):
+    sections = sections_for_lot(lot, builder)
+    lot_filters = []
+
     for section in sections:
-        filter = {
+        section_filter = {
             "label": section["name"],
             "filters": [],
         }
         for question in section["questions"]:
-            if question['type'] == 'boolean':
-                actual_filter = {
-                    'label': question['question'],
-                    'name': question['id'],
-                    'id': question['id'],
-                    'value': 'true',
-                }
-                filter["filters"].append(actual_filter)
+            section_filter["filters"].extend(
+                filters_for_question(question)
+            )
 
-            if question['type'] in ['checkboxes', 'radios']:
-                for option in question['options']:
-                    actual_filter = {
-                        'label': option['label'],
-                        'name': question['id'],
-                        'id': option['label'].lower(),
-                        'value': option['label'].lower(),
-                    }
-                    filter["filters"].append(actual_filter)
+        lot_filters.append(section_filter)
 
-        filters.append(filter)
-
-    return filters
+    return lot_filters
 
 
-def get_current_lot(request):
-    return request.args.get('lot', None)
+def filters_for_question(question):
+    question_filters = []
+    if question['type'] == 'boolean':
+        question_filters.append({
+            'label': question['question'],
+            'name': question['id'],
+            'id': question['id'],
+            'value': 'true',
+        })
 
+    elif question['type'] in ['checkboxes', 'radios']:
+        for option in question['options']:
+            question_filters.append({
+                'label': option['label'],
+                'name': question['id'],
+                'id': '{}-{}'.format(
+                    question['id'],
+                    option['label'].lower().replace(' ', '-')),
+                'value': option['label'].lower(),
+            })
 
-def get_filters_from_request(request):
-    """Returns the filters applied to a search from the request object"""
-
-    filters = MultiDict(request.args.copy())
-    filters.poplist('q')
-    filters.poplist('lot')
-    return filters
+    return question_filters
 
 
 def set_filter_states(filter_groups, request):
