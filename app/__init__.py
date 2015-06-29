@@ -10,6 +10,11 @@ data_api_client = apiclient.DataAPIClient()
 search_api_client = apiclient.SearchAPIClient()
 feature_flags = flask_featureflags.FeatureFlag()
 
+questions_loader = ContentLoader(
+    "app/helpers/questions_manifest.yml",
+    "app/content/g6/"
+)
+
 
 def create_app(config_name):
     application = Flask(__name__)
@@ -23,11 +28,6 @@ def create_app(config_name):
         search_api_client=search_api_client
     )
 
-    questions_builder = ContentLoader(
-        "app/helpers/questions_manifest.yml",
-        "app/content/g6/"
-    ).get_builder()
-
     from .main import main as main_blueprint
     from .status import status as status_blueprint
 
@@ -36,7 +36,6 @@ def create_app(config_name):
 
     main_blueprint.config = {
         'BASE_TEMPLATE_DATA': application.config['BASE_TEMPLATE_DATA'],
-        'QUESTIONS_BUILDER': questions_builder
     }
 
     @application.before_request
