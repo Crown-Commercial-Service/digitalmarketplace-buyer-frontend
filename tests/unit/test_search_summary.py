@@ -13,10 +13,10 @@ from dmutils.content_loader import ContentLoader
 
 
 filter_groups = filters_for_lot(
-    "all",
+    "saas",
     ContentLoader(
         "app/helpers/questions_manifest.yml",
-        "bower_components/digital-marketplace-ssp-content/g6/"
+        "app/content/g6/"
     ).get_builder()
 )
 
@@ -139,7 +139,6 @@ class TestSearchSummary(unittest.TestCase):
             u" in <em>Software as a Service</em>"))
         self.assertEqual(len(search_summary.filters_fragments), 0)
 
-    @unittest.skip("until content refactor")
     def test_search_summary_with_a_single_filter_group(self):
         self.request_args.setlist('serviceTypes', ['collaboration'])
         search_summary = SearchSummary('9', self.request_args, filter_groups)
@@ -149,7 +148,6 @@ class TestSearchSummary(unittest.TestCase):
             u" in <em>Software as a Service</em>"))
         self.assertEqual(len(search_summary.filters_fragments), 1)
 
-    @unittest.skip("until content refactor")
     def test_search_summary_with_two_filter_groups(self):
         self.request_args.setlist(
             'serviceTypes',
@@ -166,7 +164,6 @@ class TestSearchSummary(unittest.TestCase):
             u" in <em>Software as a Service</em>"))
         self.assertEqual(len(search_summary.filters_fragments), 2)
 
-    @unittest.skip("until content refactor")
     def test_search_summary_with_three_filter_groups(self):
         self.request_args.setlist(
             'serviceTypes',
@@ -191,7 +188,6 @@ class TestSearchSummary(unittest.TestCase):
             u" in <em>Software as a Service</em>"))
         self.assertEqual(len(search_summary.filters_fragments), 3)
 
-    @unittest.skip("until content refactor")
     def test_search_summary_orders_filter_groups_as_in_manifest(self):
         self.request_args.setlist(
             'serviceTypes',
