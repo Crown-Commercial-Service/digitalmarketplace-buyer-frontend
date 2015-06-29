@@ -1,7 +1,5 @@
 from flask import Markup
 
-from .search_summary import SearchSummary
-
 
 class SearchResults(object):
     """Provides access to the search results information"""
@@ -12,10 +10,6 @@ class SearchResults(object):
         self.total = response['meta']['total']
         if 'page' in response['meta']['query']:
             self.page = response['meta']['query']['page']
-
-    @staticmethod
-    def get_search_summary(results_total, request_args, filter_groups):
-        return SearchSummary(results_total, request_args, filter_groups)
 
     def _add_highlighting(self):
         for index, service in enumerate(self.search_results):

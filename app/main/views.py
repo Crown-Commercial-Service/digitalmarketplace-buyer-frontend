@@ -16,6 +16,7 @@ from ..presenters.search_presenters import (
     set_filter_states,
 )
 from ..presenters.search_results import SearchResults
+from ..presenters.search_summary import SearchSummary
 from ..presenters.service_presenters import Service
 from ..helpers.search_helpers import (
     get_keywords_from_request, get_template_data, pagination,
@@ -238,12 +239,14 @@ def search():
     )
 
     search_results_obj = SearchResults(response)
+
     pagination_config = pagination(
         search_results_obj.total,
         current_app.config["DM_SEARCH_PAGE_SIZE"],
         get_page_from_request(request)
     )
-    search_summary = SearchResults.get_search_summary(
+
+    search_summary = SearchSummary(
         response['meta']['total'],
         request.args,
         filters
