@@ -5,6 +5,10 @@ try:
     from urllib.parse import urlparse
 except ImportError:
     from urlparse import urlparse
+try:
+    from urllib import unquote
+except ImportError:
+    from urllib.parse import unquote
 
 
 class Service(object):
@@ -239,7 +243,7 @@ class Meta(object):
         if 'additionalDocumentURLs' in service_data:
             for index, url in enumerate(service_data['additionalDocumentURLs'], 1):
                 extension = self._get_document_extension(url)
-                name = "Additional document #{}".format(index)
+                name = self._get_pretty_document_name_without_extension(url)
                 documents.append({
                     'name':  name,
                     'url': url,
@@ -300,6 +304,11 @@ class Meta(object):
         if options:
             caveats.append(options)
         return caveats
+
+    def _get_pretty_document_name_without_extension(self, document_url):
+        document_basename = os.path.basename(urlparse(document_url).path)
+        filename = unquote(os.path.splitext(document_basename)[0])
+        return filename.replace('_', ' ')
 
     def _get_document_extension(self, document_url):
         url_object = urlparse(document_url)
