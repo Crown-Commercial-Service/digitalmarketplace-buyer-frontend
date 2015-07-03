@@ -1,4 +1,6 @@
-dependsOnLots: 'SaaS, PaaS, IaaS'
+depends:
+  - "on": "lot"
+    being: ['SaaS', 'PaaS', 'IaaS', 'SCS']
 type: radios
 options:
     -

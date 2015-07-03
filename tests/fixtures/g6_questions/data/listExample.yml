@@ -1,4 +1,6 @@
-dependsOnLots: 'SaaS, PaaS, IaaS'
+depends:
+  - "on": "lot"
+    being: ['SaaS', 'PaaS', 'IaaS']
 hint: 'Enter all the parts of the answer'
 listItemName: 'certification example'
 type: list

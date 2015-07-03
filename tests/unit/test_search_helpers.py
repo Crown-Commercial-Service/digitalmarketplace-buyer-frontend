@@ -1,3 +1,5 @@
+import mock
+
 from nose.tools import assert_equal, assert_false, assert_true
 from werkzeug.datastructures import MultiDict
 
@@ -101,3 +103,184 @@ def test_should_reject_invalid_page():
             search_helpers.valid_page(test), \
             expected, \
             test
+
+
+class TestBuildSearchQueryHelpers(object):
+    def setUp(self):
+        self.lot_filters = [
+            {'label': 'section1', 'filters': [
+                {'name': 'question1', 'value': 'true'},
+                {'name': 'question2', 'value': 'true'},
+                {'name': 'question3', 'value': 'option1'},
+                {'name': 'question3', 'value': 'option2'},
+                {'name': 'question3', 'value': 'option3'},
+            ]},
+            {'label': 'section2', 'filters': [
+                {'name': 'question4', 'value': 'true'},
+                {'name': 'question5', 'value': 'true'},
+                {'name': 'question6', 'value': 'option1'},
+                {'name': 'question6', 'value': 'option2'},
+                {'name': 'question6', 'value': 'option3'},
+            ]},
+        ]
+
+    def _request(self, params):
+        return mock.Mock(args=MultiDict(params))
+
+    def _loader(self, question_types=None):
+        question_types = question_types or {
+            'question1': {'type': 'boolean'},
+            'question4': {},
+            'question3': {'type': 'radios'},
+            'question6': {'type': 'checkboxes'},
+        }
+
+        def _mock_get_question(question):
+            return question_types[question]
+
+        loader = mock.Mock()
+        loader.get_question = _mock_get_question
+
+        return loader
+
+    def test_get_filters_from_request(self):
+        request = self._request({
+            'q': '',
+            'page': 1,
+            'someFilter': 'filter',
+            'otherFilter': [1, 2]
+        })
+
+        assert_equal(
+            search_helpers.get_filters_from_request(request).to_dict(False),
+            {
+                'someFilter': ['filter'],
+                'otherFilter': [1, 2]
+            }
+        )
+
+    def test_allowed_request_lot_filters(self):
+        assert_equal(
+            search_helpers.allowed_request_lot_filters(self.lot_filters),
+            {
+                ('question1', 'true'),
+                ('question2', 'true'),
+                ('question3', 'option1'),
+                ('question3', 'option2'),
+                ('question3', 'option3'),
+                ('question4', 'true'),
+                ('question5', 'true'),
+                ('question6', 'option1'),
+                ('question6', 'option2'),
+                ('question6', 'option3'),
+            }
+        )
+
+    def test_clean_request_filters(self):
+        filters = MultiDict({
+            'question1': 'true',
+            'question2': ['true', 'false', 1],
+            'question3': ['option1', 'true', 'option5', 'option2', 2, None],
+            'question6': '',
+            'question4': 'false',
+            'lot': 'false',
+            'page': 'false',
+        })
+
+        assert_equal(
+            search_helpers.clean_request_filters(filters, self.lot_filters),
+            MultiDict({
+                'question1': 'true',
+                'question2': 'true',
+                'question3': ['option1', 'option2'],
+            })
+        )
+
+    def test_group_request_filters(self):
+        filters = MultiDict({
+            'question1': 'true',
+            'question3': ['option1', 'option2'],
+            'question4': 'true',
+            'question6': ['option1', 'option3'],
+        })
+
+        assert_equal(
+            search_helpers.group_request_filters(filters, self._loader()),
+            {
+                'question1': ['true'],
+                'question4': ['true'],
+                'question3': ['option1,option2'],
+                'question6': ['option1', 'option3'],
+            }
+        )
+
+    def test_build_search_query(self):
+        request = self._request({
+            'page': 5,
+            'q': 'email',
+            'non': 1,
+            'newkey': 'true',
+            'lot': 'saas',
+            'question1': 'true',
+            'question3': ['option1', 'option2'],
+            'question4': 'true',
+            'question6': ['option1', 'option3'],
+        })
+
+        assert_equal(
+            search_helpers.build_search_query(
+                request, self.lot_filters, self._loader()),
+            {
+                'page': 5,
+                'q': 'email',
+                'lot': 'saas',
+                'question1': ['true'],
+                'question4': ['true'],
+                'question3': ['option1,option2'],
+                'question6': ['option1', 'option3'],
+            }
+        )
+
+    def test_build_search_query_unknown_lot(self):
+        request = self._request({
+            'lot': 'saasaas',
+        })
+
+        assert_equal(
+            search_helpers.build_search_query(
+                request, self.lot_filters, self._loader()),
+            {}
+        )
+
+    def test_build_search_query_multiple_lots(self):
+        request = self._request({
+            'lot': 'saas,paas',
+        })
+
+        assert_equal(
+            search_helpers.build_search_query(
+                request, self.lot_filters, self._loader()),
+            {}
+        )
+
+    def test_build_search_query_no_keywords(self):
+        request = self._request({
+            'q': '',
+        })
+
+        assert_equal(
+            search_helpers.build_search_query(
+                request, self.lot_filters, self._loader()),
+            {}
+        )
+
+    def test_build_search_query_no_page(self):
+        request = self._request({
+            'page': '',
+        })
+
+        assert_equal(
+            search_helpers.build_search_query(
+                request, self.lot_filters, self._loader()),
+            {}
+        )

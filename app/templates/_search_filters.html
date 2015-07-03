@@ -2,11 +2,21 @@
   <h3>Choose a category</h3>
   {% from 'macros/_filters.html' import checkbox, lot_filters %}
   <ul>
+
+  <li>
+        {% if current_lot %}
+        <a href="{{ url_for('.search', q=search_keywords) }}">All categories</a>
+        {% else %}
+        All categories
+        {% endif %}
+  </li>
   {% for lot in lots %}
-    {% if lot.isActive %}
+    {% if current_lot == lot.lot %}
       <li>{{ lot.label }}</li>
     {% else %}
-      <li><a href="{{ lot.url }}">{{ lot.label }}</a></li>
+      <li>
+        <a href="{{ url_for('.search', q=search_keywords, lot=lot.lot) }}">{{ lot.label }}</a>
+      </li>
     {% endif %}
   {% endfor %}
   </ul>
@@ -22,11 +32,11 @@
 {% if current_lot %}
 <input type="hidden" name="lot" value="{{ current_lot }}" />
 {% endif %}
-{% for filter_group in filter_groups %}
+{% for filter in filters %}
   {%
     with
-    label = filter_group.label,
-    options = filter_group.filters
+    label = filter.label,
+    options = filter.filters
   %}
     {% include "toolkit/forms/option-select.html" %}
   {% endwith %}
