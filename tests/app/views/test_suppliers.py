@@ -231,7 +231,7 @@ class TestSuppliersPage(BaseApplicationTest):
             "Example Company Limited is an innovation station sensation; we deliver software so bleeding edge you literally won&#39;t be able to run any of it on your systems."  # noqa
             in res.get_data(as_text=True))
         assert_true(
-            self._strip_whitespace("<h2>Clients</h2>UK Ministry of Defence, Astula Ltd, Bedrock Communications Ltd</div>")
+            self._strip_whitespace("<h2>Clients</h2>UK Ministry of Defence, Astula Ltd, Bedrock Communications Ltd</div>")  # noqa
             in self._strip_whitespace(res.get_data(as_text=True)))
 
     def test_should_show_supplier_with_no_desc_or_clients(self):
@@ -298,4 +298,3 @@ class TestSuppliersPage(BaseApplicationTest):
             'www.examplecompany.biz'
             in res.get_data(as_text=True)
         )
-
