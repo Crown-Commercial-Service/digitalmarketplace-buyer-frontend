@@ -5,6 +5,10 @@ try:
     from urllib.parse import urlparse
 except ImportError:
     from urlparse import urlparse
+try:
+    from urllib import unquote
+except ImportError:
+    from urllib.parse import unquote
 
 
 class Service(object):
@@ -231,18 +235,18 @@ class Meta(object):
                 extension = self._get_document_extension(url)
                 documents.append({
                     'name':  names[index],
-                    'url': self._replace_whitespace(url, '%20'),
+                    'url': url,
                     'extension': extension
                 })
 
         # get additional documents, if they exist
         if 'additionalDocumentURLs' in service_data:
-            for document_url in service_data['additionalDocumentURLs']:
-                extension = self._get_document_extension(document_url)
-                name = self._get_document_name_without_extension(document_url)
+            for index, url in enumerate(service_data['additionalDocumentURLs'], 1):
+                extension = self._get_document_extension(url)
+                name = self._get_pretty_document_name_without_extension(url)
                 documents.append({
                     'name':  name,
-                    'url': self._replace_whitespace(document_url, '%20'),
+                    'url': url,
                     'extension': extension
                 })
 
@@ -301,17 +305,14 @@ class Meta(object):
             caveats.append(options)
         return caveats
 
-    def _get_document_name_without_extension(self, document_url):
+    def _get_pretty_document_name_without_extension(self, document_url):
         document_basename = os.path.basename(urlparse(document_url).path)
-        return os.path.splitext(document_basename)[0]
+        filename = unquote(os.path.splitext(document_basename)[0])
+        return filename.replace('_', ' ')
 
     def _get_document_extension(self, document_url):
         url_object = urlparse(document_url)
         return os.path.splitext(url_object.path)[1].split('.')[1]
-
-    def _replace_whitespace(self, string, replacement_substring):
-                # Replace all runs of whitespace with replacement_substring
-                return re.sub(r"\s+", replacement_substring, string)
 
     def _if_both_keys_or_either(self, service_data, keys=[], values={}):
         def is_not_false(key):
@@ -320,7 +321,6 @@ class Meta(object):
             else:
                 return False
 
-        caveat = ''
         if is_not_false(keys[0]) and is_not_false(keys[1]):
             caveat = values['if_both']
         elif is_not_false(keys[0]):
