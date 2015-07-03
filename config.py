@@ -56,6 +56,7 @@ class Config(object):
 
 class Test(Config):
     DEBUG = True
+    DM_LOG_LEVEL = 'CRITICAL'
 
 
 class Development(Config):

@@ -1,4 +1,6 @@
-dependsOnLots: 'SaaS, PaaS, IaaS'
+depends:
+  - "on": "lot"
+    being: ['SaaS', 'PaaS', 'IaaS']
 hint: 'Choose all options that apply'
 type: checkboxes
 options:

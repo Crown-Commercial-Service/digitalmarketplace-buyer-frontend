@@ -6,20 +6,9 @@ from requests import ConnectionError
 from ...helpers import BaseApplicationTest
 
 
+@mock.patch('app.main.views.search_api_client')
 class TestErrors(BaseApplicationTest):
-    def setup(self):
-        super(TestErrors, self).setup()
-
-        self._search_api_client = mock.patch(
-            'app.main.views.search_api_client'
-        ).start()
-
-        self.search_results = self._get_search_results_fixture_data()
-
-    def teardown(self):
-        self._search_api_client.stop()
-
-    def test_404(self):
+    def test_404(self, search_api_mock):
         res = self.client.get('/g-cloud/service/1234')
         assert_equal(404, res.status_code)
         assert_true(
@@ -34,11 +23,9 @@ class TestErrors(BaseApplicationTest):
             "enquiries@digitalmarketplace.service.gov.uk</a>"
             in res.get_data(as_text=True))
 
-    def test_500(self):
+    def test_500(self, search_api_mock):
         self.app.config['DEBUG'] = False
-        self._search_api_client.search_services = mock.Mock(
-            side_effect=ConnectionError('API is down')
-        )
+        search_api_mock.search_services.side_effect = ConnectionError()
 
         res = self.client.get('/g-cloud/search?q=email')
         assert_equal(500, res.status_code)
