@@ -1,33 +1,37 @@
 {
   "suppliers": {
-    "clients": [],
+    "id": 123456,
+    "name": "Example Company Limited",
+    "description": "Example Company Limited is an innovation station sensation; we deliver software so bleeding edge you literally won't be able to run any of it on your systems.",
     "contactInformation": [
       {
-        "address1": "30 Fenchurch Street",
+        "website": "www.examplecompany.biz",
+        "contactName": "John Example",
+        "email": "j@examplecompany.biz",
+        "phoneNumber": "07309404738",
+        "address1": "123 Fake Street",
         "city": "London",
-        "contactName": "Simon Mitchell",
         "country": "United Kingdom",
-        "email": "sales.support.uk@accenture.com",
-        "id": 1150,
-        "links": {
-          "self": "http://localhost:5000/suppliers/92191/contact-information/1150"
-        },
-        "phoneNumber": "++44 (0) 7702 234537",
-        "postcode": "EC3M 3BD",
-        "website": "http://www.accenture.com/gb-en"
+        "postcode": "F4 K1E"
+      },
+      {
+        "website": "http://www.scdp.com/team/lane.php",
+        "contactName": "Lane Pryce",
+        "email": "lane@scdp.com",
+        "phoneNumber": "020 7918 9200",
+        "address1": "14 Madison Ave",
+        "address2": "Flat 1",
+        "city": "London",
+        "country": "UK",
+        "postcode": "EC1A D0N"
       }
     ],
-    "description": "Accenture is a global management consulting, technology services and outsourcing company, with 305,000 people serving clients in 120 countries. Combining unparalleled experience, comprehensive capabilities across all industries and functions, and extensive research on the world\u2019s most successful organisations, Accenture collaborates with clients to help them become high-performance businesses and governments.",
-    "dunsNumber": "734939007",
-    "eSourcingId": "675069",
-    "id": 92191,
-    "links": {
-      "self": "http://localhost:5000/suppliers/92191"
-    },
-    "name": "Accenture (UK) Limited",
-    "service_counts": {
-      "G-Cloud 5": 59,
-      "G-Cloud 6": 55
-    }
+    "dunsNumber": "333333333",
+    "eSourcingId": "333333",
+    "clients": [
+      "UK Ministry of Defence",
+      "Astula Ltd",
+      "Bedrock Communications Ltd"
+    ]
   }
 }

@@ -40,7 +40,7 @@
                     <li>
                         <a href="mailto:{{ supplier.contactInformation[0].email }}"
                            data-event-category="Email a supplier"
-                           data-event-label="Fastnet International Ltd">{{ supplier.contactInformation[0].email }}</a>
+                           data-event-label="{{ supplier.name }}">{{ supplier.contactInformation[0].email }}</a>
                     </li>
                     <li>
                         {{ supplier.contactInformation[0].address1 }}

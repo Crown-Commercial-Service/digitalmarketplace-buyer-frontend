@@ -1,17 +1,17 @@
 <nav role="navigation">
     <ul class="previous-next-navigation">
 
-        {% if pagination['prev'] %}
+        {% if prev_link %}
         <li class="previous">
-            <a href="{{ url_for('.suppliers_list_by_prefix', **pagination['prev']) }}">
+            <a href="{{ url_for('.suppliers_list_by_prefix', **prev_link) }}">
                 Previous <span class="visuallyhidden">page</span>
             </a>
         </li>
         {% endif %}
 
-        {% if pagination['next'] %}
+        {% if next_link %}
         <li class="next">
-            <a href="{{ url_for('.suppliers_list_by_prefix', **pagination['next']) }}">
+            <a href="{{ url_for('.suppliers_list_by_prefix', **next_link) }}">
                 Next <span class="visuallyhidden">page</span>
             </a>
         </li>

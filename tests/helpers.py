@@ -50,6 +50,10 @@ class BaseApplicationTest(object):
         return BaseApplicationTest._get_fixture_data('supplier_fixture.json')
 
     @staticmethod
+    def _get_supplier_with_minimum_fixture_data():
+        return BaseApplicationTest._get_fixture_data('supplier_fixture_with_minium_data.json')
+
+    @staticmethod
     def _get_suppliers_by_prefix_fixture_data():
         return BaseApplicationTest._get_fixture_data(
             'suppliers_by_prefix_fixture.json')

@@ -2,5 +2,4 @@ from flask import Blueprint
 
 main = Blueprint('main', __name__)
 
-from . import views, errors
-from app.main.suppliers import suppliers
+from . import views, errors, suppliers

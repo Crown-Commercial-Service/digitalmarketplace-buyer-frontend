@@ -25,17 +25,17 @@ def process_page(page):
 
 
 def parse_links(links):
-    prev_page = None
-    next_page = None
-    if 'prev' in links:
-        prev_page = parse_qs(urlparse(links['prev']).query)
-    if 'next' in links:
-        next_page = parse_qs(urlparse(links['next']).query)
-
-    return {
-        "prev": prev_page,
-        "next": next_page
+    pagination_links = {
+        "prev": None,
+        "next": None
     }
+
+    if 'prev' in links:
+        pagination_links['prev'] = parse_qs(urlparse(links['prev']).query)
+    if 'next' in links:
+        pagination_links['next'] = parse_qs(urlparse(links['next']).query)
+
+    return pagination_links
 
 
 @main.route('/g-cloud/suppliers')
@@ -55,7 +55,8 @@ def suppliers_list_by_prefix():
                            suppliers=suppliers,
                            nav=ascii_uppercase,
                            count=len(suppliers),
-                           pagination=parse_links(links),
+                           prev_link=parse_links(links)['prev'],
+                           next_link=parse_links(links)['next'],
                            prefix=prefix,
                            **template_data)
 

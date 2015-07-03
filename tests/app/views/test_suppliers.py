@@ -1,5 +1,5 @@
 import mock
-from nose.tools import assert_equal, assert_true
+from nose.tools import assert_equal, assert_true, assert_false
 from ...helpers import BaseApplicationTest
 
 
@@ -15,6 +15,7 @@ class TestSuppliersPage(BaseApplicationTest):
         self.suppliers_by_prefix_page_2 = self._get_suppliers_by_prefix_fixture_data_page_2()  # noqa
         self.suppliers_by_prefix_next_and_prev = self._get_suppliers_by_prefix_fixture_with_next_and_prev()  # noqa
         self.supplier = self._get_supplier_fixture_data()  # noqa
+        self.supplier_with_minimum_data = self._get_supplier_with_minimum_fixture_data()  # noqa
         self._data_api_client.find_suppliers.return_value = self.suppliers_by_prefix  # noqa
         self._data_api_client.get_supplier.return_value = self.supplier  # noqa
 
@@ -25,44 +26,44 @@ class TestSuppliersPage(BaseApplicationTest):
         res = self.client.get('/g-cloud/suppliers')
         assert_equal(200, res.status_code)
         assert_true(
-            '<h1>A</h1>'
-            in res.get_data(as_text=True))
+            self._strip_whitespace('<header class="page-heading page-heading-with-context"><h1>A</h1></header>')
+            in self._strip_whitespace(res.get_data(as_text=True)))
 
     def test_should_show_suppliers_prefixed_by_a_param(self):
         res = self.client.get('/g-cloud/suppliers?prefix=M')
         assert_equal(200, res.status_code)
         assert_true(
-            '<h1>M</h1>'
-            in res.get_data(as_text=True))
+            self._strip_whitespace('<header class="page-heading page-heading-with-context"><h1>M</h1></header>')  # noqa
+            in self._strip_whitespace(res.get_data(as_text=True)))
 
     def test_should_use_uppercase_prefix(self):
         res = self.client.get('/g-cloud/suppliers?prefix=b')
         assert_equal(200, res.status_code)
         assert_true(
-            '<h1>B</h1>'
-            in res.get_data(as_text=True))
+            self._strip_whitespace('<header class="page-heading page-heading-with-context"><h1>B</h1></header>')  # noqa
+            in self._strip_whitespace(res.get_data(as_text=True)))
 
     def test_should_use_default_if_invalid(self):
         res = self.client.get('/g-cloud/suppliers?prefix=+')
         assert_equal(200, res.status_code)
         assert_true(
-            '<h1>A</h1>'
-            in res.get_data(as_text=True))
+            self._strip_whitespace('<header class="page-heading page-heading-with-context"><h1>A</h1></header>')  # noqa
+            in self._strip_whitespace(res.get_data(as_text=True)))
 
     def test_should_use_default_if_multichar_prefix(self):
         res = self.client.get('/g-cloud/suppliers?prefix=Prefix')
         assert_equal(200, res.status_code)
 
         assert_true(
-            '<h1>A</h1>'
-            in res.get_data(as_text=True))
+            self._strip_whitespace('<header class="page-heading page-heading-with-context"><h1>A</h1></header>')  # noqa
+            in self._strip_whitespace(res.get_data(as_text=True)))
 
     def test_should_use_123_prefix(self):
         res = self.client.get('/g-cloud/suppliers?prefix=123')
         assert_equal(200, res.status_code)
         assert_true(
-            '<h1>123</h1>'
-            in res.get_data(as_text=True))
+            self._strip_whitespace('<header class="page-heading page-heading-with-context"><h1>123</h1></header>')  # noqa
+            in self._strip_whitespace(res.get_data(as_text=True)))
 
     def test_should_show_supplier_names_link_and_description(self):
         res = self.client.get('/g-cloud/suppliers')
@@ -200,11 +201,88 @@ class TestSuppliersPage(BaseApplicationTest):
     def test_should_show_warning_message_on_supplier_details(self):
         res = self.client.get('/g-cloud/supplier/92191')
         assert_equal(200, res.status_code)
-        # TEST ZERO SERVICES SUPPLIERS NOT SHOWN
-        # TEST SUPPLIER DETAILS PAGE
         assert_true(
             '<strong>This page is for information only</strong><br/>Services should be chosen using your requirements.'  # noqa
             in res.get_data(as_text=True))
         assert_true(
             'Please use the <a href="https://www.digitalmarketplace.service.gov.uk/buyers-guide/">buyers guide</a> for help.'  # noqa
             in res.get_data(as_text=True))
+
+    def test_should_have_supplier_details_on_supplier_page(self):
+        res = self.client.get('/g-cloud/supplier/92191')
+        assert_equal(200, res.status_code)
+        assert_true(
+            '<h1>Example Company Limited</h1>'
+            in res.get_data(as_text=True))
+        assert_true(
+            "Example Company Limited is an innovation station sensation; we deliver software so bleeding edge you literally won&#39;t be able to run any of it on your systems."  # noqa
+            in res.get_data(as_text=True))
+        assert_true(
+            self._strip_whitespace("<h2>Clients</h2>UK Ministry of Defence, Astula Ltd, Bedrock Communications Ltd</div>")
+            in self._strip_whitespace(res.get_data(as_text=True)))
+
+    def test_should_show_supplier_with_no_desc_or_clients(self):
+        self._data_api_client.get_supplier.return_value = self.supplier_with_minimum_data  # noqa
+
+        res = self.client.get('/g-cloud/supplier/92191')
+        assert_equal(200, res.status_code)
+        assert_true(
+            '<h1>Example Company Limited</h1>'
+            in res.get_data(as_text=True))
+        assert_false(
+            self._strip_whitespace("<h2>Clients</h2>")
+            in self._strip_whitespace(res.get_data(as_text=True)))
+
+    def test_should_have_supplier_contact_details_on_supplier_page(self):
+        res = self.client.get('/g-cloud/supplier/92191')
+
+        assert_equal(200, res.status_code)
+        assert_true(
+            self._strip_whitespace('<li>John Example</li>')
+            in self._strip_whitespace(res.get_data(as_text=True)))
+        assert_true(
+            self._strip_whitespace('<li>07309404738</li>')
+            in self._strip_whitespace(res.get_data(as_text=True)))
+
+        email_html = '''<a href="mailto:j@examplecompany.biz"
+        data-event-category="Email a supplier"
+        data-event-label="Example Company Limited">j@examplecompany.biz</a>'''
+
+        assert_true(
+            self._strip_whitespace(email_html)
+            in self._strip_whitespace(res.get_data(as_text=True)))
+        assert_true(
+            self._strip_whitespace('<li>123 Fake Street</li>')
+            in self._strip_whitespace(res.get_data(as_text=True)))
+        assert_true(
+            self._strip_whitespace('<li>United Kingdom</li>')
+            in self._strip_whitespace(res.get_data(as_text=True)))
+        assert_true(
+            self._strip_whitespace('<li>F4 K1E</li>')
+            in self._strip_whitespace(res.get_data(as_text=True)))
+
+    def test_should_have_minimum_supplier_contact_details_on_supplier_page(self):
+        self._data_api_client.get_supplier.return_value = self.supplier_with_minimum_data  # noqa
+
+        res = self.client.get('/g-cloud/supplier/92191')
+
+        assert_equal(200, res.status_code)
+        assert_true(
+            self._strip_whitespace('<li>John Example</li>')
+            in self._strip_whitespace(res.get_data(as_text=True)))
+
+        email_html = '''<a href="mailto:j@examplecompany.biz"
+        data-event-category="Email a supplier"
+        data-event-label="Example Company Limited">j@examplecompany.biz</a>'''
+
+        assert_true(
+            self._strip_whitespace(email_html)
+            in self._strip_whitespace(res.get_data(as_text=True)))
+
+    def test_should_not_show_web_address(self):
+        res = self.client.get('/g-cloud/supplier/92191')
+        assert_false(
+            'www.examplecompany.biz'
+            in res.get_data(as_text=True)
+        )
+
