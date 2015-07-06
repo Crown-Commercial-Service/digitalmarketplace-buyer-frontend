@@ -50,22 +50,32 @@ def allowed_request_lot_filters(lot_filters):
     )
 
 
-def clean_request_filters(request_filters, lot_filters):
-    """Removes any unknown filter keys or values from request.
+def clean_request_args(request_args, lot_filters):
+    """Removes any unknown args keys or values from request.
 
     Compares every key/value pair from request query parameters
     with the list of name/value pairs retrieved from search
     presenters. Only pairs that match are kept.
 
+    'q' and 'page' arguments are preserved if present in the request.args.
+    'lot' is only kept if the value is a valid lot.
+
     """
     allowed_filters = allowed_request_lot_filters(lot_filters)
 
-    clean_filters = MultiDict([
-        f for f in request_filters.items(multi=True)
+    clean_args = MultiDict([
+        f for f in request_args.items(multi=True)
         if f in allowed_filters
     ])
 
-    return clean_filters
+    for key in ['q', 'page']:
+        if request_args.get(key):
+            clean_args[key] = request_args[key]
+
+    if lot_to_lot_case(request_args.get('lot')):
+        clean_args['lot'] = request_args.get('lot')
+
+    return clean_args
 
 
 def group_request_filters(request_filters, content_loader):
@@ -84,7 +94,9 @@ def group_request_filters(request_filters, content_loader):
     filter_query = {}
     for key, values in request_filters.lists():
         if content_loader.get_question(key).get("type") == 'radios':
-            filter_query[key] = [','.join(values)]
+            filter_query[key] = ','.join(values)
+        elif len(values) == 1:
+            filter_query[key] = values[-1]
         else:
             filter_query[key] = values
 
@@ -101,22 +113,12 @@ def build_search_query(request, lot_filters, content_loader):
     through the UI and will group OR and AND filters.
 
     """
-    filters = clean_request_filters(
-        get_filters_from_request(request),
+    query = clean_request_args(
+        request.args,
         lot_filters
     )
 
-    query = group_request_filters(filters, content_loader)
-    lot = request.args.get('lot')
-
-    if lot_to_lot_case(lot):
-        query['lot'] = lot
-    if request.args.get('q'):
-        query['q'] = request.args['q']
-    if request.args.get('page'):
-        query['page'] = request.args['page']
-
-    return query
+    return group_request_filters(query, content_loader)
 
 
 def query_args_for_pagination(args):

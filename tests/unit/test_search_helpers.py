@@ -133,6 +133,9 @@ class TestBuildSearchQueryHelpers(object):
             'question4': {},
             'question3': {'type': 'radios'},
             'question6': {'type': 'checkboxes'},
+            'page': {},
+            'lot': {},
+            'q': {},
         }
 
         def _mock_get_question(question):
@@ -176,24 +179,40 @@ class TestBuildSearchQueryHelpers(object):
             }
         )
 
-    def test_clean_request_filters(self):
+    def test_clean_request_args(self):
         filters = MultiDict({
             'question1': 'true',
             'question2': ['true', 'false', 1],
             'question3': ['option1', 'true', 'option5', 'option2', 2, None],
             'question6': '',
             'question4': 'false',
-            'lot': 'false',
-            'page': 'false',
+            'lot': 'saas',
+            'q': 'email',
+            'page': 9,
+            'unknown': 'key',
         })
 
         assert_equal(
-            search_helpers.clean_request_filters(filters, self.lot_filters),
+            search_helpers.clean_request_args(filters, self.lot_filters),
             MultiDict({
                 'question1': 'true',
                 'question2': 'true',
                 'question3': ['option1', 'option2'],
+                'page': 'false',
+                'q': 'email',
+                'lot': 'saas',
+                'page': 9,
             })
+        )
+
+    def test_clean_request_args_incorrect_lot(self):
+        filters = MultiDict({
+            'lot': 'saaspaas',
+        })
+
+        assert_equal(
+            search_helpers.clean_request_args(filters, self.lot_filters),
+            MultiDict({})
         )
 
     def test_group_request_filters(self):
@@ -207,9 +226,9 @@ class TestBuildSearchQueryHelpers(object):
         assert_equal(
             search_helpers.group_request_filters(filters, self._loader()),
             {
-                'question1': ['true'],
-                'question4': ['true'],
-                'question3': ['option1,option2'],
+                'question1': 'true',
+                'question4': 'true',
+                'question3': 'option1,option2',
                 'question6': ['option1', 'option3'],
             }
         )
@@ -234,9 +253,9 @@ class TestBuildSearchQueryHelpers(object):
                 'page': 5,
                 'q': 'email',
                 'lot': 'saas',
-                'question1': ['true'],
-                'question4': ['true'],
-                'question3': ['option1,option2'],
+                'question1': 'true',
+                'question4': 'true',
+                'question3': 'option1,option2',
                 'question6': ['option1', 'option3'],
             }
         )
