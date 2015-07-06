@@ -1,7 +1,7 @@
 import mock
 import re
 import json
-from nose.tools import assert_equal, assert_true, assert_false
+from nose.tools import assert_equal, assert_true, assert_false, assert_in
 from ...helpers import BaseApplicationTest
 
 
@@ -345,3 +345,15 @@ class TestSearchResults(BaseApplicationTest):
             '&minimumContractPeriod=hr&minimumContractPeriod=dy')
 
         assert_equal(200, res.status_code)
+
+    def test_query_text_is_escaped(self):
+        return_value = self.search_results_multiple_page
+        return_value["services"] = [return_value["services"][0]]
+        return_value["meta"]["total"] = 1
+        self._search_api_client.search_services.return_value = return_value
+
+        res = self.client.get('/g-cloud/search?q=<div>XSS</div>')
+
+        assert_equal(200, res.status_code)
+        summary = find_search_summary(res.get_data(as_text=True))[0]
+        assert_in('&lt;div&gt;XSS&lt;/div&gt;', summary)
