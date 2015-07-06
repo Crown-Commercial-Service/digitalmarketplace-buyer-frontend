@@ -30,7 +30,7 @@ class TestSuppliersPage(BaseApplicationTest):
         res = self.client.get('/g-cloud/suppliers')
         assert_equal(200, res.status_code)
         assert_true(
-            self._strip_whitespace('<header class="page-heading page-heading-with-context"><h1>A</h1></header>')
+            self._strip_whitespace('<li class="selected">A')
             in self._strip_whitespace(res.get_data(as_text=True)))
 
     def test_should_show_suppliers_prefixed_by_a_param(self):
@@ -38,14 +38,14 @@ class TestSuppliersPage(BaseApplicationTest):
         self._data_api_client.find_suppliers.assert_called_once_with('M', '1', 'gcloud')
         assert_equal(200, res.status_code)
         assert_true(
-            self._strip_whitespace('<header class="page-heading page-heading-with-context"><h1>M</h1></header>')  # noqa
+            self._strip_whitespace('<li class="selected">M</li>')
             in self._strip_whitespace(res.get_data(as_text=True)))
 
     def test_should_use_uppercase_prefix(self):
         res = self.client.get('/g-cloud/suppliers?prefix=b')
         assert_equal(200, res.status_code)
         assert_true(
-            self._strip_whitespace('<header class="page-heading page-heading-with-context"><h1>B</h1></header>')  # noqa
+            self._strip_whitespace('<li class="selected">B</li>')
             in self._strip_whitespace(res.get_data(as_text=True)))
 
     def test_should_use_default_if_invalid(self):
@@ -54,7 +54,7 @@ class TestSuppliersPage(BaseApplicationTest):
 
         assert_equal(200, res.status_code)
         assert_true(
-            self._strip_whitespace('<header class="page-heading page-heading-with-context"><h1>A</h1></header>')  # noqa
+            self._strip_whitespace('<li class="selected">A</li>')
             in self._strip_whitespace(res.get_data(as_text=True)))
 
     def test_should_use_default_if_multichar_prefix(self):
@@ -64,7 +64,7 @@ class TestSuppliersPage(BaseApplicationTest):
         assert_equal(200, res.status_code)
 
         assert_true(
-            self._strip_whitespace('<header class="page-heading page-heading-with-context"><h1>A</h1></header>')  # noqa
+            self._strip_whitespace('<li class="selected">A</li>')
             in self._strip_whitespace(res.get_data(as_text=True)))
 
     def test_should_use_123_prefix(self):
@@ -73,7 +73,7 @@ class TestSuppliersPage(BaseApplicationTest):
 
         assert_equal(200, res.status_code)
         assert_true(
-            self._strip_whitespace('<header class="page-heading page-heading-with-context"><h1>123</h1></header>')  # noqa
+            self._strip_whitespace('<li class="selected">123</li>')
             in self._strip_whitespace(res.get_data(as_text=True)))
 
     def test_should_show_supplier_names_link_and_description(self):
@@ -100,39 +100,33 @@ class TestSuppliersPage(BaseApplicationTest):
         assert_equal(200, res.status_code)
 
         supplier_html = self._strip_whitespace('''
-        <div id="global-atoz-navigation" class="header-context">
-        <nav>
-            <ol class="group" role="breadcrumbs">
-                <li><a class="home" href="/g-cloud/suppliers?prefix=A">A</a></li>
-                <li><a class="home" href="/g-cloud/suppliers?prefix=B">B</a></li>
-                <li><a class="home" href="/g-cloud/suppliers?prefix=C">C</a></li>
-                <li><a class="home" href="/g-cloud/suppliers?prefix=D">D</a></li>
-                <li><a class="home" href="/g-cloud/suppliers?prefix=E">E</a></li>
-                <li><a class="home" href="/g-cloud/suppliers?prefix=F">F</a></li>
-                <li><a class="home" href="/g-cloud/suppliers?prefix=G">G</a></li>
-                <li><a class="home" href="/g-cloud/suppliers?prefix=H">H</a></li>
-                <li><a class="home" href="/g-cloud/suppliers?prefix=I">I</a></li>
-                <li><a class="home" href="/g-cloud/suppliers?prefix=J">J</a></li>
-                <li><a class="home" href="/g-cloud/suppliers?prefix=K">K</a></li>
-                <li><a class="home" href="/g-cloud/suppliers?prefix=L">L</a></li>
-                <li><a class="home" href="/g-cloud/suppliers?prefix=M">M</a></li>
-                <li><a class="home" href="/g-cloud/suppliers?prefix=N">N</a></li>
-                <li><a class="home" href="/g-cloud/suppliers?prefix=O">O</a></li>
-                <li><a class="home" href="/g-cloud/suppliers?prefix=P">P</a></li>
-                <li><a class="home" href="/g-cloud/suppliers?prefix=Q">Q</a></li>
-                <li><a class="home" href="/g-cloud/suppliers?prefix=R">R</a></li>
-                <li><a class="home" href="/g-cloud/suppliers?prefix=S">S</a></li>
-                <li><a class="home" href="/g-cloud/suppliers?prefix=T">T</a></li>
-                <li><a class="home" href="/g-cloud/suppliers?prefix=U">U</a></li>
-                <li><a class="home" href="/g-cloud/suppliers?prefix=V">V</a></li>
-                <li><a class="home" href="/g-cloud/suppliers?prefix=W">W</a></li>
-                <li><a class="home" href="/g-cloud/suppliers?prefix=X">X</a></li>
-                <li><a class="home" href="/g-cloud/suppliers?prefix=Y">Y</a></li>
-                <li><a class="home" href="/g-cloud/suppliers?prefix=Z">Z</a></li>
-                <li><a class="home" href="/g-cloud/suppliers?prefix=123">123</a></li>
-            </ol>
-        </nav>
-        </div>
+                <li class="selected">A</li>
+                <li><a href="/g-cloud/suppliers?prefix=B">B</a></li>
+                <li><a href="/g-cloud/suppliers?prefix=C">C</a></li>
+                <li><a href="/g-cloud/suppliers?prefix=D">D</a></li>
+                <li><a href="/g-cloud/suppliers?prefix=E">E</a></li>
+                <li><a href="/g-cloud/suppliers?prefix=F">F</a></li>
+                <li><a href="/g-cloud/suppliers?prefix=G">G</a></li>
+                <li><a href="/g-cloud/suppliers?prefix=H">H</a></li>
+                <li><a href="/g-cloud/suppliers?prefix=I">I</a></li>
+                <li><a href="/g-cloud/suppliers?prefix=J">J</a></li>
+                <li><a href="/g-cloud/suppliers?prefix=K">K</a></li>
+                <li><a href="/g-cloud/suppliers?prefix=L">L</a></li>
+                <li><a href="/g-cloud/suppliers?prefix=M">M</a></li>
+                <li><a href="/g-cloud/suppliers?prefix=N">N</a></li>
+                <li><a href="/g-cloud/suppliers?prefix=O">O</a></li>
+                <li><a href="/g-cloud/suppliers?prefix=P">P</a></li>
+                <li><a href="/g-cloud/suppliers?prefix=Q">Q</a></li>
+                <li><a href="/g-cloud/suppliers?prefix=R">R</a></li>
+                <li><a href="/g-cloud/suppliers?prefix=S">S</a></li>
+                <li><a href="/g-cloud/suppliers?prefix=T">T</a></li>
+                <li><a href="/g-cloud/suppliers?prefix=U">U</a></li>
+                <li><a href="/g-cloud/suppliers?prefix=V">V</a></li>
+                <li><a href="/g-cloud/suppliers?prefix=W">W</a></li>
+                <li><a href="/g-cloud/suppliers?prefix=X">X</a></li>
+                <li><a href="/g-cloud/suppliers?prefix=Y">Y</a></li>
+                <li><a href="/g-cloud/suppliers?prefix=Z">Z</a></li>
+                <li><a href="/g-cloud/suppliers?prefix=123">123</a></li>
         ''')  # noqa
 
         assert_true(
@@ -189,22 +183,22 @@ class TestSuppliersPage(BaseApplicationTest):
 
         assert_equal(200, res.status_code)
         previous_link = self._strip_whitespace('''
-        <li class="previous">
-            <a href="/g-cloud/suppliers?prefix=A&amp;page=1">
-                Previous <span class="visuallyhidden">page</span>
-            </a>
-        </li>
+      <li class="previous">
+          <a href="/g-cloud/suppliers?prefix=A&amp;page=1">
+              Previous <span class="visuallyhidden">page</span>
+          </a>
+      </li>
         ''')
         assert_true(
             previous_link
             in self._strip_whitespace(res.get_data(as_text=True))
         )
         next_link = self._strip_whitespace('''
-        <li class="next">
-            <a href="/g-cloud/suppliers?prefix=A&amp;page=3">
-                Next <span class="visuallyhidden">page</span>
-            </a>
-        </li>
+      <li class="next">
+          <a href="/g-cloud/suppliers?prefix=A&amp;page=3">
+              Next <span class="visuallyhidden">page</span>
+          </a>
+      </li>
         ''')
         assert_true(
             next_link
@@ -231,7 +225,7 @@ class TestSuppliersPage(BaseApplicationTest):
             "Example Company Limited is an innovation station sensation; we deliver software so bleeding edge you literally won&#39;t be able to run any of it on your systems."  # noqa
             in res.get_data(as_text=True))
         assert_true(
-            self._strip_whitespace("<h2>Clients</h2>UK Ministry of Defence, Astula Ltd, Bedrock Communications Ltd</div>")  # noqa
+            self._strip_whitespace('<h2>Clients</h2><p class="supplier-description">UK Ministry of Defence, Astula Ltd, Bedrock Communications Ltd</p>')  # noqa
             in self._strip_whitespace(res.get_data(as_text=True)))
 
     def test_should_show_supplier_with_no_desc_or_clients(self):
@@ -251,10 +245,10 @@ class TestSuppliersPage(BaseApplicationTest):
 
         assert_equal(200, res.status_code)
         assert_true(
-            self._strip_whitespace('<li>John Example</li>')
+            self._strip_whitespace('<span itemprop="name">John Example</span>')
             in self._strip_whitespace(res.get_data(as_text=True)))
         assert_true(
-            self._strip_whitespace('<li>07309404738</li>')
+            self._strip_whitespace('<span itemprop="telephone">07309404738</span>')
             in self._strip_whitespace(res.get_data(as_text=True)))
 
         email_html = '''<a href="mailto:j@examplecompany.biz"
@@ -264,15 +258,6 @@ class TestSuppliersPage(BaseApplicationTest):
         assert_true(
             self._strip_whitespace(email_html)
             in self._strip_whitespace(res.get_data(as_text=True)))
-        assert_true(
-            self._strip_whitespace('<li>123 Fake Street</li>')
-            in self._strip_whitespace(res.get_data(as_text=True)))
-        assert_true(
-            self._strip_whitespace('<li>United Kingdom</li>')
-            in self._strip_whitespace(res.get_data(as_text=True)))
-        assert_true(
-            self._strip_whitespace('<li>F4 K1E</li>')
-            in self._strip_whitespace(res.get_data(as_text=True)))
 
     def test_should_have_minimum_supplier_contact_details_on_supplier_page(self):
         self._data_api_client.get_supplier.return_value = self.supplier_with_minimum_data  # noqa
@@ -281,7 +266,7 @@ class TestSuppliersPage(BaseApplicationTest):
 
         assert_equal(200, res.status_code)
         assert_true(
-            self._strip_whitespace('<li>John Example</li>')
+            self._strip_whitespace('<span itemprop="name">John Example</span>')
             in self._strip_whitespace(res.get_data(as_text=True)))
 
         email_html = '''<a href="mailto:j@examplecompany.biz"

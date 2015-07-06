@@ -1,14 +1,40 @@
 {% extends "_base_page.html" %}
 
-{% block main_content %}
+{% block page_title %}{{ supplier.name }} – Digital Marketplace{% endblock %}
 
-{% include '_warning.html' %}
+{% block breadcrumb %}
+  {%
+    with
+    items = [
+        {
+            "link": "./",
+            "label": "Digital Marketplace"
+        },
+        {
+            "link": url_for(".index_g_cloud"),
+            "label": "Cloud technology and support"
+        },
+        {
+            "link": url_for(".suppliers_list_by_prefix"),
+            "label": "Suppliers"
+        },
+        {
+            "link": url_for(".suppliers_list_by_prefix", prefix=prefix),
+            "label": prefix
+        }
+    ]
+  %}
+    {% include "toolkit/breadcrumb.html" %}
+  {% endwith %}
+{% endblock %}
+
+{% block main_content %}
 
 <div class="grid-row">
     <div class="column-two-thirds">
         <header class="page-heading-smaller">
             <p class="context">
-                Digitalmarketplace Supplier
+                Digital Marketplace supplier
             </p>
 
             <h1>{{ supplier.name }}</h1>
@@ -16,49 +42,33 @@
     </div>
 </div>
 
-<div class="grid-row">
+{% include '_warning.html' %}
+
+<div class="grid-row supplier-profile">
     <div class="column-two-thirds">
-        <p class="hint summary-item-no-content">
+        <p class="supplier-description">
             {{ supplier.description }}
         </p>
         {% if supplier.clients %}
             <h2>Clients</h2>
-            {{ ", ".join(supplier.clients) }}
+            <p class="supplier-description">
+              {{ ", ".join(supplier.clients) }}
+            </p>
         {% endif %}
     </div>
 
     <div class="column-one-third">
-        <details class="contact">
-            <div class="indented">
-                <ul>
-                    <li>
-                        {{ supplier.contactInformation[0].contactName }}
-                    </li>
-                    <li>
-                        {{ supplier.contactInformation[0].phoneNumber }}
-                    </li>
-                    <li>
-                        <a href="mailto:{{ supplier.contactInformation[0].email }}"
-                           data-event-category="Email a supplier"
-                           data-event-label="{{ supplier.name }}">{{ supplier.contactInformation[0].email }}</a>
-                    </li>
-                    <li>
-                        {{ supplier.contactInformation[0].address1 }}
-                    </li>
-                    <li>
-                        {{ supplier.contactInformation[0].address2 }}
-                    </li>
-                    <li>
-                        {{ supplier.contactInformation[0].country }}
-                    </li>
-                    <li>
-                        {{ supplier.contactInformation[0].postcode }}
-                    </li>
-                </ul>
-            </div>
-        </details>
+      {%
+        with
+        organisation_type = "supplier",
+        organisation = supplier.name,
+        telephone = supplier.contactInformation[0].phoneNumber,
+        contact_name = supplier.contactInformation[0].contactName,
+        email_address = supplier.contactInformation[0].email
+      %}
+        {% include "toolkit/contact-details.html" %}
+      {% endwith %}
     </div>
 </div>
 
 {% endblock %}
-

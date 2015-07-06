@@ -13,10 +13,9 @@ except ImportError:
 
 
 def process_prefix(prefix):
-    reg = "^[A-Za-z]{1}$"  # valid prefix
     if prefix == "123":  # special case
         return prefix
-    if re.search(reg, prefix):
+    if is_alpha(prefix):
         return prefix[:1].upper()
     return "A"  # default
 
@@ -26,6 +25,11 @@ def process_page(page):
     if re.search(reg, page):
         return page
     return "1"  # default
+
+
+def is_alpha(character):
+    reg = "^[A-Za-z]{1}$"  # valid prefix
+    return re.search(reg, character)
 
 
 def parse_links(links):
@@ -74,7 +78,14 @@ def suppliers_details(supplier_id):
         'title': 'Digital Marketplace - Suppliers'
     })
 
+    first_character_of_supplier_name = supplier["name"][:1]
+    if is_alpha(first_character_of_supplier_name):
+        prefix = process_prefix(supplier["name"][:1])
+    else:
+        prefix = "123"
+
     return render_template(
         'suppliers_details.html',
         supplier=supplier,
+        prefix=prefix,
         **template_data)
