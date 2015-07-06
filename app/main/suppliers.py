@@ -5,7 +5,11 @@ from flask import render_template, request
 from app.helpers.search_helpers import get_template_data
 from app import data_api_client
 import re
-from urlparse import urlparse, parse_qs
+
+try:
+    from urlparse import urlparse, parse_qs
+except ImportError:
+    from urllib.parse import urlparse, parse_qs
 
 
 def process_prefix(prefix):
