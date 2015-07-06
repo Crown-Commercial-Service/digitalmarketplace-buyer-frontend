@@ -1,3 +1,4 @@
+//= include ../../../node_modules/govuk_frontend_toolkit/javascripts/vendor/polyfills/bind.js
 //= include ../../../node_modules/govuk_frontend_toolkit/javascripts/govuk/analytics/tracker.js
 //= include ../../../node_modules/govuk_frontend_toolkit/javascripts/govuk/analytics/google-analytics-universal-tracker.js
 //= include ../../../node_modules/govuk_frontend_toolkit/javascripts/govuk/analytics/google-analytics-classic-tracker.js
