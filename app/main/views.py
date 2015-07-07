@@ -21,7 +21,8 @@ from ..presenters.service_presenters import Service
 from ..helpers.search_helpers import (
     get_keywords_from_request, get_template_data, pagination,
     get_page_from_request, query_args_for_pagination,
-    get_lot_from_request, build_search_query
+    get_lot_from_request, build_search_query,
+    clean_request_args
 )
 
 from ..exceptions import AuthException
@@ -248,7 +249,7 @@ def search():
 
     search_summary = SearchSummary(
         response['meta']['total'],
-        request.args,
+        clean_request_args(request.args, filters),
         filters
     )
 
