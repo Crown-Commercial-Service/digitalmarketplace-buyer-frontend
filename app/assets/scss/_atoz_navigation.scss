@@ -26,6 +26,11 @@
         margin-right: 5px;
         padding-right: $gutter-half;
         padding-top: 22px;
+        padding-bottom: 18px;
+
+        @include media(mobile) {
+          padding-top: 14px;
+        }
 
         a {
           color: $black;
@@ -39,6 +44,7 @@
           @include core-48;
           font-weight: bold;
           padding-top: 0;
+          padding-bottom: 0;
         }
       }
     }
