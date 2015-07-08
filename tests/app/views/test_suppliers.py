@@ -260,8 +260,9 @@ class TestSuppliersPage(BaseApplicationTest):
         res = self.client.get('/g-cloud/supplier/92191')
         assert_equal(200, res.status_code)
         assert_true(
-            '<h1>Example Company Limited</h1>'
-            in res.get_data(as_text=True))
+            '<h1>ExampleCompanyLimited</h1>'
+            in self._strip_whitespace(res.get_data(as_text=True))
+        )
         assert_true(
             "Example Company Limited is an innovation station sensation; we deliver software so bleeding edge you literally won&#39;t be able to run any of it on your systems."  # noqa
             in res.get_data(as_text=True))
@@ -275,8 +276,8 @@ class TestSuppliersPage(BaseApplicationTest):
         res = self.client.get('/g-cloud/supplier/92191')
         assert_equal(200, res.status_code)
         assert_true(
-            '<h1>Example Company Limited</h1>'
-            in res.get_data(as_text=True))
+            '<h1>ExampleCompanyLimited</h1>'
+            in self._strip_whitespace(res.get_data(as_text=True)))
         assert_false(
             self._strip_whitespace("<h2>Clients</h2>")
             in self._strip_whitespace(res.get_data(as_text=True)))
