@@ -147,16 +147,26 @@ class TestSuppliersPage(BaseApplicationTest):
     def test_should_show_next_page_on_supplier_list(self):
         res = self.client.get('/g-cloud/suppliers')
         assert_equal(200, res.status_code)
-        html = self._strip_whitespace('''
-        <li class="next">
-            <a href="/g-cloud/suppliers?prefix=A&amp;page=2">
-                Next <span class="visuallyhidden">page</span>
-            </a>
-        </li>
-        ''')
+        html_tag = '<li class="next">'
+        html_link = '<a href="/g-cloud/suppliers?'
+        html_prefix = 'prefix=A'
+        html_page = 'page=2'
+
         assert_true(
-            html
-            in self._strip_whitespace(res.get_data(as_text=True))
+            html_tag
+            in res.get_data(as_text=True)
+        )
+        assert_true(
+            html_prefix
+            in res.get_data(as_text=True)
+        )
+        assert_true(
+            html_link
+            in res.get_data(as_text=True)
+        )
+        assert_true(
+            html_page
+            in res.get_data(as_text=True)
         )
 
     def test_should_show_next_nav_on_supplier_list(self):
@@ -165,16 +175,25 @@ class TestSuppliersPage(BaseApplicationTest):
         self._data_api_client.find_suppliers.assert_called_once_with('A', '2', 'gcloud')
 
         assert_equal(200, res.status_code)
-        html = self._strip_whitespace('''
-        <li class="previous">
-            <a href="/g-cloud/suppliers?prefix=A&amp;page=1">
-                Previous <span class="visuallyhidden">page</span>
-            </a>
-        </li>
-        ''')
+        html_tag = '<li class="previous">'
+        html_link = '<a href="/g-cloud/suppliers?'
+        html_prefix = 'prefix=A'
+        html_page = 'page=1'
         assert_true(
-            html
-            in self._strip_whitespace(res.get_data(as_text=True))
+            html_tag
+            in res.get_data(as_text=True)
+        )
+        assert_true(
+            html_prefix
+            in res.get_data(as_text=True)
+        )
+        assert_true(
+            html_link
+            in res.get_data(as_text=True)
+        )
+        assert_true(
+            html_page
+            in res.get_data(as_text=True)
         )
 
     def test_should_show_next_and_prev_nav_on_supplier_list(self):
@@ -182,27 +201,49 @@ class TestSuppliersPage(BaseApplicationTest):
         res = self.client.get('/g-cloud/suppliers?page=2')
 
         assert_equal(200, res.status_code)
-        previous_link = self._strip_whitespace('''
-      <li class="previous">
-          <a href="/g-cloud/suppliers?prefix=A&amp;page=1">
-              Previous <span class="visuallyhidden">page</span>
-          </a>
-      </li>
-        ''')
+
+        previous_html_tag = '<li class="previous">'
+        previous_html_link = '<a href="/g-cloud/suppliers?'
+        previous_html_prefix = 'prefix=A'
+        previous_html_page = 'page=1'
+
         assert_true(
-            previous_link
-            in self._strip_whitespace(res.get_data(as_text=True))
+            previous_html_tag
+            in res.get_data(as_text=True)
         )
-        next_link = self._strip_whitespace('''
-      <li class="next">
-          <a href="/g-cloud/suppliers?prefix=A&amp;page=3">
-              Next <span class="visuallyhidden">page</span>
-          </a>
-      </li>
-        ''')
         assert_true(
-            next_link
-            in self._strip_whitespace(res.get_data(as_text=True))
+            previous_html_prefix
+            in res.get_data(as_text=True)
+        )
+        assert_true(
+            previous_html_link
+            in res.get_data(as_text=True)
+        )
+        assert_true(
+            previous_html_page
+            in res.get_data(as_text=True)
+        )
+
+        next_html_tag = '<li class="next">'
+        next_html_link = '<a href="/g-cloud/suppliers?'
+        next_html_prefix = 'prefix=A'
+        next_html_page = 'page=3'
+
+        assert_true(
+            next_html_tag
+            in res.get_data(as_text=True)
+        )
+        assert_true(
+            next_html_link
+            in res.get_data(as_text=True)
+        )
+        assert_true(
+            next_html_prefix
+            in res.get_data(as_text=True)
+        )
+        assert_true(
+            next_html_page
+            in res.get_data(as_text=True)
         )
 
     def test_should_show_warning_message_on_supplier_details(self):
