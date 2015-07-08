@@ -1,40 +1,62 @@
 {% extends "_base_page.html" %}
 
+{% block page_title %}Suppliers – Cloud technology and support – Digital Marketplace{% endblock %}
+
+{% block breadcrumb %}
+  {%
+    with
+    items = [
+        {
+            "link": "./",
+            "label": "Digital Marketplace"
+        },
+        {
+            "link": url_for(".index_g_cloud"),
+            "label": "Cloud technology and support"
+        }
+    ]
+  %}
+    {% include "toolkit/breadcrumb.html" %}
+  {% endwith %}
+{% endblock %}
+
 {% block main_content %}
+
+<header class="page-heading">
+    <h1>Suppliers</h1>
+</header>
 
 {% include '_warning.html' %}
 
-<header class="page-heading">
-    <h1>G-Cloud supplier A to Z</h1>
-</header>
-
-<div id="global-atoz-navigation" class="header-context">
-    <nav>
-            <ol class="group" role="breadcrumbs">
-            {% for item in nav %}
-                <li><a class="home" href="{{ url_for('main.suppliers_list_by_prefix', prefix=item)}}">{{ item }}</a></li>
-            {% endfor %}
-                <li><a class="home" href="{{ url_for('main.suppliers_list_by_prefix', prefix=123) }}">123</a></li>
-            </ol>
-    </nav>
+<div id="global-atoz-navigation">
+  <nav>
+    <ol>
+      {% for item in nav %}
+        {% if prefix == item %}
+          <li class="selected">{{ item }}</li>
+        {% else %}
+          <li><a href="{{ url_for('main.suppliers_list_by_prefix', prefix=item)}}">{{ item }}</a></li>
+        {% endif %}
+      {% endfor %}
+      {% if prefix == "123" %}
+        <li class="selected">123</li>
+      {% else %}
+        <li><a href="{{ url_for('main.suppliers_list_by_prefix', prefix=123) }}">123</a></li>
+      {% endif %}
+    </ol>
+  </nav>
 </div>
 
-
-<header class="page-heading page-heading-with-context">
-    <h1>{{ prefix }}</h1>
-</header>
-
-
 {% for supplier in suppliers %}
-<div class="search-result">
+  <div class="search-result">
     <h2 class="search-result-title">
-        <a href="{{ url_for('main.suppliers_details', supplier_id=supplier.id)}}">{{ supplier.name}}</a>
+      <a href="{{ url_for('main.suppliers_details', supplier_id=supplier.id)}}">{{ supplier.name}}</a>
     </h2>
 
     <p class="search-result-excerpt">
-        {{ supplier.description }}
+      {{ supplier.description }}
     </p>
-</div>
+  </div>
 {% endfor %}
 
 {% include '_supplier_pagination.html' %}

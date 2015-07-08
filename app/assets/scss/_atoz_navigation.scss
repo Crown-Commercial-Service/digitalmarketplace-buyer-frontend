@@ -2,28 +2,20 @@
 @import "_measurements.scss";
 @import "_conditionals.scss";
 @import "_typography.scss";
-@import "_url-helpers.scss";
-
-/*
-  The file-url helper requires the setting of a $path variable to the path of your app's static
-  assets endpoint. For example:
-
-  $path : '/assets/images/';
-*/
+@import "_shims.scss";
 
 #global-atoz-navigation {
-  background-color: $white;
   max-width: 1020px;
-  margin: 0 auto;
+  margin: $gutter/2 0 $gutter-half 0;
+  padding: 0 0 10px 0;
   z-index: 50;
+  border-bottom: 1px solid $border-colour;
+  @extend %contain-floats;
 
   nav {
     ol {
       max-width: 960px;
-      margin: 0 $gutter-half;
-      @include media(tablet) {
-        margin: 0 $gutter;
-      }
+      margin: 0;
       padding: 0.75em 0;
 
       li {
@@ -32,13 +24,9 @@
         list-style: none;
 
         margin-left: 0;
-        margin-right: 0.5em;
+        margin-right: 5px;
         padding-right: $gutter-half;
-
-        &:last-child {
-          background-image: none;
-          margin-right: 0;
-        }
+        padding-top: 22px;
 
         a {
           color: $black;
@@ -47,7 +35,22 @@
             color: $link-hover-colour;
           }
         }
+
+        &.selected {
+          @include core-48;
+          font-weight: bold;
+          padding-top: 0;
+        }
       }
     }
   }
+}
+
+.supplier-profile {
+  padding-top: $gutter * 1.5;
+}
+
+.supplier-description {
+  @include core-19;
+  margin: 0 0 $gutter 0;
 }
