@@ -34,13 +34,14 @@
 
 <div class="grid-row">
     <div class="column-two-thirds">
-        <header class="page-heading-smaller">
-            <p class="context">
-                Digital Marketplace supplier
-            </p>
-
-            <h1>{{ supplier.name }}</h1>
-        </header>
+      {%
+        with
+        heading = supplier.name,
+        context = "Digital Marketplace supplier",
+        smaller = True
+      %}
+        {% include "toolkit/page-heading.html" %}
+      {% endwith %}
     </div>
 </div>
 

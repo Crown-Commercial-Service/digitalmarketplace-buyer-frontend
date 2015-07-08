@@ -24,9 +24,12 @@
 
 {% include '_warning.html' %}
 
-<header class="page-heading">
-  <h1>Suppliers</h1>
-</header>
+{%
+  with
+  heading = "Suppliers"
+%}
+  {% include "toolkit/page-heading.html" %}
+{% endwith %}
 
 <div id="global-atoz-navigation">
   <nav>
