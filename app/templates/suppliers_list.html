@@ -22,11 +22,11 @@
 
 {% block main_content %}
 
-<header class="page-heading">
-    <h1>Suppliers</h1>
-</header>
-
 {% include '_warning.html' %}
+
+<header class="page-heading">
+  <h1>Suppliers</h1>
+</header>
 
 <div id="global-atoz-navigation">
   <nav>
@@ -46,18 +46,22 @@
     </ol>
   </nav>
 </div>
-
-{% for supplier in suppliers %}
-  <div class="search-result">
-    <h2 class="search-result-title">
-      <a href="{{ url_for('main.suppliers_details', supplier_id=supplier.id)}}">{{ supplier.name}}</a>
-    </h2>
-
-    <p class="search-result-excerpt">
-      {{ supplier.description }}
-    </p>
+<div class="grid-row">
+  <div class="column-two-thirds">
+    <div class="supplier-list">
+      {% for supplier in suppliers %}
+        <div class="search-result">
+          <h2 class="search-result-title">
+            <a href="{{ url_for('main.suppliers_details', supplier_id=supplier.id)}}">{{ supplier.name}}</a>
+          </h2>
+          <p class="search-result-excerpt">
+            {{ supplier.description }}
+          </p>
+        </div>
+      {% endfor %}
+    </div>
   </div>
-{% endfor %}
+</div>
 
 {% include '_supplier_pagination.html' %}
 

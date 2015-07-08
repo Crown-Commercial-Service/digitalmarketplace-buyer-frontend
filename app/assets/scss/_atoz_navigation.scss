@@ -9,7 +9,6 @@
   margin: $gutter/2 0 $gutter-half 0;
   padding: 0 0 10px 0;
   z-index: 50;
-  border-bottom: 1px solid $border-colour;
   @extend %contain-floats;
 
   nav {
