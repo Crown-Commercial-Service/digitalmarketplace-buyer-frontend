@@ -1,0 +1,58 @@
+@import "_colours.scss";
+@import "_measurements.scss";
+@import "_conditionals.scss";
+@import "_typography.scss";
+@import "_shims.scss";
+
+#global-atoz-navigation {
+  margin: 0;
+  padding: 0;
+  z-index: 50;
+  @extend %contain-floats;
+
+  nav {
+    ol {
+      margin: 0;
+      padding: 0;
+
+      li {
+        @include core-16;
+        float: left;
+        list-style: none;
+        margin-left: 0;
+        margin-right: 5px;
+        padding-right: $gutter-half;
+        padding-top: 22px;
+        padding-bottom: 18px;
+
+        @include media(mobile) {
+          padding-top: 14px;
+        }
+
+        a {
+          color: $black;
+
+          &:hover {
+            color: $link-hover-colour;
+          }
+        }
+
+        &.selected {
+          @include core-48;
+          font-weight: bold;
+          padding-top: 0;
+          padding-bottom: 0;
+        }
+      }
+    }
+  }
+}
+
+.supplier-profile {
+  padding-top: $gutter * 1.5;
+}
+
+.supplier-description {
+  @include core-19;
+  margin: 0 0 $gutter 0;
+}

@@ -29,23 +29,28 @@
       <li>
         <a href="https://www.gov.uk/government/organisations/crown-commercial-service">Crown Commercial Service</a>
       </li>
+        {% if 'SUPPLIER_A_TO_Z' is active_feature %}
+        <li>
+            <a class="home" href="{{ url_for('main.suppliers_list_by_prefix') }}">G-Cloud supplier A-Z</a>
+        </li>
+        {% endif %}
     </ul>
-  </div>
-  <div class="footer-suppliers">
-    <h2>
-      Guidance
-    </h2>
-    <ul>
-      <li>
-        <a href="/buyers-guide">Digital Marketplace buyers' guide</a>
-      </li>
-      <li>
-        <a href="/g-cloud/buyers-guide">G-Cloud buyers' guide</a>
-      </li>
-      <li>
-        <a href="/g-cloud/suppliers-guide">G-Cloud suppliers' guide</a>
-      </li>
-      <li>
+    </div>
+    <div class="footer-suppliers">
+        <h2>
+            Guidance
+        </h2>
+        <ul>
+            <li>
+                <a href="/buyers-guide">Digital Marketplace buyers' guide</a>
+            </li>
+            <li>
+                <a href="/g-cloud/buyers-guide">G-Cloud buyers' guide</a>
+            </li>
+            <li>
+                <a href="/g-cloud/suppliers-guide">G-Cloud suppliers' guide</a>
+            </li>
+            <li>
         <a href="https://www.gov.uk/government/publications/digital-services-store-buyers-guide/digital-services-store-buyers-guide">Digital Services buyers' guide</a>
       </li>
       <li>
@@ -53,5 +58,5 @@
       </li>
     </ul>
   </div>
-  <hr />
+    <hr/>
 </div>
