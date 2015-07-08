@@ -1,5 +1,6 @@
 # coding=utf-8
 from string import ascii_uppercase
+import flask_featureflags
 from app.main import main
 from flask import render_template, request
 from app.helpers.search_helpers import get_template_data
@@ -47,6 +48,7 @@ def parse_links(links):
 
 
 @main.route('/g-cloud/suppliers')
+@flask_featureflags.is_active_feature('SUPPLIER_A_TO_Z')
 def suppliers_list_by_prefix():
     prefix = process_prefix(request.args.get('prefix', default='A'))
     page = process_page(request.args.get('page', default="1"))
@@ -70,6 +72,7 @@ def suppliers_list_by_prefix():
 
 
 @main.route('/g-cloud/supplier/<supplier_id>')
+@flask_featureflags.is_active_feature('SUPPLIER_A_TO_Z')
 def suppliers_details(supplier_id):
     supplier = data_api_client.get_supplier(
         supplier_id=supplier_id)["suppliers"]

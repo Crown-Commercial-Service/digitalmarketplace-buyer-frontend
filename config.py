@@ -43,6 +43,7 @@ class Config(object):
 
     # Feature Flags
     RAISE_ERROR_ON_MISSING_FEATURES = True
+    FEATURE_FLAGS_SUPPLIER_A_TO_Z = False
 
     @staticmethod
     def init_app(app):
@@ -57,12 +58,18 @@ class Config(object):
 class Test(Config):
     DEBUG = True
     DM_LOG_LEVEL = 'CRITICAL'
+    FEATURE_FLAGS_SUPPLIER_A_TO_Z = enabled_since('2015-07-08')
 
 
 class Development(Config):
     DEBUG = True
 
     DM_SEARCH_PAGE_SIZE = 5
+    FEATURE_FLAGS_SUPPLIER_A_TO_Z = enabled_since('2015-07-08')
+
+
+class Preview(Config):
+    FEATURE_FLAGS_SUPPLIER_A_TO_Z = enabled_since('2015-07-08')
 
 
 class Live(Config):
@@ -71,7 +78,7 @@ class Live(Config):
 
 configs = {
     'development': Development,
-    'preview': Live,
+    'preview': Preview,
     'staging': Live,
     'production': Live,
     'test': Test,
