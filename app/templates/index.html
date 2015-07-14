@@ -13,39 +13,29 @@
       Find technology or people for digital projects in the public sector
     </p>
   </header>
-
-  <ul class="browse-list">
-    <li class="browse-list-item">
-      <a href="/g-cloud" class="browse-list-item-link">
-          Find cloud technology and support
-      </a>
-      <p class="browse-list-item-body">
-          eg web hosting or IT health checks
-      </p>
-      <p class="browse-list-item-subtext">
-        <a href="/g-cloud/framework">Procurement framework: G-Cloud</a>
-      </p>
-    </li>
-    <li class="browse-list-item">
-      <a href="/crown-hosting" class="browse-list-item-link">
-        Buy physical datacentre space for legacy systems
-      </a>
-      <p class="browse-list-item-subtext">
-        <a href="/crown-hosting/framework">Procurement framework: Crown Hosting Data Centres</a>
-      </p>
-    </li>
-    <li class="browse-list-item">
-      <a href="https://digitalservicesstore.service.gov.uk/" class="browse-list-item-link">
-          Find specialists to work on digital projects
-      </a>
-      <p class="browse-list-item-body">
-          eg technical architects and user researchers
-      </p>
-      <p class="browse-list-item-subtext">
-        <a href="/digital-services/framework">Procurement framework: Digital Services</a>
-      </p>
-    </li>
-  </ul>
+  {% with
+    items = [
+      {
+        "link": "/g-cloud",
+        "title": "Find cloud technology and support",
+        "body": "eg web hosting or IT health checks",
+        "subtext": "<a href='/g-cloud/framework'>Procurement framework: G-Cloud</a>"
+      },
+      {
+        "link": "/crown-hosting",
+        "title": "Buy physical datacentre space for legacy systems",
+        "subtext": "<a href='/crown-hosting/framework'>Procurement framework: Crown Hosting Data Centres</a>"
+      },
+      {
+        "link": "https://digitalservicesstore.service.gov.uk/",
+        "title": "Find specialists to work on digital projects",
+        "body": "eg technical architects and user researchers",
+        "subtext": "<a href='/digital-services/framework'>Procurement framework: Digital Services</a>"
+      }
+    ]
+  %}
+    {% include "toolkit/browse-list.html" %}
+  {% endwith %}
 </div>
 
 {% endblock %}
