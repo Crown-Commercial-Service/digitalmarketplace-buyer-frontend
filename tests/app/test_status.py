@@ -2,7 +2,7 @@ import json
 from ..helpers import BaseApplicationTest
 
 import mock
-from nose.tools import assert_equal
+from nose.tools import assert_equal, assert_false
 
 
 class TestStatus(BaseApplicationTest):
@@ -20,6 +20,12 @@ class TestStatus(BaseApplicationTest):
     def teardown(self):
         self._data_api_client.stop()
         self._search_api_client.stop()
+
+    @mock.patch('app.status.views.data_api_client')
+    def test_should_return_200_from_elb_status_check(self, data_api_client):
+        status_response = self.client.get('/_status?ignore-dependencies')
+        assert_equal(200, status_response.status_code)
+        assert_false(data_api_client.called)
 
     def test_status_ok(self):
         self._data_api_client.get_status.return_value = {
