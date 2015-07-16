@@ -1,6 +1,8 @@
 {% extends "_base_page.html" %}
 
-{% block page_title %}Suppliers – Cloud technology and support – Digital Marketplace{% endblock %}
+{% block page_title %}
+  Suppliers starting with {{ prefix }} – Cloud technology and support – Digital Marketplace
+{% endblock %}
 
 {% block breadcrumb %}
   {%
@@ -23,26 +25,37 @@
 {% block main_content %}
 
 {%
-  with
-  heading = "Suppliers"
+  with heading="Suppliers starting with " + prefix
 %}
   {% include "toolkit/page-heading.html" %}
 {% endwith %}
 
 <div id="global-atoz-navigation">
-  <nav>
+  <nav role="navigation" aria-label="Suppliers">
     <ol>
       {% for item in nav %}
         {% if prefix == item %}
-          <li class="selected">{{ item }}</li>
+          <li class="selected">
+            <span class="visuallyhidden">Suppliers starting with </span>
+            <strong>{{ item }}</strong>
+          </li>
         {% else %}
-          <li><a href="{{ url_for('main.suppliers_list_by_prefix', prefix=item)}}">{{ item }}</a></li>
+          <li>
+            <span class="visuallyhidden">Suppliers starting with </span>
+            <a href="{{ url_for('main.suppliers_list_by_prefix', prefix=item)}}">{{ item }}</a>
+          </li>
         {% endif %}
       {% endfor %}
-      {% if prefix == "123" %}
-        <li class="selected">123</li>
+      {% if prefix == "1–9" %}
+        <li class="selected">
+          <span class="visuallyhidden">Suppliers starting with </span>
+          <strong>1–9</strong>
+        </li>
       {% else %}
-        <li><a href="{{ url_for('main.suppliers_list_by_prefix', prefix=123) }}">123</a></li>
+        <li>
+          <span class="visuallyhidden">Suppliers starting with </span>
+          <a href="{{ url_for('main.suppliers_list_by_prefix', prefix='1–9') }}">1–9</a>
+        </li>
       {% endif %}
     </ol>
   </nav>
