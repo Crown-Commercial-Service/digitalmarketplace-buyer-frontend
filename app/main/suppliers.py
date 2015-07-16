@@ -65,9 +65,7 @@ def suppliers_list_by_prefix():
     suppliers = api_result["suppliers"]
     links = api_result["links"]
 
-    template_data = get_template_data(main, {
-        'title': 'Digital Marketplace - Suppliers'
-    })
+    template_data = get_template_data(main, {})
 
     return render_template('suppliers_list.html',
                            suppliers=suppliers,
@@ -85,9 +83,7 @@ def suppliers_details(supplier_id):
     supplier = data_api_client.get_supplier(
         supplier_id=supplier_id)["suppliers"]
 
-    template_data = get_template_data(main, {
-        'title': 'Digital Marketplace - Suppliers'
-    })
+    template_data = get_template_data(main, {})
 
     first_character_of_supplier_name = supplier["name"][:1]
     if is_alpha(first_character_of_supplier_name):

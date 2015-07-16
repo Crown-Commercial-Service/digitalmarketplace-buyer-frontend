@@ -32,9 +32,7 @@ from .. import search_api_client, data_api_client
 
 @main.route('/')
 def index():
-    template_data = get_template_data(main, {
-        'title': 'Digital Marketplace'
-    })
+    template_data = get_template_data(main, {})
     return render_template('index.html', **template_data)
 
 
