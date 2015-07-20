@@ -357,3 +357,17 @@ class TestSearchResults(BaseApplicationTest):
         assert_equal(200, res.status_code)
         summary = find_search_summary(res.get_data(as_text=True))[0]
         assert_in('&lt;div&gt;XSS&lt;/div&gt;', summary)
+
+    def test_summary_for_unicode_query_keywords(self):
+        return_value = self.search_results_multiple_page
+        return_value["services"] = [return_value["services"][0]]
+        return_value["meta"]["total"] = 1
+        self._search_api_client.search_services.return_value = return_value
+
+        res = self.client.get(u'/g-cloud/search?q=email+\U0001f47e&lot=saas')
+        assert_equal(200, res.status_code)
+        summary = find_search_summary(res.get_data(as_text=True))[0]
+        assert_true(
+            u'<span class="search-summary-count">1</span> result found' +
+            u' containing <em>email \U0001f47e</em> in' +
+            u' <em>Software as a Service</em>' in summary)

@@ -51,7 +51,7 @@ class SearchSummary(object):
                 )
 
     def _set_initial_sentence(self, results_total, request_args):
-        keywords = escape(request_args.get('q', '', type=str))
+        keywords = escape(request_args.get('q', ''))
         lot_label = get_label_for_lot_param(
             request_args.get('lot', 'all', type=str)) or 'All categories'
         lot = u"{}{}{}".format(
