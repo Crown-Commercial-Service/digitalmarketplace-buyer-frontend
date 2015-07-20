@@ -133,17 +133,6 @@ class TestSuppliersPage(BaseApplicationTest):
             supplier_html
             in self._strip_whitespace(res.get_data(as_text=True)))
 
-    def test_should_show_warning_message_on_supplier_list(self):
-        res = self.client.get('/g-cloud/suppliers')
-        assert_equal(200, res.status_code)
-
-        assert_true(
-            '<strong>This page is for information only</strong><br/>Services should be chosen using your requirements.'  # noqa
-            in res.get_data(as_text=True))
-        assert_true(
-            'Please use the <a href="https://www.digitalmarketplace.service.gov.uk/buyers-guide/">buyers guide</a> for help.'  # noqa
-            in res.get_data(as_text=True))
-
     def test_should_show_next_page_on_supplier_list(self):
         res = self.client.get('/g-cloud/suppliers')
         assert_equal(200, res.status_code)
@@ -245,16 +234,6 @@ class TestSuppliersPage(BaseApplicationTest):
             next_html_page
             in res.get_data(as_text=True)
         )
-
-    def test_should_show_warning_message_on_supplier_details(self):
-        res = self.client.get('/g-cloud/supplier/92191')
-        assert_equal(200, res.status_code)
-        assert_true(
-            '<strong>This page is for information only</strong><br/>Services should be chosen using your requirements.'  # noqa
-            in res.get_data(as_text=True))
-        assert_true(
-            'Please use the <a href="https://www.digitalmarketplace.service.gov.uk/buyers-guide/">buyers guide</a> for help.'  # noqa
-            in res.get_data(as_text=True))
 
     def test_should_have_supplier_details_on_supplier_page(self):
         res = self.client.get('/g-cloud/supplier/92191')
