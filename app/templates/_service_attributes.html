@@ -1,40 +1,12 @@
 {% for attributeGrouping in service.attributes %}
- <h2 class="summary-item-heading">
-  {{ attributeGrouping.name }}
-</h2>
-<table class="summary-item-body">
-  <thead class="summary-item-field-headings">
-    <tr>
-      <th scope="col">
-        Name
-      </th>
-      <th scope="col">
-        Content
-      </th>
-    </tr>
-  </thead>
-  <tbody class="summary-item">
-    {% for row in attributeGrouping.rows %}
-    <tr class="summary-item-row">
-      <td class="summary-item-field-name">
-        <span>{{ row.key }}</span>
-      </td>
-      <td class="summary-item-field-content">
-        {% if row.type == 'list' %}
-          <ul>
-          {% for valueItem in row.value %}
-            <li>{{ valueItem }}</li>
-          {% endfor %}
-          </ul>
-          {% if row.assuranceCaveat %}
-            {{ row.assuranceCaveat }}
-          {% endif %}
-        {% else %}
-          {{ row.value }}
-        {% endif %}
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table> 
+  {%
+    with
+    heading = attributeGrouping.name,
+    column_headings = [
+      "Name", "Content"
+    ],
+    rows = attributeGrouping.rows
+  %}
+    {% include "toolkit/forms/summary.html" %}
+  {% endwith %}
 {% endfor %}

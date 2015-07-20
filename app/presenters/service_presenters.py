@@ -9,6 +9,7 @@ try:
     from urllib import unquote
 except ImportError:
     from urllib.parse import unquote
+from jinja2 import Template
 
 
 class Service(object):
@@ -52,25 +53,15 @@ class Service(object):
 
         for row in group:
             try:
-                attribute = Attribute(row['value'], service_data)
-            except KeyError:
+                rows.append({
+                    'key': row['key'],
+                    'fields': [
+                        row['key'],
+                        Attribute(row['value'], service_data).get_rendered()
+                    ]
+                })
+            except (KeyError, ValueError):
                 continue
-            data_value = attribute.get_data_value()
-            data_type = attribute.get_data_type(data_value)
-            if data_type is not False and \
-                    attribute.is_empty_certifications_field() is False:
-                    current_row = {
-                        'key': row['key'],
-                        'value': data_value,
-                        'type': data_type
-                    }
-                    if hasattr(attribute, 'assurance'):
-                        current_row = attribute.add_assurance_to_row(
-                            attribute.assurance,
-                            current_row
-                        )
-
-                    rows.append(current_row)
 
         return rows
 
@@ -85,8 +76,9 @@ class Attribute(object):
         self.key_type = self.get_data_type(key)
         if self._key_maps_to_data() is False:
             raise KeyError("Attribute key not found in service data")
-        else:
-            self._set_assurance()
+        if self.is_empty_certifications_field():
+            raise ValueError("Field is empty")
+        self._set_assurance()
 
     def get_data_type(self, value):
         """Gets the type of the value parameter"""
@@ -133,13 +125,35 @@ class Attribute(object):
         else:
             return value
 
-    def add_assurance_to_row(self, assurance, row_object):
-        if row_object['type'] == 'list':
-            row_object = self._add_assurance_to_list(row_object)
-            return row_object
+    def get_rendered(self):
+        if self.get_data_type(self.data_value) == 'list':
+            template = Template("""
+              <ul>
+              {%- for valueItem in value -%}
+                <li>{{ valueItem }}</li>
+              {%- endfor -%}
+              </ul>
+              {%- if assurance %} Assured by {{ assurance }} {% endif %}
+            """)
         else:
-            row_object = self._add_assurance_to_string(row_object)
-            return row_object
+            template = Template("""
+                {{ value }}{% if assurance %}, assured by {{ assurance }}{% endif %}
+            """)
+
+        return template.render({
+            "value": self.get_data_value(),
+            "assurance": self.get_assurance_caveat()
+        })
+
+    def get_assurance_caveat(self):
+        if (
+            hasattr(self, 'assurance') and
+            self.assurance != 'Service provider assertion'
+        ):
+            return lowercase_first_character_unless_part_of_acronym(
+                self.assurance
+            )
+        return False
 
     def is_empty_certifications_field(self):
         if self.key != 'vendorCertifications':
@@ -150,21 +164,6 @@ class Attribute(object):
             return True
         else:
             return False
-
-    def _add_assurance_to_list(self, row_object):
-        if self.assurance != 'Service provider assertion':
-            row_object['assuranceCaveat'] = (
-                u'Assured by %s' % self.assurance.lower()
-            )
-        return row_object
-
-    def _add_assurance_to_string(self, row_object):
-        if self.assurance != 'Service provider assertion':
-            row_object['value'] = u'%s, assured by %s' % (
-                row_object['value'],
-                self.assurance.lower()
-            )
-        return row_object
 
     def _set_assurance(self):
         data_value = self.get_data_value()
@@ -336,3 +335,11 @@ class Meta(object):
             return values['if_exists']
         else:
             return values['if_absent']
+
+
+def lowercase_first_character_unless_part_of_acronym(string):
+    if not string:
+        return ''
+    if string[1:2] == string[1:2].upper():
+        return string
+    return string[:1].lower() + string[1:]

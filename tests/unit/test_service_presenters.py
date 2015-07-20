@@ -1,7 +1,9 @@
 import os
 import json
 import unittest
-from app.presenters.service_presenters import Service, Attribute, Meta
+from app.presenters.service_presenters import (
+    Service, Attribute, Meta, lowercase_first_character_unless_part_of_acronym
+)
 
 
 def _get_fixture_data():
@@ -59,43 +61,14 @@ class TestService(unittest.TestCase):
 
     def test_attributes_are_correctly_set(self):
         self.maxDiff = None
-        self.assertEquals(self.service.attributes[0], {
-            'name': u'Support',
-            'rows': [
-                {
-                    'key': u'Support service type',
-                    'type': 'list',
-                    'value': [
-                        u'Service desk',
-                        u'Email',
-                        u'Phone'
-                    ]
-                },
-                {
-                    'key': u'Support accessible to any third-party suppliers',
-                    'type': 'string',
-                    'value': u'Yes'
-                },
-                {
-                    'key': u'Support availability',
-                    'type': 'string',
-                    'value': u'24/7, 365 days a year'
-                },
-                {
-                    'key': u'Standard support response times',
-                    'type': 'string',
-                    'value': (
-                        u'Normally 1 hour as standard, up to a maximum of 4 ' +
-                        u'hours'
-                    )
-                },
-                {
-                    'key': u'Incident escalation process available',
-                    'type': 'string',
-                    'value': u'Yes'
-                }
-            ]
-        })
+        self.assertEquals(
+            self.service.attributes[0]['name'],
+            'Support'
+        )
+        self.assertEquals(
+            len(self.service.attributes[0]['rows']),
+            5
+        )
 
     def test_the_support_attribute_group_is_not_there_if_no_attributes(self):
         del self.fixture['services']['openStandardsSupported']
@@ -110,27 +83,10 @@ class TestService(unittest.TestCase):
         service = Service(self.fixture)
         for group in service.attributes:
             if (
-                (group['name'] == 'External interface protection')
-                and
+                (group['name'] == 'External interface protection') and
                 ('onboardingGuidance' in group)
             ):
                 self.fail("Attribute with tuple value should not be in group")
-
-    def test_attributes_are_given_the_correct_type(self):
-        service = Service(self.fixture)
-        for group in service.attributes:
-            if group['name'] == 'Support':
-                for row in group['rows']:
-                    if row['key'] == 'supportTypes':
-                        self.assertEqual(row['type'], 'list')
-                    if row['key'] == 'supportForThirdParties':
-                        self.assertEqual(row['type'], 'boolean')
-                    if row['key'] == 'supportAvailability':
-                        self.assertEqual(row['type'], 'string')
-            elif group['name'] == 'Secure service administration':
-                for row in group['rows']:
-                    if row['key'] == 'serviceManagementModel':
-                        self.assertEqual(row['type'], 'dictonary')
 
     def test_attributes_with_assurance_in_the_fields_add_it_correctly(self):
         service = Service(self.fixture)
@@ -138,18 +94,18 @@ class TestService(unittest.TestCase):
             if group['name'] == 'Data-in-transit protection':
                 for row in group['rows']:
                     # string with bespoke assurance caveat
-                    if row['key'] == 'Data protection between services':
+                    if row['fields'][0] == 'Data protection between services':
                         self.assertEqual(
-                            row['value'],
+                            row['fields'][1].strip(),
                             (
                                 u'No encryption, assured by ' +
                                 u'independent validation of assertion'
                             )
                         )
                     # string with standard assurance caveat
-                    if row['key'] == 'Data protection within service':
+                    if row['fields'][0] == 'Data protection within service':
                         self.assertEqual(
-                            row['value'],
+                            row['fields'][1].strip(),
                             u'No encryption'
                         )
 
@@ -159,14 +115,11 @@ class TestService(unittest.TestCase):
             if group['name'] == 'Asset protection and resilience':
                 for row in group['rows']:
                     # list with bespoke assurance caveat
-                    if row['key'] == 'Data management location':
-                        self.assertEqual(
-                            row['assuranceCaveat'],
-                            u'Assured by independent validation of assertion'
+                    if row['fields'][0] == 'Data management location':
+                        self.assertIn(
+                            u'Assured by independent validation of assertion',
+                            row['fields'][1]
                         )
-                    # list with standard assurance caveat
-                    if row['key'] == 'Data management location':
-                        self.assertIn('assuranceCaveat', row)
 
 
 class TestAttribute(unittest.TestCase):
@@ -309,13 +262,55 @@ class TestAttribute(unittest.TestCase):
 
     def test_is_empty_certifications_field_works_with_empty_list(self):
         self.fixture['vendorCertifications'] = []
-        attribute = Attribute('vendorCertifications', self.fixture)
-        self.assertEqual(attribute.is_empty_certifications_field(), True)
+        self.assertRaises(
+            ValueError,
+            Attribute, 'vendorCertifications', self.fixture
+        )
 
     def test_is_empty_certifications_field_works_with_full_list(self):
         self.fixture['vendorCertifications'] = ['Not applicable']
         attribute = Attribute('vendorCertifications', self.fixture)
         self.assertEqual(attribute.is_empty_certifications_field(), False)
+
+    def test_rendering_of_string_attribute(self):
+        self.fixture['vendorCertifications'] = 'Gold star'
+        attribute = Attribute('vendorCertifications', self.fixture)
+        self.assertEqual(attribute.get_rendered().strip(), 'Gold star')
+
+    def test_rendering_of_string_attribute_with_assurance(self):
+        self.fixture['vendorCertifications'] = {
+            'value': 'Gold star',
+            'assurance': 'CESG-assured components'
+        }
+        attribute = Attribute('vendorCertifications', self.fixture)
+        self.assertEqual(
+            attribute.get_rendered().strip(),
+            'Gold star, assured by CESG-assured components'
+        )
+
+    def test_rendering_of_list_attribute(self):
+        self.fixture['vendorCertifications'] = [
+            'Gold star', 'Bronze star'
+        ]
+        attribute = Attribute('vendorCertifications', self.fixture)
+        self.assertEqual(
+            attribute.get_rendered().strip(),
+            "<ul><li>Gold star</li><li>Bronze star</li></ul>"
+        )
+
+    def test_rendering_of_string_list_with_assurance(self):
+        self.fixture['vendorCertifications'] = {
+            "value": [
+                'Gold star', 'Bronze star'
+            ],
+            "assurance": "CESG-assured componenents"
+        }
+        attribute = Attribute('vendorCertifications', self.fixture)
+        self.assertEqual(
+            attribute.get_rendered().strip(),
+            "<ul><li>Gold star</li><li>Bronze star</li></ul>" +
+            " Assured by CESG-assured componenents"
+        )
 
 
 class TestMeta(unittest.TestCase):
@@ -471,3 +466,21 @@ class TestMeta(unittest.TestCase):
         self.assertNotIn('Trial and free options available', price_caveats)
         self.assertNotIn('Trial option available', price_caveats)
         self.assertNotIn('Free option available', price_caveats)
+
+
+class TestHelpers(unittest.TestCase):
+    def test_normal_string_can_be_lowercased(self):
+        self.assertEqual(
+            lowercase_first_character_unless_part_of_acronym(
+                "Independent validation of assertion"
+            ),
+            "independent validation of assertion"
+        )
+
+    def test_string_starting_with_acronym_can_be_lowercased(self):
+        self.assertEqual(
+            lowercase_first_character_unless_part_of_acronym(
+                "CESG-assured components"
+            ),
+            "CESG-assured components"
+        )
