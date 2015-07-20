@@ -17,12 +17,13 @@
     </li>
   {% endfor %}
   </ul>
-  <h2 class="service-id-heading">Service ID</h2>
+  <h2 class="sidebar-heading">Service ID</h2>
   <p class="service-id">
   {% for group in service.meta.serviceId %}
     <span>{{ group }}</span>
   {% endfor %}
   </p>
+  <h2 class="sidebar-heading">Contact</h2>
   {%
     with
     organisation_type="supplier",
