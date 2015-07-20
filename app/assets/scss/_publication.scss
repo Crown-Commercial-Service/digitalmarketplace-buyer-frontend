@@ -204,6 +204,9 @@ $gutter-one-sixth: $gutter-one-third/2;
           font-style: normal;
         }
       }
+      .image-embedded {
+        margin: 1em 40px;
+      }
       figcaption {
         @include core-16;
         font-weight: bold;
