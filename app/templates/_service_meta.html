@@ -18,11 +18,9 @@
   {% endfor %}
   </ul>
   <h2 class="sidebar-heading">Service ID</h2>
-  <p class="service-id">
-  {% for group in service.meta.serviceId %}
-    <span>{{ group }}</span>
-  {% endfor %}
-  </p>
+  {% with id=service.meta.serviceId %}
+    {% include "toolkit/service-id.html" %}
+  {% endwith %}
   <h2 class="sidebar-heading">Contact</h2>
   {%
     with

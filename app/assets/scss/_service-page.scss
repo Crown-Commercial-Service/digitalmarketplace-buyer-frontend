@@ -58,6 +58,10 @@
   .contact-details-organisation {
     display: none;
   }
+
+  .service-id {
+    margin-bottom: $gutter;
+  }
 }
 
 .price {
@@ -83,9 +87,4 @@
 .sidebar-heading {
   @include bold-16;
   margin-bottom: 5px;
-}
-
-.service-id {
-  @include core-16;
-  margin: 0 4px ($gutter + 10px) 0;
 }
