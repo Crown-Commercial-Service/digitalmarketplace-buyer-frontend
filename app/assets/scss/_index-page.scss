@@ -21,6 +21,7 @@
 
     button {
       height: 48px;
+      width: 100%;
 
       @include media(tablet) {
         width: 7.6em;
