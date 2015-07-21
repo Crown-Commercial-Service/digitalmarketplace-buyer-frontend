@@ -12,16 +12,16 @@
 <header class="page-heading">
         <h1>Search results</h1>
 </header>
-<form action="{{ url_for('.search') }}" method="get">
     <div class="grid-row">
-        <div class="column-one-third search-page-filters">
-            {% include '_search_filters.html' %}
-        </div>
-        <div class="column-two-thirds">
+        <section class="column-one-third search-page-filters" aria-label="Search filters">
+            <form action="{{ url_for('.search') }}" method="get">
+                {% include '_search_filters.html' %}
+            </form>
+        </section>
+        <section class="column-two-thirds" aria-label="Services found">
             {% include '_search_summary.html' %}
             {% include '_search_results.html' %}
             {% include '_search_pagination.html' %}
-        </div>
+        </section>
     </div>
-</form>
 {% endblock %}
