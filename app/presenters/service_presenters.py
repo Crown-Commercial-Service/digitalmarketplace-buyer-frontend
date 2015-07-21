@@ -1,6 +1,7 @@
 import os
 import re
-from .data.service_data import mappings
+from jinja2 import Template
+
 try:
     from urllib.parse import urlparse
 except ImportError:
@@ -9,7 +10,6 @@ try:
     from urllib import unquote
 except ImportError:
     from urllib.parse import unquote
-from jinja2 import Template
 
 
 class Service(object):
@@ -17,8 +17,8 @@ class Service(object):
         if key[0] in service_data:
             setattr(self, key[1], service_data[key[0]])
 
-    def __init__(self, service):
-        service_data = service['services']
+    def __init__(self, service_data, content):
+        self.content = content
         # required attributes directly mapped to service_data values
         self.title = service_data['serviceName']
         self.serviceSummary = service_data['serviceSummary']
@@ -34,51 +34,49 @@ class Service(object):
         self.meta = self._get_service_meta(service_data)
 
     def _get_service_attributes(self, service_data):
-        attribute_groups = []
-        for group in mappings:
-            attribute_group = {
-                'name': group['name'],
-                'rows': self._get_rows(group['rows'], service_data)
-            }
-            if len(attribute_group['rows']) > 0:
-                attribute_groups.append(attribute_group)
-
-        return attribute_groups
+        sections = map(
+            lambda section: {
+                'name': section['name'],
+                'rows': self._get_rows(section, service_data)
+            },
+            self.content
+        )
+        return list(filter(
+            lambda section: len(list(section['rows'])) > 0,
+            list(sections)
+        ))
 
     def _get_service_meta(self, service_data):
         return Meta(service_data)
 
-    def _get_rows(self, group, service_data):
-        rows = []
+    def _get_rows(self, section, service_data):
+        return list(filter(
+            not_none, map(
+                lambda question: self._get_row(
+                    question['question'],
+                    service_data.get(question['id'], None)
+                ),
+                section['questions']
+            )
+        ))
 
-        for row in group:
-            try:
-                rows.append({
-                    'key': row['key'],
-                    'fields': [
-                        row['key'],
-                        Attribute(row['value'], service_data).get_rendered()
-                    ]
-                })
-            except (KeyError, ValueError):
-                continue
-
-        return rows
+    def _get_row(self, label, value):
+        if value in ["", [], None]:
+            return None
+        return {'fields': [
+            label,
+            Attribute(value).get_rendered()
+        ]}
 
 
 class Attribute(object):
     """Wrapper to handle accessing an attribute in service_data"""
 
-    def __init__(self, key, service_data):
+    def __init__(self, value):
         """Returns if the attribute key points to a row in the service data"""
-        self.key = key
-        self.service_data = service_data
-        self.key_type = self.get_data_type(key)
-        if self._key_maps_to_data() is False:
-            raise KeyError("Attribute key not found in service data")
-        if self.is_empty_certifications_field():
-            raise ValueError("Field is empty")
-        self._set_assurance()
+        self.value = value
+        self._unpack_assurance()
+        self.value = self._format(self.value)
 
     def get_data_type(self, value):
         """Gets the type of the value parameter"""
@@ -92,41 +90,15 @@ class Attribute(object):
             return 'float'
         elif isinstance(value, list):
             return 'list'
-        elif self._is_function(value):
+        elif self._is_function(self.value):
             return 'function'
         elif isinstance(value, dict):
             return 'dictionary'
         else:
             return False
 
-    def get_data_value(self):
-        """Get the value for the attribute key in the service data"""
-        if hasattr(self, 'data_value') is False:
-            if self.key_type is 'function':
-                data_value = self.key(self.service_data)
-            else:
-                data_value = self.service_data[self.key]
-            self.data_value = self.format(data_value)
-            self.data_type = self.get_data_type(data_value)
-        return self.data_value
-
-    def format(self, value):
-        """Formats the value parameter based on its type"""
-        value_format = self.get_data_type(value)
-        if value_format is 'boolean':
-            if value:
-                return u'Yes'
-            else:
-                return u'No'
-        elif (value_format is 'list') and (len(value) == 0):
-            return ''
-        elif (value_format is 'list') and (len(value) == 1):
-            return self.format(value[0])
-        else:
-            return value
-
     def get_rendered(self):
-        if self.get_data_type(self.data_value) == 'list':
+        if self.type == 'list':
             template = Template("""
               <ul>
               {%- for valueItem in value -%}
@@ -141,36 +113,39 @@ class Attribute(object):
             """)
 
         return template.render({
-            "value": self.get_data_value(),
-            "assurance": self.get_assurance_caveat()
+            "value": self.value,
+            "assurance": self.assurance
         })
 
-    def get_assurance_caveat(self):
-        if (
-            hasattr(self, 'assurance') and
-            self.assurance != 'Service provider assertion'
-        ):
-            return lowercase_first_character_unless_part_of_acronym(
-                self.assurance
-            )
-        return False
-
-    def is_empty_certifications_field(self):
-        if self.key != 'vendorCertifications':
-            return False
-
-        value = self.service_data[self.key]
-        if len(value) == 0:
-            return True
+    def _format(self, value):
+        """Formats the value parameter based on its type"""
+        self.type = self.get_data_type(value)
+        if self.type is 'boolean':
+            if value:
+                return u'Yes'
+            else:
+                return u'No'
+        elif (self.type is 'list') and (len(value) == 0):
+            return ''
+        elif (self.type is 'list') and (len(value) == 1):
+            return self._format(value[0])
         else:
-            return False
+            return value
 
-    def _set_assurance(self):
-        data_value = self.get_data_value()
-        if 'assurance' in data_value:
-            self.assurance = data_value['assurance']
-            self.data_value = self.format(data_value['value'])
-            self.data_type = self.get_data_type(self.data_value)
+    def _unpack_assurance(self):
+        if (
+            self.get_data_type(self.value) is 'dictionary' and
+            'assurance' in self.value
+        ):
+            if (self.value['assurance'] == 'Service provider assertion'):
+                self.assurance = False
+            else:
+                self.assurance = lowercase_first_character_unless_part_of_acronym(
+                    self.value['assurance']
+                )
+            self.value = self.value['value']
+        else:
+            self.assurance = False
 
     def _is_string(self, var):
         try:
@@ -180,12 +155,6 @@ class Attribute(object):
 
     def _is_function(self, var):
         return hasattr(var, '__call__')
-
-    def _key_maps_to_data(self):
-        if self.get_data_type(self.key) is 'function':
-            return self.key(self.service_data) is not False
-        else:
-            return self.key in self.service_data
 
 
 class Meta(object):
@@ -343,3 +312,7 @@ def lowercase_first_character_unless_part_of_acronym(string):
     if string[1:2] == string[1:2].upper():
         return string
     return string[:1].lower() + string[1:]
+
+
+def not_none(item):
+    return item is not None

@@ -4,6 +4,7 @@ import unittest
 from app.presenters.service_presenters import (
     Service, Attribute, Meta, lowercase_first_character_unless_part_of_acronym
 )
+from app import service_questions_loader
 
 
 def _get_fixture_data():
@@ -21,7 +22,10 @@ class TestService(unittest.TestCase):
 
     def setUp(self):
         self.fixture = _get_fixture_data()
-        self.service = Service(self.fixture)
+        self.fixture = self.fixture['services']
+        self.service = Service(
+            self.fixture, service_questions_loader.get_builder()
+        )
 
     def tearDown(self):
         pass
@@ -29,26 +33,26 @@ class TestService(unittest.TestCase):
     def test_title_attribute_is_set(self):
         self.assertEquals(
             self.service.title,
-            self.fixture['services']['serviceName'])
+            self.fixture['serviceName'])
 
     def test_lot_attribute_is_set(self):
         self.assertEquals(
             self.service.lot,
-            self.fixture['services']['lot'])
+            self.fixture['lot'])
 
     def test_Service_works_if_supplierName_is_not_set(self):
-        del self.fixture['services']['supplierName']
-        self.service = Service(self.fixture)
+        del self.fixture['supplierName']
+        self.service = Service(self.fixture, service_questions_loader.get_builder())
         self.assertFalse(hasattr(self.service, 'supplierName'))
 
     def test_Service_works_if_serviceFeatures_is_not_set(self):
-        del self.fixture['services']['serviceFeatures']
-        self.service = Service(self.fixture)
+        del self.fixture['serviceFeatures']
+        self.service = Service(self.fixture, service_questions_loader.get_builder())
         self.assertFalse(hasattr(self.service, 'features'))
 
     def test_Service_works_if_serviceBenefits_is_not_set(self):
-        del self.fixture['services']['serviceBenefits']
-        self.service = Service(self.fixture)
+        del self.fixture['serviceBenefits']
+        self.service = Service(self.fixture, service_questions_loader.get_builder())
         self.assertFalse(hasattr(self.service, 'benefits'))
 
     def test_features_attributes_are_correctly_set(self):
@@ -60,19 +64,25 @@ class TestService(unittest.TestCase):
         self.assertEquals(len(self.service.benefits), 6)
 
     def test_attributes_are_correctly_set(self):
-        self.maxDiff = None
+        service = Service(
+            self.fixture, service_questions_loader.get_builder()
+        )
         self.assertEquals(
             self.service.attributes[0]['name'],
             'Support'
         )
         self.assertEquals(
-            len(self.service.attributes[0]['rows']),
+            len(self.service.attributes),
+            30
+        )
+        self.assertEquals(
+            len(list(self.service.attributes[0]['rows'])),
             5
         )
 
     def test_the_support_attribute_group_is_not_there_if_no_attributes(self):
-        del self.fixture['services']['openStandardsSupported']
-        service = Service(self.fixture)
+        del self.fixture['openStandardsSupported']
+        service = Service(self.fixture, service_questions_loader.get_builder())
         for group in service.attributes:
             if group['name'] == 'Open standards':
                 self.fail("Support group should not be found")
@@ -80,7 +90,7 @@ class TestService(unittest.TestCase):
     def test_only_attributes_with_a_valid_type_are_added_to_groups(self):
         invalidValue = (u'Manuals provided', u'CMS training')
         self.fixture['onboardingGuidance'] = invalidValue
-        service = Service(self.fixture)
+        service = Service(self.fixture, service_questions_loader.get_builder())
         for group in service.attributes:
             if (
                 (group['name'] == 'External interface protection') and
@@ -89,7 +99,7 @@ class TestService(unittest.TestCase):
                 self.fail("Attribute with tuple value should not be in group")
 
     def test_attributes_with_assurance_in_the_fields_add_it_correctly(self):
-        service = Service(self.fixture)
+        service = Service(self.fixture, service_questions_loader.get_builder())
         for group in service.attributes:
             if group['name'] == 'Data-in-transit protection':
                 for row in group['rows']:
@@ -110,7 +120,7 @@ class TestService(unittest.TestCase):
                         )
 
     def test_attributes_with_assurance_for_a_list_value_has_a_caveat(self):
-        service = Service(self.fixture)
+        service = Service(self.fixture, service_questions_loader.get_builder())
         for group in service.attributes:
             if group['name'] == 'Asset protection and resilience':
                 for row in group['rows']:
@@ -131,29 +141,9 @@ class TestAttribute(unittest.TestCase):
 
     def test_Attribute_works_if_the_key_is_in_service_data(self):
         try:
-            attribute = Attribute('supportAvailability', self.fixture)
+            attribute = Attribute('supportAvailability')
         except KeyError:
             self.fail("'supportAvailability' key should be in service data")
-
-    def test_Attribute_fails_if_the_key_isnt_in_service_data(self):
-        key_error_raised = False
-        try:
-            attribute = Attribute('downtime', self.fixture)
-        except KeyError:
-            key_error_raised = True
-        self.assertTrue(key_error_raised)
-
-    def test_Attribute_fails_if_key_is_a_function_that_returns_false(self):
-        key_error_raised = False
-
-        def func(service_data):
-            return False
-
-        try:
-            attribute = Attribute(func, self.fixture)
-        except KeyError:
-            key_error_raised = True
-        self.assertTrue(key_error_raised)
 
     def test_Attribute_fails_if_key_is_a_function_that_returns_a_value(self):
         key_error_raised = False
@@ -165,147 +155,129 @@ class TestAttribute(unittest.TestCase):
             }
 
         try:
-            attribute = Attribute(func, self.fixture)
+            attribute = Attribute(func)
         except KeyError:
             key_error_raised = True
         self.assertFalse(key_error_raised)
 
     def test_get_data_value_retrieves_correct_value(self):
-        attribute = Attribute('supportAvailability', self.fixture)
         self.assertEqual(
-            attribute.get_data_value(),
+            Attribute('24/7, 365 days a year').value,
             '24/7, 365 days a year'
         )
 
     def test_get_data_type_recognises_strings(self):
-        attribute = Attribute('supportAvailability', self.fixture)
         self.assertEqual(
-            attribute.get_data_type('24x7x365 with UK based engineers'),
+            Attribute('24x7x365 with UK based engineers').type,
             'string'
         )
 
     def test_get_data_type_recognises_floats(self):
-        attribute = Attribute('supportAvailability', self.fixture)
         self.assertEqual(
-            attribute.get_data_type(99.99),
+            Attribute(99.99).type,
             'float'
         )
 
     def test_get_data_type_recognises_integer(self):
-        attribute = Attribute('supportAvailability', self.fixture)
         self.assertEqual(
-            attribute.get_data_type(99),
+            Attribute(99).type,
             'integer'
         )
 
     def test_get_data_type_recognises_unicode_strings(self):
-        attribute = Attribute('supportAvailability', self.fixture)
         self.assertEqual(
-            attribute.get_data_type(u'24x7x365 with UK based engineers'),
+            Attribute(u'24x7x365 with UK based engineers').type,
             'string'
         )
 
     def test_get_data_type_recognises_lists(self):
-        attribute = Attribute('supportAvailability', self.fixture)
         self.assertEqual(
-            attribute.get_data_type([1, 2]),
+            Attribute([1, 2]).type,
             'list'
         )
 
     def test_get_data_type_recognises_functions(self):
-        attribute = Attribute('supportAvailability', self.fixture)
 
         def _func():
             pass
 
         self.assertEqual(
-            attribute.get_data_type(_func),
+            Attribute(_func).type,
             'function'
         )
 
     def test_get_data_type_recognises_booleans(self):
-        attribute = Attribute('supportAvailability', self.fixture)
         self.assertEqual(
-            attribute.get_data_type(True),
+            Attribute(True).type,
             'boolean'
         )
 
     def test_get_data_type_recognises_dictionaries(self):
-        attribute = Attribute('supportAvailability', self.fixture)
-        dictionary = {
-            "assurance": "Service provider assertion",
-            "value": True
-        }
-        self.assertEqual(attribute.get_data_type(dictionary), 'dictionary')
-
-    def test_get_data_type_returns_false_for_unrecognised_type(self):
-        attribute = Attribute('supportAvailability', self.fixture)
-        self.assertFalse(attribute.get_data_type(('name', 'address')))
-
-    def test_format_returns_yes_for_true_boolean(self):
-        attribute = Attribute('supportAvailability', self.fixture)
-        self.assertEqual(attribute.format(True), 'Yes')
-
-    def test_format_returns_no_for_true_boolean(self):
-        attribute = Attribute('supportAvailability', self.fixture)
-        self.assertEqual(attribute.format(False), 'No')
-
-    def test_format_returns_empty_string_for_a_empty_list(self):
-        self.fixture['supportedDevices'] = []
-        attribute = Attribute('supportedDevices', self.fixture)
-        self.assertEqual(attribute.format([]), "")
-
-    def test_format_returns_the_first_item_for_a_list_with_one_item(self):
-        self.fixture['supportedDevices'] = ['PC']
-        attribute = Attribute('supportedDevices', self.fixture)
-        self.assertEqual(attribute.format(["PC"]), "PC")
-
-    def test_is_empty_certifications_field_works_with_empty_list(self):
-        self.fixture['vendorCertifications'] = []
-        self.assertRaises(
-            ValueError,
-            Attribute, 'vendorCertifications', self.fixture
+        attribute = Attribute(
+            {
+                "assurance": "Independent validation of assertion",
+                "value": True
+            }
+        )
+        self.assertEqual(attribute.type, 'boolean')
+        self.assertEqual(
+            attribute.assurance, "independent validation of assertion"
         )
 
-    def test_is_empty_certifications_field_works_with_full_list(self):
-        self.fixture['vendorCertifications'] = ['Not applicable']
-        attribute = Attribute('vendorCertifications', self.fixture)
-        self.assertEqual(attribute.is_empty_certifications_field(), False)
+    def test_get_data_type_returns_false_for_unrecognised_type(self):
+        attribute = Attribute(('name', 'address'))
+        self.assertFalse(attribute.type)
+
+    def test_format_returns_yes_for_true_boolean(self):
+        attribute = Attribute("")
+        self.assertEqual(attribute._format(True), 'Yes')
+
+    def test_format_returns_no_for_true_boolean(self):
+        attribute = Attribute("")
+        self.assertEqual(attribute._format(False), 'No')
+
+    def test_format_returns_empty_string_for_a_empty_list(self):
+        attribute = Attribute("")
+        self.assertEqual(attribute._format([]), "")
+
+    def test_format_returns_the_first_item_for_a_list_with_one_item(self):
+        attribute = Attribute("")
+        self.assertEqual(attribute._format(['PC']), "PC")
 
     def test_rendering_of_string_attribute(self):
-        self.fixture['vendorCertifications'] = 'Gold star'
-        attribute = Attribute('vendorCertifications', self.fixture)
+        attribute = Attribute('Gold star')
         self.assertEqual(attribute.get_rendered().strip(), 'Gold star')
 
     def test_rendering_of_string_attribute_with_assurance(self):
-        self.fixture['vendorCertifications'] = {
-            'value': 'Gold star',
-            'assurance': 'CESG-assured components'
-        }
-        attribute = Attribute('vendorCertifications', self.fixture)
+        attribute = Attribute(
+            {
+                'value': 'Gold star',
+                'assurance': 'CESG-assured components'
+            }
+        )
         self.assertEqual(
             attribute.get_rendered().strip(),
             'Gold star, assured by CESG-assured components'
         )
 
     def test_rendering_of_list_attribute(self):
-        self.fixture['vendorCertifications'] = [
-            'Gold star', 'Bronze star'
-        ]
-        attribute = Attribute('vendorCertifications', self.fixture)
+        attribute = Attribute(
+            ['Gold star', 'Bronze star']
+        )
         self.assertEqual(
             attribute.get_rendered().strip(),
             "<ul><li>Gold star</li><li>Bronze star</li></ul>"
         )
 
     def test_rendering_of_string_list_with_assurance(self):
-        self.fixture['vendorCertifications'] = {
-            "value": [
-                'Gold star', 'Bronze star'
-            ],
-            "assurance": "CESG-assured componenents"
-        }
-        attribute = Attribute('vendorCertifications', self.fixture)
+        attribute = Attribute(
+            {
+                "value": [
+                    'Gold star', 'Bronze star'
+                ],
+                "assurance": "CESG-assured componenents"
+            }
+        )
         self.assertEqual(
             attribute.get_rendered().strip(),
             "<ul><li>Gold star</li><li>Bronze star</li></ul>" +
