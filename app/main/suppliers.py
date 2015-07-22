@@ -2,7 +2,7 @@
 from string import ascii_uppercase
 import flask_featureflags
 from app.main import main
-from flask import render_template, request
+from flask import render_template, request, url_for
 from app.helpers.search_helpers import get_template_data
 from app import data_api_client
 import re
@@ -65,7 +65,14 @@ def suppliers_list_by_prefix():
     suppliers = api_result["suppliers"]
     links = api_result["links"]
 
-    template_data = get_template_data(main, {})
+    template_data = get_template_data(main, {
+        'crumbs': [
+            {
+                'text': 'Cloud technology and support',
+                'link': url_for('.index_g_cloud')
+            }
+        ]
+    })
 
     return render_template('suppliers_list.html',
                            suppliers=suppliers,
@@ -83,14 +90,29 @@ def suppliers_details(supplier_id):
     supplier = data_api_client.get_supplier(
         supplier_id=supplier_id)["suppliers"]
 
-    template_data = get_template_data(main, {})
-
     first_character_of_supplier_name = supplier["name"][:1]
     if is_alpha(first_character_of_supplier_name):
         prefix = process_prefix(
             prefix=first_character_of_supplier_name, format='template')
     else:
         prefix = u"1–9"
+
+    template_data = get_template_data(main, {
+        'crumbs': [
+            {
+                'text': 'Cloud technology and support',
+                'link': url_for('.index_g_cloud')
+            },
+            {
+                'text': 'Suppliers',
+                'link': url_for('.suppliers_list_by_prefix')
+            },
+            {
+                'text': prefix,
+                'link': url_for('.suppliers_list_by_prefix', prefix=prefix)
+            }
+        ]
+    })
 
     return render_template(
         'suppliers_details.html',
