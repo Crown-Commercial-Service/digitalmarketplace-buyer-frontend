@@ -1,3 +1,4 @@
+import re
 from math import ceil
 
 from werkzeug.datastructures import MultiDict
@@ -103,6 +104,16 @@ def group_request_filters(request_filters, content_loader):
     return filter_query
 
 
+def replace_g5_search_dots(keywords_query):
+    """Replaces '.' with '-' in G5 service IDs to support old ID search format."""
+
+    return re.sub(
+        r'5\.G(\d)\.(\d{4})\.(\d{3})',
+        r'5-G\1-\2-\3',
+        keywords_query
+    )
+
+
 def build_search_query(request, lot_filters, content_loader):
     """Match request args with known filters.
 
@@ -117,6 +128,9 @@ def build_search_query(request, lot_filters, content_loader):
         request.args,
         lot_filters
     )
+
+    if 'q' in query:
+        query['q'] = replace_g5_search_dots(query['q'])
 
     return group_request_filters(query, content_loader)
 

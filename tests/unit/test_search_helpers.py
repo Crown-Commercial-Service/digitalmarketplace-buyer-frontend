@@ -233,6 +233,18 @@ class TestBuildSearchQueryHelpers(object):
             }
         )
 
+    def test_replace_g5_search_dots(self):
+        assert_equal(
+            search_helpers.replace_g5_search_dots("some text 5.G4.1005.001 text"),
+            "some text 5-G4-1005-001 text"
+        )
+
+    def test_replace_g5_search_dots_no_id(self):
+        assert_equal(
+            search_helpers.replace_g5_search_dots("some text 5.G4.1005 text"),
+            "some text 5.G4.1005 text"
+        )
+
     def test_build_search_query(self):
         request = self._request({
             'page': 5,
@@ -302,4 +314,15 @@ class TestBuildSearchQueryHelpers(object):
             search_helpers.build_search_query(
                 request, self.lot_filters, self._loader()),
             {}
+        )
+
+    def test_build_search_query_g5_dots_id_search(self):
+        request = self._request({
+            'q': 'some text 5.G4.1005.001',
+        })
+
+        assert_equal(
+            search_helpers.build_search_query(
+                request, self.lot_filters, self._loader()),
+            {'q': 'some text 5-G4-1005-001'}
         )
