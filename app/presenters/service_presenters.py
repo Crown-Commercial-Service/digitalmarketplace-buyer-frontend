@@ -17,8 +17,8 @@ class Service(object):
         if key[0] in service_data:
             setattr(self, key[1], service_data[key[0]])
 
-    def __init__(self, service_data, content):
-        self.content = content
+    def __init__(self, service_data, service_questions):
+        self.service_questions = service_questions
         # required attributes directly mapped to service_data values
         self.title = service_data['serviceName']
         self.serviceSummary = service_data['serviceSummary']
@@ -39,7 +39,7 @@ class Service(object):
                 'name': section['name'],
                 'rows': self._get_rows(section, service_data)
             },
-            self.content
+            self.service_questions
         )
         return list(filter(
             lambda section: len(list(section['rows'])) > 0,
