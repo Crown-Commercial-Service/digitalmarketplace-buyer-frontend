@@ -1,8 +1,17 @@
 import os
+import hashlib
 import jinja2
 from dmutils.status import enabled_since, get_version_label
 
 basedir = os.path.abspath(os.path.dirname(__file__))
+
+
+def get_asset_fingerprint(asset_file_path):
+    hasher = hashlib.md5()
+    with open(asset_file_path, 'rb') as asset_file:
+        buf = asset_file.read()
+        hasher.update(buf)
+    return hasher.hexdigest()
 
 
 class Config(object):
@@ -13,7 +22,11 @@ class Config(object):
     DEBUG = False
     BASE_TEMPLATE_DATA = {
         'asset_path': '/static/',
-        'header_class': 'with-proposition'
+        'header_class': 'with-proposition',
+        "asset_fingerprints": {
+            "css": get_asset_fingerprint("app/static/stylesheets/application.css"),
+            "js": get_asset_fingerprint("app/static/javascripts/application.js")
+        }
     }
     DM_DATA_API_URL = os.getenv('DM_API_URL')
     DM_DATA_API_AUTH_TOKEN = os.getenv('DM_BUYER_FRONTEND_API_AUTH_TOKEN')
