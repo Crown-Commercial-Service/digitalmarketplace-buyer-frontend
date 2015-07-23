@@ -68,15 +68,15 @@ class TestService(unittest.TestCase):
             self.fixture, service_questions_loader.get_builder()
         )
         self.assertEquals(
-            self.service.attributes[0]['name'],
+            service.attributes[0]['name'],
             'Support'
         )
         self.assertEquals(
-            len(self.service.attributes),
+            len(service.attributes),
             30
         )
         self.assertEquals(
-            len(list(self.service.attributes[0]['rows'])),
+            len(list(service.attributes[0]['rows'])),
             5
         )
 
