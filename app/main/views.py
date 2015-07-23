@@ -11,6 +11,7 @@ from dmutils.formats import LOTS
 
 from . import main
 from .. import questions_loader
+from .. import service_questions_loader
 from ..presenters.search_presenters import (
     filters_for_lot,
     set_filter_states,
@@ -184,12 +185,18 @@ def get_service_by_id(service_id):
         if service is None or service['services'].get('status') != 'published':
             abort(404, "Service ID '{}' can not be found".format(service_id))
 
-        service_view_data = Service(service)
+        service_data = service['services']
+        service_view_data = Service(
+            service_data,
+            service_questions_loader.get_builder().filter(
+                service_data
+            )
+        )
 
         try:
             # get supplier data and add contact info to service object
             supplier = data_api_client.get_supplier(
-                service['services']['supplierId']
+                service_data['supplierId']
             )
             supplier_data = supplier['suppliers']
             service_view_data.meta.set_contact_attribute(

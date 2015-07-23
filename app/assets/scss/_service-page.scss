@@ -50,33 +50,17 @@
   }
 }
 
-table.summary-item-body tbody td {
-  float: left;
-
-  @include media(tablet) {
-    float: none;
+#meta {
+  .document-link-with-icon {
+    font-size: 16px;
   }
 
-  &.summary-item-field-name {
-    width: 100%;
-
-    @include media(tablet) {
-      width: 50%;
-    }
+  .contact-details-organisation {
+    display: none;
   }
 
-  &.summary-item-field-content {
-    padding-left: $gutter-half;
-    width: auto;
-
-    @include media(tablet) {
-      padding-left: 25px;
-      width: 50%;
-    }
-
-    li {
-      margin-bottom: 5px;
-    }
+  .service-id {
+    margin-bottom: $gutter;
   }
 }
 
@@ -90,8 +74,8 @@ table.summary-item-body tbody td {
 }
 
 .price-caveats {
-  @include core-19;
-  color: $grey-1;
+  @include core-16;
+  color: $text-colour;
   @extend %plain-list;
   margin: 0 0 20px;
 
@@ -100,75 +84,7 @@ table.summary-item-body tbody td {
   }
 }
 
-.service-id-heading {
-  @include core-19;
+.sidebar-heading {
+  @include bold-16;
   margin-bottom: 5px;
-}
-
-.service-id {
-  @include core-16;
-  @include inline-block;
-  background: $highlight-colour;
-  padding: 5px 10px;
-  border: 1px dotted $grey-3;
-  margin: 0 4px ($gutter + 10px) 0;
-}
-
-.contact {
-  @include core-19;
-
-  .summary {
-    color: $link-colour;
-    display: block;
-    cursor: pointer;
-    text-decoration: underline;
-
-    &:hover {
-      color: $link-hover-colour;
-    }
-
-    &:active {
-      color: $link-active-colour;
-    }
-  }
-
-  @include ie-lte(7) {
-    .summary {
-      padding-left: 20px;
-      background: file-url('arrow-sprite.png') no-repeat 0px 2px;
-    }
-
-    &.open .summary { background-position: 0px -78px; }
-  }
-
-  .indented {
-    border-left: solid 4px $grey-2;
-    padding: 10px 0 10px 15px;
-    margin: 10px 0 $gutter;
-
-    @include media(tablet) {
-      margin-bottom: 0;
-    }
-
-    ul {
-      @extend %plain-list;
-      margin: 0;
-
-      li {
-        margin-bottom: 5px;
-      }
-    }
-  }
-}
-
-.no-details .contact {
-  .summary:before {
-    float: left;
-    width: 20px;
-    content: '► ';
-  }
-
-  &.open .summary:before {
-    content: '▼ ';
-  }
 }

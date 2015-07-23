@@ -15,6 +15,11 @@ questions_loader = ContentLoader(
     "app/content/g6/"
 )
 
+service_questions_loader = ContentLoader(
+    "app/helpers/service_page_manifest.yml",
+    "app/content/g6/"
+)
+
 
 def create_app(config_name):
     application = Flask(__name__)
