@@ -16,7 +16,7 @@ except ImportError:
 def process_prefix(prefix=None, format='view'):
     if prefix == u"1–9":  # special case
         if format == 'api':
-            return u"123"
+            return u"1–9"
         else:
             return prefix
     if is_alpha(prefix):

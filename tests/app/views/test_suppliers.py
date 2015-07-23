@@ -1,3 +1,4 @@
+# coding: utf-8
 import mock
 from nose.tools import assert_equal, assert_true, assert_false
 from ...helpers import BaseApplicationTest
@@ -30,7 +31,7 @@ class TestSuppliersPage(BaseApplicationTest):
         res = self.client.get('/g-cloud/suppliers')
         assert_equal(200, res.status_code)
         assert_true(
-            self._strip_whitespace('<li class="selected">A')
+            self._strip_whitespace('<li class="selected"><span class="visuallyhidden">Suppliers starting with </span><strong>A</strong></li>')  # noqa
             in self._strip_whitespace(res.get_data(as_text=True)))
 
     def test_should_show_suppliers_prefixed_by_a_param(self):
@@ -38,14 +39,14 @@ class TestSuppliersPage(BaseApplicationTest):
         self._data_api_client.find_suppliers.assert_called_once_with('M', '1', 'gcloud')
         assert_equal(200, res.status_code)
         assert_true(
-            self._strip_whitespace('<li class="selected">M</li>')
+            self._strip_whitespace('<li class="selected"><span class="visuallyhidden">Suppliers starting with </span><strong>M</strong></li>')  # noqa
             in self._strip_whitespace(res.get_data(as_text=True)))
 
     def test_should_use_uppercase_prefix(self):
         res = self.client.get('/g-cloud/suppliers?prefix=b')
         assert_equal(200, res.status_code)
         assert_true(
-            self._strip_whitespace('<li class="selected">B</li>')
+            self._strip_whitespace('<li class="selected"><span class="visuallyhidden">Suppliers starting with </span><strong>B</strong></li>')  # noqa
             in self._strip_whitespace(res.get_data(as_text=True)))
 
     def test_should_use_default_if_invalid(self):
@@ -54,7 +55,7 @@ class TestSuppliersPage(BaseApplicationTest):
 
         assert_equal(200, res.status_code)
         assert_true(
-            self._strip_whitespace('<li class="selected">A</li>')
+            self._strip_whitespace('<li class="selected"><span class="visuallyhidden">Suppliers starting with </span><strong>A</strong></li>')  # noqa
             in self._strip_whitespace(res.get_data(as_text=True)))
 
     def test_should_use_default_if_multichar_prefix(self):
@@ -64,16 +65,16 @@ class TestSuppliersPage(BaseApplicationTest):
         assert_equal(200, res.status_code)
 
         assert_true(
-            self._strip_whitespace('<li class="selected">A</li>')
+            self._strip_whitespace('<li class="selected"><span class="visuallyhidden">Suppliers starting with </span><strong>A</strong></li>')  # noqa
             in self._strip_whitespace(res.get_data(as_text=True)))
 
-    def test_should_use_123_prefix(self):
-        res = self.client.get('/g-cloud/suppliers?prefix=123')
-        self._data_api_client.find_suppliers.assert_called_once_with('123', '1', 'gcloud')
+    def test_should_use_number_range_prefix(self):
+        res = self.client.get('/g-cloud/suppliers?prefix=1%E2%80%939')
+        self._data_api_client.find_suppliers.assert_called_once_with(u'1–9', '1', 'gcloud')
 
         assert_equal(200, res.status_code)
         assert_true(
-            self._strip_whitespace('<li class="selected">123</li>')
+            self._strip_whitespace(u'<li class="selected"><span class="visuallyhidden">Suppliers starting with </span><strong>1–9</strong></li>')  # noqa
             in self._strip_whitespace(res.get_data(as_text=True)))
 
     def test_should_show_supplier_names_link_and_description(self):
@@ -99,36 +100,35 @@ class TestSuppliersPage(BaseApplicationTest):
         res = self.client.get('/g-cloud/suppliers')
         assert_equal(200, res.status_code)
 
-        supplier_html = self._strip_whitespace('''
-                <li class="selected">A</li>
-                <li><a href="/g-cloud/suppliers?prefix=B">B</a></li>
-                <li><a href="/g-cloud/suppliers?prefix=C">C</a></li>
-                <li><a href="/g-cloud/suppliers?prefix=D">D</a></li>
-                <li><a href="/g-cloud/suppliers?prefix=E">E</a></li>
-                <li><a href="/g-cloud/suppliers?prefix=F">F</a></li>
-                <li><a href="/g-cloud/suppliers?prefix=G">G</a></li>
-                <li><a href="/g-cloud/suppliers?prefix=H">H</a></li>
-                <li><a href="/g-cloud/suppliers?prefix=I">I</a></li>
-                <li><a href="/g-cloud/suppliers?prefix=J">J</a></li>
-                <li><a href="/g-cloud/suppliers?prefix=K">K</a></li>
-                <li><a href="/g-cloud/suppliers?prefix=L">L</a></li>
-                <li><a href="/g-cloud/suppliers?prefix=M">M</a></li>
-                <li><a href="/g-cloud/suppliers?prefix=N">N</a></li>
-                <li><a href="/g-cloud/suppliers?prefix=O">O</a></li>
-                <li><a href="/g-cloud/suppliers?prefix=P">P</a></li>
-                <li><a href="/g-cloud/suppliers?prefix=Q">Q</a></li>
-                <li><a href="/g-cloud/suppliers?prefix=R">R</a></li>
-                <li><a href="/g-cloud/suppliers?prefix=S">S</a></li>
-                <li><a href="/g-cloud/suppliers?prefix=T">T</a></li>
-                <li><a href="/g-cloud/suppliers?prefix=U">U</a></li>
-                <li><a href="/g-cloud/suppliers?prefix=V">V</a></li>
-                <li><a href="/g-cloud/suppliers?prefix=W">W</a></li>
-                <li><a href="/g-cloud/suppliers?prefix=X">X</a></li>
-                <li><a href="/g-cloud/suppliers?prefix=Y">Y</a></li>
-                <li><a href="/g-cloud/suppliers?prefix=Z">Z</a></li>
-                <li><a href="/g-cloud/suppliers?prefix=123">123</a></li>
+        supplier_html = self._strip_whitespace(u'''
+                <li class="selected"><span class="visuallyhidden">Suppliers starting with </span><strong>A</strong></li>
+                <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=B">B</a></li>
+                <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=C">C</a></li>
+                <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=D">D</a></li>
+                <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=E">E</a></li>
+                <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=F">F</a></li>
+                <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=G">G</a></li>
+                <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=H">H</a></li>
+                <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=I">I</a></li>
+                <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=J">J</a></li>
+                <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=K">K</a></li>
+                <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=L">L</a></li>
+                <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=M">M</a></li>
+                <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=N">N</a></li>
+                <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=O">O</a></li>
+                <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=P">P</a></li>
+                <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=Q">Q</a></li>
+                <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=R">R</a></li>
+                <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=S">S</a></li>
+                <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=T">T</a></li>
+                <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=U">U</a></li>
+                <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=V">V</a></li>
+                <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=W">W</a></li>
+                <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=X">X</a></li>
+                <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=Y">Y</a></li>
+                <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=Z">Z</a></li>
+                <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=1%E2%80%939">1–9</a></li>
         ''')  # noqa
-
         assert_true(
             supplier_html
             in self._strip_whitespace(res.get_data(as_text=True)))
