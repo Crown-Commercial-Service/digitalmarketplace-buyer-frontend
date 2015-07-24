@@ -197,10 +197,11 @@ def search():
     )
 
     set_filter_states(filters, request)
+    current_lot = get_lot_from_request(request)
 
     template_data = get_template_data(main, {
         'title': 'Search results',
-        'current_lot': get_lot_from_request(request),
+        'current_lot': current_lot,
         'lots': LOTS,
         'search_keywords': get_keywords_from_request(request),
         'services': search_results_obj.search_results,
@@ -210,5 +211,7 @@ def search():
         'summary': search_summary.markup(),
         'filters': filters,
     })
+    if current_lot:
+        template_data['current_lot_label'] = get_label_for_lot_param(current_lot)
 
     return render_template('search.html', **template_data)
