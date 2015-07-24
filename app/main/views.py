@@ -38,39 +38,19 @@ def index():
 
 @main.route('/g-cloud')
 def index_g_cloud():
-    template_data = get_template_data(main, {
-        'crumbs':  [
-            {
-                'text': 'Cloud technology and support',
-            }
-        ]
-    })
+    template_data = get_template_data(main, {})
     return render_template('index-g-cloud.html', **template_data)
 
 
 @main.route('/g-cloud/framework')
 def framework_g_cloud():
-    template_data = get_template_data(main, {
-        'crumbs': [
-            {
-                'text': 'Cloud technology and support',
-                'link': url_for('.index_g_cloud')
-            }
-        ]
-    })
+    template_data = get_template_data(main, {})
     return render_template('content/framework-g-cloud.html', **template_data)
 
 
 @main.route('/digital-services/framework')
 def framework_digital_services():
-    template_data = get_template_data(main, {
-        'crumbs': [
-            {
-                'text': 'Specialists to work on digital projects',
-                'link': 'https://digitalservicesstore.service.gov.uk'
-            }
-        ]
-    })
+    template_data = get_template_data(main, {})
     return render_template(
         'content/framework-digital-services.html', **template_data
     )
@@ -78,26 +58,13 @@ def framework_digital_services():
 
 @main.route('/crown-hosting')
 def index_crown_hosting():
-    template_data = get_template_data(main, {
-        'crumbs': [
-            {
-                'text': 'Physical datacentre space for legacy systems'
-            }
-        ]
-    })
+    template_data = get_template_data(main, {})
     return render_template('content/index-crown-hosting.html', **template_data)
 
 
 @main.route('/crown-hosting/framework')
 def framework_crown_hosting():
-    template_data = get_template_data(main, {
-        'crumbs': [
-            {
-                'text': 'Physical datacentre space for legacy systems',
-                'link': url_for('.index_crown_hosting')
-            }
-        ]
-    })
+    template_data = get_template_data(main, {})
     return render_template(
         'content/framework-crown-hosting.html', **template_data
     )
@@ -105,9 +72,7 @@ def framework_crown_hosting():
 
 @main.route('/buyers-guide')
 def buyers_guide():
-    template_data = get_template_data(main, {
-        'crumbs': []
-    })
+    template_data = get_template_data(main, {})
     return render_template('content/buyers-guide.html', **template_data)
 
 
@@ -118,14 +83,7 @@ def suppliers_guide():
 
 @main.route('/g-cloud/buyers-guide')
 def buyers_guide_g_cloud():
-    template_data = get_template_data(main, {
-        'crumbs': [
-            {
-                'text': 'Cloud technology and support',
-                'link': url_for('.index_g_cloud')
-            }
-        ]
-    })
+    template_data = get_template_data(main, {})
     return render_template(
         'content/buyers-guide-g-cloud.html', **template_data
     )
@@ -133,14 +91,7 @@ def buyers_guide_g_cloud():
 
 @main.route('/g-cloud/suppliers-guide')
 def suppliers_guide_g_cloud():
-    template_data = get_template_data(main, {
-        'crumbs': [
-            {
-                'text': 'Cloud technology and support',
-                'link': url_for('.index_g_cloud')
-            }
-        ]
-    })
+    template_data = get_template_data(main, {})
     return render_template(
         'content/suppliers-guide-g-cloud.html', **template_data
     )
@@ -148,9 +99,7 @@ def suppliers_guide_g_cloud():
 
 @main.route('/cookies')
 def cookies():
-    template_data = get_template_data(main, {
-        'crumbs': []
-    })
+    template_data = get_template_data(main, {})
     return render_template(
         'content/cookies.html', **template_data
     )
@@ -158,9 +107,7 @@ def cookies():
 
 @main.route('/terms-and-conditions')
 def terms_and_conditions():
-    template_data = get_template_data(main, {
-        'crumbs': []
-    })
+    template_data = get_template_data(main, {})
     return render_template(
         'content/terms-and-conditions.html', **template_data
     )
@@ -206,19 +153,10 @@ def get_service_by_id(service_id):
         except HTTPError as e:
             abort(e.status_code)
 
-        breadcrumb = [
-            {
-                'text': 'Cloud technology and support',
-                'link': url_for('.index_g_cloud')
-            },
-            {
-                'text': get_label_for_lot_param(service_view_data.lot.lower()),
-                'link': url_for('.search', lot=service_view_data.lot.lower())
-            }
-        ]
         template_data = get_template_data(main, {
-            'crumbs': breadcrumb,
-            'service': service_view_data
+            'service': service_view_data,
+            'lot': service_view_data.lot.lower(),
+            'lot_label': get_label_for_lot_param(service_view_data.lot.lower())
         })
         return render_template('service.html', **template_data)
     except AuthException:
@@ -258,17 +196,6 @@ def search():
         filters
     )
 
-    breadcrumb = [
-        {
-            'text': 'Cloud technology and support',
-            'link': url_for('.index_g_cloud')
-        }
-    ]
-
-    label = get_label_for_lot_param(get_lot_from_request(request))
-    if label:
-        breadcrumb.append({'text': label})
-
     set_filter_states(filters, request)
 
     template_data = get_template_data(main, {
@@ -280,8 +207,8 @@ def search():
         'total': search_results_obj.total,
         'search_query': query_args_for_pagination(request.args),
         'pagination': pagination_config,
-        'crumbs': breadcrumb,
         'summary': search_summary.markup(),
-        'filters': filters
+        'filters': filters,
     })
+
     return render_template('search.html', **template_data)

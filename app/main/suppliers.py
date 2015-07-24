@@ -65,14 +65,7 @@ def suppliers_list_by_prefix():
     suppliers = api_result["suppliers"]
     links = api_result["links"]
 
-    template_data = get_template_data(main, {
-        'crumbs': [
-            {
-                'text': 'Cloud technology and support',
-                'link': url_for('.index_g_cloud')
-            }
-        ]
-    })
+    template_data = get_template_data(main, {})
 
     return render_template('suppliers_list.html',
                            suppliers=suppliers,
@@ -97,22 +90,7 @@ def suppliers_details(supplier_id):
     else:
         prefix = u"1–9"
 
-    template_data = get_template_data(main, {
-        'crumbs': [
-            {
-                'text': 'Cloud technology and support',
-                'link': url_for('.index_g_cloud')
-            },
-            {
-                'text': 'Suppliers',
-                'link': url_for('.suppliers_list_by_prefix')
-            },
-            {
-                'text': prefix,
-                'link': url_for('.suppliers_list_by_prefix', prefix=prefix)
-            }
-        ]
-    })
+    template_data = get_template_data(main, {})
 
     return render_template(
         'suppliers_details.html',

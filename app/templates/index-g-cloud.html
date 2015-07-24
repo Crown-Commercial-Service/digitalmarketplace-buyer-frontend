@@ -1,10 +1,22 @@
-{% from 'macros/_breadcrumb.html' import breadcrumb %}
 {% extends "_base_page.html" %}
 
 {% block page_title %}G-Cloud - Digital Marketplace{% endblock %}
 
 {% block breadcrumb %}
-  {{ breadcrumb(crumbs) }}
+  {%
+    with
+    items = [
+      {
+          "link": url_for('.index'),
+          "label": "Digtial Marketplace"
+      },
+      {
+          "label": "Cloud technology and support"
+      }
+    ]
+  %}
+    {% include "toolkit/breadcrumb.html" %}
+  {% endwith %}
 {% endblock %}
 
 {% block main_content %}

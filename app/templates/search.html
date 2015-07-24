@@ -1,11 +1,38 @@
-{% from 'macros/_breadcrumb.html' import breadcrumb %}
 
 {% extends "_base_page.html" %}
 
 {% block page_title %}Search - Digital Marketplace{% endblock %}
 
 {% block breadcrumb %}
-  {{ breadcrumb(crumbs) }}
+  {% with %}
+    {% if current_lot %}
+      {% set items = [
+        {
+            "link": url_for('.index'),
+            "label": "Digital Marketplace"
+        },
+        {
+            "link": url_for('.index_g_cloud'),
+            "label": "Cloud technology and support"
+        },
+        {
+          "label": current_lot
+        }
+      ] %}
+    {% else %}
+      {% set items = [
+        {
+            "link": url_for('.index'),
+            "label": "Digital Marketplace"
+        },
+        {
+            "link": url_for('.index_g_cloud'),
+            "label": "Cloud technology and support"
+        }
+      ] %}
+    {% endif %}
+    {% include "toolkit/breadcrumb.html" %}
+  {% endwith %}
 {% endblock %}
 
 {% block main_content %}
