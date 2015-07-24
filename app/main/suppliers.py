@@ -2,7 +2,7 @@
 from string import ascii_uppercase
 import flask_featureflags
 from app.main import main
-from flask import render_template, request
+from flask import render_template, request, url_for
 from app.helpers.search_helpers import get_template_data
 from app import data_api_client
 import re
@@ -13,12 +13,15 @@ except ImportError:
     from urllib.parse import urlparse, parse_qs
 
 
-def process_prefix(prefix):
-    if prefix == "123":  # special case
-        return prefix
+def process_prefix(prefix=None, format='view'):
+    if prefix == u"1–9":  # special case
+        if format == 'api':
+            return u"1–9"
+        else:
+            return prefix
     if is_alpha(prefix):
         return prefix[:1].upper()
-    return "A"  # default
+    return u"A"  # default
 
 
 def process_page(page):
@@ -50,16 +53,19 @@ def parse_links(links):
 @main.route('/g-cloud/suppliers')
 @flask_featureflags.is_active_feature('SUPPLIER_A_TO_Z')
 def suppliers_list_by_prefix():
-    prefix = process_prefix(request.args.get('prefix', default='A'))
-    page = process_page(request.args.get('page', default="1"))
+    api_prefix = process_prefix(
+        prefix=request.args.get('prefix', default=u"A"),
+        format='api')
+    template_prefix = process_prefix(
+        prefix=request.args.get('prefix', default=u"A"),
+        format='view')
+    page = process_page(request.args.get('page', default=u"1"))
 
-    api_result = data_api_client.find_suppliers(prefix, page, 'gcloud')
+    api_result = data_api_client.find_suppliers(api_prefix, page, 'gcloud')
     suppliers = api_result["suppliers"]
     links = api_result["links"]
 
-    template_data = get_template_data(main, {
-        'title': 'Digital Marketplace - Suppliers'
-    })
+    template_data = get_template_data(main, {})
 
     return render_template('suppliers_list.html',
                            suppliers=suppliers,
@@ -67,7 +73,7 @@ def suppliers_list_by_prefix():
                            count=len(suppliers),
                            prev_link=parse_links(links)['prev'],
                            next_link=parse_links(links)['next'],
-                           prefix=prefix,
+                           prefix=template_prefix,
                            **template_data)
 
 
@@ -77,15 +83,14 @@ def suppliers_details(supplier_id):
     supplier = data_api_client.get_supplier(
         supplier_id=supplier_id)["suppliers"]
 
-    template_data = get_template_data(main, {
-        'title': 'Digital Marketplace - Suppliers'
-    })
-
     first_character_of_supplier_name = supplier["name"][:1]
     if is_alpha(first_character_of_supplier_name):
-        prefix = process_prefix(supplier["name"][:1])
+        prefix = process_prefix(
+            prefix=first_character_of_supplier_name, format='template')
     else:
-        prefix = "123"
+        prefix = u"1–9"
+
+    template_data = get_template_data(main, {})
 
     return render_template(
         'suppliers_details.html',

@@ -1,10 +1,23 @@
-{% from 'macros/_breadcrumb.html' import breadcrumb %}
 {% extends "_base_page.html" %}
 
 {% block page_title %}G-Cloud buyers' guide - Digital Marketplace{% endblock %}
 
 {% block breadcrumb %}
-  {{ breadcrumb(crumbs) }}
+  {%
+    with
+    items = [
+      {
+          "link": url_for('.index'), 
+          "label": "Digital Marketplace"
+      },
+      {
+          "link": url_for('.index_g_cloud'), 
+          "label": "Cloud technology and support"
+      }
+    ]
+  %}
+    {% include "toolkit/breadcrumb.html" %}
+  {% endwith %}
 {% endblock %}
 
 {% block main_content %}
@@ -35,7 +48,7 @@
   You can use the Digital Marketplace to find and compare cloud technology and support (eg web hosting or site analytics).
 </p><p>
   All public sector organisations, including agencies and arm’s length bodies, can use the Digital Marketplace.
-  <a href='https://www.gov.uk/government/publications/public-sector-organisations-eligible-to-use-cloudstore'>Check the list of approved organisations</a> to see if you’re eligible.
+  <a href='https://www.gov.uk/government/publications/public-sector-organisations-eligible-to-use-cloudstore' rel='external'>Check the list of approved organisations</a> to see if you’re eligible.
 </p><p>
   All the cloud services included on the Digital Marketplace are listed on the G-Cloud framework, and all suppliers have successfully been through the Official Journal of the European Union (OJEU) process. That means you can save on the time and cost traditionally associated with entering into individual procurement contracts.
 </p><p>
@@ -66,8 +79,8 @@
 <li>Complete the <a rel="external" href="http://ccs-agreements.cabinetoffice.gov.uk/sites/default/files/contracts/G-Cloud%20Customer%20Benefits%20Record.docx">Crown Commercial Service (CCS) benefits form</a>.</li>
 </ol>
 
-<figure class="image embedded"><div class="img"><img alt="CloudStore buying process" src="/static/images/buying-process.png"></div>
-</figure><p>If you award a contract through G-Cloud, make sure you keep a record of all the selection process stages. You must be able to demonstrate a clear, accountable audit trail, including searches you’ve carried out, filters you’ve applied and any evaluation you’ve made.	 </p>
+<div class="image-embedded"><img alt="" src="/static/images/buying-process.png"></div>
+<p>If you award a contract through G-Cloud, make sure you keep a record of all the selection process stages. You must be able to demonstrate a clear, accountable audit trail, including searches you’ve carried out, filters you’ve applied and any evaluation you’ve made.	 </p>
 
 <h3 id="understand-what-you-need">
 <span class="number">1.1 </span>Prepare your requirements and get approval</h3>
@@ -93,7 +106,7 @@ the technologies that are a good fit for your project
 </li>
 </ul>
 <p>
-Read the government service manual guidance on <a href='https://www.gov.uk/service-manual/making-software/choosing-technology.html'>choosing technology</a> for what points to consider.
+Read the government service manual guidance on <a href='https://www.gov.uk/service-manual/making-software/choosing-technology.html' rel='external'>choosing technology</a> for what points to consider.
 </p>
 <p>
 You’ll need to check that you have approval to buy what you need.
@@ -151,6 +164,9 @@ For a <abbr title="Most Economically Advantageous Tender">MEAT</abbr>-based asse
 </p>
 
 <table>
+<caption class="visuallyhidden">
+  Specialties and Roles in the Digital Services Framework
+</caption>
 <thead><tr>
 <th>Criteria number</th>
 <th>Direct award criteria</th>

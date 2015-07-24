@@ -1,10 +1,23 @@
-{% from 'macros/_breadcrumb.html' import breadcrumb %}
 {% extends "_base_page.html" %}
 
 {% block page_title %}Digital Services framework - Digital Marketplace{% endblock %}
 
 {% block breadcrumb %}
-  {{ breadcrumb(crumbs) }}
+  {%
+    with
+    items = [
+      {
+          "link": url_for('.index'),
+          "label": "Digtial Marketplace"
+      },
+      {
+          "link": "https://digitalservicesstore.service.gov.uk",
+          "label": "Specialists to work on digital projects"
+      }
+    ]
+  %}
+    {% include "toolkit/breadcrumb.html" %}
+  {% endwith %}
 {% endblock %}
 
 {% block main_content %}
@@ -74,19 +87,22 @@
       </p>
       <ul>
         <li>
-          work in <a href="https://www.gov.uk/service-manual/agile/index.html">an agile way</a>
+          work in <a href="https://www.gov.uk/service-manual/agile/index.html" rel="external">an agile way</a>
         </li>
         <li>
-          work according to guidance in the <a href="https://www.gov.uk/service-manual">Government Service Design Manual</a>
+          work according to guidance in the <a href="https://www.gov.uk/service-manual" rel="external">Government Service Design Manual</a>
         </li>
         <li>
-          provide services that are <a href="https://www.gov.uk/service-manual/start">digital by default</a>
+          provide services that are <a href="https://www.gov.uk/service-manual/start" rel="external">digital by default</a>
         </li>
       </ul>
       <p>
         There are over 170 suppliers on the Digital Services framework, who provide all or some of the following roles:
       </p>
       <table class="dss-table">
+        <caption class="visuallyhidden">
+          Specialties and Roles in the Digital Services Framework
+        </caption>
         <thead><tr>
         <th>Capabilities</th>
               <th>Linked roles</th>
@@ -140,7 +156,7 @@
         You can apply to submit your services to the Digital Services framework when an <a rel="external" href="http://www.ojeu.eu">Official Journal of the European Union (OJEU)</a> is open. On average, an OJEU will be open for 6 weeks, every 6 to 9 months. It will be published on <a  rel="external" href="http://ted.europa.eu">Tenders Electronic Daily</a>.
      </p>
      <p>
-        You’ll be asked to describe and show evidence of your capabilities when applying for a place on the framework. As part of this process, you’ll need to demonstrate that your methodology meets the <a href="https://www.gov.uk/service-manual">Government Service Design Manual</a> and the <a href="https://www.gov.uk/service-manual/digital-by-default">Digital by Default Service Standard</a> for new or redesigned digital services.
+        You’ll be asked to describe and show evidence of your capabilities when applying for a place on the framework. As part of this process, you’ll need to demonstrate that your methodology meets the <a href="https://www.gov.uk/service-manual" rel="external">Government Service Design Manual</a> and the <a href="https://www.gov.uk/service-manual/digital-by-default" rel="external">Digital by Default Service Standard</a> for new or redesigned digital services.
       </p>
       <p>
         Applications to the framework are evaluated by Government Digital Service (GDS) subject matter experts covering all 8 digital capabilities.

@@ -6,22 +6,22 @@
   {%
     with
     items = [
-        {
-            "link": "./",
-            "label": "Digital Marketplace"
-        },
-        {
-            "link": url_for(".index_g_cloud"),
-            "label": "Cloud technology and support"
-        },
-        {
-            "link": url_for(".suppliers_list_by_prefix"),
-            "label": "Suppliers"
-        },
-        {
-            "link": url_for(".suppliers_list_by_prefix", prefix=prefix),
-            "label": prefix
-        }
+      {
+          "link": url_for('.index'),
+          "label": "Digital Marketplace"
+      },
+      {
+          "link": url_for('.index_g_cloud'),
+          "label": "Cloud technology and support"
+      },
+      {
+          "link": url_for('.suppliers_list_by_prefix'),
+          "label": "Suppliers"
+      },
+      {
+          "link": url_for('.suppliers_list_by_prefix', prefix=prefix),
+          "label": prefix
+      }
     ]
   %}
     {% include "toolkit/breadcrumb.html" %}
@@ -30,18 +30,14 @@
 
 {% block main_content %}
 
-<div class="grid-row">
-    <div class="column-two-thirds">
-      {%
-        with
-        heading = supplier.name,
-        context = "Digital Marketplace supplier",
-        smaller = True
-      %}
-        {% include "toolkit/page-heading.html" %}
-      {% endwith %}
-    </div>
-</div>
+{%
+  with
+  heading = supplier.name,
+  context = "Digital Marketplace supplier",
+  smaller = True
+%}
+  {% include "toolkit/page-heading.html" %}
+{% endwith %}
 
 <div class="grid-row supplier-profile">
     {% if supplier.description or supplier.clients %}
@@ -58,7 +54,7 @@
       </div>
     {% endif %}
 
-    <div class="column-one-third">
+    <aside role="complementary" class="column-one-third" aria-label="Supplier contact">
       {%
         with
         organisation_type = "supplier",
@@ -69,7 +65,7 @@
       %}
         {% include "toolkit/contact-details.html" %}
       {% endwith %}
-    </div>
+    </aside>
 </div>
 
 {% endblock %}

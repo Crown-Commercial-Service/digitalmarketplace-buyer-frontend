@@ -1,10 +1,23 @@
-{% from 'macros/_breadcrumb.html' import breadcrumb %}
 {% extends "_base_page.html" %}
 
 {% block page_title %}G-Cloud framework - Digital Marketplace{% endblock %}
 
 {% block breadcrumb %}
-  {{ breadcrumb(crumbs) }}
+  {%
+    with
+    items = [
+      {
+          "link": url_for('.index'),
+          "label": "Digital Marketplace"
+      },
+      {
+          "link": url_for('.index_g_cloud'),
+          "label": "Cloud technology and support"
+      }
+    ]
+  %}
+    {% include "toolkit/breadcrumb.html" %}
+  {% endwith %}
 {% endblock %}
 
 {% block main_content %}
@@ -72,19 +85,19 @@
       </p>
       <ul>
         <li>
-          <h4>Infrastructure as a Service</h4>
+          <h3>Infrastructure as a Service</h3>
           Infrastructure is the hardware that makes software work. It’s the networks, hosting facilities and servers on which platforms and software depend. Infrastructure as a Service (IaaS) is infrastructure you can order and run entirely over the internet, without having to pay for your own hardware.
         </li>
         <li>
-          <h4>Platform as a Service</h4>
+          <h3>Platform as a Service</h3>
           Platform as a Service (PaaS) technologies are software platforms that provide a basis for building other services and applications. With PaaS, you can set up, order, pay for and manage platforms in the cloud.
         </li>
         <li>
-          <h4>Software as a Service</h4>
+          <h3>Software as a Service</h3>
           Software as a Service (SaaS) is an application or service that can be run over the internet or in the cloud. Examples of SaaS include web-based email services, customer relationship management (CRM) software and analytics tools.
         </li>
         <li>
-          <h4>Specialist Cloud Services</h4>
+          <h3>Specialist Cloud Services</h3>
           Specialist Cloud Services (SCS) support your transition to SaaS, PaaS and IaaS. Examples of SCS include cloud strategy, data transfer between providers or day-to-day support of cloud-based services.
         </li>
       </ul>
