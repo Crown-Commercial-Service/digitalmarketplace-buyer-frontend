@@ -104,18 +104,18 @@ class TestService(unittest.TestCase):
             if group['name'] == 'Data-in-transit protection':
                 for row in group['rows']:
                     # string with bespoke assurance caveat
-                    if row['fields'][0] == 'Data protection between services':
+                    if row['label'] == 'Data protection between services':
                         self.assertEqual(
-                            row['fields'][1].strip(),
+                            row['value'],
                             (
                                 u'No encryption, assured by ' +
                                 u'independent validation of assertion'
                             )
                         )
                     # string with standard assurance caveat
-                    if row['fields'][0] == 'Data protection within service':
+                    if row['label'] == 'Data protection within service':
                         self.assertEqual(
-                            row['fields'][1].strip(),
+                            row['value'],
                             u'No encryption'
                         )
 
@@ -125,10 +125,10 @@ class TestService(unittest.TestCase):
             if group['name'] == 'Asset protection and resilience':
                 for row in group['rows']:
                     # list with bespoke assurance caveat
-                    if row['fields'][0] == 'Data management location':
+                    if row['label'] == 'Data management location':
                         self.assertIn(
                             u'Assured by independent validation of assertion',
-                            row['fields'][1]
+                            row['assurance']
                         )
 
 
@@ -246,7 +246,9 @@ class TestAttribute(unittest.TestCase):
 
     def test_rendering_of_string_attribute(self):
         attribute = Attribute('Gold star')
-        self.assertEqual(attribute.get_rendered().strip(), 'Gold star')
+        self.assertEqual(attribute.value, 'Gold star')
+        self.assertEqual(attribute.assurance, False)
+        self.assertEqual(attribute.type, 'string')
 
     def test_rendering_of_string_attribute_with_assurance(self):
         attribute = Attribute(
@@ -256,7 +258,7 @@ class TestAttribute(unittest.TestCase):
             }
         )
         self.assertEqual(
-            attribute.get_rendered().strip(),
+            attribute.value,
             'Gold star, assured by CESG-assured components'
         )
 
@@ -265,8 +267,12 @@ class TestAttribute(unittest.TestCase):
             ['Gold star', 'Bronze star']
         )
         self.assertEqual(
-            attribute.get_rendered().strip(),
-            "<ul><li>Gold star</li><li>Bronze star</li></ul>"
+            attribute.value,
+            ['Gold star', 'Bronze star'],
+        )
+        self.assertEqual(
+            attribute.assurance,
+            False
         )
 
     def test_rendering_of_string_list_with_assurance(self):
@@ -279,9 +285,12 @@ class TestAttribute(unittest.TestCase):
             }
         )
         self.assertEqual(
-            attribute.get_rendered().strip(),
-            "<ul><li>Gold star</li><li>Bronze star</li></ul>" +
-            " Assured by CESG-assured componenents"
+            attribute.value,
+            ['Gold star', 'Bronze star']
+        )
+        self.assertEqual(
+            attribute.assurance,
+            "Assured by CESG-assured componenents"
         )
 
 

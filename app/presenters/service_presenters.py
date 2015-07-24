@@ -63,10 +63,13 @@ class Service(object):
     def _get_row(self, label, value):
         if value in ["", [], None]:
             return None
-        return {'fields': [
-            label,
-            Attribute(value).get_rendered()
-        ]}
+        attribute = Attribute(value)
+        return {
+            'label': label,
+            'type': attribute.type,
+            'value': attribute.value,
+            'assurance': attribute.assurance
+        }
 
 
 class Attribute(object):
@@ -97,26 +100,6 @@ class Attribute(object):
         else:
             return False
 
-    def get_rendered(self):
-        if self.type == 'list':
-            template = Template("""
-              <ul>
-              {%- for valueItem in value -%}
-                <li>{{ valueItem }}</li>
-              {%- endfor -%}
-              </ul>
-              {%- if assurance %} Assured by {{ assurance }} {% endif %}
-            """)
-        else:
-            template = Template("""
-                {{ value }}{% if assurance %}, assured by {{ assurance }}{% endif %}
-            """)
-
-        return template.render({
-            "value": self.value,
-            "assurance": self.assurance
-        })
-
     def _format(self, value):
         """Formats the value parameter based on its type"""
         self.type = self.get_data_type(value)
@@ -128,8 +111,15 @@ class Attribute(object):
         elif (self.type is 'list') and (len(value) == 0):
             return ''
         elif (self.type is 'list') and (len(value) == 1):
+            self.type = 'string'
             return self._format(value[0])
+        elif (self.type is 'list') and (len(value) > 1):
+            if self.assurance:
+                self.assurance = "Assured by " + self.assurance
+            return value
         else:
+            if self.assurance:
+                value = value + ", assured by " + self.assurance
             return value
 
     def _unpack_assurance(self):
