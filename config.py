@@ -2,6 +2,7 @@ import os
 import hashlib
 import jinja2
 from dmutils.status import enabled_since, get_version_label
+from dmutils.asset_fingerprint import AssetFingerprinter
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -20,13 +21,11 @@ class Config(object):
         os.path.abspath(os.path.dirname(__file__))
     )
     DEBUG = False
+    ASSET_PATH = '/static/'
     BASE_TEMPLATE_DATA = {
-        'asset_path': '/static/',
         'header_class': 'with-proposition',
-        "asset_fingerprints": {
-            "css": get_asset_fingerprint("app/static/stylesheets/application.css"),
-            "js": get_asset_fingerprint("app/static/javascripts/application.js")
-        }
+        'asset_path': ASSET_PATH,
+        'asset_fingerprinter': AssetFingerprinter(asset_root=ASSET_PATH)
     }
     DM_DATA_API_URL = os.getenv('DM_API_URL')
     DM_DATA_API_AUTH_TOKEN = os.getenv('DM_BUYER_FRONTEND_API_AUTH_TOKEN')
