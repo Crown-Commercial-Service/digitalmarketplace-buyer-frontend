@@ -51,100 +51,93 @@ class Service(object):
 
     def _get_rows(self, section, service_data):
         return list(filter(
-            not_none, map(
-                lambda question: self._get_row(
-                    question['question'],
-                    service_data.get(question['id'], None)
+            not_empty, map(
+                lambda question: Attribute(
+                    value=service_data.get(question['id'], None),
+                    question_type=question['type'],
+                    label=question['question']
                 ),
                 section['questions']
             )
         ))
 
-    def _get_row(self, label, value):
-        if value in ["", [], None]:
-            return None
-        attribute = Attribute(value)
-        return {
-            'label': label,
-            'type': attribute.type,
-            'value': attribute.value,
-            'assurance': attribute.assurance
-        }
-
 
 class Attribute(object):
     """Wrapper to handle accessing an attribute in service_data"""
 
-    def __init__(self, value):
-        """Returns if the attribute key points to a row in the service data"""
-        self.value = value
-        self._unpack_assurance()
-        self.value = self._format(self.value)
-
-    def get_data_type(self, value):
-        """Gets the type of the value parameter"""
-        if self._is_string(value):
-            return 'string'
-        elif isinstance(value, bool):
-            return 'boolean'
-        elif isinstance(value, int):
-            return 'integer'
-        elif isinstance(value, float):
-            return 'float'
-        elif isinstance(value, list):
-            return 'list'
-        elif self._is_function(self.value):
-            return 'function'
-        elif isinstance(value, dict):
-            return 'dictionary'
-        else:
-            return False
-
-    def _format(self, value):
-        """Formats the value parameter based on its type"""
-        self.type = self.get_data_type(value)
-        if self.type is 'boolean':
-            if value:
-                return u'Yes'
-            else:
-                return u'No'
-        elif (self.type is 'list') and (len(value) == 0):
-            return ''
-        elif (self.type is 'list') and (len(value) == 1):
-            self.type = 'string'
-            return self._format(value[0])
-        elif (self.type is 'list') and (len(value) > 1):
-            if self.assurance:
-                self.assurance = "Assured by " + self.assurance
-            return value
-        else:
-            if self.assurance:
-                value = value + ", assured by " + self.assurance
-            return value
-
-    def _unpack_assurance(self):
-        if (
-            self.get_data_type(self.value) is 'dictionary' and
-            'assurance' in self.value
-        ):
-            if (self.value['assurance'] == 'Service provider assertion'):
-                self.assurance = False
-            else:
-                self.assurance = lowercase_first_character_unless_part_of_acronym(
-                    self.value['assurance']
-                )
-            self.value = self.value['value']
-        else:
+    def __init__(self, value, question_type, label=''):
+        self.label = label
+        if value in ['', [], None]:
+            self.value = ''
+            self.type = 'text'
             self.assurance = False
+        else:
+            value, self.assurance = self._unpack_assurance(value)
+            self.value, self.type = self._format(value, question_type)
 
-    def _is_string(self, var):
-        try:
-            return isinstance(var, basestring)
-        except NameError:
-            return isinstance(var, str)
+    def _format(self, value, as_type='text'):
+        """
+            Determines what kind of template should be used for an attribute,
+            based on the question type from SSP content
+        """
 
-    def _is_function(self, var):
-        return hasattr(var, '__call__')
+        if as_type == 'boolean':
+            if value:
+                return self._format('Yes')
+            else:
+                return self._format('No')
+
+        if as_type == 'service_id':
+            if re.findall("[a-zA-Z]", str(value)):
+                return [value]
+            else:
+                return re.findall("....", str(value))
+
+        if as_type == 'checkboxes':
+            return self._format(value, 'list')
+
+        if as_type == 'radios':
+            if isinstance(value, list):
+                return self._format(value, 'list')
+            else:
+                return self._format(value, 'text')
+
+        if as_type == 'percentage':
+            return self._format(str(value) + '%')
+
+        if as_type in [
+            'textarea', 'textbox_large',
+            'pricing',  # To do: figure out pricing
+            'upload'  # To do: figure out files
+        ]:
+            return self._format(value)
+
+        if (as_type == 'list') and (len(value) == 1):
+            return self._format(value[0])
+
+        if (as_type == 'list'):
+            if self.assurance is not False:
+                self.assurance = "Assured by " + self.assurance
+            return (value, 'list')
+        elif (as_type == 'text'):
+            if self.assurance is not False:
+                value = value + ", assured by " + self.assurance
+            return (value, 'text')
+
+    def _unpack_assurance(self, value):
+        if (
+            isinstance(value, dict) and
+            'assurance' in value
+        ):
+            if (value['assurance'] == 'Service provider assertion'):
+                assurance = False
+            else:
+                assurance = lowercase_first_character_unless_part_of_acronym(
+                    value['assurance']
+                )
+            return (value['value'], assurance)
+        else:
+            return (value, False)
 
 
 class Meta(object):
@@ -304,5 +297,5 @@ def lowercase_first_character_unless_part_of_acronym(string):
     return string[:1].lower() + string[1:]
 
 
-def not_none(item):
-    return item is not None
+def not_empty(item):
+    return item.value is not ''

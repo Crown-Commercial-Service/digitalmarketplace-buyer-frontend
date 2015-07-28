@@ -11,11 +11,7 @@
   ) %}
     {% call summary.row() %}
       {{ summary.field_name(item.label) }}
-      {% if item.type == 'list' %}
-        {{ summary.list(item.value, item.assurance) }}
-      {% else %}
-        {{ summary.text(item.value) }}
-      {% endif %}
+      {{ summary[item.type](item.value, item.assurance) }}
     {% endcall %}
   {% endcall %}
 {% endfor %}

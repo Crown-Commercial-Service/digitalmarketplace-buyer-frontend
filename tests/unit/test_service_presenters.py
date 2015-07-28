@@ -104,18 +104,18 @@ class TestService(unittest.TestCase):
             if group['name'] == 'Data-in-transit protection':
                 for row in group['rows']:
                     # string with bespoke assurance caveat
-                    if row['label'] == 'Data protection between services':
+                    if row.label == 'Data protection between services':
                         self.assertEqual(
-                            row['value'],
+                            row.value,
                             (
                                 u'No encryption, assured by ' +
                                 u'independent validation of assertion'
                             )
                         )
                     # string with standard assurance caveat
-                    if row['label'] == 'Data protection within service':
+                    if row.label == 'Data protection within service':
                         self.assertEqual(
-                            row['value'],
+                            row.value,
                             u'No encryption'
                         )
 
@@ -125,10 +125,10 @@ class TestService(unittest.TestCase):
             if group['name'] == 'Asset protection and resilience':
                 for row in group['rows']:
                     # list with bespoke assurance caveat
-                    if row['label'] == 'Data management location':
+                    if row.label == 'Data management location':
                         self.assertIn(
                             u'Assured by independent validation of assertion',
-                            row['assurance']
+                            row.assurance
                         )
 
 
@@ -141,152 +141,130 @@ class TestAttribute(unittest.TestCase):
 
     def test_Attribute_works_if_the_key_is_in_service_data(self):
         try:
-            attribute = Attribute('supportAvailability')
+            attribute = Attribute('supportAvailability', 'text')
         except KeyError:
             self.fail("'supportAvailability' key should be in service data")
 
-    def test_Attribute_fails_if_key_is_a_function_that_returns_a_value(self):
-        key_error_raised = False
-
-        def func(service_data):
-            return {
-                'value': 'No',
-                'assurance': 'Service provider assertion'
-            }
-
-        try:
-            attribute = Attribute(func)
-        except KeyError:
-            key_error_raised = True
-        self.assertFalse(key_error_raised)
-
     def test_get_data_value_retrieves_correct_value(self):
         self.assertEqual(
-            Attribute('24/7, 365 days a year').value,
+            Attribute('24/7, 365 days a year', 'text').value,
             '24/7, 365 days a year'
         )
 
     def test_get_data_type_recognises_strings(self):
         self.assertEqual(
-            Attribute('24x7x365 with UK based engineers').type,
-            'string'
+            Attribute('24x7x365 with UK based engineers', 'text').type,
+            'text'
         )
 
     def test_get_data_type_recognises_floats(self):
-        self.assertEqual(
-            Attribute(99.99).type,
-            'float'
-        )
+        attribute = Attribute(99.99, 'percentage')
+        self.assertEqual(attribute.type, 'text')
+        self.assertEqual(attribute.value, '99.99%')
 
     def test_get_data_type_recognises_integer(self):
-        self.assertEqual(
-            Attribute(99).type,
-            'integer'
-        )
+        attribute = Attribute(99, 'percentage')
+        self.assertEqual(attribute.type, 'text')
+        self.assertEqual(attribute.value, '99%')
 
     def test_get_data_type_recognises_unicode_strings(self):
         self.assertEqual(
-            Attribute(u'24x7x365 with UK based engineers').type,
-            'string'
+            Attribute(u'24x7x365 with UK based engineers', 'text').type,
+            'text'
         )
 
     def test_get_data_type_recognises_lists(self):
         self.assertEqual(
-            Attribute([1, 2]).type,
+            Attribute([1, 2], 'list').type,
             'list'
         )
 
-    def test_get_data_type_recognises_functions(self):
-
-        def _func():
-            pass
-
-        self.assertEqual(
-            Attribute(_func).type,
-            'function'
-        )
-
     def test_get_data_type_recognises_booleans(self):
-        self.assertEqual(
-            Attribute(True).type,
-            'boolean'
-        )
+        attribute = Attribute(True, 'boolean')
+        self.assertEqual(attribute.type, 'text')
+        self.assertEqual(attribute.value, 'Yes')
 
     def test_get_data_type_recognises_dictionaries(self):
         attribute = Attribute(
             {
                 "assurance": "Independent validation of assertion",
                 "value": True
-            }
+            },
+            'boolean'
         )
-        self.assertEqual(attribute.type, 'boolean')
+        self.assertEqual(attribute.type, 'text')
         self.assertEqual(
             attribute.assurance, "independent validation of assertion"
         )
 
-    def test_get_data_type_returns_false_for_unrecognised_type(self):
-        attribute = Attribute(('name', 'address'))
-        self.assertFalse(attribute.type)
-
     def test_format_returns_yes_for_true_boolean(self):
-        attribute = Attribute("")
-        self.assertEqual(attribute._format(True), 'Yes')
+        attribute = Attribute(True, 'boolean')
+        self.assertEqual(attribute.value, 'Yes')
+        self.assertEqual(attribute.type, 'text')
+        self.assertEqual(attribute.assurance, False)
 
-    def test_format_returns_no_for_true_boolean(self):
-        attribute = Attribute("")
-        self.assertEqual(attribute._format(False), 'No')
+    def test_format_returns_no_for_false_boolean(self):
+        attribute = Attribute(False, 'boolean')
+        self.assertEqual(attribute.value, 'No')
+        self.assertEqual(attribute.type, 'text')
+        self.assertEqual(attribute.assurance, False)
 
     def test_format_returns_empty_string_for_a_empty_list(self):
-        attribute = Attribute("")
-        self.assertEqual(attribute._format([]), "")
+        attribute = Attribute([], 'list')
+        self.assertEqual(attribute.value, '')
+        self.assertEqual(attribute.type, 'text')
+        self.assertEqual(attribute.assurance, False)
 
     def test_format_returns_the_first_item_for_a_list_with_one_item(self):
-        attribute = Attribute("")
-        self.assertEqual(attribute._format(['PC']), "PC")
+        attribute = Attribute(['PC'], 'checkboxes')
+        self.assertEqual(attribute.value, "PC")
+        self.assertEqual(attribute.type, 'text')
+        self.assertEqual(attribute.assurance, False)
 
     def test_rendering_of_string_attribute(self):
-        attribute = Attribute('Gold star')
-        self.assertEqual(attribute.value, 'Gold star')
+        attribute = Attribute('Managed email service', 'textbox_large')
+        self.assertEqual(attribute.value, 'Managed email service')
+        self.assertEqual(attribute.type, 'text')
         self.assertEqual(attribute.assurance, False)
-        self.assertEqual(attribute.type, 'string')
+
+    def test_rendering_of_list_attribute(self):
+        attribute = Attribute(
+            ['Gold certification', 'Silver certification'],
+            'list'
+        )
+        self.assertEqual(
+            attribute.value,
+            ['Gold certification', 'Silver certification'],
+        )
+        self.assertEqual(attribute.type, 'list')
+        self.assertEqual(attribute.assurance, False)
 
     def test_rendering_of_string_attribute_with_assurance(self):
         attribute = Attribute(
             {
-                'value': 'Gold star',
+                'value': 'Managed email service',
                 'assurance': 'CESG-assured components'
-            }
+            },
+            'text'
         )
         self.assertEqual(
             attribute.value,
-            'Gold star, assured by CESG-assured components'
-        )
-
-    def test_rendering_of_list_attribute(self):
-        attribute = Attribute(
-            ['Gold star', 'Bronze star']
-        )
-        self.assertEqual(
-            attribute.value,
-            ['Gold star', 'Bronze star'],
-        )
-        self.assertEqual(
-            attribute.assurance,
-            False
+            'Managed email service, assured by CESG-assured components'
         )
 
     def test_rendering_of_string_list_with_assurance(self):
         attribute = Attribute(
             {
                 "value": [
-                    'Gold star', 'Bronze star'
+                    'Gold certification', 'Silver certification'
                 ],
                 "assurance": "CESG-assured componenents"
-            }
+            },
+            'list'
         )
         self.assertEqual(
             attribute.value,
-            ['Gold star', 'Bronze star']
+            ['Gold certification', 'Silver certification']
         )
         self.assertEqual(
             attribute.assurance,
