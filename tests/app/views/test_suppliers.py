@@ -69,8 +69,8 @@ class TestSuppliersPage(BaseApplicationTest):
             in self._strip_whitespace(res.get_data(as_text=True)))
 
     def test_should_use_number_range_prefix(self):
-        res = self.client.get('/g-cloud/suppliers?prefix=1%E2%80%939')
-        self._data_api_client.find_suppliers.assert_called_once_with(u'1–9', '1', 'gcloud')
+        res = self.client.get('/g-cloud/suppliers?prefix=other')
+        self._data_api_client.find_suppliers.assert_called_once_with(u'other', '1', 'gcloud')
 
         assert_equal(200, res.status_code)
         assert_true(
@@ -127,7 +127,7 @@ class TestSuppliersPage(BaseApplicationTest):
                 <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=X">X</a></li>
                 <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=Y">Y</a></li>
                 <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=Z">Z</a></li>
-                <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=1%E2%80%939">1–9</a></li>
+                <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=other">1–9</a></li>
         ''')  # noqa
         assert_true(
             supplier_html

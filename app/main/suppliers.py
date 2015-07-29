@@ -14,9 +14,9 @@ except ImportError:
 
 
 def process_prefix(prefix=None, format='view'):
-    if prefix == u"1–9":  # special case
+    if prefix == u"other":  # special case
         if format == 'api':
-            return u"1–9"
+            return u"other"
         else:
             return prefix
     if is_alpha(prefix):
@@ -88,7 +88,7 @@ def suppliers_details(supplier_id):
         prefix = process_prefix(
             prefix=first_character_of_supplier_name, format='template')
     else:
-        prefix = u"1–9"
+        prefix = u"other"
 
     template_data = get_template_data(main, {})
 
