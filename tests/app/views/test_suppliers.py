@@ -245,9 +245,6 @@ class TestSuppliersPage(BaseApplicationTest):
         assert_true(
             "Example Company Limited is an innovation station sensation; we deliver software so bleeding edge you literally won&#39;t be able to run any of it on your systems."  # noqa
             in res.get_data(as_text=True))
-        assert_true(
-            self._strip_whitespace('<h2>Clients</h2><p class="supplier-description">UK Ministry of Defence, Astula Ltd, Bedrock Communications Ltd</p>')  # noqa
-            in self._strip_whitespace(res.get_data(as_text=True)))
 
     def test_should_show_supplier_with_no_desc_or_clients(self):
         self._data_api_client.get_supplier.return_value = self.supplier_with_minimum_data  # noqa
