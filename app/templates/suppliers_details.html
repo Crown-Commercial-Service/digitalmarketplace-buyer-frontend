@@ -45,12 +45,6 @@
           <p class="supplier-description">
               {{ supplier.description }}
           </p>
-          {% if supplier.clients %}
-              <h2>Clients</h2>
-              <p class="supplier-description">
-                {{ ", ".join(supplier.clients) }}
-              </p>
-          {% endif %}
       </div>
     {% endif %}
 
