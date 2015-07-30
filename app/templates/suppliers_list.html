@@ -24,11 +24,19 @@
 
 {% block main_content %}
 
+{% if prefix == "other"%}
+{%
+  with heading="Suppliers starting with 1–9"
+%}
+  {% include "toolkit/page-heading.html" %}
+{% endwith %}
+{% else %}
 {%
   with heading="Suppliers starting with " + prefix
 %}
   {% include "toolkit/page-heading.html" %}
 {% endwith %}
+{% endif %}
 
 <div id="global-atoz-navigation">
   <nav role="navigation" aria-label="Suppliers">
@@ -46,7 +54,7 @@
           </li>
         {% endif %}
       {% endfor %}
-      {% if prefix == "1–9" %}
+      {% if prefix == "other" %}
         <li class="selected">
           <span class="visuallyhidden">Suppliers starting with </span>
           <strong>1–9</strong>
@@ -54,7 +62,7 @@
       {% else %}
         <li>
           <span class="visuallyhidden">Suppliers starting with </span>
-          <a href="{{ url_for('main.suppliers_list_by_prefix', prefix='1–9') }}">1–9</a>
+          <a href="{{ url_for('main.suppliers_list_by_prefix', prefix='other') }}">1–9</a>
         </li>
       {% endif %}
     </ol>
