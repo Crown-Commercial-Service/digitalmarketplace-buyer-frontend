@@ -1,13 +1,33 @@
+var isInBrowser = true;
+if (typeof window == 'undefined') {
+  var window,
+      mock_dom = require('../support/mock_dom.js'),
+      isInBrowser = false;
+}
+
 describe("GOVUK.Analytics", function () {
   var analytics;
 
-  beforeEach(function() {
-    window.ga = function() {};
-    spyOn(window, 'ga');
-    analytics = new GOVUK.Analytics({
-      universalId: 'universal-id',
-      cookieDomain: 'www.digitalmarketplace.service.gov.uk'
-    });
+  beforeEach(function(done) {
+    var setUp = function () {
+      window.ga = function() {};
+      spyOn(window, 'ga');
+      analytics = new window.GOVUK.Analytics({
+        universalId: 'universal-id',
+        cookieDomain: 'www.digitalmarketplace.service.gov.uk'
+      });
+    }
+
+    if (isInBrowser) {
+      setUp();
+      done();
+    } else {
+      mock_dom.onReady(function (jsdomWindow) {
+        window = jsdomWindow;
+        setUp();
+        done();
+      });
+    }
   });
 
   describe('when created', function() {

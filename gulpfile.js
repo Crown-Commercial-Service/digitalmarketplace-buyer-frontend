@@ -4,6 +4,7 @@ var deleteFiles = require('del');
 var sass = require('gulp-sass');
 var filelog = require('gulp-filelog');
 var include = require('gulp-include');
+var jasmine = require('gulp-jasmine');
 
 // Paths
 var environment;
@@ -269,6 +270,12 @@ gulp.task(
     'copy:govuk_template'
   ]
 );
+
+gulp.task('test', function () {
+  return gulp
+    .src(repoRoot + 'spec/javascripts/unit/*Spec.js')
+    .pipe(jasmine());
+});
 
 gulp.task(
   'compile',
