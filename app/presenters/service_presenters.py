@@ -65,64 +65,24 @@ class Service(object):
 class Attribute(object):
     """Wrapper to handle accessing an attribute in service_data"""
 
-    def __init__(self, value, question_type, label=''):
+    def __init__(
+        self,
+        value,
+        question_type,
+        label='',
+        optional=False,
+    ):
         self.label = label
+        self.answer_required = False
         if value in ['', [], None]:
             self.value = ''
             self.type = 'text'
             self.assurance = False
+            if not optional:
+                self.answer_required = True
         else:
-            value, self.assurance = self._unpack_assurance(value)
-            self.value, self.type = self._format(value, question_type)
-
-    def _format(self, value, as_type='text'):
-        """
-            Determines what kind of template should be used for an attribute,
-            based on the question type from SSP content
-        """
-
-        if as_type == 'boolean':
-            if value:
-                return self._format('Yes')
-            else:
-                return self._format('No')
-
-        if as_type == 'service_id':
-            if re.findall("[a-zA-Z]", str(value)):
-                return [value]
-            else:
-                return re.findall("....", str(value))
-
-        if as_type == 'checkboxes':
-            return self._format(value, 'list')
-
-        if as_type == 'radios':
-            if isinstance(value, list):
-                return self._format(value, 'list')
-            else:
-                return self._format(value, 'text')
-
-        if as_type == 'percentage':
-            return self._format(str(value) + '%')
-
-        if as_type in [
-            'textarea', 'textbox_large',
-            'pricing',  # To do: figure out pricing
-            'upload'  # To do: figure out files
-        ]:
-            return self._format(value)
-
-        if (as_type == 'list') and (len(value) == 1):
-            return self._format(value[0])
-
-        if (as_type == 'list'):
-            if self.assurance is not False:
-                self.assurance = "Assured by " + self.assurance
-            return (value, 'list')
-        elif (as_type == 'text'):
-            if self.assurance is not False:
-                value = value + ", assured by " + self.assurance
-            return (value, 'text')
+            self.value, self.assurance = self._unpack_assurance(value)
+            self.type = question_type
 
     def _unpack_assurance(self, value):
         if (

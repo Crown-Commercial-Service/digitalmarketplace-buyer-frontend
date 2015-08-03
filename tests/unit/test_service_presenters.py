@@ -106,17 +106,16 @@ class TestService(unittest.TestCase):
                     # string with bespoke assurance caveat
                     if row.label == 'Data protection between services':
                         self.assertEqual(
-                            row.value,
-                            (
-                                u'No encryption, assured by ' +
-                                u'independent validation of assertion'
-                            )
+                            row.value, [u'No encryption']
+                        )
+                        self.assertEqual(
+                            row.assurance, u'independent validation of assertion'
                         )
                     # string with standard assurance caveat
                     if row.label == 'Data protection within service':
                         self.assertEqual(
                             row.value,
-                            u'No encryption'
+                            [u'No encryption']
                         )
 
     def test_attributes_with_assurance_for_a_list_value_has_a_caveat(self):
@@ -127,7 +126,7 @@ class TestService(unittest.TestCase):
                     # list with bespoke assurance caveat
                     if row.label == 'Data management location':
                         self.assertIn(
-                            u'Assured by independent validation of assertion',
+                            u'independent validation of assertion',
                             row.assurance
                         )
 
@@ -151,95 +150,33 @@ class TestAttribute(unittest.TestCase):
             '24/7, 365 days a year'
         )
 
-    def test_get_data_type_recognises_strings(self):
+    def test_get_data_type_handles_empty_data(self):
         self.assertEqual(
-            Attribute('24x7x365 with UK based engineers', 'text').type,
+            Attribute('', 'text').type,
             'text'
         )
-
-    def test_get_data_type_recognises_floats(self):
-        attribute = Attribute(99.99, 'percentage')
-        self.assertEqual(attribute.type, 'text')
-        self.assertEqual(attribute.value, '99.99%')
-
-    def test_get_data_type_recognises_integer(self):
-        attribute = Attribute(99, 'percentage')
-        self.assertEqual(attribute.type, 'text')
-        self.assertEqual(attribute.value, '99%')
-
-    def test_get_data_type_recognises_unicode_strings(self):
         self.assertEqual(
-            Attribute(u'24x7x365 with UK based engineers', 'text').type,
+            Attribute('', 'text').value,
+            ''
+        )
+        self.assertEqual(
+            Attribute(None, 'percentage').type,
             'text'
         )
-
-    def test_get_data_type_recognises_lists(self):
         self.assertEqual(
-            Attribute([1, 2], 'list').type,
-            'list'
-        )
-
-    def test_get_data_type_recognises_booleans(self):
-        attribute = Attribute(True, 'boolean')
-        self.assertEqual(attribute.type, 'text')
-        self.assertEqual(attribute.value, 'Yes')
-
-    def test_get_data_type_recognises_dictionaries(self):
-        attribute = Attribute(
-            {
-                "assurance": "Independent validation of assertion",
-                "value": True
-            },
-            'boolean'
-        )
-        self.assertEqual(attribute.type, 'text')
-        self.assertEqual(
-            attribute.assurance, "independent validation of assertion"
-        )
-
-    def test_format_returns_yes_for_true_boolean(self):
-        attribute = Attribute(True, 'boolean')
-        self.assertEqual(attribute.value, 'Yes')
-        self.assertEqual(attribute.type, 'text')
-        self.assertEqual(attribute.assurance, False)
-
-    def test_format_returns_no_for_false_boolean(self):
-        attribute = Attribute(False, 'boolean')
-        self.assertEqual(attribute.value, 'No')
-        self.assertEqual(attribute.type, 'text')
-        self.assertEqual(attribute.assurance, False)
-
-    def test_format_returns_empty_string_for_a_empty_list(self):
-        attribute = Attribute([], 'list')
-        self.assertEqual(attribute.value, '')
-        self.assertEqual(attribute.type, 'text')
-        self.assertEqual(attribute.assurance, False)
-
-    def test_format_returns_the_first_item_for_a_list_with_one_item(self):
-        attribute = Attribute(['PC'], 'checkboxes')
-        self.assertEqual(attribute.value, "PC")
-        self.assertEqual(attribute.type, 'text')
-        self.assertEqual(attribute.assurance, False)
-
-    def test_rendering_of_string_attribute(self):
-        attribute = Attribute('Managed email service', 'textbox_large')
-        self.assertEqual(attribute.value, 'Managed email service')
-        self.assertEqual(attribute.type, 'text')
-        self.assertEqual(attribute.assurance, False)
-
-    def test_rendering_of_list_attribute(self):
-        attribute = Attribute(
-            ['Gold certification', 'Silver certification'],
-            'list'
+            Attribute(None, 'percentage').value,
+            ''
         )
         self.assertEqual(
-            attribute.value,
-            ['Gold certification', 'Silver certification'],
+            Attribute([], 'list').type,
+            'text'
         )
-        self.assertEqual(attribute.type, 'list')
-        self.assertEqual(attribute.assurance, False)
+        self.assertEqual(
+            Attribute([], 'text').value,
+            ''
+        )
 
-    def test_rendering_of_string_attribute_with_assurance(self):
+    def test_an_attribute_with_assurance(self):
         attribute = Attribute(
             {
                 'value': 'Managed email service',
@@ -249,10 +186,14 @@ class TestAttribute(unittest.TestCase):
         )
         self.assertEqual(
             attribute.value,
-            'Managed email service, assured by CESG-assured components'
+            'Managed email service'
+        )
+        self.assertEqual(
+            attribute.assurance,
+            'CESG-assured components'
         )
 
-    def test_rendering_of_string_list_with_assurance(self):
+    def test_rendering_of_list_with_assurance(self):
         attribute = Attribute(
             {
                 "value": [
@@ -268,8 +209,57 @@ class TestAttribute(unittest.TestCase):
         )
         self.assertEqual(
             attribute.assurance,
-            "Assured by CESG-assured componenents"
+            "CESG-assured componenents"
         )
+
+    def test_an_attribute_with_assurance_being_service_provider_assertion(self):
+        attribute = Attribute(
+            {
+                'value': 'Managed email service',
+                'assurance': 'Service provider assertion'
+            },
+            'text'
+        )
+        self.assertEqual(
+            attribute.value,
+            'Managed email service'
+        )
+        self.assertEqual(
+            attribute.assurance,
+            False
+        )
+
+    def test_a_required_attribute_with_no_value(self):
+        attribute = Attribute(
+            '',
+            'text',
+            optional=False
+        )
+        self.assertEqual(attribute.answer_required, True)
+
+    def test_a_required_attribute_with_a_value(self):
+        attribute = Attribute(
+            'Managed email service',
+            'text',
+            optional=False
+        )
+        self.assertEqual(attribute.answer_required, False)
+
+    def test_a_optional_attribute_with_no_value(self):
+        attribute = Attribute(
+            '',
+            'text',
+            optional=True
+        )
+        self.assertEqual(attribute.answer_required, False)
+
+    def test_a_optional_attribute_with_a_value(self):
+        attribute = Attribute(
+            'Managed email service',
+            'text',
+            optional=True
+        )
+        self.assertEqual(attribute.answer_required, False)
 
 
 class TestMeta(unittest.TestCase):
