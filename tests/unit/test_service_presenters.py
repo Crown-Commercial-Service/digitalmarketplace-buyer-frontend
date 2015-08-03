@@ -229,6 +229,38 @@ class TestAttribute(unittest.TestCase):
             False
         )
 
+    def test_a_required_attribute_with_no_value(self):
+        attribute = Attribute(
+            '',
+            'text',
+            optional=False
+        )
+        self.assertEqual(attribute.answer_required, True)
+
+    def test_a_required_attribute_with_a_value(self):
+        attribute = Attribute(
+            'Managed email service',
+            'text',
+            optional=False
+        )
+        self.assertEqual(attribute.answer_required, False)
+
+    def test_a_optional_attribute_with_no_value(self):
+        attribute = Attribute(
+            '',
+            'text',
+            optional=True
+        )
+        self.assertEqual(attribute.answer_required, False)
+
+    def test_a_optional_attribute_with_a_value(self):
+        attribute = Attribute(
+            'Managed email service',
+            'text',
+            optional=True
+        )
+        self.assertEqual(attribute.answer_required, False)
+
 
 class TestMeta(unittest.TestCase):
     def setUp(self):

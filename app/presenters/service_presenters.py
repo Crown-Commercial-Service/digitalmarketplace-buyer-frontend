@@ -65,12 +65,21 @@ class Service(object):
 class Attribute(object):
     """Wrapper to handle accessing an attribute in service_data"""
 
-    def __init__(self, value, question_type, label=''):
+    def __init__(
+        self,
+        value,
+        question_type,
+        label='',
+        optional=False,
+    ):
         self.label = label
+        self.answer_required = False
         if value in ['', [], None]:
             self.value = ''
             self.type = 'text'
             self.assurance = False
+            if not optional:
+                self.answer_required = True
         else:
             self.value, self.assurance = self._unpack_assurance(value)
             self.type = question_type
