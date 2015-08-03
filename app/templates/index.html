@@ -4,6 +4,54 @@
 
 {% block main_content %}
 
+{% if 'G_CLOUD_7_NOTICE' is active_feature %}
+<div class="index-page grid-row">
+  <div class="column-two-thirds">
+    <header class="page-heading">
+      <h1>
+        Digital Marketplace
+      </h1>
+      <p class="lead">
+        Find technology or people for digital projects in the public sector
+      </p>
+    </header>
+    {% with
+      items = [
+        {
+          "link": "/g-cloud",
+          "title": "Find cloud technology and support",
+          "body": "eg web hosting or IT health checks",
+          "subtext": "Procurement framework: <a href='/g-cloud/framework'>G-Cloud</a>"
+        },
+        {
+          "link": "/crown-hosting",
+          "title": "Buy physical datacentre space for legacy systems",
+          "subtext": "Procurement framework: <a href='/crown-hosting/framework'>Crown Hosting Data Centres</a>"
+        },
+        {
+          "link": "https://digitalservicesstore.service.gov.uk/",
+          "title": "Find specialists to work on digital projects",
+          "body": "eg technical architects and user researchers",
+          "subtext": "Procurement framework: <a href='/digital-services/framework'>Digital Services</a>"
+        }
+      ]
+    %}
+      {% include "toolkit/browse-list.html" %}
+    {% endwith %}
+  </div>
+  <aside class="g-cloud-7-notice column-one-third">
+    <h2 id="g-cloud-7-notice-heading">G-Cloud is open for applications</h2>
+    <p class="hint">Deadline 20 October</p>
+    <p>Register for G-Cloud 7 to sell cloud services to the public sector</p>
+    <nav role="navigation" aria-labelledby="g-cloud-7-notice-heading">
+      <ul>
+        <li><a href="/suppliers">Log in to existing supplier account</a></li>
+        <li><a href="">Create new supplier account</a></li>
+      </ul>
+    </nav>
+  </aside>
+</div>
+{% else %}
 <div class="index-page">
   <header class="page-heading">
     <h1>
@@ -37,5 +85,6 @@
     {% include "toolkit/browse-list.html" %}
   {% endwith %}
 </div>
+{% endif %}
 
 {% endblock %}
