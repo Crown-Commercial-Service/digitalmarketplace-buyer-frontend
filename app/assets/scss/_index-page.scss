@@ -45,17 +45,21 @@
     }
 
     p {
-      margin: 0 0 $gutter-half;
+      margin: 0;
 
       &.hint {
         color: $grey-1;
         margin-bottom: 5px;
       }
+
+      &.supplier-info {
+        margin-top: $gutter-half;
+        border-bottom: 1px solid $border-colour;
+        padding-bottom: $gutter-half;
+      }
     }
 
     nav {
-      margin-top: $gutter-half;
-      border-top: 1px solid $border-colour;
       padding-top: $gutter-half;
 
       ul {

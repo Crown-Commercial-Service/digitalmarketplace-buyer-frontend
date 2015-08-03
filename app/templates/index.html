@@ -43,6 +43,9 @@
     <h2 id="g-cloud-7-notice-heading">G-Cloud is open for applications</h2>
     <p class="hint">Deadline 20 October</p>
     <p>Register for G-Cloud 7 to sell cloud services to the public sector</p>
+    {% if 'G_CLOUD_7_IS_LIVE' is active_feature %}
+    <p><a href="">Read G-Cloud 7 information for suppliers</a></p>
+    {% endif %}
     <nav role="navigation" aria-labelledby="g-cloud-7-notice-heading">
       <ul>
         <li><a href="/suppliers">Log in to existing supplier account</a></li>

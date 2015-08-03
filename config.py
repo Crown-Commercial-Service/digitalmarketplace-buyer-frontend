@@ -57,6 +57,7 @@ class Config(object):
     RAISE_ERROR_ON_MISSING_FEATURES = True
     FEATURE_FLAGS_SUPPLIER_A_TO_Z = False
     FEATURE_FLAGS_G_CLOUD_7_NOTICE = False
+    FEATURE_FLAGS_G_CLOUD_7_IS_LIVE = False
 
     @staticmethod
     def init_app(app):
@@ -73,6 +74,7 @@ class Test(Config):
     DM_LOG_LEVEL = 'CRITICAL'
     FEATURE_FLAGS_SUPPLIER_A_TO_Z = enabled_since('2015-07-08')
     FEATURE_FLAGS_G_CLOUD_7_NOTICE = enabled_since('2015-08-03')
+    FEATURE_FLAGS_G_CLOUD_7_IS_LIVE = enabled_since('2015-08-03')
 
 
 class Development(Config):
@@ -81,11 +83,13 @@ class Development(Config):
     DM_SEARCH_PAGE_SIZE = 5
     FEATURE_FLAGS_SUPPLIER_A_TO_Z = enabled_since('2015-07-08')
     FEATURE_FLAGS_G_CLOUD_7_NOTICE = enabled_since('2015-08-03')
+    FEATURE_FLAGS_G_CLOUD_7_IS_LIVE = enabled_since('2015-08-03')
 
 
 class Preview(Config):
     FEATURE_FLAGS_SUPPLIER_A_TO_Z = enabled_since('2015-07-08')
     FEATURE_FLAGS_G_CLOUD_7_NOTICE = enabled_since('2015-08-03')
+    FEATURE_FLAGS_G_CLOUD_7_IS_LIVE = enabled_since('2015-08-03')
 
 
 class Live(Config):
