@@ -4,6 +4,61 @@
 
 {% block main_content %}
 
+{% if 'G_CLOUD_7_NOTICE' is active_feature %}
+<div class="index-page grid-row">
+  <div class="column-two-thirds">
+    <header class="page-heading">
+      <h1>
+        Digital Marketplace
+      </h1>
+      <p class="lead">
+        Find technology or people for digital projects in the public sector
+      </p>
+    </header>
+    {% with
+      items = [
+        {
+          "link": "/g-cloud",
+          "title": "Find cloud technology and support",
+          "body": "eg web hosting or IT health checks",
+          "subtext": "Procurement framework: <a href='/g-cloud/framework'>G&#8209;Cloud</a>"
+        },
+        {
+          "link": "/crown-hosting",
+          "title": "Buy physical datacentre space for legacy systems",
+          "subtext": "Procurement framework: <a href='/crown-hosting/framework'>Crown Hosting Data Centres</a>"
+        },
+        {
+          "link": "https://digitalservicesstore.service.gov.uk/",
+          "title": "Find specialists to work on digital projects",
+          "body": "eg technical architects and user researchers",
+          "subtext": "Procurement framework: <a href='/digital-services/framework'>Digital Services</a>"
+        }
+      ]
+    %}
+      {% include "toolkit/browse-list.html" %}
+    {% endwith %}
+  </div>
+  <aside role="complementary" class="g-cloud-7-notice column-one-third">
+    {% if 'G_CLOUD_7_IS_LIVE' is active_feature %}
+    <h2 id="g-cloud-7-notice-heading">G&#8209;Cloud&nbsp;7 is open for applications</h2>
+    <p class="hint">Deadline 6 October</p>
+    {% else %}
+    <h2 id="g-cloud-7-notice-heading">G&#8209;Cloud&nbsp;7 will be open for applications on 26 August</h2>
+    {% endif %}
+    <p>Register as a G&#8209;Cloud&nbsp;7 supplier to sell cloud services to the public sector</p>
+    {% if 'G_CLOUD_7_SUPPLIER_GUIDE' is active_feature %}
+    <p class="supplier-info"><a href="">Read G&#8209;Cloud&nbsp;7 information for suppliers</a></p>
+    {% endif %}
+    <nav role="navigation" aria-labelledby="g-cloud-7-notice-heading">
+      <ul>
+        <li><a href="/suppliers">Log in to existing supplier account</a></li>
+        <li><a href="">Create new supplier account</a></li>
+      </ul>
+    </nav>
+  </aside>
+</div>
+{% else %}
 <div class="index-page">
   <header class="page-heading">
     <h1>
@@ -37,5 +92,6 @@
     {% include "toolkit/browse-list.html" %}
   {% endwith %}
 </div>
+{% endif %}
 
 {% endblock %}
