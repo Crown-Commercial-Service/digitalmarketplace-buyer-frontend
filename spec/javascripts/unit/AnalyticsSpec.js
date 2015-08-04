@@ -19,8 +19,7 @@ describe("GOVUK.Analytics", function () {
 
     it('configures a universal tracker', function() {
       expect(universalSetupArguments[0]).toEqual(['create', 'universal-id', {
-        'cookieDomain': 'www.digitalmarketplace.service.gov.uk',
-        'allowLinker': true
+        'cookieDomain': 'www.digitalmarketplace.service.gov.uk'
       }]);
     });
   })
@@ -53,10 +52,11 @@ describe("GOVUK.Analytics", function () {
       window.ga.calls.reset();
       analytics = new window.GOVUK.Analytics({
         universalId: 'universal-id',
-        cookieDomain: 'www.digitalmarketplace.service.gov.uk'
+        cookieDomain: 'www.digitalmarketplace.service.gov.uk',
+        receiveCrossDomainTracking: true
       });
       analytics.trackPageview();
-      analytics.addLinkedTrackerDomain('universal-id', 'link', 'digitalservicesstore.service.gov.uk');
+      analytics.addLinkedTrackerDomain('digitalservicesstore.service.gov.uk');
     });
 
     it('only sets up one tracker', function () {
