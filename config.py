@@ -93,7 +93,6 @@ class Preview(Config):
     FEATURE_FLAGS_SUPPLIER_A_TO_Z = enabled_since('2015-07-08')
     FEATURE_FLAGS_G_CLOUD_7_NOTICE = enabled_since('2015-08-03')
     FEATURE_FLAGS_G_CLOUD_7_IS_LIVE = enabled_since('2015-08-03')
-    FEATURE_FLAGS_G_CLOUD_7_SUPPLIER_GUIDE = enabled_since('2015-08-03')
 
 
 class Live(Config):
