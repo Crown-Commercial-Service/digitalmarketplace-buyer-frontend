@@ -6,8 +6,9 @@
   GOVUK.Analytics.load();
   GOVUK.analytics = new GOVUK.Analytics({
     universalId: property,
-    cookieDomain: cookieDomain
+    cookieDomain: cookieDomain,
+    receiveCrossDomainTracking: true
   });
   GOVUK.analytics.trackPageview();
-  GOVUK.analytics.addLinkedTrackerDomain(property, 'link', 'digitalservicesstore.service.gov.uk');
+  GOVUK.analytics.addLinkedTrackerDomain('digitalservicesstore.service.gov.uk');
 })();
