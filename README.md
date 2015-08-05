@@ -106,3 +106,8 @@ npm install
 
 Note: `npm run frontend-install` is run automatically as a post-install task when you run `npm install`.
 
+## Frontend tests
+
+To run the JavaScript tests, navigate to `spec/javascripts/support/` and open `LocalTestRunner.html` in a browser.
+
+TODO: Add a Gulp task which is run as part of `./scripts/run_tests.sh`.
