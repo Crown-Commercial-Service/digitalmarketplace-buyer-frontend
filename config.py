@@ -100,10 +100,14 @@ class Live(Config):
     FEATURE_FLAGS_SUPPLIER_A_TO_Z = enabled_since('2015-07-30')
 
 
+class Staging(Live):
+    FEATURE_FLAGS_G_CLOUD_7_NOTICE = enabled_since('2015-08-18')
+
+
 configs = {
     'development': Development,
     'preview': Preview,
-    'staging': Live,
+    'staging': Staging,
     'production': Live,
     'test': Test,
 }
