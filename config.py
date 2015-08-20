@@ -98,6 +98,7 @@ class Preview(Config):
 class Live(Config):
     DEBUG = False
     FEATURE_FLAGS_SUPPLIER_A_TO_Z = enabled_since('2015-07-30')
+    FEATURE_FLAGS_G_CLOUD_7_NOTICE = enabled_since('2015-08-20')
 
 
 class Staging(Live):
