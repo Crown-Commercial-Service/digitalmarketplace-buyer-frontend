@@ -103,7 +103,7 @@ class Live(Config):
 
 class Staging(Live):
     FEATURE_FLAGS_G_CLOUD_7_NOTICE = enabled_since('2015-08-18')
-    FEATURE_FLAGS_G_CLOUD_7_IS_LIVE = enabled_since('2015-08-03')
+    FEATURE_FLAGS_G_CLOUD_7_IS_LIVE = enabled_since('2015-09-01')
 
 configs = {
     'development': Development,
