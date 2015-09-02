@@ -51,7 +51,6 @@ def parse_links(links):
 
 
 @main.route('/g-cloud/suppliers')
-@flask_featureflags.is_active_feature('SUPPLIER_A_TO_Z')
 def suppliers_list_by_prefix():
     api_prefix = process_prefix(
         prefix=request.args.get('prefix', default=u"A"),
@@ -78,7 +77,6 @@ def suppliers_list_by_prefix():
 
 
 @main.route('/g-cloud/supplier/<supplier_id>')
-@flask_featureflags.is_active_feature('SUPPLIER_A_TO_Z')
 def suppliers_details(supplier_id):
     supplier = data_api_client.get_supplier(
         supplier_id=supplier_id)["suppliers"]
