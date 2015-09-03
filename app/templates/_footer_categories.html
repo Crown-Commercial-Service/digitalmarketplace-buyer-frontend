@@ -29,11 +29,9 @@
       <li>
         <a href="https://www.gov.uk/government/organisations/crown-commercial-service" rel="external">Crown Commercial Service</a>
       </li>
-        {% if 'SUPPLIER_A_TO_Z' is active_feature %}
-        <li>
-            <a class="home" href="{{ url_for('main.suppliers_list_by_prefix') }}">G-Cloud supplier A-Z</a>
-        </li>
-        {% endif %}
+      <li>
+          <a class="home" href="{{ url_for('main.suppliers_list_by_prefix') }}">G-Cloud supplier A-Z</a>
+      </li>
     </ul>
     </div>
     <div class="footer-suppliers">
