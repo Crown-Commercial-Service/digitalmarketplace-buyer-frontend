@@ -128,7 +128,7 @@ def get_service_by_id(service_id):
     try:
         service = data_api_client.get_service(service_id)
         if service is None or service['services'].get('status') != 'published':
-            abort(404, "Service ID '{}' can not be found".format(service_id))
+            abort(404, u"Service ID '{}' can not be found".format(service_id))
 
         service_data = service['services']
         service_view_data = Service(
