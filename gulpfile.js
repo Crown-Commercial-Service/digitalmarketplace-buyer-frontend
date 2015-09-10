@@ -5,6 +5,7 @@ var sass = require('gulp-sass');
 var filelog = require('gulp-filelog');
 var include = require('gulp-include');
 var jasmine = require('gulp-jasmine-phantom');
+var sourcemaps = require('gulp-sourcemaps');
 
 // Paths
 var environment;
@@ -117,9 +118,11 @@ gulp.task('js', function () {
   var stream = gulp.src(jsSourceFile)
     .pipe(filelog('Compressing JavaScript files'))
     .pipe(include())
+    .pipe(sourcemaps.init())
     .pipe(uglify(
       uglifyOptions[environment]
     ))
+    .pipe(sourcemaps.write('./maps'))
     .pipe(gulp.dest(jsDistributionFolder));
 
   stream.on('end', function () {
