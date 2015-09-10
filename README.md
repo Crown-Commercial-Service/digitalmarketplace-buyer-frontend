@@ -47,8 +47,16 @@ Install new Python dependencies with pip
 
 ### Run the tests
 
+To run the whole testsuite:
+
 ```
 ./scripts/run_tests.sh
+```
+
+To only run the JavaScript tests:
+
+```
+npm test
 ```
 
 ### Run the development server

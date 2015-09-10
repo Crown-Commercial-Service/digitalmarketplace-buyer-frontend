@@ -9,3 +9,7 @@ var manifest = {
     '../unit/AnalyticsSpec.js'
   ]
 };
+
+if (typeof exports !== 'undefined') {
+  exports.manifest = manifest;
+}

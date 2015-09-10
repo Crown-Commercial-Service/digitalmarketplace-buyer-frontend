@@ -13,7 +13,8 @@
     "gulp-shell" : "0.2.9",
     "gulp-filelog" : "0.4.1",
     "gulp-include": "1.1.1",
-    "govuk_frontend_toolkit" : "4.1.1"
+    "govuk_frontend_toolkit" : "4.1.1",
+    "gulp-jasmine-phantom": "git://github.com/alphagov/gulp-jasmine-phantom#203c1cb2c4e951ff6aac7f3022d0f61111c8d9f4"
   },
   "scripts": {
     "test" : "./node_modules/gulp/bin/gulp.js test",
@@ -21,6 +22,7 @@
     "frontend-build:development" : "./node_modules/gulp/bin/gulp.js build:development",
     "frontend-build:production" : "./node_modules/gulp/bin/gulp.js build:production",
     "frontend-build:watch" : "./node_modules/gulp/bin/gulp.js watch",
+    "test": "./node_modules/gulp/bin/gulp.js test",
     "postinstall": "npm run frontend-install"
   }
 }
