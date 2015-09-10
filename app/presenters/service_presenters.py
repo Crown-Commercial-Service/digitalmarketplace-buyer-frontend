@@ -180,12 +180,12 @@ class Meta(object):
         return caveats
 
     def _get_pretty_document_name_without_extension(self, document_url):
-        document_basename = os.path.basename(urlparse(document_url).path)
+        document_basename = os.path.basename(urlparse(document_url.replace(';', '%3B')).path)
         filename = unquote(os.path.splitext(document_basename)[0])
         return filename.replace('_', ' ')
 
     def _get_document_extension(self, document_url):
-        url_object = urlparse(document_url)
+        url_object = urlparse(document_url.replace(';', '%3B'))
         return os.path.splitext(url_object.path)[1].split('.')[1]
 
     def _if_both_keys_or_either(self, service_data, keys=[], values={}):
