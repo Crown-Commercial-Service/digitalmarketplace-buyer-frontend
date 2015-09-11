@@ -1,5 +1,7 @@
 # coding=utf-8
 
+from __future__ import unicode_literals
+
 from datetime import datetime
 from flask import abort, render_template, request, redirect, \
     url_for, current_app
