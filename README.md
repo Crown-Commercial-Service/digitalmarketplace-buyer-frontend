@@ -43,7 +43,13 @@ source ./venv/bin/activate
 
 Install new Python dependencies with pip
 
-```pip install -r requirements.txt```
+```pip install -r requirements_for_test.txt```
+
+[Install frontend dependencies](https://github.com/alphagov/digitalmarketplace-buyer-frontend#front-end) with npm and gulp
+
+```
+npm install
+```
 
 ### Run the tests
 
