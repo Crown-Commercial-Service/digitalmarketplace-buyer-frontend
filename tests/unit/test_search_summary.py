@@ -15,8 +15,8 @@ from dmutils.content_loader import ContentLoader
 filter_groups = filters_for_lot(
     "saas",
     ContentLoader(
-        "app/helpers/questions_manifest.yml",
-        "app/content/g6/"
+        "app/content/frameworks/g-cloud-6/manifests/search_filters.yml",
+        "app/content/frameworks/g-cloud-6/questions/services/"
     ).get_builder()
 )
 
