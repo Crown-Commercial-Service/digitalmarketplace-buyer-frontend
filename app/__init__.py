@@ -11,13 +11,13 @@ search_api_client = apiclient.SearchAPIClient()
 feature_flags = flask_featureflags.FeatureFlag()
 
 questions_loader = ContentLoader(
-    "app/helpers/questions_manifest.yml",
-    "app/content/g6/"
+    "app/content/frameworks/g-cloud-6/manifests/search_filters.yml",
+    "app/content/frameworks/g-cloud-6/questions/services/"
 )
 
 service_questions_loader = ContentLoader(
-    "app/helpers/service_page_manifest.yml",
-    "app/content/g6/"
+    "app/content/frameworks/g-cloud-6/manifests/display_service.yml",
+    "app/content/frameworks/g-cloud-6/questions/services/"
 )
 
 
