@@ -11,6 +11,7 @@ $path: "/static/images/";
   padding-bottom: $gutter * 2;
 }
 
+@import "_grids.scss";
 @import "_notification-banners.scss";
 @import "_buttons.scss";
 @import "_breadcrumb.scss";
@@ -43,5 +44,3 @@ $path: "/static/images/";
   @include core-19;
   margin: (1.5 * $gutter) 0 (2 * $gutter);
 }
-
-@import "_grids.scss";
