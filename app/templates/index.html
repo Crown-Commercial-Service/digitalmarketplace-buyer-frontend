@@ -63,17 +63,16 @@
         </ul>
       </nav>
     {% else %}
-    <div class='temp-message normal-paragraph'>
-      <h2 id="g-cloud-7-notice-heading" class='padding-bottom-small'>
-        G‑Cloud&nbsp;7 is closed for applications
-      </h2>
-      <p>
-        Applications are being reviewed.
-      </p>
-      <p>
-        G&#8209;Cloud&nbsp;7 services will be available from 23&nbsp;November&nbsp;2015.
-      </p>
-    </div>
+      {%
+      with
+        messages = [
+        "Applications are being reviewed.",
+        "G\u2011Cloud&nbsp;7 services will be available from 23&nbsp;November&nbsp;2015."
+        ],
+        heading = "G\u2011Cloud 7 is closed for applications"
+      %}
+      {% include "toolkit/temporary-message.html" %}
+      {% endwith %}
     {% endif %}
   </aside>
 </div>
