@@ -1,10 +1,11 @@
 # coding=utf-8
 from string import ascii_uppercase
-import flask_featureflags
 from app.main import main
-from flask import render_template, request, url_for
+from flask import render_template, request, abort
 from app.helpers.search_helpers import get_template_data
 from app import data_api_client
+from dmutils.apiclient.errors import APIError
+import numbers
 import re
 
 try:
@@ -25,10 +26,11 @@ def process_prefix(prefix=None, format='view'):
 
 
 def process_page(page):
-    reg = "^[1-9]{1}$"  # valid page
-    if re.search(reg, page):
+    try:
+        int(page)
         return page
-    return "1"  # default
+    except ValueError:
+        return "1"  # default
 
 
 def is_alpha(character):
@@ -60,20 +62,26 @@ def suppliers_list_by_prefix():
         format='view')
     page = process_page(request.args.get('page', default=u"1"))
 
-    api_result = data_api_client.find_suppliers(api_prefix, page, 'gcloud')
-    suppliers = api_result["suppliers"]
-    links = api_result["links"]
+    try:
+        api_result = data_api_client.find_suppliers(api_prefix, page, 'gcloud')
+        suppliers = api_result["suppliers"]
+        links = api_result["links"]
 
-    template_data = get_template_data(main, {})
+        template_data = get_template_data(main, {})
 
-    return render_template('suppliers_list.html',
-                           suppliers=suppliers,
-                           nav=ascii_uppercase,
-                           count=len(suppliers),
-                           prev_link=parse_links(links)['prev'],
-                           next_link=parse_links(links)['next'],
-                           prefix=template_prefix,
-                           **template_data)
+        return render_template('suppliers_list.html',
+                               suppliers=suppliers,
+                               nav=ascii_uppercase,
+                               count=len(suppliers),
+                               prev_link=parse_links(links)['prev'],
+                               next_link=parse_links(links)['next'],
+                               prefix=template_prefix,
+                               **template_data)
+    except APIError as e:
+        if e.status_code == 404:
+            abort(404, "No suppliers for prefix {} page {}".format(api_prefix, page))
+        else:
+            raise e
 
 
 @main.route('/g-cloud/supplier/<supplier_id>')

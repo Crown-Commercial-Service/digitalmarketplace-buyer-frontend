@@ -2,6 +2,7 @@
 import mock
 from nose.tools import assert_equal, assert_true, assert_false
 from ...helpers import BaseApplicationTest
+from dmutils.apiclient import APIError
 
 
 class TestSuppliersPage(BaseApplicationTest):
@@ -132,6 +133,12 @@ class TestSuppliersPage(BaseApplicationTest):
         assert_true(
             supplier_html
             in self._strip_whitespace(res.get_data(as_text=True)))
+
+    def test_should_show_no_suppliers_page_if_api_returns_404(self):
+        self._data_api_client.find_suppliers.side_effect = APIError(mock.Mock(status_code=404))
+
+        res = self.client.get('/g-cloud/suppliers')
+        assert_equal(404, res.status_code)
 
     def test_should_show_next_page_on_supplier_list(self):
         res = self.client.get('/g-cloud/suppliers')
