@@ -82,13 +82,13 @@ class Development(Config):
 
     DM_SEARCH_PAGE_SIZE = 5
     FEATURE_FLAGS_G_CLOUD_7_NOTICE = enabled_since('2015-08-03')
-    FEATURE_FLAGS_G_CLOUD_7_IS_LIVE = enabled_since('2015-08-03')
+    FEATURE_FLAGS_G_CLOUD_7_IS_LIVE = False
     FEATURE_FLAGS_G_CLOUD_7_SUPPLIER_GUIDE = enabled_since('2015-08-03')
 
 
 class Preview(Config):
     FEATURE_FLAGS_G_CLOUD_7_NOTICE = enabled_since('2015-08-03')
-    FEATURE_FLAGS_G_CLOUD_7_IS_LIVE = enabled_since('2015-08-03')
+    FEATURE_FLAGS_G_CLOUD_7_IS_LIVE = False
 
 
 class Live(Config):
@@ -99,7 +99,7 @@ class Live(Config):
 
 class Staging(Live):
     FEATURE_FLAGS_G_CLOUD_7_NOTICE = enabled_since('2015-08-18')
-    FEATURE_FLAGS_G_CLOUD_7_IS_LIVE = enabled_since('2015-09-01')
+    FEATURE_FLAGS_G_CLOUD_7_IS_LIVE = False
 
 configs = {
     'development': Development,
