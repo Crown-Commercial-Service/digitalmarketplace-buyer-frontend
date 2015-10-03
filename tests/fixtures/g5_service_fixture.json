@@ -6,7 +6,7 @@
     "serviceSummary": "Blogging platform is a free and open-source blogging tool and a content management system CMS based on PHP and MySQL. Features include a plugin architecture and a template system.",
     "priceMin": 85,
     "priceUnit": "Single website",
-    "priceString": "\u00a85 per year",
+    "priceString": "",
     "supplierId": 123456,
     "supplierName": "Example Company Limited",
     "status": "published",
