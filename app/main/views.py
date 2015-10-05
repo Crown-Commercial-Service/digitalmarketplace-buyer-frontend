@@ -188,7 +188,7 @@ def search():
 
     pagination_config = pagination(
         search_results_obj.total,
-        current_app.config["DM_SEARCH_PAGE_SIZE"],
+        int(current_app.config["DM_SEARCH_PAGE_SIZE"]),
         get_page_from_request(request)
     )
 
