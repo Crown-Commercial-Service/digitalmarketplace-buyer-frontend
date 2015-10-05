@@ -2,6 +2,7 @@ import os
 import re
 from jinja2 import Template
 from dmutils.service_attribute import Attribute
+from dmutils.formats import format_service_price
 
 try:
     from urllib.parse import urlparse
@@ -65,7 +66,7 @@ class Service(object):
 
 class Meta(object):
     def __init__(self, service_data):
-        self.price = service_data['priceString']
+        self.price = format_service_price(service_data)
         self.contact = {
             'name': 'Contact name',
             'phone': 'Contact number',
