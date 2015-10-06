@@ -39,8 +39,8 @@
       {% include "toolkit/browse-list.html" %}
     {% endwith %}
   </div>
-  <aside role="complementary" class="g-cloud-7-notice column-one-third">
-    {% if 'G_CLOUD_7_IS_LIVE' is active_feature %}
+  {% if 'G_CLOUD_7_IS_LIVE' is active_feature %}
+    <aside role="complementary" class="g-cloud-7-notice column-one-third">
       <h2 id="g-cloud-7-notice-heading">
         G&#8209;Cloud&nbsp;7 is open for applications
       </h2>
@@ -48,26 +48,35 @@
         Deadline for submissions<br />
         3pm <abbr title="British Summer Time">BST</abbr>, 6 October 2015
       </p>
-    {% else %}
-      <h2 id="g-cloud-7-notice-heading">
-        G&#8209;Cloud&nbsp;7 will be open for applications soon
-      </h2>
-    {% endif %}
-    <p>
-      Register your interest in becoming a G&#8209;Cloud&nbsp;7 supplier.
-    </p>
-    {% if 'G_CLOUD_7_SUPPLIER_GUIDE' is active_feature %}
-      <p class="supplier-info">
-        <a href="">Read G&#8209;Cloud&nbsp;7 information for suppliers</a>
+      <p>
+        Register your interest in becoming a G&#8209;Cloud&nbsp;7 supplier.
       </p>
+      {% if 'G_CLOUD_7_SUPPLIER_GUIDE' is active_feature %}
+        <p class="supplier-info">
+          <a href="">Read G&#8209;Cloud&nbsp;7 information for suppliers</a>
+        </p>
+      {% endif %}
+      <nav role="navigation" aria-labelledby="g-cloud-7-notice-heading">
+        <ul>
+          <li><a href="/suppliers">Log in to existing supplier account</a></li>
+          <li><a href="/suppliers/create">Create new supplier account</a></li>
+        </ul>
+      </nav>
+    </aside>
+    {% else %}
+      <div class="g-cloud-7-notice column-one-third">
+        {%
+        with
+          messages = [
+          "Applications are being reviewed.",
+          "G\u2011Cloud&nbsp;7 services will be available from 23&nbsp;November&nbsp;2015."
+          ],
+          heading = "G\u2011Cloud 7 is closed for applications"
+        %}
+        {% include "toolkit/temporary-message.html" %}
+        {% endwith %}
+      </div>
     {% endif %}
-    <nav role="navigation" aria-labelledby="g-cloud-7-notice-heading">
-      <ul>
-        <li><a href="/suppliers">Log in to existing supplier account</a></li>
-        <li><a href="/suppliers/create">Create new supplier account</a></li>
-      </ul>
-    </nav>
-  </aside>
 </div>
 {% else %}
 <div class="index-page">
