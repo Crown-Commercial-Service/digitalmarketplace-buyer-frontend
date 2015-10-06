@@ -94,7 +94,7 @@ class Preview(Config):
 class Live(Config):
     DEBUG = False
     FEATURE_FLAGS_G_CLOUD_7_NOTICE = enabled_since('2015-08-20')
-    FEATURE_FLAGS_G_CLOUD_7_IS_LIVE = enabled_since('2015-09-01')
+    FEATURE_FLAGS_G_CLOUD_7_IS_LIVE = False
 
 
 class Staging(Live):
