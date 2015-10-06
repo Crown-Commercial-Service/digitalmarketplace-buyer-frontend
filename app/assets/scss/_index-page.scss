@@ -75,4 +75,9 @@
     }
   }
 
+  /* `.g-cloud-7-notice p` overwrites the `margin-bottom` of paragraphs in the temporary message */
+  .g-cloud-7-notice .temporary-message-message {
+    margin-bottom: 5px;
+  }
+
 }
