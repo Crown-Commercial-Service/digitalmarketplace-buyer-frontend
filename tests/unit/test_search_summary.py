@@ -9,15 +9,12 @@ from app.presenters.search_presenters import filters_for_lot
 from app.presenters.search_results import SearchResults
 from app.presenters.search_summary import SearchSummary, \
     SummaryRules, SummaryFragment
-from dmutils.content_loader import ContentLoader
+from app import content_loader
 
 
 filter_groups = filters_for_lot(
     "saas",
-    ContentLoader(
-        "app/content/frameworks/g-cloud-6/manifests/search_filters.yml",
-        "app/content/frameworks/g-cloud-6/questions/services/"
-    ).get_builder()
+    content_loader.get_builder('g-cloud-6', 'search_filters')
 )
 
 

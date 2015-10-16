@@ -8,10 +8,9 @@ from werkzeug.datastructures import MultiDict
 from app.presenters.search_presenters import filters_for_lot, set_filter_states
 
 
-questions_builder = ContentLoader(
-    "tests/fixtures/g6_questions/manifest.yml",
-    "tests/fixtures/g6_questions/data/"
-).get_builder()
+content_loader = ContentLoader('tests/fixtures/content')
+content_loader.load_manifest('g6', 'data', 'manifest')
+questions_builder = content_loader.get_builder('g6', 'manifest')
 
 
 def _get_fixture_data():

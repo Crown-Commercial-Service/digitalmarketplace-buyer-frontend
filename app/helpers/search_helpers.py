@@ -79,7 +79,7 @@ def clean_request_args(request_args, lot_filters):
     return clean_args
 
 
-def group_request_filters(request_filters, content_loader):
+def group_request_filters(request_filters, content_builder):
     """Groups filters using ','/& according to question type.
 
     * Questions of type "radios" result in OR filters - there's only one
@@ -94,7 +94,7 @@ def group_request_filters(request_filters, content_loader):
     """
     filter_query = {}
     for key, values in request_filters.lists():
-        if content_loader.get_question(key).get("type") == 'radios':
+        if is_radio_type(content_builder, key):
             filter_query[key] = ','.join(values)
         elif len(values) == 1:
             filter_query[key] = values[-1]
@@ -102,6 +102,14 @@ def group_request_filters(request_filters, content_loader):
             filter_query[key] = values
 
     return filter_query
+
+
+def is_radio_type(content_builer, key):
+    if key == 'lot':
+        return True
+
+    question = content_builer.get_question(key) or {}
+    return question.get('type') == 'radios'
 
 
 def replace_g5_search_dots(keywords_query):
@@ -114,7 +122,7 @@ def replace_g5_search_dots(keywords_query):
     )
 
 
-def build_search_query(request, lot_filters, content_loader):
+def build_search_query(request, lot_filters, content_builder):
     """Match request args with known filters.
 
     Removes any unknown query parameters, and will only keep `page`, `q`
@@ -132,7 +140,7 @@ def build_search_query(request, lot_filters, content_loader):
     if 'q' in query:
         query['q'] = replace_g5_search_dots(query['q'])
 
-    return group_request_filters(query, content_loader)
+    return group_request_filters(query, content_builder)
 
 
 def query_args_for_pagination(args):
