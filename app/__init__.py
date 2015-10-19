@@ -10,15 +10,9 @@ data_api_client = apiclient.DataAPIClient()
 search_api_client = apiclient.SearchAPIClient()
 feature_flags = flask_featureflags.FeatureFlag()
 
-questions_loader = ContentLoader(
-    "app/content/frameworks/g-cloud-6/manifests/search_filters.yml",
-    "app/content/frameworks/g-cloud-6/questions/services/"
-)
-
-service_questions_loader = ContentLoader(
-    "app/content/frameworks/g-cloud-6/manifests/display_service.yml",
-    "app/content/frameworks/g-cloud-6/questions/services/"
-)
+content_loader = ContentLoader('app/content')
+content_loader.load_manifest('g-cloud-6', 'services', 'search_filters')
+content_loader.load_manifest('g-cloud-6', 'services', 'display_service')
 
 
 def create_app(config_name):

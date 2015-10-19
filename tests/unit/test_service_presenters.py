@@ -4,7 +4,7 @@ import unittest
 from app.presenters.service_presenters import (
     Service, Attribute, Meta, lowercase_first_character_unless_part_of_acronym
 )
-from app import service_questions_loader
+from app import content_loader
 
 
 def _get_fixture_data():
@@ -24,7 +24,7 @@ class TestService(unittest.TestCase):
         self.fixture = _get_fixture_data()
         self.fixture = self.fixture['services']
         self.service = Service(
-            self.fixture, service_questions_loader.get_builder()
+            self.fixture, content_loader.get_builder('g-cloud-6', 'display_service')
         )
 
     def tearDown(self):
@@ -42,17 +42,17 @@ class TestService(unittest.TestCase):
 
     def test_Service_works_if_supplierName_is_not_set(self):
         del self.fixture['supplierName']
-        self.service = Service(self.fixture, service_questions_loader.get_builder())
+        self.service = Service(self.fixture, content_loader.get_builder('g-cloud-6', 'display_service'))
         self.assertFalse(hasattr(self.service, 'supplierName'))
 
     def test_Service_works_if_serviceFeatures_is_not_set(self):
         del self.fixture['serviceFeatures']
-        self.service = Service(self.fixture, service_questions_loader.get_builder())
+        self.service = Service(self.fixture, content_loader.get_builder('g-cloud-6', 'display_service'))
         self.assertFalse(hasattr(self.service, 'features'))
 
     def test_Service_works_if_serviceBenefits_is_not_set(self):
         del self.fixture['serviceBenefits']
-        self.service = Service(self.fixture, service_questions_loader.get_builder())
+        self.service = Service(self.fixture, content_loader.get_builder('g-cloud-6', 'display_service'))
         self.assertFalse(hasattr(self.service, 'benefits'))
 
     def test_features_attributes_are_correctly_set(self):
@@ -65,7 +65,7 @@ class TestService(unittest.TestCase):
 
     def test_attributes_are_correctly_set(self):
         service = Service(
-            self.fixture, service_questions_loader.get_builder()
+            self.fixture, content_loader.get_builder('g-cloud-6', 'display_service')
         )
         self.assertEquals(
             service.attributes[0]['name'],
@@ -82,7 +82,7 @@ class TestService(unittest.TestCase):
 
     def test_the_support_attribute_group_is_not_there_if_no_attributes(self):
         del self.fixture['openStandardsSupported']
-        service = Service(self.fixture, service_questions_loader.get_builder())
+        service = Service(self.fixture, content_loader.get_builder('g-cloud-6', 'display_service'))
         for group in service.attributes:
             if group['name'] == 'Open standards':
                 self.fail("Support group should not be found")
@@ -90,7 +90,7 @@ class TestService(unittest.TestCase):
     def test_only_attributes_with_a_valid_type_are_added_to_groups(self):
         invalidValue = (u'Manuals provided', u'CMS training')
         self.fixture['onboardingGuidance'] = invalidValue
-        service = Service(self.fixture, service_questions_loader.get_builder())
+        service = Service(self.fixture, content_loader.get_builder('g-cloud-6', 'display_service'))
         for group in service.attributes:
             if (
                 (group['name'] == 'External interface protection') and
@@ -99,7 +99,7 @@ class TestService(unittest.TestCase):
                 self.fail("Attribute with tuple value should not be in group")
 
     def test_attributes_with_assurance_in_the_fields_add_it_correctly(self):
-        service = Service(self.fixture, service_questions_loader.get_builder())
+        service = Service(self.fixture, content_loader.get_builder('g-cloud-6', 'display_service'))
         for group in service.attributes:
             if group['name'] == 'Data-in-transit protection':
                 for row in group['rows']:
@@ -119,7 +119,7 @@ class TestService(unittest.TestCase):
                         )
 
     def test_attributes_with_assurance_for_a_list_value_has_a_caveat(self):
-        service = Service(self.fixture, service_questions_loader.get_builder())
+        service = Service(self.fixture, content_loader.get_builder('g-cloud-6', 'display_service'))
         for group in service.attributes:
             if group['name'] == 'Asset protection and resilience':
                 for row in group['rows']:

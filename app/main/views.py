@@ -12,8 +12,6 @@ from dmutils.apiclient import HTTPError
 from dmutils.formats import LOTS
 
 from . import main
-from .. import questions_loader
-from .. import service_questions_loader
 from ..presenters.search_presenters import (
     filters_for_lot,
     set_filter_states,
@@ -29,7 +27,7 @@ from ..helpers.search_helpers import (
 )
 
 from ..exceptions import AuthException
-from .. import search_api_client, data_api_client
+from .. import search_api_client, data_api_client, content_loader
 
 
 @main.route('/')
@@ -135,7 +133,7 @@ def get_service_by_id(service_id):
         service_data = service['services']
         service_view_data = Service(
             service_data,
-            service_questions_loader.get_builder().filter(
+            content_loader.get_builder('g-cloud-6', 'display_service').filter(
                 service_data
             )
         )
@@ -175,13 +173,14 @@ def redirect_search():
 
 @main.route('/g-cloud/search')
 def search():
+    content_builder = content_loader.get_builder('g-cloud-6', 'search_filters')
     filters = filters_for_lot(
         get_lot_from_request(request),
-        questions_loader.get_builder()
+        content_builder
     )
 
     response = search_api_client.search_services(
-        **build_search_query(request, filters, questions_loader)
+        **build_search_query(request, filters, content_builder)
     )
 
     search_results_obj = SearchResults(response)
