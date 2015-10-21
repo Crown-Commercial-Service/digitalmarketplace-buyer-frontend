@@ -1,16 +1,15 @@
-from dmutils.formats import lot_to_lot_case
 from ..helpers.search_helpers import get_filters_from_request
 
 
 def sections_for_lot(lot, builder):
     if lot is None or lot == 'all':
         sections = builder.filter(
-            {'lot': 'IaaS'}).filter(
-            {'lot': 'PaaS'}).filter(
-            {'lot': 'SaaS'}).filter(
-            {'lot': 'SCS'}).sections
+            {'lot': 'iaas'}).filter(
+            {'lot': 'paas'}).filter(
+            {'lot': 'saas'}).filter(
+            {'lot': 'scs'}).sections
     else:
-        sections = builder.filter({'lot': lot_to_lot_case(lot)}).sections
+        sections = builder.filter({'lot': lot}).sections
 
     return sections
 
