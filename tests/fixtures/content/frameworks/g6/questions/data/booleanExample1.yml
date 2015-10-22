@@ -1,6 +1,6 @@
 depends:
   - "on": "lot"
-    being: ['SaaS', 'PaaS']
+    being: ['saas', 'paas']
 type: boolean
 filterLabel: 'Option 1'
 validations:
