@@ -38,42 +38,20 @@
       {% include "toolkit/browse-list.html" %}
     {% endwith %}
   </div>
-  {% if 'G_CLOUD_7_IS_LIVE' is active_feature %}
-    <aside role="complementary" class="g-cloud-7-notice column-one-third">
-      <h2 id="g-cloud-7-notice-heading">
-        G&#8209;Cloud&nbsp;7 is open for applications
-      </h2>
-      <p class="hint">
-        Deadline for submissions<br />
-        3pm <abbr title="British Summer Time">BST</abbr>, 6 October 2015
-      </p>
-      <p>
-        Register your interest in becoming a G&#8209;Cloud&nbsp;7 supplier.
-      </p>
-      <p class="supplier-info">
-        <a href="">Read G&#8209;Cloud&nbsp;7 information for suppliers</a>
-      </p>
-      <nav role="navigation" aria-labelledby="g-cloud-7-notice-heading">
-        <ul>
-          <li><a href="/suppliers">Log in to existing supplier account</a></li>
-          <li><a href="/suppliers/create">Create new supplier account</a></li>
-        </ul>
-      </nav>
-    </aside>
-    {% else %}
-      <div class="g-cloud-7-notice column-one-third">
+    <div class="framework-message column-one-third">
+      {% if temporary_message %}
+        {# define all variables used by any of the expected templates #}
         {%
-        with
-          messages = [
-          "Applications are being reviewed.",
-          "G\u2011Cloud&nbsp;7 services will be available from 23&nbsp;November&nbsp;2015."
-          ],
-          heading = "G\u2011Cloud 7 is closed for applications"
+          with
+            heading = temporary_message.heading,
+            subheading = temporary_message.subheading,
+            messages = temporary_message.messages,
+            message = temporary_message.message
         %}
-        {% include "toolkit/temporary-message.html" %}
+          {% include "toolkit/{}.html".format(temporary_message.template_name) %}
         {% endwith %}
-      </div>
-    {% endif %}
+      {% endif %}
+    </div>
 </div>
 
 {% endblock %}
