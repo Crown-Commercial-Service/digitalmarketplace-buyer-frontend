@@ -55,7 +55,6 @@ class Config(object):
 
     # Feature Flags
     RAISE_ERROR_ON_MISSING_FEATURES = True
-    FEATURE_FLAGS_G_CLOUD_7_NOTICE = False
     FEATURE_FLAGS_G_CLOUD_7_IS_LIVE = False
 
     @staticmethod
@@ -71,7 +70,6 @@ class Config(object):
 class Test(Config):
     DEBUG = True
     DM_LOG_LEVEL = 'CRITICAL'
-    FEATURE_FLAGS_G_CLOUD_7_NOTICE = enabled_since('2015-08-03')
     FEATURE_FLAGS_G_CLOUD_7_IS_LIVE = enabled_since('2015-08-03')
 
 
@@ -79,23 +77,19 @@ class Development(Config):
     DEBUG = True
 
     DM_SEARCH_PAGE_SIZE = 5
-    FEATURE_FLAGS_G_CLOUD_7_NOTICE = enabled_since('2015-08-03')
     FEATURE_FLAGS_G_CLOUD_7_IS_LIVE = False
 
 
 class Preview(Config):
-    FEATURE_FLAGS_G_CLOUD_7_NOTICE = enabled_since('2015-08-03')
     FEATURE_FLAGS_G_CLOUD_7_IS_LIVE = False
 
 
 class Live(Config):
     DEBUG = False
-    FEATURE_FLAGS_G_CLOUD_7_NOTICE = enabled_since('2015-08-20')
     FEATURE_FLAGS_G_CLOUD_7_IS_LIVE = False
 
 
 class Staging(Live):
-    FEATURE_FLAGS_G_CLOUD_7_NOTICE = enabled_since('2015-08-18')
     FEATURE_FLAGS_G_CLOUD_7_IS_LIVE = False
 
 configs = {
