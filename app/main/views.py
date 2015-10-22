@@ -33,7 +33,21 @@ from .. import search_api_client, data_api_client, content_loader
 @main.route('/')
 def index():
     template_data = get_template_data(main, {})
-    return render_template('index.html', **template_data)
+
+    framework_slug = 'digital-outcomes-and-specialists'
+    framework_slug = 'g-cloud-7'
+    # get framework status in a better way
+    framework_status = 'pending'
+    block = 'homepage-sidebar'
+
+    content_loader.load_messages(framework_slug, [block])
+    temporary_message = content_loader.get_message(framework_slug, block, framework_status)
+
+    return render_template(
+        'index.html',
+        temporary_message=temporary_message,
+        **template_data
+    )
 
 
 @main.route('/g-cloud')
