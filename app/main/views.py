@@ -10,6 +10,7 @@ from dmutils.deprecation import deprecated
 from dmutils.formats import get_label_for_lot_param
 from dmutils.apiclient import HTTPError
 from dmutils.formats import LOTS
+from dmutils.apiclient import APIError
 
 from . import main
 from ..presenters.search_presenters import (
@@ -19,6 +20,7 @@ from ..presenters.search_presenters import (
 from ..presenters.search_results import SearchResults
 from ..presenters.search_summary import SearchSummary
 from ..presenters.service_presenters import Service
+from ..helpers.shared_helpers import get_one_framework_by_status_in_order_of_preference
 from ..helpers.search_helpers import (
     get_keywords_from_request, get_template_data, pagination,
     get_page_from_request, query_args_for_pagination,
@@ -33,15 +35,25 @@ from .. import search_api_client, data_api_client, content_loader
 @main.route('/')
 def index():
     template_data = get_template_data(main, {})
+    temporary_message = {}
 
-    framework_slug = 'digital-outcomes-and-specialists'
-    framework_slug = 'g-cloud-7'
-    # get framework status in a better way
-    framework_status = 'pending'
-    block = 'homepage-sidebar'
+    # if no framework is found, ditch the message
+    try:
+        frameworks = data_api_client.find_frameworks().get('frameworks')
+        framework = get_one_framework_by_status_in_order_of_preference(
+            frameworks,
+            ['open', 'coming', 'pending']
+        )
 
-    content_loader.load_messages(framework_slug, [block])
-    temporary_message = content_loader.get_message(framework_slug, block, framework_status)
+        content_loader.load_messages(framework.get('slug'), ['homepage-sidebar'])
+        temporary_message = content_loader.get_message(
+            framework.get('slug'),
+            'homepage-sidebar',
+            framework.get('status')
+        )
+
+    except APIError:
+        pass
 
     return render_template(
         'index.html',

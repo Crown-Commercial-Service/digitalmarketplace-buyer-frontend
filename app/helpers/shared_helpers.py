@@ -8,3 +8,12 @@ def get_label_for_lot_param(lot_param):
     }
     if lot_param in lots:
         return lots[lot_param]
+
+
+def get_one_framework_by_status_in_order_of_preference(frameworks, statuses_in_order_of_preference):
+    for status in statuses_in_order_of_preference:
+        for framework in frameworks:
+            if framework.get('status') == status:
+                return framework
+
+    return None
