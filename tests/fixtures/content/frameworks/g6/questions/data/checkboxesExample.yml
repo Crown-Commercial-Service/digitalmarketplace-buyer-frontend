@@ -1,6 +1,6 @@
 depends:
   - "on": "lot"
-    being: ['SaaS', 'PaaS', 'IaaS']
+    being: ['saas', 'paas', 'iaas']
 hint: 'Choose all options that apply'
 type: checkboxes
 options:

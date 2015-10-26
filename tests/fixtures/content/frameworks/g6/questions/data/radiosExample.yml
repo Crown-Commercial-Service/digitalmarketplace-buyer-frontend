@@ -1,6 +1,6 @@
 depends:
   - "on": "lot"
-    being: ['SaaS', 'PaaS', 'IaaS', 'SCS']
+    being: ['saas', 'paas', 'iaas', 'scs']
 type: radios
 options:
     -

@@ -1,6 +1,6 @@
 depends:
   - "on": "lot"
-    being: ['SaaS', 'PaaS', 'IaaS']
+    being: ['saas', 'paas', 'iaas']
 hint: 'Enter all the parts of the answer'
 listItemName: 'certification example'
 type: list
