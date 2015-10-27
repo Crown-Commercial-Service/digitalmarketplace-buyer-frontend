@@ -8,9 +8,9 @@ from flask import abort, render_template, request, redirect, \
 
 from dmutils.deprecation import deprecated
 from dmutils.formats import get_label_for_lot_param
-from dmutils.apiclient import HTTPError
+from dmutils.apiclient import HTTPError, APIError
 from dmutils.formats import LOTS
-from dmutils.apiclient import APIError
+from dmutils.content_loader import ContentNotFoundError
 
 from . import main
 from ..presenters.search_presenters import (
@@ -37,7 +37,6 @@ def index():
     template_data = get_template_data(main, {})
     temporary_message = {}
 
-    # if no framework is found, ditch the message
     try:
         frameworks = data_api_client.find_frameworks().get('frameworks')
         framework = get_one_framework_by_status_in_order_of_preference(
@@ -52,8 +51,15 @@ def index():
             framework.get('status')
         )
 
-    except APIError:
+    # if no framework is found (should never happen), ditch the message and load the page
+    except (APIError, AttributeError):
         pass
+    # if no message file is found (should never happen), throw a 500
+    except ContentNotFoundError:
+        current_app.logger.error(
+            "contentloader.fail No message file found for framework. "
+            "framework {} status {}".format(framework.get('slug'), framework.get('status')))
+        abort(500)
 
     return render_template(
         'index.html',
