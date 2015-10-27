@@ -1,3 +1,5 @@
+# coding=utf-8
+
 import mock
 from nose.tools import assert_equal, assert_true, assert_in, assert_not_in
 from ...helpers import BaseApplicationTest
@@ -85,8 +87,8 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
             ('digital-outcomes-and-specialists', 'coming')
         ]
         framework_messages = [
-            'Become a Digital Outcomes and Specialists supplier',
-            'Digital Outcomes and Specialists will be open for applications soon.'
+            u"Become a Digital Outcomes and Specialists supplier",
+            u"Digital Outcomes and Specialists will be open for applications soon."
         ]
 
         self._load_homepage(framework_slugs_and_statuses, framework_messages)
@@ -98,8 +100,8 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
             ('digital-outcomes-and-specialists', 'open')
         ]
         framework_messages = [
-            'Become a Digital Outcomes and Specialists supplier',
-            'Digital Outcomes and Specialists is open for applications.'
+            u"Become a Digital Outcomes and Specialists supplier",
+            u"Digital Outcomes and Specialists is open for applications."
         ]
 
         self._load_homepage(framework_slugs_and_statuses, framework_messages)
@@ -110,8 +112,8 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
             ('g-cloud-7', 'pending')
         ]
         framework_messages = [
-            'G‑Cloud 7 is closed for applications',
-            'G‑Cloud 7 services will be available from 23 November 2015.'
+            u"G‑Cloud 7 is closed for applications",
+            u"G‑Cloud 7 services will be available from 23 November 2015."
         ]
 
         self._load_homepage(framework_slugs_and_statuses, framework_messages)
