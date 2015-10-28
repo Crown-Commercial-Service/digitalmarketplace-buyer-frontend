@@ -36,7 +36,7 @@
 
   }
 
-  .g-cloud-7-notice {
+  .framework-message {
     margin-top: 45px;
 
     h2 {
@@ -75,8 +75,8 @@
     }
   }
 
-  /* `.g-cloud-7-notice p` overwrites the `margin-bottom` of paragraphs in the temporary message */
-  .g-cloud-7-notice .temporary-message-message {
+  /* `.framework-message p` overwrites the `margin-bottom` of paragraphs in the temporary message */
+  .framework-message .temporary-message-message {
     margin-bottom: 5px;
   }
 

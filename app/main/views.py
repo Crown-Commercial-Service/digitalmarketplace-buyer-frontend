@@ -8,8 +8,9 @@ from flask import abort, render_template, request, redirect, \
 
 from dmutils.deprecation import deprecated
 from dmutils.formats import get_label_for_lot_param
-from dmutils.apiclient import HTTPError
+from dmutils.apiclient import HTTPError, APIError
 from dmutils.formats import LOTS
+from dmutils.content_loader import ContentNotFoundError
 
 from . import main
 from ..presenters.search_presenters import (
@@ -19,6 +20,7 @@ from ..presenters.search_presenters import (
 from ..presenters.search_results import SearchResults
 from ..presenters.search_summary import SearchSummary
 from ..presenters.service_presenters import Service
+from ..helpers.shared_helpers import get_one_framework_by_status_in_order_of_preference
 from ..helpers.search_helpers import (
     get_keywords_from_request, get_template_data, pagination,
     get_page_from_request, query_args_for_pagination,
@@ -33,7 +35,38 @@ from .. import search_api_client, data_api_client, content_loader
 @main.route('/')
 def index():
     template_data = get_template_data(main, {})
-    return render_template('index.html', **template_data)
+    temporary_message = {}
+
+    try:
+        frameworks = data_api_client.find_frameworks().get('frameworks')
+        framework = get_one_framework_by_status_in_order_of_preference(
+            frameworks,
+            ['open', 'coming', 'pending']
+        )
+
+        if framework is not None:
+            content_loader.load_messages(framework.get('slug'), ['homepage-sidebar'])
+            temporary_message = content_loader.get_message(
+                framework.get('slug'),
+                'homepage-sidebar',
+                framework.get('status')
+            )
+
+    # if no framework is found (should never happen), ditch the message and load the page
+    except APIError:
+        pass
+    # if no message file is found (should never happen), throw a 500
+    except ContentNotFoundError:
+        current_app.logger.error(
+            "contentloader.fail No message file found for framework. "
+            "framework {} status {}".format(framework.get('slug'), framework.get('status')))
+        abort(500)
+
+    return render_template(
+        'index.html',
+        temporary_message=temporary_message,
+        **template_data
+    )
 
 
 @main.route('/g-cloud')
