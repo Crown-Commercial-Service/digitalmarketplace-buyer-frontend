@@ -15,5 +15,3 @@ def get_one_framework_by_status_in_order_of_preference(frameworks, statuses_in_o
         for framework in frameworks:
             if framework.get('status') == status:
                 return framework
-
-    return None

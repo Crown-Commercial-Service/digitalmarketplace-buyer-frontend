@@ -44,15 +44,16 @@ def index():
             ['open', 'coming', 'pending']
         )
 
-        content_loader.load_messages(framework.get('slug'), ['homepage-sidebar'])
-        temporary_message = content_loader.get_message(
-            framework.get('slug'),
-            'homepage-sidebar',
-            framework.get('status')
-        )
+        if framework is not None:
+            content_loader.load_messages(framework.get('slug'), ['homepage-sidebar'])
+            temporary_message = content_loader.get_message(
+                framework.get('slug'),
+                'homepage-sidebar',
+                framework.get('status')
+            )
 
     # if no framework is found (should never happen), ditch the message and load the page
-    except (APIError, AttributeError):
+    except APIError:
         pass
     # if no message file is found (should never happen), throw a 500
     except ContentNotFoundError:
