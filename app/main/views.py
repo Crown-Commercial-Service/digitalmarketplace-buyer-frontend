@@ -194,8 +194,10 @@ def get_service_by_id(service_id):
         return render_template('service.html', **template_data)
     except AuthException:
         abort(500, "Application error")
-    except KeyError as e:
+    except KeyError:
         abort(404, "Service ID '%s' can not be found" % service_id)
+    except HTTPError as e:
+        abort(e.status_code)
 
 
 @main.route('/search')
