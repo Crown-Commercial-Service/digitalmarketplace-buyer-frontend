@@ -16,7 +16,7 @@ class TestErrors(BaseApplicationTest):
             "address or start again on the Digital Marketplace homepage."
             in res.get_data(as_text=True))
         assert_true(
-            "If you can't find what you're looking for, contact us at "
+            "If you can't find what you're looking for, email "
             "<a href=\"mailto:enquiries@digitalmarketplace.service.gov.uk?"
             "subject=Digital%20Marketplace%20feedback\" title=\"Please "
             "send feedback to enquiries@digitalmarketplace.service.gov.uk\">"
