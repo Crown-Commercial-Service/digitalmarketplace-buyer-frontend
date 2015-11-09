@@ -9,6 +9,9 @@
     "priceString": "",
     "supplierId": 123456,
     "supplierName": "Example Company Limited",
+    "frameworkName": "G-Cloud 5",
+    "frameworkSlug": "g-cloud-5",
+    "frameworkStatus": "live",
     "status": "published",
     "lot": "IaaS",
     "serviceTypes": [

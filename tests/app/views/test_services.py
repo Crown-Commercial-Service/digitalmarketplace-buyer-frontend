@@ -129,8 +129,7 @@ class TestServicePage(BaseApplicationTest):
         self._assert_breadcrumbs(document, self.service['services']['lot'])
 
     def _assert_redirect_deprecated_service_page_url(self):
-        self._data_api_client.get_service.return_value = \
-            self.service
+        self._data_api_client.get_service.return_value = self.service
 
         service_id = self.service['services']['id']
 
@@ -174,6 +173,26 @@ class TestServicePage(BaseApplicationTest):
             self.service
         service_id = self.service['services']['id']
         res = self.client.get('/g-cloud/services/{}'.format(service_id))
+        assert_equal(404, res.status_code)
+
+    def test_expired_framework_causes_410(self):
+        self.service = self._get_g6_service_fixture_data()
+        self.service['services']['frameworkStatus'] = 'expired'
+        self._data_api_client.get_service.return_value = self.service
+        service_id = self.service['services']['id']
+
+        res = self.client.get('/g-cloud/services/{}'.format(service_id))
+
+        assert_equal(410, res.status_code)
+
+    def test_pre_live_framework_causes_404(self):
+        self.service = self._get_g6_service_fixture_data()
+        self.service['services']['frameworkStatus'] = 'standstill'
+        self._data_api_client.get_service.return_value = self.service
+        service_id = self.service['services']['id']
+
+        res = self.client.get('/g-cloud/services/{}'.format(service_id))
+
         assert_equal(404, res.status_code)
 
     def test_certifications_section_not_displayed_if_service_has_none(self):
