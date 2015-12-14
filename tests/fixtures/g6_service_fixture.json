@@ -101,6 +101,7 @@
       "assurance": "Service provider assertion",
       "value": false
     },
+    "frameworkName": "framework",
     "guaranteedResources": true,
     "hardwareSoftwareVerification": {
       "assurance": "Service provider assertion",

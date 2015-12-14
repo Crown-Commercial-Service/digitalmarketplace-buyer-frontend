@@ -25,6 +25,7 @@ class Service(object):
         self.title = service_data['serviceName']
         self.serviceSummary = service_data['serviceSummary']
         self.lot = service_data['lot']
+        self.frameworkName = service_data['frameworkName']
         # optional attributes directly mapped to service_data values
         for key in [
             ('supplierName', 'supplierName'),
@@ -75,6 +76,7 @@ class Meta(object):
         self.priceCaveats = self.get_price_caveats(service_data)
         self.serviceId = self.get_service_id(service_data)
         self.documents = self.get_documents(service_data)
+        self.externalFrameworkUrl = self.get_external_framework_url(service_data)
 
     def set_contact_attribute(self, contactName, phone, email):
         self.contact = {
@@ -89,6 +91,16 @@ class Meta(object):
             return [id]
         else:
             return re.findall("....", str(id))
+
+    def get_external_framework_url(self, service_data):
+        external_url = 'http://ccs-agreements.cabinetoffice.gov.uk/contracts/'
+        if service_data['frameworkName'] == 'G-Cloud 7':
+            framework_url = external_url + 'rm1557vii'
+        elif service_data['frameworkName'] == 'G-Cloud 6':
+            framework_url = external_url + 'rm1557vi'
+        else:
+            framework_url = external_url
+        return framework_url
 
     def get_documents(self, service_data):
         url_keys = [
