@@ -40,6 +40,11 @@ class TestService(unittest.TestCase):
             self.service.lot,
             self.fixture['lot'])
 
+    def test_framework_attribute_is_set(self):
+        self.assertEquals(
+            self.service.frameworkName,
+            self.fixture['frameworkName'])
+
     def test_Service_works_if_supplierName_is_not_set(self):
         del self.fixture['supplierName']
         self.service = Service(self.fixture, content_loader.get_builder('g-cloud-6', 'display_service'))
@@ -162,6 +167,20 @@ class TestMeta(unittest.TestCase):
         self.assertEqual(
             self.meta.get_service_id({'id': '5-G4-1046-001'}),
             ['5-G4-1046-001']
+        )
+
+    def test_external_framework_url_returns_correct_suffix(self):
+        self.assertEqual(
+            self.meta.get_external_framework_url({'frameworkName': 'G-Cloud 7'}),
+            'http://ccs-agreements.cabinetoffice.gov.uk/contracts/rm1557vii'
+        )
+        self.assertEqual(
+            self.meta.get_external_framework_url({'frameworkName': 'G-Cloud 6'}),
+            'http://ccs-agreements.cabinetoffice.gov.uk/contracts/rm1557vi'
+        )
+        self.assertEqual(
+            self.meta.get_external_framework_url({'frameworkName': 'None'}),
+            'http://ccs-agreements.cabinetoffice.gov.uk/contracts/'
         )
 
     def test_get_documents_returns_the_correct_document_information(self):
