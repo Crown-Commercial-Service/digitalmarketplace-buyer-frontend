@@ -21,13 +21,13 @@
   {% endfor %}
   </ul>
 </div>
-<div class="govuk-option-select">
+<div class="govuk-option-select filter-field-text">
   <div class="container-head">
     <label class="option-select-label" for="keywords">
       Keywords
     </label>
   </div>
-  <input class="filter-field-text" type="text" name="q" id="keywords" value="{{ search_keywords }}" maxlength="200">
+  <input type="text" name="q" id="keywords" value="{{ search_keywords }}" maxlength="200">
 </div>
 {% if current_lot %}
 <input type="hidden" name="lot" value="{{ current_lot }}" />
