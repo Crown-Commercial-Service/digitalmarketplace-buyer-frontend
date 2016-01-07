@@ -8,6 +8,8 @@ install:
   - pip install -r requirements_for_test.txt
   - npm install
 script:
-  - ./scripts/run_tests.sh
+  - ./scripts/run_tests.sh --cov=app --cov-report=term-missing
+after_success:
+  - coveralls
 notifications:
   email: false
