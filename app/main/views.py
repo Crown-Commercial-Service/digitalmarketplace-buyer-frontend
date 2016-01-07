@@ -8,7 +8,7 @@ from flask import abort, render_template, request, redirect, \
 
 from dmutils.deprecation import deprecated
 from dmutils.formats import get_label_for_lot_param
-from dmutils.apiclient import HTTPError, APIError
+from dmapiclient import HTTPError, APIError
 from dmutils.formats import LOTS
 from dmutils.content_loader import ContentNotFoundError
 
