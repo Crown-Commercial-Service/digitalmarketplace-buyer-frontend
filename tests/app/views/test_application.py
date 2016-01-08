@@ -3,7 +3,7 @@
 import mock
 from nose.tools import assert_equal, assert_true, assert_in, assert_not_in
 from ...helpers import BaseApplicationTest
-from dmutils.apiclient import APIError
+from dmapiclient import APIError
 
 
 class TestApplication(BaseApplicationTest):

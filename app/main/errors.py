@@ -3,7 +3,7 @@
 from flask import render_template, current_app, request
 from . import main
 from ..helpers.search_helpers import get_template_data
-from dmutils.apiclient import APIError
+from dmapiclient import APIError
 
 
 @main.app_errorhandler(APIError)

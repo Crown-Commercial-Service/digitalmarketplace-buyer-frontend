@@ -1,13 +1,15 @@
 from flask import Flask, request, redirect
 from flask.ext.bootstrap import Bootstrap
-from config import configs
-from dmutils import apiclient, init_app, flask_featureflags
+
+import dmapiclient
+from dmutils import init_app, flask_featureflags
 from dmutils.content_loader import ContentLoader
 
+from config import configs
 
 bootstrap = Bootstrap()
-data_api_client = apiclient.DataAPIClient()
-search_api_client = apiclient.SearchAPIClient()
+data_api_client = dmapiclient.DataAPIClient()
+search_api_client = dmapiclient.SearchAPIClient()
 feature_flags = flask_featureflags.FeatureFlag()
 
 content_loader = ContentLoader('app/content')

@@ -2,10 +2,14 @@ language: python
 python:
   - "2.7"
   - "3.4"
+before_install:
+  - nvm install 4.2
 install:
   - pip install -r requirements_for_test.txt
   - npm install
 script:
-  - ./scripts/run_tests.sh
+  - ./scripts/run_tests.sh --cov=app --cov-report=term-missing
+after_success:
+  - coveralls
 notifications:
   email: false

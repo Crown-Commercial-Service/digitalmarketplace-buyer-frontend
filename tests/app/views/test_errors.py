@@ -2,7 +2,7 @@
 
 import mock
 from nose.tools import assert_equal, assert_true
-from requests import ConnectionError
+from dmapiclient import HTTPError
 from ...helpers import BaseApplicationTest
 
 
@@ -25,10 +25,13 @@ class TestErrors(BaseApplicationTest):
 
     def test_500(self, search_api_mock):
         self.app.config['DEBUG'] = False
-        search_api_mock.search_services.side_effect = ConnectionError()
+
+        api_response = mock.Mock()
+        api_response.status_code = 503
+        search_api_mock.search_services.side_effect = HTTPError(api_response)
 
         res = self.client.get('/g-cloud/search?q=email')
-        assert_equal(500, res.status_code)
+        assert_equal(503, res.status_code)
         assert_true(
             "Sorry, we're experiencing technical difficulties"
             in res.get_data(as_text=True))

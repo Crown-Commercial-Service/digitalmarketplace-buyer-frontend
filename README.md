@@ -1,5 +1,8 @@
 # Digital Marketplace Buyer Frontend
 
+[![Coverage Status](https://coveralls.io/repos/alphagov/digitalmarketplace-buyer-frontend/badge.svg?branch=master&service=github)](https://coveralls.io/github/alphagov/digitalmarketplace-buyer-frontend?branch=master)
+[![Requirements Status](https://requires.io/github/alphagov/digitalmarketplace-buyer-frontend/requirements.svg?branch=master)](https://requires.io/github/alphagov/digitalmarketplace-buyer-frontend/requirements/?branch=master)
+
 Frontend buyer application for the digital marketplace.
 
 - Python app, based on the [Flask framework](http://flask.pocoo.org/)
