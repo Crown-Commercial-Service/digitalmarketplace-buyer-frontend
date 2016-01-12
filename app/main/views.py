@@ -210,11 +210,7 @@ def get_service_by_id(service_id):
     except KeyError:
         abort(404, "Service ID '%s' can not be found" % service_id)
     except HTTPError as e:
-        if e.status_code == 410:
-            template_data = get_template_data(main, {})
-            return render_template('errors/410_service_gone.html', **template_data), 410
-        else:
-            abort(e.status_code)
+        abort(e.status_code)
 
 
 @main.route('/search')
