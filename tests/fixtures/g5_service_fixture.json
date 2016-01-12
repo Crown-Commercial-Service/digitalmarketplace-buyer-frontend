@@ -45,5 +45,6 @@
       "http://assets-production.govstore.service.gov.uk/G5/Supplier/someId/Appendix%201.pdf",
       "http://assets-production.govstore.service.gov.uk/G5/Supplier/someId/Appendix%202.pdf"
     ]
-  }
+  },
+  "serviceMadeUnavailableAuditEvent": null
 }
