@@ -13,10 +13,9 @@ class UnavailableBanner(object):
             '//div[@id="wrapper"]//div[@class="banner-temporary-message-without-action"]'
         )
 
+    @property
     def exists(self):
-        if not self.banner:
-            return False
-        return True
+        return bool(self.banner)
 
     def heading_text(self):
         return self.banner[0].xpath('h2/text()')[0].strip()
@@ -222,11 +221,8 @@ class TestServicePage(BaseApplicationTest):
         res = self.client.get('/g-cloud/services/{}'.format(service_id))
         assert_equal(200, res.status_code)
         document = html.fromstring(res.get_data(as_text=True))
-
-        banner = document.xpath(
-            '//div[@id="wrapper"]//div[@class="banner-temporary-message-without-action"]'
-        )
-        assert_equal(len(banner), 0)
+        unavailable_banner = UnavailableBanner(document)
+        assert_false(unavailable_banner.exists)
 
     def test_enabled_service_has_unavailable_banner(self):
         self.service = self._get_g6_service_fixture_data()
@@ -248,7 +244,7 @@ class TestServicePage(BaseApplicationTest):
         document = html.fromstring(res.get_data(as_text=True))
 
         unavailable_banner = UnavailableBanner(document)
-        assert_true(unavailable_banner.exists())
+        assert_true(unavailable_banner.exists)
         assert_equal(
             unavailable_banner.heading_text(),
             '{} stopped providing this service on {}'.format(
@@ -281,7 +277,7 @@ class TestServicePage(BaseApplicationTest):
         document = html.fromstring(res.get_data(as_text=True))
 
         unavailable_banner = UnavailableBanner(document)
-        assert_true(unavailable_banner.exists())
+        assert_true(unavailable_banner.exists)
         assert_equal(
             unavailable_banner.heading_text(),
             '{} stopped providing this service on {}'.format(
@@ -313,7 +309,7 @@ class TestServicePage(BaseApplicationTest):
 
         document = html.fromstring(res.get_data(as_text=True))
         unavailable_banner = UnavailableBanner(document)
-        assert_true(unavailable_banner.exists())
+        assert_true(unavailable_banner.exists)
         assert_equal(
             unavailable_banner.heading_text(),
             'This {} service is no longer available to buy. The {} framework expired on {}.'.format(
