@@ -1,3 +1,4 @@
+// GOVUK Front-end toolkit styles
 @import "_phase_banner.scss";
 @import "_grid_layout.scss";
 @import "_typography.scss";
@@ -6,30 +7,35 @@
 // Path to assets for use with file-url()
 $path: "/static/images/";
 
+// Digtial Marketplace Front-end toolkit styles
+@import "toolkit/_grids.scss";
+@import "toolkit/_notification-banners.scss";
+@import "toolkit/_buttons.scss";
+@import "toolkit/_breadcrumb.scss";
+@import "toolkit/_page-headings.scss";
+@import "toolkit/_browse-list.scss";
+@import "toolkit/_document.scss";
+@import "toolkit/_contact-details.scss";
+@import "toolkit/_service-id.scss";
+@import "toolkit/_temporary-message.scss";
+@import "toolkit/_framework-notice.scss";
+@import "toolkit/search/_search-result.scss";
+@import "toolkit/forms/_option-select.scss";
+@import "toolkit/forms/_summary.scss";
+@import "toolkit/forms/_textboxes.scss";
+
+/* Blocks shared between multiple selectors */
+@import "shared_placeholders/_temporary-messages.scss";
+
 #wrapper {
   @extend %site-width-container;
   padding-bottom: $gutter * 2;
 }
 
-@import "_grids.scss";
-@import "_notification-banners.scss";
-@import "_buttons.scss";
-@import "_breadcrumb.scss";
+// Buyers app styles
 @import "_footer.scss";
-@import "_page-headings.scss";
-@import "search/_search-result.scss";
-@import "_notification-banners.scss";
-@import "_browse-list.scss";
-@import "forms/_option-select.scss";
-@import "forms/_summary.scss";
-@import "forms/_textboxes.scss";
-@import "_document.scss";
-@import "toolkit/contact-details.scss";
-@import "toolkit/service-id.scss";
-
 @import "_table.scss";
 @import "_notice.scss";
-
 @import "_service-page.scss";
 @import "_index-page.scss";
 @import "_search-page.scss";
@@ -38,8 +44,6 @@ $path: "/static/images/";
 @import "_supplier-a-to-z.scss";
 @import "_atoz_navigation.scss";
 @import "_error-pages.scss";
-@import "toolkit/temporary-message.scss";
-@import "toolkit/framework-notice.scss";
 
 .return-to-top {
   display: block;
