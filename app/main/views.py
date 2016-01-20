@@ -7,8 +7,8 @@ from flask import abort, render_template, request, redirect, \
     url_for, current_app
 
 from dmutils.deprecation import deprecated
-from dmutils.formats import get_label_for_lot_param
-from dmutils.apiclient import HTTPError, APIError
+from dmutils.formats import get_label_for_lot_param, dateformat
+from dmapiclient import HTTPError, APIError
 from dmutils.formats import LOTS
 from dmutils.content_loader import ContentNotFoundError
 
@@ -160,11 +160,9 @@ def redirect_service_page(service_id):
 def get_service_by_id(service_id):
     try:
         service = data_api_client.get_service(service_id)
-        if service is None or service['services'].get('status') != 'published':
+        if service is None:
             abort(404, "Service ID '{}' can not be found".format(service_id))
-        if service['services']['frameworkStatus'] == "expired":
-            abort(410, "Framework is now expired")
-        if service['services']['frameworkStatus'] != "live":
+        if service['services']['frameworkStatus'] not in ("live", "expired"):
             abort(404, "Service ID '{}' can not be found".format(service_id))
 
         service_data = service['services']
@@ -190,22 +188,29 @@ def get_service_by_id(service_id):
         except HTTPError as e:
             abort(e.status_code)
 
+        service_unavailability_information = None
+        status_code = 200
+        if service['serviceMadeUnavailableAuditEvent'] is not None:
+            service_unavailability_information = {
+                'date': dateformat(service['serviceMadeUnavailableAuditEvent']['createdAt']),
+                'type': service['serviceMadeUnavailableAuditEvent']['type']
+            }
+            # mark the resource as unavailable in the headers
+            status_code = 410
+
         template_data = get_template_data(main, {
             'service': service_view_data,
+            'service_unavailability_information': service_unavailability_information,
             'lot': service_view_data.lot.lower(),
             'lot_label': get_label_for_lot_param(service_view_data.lot.lower())
         })
-        return render_template('service.html', **template_data)
+        return render_template('service.html', **template_data), status_code
     except AuthException:
         abort(500, "Application error")
     except KeyError:
         abort(404, "Service ID '%s' can not be found" % service_id)
     except HTTPError as e:
-        if e.status_code == 410:
-            template_data = get_template_data(main, {})
-            return render_template('errors/410_service_gone.html', **template_data), 410
-        else:
-            abort(e.status_code)
+        abort(e.status_code)
 
 
 @main.route('/search')

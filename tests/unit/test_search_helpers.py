@@ -106,7 +106,7 @@ def test_should_reject_invalid_page():
 
 
 class TestBuildSearchQueryHelpers(object):
-    def setUp(self):
+    def setup(self):
         self.lot_filters = [
             {'label': 'section1', 'filters': [
                 {'name': 'question1', 'value': 'true'},

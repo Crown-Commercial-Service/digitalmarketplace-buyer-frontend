@@ -3,7 +3,7 @@
 from flask import render_template, current_app, request
 from . import main
 from ..helpers.search_helpers import get_template_data
-from dmutils.apiclient import APIError
+from dmapiclient import APIError
 
 
 @main.app_errorhandler(APIError)
@@ -16,11 +16,6 @@ def page_not_found(e):
     return _render_error_page(404)
 
 
-@main.app_errorhandler(410)
-def page_gone(e):
-    return _render_error_page(410)
-
-
 @main.app_errorhandler(500)
 def page_not_found(e):
     return _render_error_page(500)
@@ -29,7 +24,6 @@ def page_not_found(e):
 def _render_error_page(status_code):
     templates = {
         404: "errors/404.html",
-        410: "errors/410.html",
         500: "errors/500.html",
         503: "errors/500.html",
     }

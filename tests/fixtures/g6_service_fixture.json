@@ -336,5 +336,6 @@
       "assurance": "Service provider assertion",
       "value": true
     }
-  }
+  },
+  "serviceMadeUnavailableAuditEvent": null
 }

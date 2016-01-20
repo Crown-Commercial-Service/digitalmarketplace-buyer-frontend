@@ -4,7 +4,7 @@ from app.main import main
 from flask import render_template, request, abort
 from app.helpers.search_helpers import get_template_data
 from app import data_api_client
-from dmutils.apiclient.errors import APIError
+from dmapiclient import APIError
 import numbers
 import re
 

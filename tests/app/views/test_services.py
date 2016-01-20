@@ -2,8 +2,26 @@
 import mock
 import re
 from lxml import html
-from nose.tools import assert_equal, assert_in, assert_false
+from nose.tools import assert_equal, assert_in, assert_false, assert_true
 from ...helpers import BaseApplicationTest
+
+
+class UnavailableBanner(object):
+
+    def __init__(self, document):
+        self.banner = document.xpath(
+            '//div[@id="wrapper"]//div[@class="banner-temporary-message-without-action"]'
+        )
+
+    @property
+    def exists(self):
+        return bool(self.banner)
+
+    def heading_text(self):
+        return self.banner[0].xpath('h2/text()')[0].strip()
+
+    def body_text(self):
+        return self.banner[0].xpath('p[@class="banner-message"]/text()')[0].strip()
 
 
 class TestServicePage(BaseApplicationTest):
@@ -142,6 +160,45 @@ class TestServicePage(BaseApplicationTest):
             ),
             res.location)
 
+    def _get_status_update_audit_event_for(self,
+                                           update_type=None,
+                                           old_status=None,
+                                           new_status=None,
+                                           timestamp=None,
+                                           service=None):
+        audit_event = {
+            "links": {
+                "oldArchivedService": "http://localhost:5000/archived-services/1",
+                "self": "http://localhost:5000/audit-events",
+                "newArchivedService": "http://localhost:5000/archived-services/2"
+            },
+            "type": update_type,
+            "acknowledged": False,
+            "user": "joebloggs",
+            "id": 1,
+            "createdAt": timestamp
+        }
+
+        if update_type is 'update_service_status':
+            audit_event["data"] = {
+                "supplierId": service["supplierId"],
+                "newArchivedServiceId": 2,
+                "new_status": new_status,
+                "supplierName": service["supplierName"],
+                "serviceId": service["id"],
+                "old_status": old_status,
+                "oldArchivedServiceId": 1
+            }
+        elif update_type is "framework_update":
+            audit_event["data"] = {
+                "update": {
+                    "status": new_status,
+                    "clarificationQuestionsOpen": True
+                }
+            }
+
+        return audit_event
+
     def test_g5_service_page_url(self):
 
         self.service = self._get_g5_service_fixture_data()
@@ -157,33 +214,114 @@ class TestServicePage(BaseApplicationTest):
         self._assert_redirect_deprecated_service_page_url()
         self._assert_service_page_url()
 
-    def test_enabled_service_not_displayed(self):
+    def test_published_service_doesnt_have_unavailable_banner(self):
         self.service = self._get_g6_service_fixture_data()
-        self.service['services']['status'] = 'enabled'
-        self._data_api_client.get_service.return_value = \
-            self.service
-        service_id = self.service['services']['id']
-        res = self.client.get('/g-cloud/services/{}'.format(service_id))
-        assert_equal(404, res.status_code)
-
-    def test_disabled_service_not_displayed(self):
-        self.service = self._get_g6_service_fixture_data()
-        self.service['services']['status'] = 'disabled'
-        self._data_api_client.get_service.return_value = \
-            self.service
-        service_id = self.service['services']['id']
-        res = self.client.get('/g-cloud/services/{}'.format(service_id))
-        assert_equal(404, res.status_code)
-
-    def test_expired_framework_causes_410(self):
-        self.service = self._get_g6_service_fixture_data()
-        self.service['services']['frameworkStatus'] = 'expired'
         self._data_api_client.get_service.return_value = self.service
         service_id = self.service['services']['id']
-
         res = self.client.get('/g-cloud/services/{}'.format(service_id))
+        assert_equal(200, res.status_code)
+        document = html.fromstring(res.get_data(as_text=True))
+        unavailable_banner = UnavailableBanner(document)
+        assert_false(unavailable_banner.exists)
 
+    def test_enabled_service_has_unavailable_banner(self):
+        self.service = self._get_g6_service_fixture_data()
+        self.service['services']['status'] = 'enabled'
+        self.service['serviceMadeUnavailableAuditEvent'] = \
+            self._get_status_update_audit_event_for(
+                update_type='update_service_status',
+                old_status='published',
+                new_status='enabled',
+                timestamp='2016-01-05T17:01:07.649587Z',
+                service=self.service['services']
+            )
+        self._data_api_client.get_service.return_value = \
+            self.service
+        service_id = self.service['services']['id']
+        res = self.client.get('/g-cloud/services/{}'.format(service_id))
         assert_equal(410, res.status_code)
+
+        document = html.fromstring(res.get_data(as_text=True))
+
+        unavailable_banner = UnavailableBanner(document)
+        assert_true(unavailable_banner.exists)
+        assert_equal(
+            unavailable_banner.heading_text(),
+            '{} stopped providing this service on {}'.format(
+                self.service['services']['supplierName'],
+                'Tuesday 05 January 2016.'
+            )
+        )
+        assert_equal(
+            unavailable_banner.body_text(),
+            'Any existing contracts for this service are still valid.'
+        )
+
+    def test_disabled_service_has_unavailable_banner(self):
+        self.service = self._get_g6_service_fixture_data()
+        self.service['services']['status'] = 'disabled'
+        self.service['serviceMadeUnavailableAuditEvent'] = \
+            self._get_status_update_audit_event_for(
+                update_type='update_service_status',
+                old_status='published',
+                new_status='disabled',
+                timestamp='2016-01-05T17:01:07.649587Z',
+                service=self.service['services']
+            )
+        self._data_api_client.get_service.return_value = \
+            self.service
+        service_id = self.service['services']['id']
+        res = self.client.get('/g-cloud/services/{}'.format(service_id))
+        assert_equal(410, res.status_code)
+
+        document = html.fromstring(res.get_data(as_text=True))
+
+        unavailable_banner = UnavailableBanner(document)
+        assert_true(unavailable_banner.exists)
+        assert_equal(
+            unavailable_banner.heading_text(),
+            '{} stopped providing this service on {}'.format(
+                self.service['services']['supplierName'],
+                'Tuesday 05 January 2016.'
+            )
+        )
+        assert_equal(
+            unavailable_banner.body_text(),
+            'Any existing contracts for this service are still valid.'
+        )
+
+    def test_expired_framework_causes_service_to_have_unavailable_banner(self):
+        self.service = self._get_g6_service_fixture_data()
+        self.service['services']['frameworkStatus'] = 'expired'
+        self.service['serviceMadeUnavailableAuditEvent'] = \
+            self._get_status_update_audit_event_for(
+                update_type='framework_update',
+                old_status='live',
+                new_status='expired',
+                timestamp='2016-01-05T17:01:07.649587Z',
+                service=self.service['services']
+            )
+        self._data_api_client.get_service.return_value = \
+            self.service
+        service_id = self.service['services']['id']
+        res = self.client.get('/g-cloud/services/{}'.format(service_id))
+        assert_equal(410, res.status_code)
+
+        document = html.fromstring(res.get_data(as_text=True))
+        unavailable_banner = UnavailableBanner(document)
+        assert_true(unavailable_banner.exists)
+        assert_equal(
+            unavailable_banner.heading_text(),
+            'This {} service is no longer available to buy. The {} framework expired on {}.'.format(
+                self.service['services']['frameworkName'],
+                self.service['services']['frameworkName'],
+                'Tuesday 05 January 2016'
+            )
+        )
+        assert_equal(
+            unavailable_banner.body_text(),
+            'Any existing contracts with {} are still valid.'.format(self.service['services']['supplierName'])
+        )
 
     def test_pre_live_framework_causes_404(self):
         self.service = self._get_g6_service_fixture_data()

@@ -26,6 +26,31 @@
 {% endblock %}
 
 {% block main_content %}
+{% if service_unavailability_information %}
+<div class="grid-row">
+  <div class="column-one-whole">
+    {% if service_unavailability_information.type == 'framework_update' %}
+      {%
+        with
+        type = "temporary-message",
+        heading = "This " + service.frameworkName + " service is no longer available to buy. The " + service.frameworkName + " framework expired on " + service_unavailability_information.date + ".",
+        message = "Any existing contracts with " + service.supplierName + " are still valid."
+      %}
+        {% include "toolkit/notification-banner.html" %}
+      {% endwith %}
+    {% else %}
+      {%
+        with
+        type = "temporary-message",
+        heading = service.supplierName + " stopped providing this service on " + service_unavailability_information.date + ".",
+        message = "Any existing contracts for this service are still valid."
+      %}
+        {% include "toolkit/notification-banner.html" %}
+      {% endwith %}
+    {% endif %}
+  </div>
+</div>
+{% endif %}
 <div class="grid-row">
   <div class="column-two-thirds">
     <header class="page-heading-smaller">
