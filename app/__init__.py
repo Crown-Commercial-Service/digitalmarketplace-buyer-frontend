@@ -1,5 +1,4 @@
 from flask import Flask, request, redirect
-from flask.ext.bootstrap import Bootstrap
 
 import dmapiclient
 from dmutils import init_app, flask_featureflags
@@ -7,7 +6,6 @@ from dmutils.content_loader import ContentLoader
 
 from config import configs
 
-bootstrap = Bootstrap()
 data_api_client = dmapiclient.DataAPIClient()
 search_api_client = dmapiclient.SearchAPIClient()
 feature_flags = flask_featureflags.FeatureFlag()
@@ -23,7 +21,6 @@ def create_app(config_name):
     init_app(
         application,
         configs[config_name],
-        bootstrap=bootstrap,
         data_api_client=data_api_client,
         feature_flags=feature_flags,
         search_api_client=search_api_client
