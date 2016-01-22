@@ -8,7 +8,7 @@ class TestGCloudIndexResults(BaseApplicationTest):
         super(TestGCloudIndexResults, self).setup()
 
         self._search_api_client = mock.patch(
-            'app.main.views.search_api_client'
+            'app.main.views.g_cloud.search_api_client'
         ).start()
 
         self.search_results = self._get_search_results_fixture_data()

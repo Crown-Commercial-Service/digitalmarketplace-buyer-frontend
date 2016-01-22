@@ -22,7 +22,7 @@ class TestSearchResults(BaseApplicationTest):
         super(TestSearchResults, self).setup()
 
         self._search_api_client = mock.patch(
-            'app.main.views.search_api_client'
+            'app.main.views.g_cloud.search_api_client'
         ).start()
 
         self.search_results = self._get_search_results_fixture_data()
@@ -31,14 +31,6 @@ class TestSearchResults(BaseApplicationTest):
 
     def teardown(self):
         self._search_api_client.stop()
-
-    def test_search_page_redirect(self):
-        self._search_api_client.search_services.return_value = \
-            self.search_results
-
-        res = self.client.get('/search?q=email')
-        assert_equal(301, res.status_code)
-        assert_equal('http://localhost/g-cloud/search?q=email', res.location)
 
     def test_search_page_results_service_links(self):
         self._search_api_client.search_services.return_value = \

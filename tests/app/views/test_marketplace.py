@@ -65,7 +65,7 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
             BaseApplicationTest._strip_whitespace(response_data),
         )
 
-    @mock.patch('app.main.views.data_api_client')
+    @mock.patch('app.main.views.marketplace.data_api_client')
     def _load_homepage(self, framework_slugs_and_statuses, framework_messages, data_api_client):
 
         data_api_client.find_frameworks.return_value = self._find_frameworks(framework_slugs_and_statuses)
@@ -128,7 +128,7 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
         # there are no messages
         self._load_homepage(framework_slugs_and_statuses, None)
 
-    @mock.patch('app.main.views.data_api_client')
+    @mock.patch('app.main.views.marketplace.data_api_client')
     def test_api_error_message_doesnt_exist(self, data_api_client):
 
         data_api_client.find_frameworks.side_effect = APIError()
@@ -137,7 +137,7 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
         self._assert_message_container_is_empty(res.get_data(as_text=True))
 
     # here we've given an valid framework with a valid status but there is no message.yml file to read from
-    @mock.patch('app.main.views.data_api_client')
+    @mock.patch('app.main.views.marketplace.data_api_client')
     def test_g_cloud_6_open_blows_up(self, data_api_client):
         framework_slugs_and_statuses = [
             ('g-cloud-6', 'open')
