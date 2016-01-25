@@ -93,7 +93,7 @@ class Test(Config):
 
 class Development(Config):
     DEBUG = True
-
+    SESSION_COOKIE_SECURE = False
     DM_SEARCH_PAGE_SIZE = 5
 
 

@@ -3,12 +3,43 @@ import os
 from app import create_app
 import json
 import re
+from datetime import datetime, timedelta
+from dmutils.formats import DATETIME_FORMAT
 
 
 class BaseApplicationTest(object):
     def setup(self):
         self.app = create_app('test')
         self.client = self.app.test_client()
+
+    @staticmethod
+    def user(id, email_address, supplier_id, supplier_name, name,
+             is_token_valid=True, locked=False, active=True, role='buyer'):
+
+        hours_offset = -1 if is_token_valid else 1
+        date = datetime.utcnow() + timedelta(hours=hours_offset)
+        password_changed_at = date.strftime(DATETIME_FORMAT)
+
+        user = {
+            "id": id,
+            "emailAddress": email_address,
+            "name": name,
+            "role": role,
+            "locked": locked,
+            'active': active,
+            'passwordChangedAt': password_changed_at
+        }
+
+        if supplier_id:
+            supplier = {
+                "supplierId": supplier_id,
+                "name": supplier_name,
+            }
+            user['role'] = 'supplier'
+            user['supplier'] = supplier
+        return {
+            "users": user
+        }
 
     @staticmethod
     def _get_fixture_data(fixture_filename):
