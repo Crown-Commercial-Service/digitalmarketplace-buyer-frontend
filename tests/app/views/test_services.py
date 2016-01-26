@@ -247,7 +247,7 @@ class TestServicePage(BaseApplicationTest):
         assert_true(unavailable_banner.exists)
         assert_equal(
             unavailable_banner.heading_text(),
-            '{} stopped providing this service on {}'.format(
+            '{} stopped offering this service on {}'.format(
                 self.service['services']['supplierName'],
                 'Tuesday 05 January 2016.'
             )
@@ -280,7 +280,7 @@ class TestServicePage(BaseApplicationTest):
         assert_true(unavailable_banner.exists)
         assert_equal(
             unavailable_banner.heading_text(),
-            '{} stopped providing this service on {}'.format(
+            '{} stopped offering this service on {}'.format(
                 self.service['services']['supplierName'],
                 'Tuesday 05 January 2016.'
             )
