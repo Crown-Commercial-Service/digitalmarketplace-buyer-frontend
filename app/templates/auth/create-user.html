@@ -1,6 +1,6 @@
 {% extends "_base_page.html" %}
 
-{% block page_title %}Create contributor account – Digital Marketplace{% endblock %}
+{% block page_title %}Create account – Digital Marketplace{% endblock %}
 
 {% block main_content %}
 
@@ -10,15 +10,15 @@
 </header>
 <p>
     The link you used to create an account may have expired.<br/>
-    Check you’ve entered the correct link or ask the person who invited you to send a new invitation.<br/>
-    If you still can’t create a contributor account, email <a href="mailto:enquiries@digitalmarketplace.service.gov.uk">enquiries@digitalmarketplace.service.gov.uk</a>
+    Check you’ve entered the correct link or <a href="{{ url_for('.create_buyer_account') }}">send a new one</a>.<br/>
+    If you still can’t create an account, email <a href="mailto:enquiries@digitalmarketplace.service.gov.uk">enquiries@digitalmarketplace.service.gov.uk</a>
 </p>
 {% else %}
 
 {%
   with
   smaller = true,
-  heading = "Create contributor account for " ~ supplier_name,
+  heading = "Create a new Digital Marketplace account",
   context = email_address
 %}
   {% include "toolkit/page-heading.html" %}
@@ -72,7 +72,7 @@
             {%
               with
               type = "save",
-              label = "Create contributor account"
+              label = "Create account"
             %}
               {% include "toolkit/button.html" %}
             {% endwith %}
@@ -80,8 +80,5 @@
         </div>
     </form>
 
-        </p>
-    </div>
-
 {% endif%}
-    {% endblock %}
+{% endblock %}
