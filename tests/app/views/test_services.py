@@ -247,7 +247,7 @@ class TestServicePage(BaseApplicationTest):
         assert_true(unavailable_banner.exists)
         assert_equal(
             unavailable_banner.heading_text(),
-            '{} stopped providing this service on {}'.format(
+            '{} stopped offering this service on {}'.format(
                 self.service['services']['supplierName'],
                 'Tuesday 05 January 2016.'
             )
@@ -280,7 +280,7 @@ class TestServicePage(BaseApplicationTest):
         assert_true(unavailable_banner.exists)
         assert_equal(
             unavailable_banner.heading_text(),
-            '{} stopped providing this service on {}'.format(
+            '{} stopped offering this service on {}'.format(
                 self.service['services']['supplierName'],
                 'Tuesday 05 January 2016.'
             )
@@ -312,15 +312,17 @@ class TestServicePage(BaseApplicationTest):
         assert_true(unavailable_banner.exists)
         assert_equal(
             unavailable_banner.heading_text(),
-            'This {} service is no longer available to buy. The {} framework expired on {}.'.format(
-                self.service['services']['frameworkName'],
-                self.service['services']['frameworkName'],
-                'Tuesday 05 January 2016'
+            'This {} service is no longer available to buy.'.format(
+                self.service['services']['frameworkName']
             )
         )
         assert_equal(
             unavailable_banner.body_text(),
-            'Any existing contracts with {} are still valid.'.format(self.service['services']['supplierName'])
+            'The {} framework expired on {}. Any existing contracts with {} are still valid.'.format(
+                self.service['services']['frameworkName'],
+                'Tuesday 05 January 2016',
+                self.service['services']['supplierName']
+            )
         )
 
     def test_pre_live_framework_causes_404(self):

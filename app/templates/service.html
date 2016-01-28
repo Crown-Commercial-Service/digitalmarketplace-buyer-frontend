@@ -33,8 +33,11 @@
       {%
         with
         type = "temporary-message",
-        heading = "This " + service.frameworkName + " service is no longer available to buy. The " + service.frameworkName + " framework expired on " + service_unavailability_information.date + ".",
-        message = "Any existing contracts with " + service.supplierName + " are still valid."
+        heading = "This {} service is no longer available to buy.".format(service.frameworkName),
+        message = " The {} framework expired on {}. Any existing contracts with {} are still valid.".format(
+            service.frameworkName,
+            service_unavailability_information.date,
+            service.supplierName)
       %}
         {% include "toolkit/notification-banner.html" %}
       {% endwith %}
@@ -42,7 +45,8 @@
       {%
         with
         type = "temporary-message",
-        heading = service.supplierName + " stopped providing this service on " + service_unavailability_information.date + ".",
+        heading = "{} stopped offering this service on {}.".format(
+          service.supplierName, service_unavailability_information.date),
         message = "Any existing contracts for this service are still valid."
       %}
         {% include "toolkit/notification-banner.html" %}
