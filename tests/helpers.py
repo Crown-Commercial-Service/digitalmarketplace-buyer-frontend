@@ -120,12 +120,32 @@ class BaseApplicationTest(object):
     def login(self):
         with patch('app.main.views.login.data_api_client') as login_api_client:
             login_api_client.authenticate_user.return_value = self.user(
-                123, "email@email.com", 1234, 'Supplier Name', 'Name')
+                123, "email@email.com", 1234, 'Supplier Name', 'Name', role='supplier')
 
             self.get_user_patch = patch.object(
                 data_api_client,
                 'get_user',
-                return_value=self.user(123, "email@email.com", 1234, 'Supplier Name', 'Name')
+                return_value=self.user(123, "email@email.com", 1234, 'Supplier Name', 'Name', role='supplier')
+            )
+            self.get_user_patch.start()
+
+            self.client.post("/login", data={
+                'email_address': 'valid@email.com',
+                'password': '1234567890'
+            })
+
+            login_api_client.authenticate_user.assert_called_once_with(
+                "valid@email.com", "1234567890", supplier=False)
+
+    def login_as_buyer(self):
+        with patch('app.main.views.login.data_api_client') as login_api_client:
+            login_api_client.authenticate_user.return_value = self.user(
+                123, "email@email.com", None, None, 'Name')
+
+            self.get_user_patch = patch.object(
+                data_api_client,
+                'get_user',
+                return_value=self.user(123, "email@email.com", None, None, 'Name')
             )
             self.get_user_patch.start()
 
