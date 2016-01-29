@@ -63,7 +63,7 @@ def suppliers_list_by_prefix():
     page = process_page(request.args.get('page', default=u"1"))
 
     try:
-        api_result = data_api_client.find_suppliers(api_prefix, page, 'gcloud')
+        api_result = data_api_client.find_suppliers(api_prefix, page, 'g-cloud')
         suppliers = api_result["suppliers"]
         links = api_result["links"]
 
