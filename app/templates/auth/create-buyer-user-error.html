@@ -12,13 +12,20 @@
   <div class="grid-row">
     <div class="column-two-thirds">
       <p>
-        Only employees of public sector organisations can create buyer accounts on the Digital Marketplace.<br/>
-        The email you registered with does not belong to a domain that is recognised.<br/>
-        If you think that your email address should be allowed, email 
-        <a href="mailto:enquiries@digitalmarketplace.service.gov.uk">enquiries@digitalmarketplace.service.gov.uk</a> to 
-        get your domain added to our list.<br/>
-        Or you can <a href="{{ url_for('.create_buyer_account') }}">register using a different email address</a>.<br/>
-        If you still can’t create an account, email <a href="mailto:enquiries@digitalmarketplace.service.gov.uk">enquiries@digitalmarketplace.service.gov.uk</a>
+        You must be employed by, or represent, a public sector organisation to create a buyer account.<br/>
+
+        The email you used doesn't belong to a recognised public sector domain.<br/>
+
+        <a href="{{ url_for('.create_buyer_account') }}">Create an account using a different email address</a> or email 
+        <a href="mailto:enquiries@digitalmarketplace.service.gov.uk">enquiries@digitalmarketplace.service.gov.uk</a> if:
+        <ul>
+          <li>
+            you think your domain should be recognised
+          </li>
+          <li>
+            you still can't create an account
+          </li>
+        </ul>
       </p>
     </div>
   </div>
