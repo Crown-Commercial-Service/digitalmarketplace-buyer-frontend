@@ -221,9 +221,7 @@ def submit_create_buyer_account():
             current_app.config['INVITE_EMAIL_SALT']
         )
         url = url_for('main.create_user', encoded_token=token, _external=True)
-        print("BUYER ACCOUNT CREATION URL: {}".format(url))
         email_body = render_template("emails/create_buyer_user_email.html", url=url)
-        print("BUYER ACCOUNT CREATION EMAIL BODY: {}".format(email_body))
         try:
             send_email(
                 email_address,
