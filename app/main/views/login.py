@@ -148,7 +148,7 @@ def send_reset_password_email():
 
 @main.route('/reset-password/<token>', methods=["GET"])
 def reset_password(token):
-    decoded = decode_password_reset_token(token)
+    decoded = decode_password_reset_token(token, data_api_client)
     if not decoded:
         return redirect(url_for('.request_password_reset'))
 
@@ -165,7 +165,7 @@ def reset_password(token):
 @main.route('/reset-password/<token>', methods=["POST"])
 def update_password(token):
     form = ChangePasswordForm()
-    decoded = decode_password_reset_token(token)
+    decoded = decode_password_reset_token(token, data_api_client)
     if not decoded:
         return redirect(url_for('.request_password_reset'))
 

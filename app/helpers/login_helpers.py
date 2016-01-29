@@ -7,31 +7,33 @@ from flask import current_app, flash, redirect, url_for
 
 from dmutils.email import decode_token
 from dmutils.formats import DATETIME_FORMAT
-from .. import data_api_client
 
 ONE_DAY_IN_SECONDS = 86400
 SEVEN_DAYS_IN_SECONDS = 604800
 
 
 def redirect_logged_in_user(next_url=None):
-    if current_user.role == 'supplier':
-        if next_url and next_url.startswith('/suppliers'):
+    if current_user.is_authenticated():
+        if current_user.role == 'supplier':
+            if next_url and next_url.startswith('/suppliers'):
+                return redirect(next_url)
+            else:
+                return redirect('/suppliers')
+        if current_user.role.startswith('admin'):
+            if next_url and next_url.startswith('/admin'):
+                return redirect(next_url)
+            else:
+                return redirect('/admin')
+        if next_url:
             return redirect(next_url)
         else:
-            return redirect('/suppliers')
-    if current_user.role.startswith('admin'):
-        if next_url and next_url.startswith('/admin'):
-            return redirect(next_url)
-        else:
-            return redirect('/admin')
-    if next_url:
-        return redirect(next_url)
-    else:
-        # TODO: direct to buyer dashboard, once it exists
-        return redirect(url_for('.index'))
+            # TODO: direct to buyer dashboard, once it exists
+            pass
+
+    return redirect(url_for('.index'))
 
 
-def decode_password_reset_token(token):
+def decode_password_reset_token(token, data_api_client):
     try:
         decoded, timestamp = decode_token(
             token,
