@@ -24,7 +24,7 @@ def redirect_logged_in_user(next_url=None):
                 return redirect(next_url)
             else:
                 return redirect('/admin')
-        if next_url:
+        if next_url and next_url.startswith('/'):
             return redirect(next_url)
         else:
             # TODO: direct to buyer dashboard, once it exists
