@@ -4,17 +4,6 @@
 
 {% block main_content %}
 
-{% if not token %}
-<header class="page-heading-smaller">
-  <h1>Expired link</h1>
-</header>
-<p>
-    The link you used to create an account may have expired.<br/>
-    Check you’ve entered the correct link or <a href="{{ url_for('.create_buyer_account') }}">send a new one</a>.<br/>
-    If you still can’t create an account, email <a href="mailto:enquiries@digitalmarketplace.service.gov.uk">enquiries@digitalmarketplace.service.gov.uk</a>
-</p>
-{% else %}
-
 {%
   with
   smaller = true,
@@ -80,5 +69,4 @@
         </div>
     </form>
 
-{% endif%}
 {% endblock %}
