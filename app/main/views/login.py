@@ -191,7 +191,7 @@ def update_password(token):
                                **template_data), 400
 
 
-@main.route('/create-account', methods=["GET"])
+@main.route('/buyers/create', methods=["GET"])
 def create_buyer_account():
     form = EmailAddressForm()
     template_data = main.config['BASE_TEMPLATE_DATA']
@@ -202,7 +202,7 @@ def create_buyer_account():
         **template_data), 200
 
 
-@main.route('/create-account', methods=['POST'])
+@main.route('/buyers/create', methods=['POST'])
 def submit_create_buyer_account():
     current_app.logger.info(
         "buyercreate: post create-buyer-account")
@@ -349,7 +349,7 @@ def create_your_account_complete():
     session.clear()
     session['email_sent_to'] = email_address
     return render_template(
-        "auth/create_your_account_complete.html",
+        "auth/create-your-account-complete.html",
         email_address=email_address,
         **template_data
     ), 200
