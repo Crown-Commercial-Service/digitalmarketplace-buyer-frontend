@@ -26,7 +26,7 @@ class TestSuppliersPage(BaseApplicationTest):
 
     def test_should_call_api_with_correct_params(self):
         self.client.get('/g-cloud/suppliers')
-        self._data_api_client.find_suppliers.assert_called_once_with('A', '1', 'gcloud')
+        self._data_api_client.find_suppliers.assert_called_once_with('A', '1', 'g-cloud')
 
     def test_should_show_suppliers_prefixed_by_a_default(self):
         res = self.client.get('/g-cloud/suppliers')
@@ -37,7 +37,7 @@ class TestSuppliersPage(BaseApplicationTest):
 
     def test_should_show_suppliers_prefixed_by_a_param(self):
         res = self.client.get('/g-cloud/suppliers?prefix=M')
-        self._data_api_client.find_suppliers.assert_called_once_with('M', '1', 'gcloud')
+        self._data_api_client.find_suppliers.assert_called_once_with('M', '1', 'g-cloud')
         assert_equal(200, res.status_code)
         assert_true(
             self._strip_whitespace('<li class="selected"><span class="visuallyhidden">Suppliers starting with </span><strong>M</strong></li>')  # noqa
@@ -52,7 +52,7 @@ class TestSuppliersPage(BaseApplicationTest):
 
     def test_should_use_default_if_invalid(self):
         res = self.client.get('/g-cloud/suppliers?prefix=+')
-        self._data_api_client.find_suppliers.assert_called_once_with('A', '1', 'gcloud')
+        self._data_api_client.find_suppliers.assert_called_once_with('A', '1', 'g-cloud')
 
         assert_equal(200, res.status_code)
         assert_true(
@@ -61,7 +61,7 @@ class TestSuppliersPage(BaseApplicationTest):
 
     def test_should_use_default_if_multichar_prefix(self):
         res = self.client.get('/g-cloud/suppliers?prefix=Prefix')
-        self._data_api_client.find_suppliers.assert_called_once_with('A', '1', 'gcloud')
+        self._data_api_client.find_suppliers.assert_called_once_with('A', '1', 'g-cloud')
 
         assert_equal(200, res.status_code)
 
@@ -71,7 +71,7 @@ class TestSuppliersPage(BaseApplicationTest):
 
     def test_should_use_number_range_prefix(self):
         res = self.client.get('/g-cloud/suppliers?prefix=other')
-        self._data_api_client.find_suppliers.assert_called_once_with(u'other', '1', 'gcloud')
+        self._data_api_client.find_suppliers.assert_called_once_with(u'other', '1', 'g-cloud')
 
         assert_equal(200, res.status_code)
         assert_true(
@@ -168,7 +168,7 @@ class TestSuppliersPage(BaseApplicationTest):
     def test_should_show_next_nav_on_supplier_list(self):
         self._data_api_client.find_suppliers.return_value = self.suppliers_by_prefix_page_2  # noqa
         res = self.client.get('/g-cloud/suppliers?page=2')
-        self._data_api_client.find_suppliers.assert_called_once_with('A', '2', 'gcloud')
+        self._data_api_client.find_suppliers.assert_called_once_with('A', '2', 'g-cloud')
 
         assert_equal(200, res.status_code)
         html_tag = '<li class="previous">'
