@@ -9,11 +9,14 @@ from flask_login import logout_user, login_user
 from dmapiclient import HTTPError
 from dmapiclient.audit import AuditTypes
 from dmutils.user import User
-from dmutils.email import send_email, generate_token, MandrillException
+from dmutils.email import (
+    decode_invitation_token, decode_password_reset_token, generate_token, send_email,
+    MandrillException
+)
 from .. import main
 from ..forms.auth_forms import LoginForm, EmailAddressForm, ChangePasswordForm, CreateUserForm
 from ...helpers import hash_email
-from ...helpers.login_helpers import redirect_logged_in_user, decode_password_reset_token, decode_invitation_token
+from ...helpers.login_helpers import redirect_logged_in_user
 from ... import data_api_client
 
 
@@ -211,8 +214,6 @@ def submit_create_buyer_account():
 
     if form.validate_on_submit():
         email_address = form.email_address.data
-        # Send email then
-        # Go to "ACTIVATE YOUR ACCOUNT" page
         token = generate_token(
             {
                 "email_address":  email_address
@@ -222,6 +223,7 @@ def submit_create_buyer_account():
         )
         url = url_for('main.create_user', encoded_token=token, _external=True)
         email_body = render_template("emails/create_buyer_user_email.html", url=url)
+        # print("CREATE ACCOUNT URL: {}".format(url))
         try:
             send_email(
                 email_address,
@@ -261,7 +263,7 @@ def create_user(encoded_token):
     form = CreateUserForm()
     template_data = main.config['BASE_TEMPLATE_DATA']
 
-    token = decode_invitation_token(encoded_token, buyer=True)
+    token = decode_invitation_token(encoded_token, role='buyer')
     if token is None:
         current_app.logger.warning(
             "createuser.token_invalid: {encoded_token}",
@@ -294,7 +296,7 @@ def submit_create_user(encoded_token):
     template_data = main.config['BASE_TEMPLATE_DATA']
     form = CreateUserForm()
 
-    token = decode_invitation_token(encoded_token, buyer=True)
+    token = decode_invitation_token(encoded_token, role='buyer')
     if token is None:
         current_app.logger.warning("createuser.token_invalid: {encoded_token}",
                                    extra={'encoded_token': encoded_token})
