@@ -135,7 +135,7 @@ class BaseApplicationTest(object):
             })
 
             login_api_client.authenticate_user.assert_called_once_with(
-                "valid@email.com", "1234567890", supplier=False)
+                "valid@email.com", "1234567890")
 
     def login_as_buyer(self):
         with patch('app.main.views.login.data_api_client') as login_api_client:
@@ -155,7 +155,7 @@ class BaseApplicationTest(object):
             })
 
             login_api_client.authenticate_user.assert_called_once_with(
-                "valid@email.com", "1234567890", supplier=False)
+                "valid@email.com", "1234567890")
 
     @staticmethod
     def get_cookie_by_name(response, name):

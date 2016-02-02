@@ -41,8 +41,7 @@ def process_login():
     if form.validate_on_submit():
         user_json = data_api_client.authenticate_user(
             form.email_address.data,
-            form.password.data,
-            supplier=False)
+            form.password.data)
         if not user_json:
             current_app.logger.info(
                 "login.fail: failed to log in {email_hash}",
