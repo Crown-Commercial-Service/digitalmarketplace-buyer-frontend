@@ -508,6 +508,68 @@ class TestLoginFormsNotAutofillable(BaseApplicationTest):
         )
 
 
+class TestBuyersCreation(BaseApplicationTest):
+    def test_should_get_create_buyer_form_ok(self):
+        res = self.client.get('/buyers/create')
+        assert res.status_code == 200
+        assert 'Create a buyer account' in res.get_data(as_text=True)
+
+    @mock.patch('app.main.views.login.send_email')
+    def test_should_be_able_to_submit_valid_email_address(self, send_email):
+        res = self.client.post(
+            '/buyers/create',
+            data={'email_address': 'valid@test.gov.uk'},
+            follow_redirects=True
+        )
+        assert res.status_code == 200
+        assert 'Activate your account' in res.get_data(as_text=True)
+
+    def test_should_raise_validation_error_for_invalid_email_address(self):
+        res = self.client.post(
+            '/buyers/create',
+            data={'email_address': 'not-an-email-address'},
+            follow_redirects=True
+        )
+        assert res.status_code == 400
+        data = res.get_data(as_text=True)
+        assert 'Create a buyer account' in data
+        assert 'Please enter a valid email address' in data
+
+    def test_should_raise_validation_error_for_empty_email_address(self):
+        res = self.client.post(
+            '/buyers/create',
+            data={},
+            follow_redirects=True
+        )
+        assert res.status_code == 400
+        data = res.get_data(as_text=True)
+        assert 'Create a buyer account' in data
+        assert 'Email address must be provided' in data
+
+    @mock.patch('app.main.views.login.send_email')
+    def test_should_503_if_email_fails_to_send(self, send_email):
+        send_email.side_effect = MandrillException("Arrrgh")
+        res = self.client.post(
+            '/buyers/create',
+            data={'email_address': 'valid@test.gov.uk'},
+            follow_redirects=True
+        )
+        assert res.status_code == 503
+        assert 'Failed to send user creation email' in res.get_data(as_text=True)
+
+    @mock.patch('app.main.views.login.send_email')
+    @mock.patch('app.main.views.login.data_api_client')
+    def test_should_create_audit_event_when_email_sent(self, data_api_client, send_email):
+        res = self.client.post(
+            '/buyers/create',
+            data={'email_address': 'valid@test.gov.uk'},
+            follow_redirects=True
+        )
+        assert res.status_code == 200
+        data_api_client.create_audit_event.assert_called_with(audit_type=AuditTypes.invite_user,
+                                                              data={'invitedEmail': 'valid@test.gov.uk'})
+
+
 class TestCreateUser(BaseApplicationTest):
     def _generate_token(self, email_address='test@email.com'):
         return generate_token(
