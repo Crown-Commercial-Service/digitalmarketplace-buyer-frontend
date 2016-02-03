@@ -151,10 +151,11 @@ def send_reset_password_email():
 @main.route('/reset-password/<token>', methods=["GET"])
 def reset_password(token):
     decoded = decode_password_reset_token(token, data_api_client)
-    if not decoded:
+    if decoded.get('error', None):
+        flash(decoded['error'], 'error')
         return redirect(url_for('.request_password_reset'))
 
-    email_address = decoded["email"]
+    email_address = decoded['email']
 
     template_data = main.config['BASE_TEMPLATE_DATA']
     return render_template("auth/reset-password.html",
@@ -168,7 +169,8 @@ def reset_password(token):
 def update_password(token):
     form = ChangePasswordForm()
     decoded = decode_password_reset_token(token, data_api_client)
-    if not decoded:
+    if decoded.get('error', None):
+        flash(decoded['error'], 'error')
         return redirect(url_for('.request_password_reset'))
 
     user_id = decoded["user"]
