@@ -515,8 +515,8 @@ class TestBuyersCreation(BaseApplicationTest):
         assert 'Create a buyer account' in res.get_data(as_text=True)
 
     @mock.patch('app.main.views.login.send_email')
-    def test_should_be_able_to_submit_valid_email_address(self, send_email):
-        send_email.side_effect = None
+    @mock.patch('app.main.views.login.data_api_client')
+    def test_should_be_able_to_submit_valid_email_address(self, data_api_client, send_email):
         res = self.client.post(
             '/buyers/create',
             data={'email_address': 'valid@test.gov.uk'},
