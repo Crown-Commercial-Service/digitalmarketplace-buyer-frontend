@@ -3,7 +3,7 @@ from __future__ import absolute_import
 import six
 
 from flask_login import current_user
-from flask import abort, current_app, flash, redirect, render_template, request, session, url_for
+from flask import abort, current_app, flash, redirect, render_template, request, session, url_for, get_flashed_messages
 from flask_login import logout_user, login_user
 
 from dmapiclient import HTTPError
@@ -23,7 +23,7 @@ from ... import data_api_client
 @main.route('/login', methods=["GET"])
 def render_login():
     next_url = request.args.get('next')
-    if current_user.is_authenticated():
+    if current_user.is_authenticated() and not get_flashed_messages():
         return redirect_logged_in_user(next_url)
     template_data = main.config['BASE_TEMPLATE_DATA']
     return render_template(

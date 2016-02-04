@@ -27,6 +27,11 @@
               <p class="banner-message">
                 Could not update password due to an error.
               </p>
+            {% elif message == 'supplier-role-required' %}
+              <p class="banner-message">
+                You are logged in as a buyer but the page you tried to access is for suppliers.<br />
+                Please log in with a supplier account to access that page.
+              </p>
             {% elif category != 'must_login' %}
               {{ message }}
             {% endif %}
