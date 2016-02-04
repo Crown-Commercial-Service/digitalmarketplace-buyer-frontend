@@ -516,6 +516,7 @@ class TestBuyersCreation(BaseApplicationTest):
 
     @mock.patch('app.main.views.login.send_email')
     def test_should_be_able_to_submit_valid_email_address(self, send_email):
+        send_email.side_effect = None
         res = self.client.post(
             '/buyers/create',
             data={'email_address': 'valid@test.gov.uk'},
