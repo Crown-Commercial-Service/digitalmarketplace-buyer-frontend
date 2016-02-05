@@ -102,6 +102,7 @@ class Preview(Config):
 
 
 class Live(Config):
+    DM_HTTP_PROTO = 'https'
     DEBUG = False
 
 
