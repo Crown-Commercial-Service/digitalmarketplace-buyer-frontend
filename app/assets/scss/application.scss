@@ -23,6 +23,7 @@ $path: "/static/images/";
 @import "toolkit/forms/_option-select.scss";
 @import "toolkit/forms/_summary.scss";
 @import "toolkit/forms/_textboxes.scss";
+@import "toolkit/forms/_validation.scss";
 
 /* Blocks shared between multiple selectors */
 @import "shared_placeholders/_temporary-messages.scss";
@@ -32,9 +33,14 @@ $path: "/static/images/";
   padding-bottom: $gutter * 2;
 }
 
+@import "toolkit/forms/_hint.scss";
+@import "toolkit/forms/_questions.scss";
+
 // Buyers app styles
 @import "_footer.scss";
+@import "_forms.scss";
 @import "_table.scss";
+@import "_text.scss";
 @import "_notice.scss";
 @import "_service-page.scss";
 @import "_index-page.scss";

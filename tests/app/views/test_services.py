@@ -30,7 +30,7 @@ class TestServicePage(BaseApplicationTest):
         super(TestServicePage, self).setup()
 
         self._data_api_client = mock.patch(
-            'app.main.views.data_api_client'
+            'app.main.views.g_cloud.data_api_client'
         ).start()
 
         self.supplier = self._get_supplier_fixture_data()
@@ -146,20 +146,6 @@ class TestServicePage(BaseApplicationTest):
         self._assert_document_links(document)
         self._assert_breadcrumbs(document, self.service['services']['lot'])
 
-    def _assert_redirect_deprecated_service_page_url(self):
-        self._data_api_client.get_service.return_value = self.service
-
-        service_id = self.service['services']['id']
-
-        service_id_string = "{}".format(service_id)
-        res = self.client.get('service/{}'.format(service_id_string.lower()))
-        assert_equal(301, res.status_code)
-        assert_equal(
-            'http://localhost/g-cloud/services/{}'.format(
-                service_id_string.upper()
-            ),
-            res.location)
-
     def _get_status_update_audit_event_for(self,
                                            update_type=None,
                                            old_status=None,
@@ -204,14 +190,12 @@ class TestServicePage(BaseApplicationTest):
         self.service = self._get_g5_service_fixture_data()
         self._data_api_client.get_service.return_value = self.service
 
-        self._assert_redirect_deprecated_service_page_url()
         self._assert_service_page_url()
 
     def test_g6_service_page_url(self):
         self.service = self._get_g6_service_fixture_data()
         self._data_api_client.get_service.return_value = self.service
 
-        self._assert_redirect_deprecated_service_page_url()
         self._assert_service_page_url()
 
     def test_published_service_doesnt_have_unavailable_banner(self):

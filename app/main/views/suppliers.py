@@ -5,7 +5,6 @@ from flask import render_template, request, abort
 from app.helpers.search_helpers import get_template_data
 from app import data_api_client
 from dmapiclient import APIError
-import numbers
 import re
 
 try:

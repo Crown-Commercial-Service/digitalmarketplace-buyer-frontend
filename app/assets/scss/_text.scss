@@ -1,0 +1,18 @@
+@import "typography";
+
+body {
+  @include core-19;
+}
+
+.lede {
+  font-size: 100%;
+  margin-bottom: 2em;
+
+  @include media(desktop) {
+    width: 66%;
+  }
+}
+
+.visual-emphasis {
+  font-weight: bold;
+}
