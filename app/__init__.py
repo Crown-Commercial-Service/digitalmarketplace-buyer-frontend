@@ -34,12 +34,16 @@ def create_app(config_name):
 
     from .main import main as main_blueprint
     from .status import status as status_blueprint
+    from .buyers import buyers as buyers_blueprint
 
     application.register_blueprint(status_blueprint)
     application.register_blueprint(main_blueprint)
+    application.register_blueprint(buyers_blueprint)
+
     main_blueprint.config = {
         'BASE_TEMPLATE_DATA': application.config['BASE_TEMPLATE_DATA'],
     }
+    buyers_blueprint.config = main_blueprint.config
 
     login_manager.login_view = 'main.render_login'
     login_manager.login_message_category = "must_login"
