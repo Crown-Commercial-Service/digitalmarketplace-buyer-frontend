@@ -1,5 +1,5 @@
 {% extends "_base_page.html" %}
-
+{% import "toolkit/summary-table.html" as summary %}
 {% block page_title %}Your account - Digital Marketplace{% endblock %}
 
 {% block breadcrumb %}
@@ -27,5 +27,46 @@
             {% endwith %}
         </div>
     </div>
+
+
+{{ summary.heading("Unpublished requirements", id="unpublished_requirements") }}
+{% call(item) summary.list_table(
+    draft_briefs,
+    caption="Unpublished requirements caption",
+    empty_message="You don’t have any unpublished requirements",
+    field_headings=[
+    "Brief name",
+    "Created",
+    "Unanswered questions",
+    ],
+    field_headings_visible=True
+) %}
+
+    {% call summary.row() %}
+        {{ summary.service_link(item.title, '#') }}
+        {{ summary.text(item.createdAt|dateformat) }}
+        {{ summary.text("Unanswered queston count?") }}
+    {% endcall %}
+{% endcall %}
+
+{{ summary.heading("Published requirements", id="published_requirements") }}
+{% call(item) summary.list_table(
+    live_briefs,
+    caption="Published requirements caption",
+    empty_message="You don’t have any published requirements",
+    field_headings=[
+    "Brief name",
+    "Published",
+    "Unanswered questions",
+    ],
+    field_headings_visible=True
+) %}
+
+    {% call summary.row() %}
+        {{ summary.service_link(item.title, '#') }}
+        {{ summary.text(item.publishedAt|dateformat) }}
+        {{ summary.text("Unanswered queston count?") }}
+    {% endcall %}
+{% endcall %}
 
 {% endblock %}
