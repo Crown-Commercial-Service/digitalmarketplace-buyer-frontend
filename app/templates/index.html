@@ -2,18 +2,19 @@
 
 {% block page_title %}Digital Marketplace{% endblock %}
 
+{% block top_header %}
+<header class="marketplace-homepage-heading">
+  <h1>
+    Digital Marketplace
+  </h1>
+</header>
+{% endblock %}
+
 {% block main_content %}
 
 <div class="index-page grid-row">
   <div class="column-two-thirds">
-    <header class="page-heading">
-      <h1>
-        Digital Marketplace
-      </h1>
-      <p class="lead">
-        Find technology or people for digital projects in the public sector
-      </p>
-    </header>
+    <h2>Find specialist or cloud services</h2>
     {% if frameworks.get('digital-outcomes-and-specialists', {}).status == "live" %}
     {% set
       dos_items = [

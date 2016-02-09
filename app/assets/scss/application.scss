@@ -56,3 +56,19 @@ $path: "/static/images/";
   @include core-19;
   margin: (1.5 * $gutter) 0 (2 * $gutter);
 }
+
+.marketplace-homepage-heading {
+
+  background-color: $govuk-blue;
+  width: 100%;
+  margin: -10px 0 40px;
+  padding: 20px 0 10px;
+  color: white;
+
+  h1 {
+    @extend %site-width-container;
+    @include bold-48;
+    padding-top: 7px;
+    padding-bottom: 13px;
+  }
+}

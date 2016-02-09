@@ -15,7 +15,9 @@
 {% endblock %}
 
 {% block content %}
-  {% include "_phase_banner.html" %}
+    {% block top_header %}
+    {% endblock %}
+  {# {% include "_phase_banner.html" %} #}
   {% block breadcrumb %}{% endblock %}
   <div id="wrapper">
     <main id="content" role="main">
