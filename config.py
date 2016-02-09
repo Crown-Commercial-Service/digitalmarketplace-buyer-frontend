@@ -30,12 +30,10 @@ class Config(object):
     WTF_CSRF_ENABLED = True
     WTF_CSRF_TIME_LIMIT = None
 
-    DM_DATA_API_URL = os.getenv('DM_API_URL')
-    DM_DATA_API_AUTH_TOKEN = os.getenv('DM_BUYER_FRONTEND_API_AUTH_TOKEN')
-    DM_SEARCH_API_URL = os.getenv('DM_SEARCH_API_URL')
-    DM_SEARCH_API_AUTH_TOKEN = os.getenv(
-        'DM_BUYER_FRONTEND_SEARCH_API_AUTH_TOKEN'
-    )
+    DM_DATA_API_URL = None
+    DM_DATA_API_AUTH_TOKEN = None
+    DM_SEARCH_API_URL = None
+    DM_SEARCH_API_AUTH_TOKEN = None
     DM_MANDRILL_API_KEY = None
 
     # matches api(s)
@@ -51,8 +49,8 @@ class Config(object):
     RESET_PASSWORD_EMAIL_SUBJECT = 'Reset your Digital Marketplace password'
 
     CREATE_USER_SUBJECT = 'Create your Digital Marketplace account'
-    SECRET_KEY = os.getenv('DM_PASSWORD_SECRET_KEY')
-    SHARED_EMAIL_KEY = os.getenv('DM_SHARED_EMAIL_KEY')
+    SECRET_KEY = None
+    SHARED_EMAIL_KEY = None
     RESET_PASSWORD_SALT = 'ResetPasswordSalt'
     INVITE_EMAIL_SALT = 'InviteEmailSalt'
 
@@ -86,6 +84,12 @@ class Test(Config):
     DEBUG = True
     DM_LOG_LEVEL = 'CRITICAL'
     WTF_CSRF_ENABLED = False
+
+    DM_DATA_API_URL = "http://localhost:5000"
+    DM_DATA_API_AUTH_TOKEN = "myToken"
+    DM_SEARCH_API_URL = "http://localhost:5001"
+    DM_SEARCH_API_AUTH_TOKEN = "myToken"
+
     DM_MANDRILL_API_KEY = 'MANDRILL'
     SHARED_EMAIL_KEY = "KEY"
     SECRET_KEY = "KEY"
@@ -95,6 +99,15 @@ class Development(Config):
     DEBUG = True
     SESSION_COOKIE_SECURE = False
     DM_SEARCH_PAGE_SIZE = 5
+
+    DM_DATA_API_URL = "http://localhost:5000"
+    DM_DATA_API_AUTH_TOKEN = "myToken"
+    DM_SEARCH_API_URL = "http://localhost:5001"
+    DM_SEARCH_API_AUTH_TOKEN = "myToken"
+
+    DM_MANDRILL_API_KEY = "not_a_real_key"
+    SECRET_KEY = "verySecretKey"
+    SHARED_EMAIL_KEY = "very_secret"
 
 
 class Preview(Config):

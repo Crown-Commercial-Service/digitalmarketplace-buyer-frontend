@@ -5,10 +5,9 @@ python:
 before_install:
   - nvm install 4.2
 install:
-  - pip install -r requirements_for_test.txt
-  - npm install
+  - make requirements_for_test npm_install
 script:
-  - ./scripts/run_tests.sh --cov=app --cov-report=term-missing
+  - PYTEST_ARGS='--cov=app --cov-report=term-missing' make test
 after_success:
   - coveralls
 notifications:
