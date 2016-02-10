@@ -19,17 +19,17 @@
     {% set
       dos_items = [
         {
-          "link": "/omewhere",
+          "link": url_for("buyers.start_new_brief", framework_slug='digital-outcomes-and-specialists', lot_slug='digital-specialists'),
           "title": "Find an individual specialist",
           "body": "eg a developer or user researcher",
         },
         {
-          "link": "/omewhere",
+          "link": url_for("buyers.start_new_brief", framework_slug='digital-outcomes-and-specialists', lot_slug='digital-outcomes'),
           "title": "Find a team to provide an outcome",
           "body": "eg a booking system or accessibility audit",
         },
         {
-          "link": "/omewhere",
+          "link": url_for("buyers.start_new_brief", framework_slug='digital-outcomes-and-specialists', lot_slug='user-research-participants'),
           "title": "Find user research participants",
           "body": "eg people from a specific user group to test your service",
         },

@@ -1,0 +1,131 @@
+{% macro text(question_content, data, errors) -%}
+  {%
+    with
+    question=question_content.question|markdown,
+    hint=(question_content.hint or '')|markdown,
+    name=question_content.id,
+    value=data[question_content.id],
+    error=errors.get(question_content.id)['message']
+  %}
+    {% include "toolkit/forms/textbox.html" %}
+  {% endwith %}
+{%- endmacro %}
+
+{% macro textbox_large(question_content, data, errors) -%}
+  {%
+    with
+    question=question_content.question|markdown,
+    hint=(question_content.hint or '')|markdown,
+    name=question_content.id,
+    value=data[question_content.id],
+    large=True,
+    max_length_in_words=question_content.max_length_in_words,
+    error=errors.get(question_content.id)['message']
+  %}
+    {% include "toolkit/forms/textbox.html" %}
+  {% endwith %}
+{%- endmacro %}
+
+{% macro list(question_content, data, errors) -%}
+  {%
+    with
+    name=question_content.id,
+    number_of_items=10,
+    question=question_content.question|markdown,
+    hint=(question_content.hint or '')|markdown,
+    values=data[question_content.id],
+    id=question_content.id,
+    error=errors.get(question_content.id)['message']
+  %}
+    {% include "toolkit/forms/list-entry.html" %}
+  {% endwith %}
+{%- endmacro %}
+
+{% macro checkboxes(question_content, data, errors) -%}
+  {%
+    with
+    name=question_content.id,
+    question=question_content.question|markdown,
+    hint=(question_content.hint or '')|markdown,
+    value=data[question_content.id],
+    id=question_content.id,
+    options=question_content.options,
+    type='checkbox',
+    error=errors.get(question_content.id)['message'],
+    question_number=question_number
+  %}
+    {% include "toolkit/forms/selection-buttons.html" %}
+  {% endwith %}
+{%- endmacro %}
+
+{% macro radios(question_content, data, errors) -%}
+  {%
+    with
+    name=question_content.id,
+    question=question_content.question|markdown,
+    hint=(question_content.hint or '')|markdown,
+    hint_underneath=(question_content.hint_underneath or False),
+    value=data[question_content.id],
+    id=question_content.id,
+    options=question_content.options,
+    type='radio',
+    error=errors.get(question_content.id)['message'],
+    question_number=question_number
+  %}
+    {% include "toolkit/forms/selection-buttons.html" %}
+  {% endwith %}
+{%- endmacro %}
+
+{% macro boolean(question_content, data, errors) -%}
+  {%
+    with
+    name=question_content.id,
+    question=question_content.question|markdown,
+    hint=(question_content.hint or '')|markdown,
+    value=data[question_content.id],
+    id=question_content.id,
+    type='boolean',
+    error=errors.get(question_content.id)['message'],
+    question_number=question_number
+  %}
+    {% include "toolkit/forms/selection-buttons.html" %}
+  {% endwith %}
+{%- endmacro %}
+
+{% macro pricing(question_content, data, errors) -%}
+  {%
+    with
+    name=question_content.id,
+    question=question_content.question,
+    fields=question_content.fields,
+    optional_fields=question_content.optional_fields,
+    minimum_price=data.get(question_content.fields.minimum_price),
+    maximum_price=data.get(question_content.fields.maximum_price),
+    price_unit=data.get(question_content.fields.price_unit),
+    price_interval=data.get(question_content.fields.price_interval),
+    hours_for_price=data.get(question_content.fields.hours_for_price),
+    hint=(question_content.hint or '')|markdown,
+    id=question_content.id,
+    error=errors.get(question_content.id)['message'],
+    question_number=question_number
+  %}
+    {% include "toolkit/forms/pricing.html" %}
+  {% endwith %}
+{%- endmacro %}
+
+{% macro percentage(question_content, data, errors) -%}
+  {%
+    with
+    unit_in_full="percent",
+    unit_position="after",
+    unit="%",
+    question=question_content.question|markdown,
+    hint=(question_content.hint or '')|markdown,
+    name=question_content.id,
+    value=data[question_content.id],
+    error=errors.get(question_content.id)['message'],
+    question_number=question_number
+  %}
+    {% include "toolkit/forms/textbox.html" %}
+  {% endwith %}
+{%- endmacro %}

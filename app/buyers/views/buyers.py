@@ -1,8 +1,8 @@
-from flask import render_template
+from flask import abort, render_template
 from flask_login import current_user
 
 from app import data_api_client
-from .. import buyers
+from .. import buyers, content_loader
 from ...helpers.search_helpers import get_template_data
 
 
@@ -19,3 +19,28 @@ def buyer_dashboard():
         live_briefs=live_briefs,
         **template_data
     )
+
+
+@buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/create', methods=['GET'])
+def start_new_brief(framework_slug, lot_slug):
+    """Page to kick off creation of a new brief."""
+
+    framework = data_api_client.get_framework(framework_slug)['frameworks']
+    try:
+        lot = next(lot for lot in framework['lots'] if lot['slug'] == lot_slug)
+    except StopIteration:
+        abort(404)
+
+    content = content_loader.get_manifest(framework_slug, 'edit_brief').filter(
+        {'lot': lot['slug']}
+    )
+
+    section = content.get_section(content.get_next_editable_section_id())
+
+    return render_template(
+        "buyers/edit_brief_section.html",
+        framework=framework,
+        data={},
+        section=section,
+        **dict(buyers.config['BASE_TEMPLATE_DATA'])
+    ), 200
