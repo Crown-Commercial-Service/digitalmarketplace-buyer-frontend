@@ -26,9 +26,14 @@ def start_new_brief(framework_slug, lot_slug):
     """Page to kick off creation of a new brief."""
 
     framework = data_api_client.get_framework(framework_slug)['frameworks']
+    if framework['status'] != 'live':
+        abort(404)
+
     try:
         lot = next(lot for lot in framework['lots'] if lot['slug'] == lot_slug)
     except StopIteration:
+        abort(404)
+    if not lot['allowsBrief']:
         abort(404)
 
     content = content_loader.get_manifest(framework_slug, 'edit_brief').filter(
