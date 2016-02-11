@@ -3,6 +3,7 @@ from flask_login import current_user
 
 from app import data_api_client
 from .. import buyers, content_loader
+from ...helpers.buyers_helpers import count_suppliers_on_lot, get_framework_and_lot
 from ...helpers.search_helpers import get_template_data
 
 from dmapiclient import HTTPError
@@ -21,6 +22,25 @@ def buyer_dashboard():
         live_briefs=live_briefs,
         **template_data
     )
+
+
+@buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>', methods=['GET'])
+def info_page_for_starting_a_brief(framework_slug, lot_slug):
+
+    framework, lot = get_framework_and_lot(framework_slug, lot_slug)
+
+    if framework['status'] != 'live':
+        abort(404)
+    if not lot['allowsBrief']:
+        abort(404)
+
+    return render_template(
+        "buyers/start_brief_info.html",
+        framework=framework,
+        lot=lot,
+        supplier_count=count_suppliers_on_lot(framework, lot),
+        **dict(buyers.config['BASE_TEMPLATE_DATA'])
+    ), 200
 
 
 @buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/create', methods=['GET'])
