@@ -87,3 +87,55 @@ class TestStartNewBrief(BaseApplicationTest):
                 "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/create")
 
             assert res.status_code == 404
+
+
+class TestStartBriefInfoPage(BaseApplicationTest):
+    @mock.patch('app.buyers.views.buyers.data_api_client')
+    def test_show_start_brief_info_page(self, data_api_client):
+        with self.app.app_context():
+            self.login_as_buyer()
+            data_api_client.get_framework.return_value = api_stubs.framework(
+                slug='digital-outcomes-and-specialists',
+                status='live',
+                lots=[
+                    api_stubs.lot(slug='digital-specialists', allows_brief=True),
+                ]
+            )
+
+            res = self.client.get(
+                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists")
+            assert res.status_code == 200
+            document = html.fromstring(res.get_data(as_text=True))
+            assert document.xpath('//h1')[0].text_content().strip() == "Find an individual specialist"
+
+    @mock.patch('app.buyers.views.buyers.data_api_client')
+    def test_404_if_lot_does_not_allow_brief(self, data_api_client):
+        with self.app.app_context():
+            self.login_as_buyer()
+            data_api_client.get_framework.return_value = api_stubs.framework(
+                slug='digital-outcomes-and-specialists',
+                status='live',
+                lots=[
+                    api_stubs.lot(slug='digital-specialists', allows_brief=False)
+                ]
+            )
+
+            res = self.client.get(
+                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists")
+            assert res.status_code == 404
+
+    @mock.patch('app.buyers.views.buyers.data_api_client')
+    def test_404_if_framework_status_is_not_live_1(self, data_api_client):
+        with self.app.app_context():
+            self.login_as_buyer()
+            data_api_client.get_framework.return_value = api_stubs.framework(
+                slug='digital-outcomes-and-specialists',
+                status='open',
+                lots=[
+                    api_stubs.lot(slug='digital-specialists', allows_brief=True),
+                ]
+            )
+
+            res = self.client.get(
+                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists")
+            assert res.status_code == 404

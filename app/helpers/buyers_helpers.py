@@ -1,9 +1,7 @@
 from flask import abort
 
-from app import data_api_client
 
-
-def get_framework_and_lot(framework_slug, lot_slug):
+def get_framework_and_lot(framework_slug, lot_slug, data_api_client):
     framework = data_api_client.get_framework(framework_slug)['frameworks']
     try:
         lot = next(lot for lot in framework['lots'] if lot['slug'] == lot_slug)
