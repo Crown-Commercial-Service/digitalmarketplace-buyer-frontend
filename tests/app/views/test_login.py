@@ -17,6 +17,9 @@ PASSWORD_MISMATCH_ERROR = "The passwords you entered do not match"
 NEW_PASSWORD_EMPTY_ERROR = "Please enter a new password"
 NEW_PASSWORD_CONFIRM_EMPTY_ERROR = "Please confirm your new password"
 
+USER_CREATION_EMAIL_ERROR = "Failed to send user creation email."
+PASSWORD_RESET_EMAIL_ERROR = "Failed to send password reset."
+
 TOKEN_CREATED_BEFORE_PASSWORD_LAST_CHANGED_ERROR = "This password reset link is invalid."
 USER_LINK_EXPIRED_ERROR = "The link you used to create an account may have expired."
 
@@ -392,15 +395,6 @@ class TestResetPassword(BaseApplicationTest):
             self.app.config['RESET_PASSWORD_EMAIL_FROM'] = "EMAIL FROM"
             self.app.config['RESET_PASSWORD_EMAIL_NAME'] = "EMAIL NAME"
 
-            data_api_client_config = {
-                'get_user.return_value': self.user(
-                    123,
-                    "email@email.com",
-                    1234,
-                    'name',
-                    'name'
-                )}
-
             res = self.client.post(
                 '/reset-password',
                 data={'email_address': 'email@email.com'}
@@ -425,21 +419,13 @@ class TestResetPassword(BaseApplicationTest):
 
             send_email.side_effect = MandrillException(Exception('API is down'))
 
-            data_api_client_config = {
-                'get_user.return_value': self.user(
-                    123,
-                    "email@email.com",
-                    1234,
-                    'name',
-                    'name'
-                )}
-
             res = self.client.post(
                 '/reset-password',
                 data={'email_address': 'email@email.com'}
             )
 
             assert res.status_code == 503
+            assert PASSWORD_RESET_EMAIL_ERROR in res.get_data(as_text=True)
 
 
 class TestLoginFormsNotAutofillable(BaseApplicationTest):
@@ -556,7 +542,7 @@ class TestBuyersCreation(BaseApplicationTest):
             follow_redirects=True
         )
         assert res.status_code == 503
-        assert 'Failed to send user creation email' in res.get_data(as_text=True)
+        assert USER_CREATION_EMAIL_ERROR in res.get_data(as_text=True)
 
     @mock.patch('app.main.views.login.send_email')
     @mock.patch('app.main.views.login.data_api_client')
