@@ -55,6 +55,7 @@ $path: "/static/images/";
 @import "_supplier-a-to-z.scss";
 @import "_atoz_navigation.scss";
 @import "_error-pages.scss";
+@import "_lists.scss";
 
 .return-to-top {
   display: block;
@@ -100,4 +101,8 @@ $path: "/static/images/";
   @include bold-27;
   padding-bottom: 30px;
 
+}
+
+.padding-bottom-small {
+  padding-bottom: 10px;
 }
