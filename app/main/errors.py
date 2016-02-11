@@ -17,8 +17,13 @@ def page_not_found(e):
 
 
 @main.app_errorhandler(500)
-def page_not_found(e):
+def exception(e):
     return _render_error_page(500)
+
+
+@main.app_errorhandler(503)
+def service_unavailable(e):
+    return _render_error_page(503)
 
 
 def _render_error_page(status_code):
