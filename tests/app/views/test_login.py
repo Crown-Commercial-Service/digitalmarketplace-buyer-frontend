@@ -930,7 +930,8 @@ class TestBuyerRoleRequired(BaseApplicationTest):
             assert res.location == 'http://localhost/login?next=%2Fbuyers'
             self.assert_flashes('buyer-role-required', expected_category='error')
 
-    def test_buyer_pages_ok_if_logged_in_as_buyer(self):
+    @mock.patch('app.buyers.views.buyers.data_api_client')
+    def test_buyer_pages_ok_if_logged_in_as_buyer(self, data_api_client):
         with self.app.app_context():
             self.login_as_buyer()
             res = self.client.get('/buyers')
