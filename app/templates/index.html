@@ -4,17 +4,20 @@
 
 {% block top_header %}
 <header class="marketplace-homepage-heading">
+  {% include "_phase_banner.html" %}
   <h1>
     Digital Marketplace
   </h1>
 </header>
 {% endblock %}
 
+{% block phase_banner %}{% endblock %}
+
 {% block main_content %}
 
 <div class="index-page grid-row">
   <div class="column-two-thirds">
-    <h2>Find specialist or cloud services</h2>
+    <h2 class="marketplace-homepage-subheading">Find digital services for public sector projects</h2>
     {% if frameworks.get('digital-outcomes-and-specialists', {}).status == "live" %}
     {% set
       dos_items = [
