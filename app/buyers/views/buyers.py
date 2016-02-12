@@ -3,7 +3,8 @@ from flask_login import current_user
 
 from app import data_api_client
 from .. import buyers, content_loader
-from ...helpers.buyers_helpers import count_suppliers_on_lot, get_framework_and_lot
+from ...helpers.buyers_helpers import count_suppliers_on_lot, get_framework_and_lot, is_brief_associated_with_user, \
+    count_unanswered_questions
 from ...helpers.search_helpers import get_template_data
 
 from dmapiclient import HTTPError
@@ -139,13 +140,15 @@ def edit_brief_submission(framework_slug, lot_slug, brief_id, section_id):
     if not lot['allowsBrief']:
         abort(404)
 
+    brief = data_api_client.get_brief(brief_id)["briefs"]
+    if not is_brief_associated_with_user(brief):
+        abort(404)
+    # TODO: cannot edit published brief
+    # TODO: update dmutils
+
     content = content_loader.get_manifest(framework_slug, 'edit_brief').filter(
         {'lot': lot['slug']}
     )
-
-    brief = data_api_client.get_brief(brief_id)["briefs"]
-    # TODO: cannot edit published brief
-    # TODO: update dmutils
     section = content.get_section(section_id)
 
     return render_template(
@@ -172,12 +175,14 @@ def update_brief_submission(framework_slug, lot_slug, brief_id, section_id):
     if not lot['allowsBrief']:
         abort(404)
 
+    # TODO: cannot edit published brief
+    brief = data_api_client.get_brief(brief_id)["briefs"]
+    if not is_brief_associated_with_user(brief):
+        abort(404)
+
     content = content_loader.get_manifest(framework_slug, 'edit_brief').filter(
         {'lot': lot['slug']}
     )
-
-    # TODO: cannot edit published brief
-    brief = data_api_client.get_brief(brief_id)["briefs"]
     section = content.get_section(section_id)
 
     update_data = section.get_data(request.form)
@@ -212,3 +217,42 @@ def update_brief_submission(framework_slug, lot_slug, brief_id, section_id):
                     section_id=next_section))
     else:
         return redirect(url_for(".buyer_dashboard"))
+
+
+@buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>', methods=['GET'])
+def view_brief_summary(framework_slug, lot_slug, brief_id):
+    framework, lot = get_framework_and_lot(framework_slug, lot_slug, data_api_client)
+
+    if framework['status'] != 'live':
+        abort(404)
+    if not lot['allowsBrief']:
+        abort(404)
+
+    brief = data_api_client.get_brief(brief_id)["briefs"]
+    if not is_brief_associated_with_user(brief):
+        abort(404)
+
+    content = content_loader.get_manifest(framework_slug, 'edit_brief').filter(
+        {'lot': lot['slug']}
+    )
+    sections = content.summary(brief)
+    unanswered_required, unanswered_optional = count_unanswered_questions(sections)
+    delete_requested = True if request.args.get('delete_requested') else False
+
+    # TODO: check validation errors
+    validation_errors = None
+
+    return render_template(
+        "buyers/brief_summary.html",
+        framework=framework,
+        confirm_remove=request.args.get("confirm_remove", None),
+        brief_id=brief_id,
+        brief_data=brief,
+        last_edit=brief['updatedAt'],
+        sections=sections,
+        unanswered_required=unanswered_required,
+        unanswered_optional=unanswered_optional,
+        can_publish=not validation_errors,
+        delete_requested=delete_requested,
+        **dict(buyers.config['BASE_TEMPLATE_DATA'])
+    ), 200
