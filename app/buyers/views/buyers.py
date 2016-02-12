@@ -114,7 +114,7 @@ def create_new_brief(framework_slug, lot_slug):
             section=section,
             errors=errors,
             **dict(buyers.config['BASE_TEMPLATE_DATA'])
-        ), 200
+        ), 400
 
     return redirect(
         url_for(".edit_brief_submission",
