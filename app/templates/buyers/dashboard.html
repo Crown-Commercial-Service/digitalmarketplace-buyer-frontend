@@ -43,7 +43,7 @@
 ) %}
 
     {% call summary.row() %}
-        {{ summary.service_link(item.title, '#') }}
+        {{ summary.service_link(item.title, url_for(".view_brief_summary", framework_slug=item.frameworkSlug, lot_slug=item.lot, brief_id=item.id)) }}
         {{ summary.text(item.createdAt|dateformat) }}
         {{ summary.text("Unanswered queston count?") }}
     {% endcall %}
@@ -63,7 +63,7 @@
 ) %}
 
     {% call summary.row() %}
-        {{ summary.service_link(item.title, '#') }}
+        {{ summary.service_link(item.title, url_for(".view_brief_summary", framework_slug=item.frameworkSlug, lot_slug=item.lot, brief_id=item.id))) }}
         {{ summary.text(item.publishedAt|dateformat) }}
         {{ summary.text("Unanswered queston count?") }}
     {% endcall %}
