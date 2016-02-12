@@ -101,7 +101,7 @@ def create_new_brief(framework_slug, lot_slug):
             current_user.id,
             update_data,
             updated_by=current_user.email_address,
-            page_questions=update_data.keys()
+            page_questions=section.get_field_names()
         )["briefs"]
     except HTTPError as e:
         update_data = section.unformat_data(update_data)
@@ -146,7 +146,6 @@ def edit_brief_submission(framework_slug, lot_slug, brief_id, section_id):
     brief = data_api_client.get_brief(brief_id)["briefs"]
     # TODO: cannot edit published brief
     # TODO: update dmutils
-    # TODO: fix javascript for lists
     section = content.get_section(section_id)
 
     return render_template(
@@ -188,7 +187,7 @@ def update_brief_submission(framework_slug, lot_slug, brief_id, section_id):
             brief_id,
             update_data,
             updated_by=current_user.email_address,
-            page_questions=update_data.keys()
+            page_questions=section.get_field_names()
         )["briefs"]
     except HTTPError as e:
         update_data = section.unformat_data(update_data)
