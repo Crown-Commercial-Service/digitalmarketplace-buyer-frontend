@@ -126,7 +126,7 @@ def send_reset_password_email():
                     "error {error} email_hash {email_hash}",
                     extra={'error': six.text_type(e),
                            'email_hash': hash_email(user.email_address)})
-                abort(503, "Failed to send password reset")
+                abort(503, response="Failed to send password reset.")
 
             current_app.logger.info(
                 "login.reset-email.sent: Sending password reset email for "
@@ -243,7 +243,7 @@ def submit_create_buyer_account():
                 extra={
                     'error': six.text_type(e),
                     'email_hash': hash_email(email_address)})
-            abort(503, "Failed to send user creation email")
+            abort(503, response="Failed to send user creation email.")
 
         data_api_client.create_audit_event(
             audit_type=AuditTypes.invite_user,

@@ -11,7 +11,11 @@
         <h1>Sorry, we're experiencing technical difficulties</h1>
       </header>
       <p>
+        {% if error_message %}
+          {{ error_message }}
+        {% else %}
           Try again later.
+        {% endif %}
       </p>
     </div>
   </div>

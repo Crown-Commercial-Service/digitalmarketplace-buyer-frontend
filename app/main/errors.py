@@ -17,11 +17,16 @@ def page_not_found(e):
 
 
 @main.app_errorhandler(500)
-def page_not_found(e):
+def internal_server_error(e):
     return _render_error_page(500)
 
 
-def _render_error_page(status_code):
+@main.app_errorhandler(503)
+def service_unavailable(e):
+    return _render_error_page(503, e.response)
+
+
+def _render_error_page(status_code, error_message=None):
     templates = {
         404: "errors/404.html",
         500: "errors/500.html",
@@ -31,4 +36,4 @@ def _render_error_page(status_code):
         status_code = 500
     template_data = get_template_data(main, {})
 
-    return render_template(templates[status_code], **template_data), status_code
+    return render_template(templates[status_code], error_message=error_message, **template_data), status_code
