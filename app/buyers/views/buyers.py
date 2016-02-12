@@ -1,4 +1,4 @@
-from flask import abort, render_template, request
+from flask import abort, render_template, request, redirect, url_for
 from flask_login import current_user
 
 from app import data_api_client
@@ -84,5 +84,112 @@ def create_new_brief(framework_slug, lot_slug):
             page_questions=update_data.keys()
         )["briefs"]
     except HTTPError as e:
-        print("API ERROR ERROR ERROR: {}".format(e))
-        raise e
+        update_data = section.unformat_data(update_data)
+        errors = section.get_error_messages(e.message, lot_slug)
+
+        return render_template(
+            "buyers/edit_brief_section.html",
+            framework=framework,
+            data=update_data,
+            section=section,
+            errors=errors,
+            **dict(buyers.config['BASE_TEMPLATE_DATA'])
+        ), 200
+
+    return redirect(
+        url_for(".edit_brief_submission",
+                framework_slug=framework_slug,
+                lot_slug=lot_slug,
+                brief_id=brief['id'],
+                section_id=content.get_next_editable_section_id(section.slug)))
+
+
+@buyers.route(
+    '/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/edit/<section_id>',
+    methods=['GET'])
+def edit_brief_submission(framework_slug, lot_slug, brief_id, section_id):
+    framework = data_api_client.get_framework(framework_slug)["frameworks"]
+    if framework["status"] != "live":
+        abort(404)
+
+    try:
+        lot = next(lot for lot in framework['lots'] if lot['slug'] == lot_slug)
+    except StopIteration:
+        abort(404)
+    if not lot['allowsBrief']:
+        abort(404)
+
+    content = content_loader.get_manifest(framework_slug, 'edit_brief').filter(
+        {'lot': lot['slug']}
+    )
+
+    brief = data_api_client.get_brief(brief_id)["briefs"]
+    # TODO: cannot edit published brief
+    # TODO: update dmutils
+    # TODO: fix javascript for lists
+    section = content.get_section(section_id)
+
+    return render_template(
+        "buyers/edit_brief_section.html",
+        framework=framework,
+        data=brief,
+        section=section,
+        **dict(buyers.config['BASE_TEMPLATE_DATA'])
+    ), 200
+
+
+@buyers.route(
+    '/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/edit/<section_id>',
+    methods=['POST'])
+def update_brief_submission(framework_slug, lot_slug, brief_id, section_id):
+    framework = data_api_client.get_framework(framework_slug)["frameworks"]
+    if framework["status"] != "live":
+        abort(404)
+
+    try:
+        lot = next(lot for lot in framework['lots'] if lot['slug'] == lot_slug)
+    except StopIteration:
+        abort(404)
+    if not lot['allowsBrief']:
+        abort(404)
+
+    content = content_loader.get_manifest(framework_slug, 'edit_brief').filter(
+        {'lot': lot['slug']}
+    )
+
+    # TODO: cannot edit published brief
+    brief = data_api_client.get_brief(brief_id)["briefs"]
+    section = content.get_section(section_id)
+
+    update_data = section.get_data(request.form)
+
+    try:
+        brief = data_api_client.update_brief(
+            brief_id,
+            update_data,
+            updated_by=current_user.email_address,
+            page_questions=update_data.keys()
+        )["briefs"]
+    except HTTPError as e:
+        update_data = section.unformat_data(update_data)
+        errors = section.get_error_messages(e.message, lot_slug)
+
+        return render_template(
+            "buyers/edit_brief_section.html",
+            framework=framework,
+            data=update_data,
+            section=section,
+            errors=errors,
+            **dict(buyers.config['BASE_TEMPLATE_DATA'])
+        ), 200
+
+    next_section = content.get_next_editable_section_id(section.slug)
+    if next_section:
+        return redirect(
+            url_for(".edit_brief_submission",
+                    framework_slug=framework_slug,
+                    lot_slug=lot_slug,
+                    brief_id=brief['id'],
+                    section_id=next_section))
+    else:
+        return redirect(url_for(".buyer_dashboard"))
