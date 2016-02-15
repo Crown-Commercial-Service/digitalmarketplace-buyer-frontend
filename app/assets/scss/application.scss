@@ -108,6 +108,17 @@ $path: "/static/images/";
 
 }
 
+.marketplace-paragraph {
+
+  h2 {
+    @include bold-27;
+    padding-bottom: 10px;
+  }
+  p {
+    padding-bottom: 30px;
+  }
+}
+
 .padding-bottom-small {
   padding-bottom: 10px;
 }
