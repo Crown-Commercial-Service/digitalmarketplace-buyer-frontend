@@ -60,13 +60,6 @@
 {% endblock %}
 
 
-{% block edit_link %}
-  {% if framework.status == 'live' %}
-    {{ summary.top_link("Edit", url_for(".edit_brief_submission", framework_slug=framework.slug, lot_slug=brief_data.lot, brief_id=brief_id, section_id=section.id)) }}
-  {% endif %}
-{% endblock %}
-
-
 {% block after_sections %}
   {% if not delete_requested %}
     <div class="grid-row">

@@ -243,6 +243,12 @@ def view_brief_summary(framework_slug, lot_slug, brief_id):
     # TODO: check validation errors
     validation_errors = None
 
+    flattened_brief = []
+    for section in sections:
+        for question in section.questions:
+            question.section_id=section.id
+            flattened_brief.append(question)
+
     return render_template(
         "buyers/brief_summary.html",
         framework=framework,
@@ -250,10 +256,10 @@ def view_brief_summary(framework_slug, lot_slug, brief_id):
         brief_id=brief_id,
         brief_data=brief,
         last_edit=brief['updatedAt'],
-        sections=sections,
+        flattened_brief=flattened_brief,
         unanswered_required=unanswered_required,
         unanswered_optional=unanswered_optional,
-        can_publish=not validation_errors,
+        can_publish=not validation_errors and not unanswered_required,
         delete_requested=delete_requested,
         **dict(buyers.config['BASE_TEMPLATE_DATA'])
     ), 200

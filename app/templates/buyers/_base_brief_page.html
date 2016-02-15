@@ -32,60 +32,57 @@
       %}
         {% include "toolkit/page-heading.html" %}
       {% endwith %}
+
+      <div class="marketplace-paragraph">
+        <h2>Overview of work</h2>
+        <p class="padding-bottom-large">Create an overview of the work to help suppliers decide whether to apply.</p>
+      </div>
     </div>
+              
     {% block before_sections %}{% endblock %}
+              
     <div class="column-one-whole">
+      
       {% import "toolkit/summary-table.html" as summary %}
-      {% for section in sections %}
-        {{ summary.heading(section.name, id=section.slug) }}
-        {% if section.editable %}
-          {% block edit_link scoped %}{% endblock %}
-        {% endif %}
-        {% if section.summary_page_description %}
-          {{ summary.description(section.summary_page_description) }}
-        {% endif %}
-        {% call(question) summary.list_table(
-          section.questions,
-          caption=section.name,
-          field_headings=[
-            "Requirements attribute name",
-            "Requirements attribute",
-            "Add or Edit"
-          ] if section.edit_questions else [
-            "Requirements attribute name",
-            "Requirements attribute",
-          ],
-          field_headings_visible=False
-        ) %}
-          {% call summary.row(complete=not question.answer_required) %}
-            {{ summary.field_name(question.label) }}
-            {% if question.answer_required %}
-              {% call summary.field() %}
-                {% if framework and framework.status == 'open' %}
-                    <a href="{{ url_for("buyers.edit_brief_submission", framework_slug=framework.slug, lot_slug=brief_data.lot, service_id=service_id, section_id=section.id, _anchor=question.id) }}">Answer required</a>
-                {% else %}
-                  Not answered
-                {% endif %}
+
+      {% call(question) summary.list_table(
+        flattened_brief,
+        field_headings=[
+          "Requirements attribute name",
+          "Requirements attribute",
+          "Action"
+        ],
+        field_headings_visible=False
+      ) %}
+      
+        {% call summary.row() %}
+          {{ summary.field_name(question.label) }}
+        
+          {% if question.answer_required or question.is_empty %}
+            {% call summary.field() %}
+              <a href="{{ url_for("buyers.edit_brief_submission", framework_slug=framework.slug, lot_slug=brief_data.lot, brief_id=brief_id, section_id=question.section_id, _anchor=question.id) }}">{{ question.empty_message or "Not answered" }}</a>
+            {% endcall %}
+          {% else %}
+            {{ summary[question.type](question.value) }}
+          {% endif %}
+    
+          {% if brief_data.get('status') == 'draft' %}
+            {% if question.is_empty and not question.answer_required %}
+              {% call summary.field(action=True) %}
+                Optional
               {% endcall %}
-            {% elif question.is_empty %}
-              {% call summary.field() %}
-                <span class="summary-item-field-answer-required">{{ question.empty_message }}</span>
-              {% endcall %}
+            {% elif not question.answer_required %}
+              {{ summary.edit_link("Edit", url_for("buyers.edit_brief_submission", framework_slug=framework.slug, lot_slug=brief_data.lot, brief_id=brief_id, section_id=question.section_id, _anchor=question.id)) }}
             {% else %}
-              {{ summary[question.type](question.value, question.assurance) }}
+              {% call summary.field() %}{% endcall %}
             {% endif %}
-            {% if section.edit_questions and framework.status == 'open' %}
-              {% if not question.is_empty %}
-                {{ summary.remove_link('Remove', '#') }}
-              {% else %}
-                {{ summary.text("") }}
-              {% endif %}
-              {{ summary.edit_link('Add' if question.is_empty else 'Edit', url_for(".edit_brief_submission", framework_slug=framework.slug, lot_slug=brief_data.lot, service_id=service_id, section_id=section.id, question_slug=question.slug)) }}
-            {% endif %}
-          {% endcall %}
+          {% endif %}
+        
         {% endcall %}
-      {% endfor %}
-    </div>
+      {% endcall %}
+
       {% block after_sections %}{% endblock %}
+    </div>
+      
   </div>
 {% endblock %}
