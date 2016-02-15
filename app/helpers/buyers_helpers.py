@@ -1,4 +1,5 @@
 from flask import abort
+from flask_login import current_user
 
 
 def get_framework_and_lot(framework_slug, lot_slug, data_api_client):
@@ -19,10 +20,12 @@ def count_suppliers_on_lot(framework, lot):
 
 
 def is_brief_associated_with_user(brief):
+    user_ids = [user.get('id') for user in brief.get('users')]
+    return current_user.id in user_ids
 
-    # TODO: Implement this function!
 
-    return True
+def brief_can_be_edited(brief):
+    return brief.get('status') == 'draft'
 
 
 def count_unanswered_questions(brief_attributes):

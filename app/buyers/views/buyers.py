@@ -4,7 +4,7 @@ from flask_login import current_user
 from app import data_api_client
 from .. import buyers, content_loader
 from ...helpers.buyers_helpers import count_suppliers_on_lot, get_framework_and_lot, is_brief_associated_with_user, \
-    count_unanswered_questions
+    count_unanswered_questions, brief_can_be_edited
 from ...helpers.search_helpers import get_template_data
 
 from dmapiclient import HTTPError
@@ -141,15 +141,15 @@ def edit_brief_submission(framework_slug, lot_slug, brief_id, section_id):
         abort(404)
 
     brief = data_api_client.get_brief(brief_id)["briefs"]
-    if not is_brief_associated_with_user(brief):
+    if not is_brief_associated_with_user(brief) or not brief_can_be_edited(brief):
         abort(404)
-    # TODO: cannot edit published brief
-    # TODO: update dmutils
 
     content = content_loader.get_manifest(framework_slug, 'edit_brief').filter(
         {'lot': lot['slug']}
     )
     section = content.get_section(section_id)
+    if not section:
+        abort(404)
 
     return render_template(
         "buyers/edit_brief_section.html",
@@ -175,15 +175,16 @@ def update_brief_submission(framework_slug, lot_slug, brief_id, section_id):
     if not lot['allowsBrief']:
         abort(404)
 
-    # TODO: cannot edit published brief
     brief = data_api_client.get_brief(brief_id)["briefs"]
-    if not is_brief_associated_with_user(brief):
+    if not is_brief_associated_with_user(brief) or not brief_can_be_edited(brief):
         abort(404)
 
     content = content_loader.get_manifest(framework_slug, 'edit_brief').filter(
         {'lot': lot['slug']}
     )
     section = content.get_section(section_id)
+    if not section:
+        abort(404)
 
     update_data = section.get_data(request.form)
 

@@ -104,7 +104,6 @@ class TestCreateNewBrief(BaseApplicationTest):
             data={
                 "title": ""
             })
-        document = html.fromstring(res.get_data(as_text=True))
 
         assert res.status_code == 302
         assert data_api_client.create_brief.called
@@ -178,7 +177,23 @@ class TestCreateNewBrief(BaseApplicationTest):
 @mock.patch('app.buyers.views.buyers.data_api_client')
 class TestEditBriefSubmission(BaseApplicationTest):
     def test_edit_brief_submission(self, data_api_client):
-        pass
+        self.login_as_buyer()
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='live',
+            lots=[
+                api_stubs.lot(slug='digital-specialists', allows_brief=True)
+            ]
+        )
+        data_api_client.get_brief.return_value = api_stubs.brief()
+
+        res = self.client.get(
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists"
+            "/1/edit/your-organisation")
+
+        assert res.status_code == 200
+        document = html.fromstring(res.get_data(as_text=True))
+        assert document.xpath('//h1')[0].text_content().strip() == "Your organisation"
 
     def test_404_if_lot_does_not_allow_brief(self, data_api_client):
         self.login_as_buyer()
@@ -195,7 +210,6 @@ class TestEditBriefSubmission(BaseApplicationTest):
             "/1/edit/your-organisation")
 
         assert res.status_code == 404
-        assert not data_api_client.update_brief.called
 
     def test_404_if_framework_status_is_not_live(self, data_api_client):
         self.login_as_buyer()
@@ -212,9 +226,8 @@ class TestEditBriefSubmission(BaseApplicationTest):
             "/1/edit/your-organisation")
 
         assert res.status_code == 404
-        assert not data_api_client.create_brief.called
 
-    def test_404_if_brief_has_published_state(self, data_api_client):
+    def test_404_if_brief_has_published_status(self, data_api_client):
         self.login_as_buyer()
         data_api_client.get_framework.return_value = api_stubs.framework(
             slug='digital-outcomes-and-specialists',
@@ -223,16 +236,30 @@ class TestEditBriefSubmission(BaseApplicationTest):
                 api_stubs.lot(slug='digital-specialists', allows_brief=True)
             ]
         )
+        data_api_client.get_brief.return_value = api_stubs.brief(status='published')
 
         res = self.client.get(
             "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists"
             "/1/edit/your-organisation")
 
         assert res.status_code == 404
-        assert not data_api_client.create_brief.called
 
     def test_404_if_section_does_not_exist(self, data_api_client):
-        pass
+        self.login_as_buyer()
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='live',
+            lots=[
+                api_stubs.lot(slug='digital-specialists', allows_brief=True)
+            ]
+        )
+        data_api_client.get_brief.return_value = api_stubs.brief()
+
+        res = self.client.get(
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists"
+            "/1/edit/not-a-real-section")
+
+        assert res.status_code == 404
 
 
 @mock.patch('app.buyers.views.buyers.data_api_client')
