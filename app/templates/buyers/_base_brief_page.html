@@ -4,25 +4,6 @@
 
 {% block main_content %}
   <div class="grid-row">
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        {% for category, message in messages %}
-          {% if category == 'error' %}
-            <div class="banner-destructive-without-action">
-          {% else %}
-            <div class="banner-success-without-action">
-          {% endif %}
-              <p class="banner-message">
-              {% if 'requirements_deleted' in message %}
-                Your requirements were deleted
-              {% else %}
-                {{ message }}
-              {% endif %}
-              </p>
-            </div>
-        {% endfor %}
-      {% endif %}
-    {% endwith %}
 
     {% block before_heading %}{% endblock %}
     <div class="column-two-thirds">
