@@ -65,8 +65,19 @@
 
     {% call summary.row() %}
         {{ summary.service_link(item.title, url_for(".view_brief_summary", framework_slug=item.frameworkSlug, lot_slug=item.lot, brief_id=item.id)) }}
+        
         {{ summary.text(item.createdAt|dateformat) }}
-        {{ summary.text("Unanswered queston count?") }}
+        
+        {% if item.unanswered_required > 0 and item.unanswered_optional > 0 %}
+            {{ summary.text("{} required<br>{} optional".format(item.unanswered_required, item.unanswered_optional)|safe) }}
+        {% elif item.unanswered_required > 0 %}
+            {{ summary.text("{} required".format(item.unanswered_required)) }}
+        {% elif item.unanswered_optional > 0 %}
+            {{ summary.text("{} optional".format(item.unanswered_optional)) }}
+        {% else %}
+            {{ summary.text() }}
+        {% endif %}
+        
     {% endcall %}
 {% endcall %}
 
@@ -78,7 +89,6 @@
     field_headings=[
     "Brief name",
     "Published",
-    "Unanswered questions",
     ],
     field_headings_visible=True
 ) %}
@@ -86,7 +96,6 @@
     {% call summary.row() %}
         {{ summary.service_link(item.title, url_for(".view_brief_summary", framework_slug=item.frameworkSlug, lot_slug=item.lot, brief_id=item.id)) }}
         {{ summary.text(item.publishedAt|dateformat) }}
-        {{ summary.text("Unanswered queston count?") }}
     {% endcall %}
 {% endcall %}
 
