@@ -40,9 +40,13 @@
           {{ summary.field_name(question.label) }}
         
           {% if question.answer_required or question.is_empty %}
-            {% call summary.field() %}
-              <a href="{{ url_for("buyers.edit_brief_submission", framework_slug=framework.slug, lot_slug=brief_data.lot, brief_id=brief_id, section_id=question.section_id, _anchor=question.id) }}">{{ question.empty_message or "Not answered" }}</a>
-            {% endcall %}
+            {% if brief_data.get('status') == 'draft' %}
+              {% call summary.field() %}
+                <a href="{{ url_for("buyers.edit_brief_submission", framework_slug=framework.slug, lot_slug=brief_data.lot, brief_id=brief_id, section_id=question.section_id, _anchor=question.id) }}">{{ question.empty_message or "Not answered" }}</a>
+              {% endcall %}
+            {% else %}
+              {{ summary.text("Not answered") }}
+            {% endif %}
           {% else %}
             {{ summary[question.type](question.value) }}
           {% endif %}
