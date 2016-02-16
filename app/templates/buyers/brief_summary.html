@@ -63,10 +63,8 @@
 {% block after_sections %}
   {% if not delete_requested %}
     <div class="grid-row">
-      <div class="column-two-thirds">
-        &nbsp;
-      </div>
-      <div class="column-one-third delete-draft-button">
+
+      <div class="column-one-third">
         {% if brief_data.status == 'draft' and can_publish and framework.status == 'live' %}
           <div class="space-underneath">
             {% include "buyers/_complete_brief.html" %}
@@ -83,6 +81,9 @@
           {% endwith %}
         </form>
         {% endif %}
+      </div>
+      <div class="column-two-thirds">
+        &nbsp;
       </div>
     </div>
   {% endif %}
