@@ -13,11 +13,13 @@ class TestBuyerDashboard(BaseApplicationTest):
                 "briefs": [
                     {"status": "draft",
                      "title": "A draft brief",
-                     "createdAt": "2016-02-02T00:00:00.000000Z"},
+                     "createdAt": "2016-02-02T00:00:00.000000Z",
+                     "frameworkSlug": "digital-outcomes-and-specialists"},
                     {"status": "live",
                      "title": "A live brief",
                      "createdAt": "2016-02-01T00:00:00.000000Z",
-                     "publishedAt": "2016-02-04T12:00:00.000000Z"},
+                     "publishedAt": "2016-02-04T12:00:00.000000Z",
+                     "frameworkSlug": "digital-outcomes-and-specialists"},
                 ]
             }
 
@@ -102,11 +104,17 @@ class TestCreateNewBrief(BaseApplicationTest):
         res = self.client.post(
             "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/create",
             data={
-                "title": ""
+                "title": "My title"
             })
 
         assert res.status_code == 302
-        assert data_api_client.create_brief.called
+        data_api_client.create_brief.assert_called_with('digital-outcomes-and-specialists',
+                                                        'digital-specialists',
+                                                        123,
+                                                        {'title': "My title"},
+                                                        page_questions=['title'],
+                                                        updated_by='buyer@email.com'
+                                                        )
 
     def test_404_if_lot_does_not_allow_brief(self, data_api_client):
         self.login_as_buyer()
@@ -162,7 +170,7 @@ class TestCreateNewBrief(BaseApplicationTest):
         res = self.client.post(
             "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/create",
             data={
-                "title": ""
+                "title": "My title"
             })
         document = html.fromstring(res.get_data(as_text=True))
 
@@ -171,7 +179,13 @@ class TestCreateNewBrief(BaseApplicationTest):
 
         assert len(anchor) == 1
         assert "Requirements title" in anchor[0].text_content().strip()
-        assert data_api_client.create_brief.called
+        data_api_client.create_brief.assert_called_with('digital-outcomes-and-specialists',
+                                                        'digital-specialists',
+                                                        123,
+                                                        {'title': "My title"},
+                                                        page_questions=['title'],
+                                                        updated_by='buyer@email.com'
+                                                        )
 
 
 @mock.patch('app.buyers.views.buyers.data_api_client')
@@ -194,6 +208,23 @@ class TestEditBriefSubmission(BaseApplicationTest):
         assert res.status_code == 200
         document = html.fromstring(res.get_data(as_text=True))
         assert document.xpath('//h1')[0].text_content().strip() == "Your organisation"
+
+    def test_404_if_brief_does_not_belong_to_user(self, data_api_client):
+        self.login_as_buyer()
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='live',
+            lots=[
+                api_stubs.lot(slug='digital-specialists', allows_brief=True)
+            ]
+        )
+        data_api_client.get_brief.return_value = api_stubs.brief(user_id=234)
+
+        res = self.client.get(
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists"
+            "/1/edit/your-organisation")
+
+        assert res.status_code == 404
 
     def test_404_if_lot_does_not_allow_brief(self, data_api_client):
         self.login_as_buyer()
@@ -265,19 +296,134 @@ class TestEditBriefSubmission(BaseApplicationTest):
 @mock.patch('app.buyers.views.buyers.data_api_client')
 class TestUpdateBriefSubmission(BaseApplicationTest):
     def test_update_brief_submission(self, data_api_client):
-        pass
+        self.login_as_buyer()
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='live',
+            lots=[
+                api_stubs.lot(slug='digital-specialists', allows_brief=True)
+            ]
+        )
+        data_api_client.get_brief.return_value = api_stubs.brief()
+
+        res = self.client.post(
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
+            "digital-specialists/1234/edit/your-organisation",
+            data={
+                "organisation": "GDS"
+            })
+
+        assert res.status_code == 302
+        data_api_client.update_brief.assert_called_with('1234',
+                                                        {"organisation": "GDS"},
+                                                        page_questions=['organisation'],
+                                                        updated_by='buyer@email.com'
+                                                        )
+
+    def test_404_if_brief_does_not_belong_to_user(self, data_api_client):
+        self.login_as_buyer()
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='live',
+            lots=[
+                api_stubs.lot(slug='digital-specialists', allows_brief=True)
+            ]
+        )
+        data_api_client.get_brief.return_value = api_stubs.brief(user_id=234)
+
+        res = self.client.post(
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
+            "digital-specialists/1234/edit/your-organisation",
+            data={
+                "organisation": "GDS"
+            })
+
+        assert res.status_code == 404
+        assert not data_api_client.update_brief.called
 
     def test_404_if_lot_does_not_allow_brief(self, data_api_client):
-        pass
+        self.login_as_buyer()
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='live',
+            lots=[
+                api_stubs.lot(slug='digital-specialists', allows_brief=False)
+            ]
+        )
+        data_api_client.get_brief.return_value = api_stubs.brief()
+
+        res = self.client.post(
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
+            "digital-specialists/1234/edit/your-organisation",
+            data={
+                "title": "A new title"
+            })
+
+        assert res.status_code == 404
+        assert not data_api_client.update_brief.called
 
     def test_404_if_framework_status_is_not_live(self, data_api_client):
-        pass
+        self.login_as_buyer()
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='open',
+            lots=[
+                api_stubs.lot(slug='digital-specialists', allows_brief=True)
+            ]
+        )
+        data_api_client.get_brief.return_value = api_stubs.brief()
 
-    def test_404_if_brief_has_published_state(self, data_api_client):
-        pass
+        res = self.client.post(
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
+            "digital-specialists/1234/edit/your-organisation",
+            data={
+                "title": "A new title"
+            })
+
+        assert res.status_code == 404
+        assert not data_api_client.update_brief.called
+
+    def test_404_if_brief_is_already_live(self, data_api_client):
+        self.login_as_buyer()
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='live',
+            lots=[
+                api_stubs.lot(slug='digital-specialists', allows_brief=True)
+            ]
+        )
+        data_api_client.get_brief.return_value = api_stubs.brief(status='live')
+
+        res = self.client.post(
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
+            "digital-specialists/1234/edit/your-organisation",
+            data={
+                "title": "A new title"
+            })
+
+        assert res.status_code == 404
+        assert not data_api_client.update_brief.called
 
     def test_404_if_section_does_not_exist(self, data_api_client):
-        pass
+        self.login_as_buyer()
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='live',
+            lots=[
+                api_stubs.lot(slug='digital-specialists', allows_brief=True)
+            ]
+        )
+        data_api_client.get_brief.return_value = api_stubs.brief()
+
+        res = self.client.post(
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
+            "digital-specialists/1234/edit/some-made-up-section",
+            data={
+                "title": "A new title"
+            })
+
+        assert res.status_code == 404
+        assert not data_api_client.update_brief.called
 
 
 class TestStartBriefInfoPage(BaseApplicationTest):
@@ -316,7 +462,7 @@ class TestStartBriefInfoPage(BaseApplicationTest):
             assert res.status_code == 404
 
     @mock.patch('app.buyers.views.buyers.data_api_client')
-    def test_404_if_framework_status_is_not_live_1(self, data_api_client):
+    def test_404_if_framework_status_is_not_live_(self, data_api_client):
         with self.app.app_context():
             self.login_as_buyer()
             data_api_client.get_framework.return_value = api_stubs.framework(
@@ -330,3 +476,102 @@ class TestStartBriefInfoPage(BaseApplicationTest):
             res = self.client.get(
                 "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists")
             assert res.status_code == 404
+
+
+@mock.patch('app.buyers.views.buyers.data_api_client')
+class TestDeleteBriefSubmission(BaseApplicationTest):
+    def test_delete_brief_submission_click_delete_button(self, data_api_client):
+        self.login_as_buyer()
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='live',
+            lots=[
+                api_stubs.lot(slug='digital-specialists', allows_brief=True)
+            ]
+        )
+        data_api_client.get_brief.return_value = api_stubs.brief()
+
+        res = self.client.post(
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
+            "digital-specialists/1234/delete",
+            data={})
+
+        assert res.status_code == 302
+        # TODO: [When API method exists] assert not data_api_client.delete_brief.called
+        assert res.location == "http://localhost/buyers/frameworks/digital-outcomes-and-specialists/requirements/" \
+                               "digital-specialists/1234?delete_requested=True"
+
+    def test_delete_brief_submission_click_confirm_delete_button(self, data_api_client):
+        self.login_as_buyer()
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='live',
+            lots=[
+                api_stubs.lot(slug='digital-specialists', allows_brief=True)
+            ]
+        )
+        data_api_client.get_brief.return_value = api_stubs.brief()
+
+        res = self.client.post(
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
+            "digital-specialists/1234/delete",
+            data={"delete_confirmed": True})
+
+        assert res.status_code == 302
+        # TODO: [When API method exists] data_api_client.delete_brief.assert_called_with(brief_id=1234)
+        assert res.location == "http://localhost/buyers"
+        self.assert_flashes('requirements_deleted')
+
+    def test_404_if_framework_is_not_live(self, data_api_client):
+        self.login_as_buyer()
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='standstill',
+            lots=[
+                api_stubs.lot(slug='digital-specialists', allows_brief=True)
+            ]
+        )
+        data_api_client.get_brief.return_value = api_stubs.brief()
+
+        res = self.client.post(
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
+            "digital-specialists/1234/delete",
+            data={"delete_confirmed": True})
+
+        assert res.status_code == 404
+
+    def test_404_if_framework_does_not_allow_brief(self, data_api_client):
+        self.login_as_buyer()
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='live',
+            lots=[
+                api_stubs.lot(slug='digital-specialists', allows_brief=False)
+            ]
+        )
+        data_api_client.get_brief.return_value = api_stubs.brief()
+
+        res = self.client.post(
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
+            "digital-specialists/1234/delete",
+            data={"delete_confirmed": True})
+
+        assert res.status_code == 404
+
+    def test_404_if_brief_does_not_belong_to_user(self, data_api_client):
+        self.login_as_buyer()
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='live',
+            lots=[
+                api_stubs.lot(slug='digital-specialists', allows_brief=True)
+            ]
+        )
+        data_api_client.get_brief.return_value = api_stubs.brief(user_id=234)
+
+        res = self.client.post(
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
+            "digital-specialists/1234/delete",
+            data={"delete_confirmed": True})
+
+        assert res.status_code == 404
