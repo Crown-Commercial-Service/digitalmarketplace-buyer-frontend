@@ -1,4 +1,4 @@
-from flask import abort, render_template, request, redirect, url_for
+from flask import abort, render_template, request, redirect, url_for, flash
 from flask_login import current_user
 
 from app import data_api_client
@@ -256,3 +256,27 @@ def view_brief_summary(framework_slug, lot_slug, brief_id):
         delete_requested=delete_requested,
         **dict(buyers.config['BASE_TEMPLATE_DATA'])
     ), 200
+
+
+@buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/delete', methods=['POST'])
+def delete_a_brief(framework_slug, lot_slug, brief_id):
+    framework, lot = get_framework_and_lot(framework_slug, lot_slug, data_api_client)
+
+    if framework['status'] != 'live':
+        abort(404)
+    if not lot['allowsBrief']:
+        abort(404)
+
+    brief = data_api_client.get_brief(brief_id)["briefs"]
+    if not is_brief_associated_with_user(brief):
+        abort(404)
+
+    if request.form.get('delete_confirmed'):
+        # TODO: Delete the brief (once a DELETE endpoint exists in the API)
+        flash({"requirements_deleted": brief.get("title")})
+        return redirect(url_for('.buyer_dashboard'))
+    else:
+        return redirect(
+            url_for('.view_brief_summary', framework_slug=framework_slug, lot_slug=lot_slug,
+                    brief_id=brief_id, delete_requested=True)
+        )

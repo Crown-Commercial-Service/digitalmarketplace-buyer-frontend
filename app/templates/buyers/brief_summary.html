@@ -45,12 +45,12 @@
 {% block before_heading %}
   {% if delete_requested %}
     <div class="column-one-whole">
-      <form action="#" method="POST">
+      <form action="{{ url_for('buyers.delete_a_brief', framework_slug=framework.slug, lot_slug=brief_data['lotSlug'], brief_id=brief_id) }}" method="POST">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
         <input type="hidden" name="delete_confirmed" value="true" />
         <div class="banner-destructive-with-action">
           <p class="banner-message">
-            Are you sure you want to delete these requirements? }}?
+            Are you sure you want to delete these requirements?
           </p>
           <button type="submit" class="button-destructive banner-action">Yes, delete</button>
         </div>
@@ -71,7 +71,7 @@
           </div>
         {% endif %}
         {% if framework.status == 'live' and brief_data.status == 'draft' %}
-        <form action="#" method="POST">
+        <form action="{{ url_for('buyers.delete_a_brief', framework_slug=framework.slug, lot_slug=brief_data['lotSlug'], brief_id=brief_id) }}" method="POST">
           <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
           {% with
             type = "destructive",
