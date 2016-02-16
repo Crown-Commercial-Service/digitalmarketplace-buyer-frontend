@@ -141,7 +141,7 @@ def edit_brief_submission(framework_slug, lot_slug, brief_id, section_id):
         abort(404)
 
     brief = data_api_client.get_brief(brief_id)["briefs"]
-    if not is_brief_associated_with_user(brief) or not brief_can_be_edited(brief):
+    if not is_brief_associated_with_user(brief, current_user.id) or not brief_can_be_edited(brief):
         abort(404)
 
     content = content_loader.get_manifest(framework_slug, 'edit_brief').filter(
@@ -176,7 +176,7 @@ def update_brief_submission(framework_slug, lot_slug, brief_id, section_id):
         abort(404)
 
     brief = data_api_client.get_brief(brief_id)["briefs"]
-    if not is_brief_associated_with_user(brief) or not brief_can_be_edited(brief):
+    if not is_brief_associated_with_user(brief, current_user.id) or not brief_can_be_edited(brief):
         abort(404)
 
     content = content_loader.get_manifest(framework_slug, 'edit_brief').filter(
@@ -223,7 +223,7 @@ def view_brief_summary(framework_slug, lot_slug, brief_id):
         abort(404)
 
     brief = data_api_client.get_brief(brief_id)["briefs"]
-    if not is_brief_associated_with_user(brief):
+    if not is_brief_associated_with_user(brief, current_user.id):
         abort(404)
 
     content = content_loader.get_manifest(framework_slug, 'edit_brief').filter(
@@ -268,7 +268,7 @@ def delete_a_brief(framework_slug, lot_slug, brief_id):
         abort(404)
 
     brief = data_api_client.get_brief(brief_id)["briefs"]
-    if not is_brief_associated_with_user(brief):
+    if not is_brief_associated_with_user(brief, current_user.id):
         abort(404)
 
     if request.form.get('delete_confirmed'):

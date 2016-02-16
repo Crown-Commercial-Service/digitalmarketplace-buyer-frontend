@@ -1,5 +1,4 @@
 from flask import abort
-from flask_login import current_user
 
 from ..buyers import content_loader
 
@@ -21,9 +20,9 @@ def count_suppliers_on_lot(framework, lot):
     return 987
 
 
-def is_brief_associated_with_user(brief):
-    user_ids = [user.get('id') for user in brief.get('users')]
-    return current_user.id in user_ids
+def is_brief_associated_with_user(brief, current_user_id):
+    user_ids = [user.get('id') for user in brief.get('users', [])]
+    return current_user_id in user_ids
 
 
 def brief_can_be_edited(brief):
