@@ -189,12 +189,12 @@ def update_brief_submission(framework_slug, lot_slug, brief_id, section_id):
     update_data = section.get_data(request.form)
 
     try:
-        brief = data_api_client.update_brief(
+        data_api_client.update_brief(
             brief_id,
             update_data,
             updated_by=current_user.email_address,
             page_questions=section.get_field_names()
-        )["briefs"]
+        )
     except HTTPError as e:
         update_data = section.unformat_data(update_data)
         errors = section.get_error_messages(e.message, lot_slug)
@@ -208,16 +208,9 @@ def update_brief_submission(framework_slug, lot_slug, brief_id, section_id):
             **dict(buyers.config['BASE_TEMPLATE_DATA'])
         ), 200
 
-    next_section = content.get_next_editable_section_id(section.slug)
-    if next_section:
-        return redirect(
-            url_for(".edit_brief_submission",
-                    framework_slug=framework_slug,
-                    lot_slug=lot_slug,
-                    brief_id=brief['id'],
-                    section_id=next_section))
-    else:
-        return redirect(url_for(".buyer_dashboard"))
+    return redirect(
+        url_for(".view_brief_summary", framework_slug=framework_slug, lot_slug=lot_slug, brief_id=brief_id)
+    )
 
 
 @buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>', methods=['GET'])
@@ -240,13 +233,13 @@ def view_brief_summary(framework_slug, lot_slug, brief_id):
     unanswered_required, unanswered_optional = count_unanswered_questions(sections)
     delete_requested = True if request.args.get('delete_requested') else False
 
-    # TODO: check validation errors
+    # TODO: check validation errors(?)
     validation_errors = None
 
     flattened_brief = []
     for section in sections:
         for question in section.questions:
-            question.section_id=section.id
+            question.section_id = section.id
             flattened_brief.append(question)
 
     return render_template(
