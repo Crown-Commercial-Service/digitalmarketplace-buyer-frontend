@@ -233,9 +233,6 @@ def view_brief_summary(framework_slug, lot_slug, brief_id):
     unanswered_required, unanswered_optional = count_unanswered_questions(sections)
     delete_requested = True if request.args.get('delete_requested') else False
 
-    # TODO: check validation errors(?)
-    validation_errors = None
-
     flattened_brief = []
     for section in sections:
         for question in section.questions:
@@ -252,7 +249,7 @@ def view_brief_summary(framework_slug, lot_slug, brief_id):
         flattened_brief=flattened_brief,
         unanswered_required=unanswered_required,
         unanswered_optional=unanswered_optional,
-        can_publish=not validation_errors and not unanswered_required,
+        can_publish=not unanswered_required,
         delete_requested=delete_requested,
         **dict(buyers.config['BASE_TEMPLATE_DATA'])
     ), 200
@@ -272,6 +269,7 @@ def delete_a_brief(framework_slug, lot_slug, brief_id):
         abort(404)
 
     if request.form.get('delete_confirmed'):
+        raise NotImplementedError
         # TODO: Delete the brief (once a DELETE endpoint exists in the API)
         flash({"requirements_deleted": brief.get("title")})
         return redirect(url_for('.buyer_dashboard'))
