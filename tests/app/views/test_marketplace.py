@@ -184,3 +184,24 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
         data_api_client.find_frameworks.return_value = self._find_frameworks(framework_slugs_and_statuses)
         res = self.client.get('/')
         assert_equal(500, res.status_code)
+
+
+class TestStaticMarketplacePages(BaseApplicationTest):
+    def setup(self):
+        super(TestStaticMarketplacePages, self).setup()
+
+    def test_cookie_page(self):
+        res = self.client.get('/cookies')
+        assert_equal(200, res.status_code)
+        assert_true(
+            '<h1>Cookies</h1>'
+            in self._strip_whitespace(res.get_data(as_text=True))
+        )
+
+    def test_cookie_page(self):
+        res = self.client.get('/terms-and-conditions')
+        assert_equal(200, res.status_code)
+        assert_true(
+            '<h1>Termsandconditions</h1>'
+            in self._strip_whitespace(res.get_data(as_text=True))
+        )

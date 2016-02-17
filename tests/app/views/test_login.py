@@ -68,7 +68,7 @@ class TestLogin(BaseApplicationTest):
             assert 'Secure;' in res.headers['Set-Cookie']
 
     def test_should_redirect_logged_in_supplier_to_supplier_dashboard(self):
-        self.login()
+        self.login_as_supplier()
         res = self.client.get("/login")
         assert res.status_code == 302
         assert res.location == 'http://localhost/suppliers'
@@ -79,14 +79,26 @@ class TestLogin(BaseApplicationTest):
         assert res.status_code == 302
         assert res.location == 'http://localhost/buyers'
 
+    def test_should_redirect_logged_in_admin_to_admin_dashboard(self):
+        self.login_as_admin()
+        res = self.client.get("/login")
+        assert res.status_code == 302
+        assert res.location == 'http://localhost/admin'
+
+    def test_should_redirect_logged_in_admin_to_next_url_if_admin_app(self):
+        self.login_as_admin()
+        res = self.client.get("/login?next=/admin/foo-bar")
+        assert res.status_code == 302
+        assert res.location == 'http://localhost/admin/foo-bar'
+
     def test_should_redirect_logged_in_supplier_to_next_url_if_supplier_app(self):
-        self.login()
+        self.login_as_supplier()
         res = self.client.get("/login?next=/suppliers/foo-bar")
         assert res.status_code == 302
         assert res.location == 'http://localhost/suppliers/foo-bar'
 
     def test_should_redirect_to_supplier_dashboard_if_next_url_not_supplier_app(self):
-        self.login()
+        self.login_as_supplier()
         res = self.client.get("/login?next=/foo-bar")
         assert res.status_code == 302
         assert res.location == 'http://localhost/suppliers'
@@ -779,7 +791,7 @@ class TestCreateUser(BaseApplicationTest):
 
     @mock.patch('app.main.views.login.data_api_client')
     def test_should_return_an_error_if_already_registered_as_a_supplier(self, data_api_client):
-        self.login()
+        self.login_as_supplier()
         data_api_client.get_user.return_value = self.user(
             999,
             'test@email.com',
@@ -798,7 +810,7 @@ class TestCreateUser(BaseApplicationTest):
 
     @mock.patch('app.main.views.login.data_api_client')
     def test_should_return_an_error_if_user_is_already_logged_in(self, data_api_client):
-        self.login()
+        self.login_as_supplier()
         data_api_client.get_user.return_value = self.user(
             123,
             'email@email.com',
@@ -924,7 +936,7 @@ class TestBuyerRoleRequired(BaseApplicationTest):
 
     def test_supplier_cannot_access_buyer_pages(self):
         with self.app.app_context():
-            self.login()
+            self.login_as_supplier()
             res = self.client.get('/buyers')
             assert res.status_code == 302
             assert res.location == 'http://localhost/login?next=%2Fbuyers'
