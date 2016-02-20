@@ -569,7 +569,7 @@ class TestDeleteBriefSubmission(BaseApplicationTest):
             data={})
 
         assert res.status_code == 302
-        # TODO: [When API method exists] assert not data_api_client.delete_brief.called
+        assert not data_api_client.delete_brief.called
         assert res.location == "http://localhost/buyers/frameworks/digital-outcomes-and-specialists/requirements/" \
                                "digital-specialists/1234?delete_requested=True"
 
@@ -584,19 +584,15 @@ class TestDeleteBriefSubmission(BaseApplicationTest):
         )
         data_api_client.get_brief.return_value = api_stubs.brief()
 
-        try:
-            res = self.client.post(
-                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
-                "digital-specialists/1234/delete",
-                data={"delete_confirmed": True})
-        except Exception as e:
-            assert type(e) == NotImplementedError
+        res = self.client.post(
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
+            "digital-specialists/1234/delete",
+            data={"delete_confirmed": True})
 
-        # TODO: [When API method exists] uncomment this
-        # data_api_client.delete_brief.assert_called_with(brief_id=1234)
-        # assert res.status_code == 302
-        # assert res.location == "http://localhost/buyers"
-        # self.assert_flashes('requirements_deleted')
+        data_api_client.delete_brief.assert_called_with('1234', 'buyer@email.com')
+        assert res.status_code == 302
+        assert res.location == "http://localhost/buyers"
+        self.assert_flashes('requirements_deleted')
 
     def test_404_if_framework_is_not_live(self, data_api_client):
         self.login_as_buyer()

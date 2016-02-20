@@ -269,8 +269,7 @@ def delete_a_brief(framework_slug, lot_slug, brief_id):
         abort(404)
 
     if request.form.get('delete_confirmed'):
-        raise NotImplementedError
-        # TODO: Delete the brief (once a DELETE endpoint exists in the API)
+        data_api_client.delete_brief(brief_id, current_user.email_address)
         flash({"requirements_deleted": brief.get("title")})
         return redirect(url_for('.buyer_dashboard'))
     else:
