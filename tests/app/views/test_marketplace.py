@@ -42,8 +42,9 @@ class TestHomepageBrowseList(BaseApplicationTest):
             assert res.status_code == 200
 
             link_texts = [item.text_content().strip() for item in document.cssselect('.browse-list-item a')]
-            assert link_texts[0] == "Find cloud software and support"
-            assert link_texts[-1] == "Find specialists to work on digital projects"
+            assert link_texts[0] == "Find cloud technology and support"
+            assert link_texts[-2] == "Find specialists to work on digital projects"
+            assert link_texts[-1] == "Digital Services"
 
     @mock.patch('app.main.views.marketplace.data_api_client')
     def test_dos_links_are_shown_when_dos_is_live(self, data_api_client):
