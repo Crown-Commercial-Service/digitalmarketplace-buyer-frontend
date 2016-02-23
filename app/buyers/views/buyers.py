@@ -149,7 +149,7 @@ def update_brief_submission(framework_slug, lot_slug, brief_id, section_id):
         {'lot': lot['slug']}
     )
     section = content.get_section(section_id)
-    if not section:
+    if section is None or not section.editable:
         abort(404)
 
     update_data = section.get_data(request.form)
