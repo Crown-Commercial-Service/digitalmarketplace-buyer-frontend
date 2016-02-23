@@ -121,7 +121,7 @@ def edit_brief_submission(framework_slug, lot_slug, brief_id, section_id):
         {'lot': lot['slug']}
     )
     section = content.get_section(section_id)
-    if not section:
+    if section is None or not section.editable:
         abort(404)
 
     return render_template(
@@ -200,6 +200,15 @@ def view_brief_summary(framework_slug, lot_slug, brief_id):
     for section in sections:
         for question in section.questions:
             question.section_id = section.id
+
+            # Look up display values for options that have different labels from values
+            options = question.get('options')
+            if options and question.value:
+                for option in options:
+                    if 'label' in option and 'value' in option and option['value'] == question.value:
+                        question.display_value = option['label']
+                        break
+
             flattened_brief.append(question)
 
     return render_template(

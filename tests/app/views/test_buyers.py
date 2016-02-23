@@ -1,4 +1,3 @@
-from unittest import TestCase
 from ...helpers import BaseApplicationTest
 from dmapiclient import api_stubs, HTTPError
 import mock
@@ -661,21 +660,28 @@ class TestBriefSummaryPage(BaseApplicationTest):
                     api_stubs.lot(slug='digital-specialists', allows_brief=True),
                 ]
             )
-            data_api_client.get_brief.return_value = api_stubs.brief()
+            brief_json = api_stubs.brief()
+            brief_json['briefs']['specialistRole'] = 'communications_manager'
+            data_api_client.get_brief.return_value = brief_json
 
             res = self.client.get(
                 "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1"
             )
 
             assert res.status_code == 200
-            document = html.fromstring(res.get_data(as_text=True))
+            page_html = res.get_data(as_text=True)
+            document = html.fromstring(page_html)
+
             assert (document.xpath('//h1')[0]).text_content().strip() == "I need a thing to do a thing"
 
             last_update = document.cssselect('p.last-edited')
             assert self._strip_whitespace(last_update[0].text_content()) == "Lastedited:Tuesday29March2016at11:11"
 
             hint = document.cssselect('span.move-to-complete-hint')
-            assert hint[0].text_content().strip() == "13 unanswered questions"
+            assert hint[0].text_content().strip() == "12 unanswered questions"
+
+            assert 'communications_manager' not in page_html
+            assert 'Communications manager' in page_html
 
     def test_404_if_framework_is_not_live(self, data_api_client):
         with self.app.app_context():

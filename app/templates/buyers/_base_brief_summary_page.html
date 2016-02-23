@@ -48,7 +48,7 @@
               {{ summary.text("Not answered") }}
             {% endif %}
           {% else %}
-            {{ summary[question.type](question.value) }}
+            {{ summary[question.type](question.display_value or question.value) }}
           {% endif %}
     
           {% if brief_data.get('status') == 'draft' %}
