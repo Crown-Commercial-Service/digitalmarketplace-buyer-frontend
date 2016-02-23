@@ -28,12 +28,8 @@ def buyer_dashboard():
 @buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>', methods=['GET'])
 def info_page_for_starting_a_brief(framework_slug, lot_slug):
 
-    framework, lot = get_framework_and_lot(framework_slug, lot_slug, data_api_client)
-
-    if framework['status'] != 'live':
-        abort(404)
-    if not lot['allowsBrief']:
-        abort(404)
+    framework, lot = get_framework_and_lot(framework_slug, lot_slug, data_api_client,
+                                           status='live', must_allow_brief=True)
 
     return render_template(
         "buyers/start_brief_info.html",
@@ -46,18 +42,9 @@ def info_page_for_starting_a_brief(framework_slug, lot_slug):
 
 @buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/create', methods=['GET'])
 def start_new_brief(framework_slug, lot_slug):
-    """Page to kick off creation of a new brief."""
 
-    framework = data_api_client.get_framework(framework_slug)['frameworks']
-    if framework['status'] != 'live':
-        abort(404)
-
-    try:
-        lot = next(lot for lot in framework['lots'] if lot['slug'] == lot_slug)
-    except StopIteration:
-        abort(404)
-    if not lot['allowsBrief']:
-        abort(404)
+    framework, lot = get_framework_and_lot(framework_slug, lot_slug, data_api_client,
+                                           status='live', must_allow_brief=True)
 
     content = content_loader.get_manifest(framework_slug, 'edit_brief').filter(
         {'lot': lot['slug']}
@@ -76,16 +63,9 @@ def start_new_brief(framework_slug, lot_slug):
 
 @buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/create', methods=['POST'])
 def create_new_brief(framework_slug, lot_slug):
-    framework = data_api_client.get_framework(framework_slug)["frameworks"]
-    if framework["status"] != "live":
-        abort(404)
 
-    try:
-        lot = next(lot for lot in framework['lots'] if lot['slug'] == lot_slug)
-    except StopIteration:
-        abort(404)
-    if not lot['allowsBrief']:
-        abort(404)
+    framework, lot = get_framework_and_lot(framework_slug, lot_slug, data_api_client,
+                                           status='live', must_allow_brief=True)
 
     content = content_loader.get_manifest(framework_slug, 'edit_brief').filter(
         {'lot': lot['slug']}
@@ -129,16 +109,9 @@ def create_new_brief(framework_slug, lot_slug):
     '/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/edit/<section_id>',
     methods=['GET'])
 def edit_brief_submission(framework_slug, lot_slug, brief_id, section_id):
-    framework = data_api_client.get_framework(framework_slug)["frameworks"]
-    if framework["status"] != "live":
-        abort(404)
 
-    try:
-        lot = next(lot for lot in framework['lots'] if lot['slug'] == lot_slug)
-    except StopIteration:
-        abort(404)
-    if not lot['allowsBrief']:
-        abort(404)
+    framework, lot = get_framework_and_lot(framework_slug, lot_slug, data_api_client,
+                                           status='live', must_allow_brief=True)
 
     brief = data_api_client.get_brief(brief_id)["briefs"]
     if not is_brief_associated_with_user(brief, current_user.id) or not brief_can_be_edited(brief):
@@ -164,16 +137,9 @@ def edit_brief_submission(framework_slug, lot_slug, brief_id, section_id):
     '/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/edit/<section_id>',
     methods=['POST'])
 def update_brief_submission(framework_slug, lot_slug, brief_id, section_id):
-    framework = data_api_client.get_framework(framework_slug)["frameworks"]
-    if framework["status"] != "live":
-        abort(404)
 
-    try:
-        lot = next(lot for lot in framework['lots'] if lot['slug'] == lot_slug)
-    except StopIteration:
-        abort(404)
-    if not lot['allowsBrief']:
-        abort(404)
+    framework, lot = get_framework_and_lot(framework_slug, lot_slug, data_api_client,
+                                           status='live', must_allow_brief=True)
 
     brief = data_api_client.get_brief(brief_id)["briefs"]
     if not is_brief_associated_with_user(brief, current_user.id) or not brief_can_be_edited(brief):
@@ -215,12 +181,9 @@ def update_brief_submission(framework_slug, lot_slug, brief_id, section_id):
 
 @buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>', methods=['GET'])
 def view_brief_summary(framework_slug, lot_slug, brief_id):
-    framework, lot = get_framework_and_lot(framework_slug, lot_slug, data_api_client)
 
-    if framework['status'] != 'live':
-        abort(404)
-    if not lot['allowsBrief']:
-        abort(404)
+    framework, lot = get_framework_and_lot(framework_slug, lot_slug, data_api_client,
+                                           status='live', must_allow_brief=True)
 
     brief = data_api_client.get_brief(brief_id)["briefs"]
     if not is_brief_associated_with_user(brief, current_user.id):
@@ -257,12 +220,9 @@ def view_brief_summary(framework_slug, lot_slug, brief_id):
 
 @buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/delete', methods=['POST'])
 def delete_a_brief(framework_slug, lot_slug, brief_id):
-    framework, lot = get_framework_and_lot(framework_slug, lot_slug, data_api_client)
 
-    if framework['status'] != 'live':
-        abort(404)
-    if not lot['allowsBrief']:
-        abort(404)
+    # Don't need the return values here; the call is just to test conditions on lot and framework
+    get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
 
     brief = data_api_client.get_brief(brief_id)["briefs"]
     if not is_brief_associated_with_user(brief, current_user.id):
