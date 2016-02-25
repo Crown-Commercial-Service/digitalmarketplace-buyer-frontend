@@ -12,7 +12,7 @@ class TestBriefPage(BaseApplicationTest):
         super(TestBriefPage, self).setup()
 
         self._data_api_client = mock.patch(
-            'app.main.views.digital_outcomes_and_specialists.data_api_client'
+            'app.main.views.marketplace.data_api_client'
         ).start()
 
         self.brief = self._get_dos_brief_fixture_data()
