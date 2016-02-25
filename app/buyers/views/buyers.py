@@ -246,3 +246,24 @@ def delete_a_brief(framework_slug, lot_slug, brief_id):
             url_for('.view_brief_summary', framework_slug=framework_slug, lot_slug=lot_slug,
                     brief_id=brief_id, delete_requested=True)
         )
+
+
+@buyers.route("/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/add-clarification-question",
+              methods=["POST"])
+def add_clarification_question(framework_slug, lot_slug, brief_id):
+
+    # Don't need the return values here; the call is just to test conditions on lot and framework
+    get_framework_and_lot(framework_slug, lot_slug, data_api_client, status="live", must_allow_brief=True)
+
+    brief = data_api_client.get_brief(brief_id)["briefs"]
+    if not is_brief_associated_with_user(brief, current_user.id):
+        abort(404)
+
+    data_api_client.add_clarification_question(brief_id,
+                                               request.form.get("question", ""),
+                                               request.form.get("answer", ""),
+                                               current_user.email_address)
+
+    return redirect(
+        url_for('.view_brief_summary', framework_slug=framework_slug, lot_slug=lot_slug,
+                brief_id=brief_id))

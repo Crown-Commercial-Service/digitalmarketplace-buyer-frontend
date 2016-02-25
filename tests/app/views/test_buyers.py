@@ -736,3 +736,97 @@ class TestBriefSummaryPage(BaseApplicationTest):
             )
 
             assert res.status_code == 404
+
+
+@mock.patch("app.buyers.views.buyers.data_api_client")
+class TestAddBriefClarificationQuestion(BaseApplicationTest):
+    def test_add_brief_clarification_question(self, data_api_client):
+        self.login_as_buyer()
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug="digital-outcomes-and-specialists",
+            status="live",
+            lots=[
+                api_stubs.lot(slug="digital-specialists", allows_brief=True)
+            ])
+        data_api_client.get_brief.return_value = api_stubs.brief(status="live")
+
+        res = self.client.post(
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements"
+            "/digital-specialists/1234/add-clarification-question",
+            data={
+                "question": "Why?",
+                "answer": "Because",
+            })
+
+        assert res.status_code == 302
+        data_api_client.add_clarification_question.assert_called_with(
+            "1234", "Why?", "Because", "buyer@email.com")
+
+    def test_404_if_framework_is_not_live(self, data_api_client):
+        with self.app.app_context():
+            self.login_as_buyer()
+            data_api_client.get_framework.return_value = api_stubs.framework(
+                slug='digital-outcomes-and-specialists',
+                status='pending',
+                lots=[
+                    api_stubs.lot(slug='digital-specialists', allows_brief=True),
+                ]
+            )
+            data_api_client.get_brief.return_value = api_stubs.brief()
+
+            res = self.client.post(
+                "/buyers/frameworks/digital-outcomes-and-specialists/requirements"
+                "/digital-specialists/1234/add-clarification-question",
+                data={
+                    "question": "Why?",
+                    "answer": "Because",
+                })
+
+            assert res.status_code == 404
+            assert not data_api_client.add_clarification_question.called
+
+    def test_404_if_framework_does_not_allow_brief(self, data_api_client):
+        with self.app.app_context():
+            self.login_as_buyer()
+            data_api_client.get_framework.return_value = api_stubs.framework(
+                slug='digital-outcomes-and-specialists',
+                status='live',
+                lots=[
+                    api_stubs.lot(slug='digital-specialists', allows_brief=False),
+                ]
+            )
+            data_api_client.get_brief.return_value = api_stubs.brief()
+
+            res = self.client.post(
+                "/buyers/frameworks/digital-outcomes-and-specialists/requirements"
+                "/digital-specialists/1234/add-clarification-question",
+                data={
+                    "question": "Why?",
+                    "answer": "Because",
+                })
+
+            assert res.status_code == 404
+            assert not data_api_client.add_clarification_question.called
+
+    def test_404_if_brief_does_not_belong_to_user(self, data_api_client):
+        with self.app.app_context():
+            self.login_as_buyer()
+            data_api_client.get_framework.return_value = api_stubs.framework(
+                slug='digital-outcomes-and-specialists',
+                status='live',
+                lots=[
+                    api_stubs.lot(slug='digital-specialists', allows_brief=True),
+                ]
+            )
+            data_api_client.get_brief.return_value = api_stubs.brief(user_id=234)
+
+            res = self.client.post(
+                "/buyers/frameworks/digital-outcomes-and-specialists/requirements"
+                "/digital-specialists/1234/add-clarification-question",
+                data={
+                    "question": "Why?",
+                    "answer": "Because",
+                })
+
+            assert res.status_code == 404
+            assert not data_api_client.add_clarification_question.called
