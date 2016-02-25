@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from flask import abort, render_template 
+from flask import abort, render_template
 
 from dmapiclient import HTTPError
 
@@ -17,11 +17,11 @@ def get_brief_by_id(brief_id):
     try:
         briefs = data_api_client.get_brief(brief_id)
         brief = briefs.get('briefs')
-        if brief == None or brief['status'] != 'live':
-            abort(404, "Opportunity '{}' can not be found".format(brief_id)) 
+        if brief['status'] != 'live':
+            abort(404, "Opportunity '{}' can not be found".format(brief_id))
     except HTTPError as e:
-        if e.status == 404:
-            abort(404, "Opportunity '{}' can not be found".format(brief_id)) 
+        if e.status_code == 404:
+            abort(404, "Opportunity '{}' can not be found".format(brief_id))
 
     return render_template(
         'brief.html',
