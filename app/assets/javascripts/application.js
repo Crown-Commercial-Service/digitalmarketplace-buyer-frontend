@@ -14,6 +14,7 @@
 //= include ../../../node_modules/govuk_frontend_toolkit/javascripts/govuk/selection-buttons.js
 //= include _analytics.js'
 //= include _onready.js'
+//= include _selection-buttons.js
 
 (function(GOVUK, GDM) {
 
