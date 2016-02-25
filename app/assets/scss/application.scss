@@ -7,23 +7,32 @@
 // Path to assets for use with file-url()
 $path: "/static/images/";
 
+// Digital Marketplace front end toolkit components
+@import "forms/word-counter";
+@import "forms/list-entry";
+
+@import "_reset.scss";
+
 // Digtial Marketplace Front-end toolkit styles
+@import "toolkit/_breadcrumb.scss";
+@import "toolkit/_browse-list.scss";
+@import "toolkit/_buttons.scss";
+@import "toolkit/_contact-details.scss";
+@import "toolkit/_document.scss";
+@import "toolkit/_framework-notice.scss";
 @import "toolkit/_grids.scss";
 @import "toolkit/_notification-banners.scss";
-@import "toolkit/_buttons.scss";
-@import "toolkit/_breadcrumb.scss";
 @import "toolkit/_page-headings.scss";
-@import "toolkit/_browse-list.scss";
-@import "toolkit/_document.scss";
-@import "toolkit/_contact-details.scss";
 @import "toolkit/_service-id.scss";
 @import "toolkit/_temporary-message.scss";
-@import "toolkit/_framework-notice.scss";
-@import "toolkit/search/_search-result.scss";
+@import "toolkit/forms/_hint.scss";
 @import "toolkit/forms/_option-select.scss";
+@import "toolkit/forms/_questions.scss";
+@import "toolkit/forms/_selection-buttons.scss";
 @import "toolkit/forms/_summary.scss";
 @import "toolkit/forms/_textboxes.scss";
 @import "toolkit/forms/_validation.scss";
+@import "toolkit/search/_search-result.scss";
 
 /* Blocks shared between multiple selectors */
 @import "shared_placeholders/_temporary-messages.scss";
@@ -37,6 +46,7 @@ $path: "/static/images/";
 @import "toolkit/forms/_questions.scss";
 
 // Buyers app styles
+@import "_brief_submission.scss";
 @import "_footer.scss";
 @import "_forms.scss";
 @import "_table.scss";
@@ -50,9 +60,65 @@ $path: "/static/images/";
 @import "_supplier-a-to-z.scss";
 @import "_atoz_navigation.scss";
 @import "_error-pages.scss";
+@import "_lists.scss";
 
 .return-to-top {
   display: block;
   @include core-19;
   margin: (1.5 * $gutter) 0 (2 * $gutter);
+}
+
+.marketplace-homepage-heading {
+
+  background-color: $govuk-blue;
+  width: 100%;
+  margin: -10px 0 40px;
+  padding: 0 0 20px;
+  color: white;
+
+  h1 {
+    @extend %site-width-container;
+    @include bold-48;
+    padding-top: 7px;
+    padding-bottom: 13px;
+  }
+  
+  .phase-banner {
+    border-bottom: 0px;
+  }
+  
+  .phase-banner p {
+    margin: -6px 0 10px;
+    color: white;
+
+    a, a:visited {
+        color: $white;
+      }
+
+    a:hover, a:active {
+      color: $light-blue-50;
+    }
+  }
+}
+
+.marketplace-homepage-subheading {
+
+  @include bold-27;
+  padding-bottom: 30px;
+
+}
+
+.marketplace-paragraph {
+
+  h2 {
+    @include bold-27;
+    padding-bottom: 10px;
+  }
+  p {
+    padding-bottom: 30px;
+  }
+}
+
+.padding-bottom-small {
+  padding-bottom: 10px;
 }

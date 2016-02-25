@@ -117,7 +117,7 @@ class BaseApplicationTest(object):
         if self.get_user_patch is not None:
             self.get_user_patch.stop()
 
-    def login(self):
+    def login_as_supplier(self):
         with patch('app.main.views.login.data_api_client') as login_api_client:
             login_api_client.authenticate_user.return_value = self.user(
                 123, "email@email.com", 1234, 'Supplier Name', 'Name', role='supplier')
@@ -140,12 +140,32 @@ class BaseApplicationTest(object):
     def login_as_buyer(self):
         with patch('app.main.views.login.data_api_client') as login_api_client:
             login_api_client.authenticate_user.return_value = self.user(
-                123, "email@email.com", None, None, 'Name')
+                123, "buyer@email.com", None, None, 'Name')
 
             self.get_user_patch = patch.object(
                 data_api_client,
                 'get_user',
-                return_value=self.user(123, "email@email.com", None, None, 'Name')
+                return_value=self.user(123, "buyer@email.com", None, None, 'Some Buyer')
+            )
+            self.get_user_patch.start()
+
+            self.client.post("/login", data={
+                'email_address': 'valid@email.com',
+                'password': '1234567890'
+            })
+
+            login_api_client.authenticate_user.assert_called_once_with(
+                "valid@email.com", "1234567890")
+
+    def login_as_admin(self):
+        with patch('app.main.views.login.data_api_client') as login_api_client:
+            login_api_client.authenticate_user.return_value = self.user(
+                123, "admin@email.com", None, None, 'Name', role='admin')
+
+            self.get_user_patch = patch.object(
+                data_api_client,
+                'get_user',
+                return_value=self.user(123, "admin@email.com", None, None, 'Some Admin', role='admin')
             )
             self.get_user_patch.start()
 
@@ -169,3 +189,13 @@ class BaseApplicationTest(object):
     def strip_all_whitespace(content):
         pattern = re.compile(r'\s+')
         return re.sub(pattern, '', content)
+
+    # Method to test flashes taken from http://blog.paulopoiati.com/2013/02/22/testing-flash-messages-in-flask/
+    def assert_flashes(self, expected_message, expected_category='message'):
+        with self.client.session_transaction() as session:
+            try:
+                category, message = session['_flashes'][0]
+            except KeyError:
+                raise AssertionError('nothing flashed')
+            assert expected_message in message
+            assert expected_category == category

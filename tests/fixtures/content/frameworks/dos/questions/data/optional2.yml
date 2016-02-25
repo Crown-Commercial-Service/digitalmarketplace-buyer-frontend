@@ -1,0 +1,7 @@
+depends:
+  - "on": "lot"
+    being: ['digital-specialists']
+type: boolean
+filterLabel: 'Optional 2'
+question: 'Optional 2'
+optional: true

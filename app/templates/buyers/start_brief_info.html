@@ -1,0 +1,73 @@
+{% extends "_base_page.html" %}
+
+{% set title_text = "Find a team to provide an outcome" if lot.slug == 'digital-outcomes' else "Find an individual specialist" %}
+{% set supplier_type = "outcomes" if lot.slug == 'digital-outcomes' else "specialists" %}
+{% set button_text = "Choose location" if lot.slug == 'digital-outcomes' else "Choose specialist role" %}
+
+{% block page_title %}
+{{ title_text }} - Digital Marketplace
+{% endblock %}
+
+{% block breadcrumb %}
+  {%
+    with items = [
+      {
+        "link": "/",
+        "label": "Digital Marketplace"
+      }
+    ]
+  %}
+    {% include "toolkit/breadcrumb.html" %}
+  {% endwith %}
+{% endblock %}
+
+{% block main_content %}
+
+<div class="grid-row">
+    <div class="column-two-thirds large-paragraph">
+        {% with
+          smaller = true,
+          heading = title_text
+        %}
+        {% include 'toolkit/page-heading.html' %}
+        {% endwith %}
+    </div>
+
+    <div class="column-two-thirds large-paragraph">
+        <p class="padding-bottom-small">There are {{ supplier_count }} suppliers who provide {{ supplier_type }} on the Digital Marketplace.</p>
+        
+        <p>You need to write and publish your requirements so these suppliers can decide:</p>
+        <ul class="list-bullet padding-bottom-small">
+            <li>whether to apply for the work</li>
+            {% if lot.slug == 'digital-outcomes' %}
+              <li>what solution best meets your needs</li>
+            {% endif %}
+        </ul>
+        
+        <p>Once you’ve published your requirements, you’ll need to:</p>
+        <ul class="list-bullet padding-bottom-small">
+            <li>answer supplier questions</li>
+            <li>shortlist and evaluate supplier applications</li>
+            <li>award to the supplier that best meets your needs</li>
+        </ul>
+        
+        <p class="padding-bottom-small">
+            <a href="#">View published requirements</a><br />
+            <a href="#">View supplier A to Z</a><br />
+            <a href="#">Find out how suppliers are evaluated</a><br />
+            <a href="#">How to talk to suppliers before you start</a>
+        </p>
+        <p class="padding-bottom-small">The buying process should take around 1 month.</p>
+        <p class="padding-bottom-small">Read more about <a href="#">how to buy</a>.</p>
+    </div>
+    
+    <div class="column-two-thirds large-paragraph">
+        <form action="{{ url_for('buyers.start_new_brief', framework_slug=framework.slug, lot_slug=lot.slug) }}" method="get">
+            <button type="submit" class="button-save">
+                {{ button_text }}
+            </button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

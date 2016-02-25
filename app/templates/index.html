@@ -2,31 +2,60 @@
 
 {% block page_title %}Digital Marketplace{% endblock %}
 
+{% block top_header %}
+<header class="marketplace-homepage-heading">
+  {% include "_phase_banner.html" %}
+  <h1>
+    Digital Marketplace
+  </h1>
+</header>
+{% endblock %}
+
+{% block phase_banner %}{% endblock %}
+
 {% block main_content %}
+
+{% set dos_is_live = frameworks.get('digital-outcomes-and-specialists', {}).status == "live" %}
 
 <div class="index-page grid-row">
   <div class="column-two-thirds">
-    <header class="page-heading">
-      <h1>
-        Digital Marketplace
-      </h1>
-      <p class="lead">
-        Find technology or people for digital projects in the public sector
-      </p>
-    </header>
-    {% with
-      items = [
+    <h2 class="marketplace-homepage-subheading">Find technology or people for digital projects in the public sector</h2>
+    {% if dos_is_live %}
+    {% set
+      dos_items = [
         {
-          "link": "/g-cloud",
-          "title": "Find cloud technology and support",
-          "body": "eg web hosting or IT health checks",
-          "subtext": "Procurement framework: <a href='/g-cloud/framework'>G&#8209;Cloud</a>"
+          "link": url_for("buyers.info_page_for_starting_a_brief", framework_slug='digital-outcomes-and-specialists', lot_slug='digital-specialists'),
+          "title": "Find an individual specialist",
+          "body": "eg a developer or user researcher",
         },
         {
-          "link": "/crown-hosting",
-          "title": "Buy physical datacentre space for legacy systems",
-          "subtext": "Procurement framework: <a href='/crown-hosting/framework'>Crown Hosting Data Centres</a>"
+          "link": url_for("buyers.info_page_for_starting_a_brief", framework_slug='digital-outcomes-and-specialists', lot_slug='digital-outcomes'),
+          "title": "Find a team to provide an outcome",
+          "body": "eg a booking system or accessibility audit",
         },
+        {
+          "link": url_for("buyers.start_new_brief", framework_slug='digital-outcomes-and-specialists', lot_slug='user-research-participants'),
+          "title": "Find user research participants",
+          "body": "eg people from a specific user group to test your service",
+        },
+        {
+          "link": "/somewhere",
+          "title": "Find a user research lab",
+          "body": "eg a room to conduct research sessions",
+        },
+      ]
+    %}
+    {% set dss_items = [] %}
+    {% set buyer_dashboard = [
+        {
+          "link": "/buyers",
+          "title": "View your briefs and supplier responses",
+        },
+      ]
+    %}
+    {% else %}
+    {% set dos_items = [] %}
+    {% set dss_items = [
         {
           "link": "https://digitalservicesstore.service.gov.uk/",
           "title": "Find specialists to work on digital projects",
@@ -34,6 +63,25 @@
           "subtext": "Procurement framework: <a href='/digital-services/framework'>Digital Services</a>"
         }
       ]
+    %}
+    {% set buyer_dashboard = [] %}
+    {% endif %}
+
+    {% with
+      items = dos_items + [
+        {
+          "link": "/g-cloud",
+          "title": "Find cloud technology and support",
+          "body": "eg web hosting or IT health checks",
+          "subtext": "Procurement framework: <a href='/g-cloud/framework'>G&#8209;Cloud</a>" if not dos_is_live else None
+        },
+        {
+          "link": "/crown-hosting",
+          "title": "Buy physical datacentre space for legacy systems",
+          "body": "eg for services that can’t be migrated to the cloud yet",
+          "subtext": "Procurement framework: <a href='/crown-hosting/framework'>Crown Hosting Data Centres</a>" if not dos_is_live else None
+        },
+      ] + dss_items + buyer_dashboard
     %}
       {% include "toolkit/browse-list.html" %}
     {% endwith %}

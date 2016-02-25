@@ -1,0 +1,73 @@
+{% extends "_base_page.html" %}
+
+{% block page_title %}{{ brief_data.title or brief_data.lotName }} – Digital Marketplace{% endblock %}
+
+{% block main_content %}
+  <div class="grid-row">
+
+    {% block before_heading %}{% endblock %}
+    <div class="column-two-thirds">
+      {% with
+        heading = brief_data.get('title', brief_data['lotName']),
+        smaller = true
+      %}
+        {% include "toolkit/page-heading.html" %}
+      {% endwith %}
+
+      <div class="marketplace-paragraph">
+        <h2>Overview of work</h2>
+        <p class="padding-bottom-large">Create an overview of the work to help suppliers decide whether to apply.</p>
+      </div>
+    </div>
+              
+    {% block before_sections %}{% endblock %}
+              
+    <div class="column-one-whole">
+      
+      {% import "toolkit/summary-table.html" as summary %}
+
+      {% call(question) summary.list_table(
+        flattened_brief,
+        field_headings=[
+          "Requirements attribute name",
+          "Requirements attribute",
+          "Action"
+        ],
+        field_headings_visible=False
+      ) %}
+      
+        {% call summary.row() %}
+          {{ summary.field_name(question.label) }}
+        
+          {% if question.answer_required or question.is_empty %}
+            {% if brief_data.get('status') == 'draft' %}
+              {% call summary.field() %}
+                <a href="{{ url_for("buyers.edit_brief_submission", framework_slug=framework.slug, lot_slug=brief_data.lot, brief_id=brief_id, section_id=question.section_id, _anchor=question.id) }}">{{ question.empty_message or "Not answered" }}</a>
+              {% endcall %}
+            {% else %}
+              {{ summary.text("Not answered") }}
+            {% endif %}
+          {% else %}
+            {{ summary[question.type](question.display_value or question.value) }}
+          {% endif %}
+    
+          {% if brief_data.get('status') == 'draft' %}
+            {% if question.is_empty and not question.answer_required %}
+              {% call summary.field(action=True) %}
+                Optional
+              {% endcall %}
+            {% elif not question.answer_required %}
+              {{ summary.edit_link("Edit", url_for("buyers.edit_brief_submission", framework_slug=framework.slug, lot_slug=brief_data.lot, brief_id=brief_id, section_id=question.section_id, _anchor=question.id)) }}
+            {% else %}
+              {% call summary.field() %}{% endcall %}
+            {% endif %}
+          {% endif %}
+        
+        {% endcall %}
+      {% endcall %}
+
+      {% block after_sections %}{% endblock %}
+    </div>
+      
+  </div>
+{% endblock %}

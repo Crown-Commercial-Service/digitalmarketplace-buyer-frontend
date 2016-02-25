@@ -17,7 +17,6 @@ def redirect_logged_in_user(next_url=None):
         if next_url and next_url.startswith('/'):
             return redirect(next_url)
         else:
-            # TODO: direct to buyer dashboard, once it exists
-            pass
+            return redirect(url_for('buyers.buyer_dashboard'))
 
     return redirect(url_for('.index'))

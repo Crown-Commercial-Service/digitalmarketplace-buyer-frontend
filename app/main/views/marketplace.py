@@ -33,9 +33,9 @@ def index():
                 framework.get('status')
             )
 
-    # if no framework is found (should never happen), ditch the message and load the page
+    # if there is a problem with the API we should still show the home page
     except APIError:
-        pass
+        frameworks = []
     # if no message file is found (should never happen), throw a 500
     except ContentNotFoundError:
         current_app.logger.error(
@@ -45,6 +45,7 @@ def index():
 
     return render_template(
         'index.html',
+        frameworks={framework['slug']: framework for framework in frameworks},
         temporary_message=temporary_message,
         **template_data
     )

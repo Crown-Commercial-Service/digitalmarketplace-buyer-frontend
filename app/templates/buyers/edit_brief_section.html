@@ -1,0 +1,27 @@
+{% extends "buyers/_base_edit_section_page.html" %}
+
+{% block breadcrumb %}
+  {%
+    with items = [
+      {
+        "link": "/",
+        "label": "Digital Marketplace"
+      },
+    ]
+  %}
+    {% include "toolkit/breadcrumb.html" %}
+  {% endwith %}
+{% endblock %}
+
+{% block save_button %}
+
+  {%
+    with
+    label="Save and continue",
+    type="save",
+    name = "return_to_overview"
+  %}
+    {% include "toolkit/button.html" %}
+  {% endwith %}
+
+{% endblock %}

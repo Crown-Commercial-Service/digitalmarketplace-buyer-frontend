@@ -1,0 +1,102 @@
+{% extends "_base_page.html" %}
+{% import "toolkit/summary-table.html" as summary %}
+{% block page_title %}Your account - Digital Marketplace{% endblock %}
+
+{% block breadcrumb %}
+    {%
+        with items = [
+        {
+            "link": "/",
+            "label": "Digital Marketplace"
+        }
+        ]
+    %}
+    {% include "toolkit/breadcrumb.html" %}
+    {% endwith %}
+{% endblock %}
+
+{% block main_content %}
+
+    <div class="grid-row">
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    {% if category == 'error' %}
+                        <div class="banner-destructive-without-action">
+                    {% else %}
+                        <div class="banner-success-without-action">
+                    {% endif %}
+                            <p class="banner-message">
+                    {% if 'requirements_deleted' in message %}
+                            Your requirements &lsquo;{{ message.get('requirements_deleted') }}&rsquo;were deleted
+                    {% else %}
+                        {{ message }}
+                    {% endif %}
+                            </p>
+                        </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <div class="column-two-thirds">
+            {% with
+                context = current_user.email_address,
+                heading = current_user.name
+            %}
+            {% include 'toolkit/page-heading.html' %}
+            {% endwith %}
+        </div>
+    </div>
+
+
+{{ summary.heading("Unpublished requirements", id="unpublished_requirements") }}
+{% call(item) summary.list_table(
+    draft_briefs,
+    caption="Unpublished requirements caption",
+    empty_message="You don’t have any unpublished requirements",
+    field_headings=[
+    "Brief name",
+    "Created",
+    "Unanswered questions",
+    ],
+    field_headings_visible=True
+) %}
+
+    {% call summary.row() %}
+        {{ summary.service_link(item.title, url_for(".view_brief_summary", framework_slug=item.frameworkSlug, lot_slug=item.lot, brief_id=item.id)) }}
+        
+        {{ summary.text(item.createdAt|dateformat) }}
+        
+        {% if item.unanswered_required > 0 and item.unanswered_optional > 0 %}
+            {{ summary.text("{} required<br>{} optional".format(item.unanswered_required, item.unanswered_optional)|safe) }}
+        {% elif item.unanswered_required > 0 %}
+            {{ summary.text("{} required".format(item.unanswered_required)) }}
+        {% elif item.unanswered_optional > 0 %}
+            {{ summary.text("{} optional".format(item.unanswered_optional)) }}
+        {% else %}
+            {{ summary.text() }}
+        {% endif %}
+        
+    {% endcall %}
+{% endcall %}
+
+{{ summary.heading("Published requirements", id="published_requirements") }}
+{% call(item) summary.list_table(
+    live_briefs,
+    caption="Published requirements caption",
+    empty_message="You don’t have any published requirements",
+    field_headings=[
+    "Brief name",
+    "Published",
+    ],
+    field_headings_visible=True
+) %}
+
+    {% call summary.row() %}
+        {{ summary.service_link(item.title, url_for(".view_brief_summary", framework_slug=item.frameworkSlug, lot_slug=item.lot, brief_id=item.id)) }}
+        {{ summary.text(item.publishedAt|dateformat) }}
+    {% endcall %}
+{% endcall %}
+
+{% endblock %}
