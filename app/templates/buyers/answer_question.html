@@ -1,4 +1,5 @@
 {% extends "_base_page.html" %}
+{% import "macros/toolkit_forms.html" as forms %}
 
 {% block page_title %}Answer a Clarification Question{% endblock %}
 
@@ -36,23 +37,9 @@
       <form method="post">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
 
-        {% with
-            large = true,
-            max_length_in_words = 100,
-            question = "Question",
-            name = "question"
-        %}
-          {% include "toolkit/forms/textbox.html" %}
-        {% endwith %}
-
-        {% with
-            large = true,
-            max_length_in_words = 100,
-            question = "Answer",
-            name = "answer"
-        %}
-          {% include "toolkit/forms/textbox.html" %}
-        {% endwith %}
+        {% for question in section.questions %}
+          {{ forms[question.type](question, data, errors or {}) }}
+        {% endfor %}
 
         {% with
             type = "save",

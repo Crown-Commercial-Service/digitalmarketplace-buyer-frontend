@@ -268,20 +268,33 @@ def add_clarification_question(framework_slug, lot_slug, brief_id):
     if not clarification_questions_open(brief):
         abort(404)
 
-    if request.method == "GET":
-        return render_template(
-            "buyers/answer_question.html",
-            framework=framework,
-            lot=lot,
-            brief=brief,
-            **dict(buyers.config["BASE_TEMPLATE_DATA"])
-        ), 200
-    else:
-        data_api_client.add_brief_clarification_question(brief_id,
-                                                         request.form.get("question", ""),
-                                                         request.form.get("answer", ""),
-                                                         current_user.email_address)
+    content = content_loader.get_manifest(framework_slug, "clarification_question")
+    section = content.get_section(content.get_next_editable_section_id())
 
-        return redirect(
-            url_for('.view_brief_summary', framework_slug=framework_slug, lot_slug=lot_slug,
-                    brief_id=brief_id) + "#clarification-questions")
+    errors = {}
+
+    if request.method == "POST":
+        try:
+            data_api_client.add_brief_clarification_question(brief_id,
+                                                             request.form.get("question", ""),
+                                                             request.form.get("answer", ""),
+                                                             current_user.email_address)
+
+            return redirect(
+                url_for('.view_brief_summary', framework_slug=framework_slug, lot_slug=lot_slug,
+                        brief_id=brief_id) + "#clarification-questions")
+        except HTTPError as e:
+            if e.status_code != 400:
+                raise
+            errors = section.get_error_messages(e.message, None)
+
+    return render_template(
+        "buyers/answer_question.html",
+        framework=framework,
+        lot=lot,
+        brief=brief,
+        data=request.form,
+        section=section,
+        errors=errors,
+        **dict(buyers.config["BASE_TEMPLATE_DATA"])
+    ), 200
