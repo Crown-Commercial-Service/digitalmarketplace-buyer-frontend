@@ -686,7 +686,6 @@ class TestBriefSummaryPage(BaseApplicationTest):
             assert "Clarification questions" not in page_html
             assert "Answer a clarification question" not in page_html
 
-
     @mock.patch("app.buyers.views.buyers.clarification_questions_open")
     def test_show_live_brief_summary_page(
             self, clarification_questions_open, data_api_client):
@@ -750,7 +749,6 @@ class TestBriefSummaryPage(BaseApplicationTest):
 
             assert "Clarification questions" in page_html
             assert "Answer a clarification question" in page_html
-
 
     def test_404_if_framework_is_not_live(self, data_api_client):
         with self.app.app_context():
