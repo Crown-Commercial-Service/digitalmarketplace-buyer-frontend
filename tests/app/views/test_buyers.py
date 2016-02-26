@@ -650,7 +650,7 @@ class TestDeleteBriefSubmission(BaseApplicationTest):
 
 @mock.patch('app.buyers.views.buyers.data_api_client')
 class TestBriefSummaryPage(BaseApplicationTest):
-    def test_show_brief_summary_page(self, data_api_client):
+    def test_show_draft_brief_summary_page(self, data_api_client):
         with self.app.app_context():
             self.login_as_buyer()
             data_api_client.get_framework.return_value = api_stubs.framework(
@@ -660,7 +660,7 @@ class TestBriefSummaryPage(BaseApplicationTest):
                     api_stubs.lot(slug='digital-specialists', allows_brief=True),
                 ]
             )
-            brief_json = api_stubs.brief()
+            brief_json = api_stubs.brief(status="draft")
             brief_json['briefs']['specialistRole'] = 'communications_manager'
             data_api_client.get_brief.return_value = brief_json
 
@@ -682,6 +682,38 @@ class TestBriefSummaryPage(BaseApplicationTest):
 
             assert 'communications_manager' not in page_html
             assert 'Communications manager' in page_html
+
+            assert "Clarification questions" not in page_html
+
+    def test_show_live_brief_summary_page(self, data_api_client):
+        with self.app.app_context():
+            self.login_as_buyer()
+            data_api_client.get_framework.return_value = api_stubs.framework(
+                slug='digital-outcomes-and-specialists',
+                status='live',
+                lots=[
+                    api_stubs.lot(slug='digital-specialists', allows_brief=True),
+                ]
+            )
+            brief_json = api_stubs.brief(status="live")
+            brief_json['briefs']['publishedAt'] = "2016-04-02T20:10:00.00000Z"
+            brief_json['briefs']['specialistRole'] = 'communications_manager'
+            data_api_client.get_brief.return_value = brief_json
+
+            res = self.client.get(
+                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1"
+            )
+
+            assert res.status_code == 200
+            page_html = res.get_data(as_text=True)
+            document = html.fromstring(page_html)
+
+            assert (document.xpath('//h1')[0]).text_content().strip() == "I need a thing to do a thing"
+
+            last_update = document.cssselect('p.last-edited')
+            assert self._strip_whitespace(last_update[0].text_content()) == "Published:Saturday02April2016at21:10"
+
+            assert "Clarification questions" in page_html
 
     def test_404_if_framework_is_not_live(self, data_api_client):
         with self.app.app_context():
@@ -752,14 +784,14 @@ class TestAddBriefClarificationQuestion(BaseApplicationTest):
 
         res = self.client.post(
             "/buyers/frameworks/digital-outcomes-and-specialists/requirements"
-            "/digital-specialists/1234/add-clarification-question",
+            "/digital-specialists/1234/answer-question",
             data={
                 "question": "Why?",
                 "answer": "Because",
             })
 
         assert res.status_code == 302
-        data_api_client.add_clarification_question.assert_called_with(
+        data_api_client.add_brief_clarification_question.assert_called_with(
             "1234", "Why?", "Because", "buyer@email.com")
 
     def test_404_if_framework_is_not_live(self, data_api_client):
@@ -776,14 +808,14 @@ class TestAddBriefClarificationQuestion(BaseApplicationTest):
 
             res = self.client.post(
                 "/buyers/frameworks/digital-outcomes-and-specialists/requirements"
-                "/digital-specialists/1234/add-clarification-question",
+                "/digital-specialists/1234/answer-question",
                 data={
                     "question": "Why?",
                     "answer": "Because",
                 })
 
             assert res.status_code == 404
-            assert not data_api_client.add_clarification_question.called
+            assert not data_api_client.add_brief_clarification_question.called
 
     def test_404_if_framework_does_not_allow_brief(self, data_api_client):
         with self.app.app_context():
@@ -799,14 +831,14 @@ class TestAddBriefClarificationQuestion(BaseApplicationTest):
 
             res = self.client.post(
                 "/buyers/frameworks/digital-outcomes-and-specialists/requirements"
-                "/digital-specialists/1234/add-clarification-question",
+                "/digital-specialists/1234/answer-question",
                 data={
                     "question": "Why?",
                     "answer": "Because",
                 })
 
             assert res.status_code == 404
-            assert not data_api_client.add_clarification_question.called
+            assert not data_api_client.add_brief_clarification_question.called
 
     def test_404_if_brief_does_not_belong_to_user(self, data_api_client):
         with self.app.app_context():
@@ -822,11 +854,11 @@ class TestAddBriefClarificationQuestion(BaseApplicationTest):
 
             res = self.client.post(
                 "/buyers/frameworks/digital-outcomes-and-specialists/requirements"
-                "/digital-specialists/1234/add-clarification-question",
+                "/digital-specialists/1234/answer-question",
                 data={
                     "question": "Why?",
                     "answer": "Because",
                 })
 
             assert res.status_code == 404
-            assert not data_api_client.add_clarification_question.called
+            assert not data_api_client.add_brief_clarification_question.called

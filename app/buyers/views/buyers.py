@@ -214,10 +214,9 @@ def view_brief_summary(framework_slug, lot_slug, brief_id):
     return render_template(
         "buyers/brief_summary.html",
         framework=framework,
+        lot=lot,
         confirm_remove=request.args.get("confirm_remove", None),
-        brief_id=brief_id,
         brief_data=brief,
-        last_edit=brief['updatedAt'],
         flattened_brief=flattened_brief,
         unanswered_required=unanswered_required,
         unanswered_optional=unanswered_optional,
@@ -248,7 +247,30 @@ def delete_a_brief(framework_slug, lot_slug, brief_id):
         )
 
 
-@buyers.route("/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/add-clarification-question",
+@buyers.route("/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/answer-question",
+              methods=["GET"])
+def clarification_question(framework_slug, lot_slug, brief_id):
+
+    framework, lot = get_framework_and_lot(framework_slug, lot_slug, data_api_client,
+                                           status="live", must_allow_brief=True)
+
+    brief = data_api_client.get_brief(brief_id)["briefs"]
+    if not is_brief_associated_with_user(brief, current_user.id):
+        abort(404)
+
+    if brief["status"] != "live":
+        abort(404)
+
+    return render_template(
+        "buyers/answer_question.html",
+        framework=framework,
+        lot=lot,
+        brief=brief,
+        **dict(buyers.config["BASE_TEMPLATE_DATA"])
+    ), 200
+
+
+@buyers.route("/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/answer-question",
               methods=["POST"])
 def add_clarification_question(framework_slug, lot_slug, brief_id):
 
@@ -259,11 +281,11 @@ def add_clarification_question(framework_slug, lot_slug, brief_id):
     if not is_brief_associated_with_user(brief, current_user.id):
         abort(404)
 
-    data_api_client.add_clarification_question(brief_id,
-                                               request.form.get("question", ""),
-                                               request.form.get("answer", ""),
-                                               current_user.email_address)
+    data_api_client.add_brief_clarification_question(brief_id,
+                                                     request.form.get("question", ""),
+                                                     request.form.get("answer", ""),
+                                                     current_user.email_address)
 
     return redirect(
         url_for('.view_brief_summary', framework_slug=framework_slug, lot_slug=lot_slug,
-                brief_id=brief_id))
+                brief_id=brief_id) + "#clarification-questions")
