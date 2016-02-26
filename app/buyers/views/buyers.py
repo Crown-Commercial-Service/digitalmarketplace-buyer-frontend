@@ -3,8 +3,11 @@ from flask_login import current_user
 
 from app import data_api_client
 from .. import buyers, content_loader
-from ...helpers.buyers_helpers import count_suppliers_on_lot, get_framework_and_lot, is_brief_associated_with_user, \
-    count_unanswered_questions, brief_can_be_edited, add_unanswered_counts_to_briefs
+from ...helpers.buyers_helpers import (
+    count_suppliers_on_lot, get_framework_and_lot, is_brief_associated_with_user,
+    count_unanswered_questions, brief_can_be_edited, add_unanswered_counts_to_briefs,
+    clarification_questions_open
+)
 from ...helpers.search_helpers import get_template_data
 
 from dmapiclient import HTTPError
@@ -222,6 +225,7 @@ def view_brief_summary(framework_slug, lot_slug, brief_id):
         unanswered_optional=unanswered_optional,
         can_publish=not unanswered_required,
         delete_requested=delete_requested,
+        clarification_questions_open=clarification_questions_open(brief),
         **dict(buyers.config['BASE_TEMPLATE_DATA'])
     ), 200
 
@@ -248,8 +252,8 @@ def delete_a_brief(framework_slug, lot_slug, brief_id):
 
 
 @buyers.route("/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/answer-question",
-              methods=["GET"])
-def clarification_question(framework_slug, lot_slug, brief_id):
+              methods=["GET", "POST"])
+def add_clarification_question(framework_slug, lot_slug, brief_id):
 
     framework, lot = get_framework_and_lot(framework_slug, lot_slug, data_api_client,
                                            status="live", must_allow_brief=True)
@@ -261,31 +265,23 @@ def clarification_question(framework_slug, lot_slug, brief_id):
     if brief["status"] != "live":
         abort(404)
 
-    return render_template(
-        "buyers/answer_question.html",
-        framework=framework,
-        lot=lot,
-        brief=brief,
-        **dict(buyers.config["BASE_TEMPLATE_DATA"])
-    ), 200
-
-
-@buyers.route("/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/answer-question",
-              methods=["POST"])
-def add_clarification_question(framework_slug, lot_slug, brief_id):
-
-    # Don't need the return values here; the call is just to test conditions on lot and framework
-    get_framework_and_lot(framework_slug, lot_slug, data_api_client, status="live", must_allow_brief=True)
-
-    brief = data_api_client.get_brief(brief_id)["briefs"]
-    if not is_brief_associated_with_user(brief, current_user.id):
+    if not clarification_questions_open(brief):
         abort(404)
 
-    data_api_client.add_brief_clarification_question(brief_id,
-                                                     request.form.get("question", ""),
-                                                     request.form.get("answer", ""),
-                                                     current_user.email_address)
+    if request.method == "GET":
+        return render_template(
+            "buyers/answer_question.html",
+            framework=framework,
+            lot=lot,
+            brief=brief,
+            **dict(buyers.config["BASE_TEMPLATE_DATA"])
+        ), 200
+    else:
+        data_api_client.add_brief_clarification_question(brief_id,
+                                                         request.form.get("question", ""),
+                                                         request.form.get("answer", ""),
+                                                         current_user.email_address)
 
-    return redirect(
-        url_for('.view_brief_summary', framework_slug=framework_slug, lot_slug=lot_slug,
-                brief_id=brief_id) + "#clarification-questions")
+        return redirect(
+            url_for('.view_brief_summary', framework_slug=framework_slug, lot_slug=lot_slug,
+                    brief_id=brief_id) + "#clarification-questions")

@@ -57,3 +57,8 @@ def add_unanswered_counts_to_briefs(briefs):
         brief['unanswered_optional'] = unanswered_optional
 
     return briefs
+
+
+def clarification_questions_open(brief):
+    # TODO: Implement this properly
+    return True
