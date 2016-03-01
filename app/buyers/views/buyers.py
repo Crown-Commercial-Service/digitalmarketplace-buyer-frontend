@@ -272,6 +272,7 @@ def add_clarification_question(framework_slug, lot_slug, brief_id):
     section = content.get_section(content.get_next_editable_section_id())
 
     errors = {}
+    status_code = 200
 
     if request.method == "POST":
         try:
@@ -287,6 +288,7 @@ def add_clarification_question(framework_slug, lot_slug, brief_id):
             if e.status_code != 400:
                 raise
             errors = section.get_error_messages(e.message, None)
+            status_code = 400
 
     return render_template(
         "buyers/answer_question.html",
@@ -297,4 +299,4 @@ def add_clarification_question(framework_slug, lot_slug, brief_id):
         section=section,
         errors=errors,
         **dict(buyers.config["BASE_TEMPLATE_DATA"])
-    ), 200
+    ), status_code
