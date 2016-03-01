@@ -8,7 +8,6 @@ from dmutils.content_loader import ContentNotFoundError
 
 from ...main import main
 from ...helpers.shared_helpers import get_one_framework_by_status_in_order_of_preference
-from ...presenters.brief_presenters import Brief
 
 from app import data_api_client, content_loader
 
