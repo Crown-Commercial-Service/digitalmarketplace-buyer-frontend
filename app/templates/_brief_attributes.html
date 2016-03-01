@@ -1,0 +1,18 @@
+{% import "toolkit/summary-table.html" as summary %}
+{% for section in content.summary(brief) %}
+    {{ summary.heading(section.name, id="brief-attributes-{{ loop.index }}") }}
+    {% call(item) summary.list_table(
+      section.questions,
+      caption=section.name,
+      field_headings=[
+        "Brief attribute name",
+        "Brief attribute value"
+      ],
+      field_headings_visible=False
+    ) %}
+      {% call summary.row() %}
+        {{ summary.field_name(item.label) }}
+        {{ summary[item.type](item.value) }}
+      {% endcall %}
+    {% endcall %}
+{% endfor %}
