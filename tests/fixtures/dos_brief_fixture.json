@@ -1,0 +1,48 @@
+{
+  "briefs": {
+    "backgroundInformation": "Testing the new platform.",
+    "contractLength": "4 weeks",
+    "createdAt": "2016-02-25T10:47:23.126761Z",
+    "essentialRequirements": [
+      "Can write Capybara tests",
+      "Is competent with Linux, Ruby and JavaScript"
+    ],
+    "evaluationType": [
+      "provide a case study or evidence of previous work"
+    ],
+    "frameworkFramework": "dos",
+    "frameworkName": "Digital Outcomes and Specialists",
+    "frameworkSlug": "digital-outcomes-and-specialists",
+    "frameworkStatus": "live",
+    "id": 1,
+    "importantDates": "31st of March: Test coverage must be 100%.",
+    "links": {
+      "framework": "http://localhost:5000/frameworks/digital-outcomes-and-specialists",
+      "self": "http://localhost:5000/briefs/2"
+    },
+    "location": "London",
+    "lot": "digital-specialists",
+    "lotName": "Digital specialists",
+    "lotSlug": "digital-specialists",
+    "niceToHaveRequirements": [
+      "Experience of cross-browser testing",
+      "Devops skills and experience"
+    ],
+    "organisation": "ByteMe IT",
+    "publishedAt": "2016-02-25T11:08:28.054129Z",
+    "specialistRole": "quality_assurance_analyst",
+    "startDate": "01/03/2016",
+    "status": "live",
+    "title": "QA tester for next-gen web project",
+    "updatedAt": "2016-02-25T11:08:28.061327Z",
+    "users": [
+      {
+        "active": true,
+        "emailAddress": "test@gov.uk",
+        "id": 1,
+        "name": "Joe Bloggs",
+        "role": "buyer"
+      }
+    ]
+  }
+}

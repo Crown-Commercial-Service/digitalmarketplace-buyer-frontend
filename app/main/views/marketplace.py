@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 from flask import abort, render_template, current_app
 
-from dmapiclient import APIError
+from dmapiclient import APIError, HTTPError
 from dmutils.content_loader import ContentNotFoundError
 
 from ...main import main
@@ -64,4 +64,21 @@ def terms_and_conditions():
     template_data = get_template_data(main, {})
     return render_template(
         'content/terms-and-conditions.html', **template_data
+    )
+
+
+@main.route('/<framework_slug>/opportunities/<brief_id>')
+def get_brief_by_id(framework_slug, brief_id):
+    template_data = get_template_data(main, {})
+    temporary_message = {}
+
+    briefs = data_api_client.get_brief(brief_id)
+    brief = briefs.get('briefs')
+    if brief['status'] != 'live':
+        abort(404, "Opportunity '{}' can not be found".format(brief_id))
+
+    return render_template(
+        'brief.html',
+        brief=brief,
+        **template_data
     )

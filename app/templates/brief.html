@@ -1,0 +1,39 @@
+
+{% extends "_base_page.html" %}
+
+{% block page_title %}{{ brief.title }} - Digital Marketplace{% endblock %}
+
+{% block breadcrumb %}
+  {%
+    with
+    items = [
+      {
+          "link": url_for('.index'),
+          "label": "Digital Marketplace"
+      }
+    ]
+  %}
+    {% include "toolkit/breadcrumb.html" %}
+  {% endwith %}
+{% endblock %}
+
+{% block main_content %}
+<div class="grid-row">
+  <div class="column-two-thirds">
+    <header class="page-heading-smaller">
+      <p class="context">{{ brief.organisation }}</p>
+      <h1>{{ brief.title }}</h1>
+    </header>
+  </div>
+</div>
+<div class="grid-row">
+  <div class="column-one-whole">
+    {% include '_brief_attributes.html' %}
+  </div>
+</div>
+<div class="grid-row">
+  <div class="column-one-whole">
+    {% include '_brief_q_and_a.html' %}
+  </div>
+</div>
+{% endblock %}

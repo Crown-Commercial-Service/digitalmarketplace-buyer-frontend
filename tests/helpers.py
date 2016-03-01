@@ -86,6 +86,10 @@ class BaseApplicationTest(object):
         return BaseApplicationTest._get_fixture_data('g6_service_fixture.json')
 
     @staticmethod
+    def _get_dos_brief_fixture_data():
+        return BaseApplicationTest._get_fixture_data('dos_brief_fixture.json')
+
+    @staticmethod
     def _get_supplier_fixture_data():
         return BaseApplicationTest._get_fixture_data('supplier_fixture.json')
 
