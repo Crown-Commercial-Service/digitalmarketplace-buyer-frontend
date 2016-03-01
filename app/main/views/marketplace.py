@@ -72,14 +72,10 @@ def get_brief_by_id(framework_slug, brief_id):
     template_data = get_template_data(main, {})
     temporary_message = {}
 
-    try:
-        briefs = data_api_client.get_brief(brief_id)
-        brief = briefs.get('briefs')
-        if brief['status'] != 'live':
-            abort(404, "Opportunity '{}' can not be found".format(brief_id))
-    except HTTPError as e:
-        if e.status_code == 404:
-            abort(404, "Opportunity '{}' can not be found".format(brief_id))
+    briefs = data_api_client.get_brief(brief_id)
+    brief = briefs.get('briefs')
+    if brief['status'] != 'live':
+        abort(404, "Opportunity '{}' can not be found".format(brief_id))
 
     return render_template(
         'brief.html',
