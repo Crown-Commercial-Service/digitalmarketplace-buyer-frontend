@@ -245,3 +245,26 @@ class TestBriefPage(BaseApplicationTest):
         document = html.fromstring(res.get_data(as_text=True))
 
         self._assert_page_title(document)
+
+    def test_dos_brief_has_at_least_one_section(self):
+        brief_id = self.brief['briefs']['id']
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
+        assert_equal(200, res.status_code)
+
+        document = html.fromstring(res.get_data(as_text=True))
+
+        section_heading = document.xpath('//h2[@class="summary-item-heading"]')[0]
+        section_attributes = section_heading.xpath('following-sibling::table[1]/tbody/tr')
+
+        start_date_key = section_attributes[0].xpath('td[1]/span/text()')
+        start_date_value = section_attributes[0].xpath('td[2]/span/text()')
+
+        contract_length_key = section_attributes[1].xpath('td[1]/span/text()')
+        contract_length_value = section_attributes[1].xpath('td[2]/span/text()')
+
+        assert_equal(section_heading.get('id'), 'brief-attributes-1')
+        assert_equal(section_heading.text.strip(), 'Overview')
+        assert_equal(start_date_key[0], 'Start date')
+        assert_equal(start_date_value[0], '01/03/2016')
+        assert_equal(contract_length_key[0], 'Contract length')
+        assert_equal(contract_length_value[0], '4 weeks')
