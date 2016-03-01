@@ -42,7 +42,7 @@
           {% if question.answer_required or question.is_empty %}
             {% if brief_data.get('status') == 'draft' %}
               {% call summary.field() %}
-                <a href="{{ url_for("buyers.edit_brief_submission", framework_slug=framework.slug, lot_slug=brief_data.lot, brief_id=brief_id, section_id=question.section_id, _anchor=question.id) }}">{{ question.empty_message or "Not answered" }}</a>
+                <a href="{{ url_for("buyers.edit_brief_submission", framework_slug=framework.slug, lot_slug=brief_data.lot, brief_id=brief_data.id, section_id=question.section_id, _anchor=question.id) }}">{{ question.empty_message or "Not answered" }}</a>
               {% endcall %}
             {% else %}
               {{ summary.text("Not answered") }}
@@ -57,17 +57,38 @@
                 Optional
               {% endcall %}
             {% elif not question.answer_required %}
-              {{ summary.edit_link("Edit", url_for("buyers.edit_brief_submission", framework_slug=framework.slug, lot_slug=brief_data.lot, brief_id=brief_id, section_id=question.section_id, _anchor=question.id)) }}
+              {{ summary.edit_link("Edit", url_for("buyers.edit_brief_submission", framework_slug=framework.slug, lot_slug=brief_data.lot, brief_id=brief_data.id, section_id=question.section_id, _anchor=question.id)) }}
             {% else %}
               {% call summary.field() %}{% endcall %}
             {% endif %}
           {% endif %}
-        
+
+        {% endcall %}
+      {% endcall %}
+    </div>
+
+    {% if brief_data.status == "live": %}
+    <div class="column-one-whole">
+
+      {{ summary.heading("Clarification questions", id="clarification-questions") }}
+      {% call(question) summary.list_table(
+        brief_data.clarificationQuestions,
+        field_headings=[
+          "Question",
+          "Answer"
+        ],
+        field_headings_visible=False
+      ) %}
+
+        {% call summary.row() %}
+          {{ summary.field_name(question.question) }}
+          {{ summary.text(question.answer) }}
         {% endcall %}
       {% endcall %}
 
       {% block after_sections %}{% endblock %}
     </div>
+    {% endif %}
       
   </div>
 {% endblock %}

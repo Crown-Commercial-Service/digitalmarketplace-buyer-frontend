@@ -650,7 +650,7 @@ class TestDeleteBriefSubmission(BaseApplicationTest):
 
 @mock.patch('app.buyers.views.buyers.data_api_client')
 class TestBriefSummaryPage(BaseApplicationTest):
-    def test_show_brief_summary_page(self, data_api_client):
+    def test_show_draft_brief_summary_page(self, data_api_client):
         with self.app.app_context():
             self.login_as_buyer()
             data_api_client.get_framework.return_value = api_stubs.framework(
@@ -660,7 +660,7 @@ class TestBriefSummaryPage(BaseApplicationTest):
                     api_stubs.lot(slug='digital-specialists', allows_brief=True),
                 ]
             )
-            brief_json = api_stubs.brief()
+            brief_json = api_stubs.brief(status="draft")
             brief_json['briefs']['specialistRole'] = 'communications_manager'
             data_api_client.get_brief.return_value = brief_json
 
@@ -682,6 +682,73 @@ class TestBriefSummaryPage(BaseApplicationTest):
 
             assert 'communications_manager' not in page_html
             assert 'Communications manager' in page_html
+
+            assert "Clarification questions" not in page_html
+            assert "Answer a clarification question" not in page_html
+
+    @mock.patch("app.buyers.views.buyers.clarification_questions_open")
+    def test_show_live_brief_summary_page(
+            self, clarification_questions_open, data_api_client):
+        with self.app.app_context():
+            self.login_as_buyer()
+            data_api_client.get_framework.return_value = api_stubs.framework(
+                slug='digital-outcomes-and-specialists',
+                status='live',
+                lots=[
+                    api_stubs.lot(slug='digital-specialists', allows_brief=True),
+                ]
+            )
+            brief_json = api_stubs.brief(status="live")
+            brief_json['briefs']['publishedAt'] = "2016-04-02T20:10:00.00000Z"
+            brief_json['briefs']['specialistRole'] = 'communications_manager'
+            data_api_client.get_brief.return_value = brief_json
+
+            clarification_questions_open.return_value = False
+
+            res = self.client.get(
+                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1"
+            )
+
+            assert res.status_code == 200
+            page_html = res.get_data(as_text=True)
+            document = html.fromstring(page_html)
+
+            assert (document.xpath('//h1')[0]).text_content().strip() == "I need a thing to do a thing"
+
+            last_update = document.cssselect('p.last-edited')
+            assert self._strip_whitespace(last_update[0].text_content()) == "Published:Saturday02April2016at21:10"
+
+            assert "Clarification questions" in page_html
+            assert "Answer a clarification question" not in page_html
+
+    @mock.patch("app.buyers.views.buyers.clarification_questions_open")
+    def test_show_live_brief_summary_with_clarification_questions_open(
+            self, clarification_questions_open, data_api_client):
+        with self.app.app_context():
+            self.login_as_buyer()
+            data_api_client.get_framework.return_value = api_stubs.framework(
+                slug='digital-outcomes-and-specialists',
+                status='live',
+                lots=[
+                    api_stubs.lot(slug='digital-specialists', allows_brief=True),
+                ]
+            )
+            brief_json = api_stubs.brief(status="live")
+            brief_json['briefs']['publishedAt'] = "2016-04-02T20:10:00.00000Z"
+            brief_json['briefs']['specialistRole'] = 'communications_manager'
+            data_api_client.get_brief.return_value = brief_json
+
+            clarification_questions_open.return_value = True
+
+            res = self.client.get(
+                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1"
+            )
+
+            assert res.status_code == 200
+            page_html = res.get_data(as_text=True)
+
+            assert "Clarification questions" in page_html
+            assert "Answer a clarification question" in page_html
 
     def test_404_if_framework_is_not_live(self, data_api_client):
         with self.app.app_context():
@@ -736,3 +803,210 @@ class TestBriefSummaryPage(BaseApplicationTest):
             )
 
             assert res.status_code == 404
+
+
+@mock.patch("app.buyers.views.buyers.data_api_client")
+@mock.patch("app.buyers.views.buyers.clarification_questions_open")
+class TestAddBriefClarificationQuestion(BaseApplicationTest):
+    def test_show_brief_clarification_question_form(self, clarification_questions_open, data_api_client):
+        self.login_as_buyer()
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug="digital-outcomes-and-specialists",
+            status="live",
+            lots=[
+                api_stubs.lot(slug="digital-specialists", allows_brief=True)
+            ])
+        data_api_client.get_brief.return_value = api_stubs.brief(status="live")
+        clarification_questions_open.return_value = True
+
+        res = self.client.get(
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements"
+            "/digital-specialists/1234/answer-question")
+
+        assert res.status_code == 200
+
+    def test_add_brief_clarification_question(self, clarification_questions_open, data_api_client):
+        self.login_as_buyer()
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug="digital-outcomes-and-specialists",
+            status="live",
+            lots=[
+                api_stubs.lot(slug="digital-specialists", allows_brief=True)
+            ])
+        data_api_client.get_brief.return_value = api_stubs.brief(status="live")
+        clarification_questions_open.return_value = True
+
+        res = self.client.post(
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements"
+            "/digital-specialists/1234/answer-question",
+            data={
+                "question": "Why?",
+                "answer": "Because",
+            })
+
+        assert res.status_code == 302
+        data_api_client.add_brief_clarification_question.assert_called_with(
+            "1234", "Why?", "Because", "buyer@email.com")
+
+    def test_404_if_framework_is_not_live(self, clarification_questions_open, data_api_client):
+        self.login_as_buyer()
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='pending',
+            lots=[
+                api_stubs.lot(slug='digital-specialists', allows_brief=True),
+            ]
+        )
+        data_api_client.get_brief.return_value = api_stubs.brief()
+        clarification_questions_open.return_value = True
+
+        res = self.client.post(
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements"
+            "/digital-specialists/1234/answer-question",
+            data={
+                "question": "Why?",
+                "answer": "Because",
+            })
+
+        assert res.status_code == 404
+        assert not data_api_client.add_brief_clarification_question.called
+
+    def test_404_if_framework_does_not_allow_brief(self, clarification_questions_open, data_api_client):
+        self.login_as_buyer()
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='live',
+            lots=[
+                api_stubs.lot(slug='digital-specialists', allows_brief=False),
+            ]
+        )
+        data_api_client.get_brief.return_value = api_stubs.brief()
+        clarification_questions_open.return_value = True
+
+        res = self.client.post(
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements"
+            "/digital-specialists/1234/answer-question",
+            data={
+                "question": "Why?",
+                "answer": "Because",
+            })
+
+        assert res.status_code == 404
+        assert not data_api_client.add_brief_clarification_question.called
+
+    def test_404_if_brief_does_not_belong_to_user(self, clarification_questions_open, data_api_client):
+        self.login_as_buyer()
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='live',
+            lots=[
+                api_stubs.lot(slug='digital-specialists', allows_brief=True),
+            ]
+        )
+        data_api_client.get_brief.return_value = api_stubs.brief(user_id=234)
+        clarification_questions_open.return_value = True
+
+        res = self.client.post(
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements"
+            "/digital-specialists/1234/answer-question",
+            data={
+                "question": "Why?",
+                "answer": "Because",
+            })
+
+        assert res.status_code == 404
+        assert not data_api_client.add_brief_clarification_question.called
+
+    def test_404_if_brief_is_not_live(self, clarification_questions_open, data_api_client):
+        self.login_as_buyer()
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='live',
+            lots=[
+                api_stubs.lot(slug='digital-specialists', allows_brief=True),
+            ]
+        )
+        data_api_client.get_brief.return_value = api_stubs.brief(status="draft")
+        clarification_questions_open.return_value = True
+
+        res = self.client.post(
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements"
+            "/digital-specialists/1234/answer-question",
+            data={
+                "question": "Why?",
+                "answer": "Because",
+            })
+
+        assert res.status_code == 404
+        assert not data_api_client.add_brief_clarification_question.called
+
+    def test_404_if_clarification_questions_are_closed(self, clarification_questions_open, data_api_client):
+        self.login_as_buyer()
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug="digital-outcomes-and-specialists",
+            status="live",
+            lots=[
+                api_stubs.lot(slug="digital-specialists", allows_brief=True)
+            ])
+        data_api_client.get_brief.return_value = api_stubs.brief(status="live")
+        clarification_questions_open.return_value = False
+
+        res = self.client.post(
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements"
+            "/digital-specialists/1234/answer-question",
+            data={
+                "question": "Why?",
+                "answer": "Because",
+            })
+
+        assert res.status_code == 404
+        assert not data_api_client.add_brief_clarification_question.called
+
+    def test_validation_error(self, clarification_questions_open, data_api_client):
+        self.login_as_buyer()
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug="digital-outcomes-and-specialists",
+            status="live",
+            lots=[
+                api_stubs.lot(slug="digital-specialists", allows_brief=True)
+            ])
+        data_api_client.get_brief.return_value = api_stubs.brief(status="live")
+        clarification_questions_open.return_value = True
+        data_api_client.add_brief_clarification_question.side_effect = HTTPError(
+            mock.Mock(status_code=400),
+            {"question": "answer_required"})
+
+        res = self.client.post(
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements"
+            "/digital-specialists/1234/answer-question",
+            data={
+                "question": "Why?",
+                "answer": "Because",
+            })
+        document = html.fromstring(res.get_data(as_text=True))
+
+        assert res.status_code == 400
+        assert len(document.cssselect("#error-question")) == 1
+
+    def test_api_error(self, clarification_questions_open, data_api_client):
+        self.login_as_buyer()
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug="digital-outcomes-and-specialists",
+            status="live",
+            lots=[
+                api_stubs.lot(slug="digital-specialists", allows_brief=True)
+            ])
+        data_api_client.get_brief.return_value = api_stubs.brief(status="live")
+        clarification_questions_open.return_value = True
+        data_api_client.add_brief_clarification_question.side_effect = HTTPError(
+            mock.Mock(status_code=500))
+
+        res = self.client.post(
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements"
+            "/digital-specialists/1234/answer-question",
+            data={
+                "question": "Why?",
+                "answer": "Because",
+            })
+
+        assert res.status_code == 500
