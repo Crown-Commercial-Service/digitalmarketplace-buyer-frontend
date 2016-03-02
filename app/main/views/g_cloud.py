@@ -28,26 +28,17 @@ from app import search_api_client, data_api_client, content_loader
 
 @main.route('/g-cloud')
 def index_g_cloud():
-    return render_template(
-        'index-g-cloud.html',
-        **dict(main.config['BASE_TEMPLATE_DATA'])
-    )
+    return render_template('index-g-cloud.html')
 
 
 @main.route('/g-cloud/framework')
 def framework_g_cloud():
-    return render_template(
-        'content/framework-g-cloud.html',
-        **dict(main.config['BASE_TEMPLATE_DATA'])
-    )
+    return render_template('content/framework-g-cloud.html')
 
 
 @main.route('/buyers-guide')
 def buyers_guide():
-    return render_template(
-        'content/buyers-guide.html',
-        **dict(main.config['BASE_TEMPLATE_DATA'])
-    )
+    return render_template('content/buyers-guide.html')
 
 
 @main.route('/suppliers-guide')
@@ -57,18 +48,12 @@ def suppliers_guide():
 
 @main.route('/g-cloud/buyers-guide')
 def buyers_guide_g_cloud():
-    return render_template(
-        'content/buyers-guide-g-cloud.html',
-        **dict(main.config['BASE_TEMPLATE_DATA'])
-    )
+    return render_template('content/buyers-guide-g-cloud.html')
 
 
 @main.route('/g-cloud/suppliers-guide')
 def suppliers_guide_g_cloud():
-    return render_template(
-        'content/suppliers-guide-g-cloud.html',
-        **dict(main.config['BASE_TEMPLATE_DATA'])
-    )
+    return render_template('content/suppliers-guide-g-cloud.html')
 
 
 @main.route('/g-cloud/services/<service_id>')
@@ -118,9 +103,7 @@ def get_service_by_id(service_id):
             service=service_view_data,
             service_unavailability_information=service_unavailability_information,
             lot=service_view_data.lot.lower(),
-            lot_label=get_label_for_lot_param(service_view_data.lot.lower()),
-            **dict(main.config['BASE_TEMPLATE_DATA'])
-        ), status_code
+            lot_label=get_label_for_lot_param(service_view_data.lot.lower())), status_code
     except AuthException:
         abort(500, "Application error")
     except KeyError:
@@ -170,6 +153,5 @@ def search():
         services=search_results_obj.search_results,
         summary=search_summary.markup(),
         title='Search results',
-        total=search_results_obj.total,
-        **dict(main.config['BASE_TEMPLATE_DATA'])
+        total=search_results_obj.total
     )

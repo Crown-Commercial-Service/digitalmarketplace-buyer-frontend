@@ -25,19 +25,16 @@ def render_login():
     next_url = request.args.get('next')
     if current_user.is_authenticated() and not get_flashed_messages():
         return redirect_logged_in_user(next_url)
-    template_data = main.config['BASE_TEMPLATE_DATA']
     return render_template(
         "auth/login.html",
         form=LoginForm(),
-        next=next_url,
-        **template_data), 200
+        next=next_url), 200
 
 
 @main.route('/login', methods=["POST"])
 def process_login():
     form = LoginForm()
     next_url = request.args.get('next')
-    template_data = main.config['BASE_TEMPLATE_DATA']
     if form.validate_on_submit():
         user_json = data_api_client.authenticate_user(
             form.email_address.data,
@@ -50,8 +47,7 @@ def process_login():
             return render_template(
                 "auth/login.html",
                 form=form,
-                next=next_url,
-                **template_data), 403
+                next=next_url), 403
 
         user = User.from_json(user_json)
 
@@ -64,8 +60,7 @@ def process_login():
         return render_template(
             "auth/login.html",
             form=form,
-            next=next_url,
-            **template_data), 400
+            next=next_url), 400
 
 
 @main.route('/logout', methods=["GET"])
@@ -76,11 +71,8 @@ def logout():
 
 @main.route('/reset-password', methods=["GET"])
 def request_password_reset():
-    template_data = main.config['BASE_TEMPLATE_DATA']
-
     return render_template("auth/request-password-reset.html",
-                           form=EmailAddressForm(),
-                           **template_data), 200
+                           form=EmailAddressForm()), 200
 
 
 @main.route('/reset-password', methods=["POST"])
@@ -142,10 +134,8 @@ def send_reset_password_email():
         flash('email_sent')
         return redirect(url_for('.request_password_reset'))
     else:
-        template_data = main.config['BASE_TEMPLATE_DATA']
         return render_template("auth/request-password-reset.html",
-                               form=form,
-                               **template_data), 400
+                               form=form), 400
 
 
 @main.route('/reset-password/<token>', methods=["GET"])
@@ -157,12 +147,10 @@ def reset_password(token):
 
     email_address = decoded['email']
 
-    template_data = main.config['BASE_TEMPLATE_DATA']
     return render_template("auth/reset-password.html",
                            email_address=email_address,
                            form=ChangePasswordForm(),
-                           token=token,
-                           **template_data), 200
+                           token=token), 200
 
 
 @main.route('/reset-password/<token>', methods=["POST"])
@@ -187,30 +175,25 @@ def update_password(token):
             flash('password_not_updated', 'error')
         return redirect(url_for('.render_login'))
     else:
-        template_data = main.config['BASE_TEMPLATE_DATA']
         return render_template("auth/reset-password.html",
                                email_address=email_address,
                                form=form,
-                               token=token,
-                               **template_data), 400
+                               token=token), 400
 
 
 @main.route('/buyers/create', methods=["GET"])
 def create_buyer_account():
     form = EmailAddressForm()
-    template_data = main.config['BASE_TEMPLATE_DATA']
 
     return render_template(
         "auth/create-buyer-account.html",
-        form=form,
-        **template_data), 200
+        form=form), 200
 
 
 @main.route('/buyers/create', methods=['POST'])
 def submit_create_buyer_account():
     current_app.logger.info(
         "buyercreate: post create-buyer-account")
-    template_data = main.config['BASE_TEMPLATE_DATA']
     form = EmailAddressForm()
 
     if form.validate_on_submit():
@@ -254,15 +237,13 @@ def submit_create_buyer_account():
         return render_template(
             "auth/create-buyer-account.html",
             form=form,
-            email_address=form.email_address.data,
-            **template_data
+            email_address=form.email_address.data
         ), 400
 
 
 @main.route('/create-user/<string:encoded_token>', methods=["GET"])
 def create_user(encoded_token):
     form = CreateUserForm()
-    template_data = main.config['BASE_TEMPLATE_DATA']
 
     token = decode_invitation_token(encoded_token, role='buyer')
     if token is None:
@@ -271,8 +252,7 @@ def create_user(encoded_token):
             extra={'encoded_token': encoded_token})
         return render_template(
             "auth/create-buyer-user-error.html",
-            token=None,
-            **template_data), 400
+            token=None), 400
 
     user_json = data_api_client.get_user(email_address=token.get("email_address"))
 
@@ -281,20 +261,17 @@ def create_user(encoded_token):
             "auth/create-user.html",
             form=form,
             email_address=token['email_address'],
-            token=encoded_token,
-            **template_data), 200
+            token=encoded_token), 200
 
     user = User.from_json(user_json)
     return render_template(
         "auth/create-buyer-user-error.html",
         token=token,
-        user=user,
-        **template_data), 400
+        user=user), 400
 
 
 @main.route('/create-user/<string:encoded_token>', methods=["POST"])
 def submit_create_user(encoded_token):
-    template_data = main.config['BASE_TEMPLATE_DATA']
     form = CreateUserForm()
 
     token = decode_invitation_token(encoded_token, role='buyer')
@@ -303,8 +280,7 @@ def submit_create_user(encoded_token):
                                    extra={'encoded_token': encoded_token})
         return render_template(
             "auth/create-buyer-user-error.html",
-            token=None,
-            **template_data), 400
+            token=None), 400
 
     else:
         if not form.validate_on_submit():
@@ -315,8 +291,7 @@ def submit_create_user(encoded_token):
                 "auth/create-user.html",
                 form=form,
                 token=encoded_token,
-                email_address=token.get('email_address'),
-                **template_data), 400
+                email_address=token.get('email_address')), 400
 
         try:
             user = data_api_client.create_user({
@@ -336,15 +311,13 @@ def submit_create_user(encoded_token):
             return render_template(
                 "auth/create-buyer-user-error.html",
                 error=e.message,
-                token=None,
-                **template_data), 400
+                token=None), 400
 
         return redirect_logged_in_user()
 
 
 @main.route('/create-your-account-complete', methods=['GET'])
 def create_your_account_complete():
-    template_data = main.config['BASE_TEMPLATE_DATA']
     if 'email_sent_to' in session:
         email_address = session['email_sent_to']
     else:
@@ -353,6 +326,4 @@ def create_your_account_complete():
     session['email_sent_to'] = email_address
     return render_template(
         "auth/create-your-account-complete.html",
-        email_address=email_address,
-        **template_data
-    ), 200
+        email_address=email_address), 200

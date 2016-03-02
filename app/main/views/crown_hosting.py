@@ -8,14 +8,12 @@ from ...main import main
 @main.route('/crown-hosting')
 def index_crown_hosting():
     return render_template(
-        'content/index-crown-hosting.html',
-        **dict(main.config['BASE_TEMPLATE_DATA'])
+        'content/index-crown-hosting.html'
     )
 
 
 @main.route('/crown-hosting/framework')
 def framework_crown_hosting():
     return render_template(
-        'content/framework-crown-hosting.html',
-        **dict(main.config['BASE_TEMPLATE_DATA'])
+        'content/framework-crown-hosting.html'
     )

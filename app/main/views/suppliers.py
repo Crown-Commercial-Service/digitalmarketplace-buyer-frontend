@@ -71,8 +71,8 @@ def suppliers_list_by_prefix():
                                count=len(suppliers),
                                prev_link=parse_links(links)['prev'],
                                next_link=parse_links(links)['next'],
-                               prefix=template_prefix,
-                               **dict(main.config['BASE_TEMPLATE_DATA']))
+                               prefix=template_prefix
+                               )
     except APIError as e:
         if e.status_code == 404:
             abort(404, "No suppliers for prefix {} page {}".format(api_prefix, page))
@@ -95,6 +95,5 @@ def suppliers_details(supplier_id):
     return render_template(
         'suppliers_details.html',
         supplier=supplier,
-        prefix=prefix,
-        **dict(main.config['BASE_TEMPLATE_DATA'])
+        prefix=prefix
     )

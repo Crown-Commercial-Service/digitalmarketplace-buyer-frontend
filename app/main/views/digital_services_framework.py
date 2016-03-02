@@ -8,6 +8,5 @@ from ...main import main
 @main.route('/digital-services/framework')
 def framework_digital_services():
     return render_template(
-        'content/framework-digital-services.html',
-        **dict(main.config['BASE_TEMPLATE_DATA'])
+        'content/framework-digital-services.html'
     )

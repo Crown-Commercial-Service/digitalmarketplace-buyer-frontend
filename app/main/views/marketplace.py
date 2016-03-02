@@ -44,31 +44,22 @@ def index():
     return render_template(
         'index.html',
         frameworks={framework['slug']: framework for framework in frameworks},
-        temporary_message=temporary_message,
-        **dict(main.config['BASE_TEMPLATE_DATA'])
+        temporary_message=temporary_message
     )
 
 
 @main.route('/cookies')
 def cookies():
-    return render_template(
-        'content/cookies.html',
-        **dict(main.config['BASE_TEMPLATE_DATA'])
-    )
+    return render_template('content/cookies.html')
 
 
 @main.route('/terms-and-conditions')
 def terms_and_conditions():
-    return render_template(
-        'content/terms-and-conditions.html',
-        **dict(main.config['BASE_TEMPLATE_DATA'])
-    )
+    return render_template('content/terms-and-conditions.html')
 
 
 @main.route('/<framework_slug>/opportunities/<brief_id>')
 def get_brief_by_id(framework_slug, brief_id):
-    temporary_message = {}
-
     briefs = data_api_client.get_brief(brief_id)
     brief = briefs.get('briefs')
     if brief['status'] != 'live':
@@ -76,6 +67,5 @@ def get_brief_by_id(framework_slug, brief_id):
 
     return render_template(
         'brief.html',
-        brief=brief,
-        **dict(main.config['BASE_TEMPLATE_DATA'])
+        brief=brief
     )

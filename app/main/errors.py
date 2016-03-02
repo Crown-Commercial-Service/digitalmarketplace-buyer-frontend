@@ -34,6 +34,7 @@ def _render_error_page(status_code, error_message=None):
     if status_code not in templates:
         status_code = 500
 
-    return render_template(templates[status_code],
-                           error_message=error_message,
-                           **dict(main.config['BASE_TEMPLATE_DATA'])), status_code
+    return render_template(
+        templates[status_code],
+        error_message=error_message
+    ), status_code
