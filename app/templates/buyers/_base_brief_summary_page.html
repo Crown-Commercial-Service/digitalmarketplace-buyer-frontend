@@ -67,7 +67,7 @@
       {% endcall %}
     </div>
 
-    {% if brief_data.status == "live": %}
+    {% if brief_data.status == "live" %}
     <div class="column-one-whole">
 
       {{ summary.heading("Clarification questions", id="clarification-questions") }}
@@ -85,10 +85,9 @@
           {{ summary.text(question.answer) }}
         {% endcall %}
       {% endcall %}
-
-      {% block after_sections %}{% endblock %}
+      
     </div>
     {% endif %}
-      
   </div>
+{% block after_sections %}{% endblock %}
 {% endblock %}
