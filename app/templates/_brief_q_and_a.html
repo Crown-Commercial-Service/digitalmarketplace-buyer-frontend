@@ -1,0 +1,16 @@
+{% import "toolkit/summary-table.html" as summary %}
+{{ summary.heading("Questions asked by suppliers", id="clarification-questions") }}
+{% call(question) summary.list_table(
+  brief.clarificationQuestions,
+  caption="Question asked by suppliers",
+  field_headings=[
+    "Clarification question",
+    "Clarification answer"
+    ],
+    field_headings_visible=False
+) %}
+  {% call summary.row() %}
+    {{ summary.field_name(question.question) }}
+    {{ summary.text(question.answer) }}
+  {% endcall %}
+{% endcall %}

@@ -268,3 +268,19 @@ class TestBriefPage(BaseApplicationTest):
         assert_equal(start_date_value[0], '01/03/2016')
         assert_equal(contract_length_key[0], 'Contract length')
         assert_equal(contract_length_value[0], '4 weeks')
+
+    def test_dos_brief_has_questions_and_answers(self):
+        brief_id = self.brief['briefs']['id']
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
+        assert_equal(200, res.status_code)
+
+        document = html.fromstring(res.get_data(as_text=True))
+
+        xpath = '//h2[@id="clarification-questions"]/following-sibling::table/tbody/tr'
+        clarification_questions = document.xpath(xpath)
+
+        question = clarification_questions[0].xpath('td[1]/span/text()')
+        answer = clarification_questions[0].xpath('td[2]/span/text()')
+
+        assert_equal(question[0], "Why?")
+        assert_equal(answer[0], "Because")
