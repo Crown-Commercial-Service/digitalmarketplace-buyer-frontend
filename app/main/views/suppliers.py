@@ -2,7 +2,6 @@
 from string import ascii_uppercase
 from app.main import main
 from flask import render_template, request, abort
-from app.helpers.search_helpers import get_template_data
 from app import data_api_client
 from dmapiclient import APIError
 import re
@@ -66,8 +65,6 @@ def suppliers_list_by_prefix():
         suppliers = api_result["suppliers"]
         links = api_result["links"]
 
-        template_data = get_template_data(main, {})
-
         return render_template('suppliers_list.html',
                                suppliers=suppliers,
                                nav=ascii_uppercase,
@@ -75,7 +72,7 @@ def suppliers_list_by_prefix():
                                prev_link=parse_links(links)['prev'],
                                next_link=parse_links(links)['next'],
                                prefix=template_prefix,
-                               **template_data)
+                               **dict(main.config['BASE_TEMPLATE_DATA']))
     except APIError as e:
         if e.status_code == 404:
             abort(404, "No suppliers for prefix {} page {}".format(api_prefix, page))
@@ -95,10 +92,9 @@ def suppliers_details(supplier_id):
     else:
         prefix = u"other"
 
-    template_data = get_template_data(main, {})
-
     return render_template(
         'suppliers_details.html',
         supplier=supplier,
         prefix=prefix,
-        **template_data)
+        **dict(main.config['BASE_TEMPLATE_DATA'])
+    )

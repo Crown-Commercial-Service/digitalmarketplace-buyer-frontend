@@ -1,8 +1,7 @@
 # coding=utf-8
 
-from flask import render_template, current_app, request
+from flask import render_template
 from . import main
-from ..helpers.search_helpers import get_template_data
 from dmapiclient import APIError
 
 
@@ -34,6 +33,7 @@ def _render_error_page(status_code, error_message=None):
     }
     if status_code not in templates:
         status_code = 500
-    template_data = get_template_data(main, {})
 
-    return render_template(templates[status_code], error_message=error_message, **template_data), status_code
+    return render_template(templates[status_code],
+                           error_message=error_message,
+                           **dict(main.config['BASE_TEMPLATE_DATA'])), status_code

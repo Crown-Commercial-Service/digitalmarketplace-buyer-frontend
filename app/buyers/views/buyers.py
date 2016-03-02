@@ -8,14 +8,12 @@ from ...helpers.buyers_helpers import (
     count_unanswered_questions, brief_can_be_edited, add_unanswered_counts_to_briefs,
     clarification_questions_open
 )
-from ...helpers.search_helpers import get_template_data
 
 from dmapiclient import HTTPError
 
 
 @buyers.route('/buyers')
 def buyer_dashboard():
-    template_data = get_template_data(buyers, {})
     user_briefs = data_api_client.find_briefs(current_user.id).get('briefs', [])
     draft_briefs = add_unanswered_counts_to_briefs([brief for brief in user_briefs if brief['status'] == 'draft'])
     live_briefs = [brief for brief in user_briefs if brief['status'] == 'live']
@@ -24,7 +22,7 @@ def buyer_dashboard():
         'buyers/dashboard.html',
         draft_briefs=draft_briefs,
         live_briefs=live_briefs,
-        **template_data
+        **dict(buyers.config['BASE_TEMPLATE_DATA'])
     )
 
 
