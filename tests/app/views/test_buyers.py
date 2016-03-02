@@ -719,6 +719,7 @@ class TestBriefSummaryPage(BaseApplicationTest):
             assert self._strip_whitespace(last_update[0].text_content()) == "Published:Saturday02April2016at21:10"
 
             assert "Clarification questions" in page_html
+            assert "No clarification questions have been answered yet" in page_html
             assert "Answer a clarification question" not in page_html
 
     @mock.patch("app.buyers.views.buyers.clarification_questions_open")
@@ -749,6 +750,40 @@ class TestBriefSummaryPage(BaseApplicationTest):
 
             assert "Clarification questions" in page_html
             assert "Answer a clarification question" in page_html
+
+    @mock.patch("app.buyers.views.buyers.clarification_questions_open")
+    def test_show_live_brief_summary_with_clarification_question(
+            self, clarification_questions_open, data_api_client):
+        with self.app.app_context():
+            self.login_as_buyer()
+            data_api_client.get_framework.return_value = api_stubs.framework(
+                slug='digital-outcomes-and-specialists',
+                status='live',
+                lots=[
+                    api_stubs.lot(slug='digital-specialists', allows_brief=True),
+                ]
+            )
+            brief_json = api_stubs.brief(status="live", clarification_questions=[
+                {"question": "Why is my question a question?",
+                 "answer": "Because",
+                 "publishedAt": "2016-01-01T00:00:00.000000Z"}
+            ])
+            brief_json['briefs']['publishedAt'] = "2016-04-02T20:10:00.00000Z"
+            brief_json['briefs']['specialistRole'] = 'communications_manager'
+            data_api_client.get_brief.return_value = brief_json
+
+            clarification_questions_open.return_value = False
+
+            res = self.client.get(
+                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1"
+            )
+
+            assert res.status_code == 200
+            page_html = res.get_data(as_text=True)
+
+            assert "Clarification questions" in page_html
+            assert "No clarification questions have been answered yet" not in page_html
+            assert "Why is my question a question?" in page_html
 
     def test_404_if_framework_is_not_live(self, data_api_client):
         with self.app.app_context():
