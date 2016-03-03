@@ -8,14 +8,12 @@ from ...helpers.buyers_helpers import (
     count_unanswered_questions, brief_can_be_edited, add_unanswered_counts_to_briefs,
     clarification_questions_open
 )
-from ...helpers.search_helpers import get_template_data
 
 from dmapiclient import HTTPError
 
 
 @buyers.route('/buyers')
 def buyer_dashboard():
-    template_data = get_template_data(buyers, {})
     user_briefs = data_api_client.find_briefs(current_user.id).get('briefs', [])
     draft_briefs = add_unanswered_counts_to_briefs([brief for brief in user_briefs if brief['status'] == 'draft'])
     live_briefs = [brief for brief in user_briefs if brief['status'] == 'live']
@@ -23,8 +21,7 @@ def buyer_dashboard():
     return render_template(
         'buyers/dashboard.html',
         draft_briefs=draft_briefs,
-        live_briefs=live_briefs,
-        **template_data
+        live_briefs=live_briefs
     )
 
 
@@ -38,8 +35,7 @@ def info_page_for_starting_a_brief(framework_slug, lot_slug):
         "buyers/start_brief_info.html",
         framework=framework,
         lot=lot,
-        supplier_count=count_suppliers_on_lot(framework, lot),
-        **dict(buyers.config['BASE_TEMPLATE_DATA'])
+        supplier_count=count_suppliers_on_lot(framework, lot)
     ), 200
 
 
@@ -59,8 +55,7 @@ def start_new_brief(framework_slug, lot_slug):
         "buyers/edit_brief_section.html",
         framework=framework,
         data={},
-        section=section,
-        **dict(buyers.config['BASE_TEMPLATE_DATA'])
+        section=section
     ), 200
 
 
@@ -96,8 +91,7 @@ def create_new_brief(framework_slug, lot_slug):
             framework=framework,
             data=update_data,
             section=section,
-            errors=errors,
-            **dict(buyers.config['BASE_TEMPLATE_DATA'])
+            errors=errors
         ), 400
 
     return redirect(
@@ -131,8 +125,7 @@ def edit_brief_submission(framework_slug, lot_slug, brief_id, section_id):
         "buyers/edit_brief_section.html",
         framework=framework,
         data=brief,
-        section=section,
-        **dict(buyers.config['BASE_TEMPLATE_DATA'])
+        section=section
     ), 200
 
 
@@ -173,8 +166,7 @@ def update_brief_submission(framework_slug, lot_slug, brief_id, section_id):
             framework=framework,
             data=update_data,
             section=section,
-            errors=errors,
-            **dict(buyers.config['BASE_TEMPLATE_DATA'])
+            errors=errors
         ), 200
 
     return redirect(
@@ -225,8 +217,7 @@ def view_brief_summary(framework_slug, lot_slug, brief_id):
         unanswered_optional=unanswered_optional,
         can_publish=not unanswered_required,
         delete_requested=delete_requested,
-        clarification_questions_open=clarification_questions_open(brief),
-        **dict(buyers.config['BASE_TEMPLATE_DATA'])
+        clarification_questions_open=clarification_questions_open(brief)
     ), 200
 
 
@@ -297,6 +288,5 @@ def add_clarification_question(framework_slug, lot_slug, brief_id):
         brief=brief,
         data=request.form,
         section=section,
-        errors=errors,
-        **dict(buyers.config["BASE_TEMPLATE_DATA"])
+        errors=errors
     ), status_code

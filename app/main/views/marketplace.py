@@ -3,19 +3,17 @@ from __future__ import unicode_literals
 
 from flask import abort, render_template, current_app
 
-from dmapiclient import APIError, HTTPError
+from dmapiclient import APIError
 from dmutils.content_loader import ContentNotFoundError
 
 from ...main import main
 from ...helpers.shared_helpers import get_one_framework_by_status_in_order_of_preference
-from ...helpers.search_helpers import get_template_data
 
 from app import data_api_client, content_loader
 
 
 @main.route('/')
 def index():
-    template_data = get_template_data(main, {})
     temporary_message = {}
 
     try:
@@ -46,32 +44,22 @@ def index():
     return render_template(
         'index.html',
         frameworks={framework['slug']: framework for framework in frameworks},
-        temporary_message=temporary_message,
-        **template_data
+        temporary_message=temporary_message
     )
 
 
 @main.route('/cookies')
 def cookies():
-    template_data = get_template_data(main, {})
-    return render_template(
-        'content/cookies.html', **template_data
-    )
+    return render_template('content/cookies.html')
 
 
 @main.route('/terms-and-conditions')
 def terms_and_conditions():
-    template_data = get_template_data(main, {})
-    return render_template(
-        'content/terms-and-conditions.html', **template_data
-    )
+    return render_template('content/terms-and-conditions.html')
 
 
 @main.route('/<framework_slug>/opportunities/<brief_id>')
 def get_brief_by_id(framework_slug, brief_id):
-    template_data = get_template_data(main, {})
-    temporary_message = {}
-
     briefs = data_api_client.get_brief(brief_id)
     brief = briefs.get('briefs')
     if brief['status'] != 'live':
@@ -79,6 +67,5 @@ def get_brief_by_id(framework_slug, brief_id):
 
     return render_template(
         'brief.html',
-        brief=brief,
-        **template_data
+        brief=brief
     )

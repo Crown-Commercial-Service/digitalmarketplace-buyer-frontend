@@ -16,7 +16,7 @@ from ...presenters.search_results import SearchResults
 from ...presenters.search_summary import SearchSummary
 from ...presenters.service_presenters import Service
 from ...helpers.search_helpers import (
-    get_keywords_from_request, get_template_data, pagination,
+    get_keywords_from_request, pagination,
     get_page_from_request, query_args_for_pagination,
     get_lot_from_request, build_search_query,
     clean_request_args
@@ -28,20 +28,17 @@ from app import search_api_client, data_api_client, content_loader
 
 @main.route('/g-cloud')
 def index_g_cloud():
-    template_data = get_template_data(main, {})
-    return render_template('index-g-cloud.html', **template_data)
+    return render_template('index-g-cloud.html')
 
 
 @main.route('/g-cloud/framework')
 def framework_g_cloud():
-    template_data = get_template_data(main, {})
-    return render_template('content/framework-g-cloud.html', **template_data)
+    return render_template('content/framework-g-cloud.html')
 
 
 @main.route('/buyers-guide')
 def buyers_guide():
-    template_data = get_template_data(main, {})
-    return render_template('content/buyers-guide.html', **template_data)
+    return render_template('content/buyers-guide.html')
 
 
 @main.route('/suppliers-guide')
@@ -51,18 +48,12 @@ def suppliers_guide():
 
 @main.route('/g-cloud/buyers-guide')
 def buyers_guide_g_cloud():
-    template_data = get_template_data(main, {})
-    return render_template(
-        'content/buyers-guide-g-cloud.html', **template_data
-    )
+    return render_template('content/buyers-guide-g-cloud.html')
 
 
 @main.route('/g-cloud/suppliers-guide')
 def suppliers_guide_g_cloud():
-    template_data = get_template_data(main, {})
-    return render_template(
-        'content/suppliers-guide-g-cloud.html', **template_data
-    )
+    return render_template('content/suppliers-guide-g-cloud.html')
 
 
 @main.route('/g-cloud/services/<service_id>')
@@ -107,13 +98,12 @@ def get_service_by_id(service_id):
             # mark the resource as unavailable in the headers
             status_code = 410
 
-        template_data = get_template_data(main, {
-            'service': service_view_data,
-            'service_unavailability_information': service_unavailability_information,
-            'lot': service_view_data.lot.lower(),
-            'lot_label': get_label_for_lot_param(service_view_data.lot.lower())
-        })
-        return render_template('service.html', **template_data), status_code
+        return render_template(
+            'service.html',
+            service=service_view_data,
+            service_unavailability_information=service_unavailability_information,
+            lot=service_view_data.lot.lower(),
+            lot_label=get_label_for_lot_param(service_view_data.lot.lower())), status_code
     except AuthException:
         abort(500, "Application error")
     except KeyError:
@@ -151,19 +141,17 @@ def search():
     set_filter_states(filters, request)
     current_lot = get_lot_from_request(request)
 
-    template_data = get_template_data(main, {
-        'title': 'Search results',
-        'current_lot': current_lot,
-        'lots': LOTS,
-        'search_keywords': get_keywords_from_request(request),
-        'services': search_results_obj.search_results,
-        'total': search_results_obj.total,
-        'search_query': query_args_for_pagination(request.args),
-        'pagination': pagination_config,
-        'summary': search_summary.markup(),
-        'filters': filters,
-    })
-    if current_lot:
-        template_data['current_lot_label'] = get_label_for_lot_param(current_lot)
-
-    return render_template('search.html', **template_data)
+    return render_template(
+        'search.html',
+        current_lot=current_lot,
+        current_lot_label=get_label_for_lot_param(current_lot) if current_lot else None,
+        filters=filters,
+        lots=LOTS,
+        pagination=pagination_config,
+        search_keywords=get_keywords_from_request(request),
+        search_query=query_args_for_pagination(request.args),
+        services=search_results_obj.search_results,
+        summary=search_summary.markup(),
+        title='Search results',
+        total=search_results_obj.total
+    )
