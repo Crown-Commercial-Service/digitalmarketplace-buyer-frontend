@@ -262,7 +262,7 @@ class TestBriefPage(BaseApplicationTest):
         contract_length_key = section_attributes[1].xpath('td[1]/span/text()')
         contract_length_value = section_attributes[1].xpath('td[2]/span/text()')
 
-        assert_equal(section_heading.get('id'), 'brief-attributes-1')
+        assert_equal(section_heading.get('id'), 'opportunity-attributes-1')
         assert_equal(section_heading.text.strip(), 'Overview')
         assert_equal(start_date_key[0], 'Start date')
         assert_equal(start_date_value[0], '01/03/2016')

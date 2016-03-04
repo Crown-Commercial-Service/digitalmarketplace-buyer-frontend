@@ -5,8 +5,8 @@
   ],
   caption="Important dates",
   field_headings=[
-    "Brief attribute name",
-    "Brief attribute value"
+    "Opportunity attribute name",
+    "Opportunity attribute value"
   ],
   field_headings_visible=False
 ) %}
@@ -16,13 +16,13 @@
   {% endcall %}
 {% endcall %}
 {% for section in content.summary(brief) %}
-    {{ summary.heading(section.name, id="brief-attributes-{}".format(loop.index)) }}
+    {{ summary.heading(section.name, id="opportunity-attributes-{}".format(loop.index)) }}
     {% call(item) summary.list_table(
       section.questions,
       caption=section.name,
       field_headings=[
-        "Brief attribute name",
-        "Brief attribute value"
+        "Opportunity attribute name",
+        "Opportunity attribute value"
       ],
       field_headings_visible=False
     ) %}
