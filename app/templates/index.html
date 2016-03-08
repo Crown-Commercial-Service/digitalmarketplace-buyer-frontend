@@ -88,15 +88,17 @@
   </div>
     <div class="supplier-messages column-one-third">
       {% if temporary_message %}
-        {%
-          with
-            heading = temporary_message.heading,
-            subheading = temporary_message.subheading,
-            messages = temporary_message.messages,
-            message = temporary_message.message
-        %}
-          {% include "toolkit/{}.html".format(temporary_message.template_name) %}
-        {% endwith %}
+        <aside role="complementary">
+          {%
+            with
+              heading = temporary_message.heading,
+              subheading = temporary_message.subheading,
+              messages = temporary_message.messages,
+              message = temporary_message.message
+          %}
+            {% include "toolkit/{}.html".format(temporary_message.template_name) %}
+          {% endwith %}
+        </aside>
       {% endif %}
     </div>
 </div>
