@@ -36,4 +36,14 @@
     {% include '_brief_q_and_a.html' %}
   </div>
 </div>
+<div class="grid-row">
+  <div class="column-one-whole">
+    {% with 
+       url = "/suppliers/opportunities/{}/response/create".format(brief.id),
+       label = "Apply to this opportunity"
+    %}
+      {% include "toolkit/link-button.html" %}
+    {% endwith %}
+  </div>
+</div>
 {% endblock %}

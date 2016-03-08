@@ -1,0 +1,34 @@
+{% import "toolkit/summary-table.html" as summary %}
+{% call(item) summary.list_table(
+  [
+    {"label": "Published", "value": brief.publishedAt|dateformat}
+  ],
+  caption="Important dates",
+  field_headings=[
+    "Opportunity attribute name",
+    "Opportunity attribute value"
+  ],
+  field_headings_visible=False
+) %}
+  {% call summary.row() %}
+    {{ summary.field_name(item.label) }}
+    {{ summary.text(item.value) }}
+  {% endcall %}
+{% endcall %}
+{% for section in content.summary(brief) %}
+    {{ summary.heading(section.name, id="opportunity-attributes-{}".format(loop.index)) }}
+    {% call(item) summary.list_table(
+      section.questions,
+      caption=section.name,
+      field_headings=[
+        "Opportunity attribute name",
+        "Opportunity attribute value"
+      ],
+      field_headings_visible=False
+    ) %}
+      {% call summary.row() %}
+        {{ summary.field_name(item.label) }}
+        {{ summary[item.type](item.value) }}
+      {% endcall %}
+    {% endcall %}
+{% endfor %}

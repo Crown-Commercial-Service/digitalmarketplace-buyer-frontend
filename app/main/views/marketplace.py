@@ -65,7 +65,11 @@ def get_brief_by_id(framework_slug, brief_id):
     if brief['status'] != 'live':
         abort(404, "Opportunity '{}' can not be found".format(brief_id))
 
+    brief_content = content_loader.get_builder('digital-outcomes-and-specialists', 'display_brief').filter(
+        brief
+    )
     return render_template(
         'brief.html',
-        brief=brief
+        brief=brief,
+        content=brief_content
     )

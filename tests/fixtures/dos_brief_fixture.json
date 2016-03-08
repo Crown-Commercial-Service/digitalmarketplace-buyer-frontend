@@ -43,6 +43,9 @@
         "name": "Joe Bloggs",
         "role": "buyer"
       }
+    ],
+    "clarificationQuestions": [
+      {"question": "Why?", "answer": "Because", "publishedAt": "2016-02-26T00:00:00.000000Z"}
     ]
   }
 }

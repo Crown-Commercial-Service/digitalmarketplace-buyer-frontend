@@ -206,3 +206,81 @@ class TestStaticMarketplacePages(BaseApplicationTest):
             '<h1>Termsandconditions</h1>'
             in self._strip_whitespace(res.get_data(as_text=True))
         )
+
+
+class TestBriefPage(BaseApplicationTest):
+
+    def setup(self):
+        super(TestBriefPage, self).setup()
+
+        self._data_api_client = mock.patch(
+            'app.main.views.marketplace.data_api_client'
+        ).start()
+
+        self.brief = self._get_dos_brief_fixture_data()
+        self._data_api_client.get_brief.return_value = self.brief
+
+    def teardown(self):
+        self._data_api_client.stop()
+
+    def _assert_page_title(self, document):
+        brief_title = self.brief['briefs']['title']
+        brief_organisation = self.brief['briefs']['organisation']
+
+        page_heading = document.xpath('//header[@class="page-heading-smaller"]')[0]
+        page_heading_h1 = page_heading.xpath('h1/text()')[0]
+        page_heading_context = page_heading.xpath('p[@class="context"]/text()')[0]
+
+    def test_dos_brief_404s_if_brief_is_draft(self):
+        self.brief['briefs']['status'] = 'draft'
+        brief_id = self.brief['briefs']['id']
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
+        assert_equal(404, res.status_code)
+
+    def test_dos_brief_has_correct_title(self):
+        brief_id = self.brief['briefs']['id']
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
+        assert_equal(200, res.status_code)
+
+        document = html.fromstring(res.get_data(as_text=True))
+
+        self._assert_page_title(document)
+
+    def test_dos_brief_has_at_least_one_section(self):
+        brief_id = self.brief['briefs']['id']
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
+        assert_equal(200, res.status_code)
+
+        document = html.fromstring(res.get_data(as_text=True))
+
+        section_heading = document.xpath('//h2[@class="summary-item-heading"]')[0]
+        section_attributes = section_heading.xpath('following-sibling::table[1]/tbody/tr')
+
+        start_date_key = section_attributes[0].xpath('td[1]/span/text()')
+        start_date_value = section_attributes[0].xpath('td[2]/span/text()')
+
+        contract_length_key = section_attributes[1].xpath('td[1]/span/text()')
+        contract_length_value = section_attributes[1].xpath('td[2]/span/text()')
+
+        assert_equal(section_heading.get('id'), 'opportunity-attributes-1')
+        assert_equal(section_heading.text.strip(), 'Overview')
+        assert_equal(start_date_key[0], 'Start date')
+        assert_equal(start_date_value[0], '01/03/2016')
+        assert_equal(contract_length_key[0], 'Contract length')
+        assert_equal(contract_length_value[0], '4 weeks')
+
+    def test_dos_brief_has_questions_and_answers(self):
+        brief_id = self.brief['briefs']['id']
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
+        assert_equal(200, res.status_code)
+
+        document = html.fromstring(res.get_data(as_text=True))
+
+        xpath = '//h2[@id="clarification-questions"]/following-sibling::table/tbody/tr'
+        clarification_questions = document.xpath(xpath)
+
+        question = clarification_questions[0].xpath('td[1]/span/text()')
+        answer = clarification_questions[0].xpath('td[2]/span/text()')
+
+        assert_equal(question[0], "Why?")
+        assert_equal(answer[0], "Because")
