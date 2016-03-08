@@ -84,7 +84,7 @@ def create_new_brief(framework_slug, lot_slug):
         )["briefs"]
     except HTTPError as e:
         update_data = section.unformat_data(update_data)
-        errors = section.get_error_messages(e.message, lot_slug)
+        errors = section.get_error_messages(e.message)
 
         return render_template(
             "buyers/edit_brief_section.html",
@@ -159,7 +159,7 @@ def update_brief_submission(framework_slug, lot_slug, brief_id, section_id):
         )
     except HTTPError as e:
         update_data = section.unformat_data(update_data)
-        errors = section.get_error_messages(e.message, lot_slug)
+        errors = section.get_error_messages(e.message)
 
         return render_template(
             "buyers/edit_brief_section.html",
@@ -278,7 +278,7 @@ def add_clarification_question(framework_slug, lot_slug, brief_id):
         except HTTPError as e:
             if e.status_code != 400:
                 raise
-            errors = section.get_error_messages(e.message, None)
+            errors = section.get_error_messages(e.message)
             status_code = 400
 
     return render_template(
