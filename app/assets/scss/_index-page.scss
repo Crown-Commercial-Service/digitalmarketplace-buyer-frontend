@@ -38,8 +38,12 @@
 
   .supplier-messages {
     h2 {
+      @include bold-27;
+      margin-bottom: $gutter;
+    }
+
+    h3 {
       @include bold-24;
-      margin-bottom: $gutter-half;
     }
 
     p {

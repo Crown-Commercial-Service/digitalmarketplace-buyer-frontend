@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from flask import abort, render_template, current_app
+from flask_login import current_user
 
 from dmapiclient import APIError
 from dmutils.content_loader import ContentNotFoundError
@@ -15,6 +16,7 @@ from app import data_api_client, content_loader
 @main.route('/')
 def index():
     temporary_message = {}
+    logged_in = current_user.is_authenticated()
 
     try:
         frameworks = data_api_client.find_frameworks().get('frameworks')
@@ -41,10 +43,15 @@ def index():
             "framework {} status {}".format(framework.get('slug'), framework.get('status')))
         abort(500)
 
+    template_data = {
+        'frameworks': {framework['slug']: framework for framework in frameworks},
+        'temporary_message': temporary_message
+    }
+    if logged_in:
+        template_data['logged_in'] = True
     return render_template(
         'index.html',
-        frameworks={framework['slug']: framework for framework in frameworks},
-        temporary_message=temporary_message
+        **template_data
     )
 
 
