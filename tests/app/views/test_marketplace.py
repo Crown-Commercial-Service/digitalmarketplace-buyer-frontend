@@ -190,7 +190,6 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
             '//div[@class="supplier-messages column-one-third"]/aside/h3/a[text()="View your services and account details"]')  # noqa
 
         assert len(link_to_dashboard) == 1
-        
 
     def test_homepage_sidebar_message_doesnt_exist_without_frameworks(self):
         framework_slugs_and_statuses = [
