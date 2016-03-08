@@ -90,7 +90,7 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
 
     @staticmethod
     def _assert_message_container_is_empty(response_data):
-        empty_message_container = '<div class="framework-message column-one-third"></div>'
+        empty_message_container = '<div class="supplier-messages column-one-third"></div>'
         assert_in(
             BaseApplicationTest._strip_whitespace(empty_message_container),
             BaseApplicationTest._strip_whitespace(response_data),
@@ -98,7 +98,7 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
 
     @staticmethod
     def _assert_message_container_is_not_empty(response_data):
-        empty_message_container = '<div class="framework-message column-one-third"></div>'
+        empty_message_container = '<div class="supplier-messages column-one-third"></div>'
         assert_not_in(
             BaseApplicationTest._strip_whitespace(empty_message_container),
             BaseApplicationTest._strip_whitespace(response_data),

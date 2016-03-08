@@ -36,9 +36,7 @@
 
   }
 
-  .framework-message {
-    margin-top: 45px;
-
+  .supplier-messages {
     h2 {
       @include bold-24;
       margin-bottom: $gutter-half;
@@ -75,8 +73,8 @@
     }
   }
 
-  /* `.framework-message p` overwrites the `margin-bottom` of paragraphs in the temporary message */
-  .framework-message .temporary-message-message {
+  /* `.supplier-message p` overwrites the `margin-bottom` of paragraphs in the temporary message */
+  .supplier-messages .temporary-message-message {
     margin-bottom: 5px;
   }
 
