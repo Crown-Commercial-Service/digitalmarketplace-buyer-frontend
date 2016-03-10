@@ -187,7 +187,7 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
         document = html.fromstring(response_data)
 
         link_to_dashboard = document.xpath(
-            '//div[@class="supplier-messages column-one-third"]/aside/h3/a[text()="View your services and account details"]')  # noqa
+            '//div[@class="supplier-messages column-one-third"]/aside/p/a/span[text()="View your services and account details"]')  # noqa
 
         assert len(link_to_dashboard) == 1
 
