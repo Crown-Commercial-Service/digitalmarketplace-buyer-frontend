@@ -555,6 +555,7 @@ class TestBuyersCreation(BaseApplicationTest):
         )
         assert res.status_code == 400
         data = res.get_data(as_text=True)
+        assert "You must use a public sector email address" in data
         assert "The email you used doesn't belong to a recognised public sector domain." in data
 
     @mock.patch('app.main.views.login.send_email')
