@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from flask import abort, render_template, current_app
+from flask_login import current_user
 
 from dmapiclient import APIError
 from dmutils.content_loader import ContentNotFoundError
@@ -44,7 +45,8 @@ def index():
     return render_template(
         'index.html',
         frameworks={framework['slug']: framework for framework in frameworks},
-        temporary_message=temporary_message
+        temporary_message=temporary_message,
+        logged_in=current_user.is_authenticated()
     )
 
 

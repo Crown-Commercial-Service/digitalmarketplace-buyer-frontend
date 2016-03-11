@@ -36,12 +36,14 @@
 
   }
 
-  .framework-message {
-    margin-top: 45px;
-
+  .supplier-messages {
     h2 {
+      @include bold-27;
+      margin-bottom: $gutter;
+    }
+
+    h3 {
       @include bold-24;
-      margin-bottom: $gutter-half;
     }
 
     p {
@@ -56,6 +58,66 @@
         margin-top: $gutter-half;
         border-bottom: 1px solid $border-colour;
         padding-bottom: $gutter-half;
+      }
+
+      a.top-level-link {
+        display: inline;
+        @include heading-24;
+        font-weight: bold;
+        text-decoration: none;
+        border-bottom: 1px solid; // No border colour, is inherited from text colour
+        position: relative;
+        top: -12px;
+
+        @include ie-lte(9) {
+          text-decoration: underline;
+          border-bottom: none;
+          top: 0;
+        }
+
+        span {
+
+          position: relative;
+          top: 12px;
+
+          @include ie-lte(9) {
+            top: 0;
+          }
+
+        }
+
+        &:visited {
+          color: $link-visited-colour;
+        }
+
+        &:hover {
+          color: $link-hover-colour;
+        }
+
+        &:active,
+        &:focus {
+
+          outline: none;
+          background: none;
+
+          @include ie-lte(9) {
+            background: $yellow;
+            outline: 3px solid $yellow;
+          }
+
+          span {
+
+            background: $yellow;
+            outline: 3px solid $yellow;
+
+            @include ie-lte(9) {
+              background: none;
+              outline: none;
+            }
+
+          }
+
+        }
       }
     }
 
@@ -75,8 +137,8 @@
     }
   }
 
-  /* `.framework-message p` overwrites the `margin-bottom` of paragraphs in the temporary message */
-  .framework-message .temporary-message-message {
+  /* `.supplier-message p` overwrites the `margin-bottom` of paragraphs in the temporary message */
+  .supplier-messages .temporary-message-message {
     margin-bottom: 5px;
   }
 

@@ -90,19 +90,17 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
 
     @staticmethod
     def _assert_message_container_is_empty(response_data):
-        empty_message_container = '<div class="framework-message column-one-third"></div>'
-        assert_in(
-            BaseApplicationTest._strip_whitespace(empty_message_container),
-            BaseApplicationTest._strip_whitespace(response_data),
-        )
+        document = html.fromstring(response_data)
+        message_container = document.xpath('//div[@class="supplier-messages column-one-third"]/aside')
+        assert len(message_container) == 0
 
     @staticmethod
     def _assert_message_container_is_not_empty(response_data):
-        empty_message_container = '<div class="framework-message column-one-third"></div>'
-        assert_not_in(
-            BaseApplicationTest._strip_whitespace(empty_message_container),
-            BaseApplicationTest._strip_whitespace(response_data),
-        )
+        document = html.fromstring(response_data)
+        message_container = document.xpath('//div[@class="supplier-messages column-one-third"]/aside')
+        assert len(message_container) == 1
+
+        assert message_container[0].xpath('h2/text()')[0].strip() == "Sell services"
 
     @mock.patch('app.main.views.marketplace.data_api_client')
     def _load_homepage(self, framework_slugs_and_statuses, framework_messages, data_api_client):
@@ -156,6 +154,42 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
         ]
 
         self._load_homepage(framework_slugs_and_statuses, framework_messages)
+
+    @mock.patch('app.main.views.marketplace.data_api_client')
+    @mock.patch('app.main.views.marketplace.current_user')
+    def test_homepage_sidebar_no_log_in_message_if_logged_out(self, data_api_client, current_user):
+        data_api_client.find_frameworks.return_value = self._find_frameworks([
+            ('digital-outcomes-and-specialists', 'live')
+        ])
+        current_user.is_authenticated.return_value = True
+        res = self.client.get('/')
+        assert res.status_code == 200
+        response_data = res.get_data(as_text=True)
+
+        document = html.fromstring(response_data)
+
+        link_to_dashboard = document.xpath(
+            '//div[@class="supplier-messages column-one-third"]/aside/h3/a[text()="View your services and account details"]')  # noqa
+
+        assert len(link_to_dashboard) == 0
+
+    @mock.patch('app.main.views.marketplace.data_api_client')
+    @mock.patch('app.main.views.marketplace.current_user')
+    def test_homepage_sidebar_no_log_in_message_if_logged_out(self, data_api_client, current_user):
+        data_api_client.find_frameworks.return_value = self._find_frameworks([
+            ('digital-outcomes-and-specialists', 'live')
+        ])
+        current_user.is_authenticated.return_value = True
+        res = self.client.get('/')
+        assert res.status_code == 200
+        response_data = res.get_data(as_text=True)
+
+        document = html.fromstring(response_data)
+
+        link_to_dashboard = document.xpath(
+            '//div[@class="supplier-messages column-one-third"]/aside/p/a/span[text()="View your services and account details"]')  # noqa
+
+        assert len(link_to_dashboard) == 1
 
     def test_homepage_sidebar_message_doesnt_exist_without_frameworks(self):
         framework_slugs_and_statuses = [
