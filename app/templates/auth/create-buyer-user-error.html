@@ -6,21 +6,21 @@
 
 {% if error == 'invalid_buyer_domain' %}
 
-  <header class="page-heading-smaller">
-    <h1>Invalid email domain</h1>
-  </header>
   <div class="grid-row">
-    <div class="column-two-thirds">
+    <div class="column-two-thirds marketplace-text">
+      <header class="page-heading-smaller">
+        <h1>Email not recognised as a public sector organisation</h1>
+      </header>
       <p>
         You must be employed by, or represent, a public sector organisation to create a buyer account.
       </p>
       <p>
         The email you used doesn't belong to a recognised public sector domain.
       </p>
-      <p>
+      
         <a href="{{ url_for('.create_buyer_account') }}">Create an account using a different email address</a> or email 
         <a href="mailto:enquiries@digitalmarketplace.service.gov.uk">enquiries@digitalmarketplace.service.gov.uk</a> if:
-        <ul class="list-bullet">
+        <ul>
           <li>
             you think your domain should be recognised
           </li>
@@ -28,7 +28,7 @@
             you still can't create an account
           </li>
         </ul>
-      </p>
+      
     </div>
   </div>
 
