@@ -198,7 +198,7 @@ def submit_create_buyer_account():
 
     if form.validate_on_submit():
         email_address = form.email_address.data
-        if not data_api_client.email_address_has_valid_buyer_domain(email_address):
+        if not data_api_client.is_email_address_with_valid_buyer_domain(email_address):
             return render_template(
                 "auth/create-buyer-user-error.html",
                 error='invalid_buyer_domain'), 400
