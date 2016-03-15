@@ -42,11 +42,15 @@ def index():
             "framework {} status {}".format(framework.get('slug'), framework.get('status')))
         abort(500)
 
+    if current_user.is_authenticated():
+        logged_in_user = current_user.role
+    else:
+        logged_in_user = None
     return render_template(
         'index.html',
         frameworks={framework['slug']: framework for framework in frameworks},
         temporary_message=temporary_message,
-        logged_in=current_user.is_authenticated()
+        logged_in_user=logged_in_user
     )
 
 
