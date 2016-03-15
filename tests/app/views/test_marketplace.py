@@ -155,13 +155,13 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
 
         self._load_homepage(framework_slugs_and_statuses, framework_messages)
 
-    @mock.patch('app.main.views.marketplace.data_api_client')
     @mock.patch('app.main.views.marketplace.current_user')
+    @mock.patch('app.main.views.marketplace.data_api_client')
     def test_homepage_sidebar_no_log_in_message_if_logged_out(self, data_api_client, current_user):
         data_api_client.find_frameworks.return_value = self._find_frameworks([
             ('digital-outcomes-and-specialists', 'live')
         ])
-        current_user.is_authenticated.return_value = True
+        current_user.is_authenticated.return_value = False
         res = self.client.get('/')
         assert res.status_code == 200
         response_data = res.get_data(as_text=True)
@@ -169,13 +169,13 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
         document = html.fromstring(response_data)
 
         link_to_dashboard = document.xpath(
-            '//div[@class="supplier-messages column-one-third"]/aside/h3/a[text()="View your services and account details"]')  # noqa
+            '//div[@class="supplier-messages column-one-third"]/aside/p[1]/a[@class="top-level-link"]')  # noqa
 
         assert len(link_to_dashboard) == 0
 
-    @mock.patch('app.main.views.marketplace.data_api_client')
     @mock.patch('app.main.views.marketplace.current_user')
-    def test_homepage_sidebar_no_log_in_message_if_logged_out(self, data_api_client, current_user):
+    @mock.patch('app.main.views.marketplace.data_api_client')
+    def test_homepage_sidebar_log_in_message_if_logged_in(self, data_api_client, current_user):
         data_api_client.find_frameworks.return_value = self._find_frameworks([
             ('digital-outcomes-and-specialists', 'live')
         ])
@@ -187,9 +187,10 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
         document = html.fromstring(response_data)
 
         link_to_dashboard = document.xpath(
-            '//div[@class="supplier-messages column-one-third"]/aside/p/a/span[text()="View your services and account details"]')  # noqa
+            '//div[@class="supplier-messages column-one-third"]/aside/p[1]/a[@class="top-level-link"]')  # noqa
 
         assert len(link_to_dashboard) == 1
+        assert link_to_dashboard[0].text.strip() == "View your services and account details"
 
     def test_homepage_sidebar_message_doesnt_exist_without_frameworks(self):
         framework_slugs_and_statuses = [
