@@ -61,8 +61,27 @@ class TestHomepageBrowseList(BaseApplicationTest):
 
             link_texts = [item.text_content().strip() for item in document.cssselect('.browse-list-item a')]
             assert link_texts[0] == "Find an individual specialist"
-            assert link_texts[-1] == "View your briefs and supplier responses"
+            assert link_texts[-1] == "Buy physical datacentre space for legacy systems"
             assert "Find specialists to work on digital projects" not in link_texts
+
+    @mock.patch('app.main.views.marketplace.current_user')
+    @mock.patch('app.main.views.marketplace.data_api_client')
+    def test_buyer_dashboard_link_exists_when_dos_is_live_and_buyer_logged_in(self, data_api_client, current_user):
+        with self.app.app_context():
+            data_api_client.find_frameworks.return_value = {"frameworks": [
+                {"slug": "digital-outcomes-and-specialists",
+                 "status": "live"}
+            ]}
+            current_user.is_authenticated.return_value = True
+            current_user.role = 'buyer'
+
+            res = self.client.get("/")
+            document = html.fromstring(res.get_data(as_text=True))
+
+            assert res.status_code == 200
+
+            link_texts = [item.text_content().strip() for item in document.cssselect('.browse-list-item a')]
+            assert link_texts[-1] == "View your requirements and supplier responses"
 
 
 class TestHomepageSidebarMessage(BaseApplicationTest):
@@ -180,6 +199,7 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
             ('digital-outcomes-and-specialists', 'live')
         ])
         current_user.is_authenticated.return_value = True
+        current_user.role = 'supplier'
         res = self.client.get('/')
         assert res.status_code == 200
         response_data = res.get_data(as_text=True)
