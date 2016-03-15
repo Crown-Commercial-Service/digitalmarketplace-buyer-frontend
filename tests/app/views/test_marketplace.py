@@ -64,16 +64,14 @@ class TestHomepageBrowseList(BaseApplicationTest):
             assert link_texts[-1] == "Buy physical datacentre space for legacy systems"
             assert "Find specialists to work on digital projects" not in link_texts
 
-    @mock.patch('app.main.views.marketplace.current_user')
     @mock.patch('app.main.views.marketplace.data_api_client')
-    def test_buyer_dashboard_link_exists_when_dos_is_live_and_buyer_logged_in(self, data_api_client, current_user):
+    def test_buyer_dashboard_link_exists_when_dos_is_live_and_buyer_logged_in(self, data_api_client):
         with self.app.app_context():
             data_api_client.find_frameworks.return_value = {"frameworks": [
                 {"slug": "digital-outcomes-and-specialists",
                  "status": "live"}
             ]}
-            current_user.is_authenticated.return_value = True
-            current_user.role = 'buyer'
+            self.login_as_buyer()
 
             res = self.client.get("/")
             document = html.fromstring(res.get_data(as_text=True))
@@ -174,13 +172,11 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
 
         self._load_homepage(framework_slugs_and_statuses, framework_messages)
 
-    @mock.patch('app.main.views.marketplace.current_user')
     @mock.patch('app.main.views.marketplace.data_api_client')
-    def test_homepage_sidebar_no_log_in_message_if_logged_out(self, data_api_client, current_user):
+    def test_homepage_sidebar_no_log_in_message_if_logged_out(self, data_api_client):
         data_api_client.find_frameworks.return_value = self._find_frameworks([
             ('digital-outcomes-and-specialists', 'live')
         ])
-        current_user.is_authenticated.return_value = False
         res = self.client.get('/')
         assert res.status_code == 200
         response_data = res.get_data(as_text=True)
@@ -192,14 +188,13 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
 
         assert len(link_to_dashboard) == 0
 
-    @mock.patch('app.main.views.marketplace.current_user')
     @mock.patch('app.main.views.marketplace.data_api_client')
-    def test_homepage_sidebar_log_in_message_if_logged_in(self, data_api_client, current_user):
+    def test_homepage_sidebar_log_in_message_if_logged_in(self, data_api_client):
         data_api_client.find_frameworks.return_value = self._find_frameworks([
             ('digital-outcomes-and-specialists', 'live')
         ])
-        current_user.is_authenticated.return_value = True
-        current_user.role = 'supplier'
+        self.login_as_supplier()
+
         res = self.client.get('/')
         assert res.status_code == 200
         response_data = res.get_data(as_text=True)

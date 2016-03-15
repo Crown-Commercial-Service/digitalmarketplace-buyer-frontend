@@ -46,7 +46,7 @@
         ]
       %}
       {% set dss_items = [] %}
-        {% if logged_in_user == 'buyer' %}
+        {% if current_user.role == 'buyer' %}
           {% set buyer_dashboard = [
               {
                 "link": "/buyers",
@@ -91,7 +91,7 @@
     {% endwith %}
   </div>
     <div class="supplier-messages column-one-third">
-      {% if temporary_message or logged_in_user == 'supplier' %}
+      {% if temporary_message or current_user.role == 'supplier' %}
         <aside role="complementary" aria-labelledby="supplier-message-heading">
           <h2 id="supplier-message-heading">Sell services</h2>
           {% if temporary_message %}
@@ -105,7 +105,7 @@
               {% include "toolkit/{}.html".format(temporary_message.template_name) %}
             {% endwith %}
           {% endif %}
-          {% if logged_in_user == 'supplier' %}
+          {% if current_user.role == 'supplier' %}
             <p>
               <a href="/suppliers" class="top-level-link">
                 View your services and account details
