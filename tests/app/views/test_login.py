@@ -545,8 +545,23 @@ class TestBuyersCreation(BaseApplicationTest):
         assert 'Create a buyer account' in data
         assert 'Email address must be provided' in data
 
+    @mock.patch('app.main.views.login.data_api_client')
+    def test_should_show_error_page_for_unrecognised_email_domain(self, data_api_client):
+        data_api_client.is_email_address_with_valid_buyer_domain.return_value = False
+        res = self.client.post(
+            '/buyers/create',
+            data={'email_address': 'kev@ymail.com'},
+            follow_redirects=True
+        )
+        assert res.status_code == 400
+        data = res.get_data(as_text=True)
+        assert "You must use a public sector email address" in data
+        assert "The email you used doesn't belong to a recognised public sector domain." in data
+
+    @mock.patch('app.main.views.login.data_api_client')
     @mock.patch('app.main.views.login.send_email')
-    def test_should_503_if_email_fails_to_send(self, send_email):
+    def test_should_503_if_email_fails_to_send(self, send_email, data_api_client):
+        data_api_client.is_email_address_with_valid_buyer_domain.return_value = True
         send_email.side_effect = MandrillException("Arrrgh")
         res = self.client.post(
             '/buyers/create',
