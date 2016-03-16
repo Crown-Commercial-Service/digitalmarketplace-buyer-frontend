@@ -331,6 +331,44 @@ class TestBriefPage(BaseApplicationTest):
 
         question = clarification_questions[0].xpath('td[1]/span/text()')
         answer = clarification_questions[0].xpath('td[2]/span/text()')
+        qa_link_text = document.xpath('//a[@href="/suppliers/opportunities/{}/ask-a-question"]/text()'
+                                      .format(brief_id))[0]
 
         assert_equal(question[0], "Why?")
         assert_equal(answer[0], "Because")
+        assert_equal(qa_link_text.strip(), "Log in to ask a question")
+
+    def test_dos_brief_has_different_link_text_for_logged_in_supplier(self):
+        self.login_as_supplier()
+        brief_id = self.brief['briefs']['id']
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
+        assert_equal(200, res.status_code)
+
+        document = html.fromstring(res.get_data(as_text=True))
+
+        qa_link_text = document.xpath('//a[@href="/suppliers/opportunities/{}/ask-a-question"]/text()'
+                                      .format(brief_id))[0]
+
+        assert_equal(qa_link_text.strip(), "Ask a question")
+
+    def test_can_apply_to_live_brief(self):
+        brief_id = self.brief['briefs']['id']
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
+        assert_equal(200, res.status_code)
+        document = html.fromstring(res.get_data(as_text=True))
+
+        apply_links = document.xpath('//a[@href="/suppliers/opportunities/{}/responses/create"]'.format(brief_id))
+        assert len(apply_links) == 1
+
+    def test_cannot_apply_to_closed_brief(self):
+        brief = self.brief.copy()
+        brief['briefs']['status'] = "closed"
+        brief['briefs']['publishedAt'] = "2000-01-25T12:00:00.000000Z"
+        self._data_api_client.get_brief.return_value = brief
+        brief_id = brief['briefs']['id']
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
+        assert_equal(200, res.status_code)
+        document = html.fromstring(res.get_data(as_text=True))
+
+        apply_links = document.xpath('//a[@href="/suppliers/opportunities/{}/responses/create"]'.format(brief_id))
+        assert len(apply_links) == 0
