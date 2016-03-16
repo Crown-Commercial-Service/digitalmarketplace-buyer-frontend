@@ -18,6 +18,22 @@
 {% endblock %}
 
 {% block main_content %}
+
+{% if brief.status == 'closed' %}
+<div class="grid-row">
+  <div class="column-one-whole">
+    {%
+      with
+      type = "temporary-message",
+      heading = "This opportunity is closed for applications.",
+      message = "The deadline was {}.".format(brief.clarificationQuestionsClosedAt|dateformat)|safe
+    %}
+      {% include "toolkit/notification-banner.html" %}
+    {% endwith %}
+  </div>
+</div>
+{% endif %}
+
 <div class="grid-row">
   <div class="column-two-thirds">
     <header class="page-heading-smaller">
@@ -36,6 +52,8 @@
     {% include '_brief_q_and_a.html' %}
   </div>
 </div>
+
+{% if brief.status == 'live' %}
 <div class="grid-row">
   <div class="column-one-whole">
     {% with 
@@ -46,4 +64,5 @@
     {% endwith %}
   </div>
 </div>
+{% endif %}
 {% endblock %}

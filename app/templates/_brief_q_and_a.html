@@ -16,4 +16,14 @@
   {% endcall %}
 {% endcall %}
 
-<a href="/suppliers/opportunities/{{ brief.id }}/ask-a-question">Log in to ask a question</a>
+{% if brief.status == 'live' and not brief.clarificationQuestionsAreClosed %}
+  <a href="/suppliers/opportunities/{{ brief.id }}/ask-a-question">
+    {% if current_user.is_authenticated() and current_user.role == 'supplier' %}
+      Ask a question
+    {% else %}
+      Log in to ask a question
+    {% endif %}
+  </a>
+{% elif brief.status == 'live' %}
+  The deadline for asking clarification questions was {{ brief.clarificationQuestionsClosedAt|dateformat }}.
+{% endif %}
