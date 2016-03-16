@@ -71,3 +71,18 @@ ol {
   list-style-type: none;
   margin-bottom: 10px;
 }
+
+.explanation-list {
+  .lead {
+    padding-bottom: 0;
+  }
+
+  ul {
+    @extend .list-bullet;
+    margin: 0;
+
+    li {
+      margin: 0;
+    }
+  }
+}
