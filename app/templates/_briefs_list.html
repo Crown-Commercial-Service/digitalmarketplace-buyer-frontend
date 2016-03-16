@@ -1,0 +1,34 @@
+{% for brief in briefs %}
+<div class="search-result">
+    <h2 class="search-result-title">
+        <a href="{{ url_for('.get_brief_by_id', framework_slug=framework.slug, brief_id=brief.id) }}">{{ brief.title }}</a>
+    </h2>
+    
+    <ul class="search-result-important-metadata">
+        <li class="search-result-metadata-item">
+            {{ brief.organisation }}
+        </li>
+        <li class="search-result-metadata-item">
+            {{ brief.location }}
+        </li>
+    </ul>
+    
+    <ul class="search-result-metadata">
+        <li class="search-result-metadata-item">
+            {{ brief.lotName }}
+        </li>
+        <li class="search-result-metadata-item">
+            {% if brief.status == 'closed' %}
+                Closed
+            {% else %}
+                Closing: {{ brief.applicationsClosedAt|dateformat }}
+            {% endif %}
+        </li>
+    </ul>
+    
+    <p class="search-result-excerpt">
+        {{ brief.backgroundInformation }}
+    </p>
+</div>
+
+{% endfor %}

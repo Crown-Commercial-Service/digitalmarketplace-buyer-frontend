@@ -1,0 +1,32 @@
+{% extends "_base_page.html" %}
+
+{% block page_title %}
+    Supplier opportunities – {{ framework.name }} – Digital Marketplace
+{% endblock %}
+
+{% block breadcrumb %}
+    {% with items = [
+        {
+        "link": url_for('.index'),
+        "label": "Digital Marketplace"
+        }
+    ]
+    %}
+    {% include "toolkit/breadcrumb.html" %}
+    {% endwith %}
+{% endblock %}
+
+{% block main_content %}
+
+    {% with heading="Supplier opportunities" %}
+        {% include "toolkit/page-heading.html" %}
+    {% endwith %}
+    
+    <div class="grid-row">
+        <section class="column-two-thirds">
+            {% include '_briefs_list.html' %}
+            {% include '_briefs_pagination.html' %}
+        </section>
+    </div>
+
+{% endblock %}

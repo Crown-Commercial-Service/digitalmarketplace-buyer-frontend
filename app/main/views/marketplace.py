@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from flask import abort, render_template, current_app
+from flask import abort, current_app, render_template, request
 
 from dmapiclient import APIError
 from dmutils.content_loader import ContentNotFoundError
 
 from ...main import main
-from ...helpers.shared_helpers import get_one_framework_by_status_in_order_of_preference
+from ...helpers.shared_helpers import get_one_framework_by_status_in_order_of_preference, process_page, parse_links
 
 from app import data_api_client, content_loader
 
@@ -62,7 +62,7 @@ def terms_and_conditions():
 def get_brief_by_id(framework_slug, brief_id):
     briefs = data_api_client.get_brief(brief_id)
     brief = briefs.get('briefs')
-    if brief['status'] != 'live':
+    if brief['status'] not in ['live', 'closed']:
         abort(404, "Opportunity '{}' can not be found".format(brief_id))
 
     brief_content = content_loader.get_builder('digital-outcomes-and-specialists', 'display_brief').filter(
@@ -73,3 +73,30 @@ def get_brief_by_id(framework_slug, brief_id):
         brief=brief,
         content=brief_content
     )
+
+
+@main.route('/<framework_slug>/opportunities')
+def list_opportunities(framework_slug):
+    page = process_page(request.args.get('page', default=u"1"))
+    framework = data_api_client.get_framework(framework_slug)['frameworks']
+
+    if not framework:
+        abort(404, "No framework {}".format(framework_slug))
+
+    try:
+        api_result = data_api_client.find_briefs(status='live,closed', framework=framework_slug, page=page)
+
+        briefs = api_result["briefs"]
+        links = api_result["links"]
+
+        return render_template('briefs_catalogue.html',
+                               framework=framework,
+                               briefs=briefs,
+                               prev_link=parse_links(links)['prev'],
+                               next_link=parse_links(links)['next']
+                               )
+    except APIError as e:
+        if e.status_code == 404:
+            abort(404, "No briefs on page {}".format(page))
+        else:
+            raise e
