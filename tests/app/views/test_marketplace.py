@@ -61,8 +61,25 @@ class TestHomepageBrowseList(BaseApplicationTest):
 
             link_texts = [item.text_content().strip() for item in document.cssselect('.browse-list-item a')]
             assert link_texts[0] == "Find an individual specialist"
-            assert link_texts[-1] == "View your briefs and supplier responses"
+            assert link_texts[-1] == "Buy physical datacentre space for legacy systems"
             assert "Find specialists to work on digital projects" not in link_texts
+
+    @mock.patch('app.main.views.marketplace.data_api_client')
+    def test_buyer_dashboard_link_exists_when_dos_is_live_and_buyer_logged_in(self, data_api_client):
+        with self.app.app_context():
+            data_api_client.find_frameworks.return_value = {"frameworks": [
+                {"slug": "digital-outcomes-and-specialists",
+                 "status": "live"}
+            ]}
+            self.login_as_buyer()
+
+            res = self.client.get("/")
+            document = html.fromstring(res.get_data(as_text=True))
+
+            assert res.status_code == 200
+
+            link_texts = [item.text_content().strip() for item in document.cssselect('.browse-list-item a')]
+            assert link_texts[-1] == "View your requirements and supplier responses"
 
 
 class TestHomepageSidebarMessage(BaseApplicationTest):
@@ -156,12 +173,10 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
         self._load_homepage(framework_slugs_and_statuses, framework_messages)
 
     @mock.patch('app.main.views.marketplace.data_api_client')
-    @mock.patch('app.main.views.marketplace.current_user')
-    def test_homepage_sidebar_no_log_in_message_if_logged_out(self, data_api_client, current_user):
+    def test_homepage_sidebar_no_log_in_message_if_logged_out(self, data_api_client):
         data_api_client.find_frameworks.return_value = self._find_frameworks([
             ('digital-outcomes-and-specialists', 'live')
         ])
-        current_user.is_authenticated.return_value = True
         res = self.client.get('/')
         assert res.status_code == 200
         response_data = res.get_data(as_text=True)
@@ -169,17 +184,17 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
         document = html.fromstring(response_data)
 
         link_to_dashboard = document.xpath(
-            '//div[@class="supplier-messages column-one-third"]/aside/h3/a[text()="View your services and account details"]')  # noqa
+            '//div[@class="supplier-messages column-one-third"]/aside/p[1]/a[@class="top-level-link"]')  # noqa
 
         assert len(link_to_dashboard) == 0
 
     @mock.patch('app.main.views.marketplace.data_api_client')
-    @mock.patch('app.main.views.marketplace.current_user')
-    def test_homepage_sidebar_no_log_in_message_if_logged_out(self, data_api_client, current_user):
+    def test_homepage_sidebar_log_in_message_if_logged_in(self, data_api_client):
         data_api_client.find_frameworks.return_value = self._find_frameworks([
             ('digital-outcomes-and-specialists', 'live')
         ])
-        current_user.is_authenticated.return_value = True
+        self.login_as_supplier()
+
         res = self.client.get('/')
         assert res.status_code == 200
         response_data = res.get_data(as_text=True)
@@ -187,9 +202,10 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
         document = html.fromstring(response_data)
 
         link_to_dashboard = document.xpath(
-            '//div[@class="supplier-messages column-one-third"]/aside/p/a/span[text()="View your services and account details"]')  # noqa
+            '//div[@class="supplier-messages column-one-third"]/aside/p[1]/a[@class="top-level-link"]')  # noqa
 
         assert len(link_to_dashboard) == 1
+        assert link_to_dashboard[0].text.strip() == "View your services and account details"
 
     def test_homepage_sidebar_message_doesnt_exist_without_frameworks(self):
         framework_slugs_and_statuses = [

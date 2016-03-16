@@ -2,11 +2,40 @@
 
 .index-page {
 
+  .browse-list {
+    .browse-list-item {
+      margin-bottom: 20px;
+    }
+
+    .browse-list-item-subtext {
+      padding: 0;
+    }
+
+    .browse-list-item-link {
+      @include bold-19;
+      padding: 0;
+      border: none;
+
+      &,
+      & span {
+        position: static;
+        top: auto;
+      }
+    }
+
+    .browse-list-item-body {
+      margin-top: 0;
+    }
+  }
+
   .lead {
     @include core-19;
   }
 
   .search-box {
+    @include media(tablet) {
+      margin-bottom: $gutter-half;
+    }
 
     position: relative;
 
@@ -61,63 +90,8 @@
       }
 
       a.top-level-link {
-        display: inline;
-        @include heading-24;
-        font-weight: bold;
+        @include bold-19;
         text-decoration: none;
-        border-bottom: 1px solid; // No border colour, is inherited from text colour
-        position: relative;
-        top: -12px;
-
-        @include ie-lte(9) {
-          text-decoration: underline;
-          border-bottom: none;
-          top: 0;
-        }
-
-        span {
-
-          position: relative;
-          top: 12px;
-
-          @include ie-lte(9) {
-            top: 0;
-          }
-
-        }
-
-        &:visited {
-          color: $link-visited-colour;
-        }
-
-        &:hover {
-          color: $link-hover-colour;
-        }
-
-        &:active,
-        &:focus {
-
-          outline: none;
-          background: none;
-
-          @include ie-lte(9) {
-            background: $yellow;
-            outline: 3px solid $yellow;
-          }
-
-          span {
-
-            background: $yellow;
-            outline: 3px solid $yellow;
-
-            @include ie-lte(9) {
-              background: none;
-              outline: none;
-            }
-
-          }
-
-        }
       }
     }
 

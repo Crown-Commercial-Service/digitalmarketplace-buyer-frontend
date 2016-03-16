@@ -21,50 +21,54 @@
   <div class="column-two-thirds">
     <h2 class="marketplace-homepage-subheading">Find technology or people for digital projects in the public sector</h2>
     {% if dos_is_live %}
-    {% set
-      dos_items = [
-        {
-          "link": url_for("buyers.info_page_for_starting_a_brief", framework_slug='digital-outcomes-and-specialists', lot_slug='digital-specialists'),
-          "title": "Find an individual specialist",
-          "body": "eg a developer or user researcher",
-        },
-        {
-          "link": url_for("buyers.info_page_for_starting_a_brief", framework_slug='digital-outcomes-and-specialists', lot_slug='digital-outcomes'),
-          "title": "Find a team to provide an outcome",
-          "body": "eg a booking system or accessibility audit",
-        },
-        {
-          "link": url_for("buyers.start_new_brief", framework_slug='digital-outcomes-and-specialists', lot_slug='user-research-participants'),
-          "title": "Find user research participants",
-          "body": "eg people from a specific user group to test your service",
-        },
-        {
-          "link": "/somewhere",
-          "title": "Find a user research lab",
-          "body": "eg a room to conduct research sessions",
-        },
-      ]
-    %}
-    {% set dss_items = [] %}
-    {% set buyer_dashboard = [
-        {
-          "link": "/buyers",
-          "title": "View your briefs and supplier responses",
-        },
-      ]
-    %}
+      {% set
+        dos_items = [
+          {
+            "link": url_for("buyers.info_page_for_starting_a_brief", framework_slug='digital-outcomes-and-specialists', lot_slug='digital-specialists'),
+            "title": "Find an individual specialist",
+            "body": "eg a developer or user researcher",
+          },
+          {
+            "link": url_for("buyers.info_page_for_starting_a_brief", framework_slug='digital-outcomes-and-specialists', lot_slug='digital-outcomes'),
+            "title": "Find a team to provide an outcome",
+            "body": "eg a booking system or accessibility audit",
+          },
+          {
+            "link": url_for("buyers.start_new_brief", framework_slug='digital-outcomes-and-specialists', lot_slug='user-research-participants'),
+            "title": "Find user research participants",
+            "body": "eg people from a specific user group to test your service",
+          },
+          {
+            "link": "/somewhere",
+            "title": "Find a user research lab",
+            "body": "eg a room to conduct research sessions",
+          },
+        ]
+      %}
+      {% set dss_items = [] %}
+        {% if current_user.role == 'buyer' %}
+          {% set buyer_dashboard = [
+              {
+                "link": "/buyers",
+                "title": "View your requirements and supplier responses",
+              },
+            ]
+          %}
+        {% else %}
+          {% set buyer_dashboard = [] %}
+        {% endif %}
     {% else %}
-    {% set dos_items = [] %}
-    {% set dss_items = [
-        {
-          "link": "https://digitalservicesstore.service.gov.uk/",
-          "title": "Find specialists to work on digital projects",
-          "body": "eg technical architects and user researchers",
-          "subtext": "Procurement framework: <a href='/digital-services/framework'>Digital Services</a>"
-        }
-      ]
-    %}
-    {% set buyer_dashboard = [] %}
+      {% set dos_items = [] %}
+      {% set dss_items = [
+          {
+            "link": "https://digitalservicesstore.service.gov.uk/",
+            "title": "Find specialists to work on digital projects",
+            "body": "eg technical architects and user researchers",
+            "subtext": "Procurement framework: <a href='/digital-services/framework'>Digital Services</a>"
+          }
+        ]
+      %}
+      {% set buyer_dashboard = [] %}
     {% endif %}
 
     {% with
@@ -87,7 +91,7 @@
     {% endwith %}
   </div>
     <div class="supplier-messages column-one-third">
-      {% if temporary_message or logged_in %}
+      {% if temporary_message or current_user.role == 'supplier' %}
         <aside role="complementary" aria-labelledby="supplier-message-heading">
           <h2 id="supplier-message-heading">Sell services</h2>
           {% if temporary_message %}
@@ -101,10 +105,10 @@
               {% include "toolkit/{}.html".format(temporary_message.template_name) %}
             {% endwith %}
           {% endif %}
-          {% if logged_in %}
+          {% if current_user.role == 'supplier' %}
             <p>
               <a href="/suppliers" class="top-level-link">
-                <span>View your services and account details</span>
+                View your services and account details
               </a>
             </p>
           {% endif %}
