@@ -1,3 +1,31 @@
+try:
+    from urlparse import urlparse, parse_qs
+except ImportError:
+    from urllib.parse import urlparse, parse_qs
+
+
+def parse_links(links):
+    pagination_links = {
+        "prev": None,
+        "next": None
+    }
+
+    if 'prev' in links:
+        pagination_links['prev'] = parse_qs(urlparse(links['prev']).query)
+    if 'next' in links:
+        pagination_links['next'] = parse_qs(urlparse(links['next']).query)
+
+    return pagination_links
+
+
+def process_page(page):
+    try:
+        int(page)
+        return page
+    except ValueError:
+        return "1"  # default
+
+
 def get_label_for_lot_param(lot_param):
     lots = {
         'saas': u'Software as a Service',

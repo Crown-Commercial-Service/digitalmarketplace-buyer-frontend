@@ -4,6 +4,7 @@ from app.main import main
 from flask import render_template, request, abort
 from app import data_api_client
 from dmapiclient import APIError
+from ...helpers.shared_helpers import process_page, parse_links
 import re
 
 try:
@@ -23,31 +24,9 @@ def process_prefix(prefix=None, format='view'):
     return u"A"  # default
 
 
-def process_page(page):
-    try:
-        int(page)
-        return page
-    except ValueError:
-        return "1"  # default
-
-
 def is_alpha(character):
     reg = "^[A-Za-z]{1}$"  # valid prefix
     return re.search(reg, character)
-
-
-def parse_links(links):
-    pagination_links = {
-        "prev": None,
-        "next": None
-    }
-
-    if 'prev' in links:
-        pagination_links['prev'] = parse_qs(urlparse(links['prev']).query)
-    if 'next' in links:
-        pagination_links['next'] = parse_qs(urlparse(links['next']).query)
-
-    return pagination_links
 
 
 @main.route('/g-cloud/suppliers')
