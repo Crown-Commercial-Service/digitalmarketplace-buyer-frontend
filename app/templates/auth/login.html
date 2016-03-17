@@ -29,13 +29,11 @@
               </p>
             {% elif message == 'supplier-role-required' %}
               <p class="banner-message">
-                You are logged in as a buyer but the page you tried to access is for suppliers.<br />
-                Please log in with a supplier account to access that page.
+                You must log in with a supplier account to see this page.
               </p>
             {% elif message == 'buyer-role-required' %}
               <p class="banner-message">
-                  You are logged in as a supplier but the page you tried to access is for buyers.<br />
-                  Please log in with a buyer account to access that page.
+                  You must log in with a buyer account to see this page.
               </p>
             {% elif category != 'must_login' %}
               {{ message }}
