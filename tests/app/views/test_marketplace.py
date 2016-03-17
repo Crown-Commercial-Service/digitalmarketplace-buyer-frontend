@@ -108,16 +108,15 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
     @staticmethod
     def _assert_message_container_is_empty(response_data):
         document = html.fromstring(response_data)
-        message_container = document.xpath('//div[@class="supplier-messages column-one-third"]/aside')
-        assert len(message_container) == 0
+        message_container_contents = document.xpath('//div[@class="supplier-messages column-one-third"]/aside/*')
+        assert len(message_container_contents) == 0
 
     @staticmethod
     def _assert_message_container_is_not_empty(response_data):
         document = html.fromstring(response_data)
-        message_container = document.xpath('//div[@class="supplier-messages column-one-third"]/aside')
-        assert len(message_container) == 1
-
-        assert message_container[0].xpath('h2/text()')[0].strip() == "Sell services"
+        message_container_contents = document.xpath('//div[@class="supplier-messages column-one-third"]/aside/*')
+        assert len(message_container_contents) > 0
+        assert message_container_contents[0].xpath('text()')[0].strip() == "Sell services"
 
     @mock.patch('app.main.views.marketplace.data_api_client')
     def _load_homepage(self, framework_slugs_and_statuses, framework_messages, data_api_client):
@@ -173,7 +172,7 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
         self._load_homepage(framework_slugs_and_statuses, framework_messages)
 
     @mock.patch('app.main.views.marketplace.data_api_client')
-    def test_homepage_sidebar_no_log_in_message_if_logged_out(self, data_api_client):
+    def test_homepage_sidebar_messages_when_logged_out(self, data_api_client):
         data_api_client.find_frameworks.return_value = self._find_frameworks([
             ('digital-outcomes-and-specialists', 'live')
         ])
@@ -183,13 +182,17 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
 
         document = html.fromstring(response_data)
 
-        link_to_dashboard = document.xpath(
-            '//div[@class="supplier-messages column-one-third"]/aside/p[1]/a[@class="top-level-link"]')  # noqa
+        sidebar_links = document.xpath(
+            '//div[@class="supplier-messages column-one-third"]/aside/div/p[1]/a[@class="top-level-link"]/text()'
+        )
+        sidebar_link_texts = [str(item).strip() for item in sidebar_links]
 
-        assert len(link_to_dashboard) == 0
+        assert 'View supplier opportunities' in sidebar_link_texts
+        assert 'Create a supplier account' in sidebar_link_texts
+        assert 'View your services and account information' not in sidebar_link_texts
 
     @mock.patch('app.main.views.marketplace.data_api_client')
-    def test_homepage_sidebar_log_in_message_if_logged_in(self, data_api_client):
+    def test_homepage_sidebar_messages_when_logged_in(self, data_api_client):
         data_api_client.find_frameworks.return_value = self._find_frameworks([
             ('digital-outcomes-and-specialists', 'live')
         ])
@@ -201,11 +204,24 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
 
         document = html.fromstring(response_data)
 
-        link_to_dashboard = document.xpath(
-            '//div[@class="supplier-messages column-one-third"]/aside/p[1]/a[@class="top-level-link"]')  # noqa
+        sidebar_links = document.xpath(
+            '//div[@class="supplier-messages column-one-third"]/aside/div/p[1]/a[@class="top-level-link"]/text()'
+        )
+        sidebar_link_texts = [str(item).strip() for item in sidebar_links]
 
-        assert len(link_to_dashboard) == 1
-        assert link_to_dashboard[0].text.strip() == "View your services and account details"
+        assert 'View supplier opportunities' in sidebar_link_texts
+        assert 'View your services and account information' in sidebar_link_texts
+        assert 'Create a supplier account' not in sidebar_link_texts
+
+    @mock.patch('app.main.views.marketplace.data_api_client')
+    def test_no_homepage_sidebar_messages_are_shown_to_not_logged_in_users_before_dos_is_live(self, data_api_client):
+        data_api_client.find_frameworks.return_value = self._find_frameworks([
+            ('digital-outcomes-and-specialists', 'standstill')
+        ])
+        res = self.client.get('/')
+
+        assert res.status_code == 200
+        self._assert_message_container_is_empty(res.get_data(as_text=True))
 
     def test_homepage_sidebar_message_doesnt_exist_without_frameworks(self):
         framework_slugs_and_statuses = [
