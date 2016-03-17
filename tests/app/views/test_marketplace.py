@@ -1,7 +1,7 @@
 # coding=utf-8
 
 import mock
-from nose.tools import assert_equal, assert_true, assert_in, assert_not_in
+from nose.tools import assert_equal, assert_true, assert_in
 from lxml import html
 from ...helpers import BaseApplicationTest
 from dmapiclient import APIError
@@ -372,3 +372,56 @@ class TestBriefPage(BaseApplicationTest):
 
         apply_links = document.xpath('//a[@href="/suppliers/opportunities/{}/responses/create"]'.format(brief_id))
         assert len(apply_links) == 0
+
+
+class TestCatalogueOfBriefsPage(BaseApplicationTest):
+    def setup(self):
+        super(TestCatalogueOfBriefsPage, self).setup()
+
+        self._data_api_client = mock.patch(
+            'app.main.views.marketplace.data_api_client'
+        ).start()
+
+        self.briefs = self._get_dos_brief_fixture_data(multi=True)
+        self._data_api_client.find_briefs.return_value = self.briefs
+
+    def teardown(self):
+        self._data_api_client.stop()
+
+    def test_catalogue_of_briefs_page(self):
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities')
+        assert_equal(200, res.status_code)
+        document = html.fromstring(res.get_data(as_text=True))
+
+        heading = document.xpath('//h1/text()')[0].strip()
+        assert heading == "Supplier opportunities"
+
+    def test_catalogue_of_briefs_page_shows_pagination_if_more_pages(self):
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities')
+        assert_equal(200, res.status_code)
+        page = res.get_data(as_text=True)
+        document = html.fromstring(page)
+
+        assert '<li class="previous">' in page
+        assert '<li class="next">' in page
+        prev_url = str(document.xpath('string(//li[@class="previous"]/a/@href)'))
+        next_url = str(document.xpath('string(//li[@class="next"]/a/@href)'))
+        assert prev_url.endswith('/opportunities?page=1')
+        assert next_url.endswith('/opportunities?page=3')
+
+    def test_no_pagination_if_no_more_pages(self):
+        del self.briefs['links']['prev']
+        del self.briefs['links']['next']
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities')
+        assert_equal(200, res.status_code)
+        page = res.get_data(as_text=True)
+
+        assert '<li class="previous">' not in page
+        assert '<li class="next">' not in page
+
+    def test_catalogue_of_briefs_page_404_for_framework_that_does_not_exist(self):
+        self._data_api_client.get_framework.return_value = {'frameworks': {}}
+        res = self.client.get('/digital-giraffes-and-monkeys/opportunities')
+
+        assert_equal(404, res.status_code)
+        self._data_api_client.get_framework.assert_called_once_with('digital-giraffes-and-monkeys')

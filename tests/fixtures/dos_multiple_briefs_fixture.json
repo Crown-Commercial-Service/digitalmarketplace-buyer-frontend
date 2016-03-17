@@ -1,0 +1,88 @@
+{
+  "briefs":[
+    {
+      "clarificationQuestionsAreClosed":true,
+      "status":"live",
+      "frameworkFramework":"dos",
+      "links":{
+        "framework":"http://localhost:5000/frameworks/digital-outcomes-and-specialists",
+        "self":"http://localhost:5000/briefs/17"
+      },
+      "clarificationQuestionsClosedAt":"2016-03-17T00:00:00.000000Z",
+      "frameworkStatus":"live",
+      "title":"I need Research Participants",
+      "organisation":"GDS",
+      "lotSlug":"user-research-participants",
+      "frameworkSlug":"digital-outcomes-and-specialists",
+      "applicationsClosedAt":"2016-03-24T00:00:00.000000Z",
+      "lotName":"User research participants",
+      "clarificationQuestions":[
+
+      ],
+      "backgroundInformation":"Here is the first requirements summary.",
+      "frameworkName":"Digital Outcomes and Specialists",
+      "location":"International (outside the UK)",
+      "lot":"user-research-participants",
+      "updatedAt":"2016-03-09T15:56:32.487141Z",
+      "publishedAt":"2016-03-09T16:02:51.591567Z",
+      "id":17,
+      "createdAt":"2016-03-09T15:23:48.328413Z"
+    },
+    {
+      "startDate":"29th March",
+      "links":{
+        "framework":"http://localhost:5000/frameworks/digital-outcomes-and-specialists",
+        "self":"http://localhost:5000/briefs/4"
+      },
+      "evaluationType":[
+        "provide a case study or evidence of previous work",
+        "presentation"
+      ],
+      "niceToHaveRequirements":[
+        "Nice people"
+      ],
+      "applicationsClosedAt":"2016-03-22T00:00:00.000000Z",
+      "essentialRequirements":[
+        "Can provide an outcome",
+        "Available from 29h March"
+      ],
+      "backgroundInformation":"We'd like to build a thing to do athing.",
+      "updatedAt":"2016-02-16T14:04:22.617017Z",
+      "id":4,
+      "createdAt":"2016-02-12T16:30:55.808730Z",
+      "clarificationQuestionsAreClosed":true,
+      "frameworkFramework":"dos",
+      "clarificationQuestionsClosedAt":"2016-03-15T00:00:00.000000Z",
+      "lotSlug":"digital-specialists",
+      "workingArrangements":"Work",
+      "organisation":"GDS",
+      "frameworkStatus":"live",
+      "lotName":"Digital specialists",
+      "location":"East of England",
+      "lot":"digital-specialists",
+      "status":"live",
+      "specialistRole":"business_analyst",
+      "importantDates":"29th March",
+      "contractLength":"3 Months",
+      "currentTechnologies":"Business Focus Plus",
+      "clarificationQuestions":[
+        {
+          "answer":"Because",
+          "question":"Why?",
+          "publishedAt":"2016-03-04T09:19:42.138442Z"
+        }
+      ],
+      "title":"Another requirement",
+      "frameworkSlug":"digital-outcomes-and-specialists",
+      "additionalTerms":"You'll never work in this town again.",
+      "frameworkName":"Digital Outcomes and Specialists",
+      "publishedAt":"2016-03-07T16:02:51.591567Z"
+    }
+  ],
+  "links":{
+    "prev":"http://localhost:5000/briefs?status=live%2Cclosed&framework=digital-outcomes-and-specialists&page=1",
+    "self":"http://localhost:5000/briefs?status=live%2Cclosed&framework=digital-outcomes-and-specialists&page=2",
+    "last":"http://localhost:5000/briefs?status=live%2Cclosed&framework=digital-outcomes-and-specialists&page=4",
+    "next":"http://localhost:5000/briefs?status=live%2Cclosed&framework=digital-outcomes-and-specialists&page=3"
+  }
+}
