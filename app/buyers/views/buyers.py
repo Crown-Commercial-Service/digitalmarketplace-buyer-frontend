@@ -6,8 +6,7 @@ from .. import buyers, content_loader
 from ...helpers.buyers_helpers import (
     count_suppliers_on_lot, get_framework_and_lot, is_brief_associated_with_user,
     count_unanswered_questions, brief_can_be_edited, add_unanswered_counts_to_briefs,
-    clarification_questions_open
-)
+    clarification_questions_open, add_response_counts_to_briefs)
 
 from dmapiclient import HTTPError
 
@@ -17,11 +16,16 @@ def buyer_dashboard():
     user_briefs = data_api_client.find_briefs(current_user.id).get('briefs', [])
     draft_briefs = add_unanswered_counts_to_briefs([brief for brief in user_briefs if brief['status'] == 'draft'])
     live_briefs = [brief for brief in user_briefs if brief['status'] == 'live']
+    closed_briefs = add_response_counts_to_briefs(
+        [brief for brief in user_briefs if brief['status'] == 'closed'],
+        data_api_client
+    )
 
     return render_template(
         'buyers/dashboard.html',
         draft_briefs=draft_briefs,
-        live_briefs=live_briefs
+        live_briefs=live_briefs,
+        closed_briefs=closed_briefs
     )
 
 
