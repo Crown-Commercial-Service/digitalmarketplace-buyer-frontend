@@ -181,8 +181,7 @@ def update_brief_submission(framework_slug, lot_slug, brief_id, section_id):
 @buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>', methods=['GET'])
 def view_brief_summary(framework_slug, lot_slug, brief_id):
 
-    framework, lot = get_framework_and_lot(framework_slug, lot_slug, data_api_client,
-                                           status='live', must_allow_brief=True)
+    framework, lot = get_framework_and_lot(framework_slug, lot_slug, data_api_client, must_allow_brief=True)
 
     brief = data_api_client.get_brief(brief_id)["briefs"]
     if not is_brief_associated_with_user(brief, current_user.id):

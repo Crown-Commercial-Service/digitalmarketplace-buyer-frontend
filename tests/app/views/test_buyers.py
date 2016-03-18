@@ -785,24 +785,6 @@ class TestBriefSummaryPage(BaseApplicationTest):
             assert "No clarification questions have been answered yet" not in page_html
             assert "Why is my question a question?" in page_html
 
-    def test_404_if_framework_is_not_live(self, data_api_client):
-        with self.app.app_context():
-            self.login_as_buyer()
-            data_api_client.get_framework.return_value = api_stubs.framework(
-                slug='digital-outcomes-and-specialists',
-                status='pending',
-                lots=[
-                    api_stubs.lot(slug='digital-specialists', allows_brief=True),
-                ]
-            )
-            data_api_client.get_brief.return_value = api_stubs.brief()
-
-            res = self.client.get(
-                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1"
-            )
-
-            assert res.status_code == 404
-
     def test_404_if_framework_does_not_allow_brief(self, data_api_client):
         with self.app.app_context():
             self.login_as_buyer()
