@@ -117,7 +117,7 @@
     {% call summary.row() %}
         {{ summary.service_link(item.title, url_for(".view_brief_summary", framework_slug=item.frameworkSlug, lot_slug=item.lot, brief_id=item.id)) }}
         {{ summary.text(item.applicationsClosedAt|dateformat) }}
-        {{ summary.text("{} responses".format(item.responses_count)) }}
+        {{ summary.link("{} responses".format(item.responses_count), url_for(".view_brief_responses", framework_slug=item.frameworkSlug, lot_slug=item.lot, brief_id=item.id)) }}
     {% endcall %}
 {% endcall %}
 {% endblock %}
