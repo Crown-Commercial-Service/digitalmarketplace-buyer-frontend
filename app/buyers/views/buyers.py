@@ -206,6 +206,11 @@ def view_brief_summary(framework_slug, lot_slug, brief_id):
 
             flattened_brief.append(question)
 
+    brief['clarificationQuestions'] = [
+        dict(question, number=index+1)
+        for index, question in enumerate(brief['clarificationQuestions'])
+    ]
+
     return render_template(
         "buyers/brief_summary.html",
         framework=framework,

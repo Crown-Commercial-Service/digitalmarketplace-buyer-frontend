@@ -65,6 +65,11 @@ def get_brief_by_id(framework_slug, brief_id):
     if brief['status'] not in ['live', 'closed']:
         abort(404, "Opportunity '{}' can not be found".format(brief_id))
 
+    brief['clarificationQuestions'] = [
+        dict(question, number=index+1)
+        for index, question in enumerate(brief['clarificationQuestions'])
+    ]
+
     brief_content = content_loader.get_builder('digital-outcomes-and-specialists', 'display_brief').filter(
         brief
     )

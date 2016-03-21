@@ -11,7 +11,10 @@
     empty_message="No questions have been answered yet"
 ) %}
   {% call summary.row() %}
-    {{ summary.field_name(question.question) }}
+    {% call summary.field(first=True, wide=False) -%} 
+      <span aria-label="question">{{ question.number }}.</span>
+      {{ question.question }}
+    {%- endcall %}
     {{ summary.text(question.answer) }}
   {% endcall %}
 {% endcall %}
