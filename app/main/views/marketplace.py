@@ -7,7 +7,7 @@ from dmapiclient import APIError
 from dmutils.content_loader import ContentNotFoundError
 
 from ...main import main
-from ...helpers.shared_helpers import get_one_framework_by_status_in_order_of_preference, process_page, parse_link
+from ...helpers.shared_helpers import get_one_framework_by_status_in_order_of_preference, parse_link
 
 from app import data_api_client, content_loader
 
@@ -77,7 +77,7 @@ def get_brief_by_id(framework_slug, brief_id):
 
 @main.route('/<framework_slug>/opportunities')
 def list_opportunities(framework_slug):
-    page = process_page(request.args.get('page', default=u"1"))
+    page = request.args.get('page', default=1, type=int)
     framework = data_api_client.get_framework(framework_slug)['frameworks']
 
     if not framework:

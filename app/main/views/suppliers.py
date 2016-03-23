@@ -4,7 +4,7 @@ from app.main import main
 from flask import render_template, request, abort
 from app import data_api_client
 from dmapiclient import APIError
-from ...helpers.shared_helpers import process_page, parse_link
+from ...helpers.shared_helpers import parse_link
 import re
 
 try:
@@ -37,7 +37,7 @@ def suppliers_list_by_prefix():
     template_prefix = process_prefix(
         prefix=request.args.get('prefix', default=u"A"),
         format='view')
-    page = process_page(request.args.get('page', default=u"1"))
+    page = request.args.get('page', default=1, type=int)
 
     try:
         api_result = data_api_client.find_suppliers(api_prefix, page, 'g-cloud')

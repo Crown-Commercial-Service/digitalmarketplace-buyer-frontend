@@ -8,14 +8,6 @@ def parse_link(links, label):
     return parse_qs(urlparse(links[label]).query) if label in links else None
 
 
-def process_page(page):
-    try:
-        int(page)
-        return page
-    except ValueError:
-        return "1"  # default
-
-
 def get_label_for_lot_param(lot_param):
     lots = {
         'saas': u'Software as a Service',
