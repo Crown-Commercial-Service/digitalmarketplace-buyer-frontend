@@ -4,18 +4,8 @@ except ImportError:
     from urllib.parse import urlparse, parse_qs
 
 
-def parse_links(links):
-    pagination_links = {
-        "prev": None,
-        "next": None
-    }
-
-    if 'prev' in links:
-        pagination_links['prev'] = parse_qs(urlparse(links['prev']).query)
-    if 'next' in links:
-        pagination_links['next'] = parse_qs(urlparse(links['next']).query)
-
-    return pagination_links
+def parse_link(links, label):
+    return parse_qs(urlparse(links[label]).query) if label in links else None
 
 
 def process_page(page):

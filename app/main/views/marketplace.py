@@ -7,7 +7,7 @@ from dmapiclient import APIError
 from dmutils.content_loader import ContentNotFoundError
 
 from ...main import main
-from ...helpers.shared_helpers import get_one_framework_by_status_in_order_of_preference, process_page, parse_links
+from ...helpers.shared_helpers import get_one_framework_by_status_in_order_of_preference, process_page, parse_link
 
 from app import data_api_client, content_loader
 
@@ -92,8 +92,8 @@ def list_opportunities(framework_slug):
         return render_template('briefs_catalogue.html',
                                framework=framework,
                                briefs=briefs,
-                               prev_link=parse_links(links)['prev'],
-                               next_link=parse_links(links)['next']
+                               prev_link=parse_link(links, 'prev'),
+                               next_link=parse_link(links, 'next')
                                )
     except APIError as e:
         if e.status_code == 404:

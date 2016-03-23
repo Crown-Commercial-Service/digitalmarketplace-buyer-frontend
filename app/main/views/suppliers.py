@@ -4,7 +4,7 @@ from app.main import main
 from flask import render_template, request, abort
 from app import data_api_client
 from dmapiclient import APIError
-from ...helpers.shared_helpers import process_page, parse_links
+from ...helpers.shared_helpers import process_page, parse_link
 import re
 
 try:
@@ -48,8 +48,8 @@ def suppliers_list_by_prefix():
                                suppliers=suppliers,
                                nav=ascii_uppercase,
                                count=len(suppliers),
-                               prev_link=parse_links(links)['prev'],
-                               next_link=parse_links(links)['next'],
+                               prev_link=parse_link(links, 'prev'),
+                               next_link=parse_link(links, 'next'),
                                prefix=template_prefix
                                )
     except APIError as e:
