@@ -1,4 +1,8 @@
-from flask import abort, render_template, request, redirect, url_for, flash
+# coding: utf-8
+from __future__ import unicode_literals
+import unicodecsv
+
+from flask import abort, render_template, request, redirect, url_for, flash, Response
 from flask_login import current_user
 
 from app import data_api_client
@@ -6,7 +10,7 @@ from .. import buyers, content_loader
 from ...helpers.buyers_helpers import (
     count_suppliers_on_lot, get_framework_and_lot, is_brief_associated_with_user,
     count_unanswered_questions, brief_can_be_edited, add_unanswered_counts_to_briefs,
-    clarification_questions_open, add_response_counts_to_briefs)
+    clarification_questions_open, add_response_counts_to_briefs, classify_and_count_brief_responses)
 
 from dmapiclient import HTTPError
 
@@ -217,6 +221,93 @@ def view_brief_summary(framework_slug, lot_slug, brief_id):
         can_publish=not unanswered_required,
         delete_requested=delete_requested,
         clarification_questions_open=clarification_questions_open(brief)
+    ), 200
+
+
+@buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/responses', methods=['GET'])
+def view_brief_responses(framework_slug, lot_slug, brief_id):
+
+    framework, lot = get_framework_and_lot(framework_slug, lot_slug, data_api_client, must_allow_brief=True)
+
+    brief = data_api_client.get_brief(brief_id)["briefs"]
+    if not is_brief_associated_with_user(brief, current_user.id):
+        abort(404)
+
+    failed_count, eligible_count = classify_and_count_brief_responses(brief["id"], data_api_client)
+
+    return render_template(
+        "buyers/brief_responses.html",
+        framework=framework,
+        lot=lot,
+        response_counts={"failed": failed_count, "eligible": eligible_count},
+        brief_data=brief
+    ), 200
+
+
+@buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/responses/download',
+              methods=['GET'])
+def download_brief_responses(framework_slug, lot_slug, brief_id):
+    framework, lot = get_framework_and_lot(framework_slug, lot_slug, data_api_client, must_allow_brief=True)
+
+    brief = data_api_client.get_brief(brief_id)["briefs"]
+    if not is_brief_associated_with_user(brief, current_user.id):
+        abort(404)
+    if brief['status'] != "closed":
+        abort(404)
+    brief_responses = data_api_client.find_brief_responses(brief_id)['briefResponses']
+
+    content = content_loader.get_manifest(framework['slug'], 'output_brief_response').filter({'lot': lot['slug']})
+    section = content.get_section('view-response-to-requirements')
+
+    column_headings = []
+    question_key_sequence = []
+    boolean_list_questions = []
+    csv_rows = []
+
+    # Build header row from manifest and add it to the list of rows
+    for question in section.questions:
+        question_key_sequence.append(question.id)
+        if question['type'] == 'boolean_list':
+            column_headings.extend(brief[question.id])
+            boolean_list_questions.append(question.id)
+        else:
+            column_headings.append(question.name)
+    csv_rows.append(column_headings)
+
+    # Add a row for each response received
+    for brief_response in brief_responses:
+        row = []
+        for key in question_key_sequence:
+            if key in boolean_list_questions:
+                row.extend(brief_response.get(key))
+            else:
+                row.append(brief_response.get(key))
+        csv_rows.append(row)
+
+    def iter_csv(rows):
+        class Line(object):
+            def __init__(self):
+                self._line = None
+
+            def write(self, line):
+                self._line = line
+
+            def read(self):
+                return self._line
+
+        line = Line()
+        writer = unicodecsv.writer(line)
+        for row in rows:
+            writer.writerow(row)
+            yield line.read()
+
+    return Response(
+        iter_csv(csv_rows),
+        mimetype='text/csv',
+        headers={
+            "Content-Disposition": "attachment;filename=responses-to-requirements-{}.csv".format(brief['id']),
+            "Content-Type": "text/csv; header=present"
+        }
     ), 200
 
 
