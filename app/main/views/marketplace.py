@@ -83,20 +83,14 @@ def list_opportunities(framework_slug):
     if not framework:
         abort(404, "No framework {}".format(framework_slug))
 
-    try:
-        api_result = data_api_client.find_briefs(status='live,closed', framework=framework_slug, page=page)
+    api_result = data_api_client.find_briefs(status='live,closed', framework=framework_slug, page=page)
 
-        briefs = api_result["briefs"]
-        links = api_result["links"]
+    briefs = api_result["briefs"]
+    links = api_result["links"]
 
-        return render_template('briefs_catalogue.html',
-                               framework=framework,
-                               briefs=briefs,
-                               prev_link=parse_link(links, 'prev'),
-                               next_link=parse_link(links, 'next')
-                               )
-    except APIError as e:
-        if e.status_code == 404:
-            abort(404, "No briefs on page {}".format(page))
-        else:
-            raise e
+    return render_template('briefs_catalogue.html',
+                           framework=framework,
+                           briefs=briefs,
+                           prev_link=parse_link(links, 'prev'),
+                           next_link=parse_link(links, 'next')
+                           )
