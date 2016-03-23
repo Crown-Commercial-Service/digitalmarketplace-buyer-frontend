@@ -1,0 +1,19 @@
+<nav role="navigation">
+  <ul class="previous-next-navigation">
+    {% if prev_link %}
+      <li class="previous">
+          <a href="{{ url_for('.list_opportunities', framework_slug=framework.slug, page=prev_link['page']) }}">
+              Previous <span class="visuallyhidden">page</span>
+          </a>
+      </li>
+    {% endif %}
+
+    {% if next_link %}
+      <li class="next">
+          <a href="{{ url_for('.list_opportunities', framework_slug=framework.slug, page=next_link['page']) }}">
+              Next <span class="visuallyhidden">page</span>
+          </a>
+      </li>
+    {% endif %}
+  </ul>
+</nav>

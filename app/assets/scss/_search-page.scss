@@ -50,3 +50,9 @@ em.search-result-highlighted-text {
     }
   }
 }
+
+.search-result-important-metadata {
+  li {
+    @include bold-19;
+  }
+}

@@ -91,29 +91,65 @@
     {% endwith %}
   </div>
     <div class="supplier-messages column-one-third">
-      {% if temporary_message or current_user.role == 'supplier' %}
-        <aside role="complementary" aria-labelledby="supplier-message-heading">
+      <aside role="complementary" aria-labelledby="supplier-message-heading">
+        
+      {% if temporary_message or current_user.role == 'supplier' or dos_is_live %}
           <h2 id="supplier-message-heading">Sell services</h2>
-          {% if temporary_message %}
-            {%
-              with
-                heading = temporary_message.heading,
-                subheading = temporary_message.subheading,
-                messages = temporary_message.messages,
-                message = temporary_message.message
-            %}
-              {% include "toolkit/{}.html".format(temporary_message.template_name) %}
-            {% endwith %}
-          {% endif %}
-          {% if current_user.role == 'supplier' %}
-            <p>
-              <a href="/suppliers" class="top-level-link">
-                View your services and account details
-              </a>
-            </p>
-          {% endif %}
-        </aside>
       {% endif %}
+        
+      {% if temporary_message %}
+        {%
+          with
+            heading = temporary_message.heading,
+            subheading = temporary_message.subheading,
+            messages = temporary_message.messages,
+            message = temporary_message.message
+        %}
+          {% include "toolkit/{}.html".format(temporary_message.template_name) %}
+        {% endwith %}
+      {% endif %}
+        
+      {% if dos_is_live %}
+        <div class="padding-bottom-small">
+          <p>
+            <a href="/digital-outcomes-and-specialists/opportunities" class="top-level-link">
+              View supplier opportunities
+            </a>
+          </p>
+          <div class="explanation-list">
+            <p class="lead">Find published requirements for:</p>
+            <ul class="list-bullet">
+              <li>digital specialists</li>
+              <li>digital outcomes</li>
+              <li>user research participant recruitment</li>
+            </ul>  
+          </div>
+        </div>
+        
+        {% if current_user.role != 'supplier' %}
+        <div class="padding-bottom-small">
+          <p>
+            <a href="/suppliers/create" class="top-level-link">
+              Create a supplier account
+            </a>
+          </p>
+          <p>Receive updates about opportunities to sell on the Digital Marketplace.</p>
+        </div>
+        {% endif %}
+        
+      {% endif %}
+        
+      {% if current_user.role == 'supplier' %}
+        <div class="padding-bottom-small">
+          <p>
+            <a href="/suppliers" class="top-level-link">
+              View your services and account information
+            </a>
+          </p>
+        </div>
+      {% endif %}
+        
+      </aside>
     </div>
 </div>
 

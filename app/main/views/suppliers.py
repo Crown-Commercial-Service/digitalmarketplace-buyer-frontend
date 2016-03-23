@@ -4,6 +4,7 @@ from app.main import main
 from flask import render_template, request, abort
 from app import data_api_client
 from dmapiclient import APIError
+from ...helpers.shared_helpers import parse_link
 import re
 
 try:
@@ -23,31 +24,9 @@ def process_prefix(prefix=None, format='view'):
     return u"A"  # default
 
 
-def process_page(page):
-    try:
-        int(page)
-        return page
-    except ValueError:
-        return "1"  # default
-
-
 def is_alpha(character):
     reg = "^[A-Za-z]{1}$"  # valid prefix
     return re.search(reg, character)
-
-
-def parse_links(links):
-    pagination_links = {
-        "prev": None,
-        "next": None
-    }
-
-    if 'prev' in links:
-        pagination_links['prev'] = parse_qs(urlparse(links['prev']).query)
-    if 'next' in links:
-        pagination_links['next'] = parse_qs(urlparse(links['next']).query)
-
-    return pagination_links
 
 
 @main.route('/g-cloud/suppliers')
@@ -58,7 +37,7 @@ def suppliers_list_by_prefix():
     template_prefix = process_prefix(
         prefix=request.args.get('prefix', default=u"A"),
         format='view')
-    page = process_page(request.args.get('page', default=u"1"))
+    page = request.args.get('page', default=1, type=int)
 
     try:
         api_result = data_api_client.find_suppliers(api_prefix, page, 'g-cloud')
@@ -69,8 +48,8 @@ def suppliers_list_by_prefix():
                                suppliers=suppliers,
                                nav=ascii_uppercase,
                                count=len(suppliers),
-                               prev_link=parse_links(links)['prev'],
-                               next_link=parse_links(links)['next'],
+                               prev_link=parse_link(links, 'prev'),
+                               next_link=parse_link(links, 'next'),
                                prefix=template_prefix
                                )
     except APIError as e:

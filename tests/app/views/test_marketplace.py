@@ -1,7 +1,7 @@
 # coding=utf-8
 
 import mock
-from nose.tools import assert_equal, assert_true, assert_in, assert_not_in
+from nose.tools import assert_equal, assert_true, assert_in
 from lxml import html
 from ...helpers import BaseApplicationTest
 from dmapiclient import APIError
@@ -108,16 +108,15 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
     @staticmethod
     def _assert_message_container_is_empty(response_data):
         document = html.fromstring(response_data)
-        message_container = document.xpath('//div[@class="supplier-messages column-one-third"]/aside')
-        assert len(message_container) == 0
+        message_container_contents = document.xpath('//div[@class="supplier-messages column-one-third"]/aside/*')
+        assert len(message_container_contents) == 0
 
     @staticmethod
     def _assert_message_container_is_not_empty(response_data):
         document = html.fromstring(response_data)
-        message_container = document.xpath('//div[@class="supplier-messages column-one-third"]/aside')
-        assert len(message_container) == 1
-
-        assert message_container[0].xpath('h2/text()')[0].strip() == "Sell services"
+        message_container_contents = document.xpath('//div[@class="supplier-messages column-one-third"]/aside/*')
+        assert len(message_container_contents) > 0
+        assert message_container_contents[0].xpath('text()')[0].strip() == "Sell services"
 
     @mock.patch('app.main.views.marketplace.data_api_client')
     def _load_homepage(self, framework_slugs_and_statuses, framework_messages, data_api_client):
@@ -173,7 +172,7 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
         self._load_homepage(framework_slugs_and_statuses, framework_messages)
 
     @mock.patch('app.main.views.marketplace.data_api_client')
-    def test_homepage_sidebar_no_log_in_message_if_logged_out(self, data_api_client):
+    def test_homepage_sidebar_messages_when_logged_out(self, data_api_client):
         data_api_client.find_frameworks.return_value = self._find_frameworks([
             ('digital-outcomes-and-specialists', 'live')
         ])
@@ -183,13 +182,17 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
 
         document = html.fromstring(response_data)
 
-        link_to_dashboard = document.xpath(
-            '//div[@class="supplier-messages column-one-third"]/aside/p[1]/a[@class="top-level-link"]')  # noqa
+        sidebar_links = document.xpath(
+            '//div[@class="supplier-messages column-one-third"]/aside/div/p[1]/a[@class="top-level-link"]/text()'
+        )
+        sidebar_link_texts = [str(item).strip() for item in sidebar_links]
 
-        assert len(link_to_dashboard) == 0
+        assert 'View supplier opportunities' in sidebar_link_texts
+        assert 'Create a supplier account' in sidebar_link_texts
+        assert 'View your services and account information' not in sidebar_link_texts
 
     @mock.patch('app.main.views.marketplace.data_api_client')
-    def test_homepage_sidebar_log_in_message_if_logged_in(self, data_api_client):
+    def test_homepage_sidebar_messages_when_logged_in(self, data_api_client):
         data_api_client.find_frameworks.return_value = self._find_frameworks([
             ('digital-outcomes-and-specialists', 'live')
         ])
@@ -201,11 +204,24 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
 
         document = html.fromstring(response_data)
 
-        link_to_dashboard = document.xpath(
-            '//div[@class="supplier-messages column-one-third"]/aside/p[1]/a[@class="top-level-link"]')  # noqa
+        sidebar_links = document.xpath(
+            '//div[@class="supplier-messages column-one-third"]/aside/div/p[1]/a[@class="top-level-link"]/text()'
+        )
+        sidebar_link_texts = [str(item).strip() for item in sidebar_links]
 
-        assert len(link_to_dashboard) == 1
-        assert link_to_dashboard[0].text.strip() == "View your services and account details"
+        assert 'View supplier opportunities' in sidebar_link_texts
+        assert 'View your services and account information' in sidebar_link_texts
+        assert 'Create a supplier account' not in sidebar_link_texts
+
+    @mock.patch('app.main.views.marketplace.data_api_client')
+    def test_no_homepage_sidebar_messages_are_shown_to_not_logged_in_users_before_dos_is_live(self, data_api_client):
+        data_api_client.find_frameworks.return_value = self._find_frameworks([
+            ('digital-outcomes-and-specialists', 'standstill')
+        ])
+        res = self.client.get('/')
+
+        assert res.status_code == 200
+        self._assert_message_container_is_empty(res.get_data(as_text=True))
 
     def test_homepage_sidebar_message_doesnt_exist_without_frameworks(self):
         framework_slugs_and_statuses = [
@@ -331,6 +347,97 @@ class TestBriefPage(BaseApplicationTest):
 
         question = clarification_questions[0].xpath('td[1]/span/text()')
         answer = clarification_questions[0].xpath('td[2]/span/text()')
+        qa_link_text = document.xpath('//a[@href="/suppliers/opportunities/{}/ask-a-question"]/text()'
+                                      .format(brief_id))[0]
 
         assert_equal(question[0], "Why?")
         assert_equal(answer[0], "Because")
+        assert_equal(qa_link_text.strip(), "Log in to ask a question")
+
+    def test_dos_brief_has_different_link_text_for_logged_in_supplier(self):
+        self.login_as_supplier()
+        brief_id = self.brief['briefs']['id']
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
+        assert_equal(200, res.status_code)
+
+        document = html.fromstring(res.get_data(as_text=True))
+
+        qa_link_text = document.xpath('//a[@href="/suppliers/opportunities/{}/ask-a-question"]/text()'
+                                      .format(brief_id))[0]
+
+        assert_equal(qa_link_text.strip(), "Ask a question")
+
+    def test_can_apply_to_live_brief(self):
+        brief_id = self.brief['briefs']['id']
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
+        assert_equal(200, res.status_code)
+        document = html.fromstring(res.get_data(as_text=True))
+
+        apply_links = document.xpath('//a[@href="/suppliers/opportunities/{}/responses/create"]'.format(brief_id))
+        assert len(apply_links) == 1
+
+    def test_cannot_apply_to_closed_brief(self):
+        brief = self.brief.copy()
+        brief['briefs']['status'] = "closed"
+        brief['briefs']['publishedAt'] = "2000-01-25T12:00:00.000000Z"
+        self._data_api_client.get_brief.return_value = brief
+        brief_id = brief['briefs']['id']
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
+        assert_equal(200, res.status_code)
+        document = html.fromstring(res.get_data(as_text=True))
+
+        apply_links = document.xpath('//a[@href="/suppliers/opportunities/{}/responses/create"]'.format(brief_id))
+        assert len(apply_links) == 0
+
+
+class TestCatalogueOfBriefsPage(BaseApplicationTest):
+    def setup(self):
+        super(TestCatalogueOfBriefsPage, self).setup()
+
+        self._data_api_client = mock.patch(
+            'app.main.views.marketplace.data_api_client'
+        ).start()
+
+        self.briefs = self._get_dos_brief_fixture_data(multi=True)
+        self._data_api_client.find_briefs.return_value = self.briefs
+
+    def teardown(self):
+        self._data_api_client.stop()
+
+    def test_catalogue_of_briefs_page(self):
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities')
+        assert_equal(200, res.status_code)
+        document = html.fromstring(res.get_data(as_text=True))
+
+        heading = document.xpath('//h1/text()')[0].strip()
+        assert heading == "Supplier opportunities"
+
+    def test_catalogue_of_briefs_page_shows_pagination_if_more_pages(self):
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities')
+        assert_equal(200, res.status_code)
+        page = res.get_data(as_text=True)
+        document = html.fromstring(page)
+
+        assert '<li class="previous">' in page
+        assert '<li class="next">' in page
+        prev_url = str(document.xpath('string(//li[@class="previous"]/a/@href)'))
+        next_url = str(document.xpath('string(//li[@class="next"]/a/@href)'))
+        assert prev_url.endswith('/opportunities?page=1')
+        assert next_url.endswith('/opportunities?page=3')
+
+    def test_no_pagination_if_no_more_pages(self):
+        del self.briefs['links']['prev']
+        del self.briefs['links']['next']
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities')
+        assert_equal(200, res.status_code)
+        page = res.get_data(as_text=True)
+
+        assert '<li class="previous">' not in page
+        assert '<li class="next">' not in page
+
+    def test_catalogue_of_briefs_page_404_for_framework_that_does_not_exist(self):
+        self._data_api_client.get_framework.return_value = {'frameworks': {}}
+        res = self.client.get('/digital-giraffes-and-monkeys/opportunities')
+
+        assert_equal(404, res.status_code)
+        self._data_api_client.get_framework.assert_called_once_with('digital-giraffes-and-monkeys')
