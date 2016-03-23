@@ -39,6 +39,10 @@ $path: "/static/images/";
 /* Blocks shared between multiple selectors */
 @import "shared_placeholders/_temporary-messages.scss";
 
+/* Classes shared between multiple apps */
+@import "shared_scss/_lists.scss";
+@import "shared_scss/_dmspeak.scss";
+
 #wrapper {
   @extend %site-width-container;
   padding-bottom: $gutter * 2;
@@ -62,7 +66,6 @@ $path: "/static/images/";
 @import "_supplier-a-to-z.scss";
 @import "_atoz_navigation.scss";
 @import "_error-pages.scss";
-@import "_lists.scss";
 
 .return-to-top {
   display: block;
@@ -122,13 +125,6 @@ $path: "/static/images/";
   }
   p {
     padding-bottom: 30px;
-  }
-}
-
-.marketplace-text {
-
-  p {
-    padding-bottom: 10px;
   }
 }
 
