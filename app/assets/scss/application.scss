@@ -34,6 +34,7 @@ $path: "/static/images/";
 @import "toolkit/forms/_textboxes.scss";
 @import "toolkit/forms/_validation.scss";
 @import "toolkit/search/_search-result.scss";
+@import "toolkit/shared_scss/_lists.scss";
 
 /* Blocks shared between multiple selectors */
 @import "shared_placeholders/_temporary-messages.scss";
