@@ -19,6 +19,8 @@
     {% endwith %}
 {% endblock %}
 
+{% set responses_count = response_counts['failed'] + response_counts['eligible'] %}
+
 {% block main_content %}
 <div class="grid-row">
     <div class="column-two-thirds">
@@ -34,7 +36,7 @@
 <div class="grid-row">
     <div class="column-two-thirds">
         <div class="marketplace-paragraph">
-            <p>{{ response_counts['failed'] + response_counts['eligible'] }} suppliers responded to your requirements. 
+            <p>{{ responses_count }} supplier{% if responses_count != 1 %}s{% endif %} responded to your requirements. 
                 Of these, {{ response_counts['eligible'] }} meet all your essential requirements. 
                 
                 {% if response_counts['eligible'] > 0 %}
