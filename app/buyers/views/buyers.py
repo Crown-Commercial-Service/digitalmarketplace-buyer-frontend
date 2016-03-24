@@ -10,7 +10,8 @@ from .. import buyers, content_loader
 from ...helpers.buyers_helpers import (
     count_suppliers_on_lot, get_framework_and_lot, is_brief_associated_with_user,
     count_unanswered_questions, brief_can_be_edited, add_unanswered_counts_to_briefs,
-    clarification_questions_open, add_response_counts_to_briefs, classify_and_count_brief_responses)
+    clarification_questions_open, add_response_counts_to_briefs, classify_and_count_brief_responses,
+    all_essentials_are_true)
 
 from dmapiclient import HTTPError
 
@@ -274,15 +275,16 @@ def download_brief_responses(framework_slug, lot_slug, brief_id):
             column_headings.append(question.name)
     csv_rows.append(column_headings)
 
-    # Add a row for each response received
+    # Add a row for each eligible response received
     for brief_response in brief_responses:
-        row = []
-        for key in question_key_sequence:
-            if key in boolean_list_questions:
-                row.extend(brief_response.get(key))
-            else:
-                row.append(brief_response.get(key))
-        csv_rows.append(row)
+        if all_essentials_are_true(brief_response):
+            row = []
+            for key in question_key_sequence:
+                if key in boolean_list_questions:
+                    row.extend(brief_response.get(key))
+                else:
+                    row.append(brief_response.get(key))
+            csv_rows.append(row)
 
     def iter_csv(rows):
         class Line(object):

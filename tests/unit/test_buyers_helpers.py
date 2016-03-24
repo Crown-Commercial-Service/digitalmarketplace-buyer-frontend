@@ -109,20 +109,20 @@ class TestBuyersHelpers(unittest.TestCase):
         }
         ]
 
-    def test__all_essentials_are_true(self):
-        assert helpers.buyers_helpers._all_essentials_are_true(
+    def test_all_essentials_are_true(self):
+        assert helpers.buyers_helpers.all_essentials_are_true(
             {"essentialRequirements": [True, True, True, True, True]}
         ) is True
 
-        assert helpers.buyers_helpers._all_essentials_are_true(
+        assert helpers.buyers_helpers.all_essentials_are_true(
             {"essentialRequirements": [True, True, False, True, True]}
         ) is False
 
-        assert helpers.buyers_helpers._all_essentials_are_true(
+        assert helpers.buyers_helpers.all_essentials_are_true(
             {"essentialRequirements": [False, False, False, False, False]}
         ) is False
 
-        assert helpers.buyers_helpers._all_essentials_are_true(
+        assert helpers.buyers_helpers.all_essentials_are_true(
             {"essentialRequirements": [True, True, True, True, False]}
         ) is False
 
