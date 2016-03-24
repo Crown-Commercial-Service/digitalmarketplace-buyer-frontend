@@ -345,14 +345,16 @@ class TestBriefPage(BaseApplicationTest):
         xpath = '//h2[@id="clarification-questions"]/following-sibling::table/tbody/tr'
         clarification_questions = document.xpath(xpath)
 
-        question = clarification_questions[0].xpath('td[1]/span/text()')
-        answer = clarification_questions[0].xpath('td[2]/span/text()')
+        number = clarification_questions[0].xpath('td[1]/span/span/text()')[0].strip()
+        question = clarification_questions[0].xpath('td[1]/span/text()')[0].strip()
+        answer = clarification_questions[0].xpath('td[2]/span/text()')[0].strip()
         qa_link_text = document.xpath('//a[@href="/suppliers/opportunities/{}/ask-a-question"]/text()'
-                                      .format(brief_id))[0]
+                                      .format(brief_id))[0].strip()
 
-        assert_equal(question[0], "Why?")
-        assert_equal(answer[0], "Because")
-        assert_equal(qa_link_text.strip(), "Log in to ask a question")
+        assert_equal(number, "1.")
+        assert_equal(question, "Why?")
+        assert_equal(answer, "Because")
+        assert_equal(qa_link_text, "Log in to ask a question")
 
     def test_dos_brief_has_different_link_text_for_logged_in_supplier(self):
         self.login_as_supplier()
