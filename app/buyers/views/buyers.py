@@ -255,7 +255,13 @@ def download_brief_responses(framework_slug, lot_slug, brief_id):
         abort(404)
     if brief['status'] != "closed":
         abort(404)
+
     brief_responses = data_api_client.find_brief_responses(brief_id)['briefResponses']
+    # Sort responses with those with the most nice-to-have requirements nearest the top
+    sorted_brief_responses = sorted(brief_responses,
+                                    key=lambda k: len([nice for nice in k['niceToHaveRequirements'] if nice is True]),
+                                    reverse=True
+                                    )
 
     content = content_loader.get_manifest(framework['slug'], 'output_brief_response').filter({'lot': lot['slug']})
     section = content.get_section('view-response-to-requirements')
@@ -276,7 +282,7 @@ def download_brief_responses(framework_slug, lot_slug, brief_id):
     csv_rows.append(column_headings)
 
     # Add a row for each eligible response received
-    for brief_response in brief_responses:
+    for brief_response in sorted_brief_responses:
         if all_essentials_are_true(brief_response):
             row = []
             for key in question_key_sequence:
@@ -298,7 +304,7 @@ def download_brief_responses(framework_slug, lot_slug, brief_id):
                 return self._line
 
         line = Line()
-        writer = unicodecsv.writer(line)
+        writer = unicodecsv.writer(line, lineterminator='\n')
         for row in rows:
             writer.writerow(row)
             yield line.read()
