@@ -36,14 +36,24 @@
 <div class="grid-row">
     <div class="column-two-thirds">
         <div class="marketplace-paragraph">
-            <p>{{ responses_count }} supplier{% if responses_count != 1 %}s{% endif %} responded to your requirements. 
-                Of these, {{ response_counts['eligible'] }} meet all your essential requirements. 
-                
-                {% if response_counts['eligible'] > 0 %}
-                    You now need to respond to these eligible suppliers. 
-                    (Suppliers that did not meet all your essential requirements have already been told that they were unsuccessful.)
-                {% endif %}
-            </p>
+          <p>
+          {% if responses_count ==  1 %}
+              {{ responses_count }} supplier responded to your requirements.
+              They did {% if response_counts['eligible'] == 0 %} not{% endif %} meet all your essential requirements.
+          {% else %}
+              {{ responses_count }} suppliers responded to your requirements.
+              Of these, {{ response_counts['eligible'] }} {{ pluralize(response_counts['eligible'], "meets", "meet") }} all your essential requirements.
+          {% endif %}
+
+          {% if response_counts['eligible'] > 0 %}
+            {% if response_counts['eligible'] == 1 %}
+              You now need to respond to this eligible supplier.
+            {% else %}
+              You now need to respond to these eligible suppliers.
+            {% endif %}
+              (Suppliers that did not meet all your essential requirements have already been told that they were unsuccessful.)
+          {% endif %}
+          </p>
         </div>
 
         {% if response_counts['eligible'] > 0 %}
