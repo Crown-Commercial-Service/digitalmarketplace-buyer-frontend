@@ -9,7 +9,7 @@
     <div class="column-two-thirds">
       {% with
         heading = brief_data.get('title', brief_data['lotName']),
-        smaller = true
+        context = 'Overview'
       %}
         {% include "toolkit/page-heading.html" %}
       {% endwith %}
@@ -23,6 +23,10 @@
     {% block before_sections %}{% endblock %}
               
     <div class="column-one-whole">
+      <ol class="instruction-list">
+        <li class="instruction-list-item divider">
+        <h2 class="instruction-list-item-body">Write requirements</h2>
+        <p class="instruction-list-item-extra-information">Before you can publish your requirements, you must complete:</p>
       
       {% import "toolkit/summary-table.html" as summary %}
 
@@ -65,7 +69,33 @@
 
         {% endcall %}
       {% endcall %}
+        </li>
+        <li class="instruction-list-item divider">
+          <h2 class="instruction-list-item-body">Publish requirements</h2>
+          <p class="instruction-list-item-extra-information">Before you can publish your requirements, you must complete:</p>
+          <a class="instruction-list-item-extra-information" href="#">Review and publish</a>
+        </li>
+        <li class="instruction-list-item divider">
+          <h2 class="instruction-list-item-body">Answer supplier questions</h2>
+          <p class="instruction-list-item-extra-information">When you’ve published your requirements, you must answer all supplier questions.</p>
+          <a class="instruction-list-item-extra-information" href="#">How to manage supplier questions</a>
+        </li>
+        <li class="instruction-list-item divider">
+          <h2 class="instruction-list-item-body">Shortlist</h2>
+          <p class="instruction-list-item-extra-information">After the application deadline, shortlist the suppliers who applied.</p>
+          <a class="instruction-list-item-extra-information" href="#">How to shortlist suppliers</a>
+        </li>
+        <li class="instruction-list-item divider">
+          <h2 class="instruction-list-item-body">Evaluate</h2>
+          <a class="instruction-list-item-extra-information" href="#">How to evaluate suppliers</a>
+        </li>
+        <li class="instruction-list-item divider">
+          <h2 class="instruction-list-item-body">Award a contract</h2>
+          <a class="instruction-list-item-extra-information" href="#">How to award a contract</a>
+        </li>
+      </ol>
     </div>
+
 
     {% if brief_data.status == "live" %}
     <div class="column-one-whole">

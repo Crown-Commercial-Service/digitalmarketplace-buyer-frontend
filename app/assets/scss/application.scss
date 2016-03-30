@@ -133,3 +133,28 @@ $path: "/static/images/";
 .padding-bottom-small {
   padding-bottom: 10px;
 }
+
+.instruction-list {
+  @include bold-27;
+  padding-left: 1em; // 27px
+
+  @include media( $min-width: $site-width + (2 * (27px + $gutter) ) ) {
+    padding-left: 0;
+  }
+}
+
+.instruction-list-item {
+
+  h2 {
+    @include bold-27;
+    margin-bottom: 10px;
+  }
+
+  .instruction-list-item-extra-information {
+    @include core-19;
+  }
+
+  a {
+    text-decoration: none;
+  }
+}

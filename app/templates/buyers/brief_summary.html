@@ -17,38 +17,6 @@
   {% endwith %}
 {% endblock %}
 
-{% block before_sections %}
-
-<div class="column-one-third align-with-heading">
-  {% if brief_data.status == "draft" %}
-    <p class='last-edited hint'>
-      Last edited:
-      {{ brief_data.updatedAt|datetimeformat }}
-    </p>
-  {% elif brief_data.status == "live" %}
-    <p class='last-edited hint'>
-      Published:
-      {{ brief_data.publishedAt|datetimeformat }}
-    </p>
-  {% endif %}
-  {% if framework.status == "live" %}
-    {% if unanswered_required or unanswered_optional %}
-      <p class="last-edited">
-        {{ submission.multiline_string(
-          submission.unanswered_required_text(unanswered_required, unanswered_optional),
-          submission.unanswered_optional_text(unanswered_required, unanswered_optional)
-        ) }}
-      </p>
-    {% endif %}
-  {% endif %}
-  {% if not can_publish and framework.status == 'live' %}
-  <p>
-    Once you’ve entered all the required information, you can publish the requirements.
-  </p>
-  {% endif %}
-  </div>
-{% endblock %}
-
 {% block before_heading %}
   {% if delete_requested %}
     <div class="column-one-whole">
