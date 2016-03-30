@@ -85,4 +85,4 @@ def classify_and_count_brief_responses(brief_id, data_api_client):
 
 
 def all_essentials_are_true(brief_response):
-    return len([essential for essential in brief_response['essentialRequirements'] if essential is False]) == 0
+    return all(brief_response['essentialRequirements'])
