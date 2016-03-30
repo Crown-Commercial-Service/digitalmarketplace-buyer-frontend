@@ -126,7 +126,7 @@ class TestBuyersHelpers(unittest.TestCase):
             {"essentialRequirements": [True, True, True, True, False]}
         ) is False
 
-    def test_classify_and_count_brief_responses(self):
+    def test_counts_for_failed_and_eligible_brief_responses(self):
         data_api_client = mock.Mock()
         data_api_client.find_brief_responses.return_value = {
             "briefResponses": [
@@ -138,4 +138,4 @@ class TestBuyersHelpers(unittest.TestCase):
             ]
         }
 
-        assert helpers.buyers_helpers.classify_and_count_brief_responses(1, data_api_client) == (3, 2)
+        assert helpers.buyers_helpers.counts_for_failed_and_eligible_brief_responses(1, data_api_client) == (3, 2)

@@ -10,7 +10,7 @@ from .. import buyers, content_loader
 from ...helpers.buyers_helpers import (
     count_suppliers_on_lot, get_framework_and_lot, is_brief_associated_with_user,
     count_unanswered_questions, brief_can_be_edited, add_unanswered_counts_to_briefs,
-    clarification_questions_open, add_response_counts_to_briefs, classify_and_count_brief_responses,
+    clarification_questions_open, add_response_counts_to_briefs, counts_for_failed_and_eligible_brief_responses,
     all_essentials_are_true)
 
 from dmapiclient import HTTPError
@@ -234,7 +234,7 @@ def view_brief_responses(framework_slug, lot_slug, brief_id):
     if not is_brief_associated_with_user(brief, current_user.id):
         abort(404)
 
-    failed_count, eligible_count = classify_and_count_brief_responses(brief["id"], data_api_client)
+    failed_count, eligible_count = counts_for_failed_and_eligible_brief_responses(brief["id"], data_api_client)
 
     return render_template(
         "buyers/brief_responses.html",

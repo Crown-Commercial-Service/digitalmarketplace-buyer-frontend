@@ -72,7 +72,7 @@ def clarification_questions_open(brief):
     return True
 
 
-def classify_and_count_brief_responses(brief_id, data_api_client):
+def counts_for_failed_and_eligible_brief_responses(brief_id, data_api_client):
     brief_responses = data_api_client.find_brief_responses(brief_id)['briefResponses']
     failed_count = 0
     eligible_count = 0
