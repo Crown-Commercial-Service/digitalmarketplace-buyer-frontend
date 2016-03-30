@@ -661,7 +661,7 @@ class TestBriefSummaryPage(BaseApplicationTest):
                 ]
             )
             brief_json = api_stubs.brief(status="draft")
-            brief_json['briefs']['specialistRole'] = 'communications_manager'
+            brief_json['briefs']['specialistRole'] = 'communicationsManager'
             data_api_client.get_brief.return_value = brief_json
 
             res = self.client.get(
@@ -680,7 +680,7 @@ class TestBriefSummaryPage(BaseApplicationTest):
             hint = document.cssselect('span.move-to-complete-hint')
             assert hint[0].text_content().strip() == "12 unanswered questions"
 
-            assert 'communications_manager' not in page_html
+            assert 'communicationsManager' not in page_html
             assert 'Communications manager' in page_html
 
             assert "Clarification questions" not in page_html
@@ -700,7 +700,7 @@ class TestBriefSummaryPage(BaseApplicationTest):
             )
             brief_json = api_stubs.brief(status="live")
             brief_json['briefs']['publishedAt'] = "2016-04-02T20:10:00.00000Z"
-            brief_json['briefs']['specialistRole'] = 'communications_manager'
+            brief_json['briefs']['specialistRole'] = 'communicationsManager'
             data_api_client.get_brief.return_value = brief_json
 
             clarification_questions_open.return_value = False
@@ -736,7 +736,7 @@ class TestBriefSummaryPage(BaseApplicationTest):
             )
             brief_json = api_stubs.brief(status="live")
             brief_json['briefs']['publishedAt'] = "2016-04-02T20:10:00.00000Z"
-            brief_json['briefs']['specialistRole'] = 'communications_manager'
+            brief_json['briefs']['specialistRole'] = 'communicationsManager'
             data_api_client.get_brief.return_value = brief_json
 
             clarification_questions_open.return_value = True
@@ -769,7 +769,7 @@ class TestBriefSummaryPage(BaseApplicationTest):
                  "publishedAt": "2016-01-01T00:00:00.000000Z"}
             ])
             brief_json['briefs']['publishedAt'] = "2016-04-02T20:10:00.00000Z"
-            brief_json['briefs']['specialistRole'] = 'communications_manager'
+            brief_json['briefs']['specialistRole'] = 'communicationsManager'
             data_api_client.get_brief.return_value = brief_json
 
             clarification_questions_open.return_value = False

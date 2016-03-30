@@ -391,6 +391,13 @@ class TestBriefPage(BaseApplicationTest):
         apply_links = document.xpath('//a[@href="/suppliers/opportunities/{}/responses/create"]'.format(brief_id))
         assert len(apply_links) == 0
 
+    def test_dos_brief_specialist_role_displays_label(self):
+        brief_id = self.brief['briefs']['id']
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
+
+        assert 'qualityAssurance' not in res.get_data(as_text=True)
+        assert 'Quality assurance analyst' in res.get_data(as_text=True)
+
 
 class TestCatalogueOfBriefsPage(BaseApplicationTest):
     def setup(self):
