@@ -61,7 +61,7 @@ def add_unanswered_counts_to_briefs(briefs):
 
 def add_response_counts_to_briefs(briefs, data_api_client):
     for brief in briefs:
-        responses = data_api_client.find_brief_responses(brief_id=brief['id'])
+        responses = data_api_client.find_brief_responses(brief_id=brief['id'])["briefResponses"]
         brief['responses_count'] = len(responses)
 
     return briefs
