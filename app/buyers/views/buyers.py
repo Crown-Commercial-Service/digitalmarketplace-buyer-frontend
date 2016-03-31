@@ -44,11 +44,12 @@ def start_new_brief(framework_slug, lot_slug):
 
     section = content.get_section(content.get_next_editable_section_id())
 
+    # TODO make sure we can still create briefs
     return render_template(
-        "buyers/edit_brief_section.html",
+        "buyers/edit_brief_question.html",
         framework=framework,
         data={},
-        section=section
+        question=section.get_question('title')
     ), 200
 
 
@@ -80,10 +81,10 @@ def create_new_brief(framework_slug, lot_slug):
         errors = section.get_error_messages(e.message)
 
         return render_template(
-            "buyers/edit_brief_section.html",
+            "buyers/edit_brief_question.html",
             framework=framework,
             data=update_data,
-            section=section,
+            section=section.get('title'),
             errors=errors
         ), 400
 
@@ -96,9 +97,9 @@ def create_new_brief(framework_slug, lot_slug):
 
 
 @buyers.route(
-    '/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/edit/<section_id>',
+    '/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/edit/<section_slug>/<question_id>',
     methods=['GET'])
-def edit_brief_submission(framework_slug, lot_slug, brief_id, section_id):
+def edit_brief_question(framework_slug, lot_slug, brief_id, section_slug, question_id):
 
     framework, lot = get_framework_and_lot(framework_slug, lot_slug, data_api_client,
                                            status='live', must_allow_brief=True)
@@ -110,22 +111,24 @@ def edit_brief_submission(framework_slug, lot_slug, brief_id, section_id):
     content = content_loader.get_manifest(framework_slug, 'edit_brief').filter(
         {'lot': lot['slug']}
     )
-    section = content.get_section(section_id)
+    section = content.get_section(section_slug)
     if section is None or not section.editable:
         abort(404)
 
     return render_template(
-        "buyers/edit_brief_section.html",
+        "buyers/edit_brief_question.html",
         framework=framework,
-        data=brief,
-        section=section
+        lot=lot,
+        brief_data=brief,
+        section=section,
+        question=section.get_question(question_id)
     ), 200
 
 
 @buyers.route(
-    '/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/edit/<section_id>',
+    '/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/edit/<section_id>/<question_name>',
     methods=['POST'])
-def update_brief_submission(framework_slug, lot_slug, brief_id, section_id):
+def update_brief_submission(framework_slug, lot_slug, brief_id, section_id, question_name):
 
     framework, lot = get_framework_and_lot(framework_slug, lot_slug, data_api_client,
                                            status='live', must_allow_brief=True)
@@ -155,10 +158,10 @@ def update_brief_submission(framework_slug, lot_slug, brief_id, section_id):
         errors = section.get_error_messages(e.message)
 
         return render_template(
-            "buyers/edit_brief_section.html",
+            "buyers/edit_brief_question.html",
             framework=framework,
             data=update_data,
-            section=section,
+            question=section.get_question(question_name),
             errors=errors
         ), 200
 
@@ -195,11 +198,43 @@ def view_brief_summary(framework_slug, lot_slug, brief_id):
         lot=lot,
         confirm_remove=request.args.get("confirm_remove", None),
         brief_data=brief,
-        flattened_brief=flattened_brief,
+        sections=sections,
         unanswered_required=unanswered_required,
         unanswered_optional=unanswered_optional,
-        can_publish=not unanswered_required,
-        delete_requested=delete_requested
+        can_publish=not unanswered_required,  # TODO This sucks
+        delete_requested=delete_requested,
+    ), 200
+
+
+@buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/<section_slug>', methods=['GET'])
+def view_brief_section_summary(framework_slug, lot_slug, brief_id, section_slug):
+
+    framework, lot = get_framework_and_lot(framework_slug, lot_slug, data_api_client,
+                                           status='live', must_allow_brief=True)
+
+    brief = data_api_client.get_brief(brief_id)["briefs"]
+
+    if brief["status"] != "draft":
+        abort(404)
+
+    if not is_brief_associated_with_user(brief, current_user.id):
+        abort(404)
+
+    content = content_loader.get_manifest(framework_slug, 'edit_brief').filter(
+        {'lot': lot['slug']}
+    )
+    sections = content.summary(brief)
+    section = sections.get_section(section_slug)
+
+    if not section:
+        abort(404)
+
+    return render_template(
+        "buyers/section_summary.html",
+        framework=framework,
+        lot=lot,
+        brief_data=brief,
+        section=section
     ), 200
 
 

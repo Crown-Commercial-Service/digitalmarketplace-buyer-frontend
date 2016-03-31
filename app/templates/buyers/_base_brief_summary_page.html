@@ -27,48 +27,13 @@
         <li class="instruction-list-item divider">
         <h2 class="instruction-list-item-body">Write requirements</h2>
         <p class="instruction-list-item-extra-information">Before you can publish your requirements, you must complete:</p>
-      
-      {% import "toolkit/summary-table.html" as summary %}
 
-      {% call(question) summary.list_table(
-        flattened_brief,
-        field_headings=[
-          "Requirements attribute name",
-          "Requirements attribute",
-          "Action"
-        ],
-        field_headings_visible=False
-      ) %}
-      
-        {% call summary.row() %}
-          {{ summary.field_name(question.label) }}
-        
-          {% if question.answer_required or question.is_empty %}
-            {% if brief_data.get('status') == 'draft' %}
-              {% call summary.field() %}
-                <a href="{{ url_for("buyers.edit_brief_submission", framework_slug=framework.slug, lot_slug=brief_data.lot, brief_id=brief_data.id, section_id=question.section_id, _anchor=question.id) }}">{{ question.empty_message or "Not answered" }}</a>
-              {% endcall %}
-            {% else %}
-              {{ summary.text("Not answered") }}
-            {% endif %}
-          {% else %}
-            {{ summary[question.type](question.display_value or question.value) }}
-          {% endif %}
-    
-          {% if brief_data.get('status') == 'draft' %}
-            {% if question.is_empty and not question.answer_required %}
-              {% call summary.field(action=True) %}
-                Optional
-              {% endcall %}
-            {% elif not question.answer_required %}
-              {{ summary.edit_link("Edit", url_for("buyers.edit_brief_submission", framework_slug=framework.slug, lot_slug=brief_data.lot, brief_id=brief_data.id, section_id=question.section_id, _anchor=question.id)) }}
-            {% else %}
-              {% call summary.field() %}{% endcall %}
-            {% endif %}
-          {% endif %}
+        <ul class="instruction-list-item-extra-information">
+          {% for section in sections %}
+            <li><a href="{{ url_for('.view_brief_section_summary', framework_slug=framework.slug, lot_slug=lot.slug, brief_id=brief_data.id, section_slug=section.slug) }}">{{ section.name|lower }}</a><li>
+          {% endfor %}
+        </ul>
 
-        {% endcall %}
-      {% endcall %}
         </li>
         <li class="instruction-list-item divider">
           <h2 class="instruction-list-item-body">Publish requirements</h2>

@@ -1,7 +1,7 @@
 {% extends "_base_page.html" %}
 {% import "macros/toolkit_forms.html" as forms %}
 
-{% block page_title %}{{ section.name }} – Digital Marketplace{% endblock %}
+{% block page_title %}{{ question.question }} – Digital Marketplace{% endblock %}
 
 {% block main_content %}
 
@@ -9,17 +9,11 @@
     <div class="column-two-thirds">
 
       {% with
-        heading = section.name,
+        heading = question.name,
         smaller = true
       %}
         {% include 'toolkit/page-heading.html' %}
       {% endwith %}
-
-      {% if section.description %}
-        <div class="section-description">
-          {{ section.description|markdown }}
-        </div>
-      {% endif %}
 
     </div>
   </div>
@@ -34,15 +28,11 @@
 
     <div class="grid-row">
       <div class="column-two-thirds">
-
-          {% for question in section.questions %}
             {% if errors and errors[question.id] %}
-              {{ forms[question.type](question, data, errors) }}
+              {{ forms[question.type](question, brief_data, errors) }}
             {% else %}
-              {{ forms[question.type](question, data, {}) }}
+              {{ forms[question.type](question, brief_data, {}) }}
             {% endif %}
-          {% endfor %}
-
           <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
           {% block save_button %}{% endblock %}
 
