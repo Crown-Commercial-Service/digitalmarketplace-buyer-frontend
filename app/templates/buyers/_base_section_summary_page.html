@@ -50,7 +50,7 @@
                 Optional
               {% endcall %}
             {% elif not question.answer_required %}
-              {{ summary.edit_link("Edit", url_for("buyers.edit_brief_submission", framework_slug=framework.slug, lot_slug=brief_data.lot, brief_id=brief_data.id, section_id=question.section_id, _anchor=question.id)) }}
+              {{ summary.edit_link("Edit", url_for("buyers.edit_brief_question", framework_slug=framework.slug, lot_slug=brief_data.lot, brief_id=brief_data.id, section_slug=section.slug, question_id=question.id)) }}
             {% else %}
               {% call summary.field() %}{% endcall %}
             {% endif %}

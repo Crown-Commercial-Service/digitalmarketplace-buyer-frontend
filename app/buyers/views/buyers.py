@@ -199,6 +199,7 @@ def view_brief_summary(framework_slug, lot_slug, brief_id):
         confirm_remove=request.args.get("confirm_remove", None),
         brief_data=brief,
         sections=sections,
+        step_sections = [section.step for section in sections if hasattr(section, 'step')],
         unanswered_required=unanswered_required,
         unanswered_optional=unanswered_optional,
         can_publish=not unanswered_required,  # TODO This sucks
