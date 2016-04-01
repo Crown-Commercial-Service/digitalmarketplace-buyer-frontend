@@ -1,5 +1,7 @@
 {% extends "_base_page.html" %}
 
+{% import "macros/brief_links.html" as brief_links %}
+
 {% block page_title %}{{ brief_data.title or brief_data.lotName }} – Digital Marketplace{% endblock %}
 
 {% block main_content %}
@@ -13,54 +15,106 @@
       %}
         {% include "toolkit/page-heading.html" %}
       {% endwith %}
-
-      <div class="marketplace-paragraph">
-        <h2>Overview of work</h2>
-        <p>Create an overview of the work to help suppliers decide whether to apply.</p>
-      </div>
+      
     </div>
-              
+
     {% block before_sections %}{% endblock %}
               
-    <div class="column-one-whole">
       <ol class="instruction-list">
-        <li class="instruction-list-item divider">
-        <h2 class="instruction-list-item-body">Write requirements</h2>
-        <p class="instruction-list-item-extra-information">Before you can publish your requirements, you must complete:</p>
+        {% with
+          steps = [
+            {
+              'title': 'Write requirements',
+              'description': 'Before you can publish your requirements, you must complete:'
+            },
+            {
+              'title': 'Publish requirements',
+              'descripton': 'Before you can publish your requirements, you must complete:'
+            },
+            {
+              'title': 'Answer supplier questions',
+              'description': 'When you’ve published your requirements, you must answer all supplier questions.',
+              'links': [
+                {
+                  'href': '/',
+                  'text': 'How to manage supplier questions'
+                }
+              ]
+            },
+            {
+              'title': 'Choose the shortlist',
+              'description': 'After the application deadline, shortlist the suppliers who applied.',
+              'links': [
+                {
+                  'href': '/',
+                  'text': 'How to shortlist suppliers',
+                }
+              ]
+            },
+            {
+              'title': 'Assess the shortlist',
+              'links': [
+                {
+                  'href': '/',
+                  'text': 'How to assess suppliers'
+                }
+              ]
+            },
+            {
+              'title': 'Award the supplier that best meets your needs',
+              'links': [
+                {
+                  'href': '/',
+                  'text': 'How to award a contract'
+                }
+              ]
+            }
+          ]
+        %}
 
-        <ul class="instruction-list-item-extra-information">
-          {% for section in sections %}
-            <li><a href="{{ url_for('.view_brief_section_summary', framework_slug=framework.slug, lot_slug=lot.slug, brief_id=brief_data.id, section_slug=section.slug) }}">{{ section.name|lower }}</a><li>
-          {% endfor %}
-        </ul>
-
-        </li>
-        <li class="instruction-list-item divider">
-          <h2 class="instruction-list-item-body">Publish requirements</h2>
-          <p class="instruction-list-item-extra-information">Before you can publish your requirements, you must complete:</p>
-          <a class="instruction-list-item-extra-information" href="#">Review and publish</a>
-        </li>
-        <li class="instruction-list-item divider">
-          <h2 class="instruction-list-item-body">Answer supplier questions</h2>
-          <p class="instruction-list-item-extra-information">When you’ve published your requirements, you must answer all supplier questions.</p>
-          <a class="instruction-list-item-extra-information" href="#">How to manage supplier questions</a>
-        </li>
-        <li class="instruction-list-item divider">
-          <h2 class="instruction-list-item-body">Shortlist</h2>
-          <p class="instruction-list-item-extra-information">After the application deadline, shortlist the suppliers who applied.</p>
-          <a class="instruction-list-item-extra-information" href="#">How to shortlist suppliers</a>
-        </li>
-        <li class="instruction-list-item divider">
-          <h2 class="instruction-list-item-body">Evaluate</h2>
-          <a class="instruction-list-item-extra-information" href="#">How to evaluate suppliers</a>
-        </li>
-        <li class="instruction-list-item divider">
-          <h2 class="instruction-list-item-body">Award a contract</h2>
-          <a class="instruction-list-item-extra-information" href="#">How to award a contract</a>
-        </li>
+        {% for step in steps %}
+          {% set step_number = loop.index %}
+          <li class="instruction-list-item divider">
+            <h2 class="instruction-list-item-body">{{ step.title }}</h2>
+            {% if step.description %}
+              <p class="instruction-list-item-extra-information">{{ step.description }}</p>
+            {% endif %}
+            {% if step_number in step_sections %}
+              {% if step_sections.count(step_number) == 1 %}
+                {% set section = sections.sections[step_sections.index(step_number)] %}
+                <a class="instruction-list-item-extra-information" href="{{ brief_links.brief_link_url('grandparent', section, framework, lot, brief_data) }}">
+                  {{ section.name|lower }}
+                </a>
+              {% else %}
+                <ul class="instruction-list-item-extra-information">
+                  {% for section in sections %}
+                    {% if section.step == step_number %}
+                    <li>
+                      <a href="{{ brief_links.brief_link_url('grandparent', section, framework, lot, brief_data) }}">{{ section.name|lower }}</a>
+                    </li>
+                    {% endif %}
+                  {% endfor %}
+                </ul>
+              {% endif %}
+            {% endif %}
+            {% if step.links %}
+              {% if step.links|length == 1 %}
+                <a class="instruction-list-item-extra-information" href="{{ step.links[0].href }}">{{ step.links[0].text }}</a>
+              {% else %} 
+                <ul class="instruction-list-item-extra-information">
+                  {% for link in step.links %}
+                    <li>
+                      <a href="{{ link.href }}">{{ link.text }}</a>
+                    </li>
+                  {% endfor %}
+                </ul>
+              {% endif %}
+            {% endif %}
+          </li>
+        {% endfor %} 
+        {% endwith %}
       </ol>
     </div>
-
 
     {% if brief_data.status == "live" %}
     <div class="column-one-whole">

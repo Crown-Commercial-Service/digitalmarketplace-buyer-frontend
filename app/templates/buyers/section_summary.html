@@ -24,7 +24,7 @@
   {%
     with
     url = url_for(".view_brief_summary", framework_slug=framework.slug, lot_slug=lot.slug, brief_id=brief_data.id),
-    text = "Return to ‘{}’".format(brief_data.title)
+    text = "Return to overview"
   %}
     {% include "toolkit/secondary-action-link.html" %}
   {% endwith %}
