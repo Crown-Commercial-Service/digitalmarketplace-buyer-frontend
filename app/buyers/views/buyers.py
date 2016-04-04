@@ -61,7 +61,8 @@ def start_new_brief(framework_slug, lot_slug):
         "buyers/edit_brief_question.html",
         framework=framework,
         data={},
-        question=section.get_question('title')
+        question=section.get_question('title'),
+        lot=lot
     ), 200
 
 
@@ -163,16 +164,20 @@ def update_brief_submission(framework_slug, lot_slug, brief_id, section_id, ques
             brief_id,
             update_data,
             updated_by=current_user.email_address,
-            page_questions=section.get_field_names()
+            page_questions=[section.get_question(question_name).name]
         )
     except HTTPError as e:
         update_data = section.unformat_data(update_data)
         errors = section.get_error_messages(e.message)
 
+        # we need the brief_id to build breadcrumbs and the update_data to fill in the form.
+        brief.update(update_data)
         return render_template(
             "buyers/edit_brief_question.html",
             framework=framework,
-            data=update_data,
+            lot=lot,
+            brief_data=brief,
+            section=section,
             question=section.get_question(question_name),
             errors=errors
         ), 200
@@ -199,6 +204,15 @@ def view_brief_overview(framework_slug, lot_slug, brief_id):
     unanswered_required, unanswered_optional = count_unanswered_questions(sections)
     delete_requested = True if request.args.get('delete_requested') else False
 
+    section_data = []
+    for section in sections:
+        r, o = count_unanswered_questions([section])
+        section_data.append({
+            'name': section.name,
+            'unanswered_required': r,
+            'unanswered_optional': o
+        })
+
     brief['clarificationQuestions'] = [
         dict(question, number=index+1)
         for index, question in enumerate(brief['clarificationQuestions'])
@@ -211,7 +225,7 @@ def view_brief_overview(framework_slug, lot_slug, brief_id):
         confirm_remove=request.args.get("confirm_remove", None),
         brief_data=brief,
         sections=sections,
-        step_sections = [section.step for section in sections if hasattr(section, 'step')],
+        step_sections=[section.step for section in sections if hasattr(section, 'step')],
         unanswered_required=unanswered_required,
         unanswered_optional=unanswered_optional,
         can_publish=not unanswered_required,  # TODO This sucks
