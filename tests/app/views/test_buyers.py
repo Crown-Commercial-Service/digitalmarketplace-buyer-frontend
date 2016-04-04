@@ -1201,6 +1201,27 @@ class TestDownloadBriefResponsesCsv(BaseApplicationTest):
         ]
     }
 
+    tricky_character_responses = {
+        "briefResponses": [
+            {
+                "supplierName": "K,ev’s \"Bu,tties",
+                "availability": "❝Next — Tuesday❞",
+                "dayRate": "¥1.49,",
+                "essentialRequirements": [True, True],
+                "niceToHaveRequirements": [True, False, False],
+                "respondToEmailAddress": "test1@email.com",
+            },
+            {
+                "supplierName": "Kev\'s \'Pies",
+                "availability": "&quot;A week Friday&rdquot;",
+                "dayRate": "&euro;3.50",
+                "essentialRequirements": [True, True],
+                "niceToHaveRequirements": [False, True, True],
+                "respondToEmailAddress": "te,st2@email.com",
+            },
+        ]
+    }
+
     def test_csv_includes_all_eligible_responses_and_no_ineligible_responses(self, data_api_client):
         data_api_client.find_brief_responses.return_value = self.brief_responses
         data_api_client.get_framework.return_value = api_stubs.framework(
@@ -1223,4 +1244,27 @@ class TestDownloadBriefResponsesCsv(BaseApplicationTest):
         # The response with two nice-to-haves is sorted to above the one with only one
         assert lines[1] == "Kev's Pies,A week Friday,£3.50,False,True,True,test2@email.com"
         assert lines[2] == "Kev's Butties,Next Tuesday,£1.49,True,False,False,test1@email.com"
+        assert lines[-1] == ""
+
+    def test_csv_handles_tricky_characters(self, data_api_client):
+        data_api_client.find_brief_responses.return_value = self.tricky_character_responses
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='live',
+            lots=[
+                api_stubs.lot(slug='digital-specialists', allows_brief=True),
+            ]
+        )
+        data_api_client.get_brief.return_value = self.brief
+
+        self.login_as_buyer()
+        res = self.client.get(self.url)
+        page = res.get_data(as_text=True)
+        lines = page.split('\n')
+
+        assert len(lines) == 4
+        assert lines[0] == "Supplier,Availability,Day rate,Nice1,Nice2,Nice3,Email address"
+        # The values with internal commas are surrounded by quotes, and all other characters appear as in the data
+        assert lines[1] == 'Kev\'s \'Pies,&quot;A week Friday&rdquot;,&euro;3.50,False,True,True,"te,st2@email.com"'
+        assert lines[2] == '"K,ev’s ""Bu,tties",❝Next — Tuesday❞,"¥1.49,",True,False,False,test1@email.com'
         assert lines[-1] == ""
