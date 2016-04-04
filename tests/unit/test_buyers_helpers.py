@@ -139,3 +139,25 @@ class TestBuyersHelpers(unittest.TestCase):
         }
 
         assert helpers.buyers_helpers.counts_for_failed_and_eligible_brief_responses(1, data_api_client) == (3, 2)
+
+    def test_get_sorted_responses_for_brief(self):
+        data_api_client = mock.Mock()
+        data_api_client.find_brief_responses.return_value = {
+            "briefResponses": [
+                {"id": "five", "niceToHaveRequirements": [True, True, True, True, True]},
+                {"id": "zero", "niceToHaveRequirements": [False, False, False, False, False]},
+                {"id": "three", "niceToHaveRequirements": [True, True, False, False, True]},
+                {"id": "five", "niceToHaveRequirements": [True, True, True, True, True]},
+                {"id": "four", "niceToHaveRequirements": [True, True, True, True, False]},
+                {"id": "four", "niceToHaveRequirements": [True, True, True, True, False]},
+            ]
+        }
+
+        assert helpers.buyers_helpers.get_sorted_responses_for_brief(1, data_api_client) == [
+            {'id': 'five', 'niceToHaveRequirements': [True, True, True, True, True]},
+            {'id': 'five', 'niceToHaveRequirements': [True, True, True, True, True]},
+            {'id': 'four', 'niceToHaveRequirements': [True, True, True, True, False]},
+            {'id': 'four', 'niceToHaveRequirements': [True, True, True, True, False]},
+            {'id': 'three', 'niceToHaveRequirements': [True, True, False, False, True]},
+            {'id': 'zero', 'niceToHaveRequirements': [False, False, False, False, False]}
+        ]

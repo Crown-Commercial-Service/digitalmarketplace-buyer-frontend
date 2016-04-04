@@ -11,7 +11,7 @@ from ...helpers.buyers_helpers import (
     count_suppliers_on_lot, get_framework_and_lot, is_brief_associated_with_user,
     count_unanswered_questions, brief_can_be_edited, add_unanswered_counts_to_briefs,
     clarification_questions_open, add_response_counts_to_briefs, counts_for_failed_and_eligible_brief_responses,
-    all_essentials_are_true)
+    all_essentials_are_true, get_sorted_responses_for_brief)
 
 from dmapiclient import HTTPError
 
@@ -256,12 +256,7 @@ def download_brief_responses(framework_slug, lot_slug, brief_id):
     if brief['status'] != "closed":
         abort(404)
 
-    brief_responses = data_api_client.find_brief_responses(brief_id)['briefResponses']
-    # Sort responses with those with the most nice-to-have requirements nearest the top
-    sorted_brief_responses = sorted(brief_responses,
-                                    key=lambda k: len([nice for nice in k['niceToHaveRequirements'] if nice is True]),
-                                    reverse=True
-                                    )
+    sorted_brief_responses = get_sorted_responses_for_brief(brief_id, data_api_client)
 
     content = content_loader.get_manifest(framework['slug'], 'output_brief_response').filter({'lot': lot['slug']})
     section = content.get_section('view-response-to-requirements')
