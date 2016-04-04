@@ -10,7 +10,7 @@
         "label": "Digital Marketplace"
       },
       {
-        "link": url_for(".view_brief_summary", framework_slug=framework.slug, lot_slug=lot.slug, brief_id=brief_data.id),
+        "link": url_for(".view_brief_overview", framework_slug=framework.slug, lot_slug=lot.slug, brief_id=brief_data.id),
         "label": brief_data.title
       }
     ]
@@ -23,7 +23,7 @@
 
   {%
     with
-    url = url_for(".view_brief_summary", framework_slug=framework.slug, lot_slug=lot.slug, brief_id=brief_data.id),
+    url = url_for(".view_brief_overview", framework_slug=framework.slug, lot_slug=lot.slug, brief_id=brief_data.id),
     text = "Return to overview"
   %}
     {% include "toolkit/secondary-action-link.html" %}
