@@ -8,10 +8,10 @@ from flask_login import current_user
 from app import data_api_client
 from .. import buyers, content_loader
 from ...helpers.buyers_helpers import (
-    count_suppliers_on_lot, get_framework_and_lot, is_brief_associated_with_user,
-    count_unanswered_questions, brief_can_be_edited, add_unanswered_counts_to_briefs,
-    clarification_questions_open, add_response_counts_to_briefs, counts_for_failed_and_eligible_brief_responses,
-    all_essentials_are_true, get_sorted_responses_for_brief)
+    add_response_counts_to_briefs, all_essentials_are_true, count_suppliers_on_lot,
+    counts_for_failed_and_eligible_brief_responses, get_framework_and_lot, get_sorted_responses_for_brief,
+    is_brief_associated_with_user, count_unanswered_questions, brief_can_be_edited, add_unanswered_counts_to_briefs
+)
 
 from dmapiclient import HTTPError
 
@@ -220,8 +220,7 @@ def view_brief_summary(framework_slug, lot_slug, brief_id):
         unanswered_required=unanswered_required,
         unanswered_optional=unanswered_optional,
         can_publish=not unanswered_required,
-        delete_requested=delete_requested,
-        clarification_questions_open=clarification_questions_open(brief)
+        delete_requested=delete_requested
     ), 200
 
 
@@ -347,9 +346,6 @@ def add_clarification_question(framework_slug, lot_slug, brief_id):
         abort(404)
 
     if brief["status"] != "live":
-        abort(404)
-
-    if not clarification_questions_open(brief):
         abort(404)
 
     content = content_loader.get_manifest(framework_slug, "clarification_question")

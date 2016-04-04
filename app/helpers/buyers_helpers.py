@@ -67,11 +67,6 @@ def add_response_counts_to_briefs(briefs, data_api_client):
     return briefs
 
 
-def clarification_questions_open(brief):
-    # TODO: Implement this properly
-    return True
-
-
 def counts_for_failed_and_eligible_brief_responses(brief_id, data_api_client):
     brief_responses = data_api_client.find_brief_responses(brief_id)['briefResponses']
     failed_count = 0
