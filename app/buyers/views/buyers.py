@@ -178,12 +178,12 @@ def update_brief_submission(framework_slug, lot_slug, brief_id, section_id, ques
         ), 200
 
     return redirect(
-        url_for(".view_brief_summary", framework_slug=framework_slug, lot_slug=lot_slug, brief_id=brief_id)
+        url_for(".view_brief_overview", framework_slug=framework_slug, lot_slug=lot_slug, brief_id=brief_id)
     )
 
 
 @buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>', methods=['GET'])
-def view_brief_summary(framework_slug, lot_slug, brief_id):
+def view_brief_overview(framework_slug, lot_slug, brief_id):
 
     framework, lot = get_framework_and_lot(framework_slug, lot_slug, data_api_client, must_allow_brief=True)
 
@@ -205,7 +205,7 @@ def view_brief_summary(framework_slug, lot_slug, brief_id):
     ]
 
     return render_template(
-        "buyers/brief_summary.html",
+        "buyers/brief_overview.html",
         framework=framework,
         lot=lot,
         confirm_remove=request.args.get("confirm_remove", None),
@@ -396,7 +396,7 @@ def delete_a_brief(framework_slug, lot_slug, brief_id):
         return redirect(url_for('.buyer_dashboard'))
     else:
         return redirect(
-            url_for('.view_brief_summary', framework_slug=framework_slug, lot_slug=lot_slug,
+            url_for('.view_brief_overview', framework_slug=framework_slug, lot_slug=lot_slug,
                     brief_id=brief_id, delete_requested=True)
         )
 
@@ -429,7 +429,7 @@ def add_clarification_question(framework_slug, lot_slug, brief_id):
                                                              current_user.email_address)
 
             return redirect(
-                url_for('.view_brief_summary', framework_slug=framework_slug, lot_slug=lot_slug,
+                url_for('.view_brief_overview', framework_slug=framework_slug, lot_slug=lot_slug,
                         brief_id=brief_id) + "#clarification-questions")
         except HTTPError as e:
             if e.status_code != 400:
