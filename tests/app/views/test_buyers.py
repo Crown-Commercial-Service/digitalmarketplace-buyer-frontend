@@ -1147,6 +1147,40 @@ class TestViewBriefResponsesPage(BaseApplicationTest):
         assert "Download the file of responses from eligible suppliers (it will be available here once applications " \
                "have closed)." in page
 
+    def test_404_if_brief_does_not_belong_to_buyer(self, data_api_client):
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='live',
+            lots=[
+                api_stubs.lot(slug='digital-outcomes', allows_brief=True),
+            ]
+        )
+        data_api_client.get_brief.return_value = api_stubs.brief(user_id=234)
+
+        self.login_as_buyer()
+        res = self.client.get(
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1/responses"
+        )
+
+        assert res.status_code == 404
+
+    def test_404_if_lot_does_not_allow_brief(self, data_api_client):
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='live',
+            lots=[
+                api_stubs.lot(slug='digital-outcomes', allows_brief=False),
+            ]
+        )
+        data_api_client.get_brief.return_value = api_stubs.brief()
+
+        self.login_as_buyer()
+        res = self.client.get(
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1/responses"
+        )
+
+        assert res.status_code == 404
+
 
 @mock.patch("app.buyers.views.buyers.data_api_client")
 class TestDownloadBriefResponsesCsv(BaseApplicationTest):
@@ -1268,3 +1302,31 @@ class TestDownloadBriefResponsesCsv(BaseApplicationTest):
         assert lines[1] == 'Kev\'s \'Pies,&quot;A week Friday&rdquot;,&euro;3.50,False,True,True,"te,st2@email.com"'
         assert lines[2] == '"K,ev’s ""Bu,tties",❝Next — Tuesday❞,"¥1.49,",True,False,False,test1@email.com'
         assert lines[-1] == ""
+
+    def test_404_if_brief_does_not_belong_to_buyer(self, data_api_client):
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='live',
+            lots=[
+                api_stubs.lot(slug='digital-specialists', allows_brief=True),
+            ]
+        )
+        data_api_client.get_brief.return_value = api_stubs.brief(user_id=234, status='closed')
+
+        self.login_as_buyer()
+        res = self.client.get(self.url)
+        assert res.status_code == 404
+
+    def test_404_if_brief_is_not_closed(self, data_api_client):
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='live',
+            lots=[
+                api_stubs.lot(slug='digital-specialists', allows_brief=True),
+            ]
+        )
+        data_api_client.get_brief.return_value = api_stubs.brief(status='live')
+
+        self.login_as_buyer()
+        res = self.client.get(self.url)
+        assert res.status_code == 404
