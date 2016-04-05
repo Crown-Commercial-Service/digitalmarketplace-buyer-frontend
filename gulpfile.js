@@ -220,6 +220,15 @@ gulp.task(
 );
 
 gulp.task(
+  'copy:svg',
+  copyFactory(
+    "image assets from app to static folder",
+    assetsFolder + '/svg',
+    staticFolder + '/svg'
+  )
+);
+
+gulp.task(
   'copy:govuk_template',
   copyFactory(
     "GOV.UK template into app folder",
@@ -288,6 +297,7 @@ gulp.task(
     'copy:dm_toolkit_assets:images',
     'copy:dm_toolkit_assets:templates',
     'copy:images',
+    'copy:svg',
     'copy:govuk_template'
   ]
 );
