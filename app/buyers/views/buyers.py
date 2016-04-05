@@ -46,10 +46,11 @@ def start_new_brief(framework_slug, lot_slug):
 
     # TODO make sure we can still create briefs
     return render_template(
-        "buyers/edit_brief_question.html",
+        "buyers/create_brief_question.html",
         framework=framework,
-        data={},
-        question=section.get_question('title'),
+        brief_data={},
+        section=section,
+        question=section.questions[0],
         lot=lot
     ), 200
 
@@ -90,11 +91,10 @@ def create_new_brief(framework_slug, lot_slug):
         ), 400
 
     return redirect(
-        url_for(".edit_brief_submission",
+        url_for(".view_brief_overview",
                 framework_slug=framework_slug,
                 lot_slug=lot_slug,
-                brief_id=brief['id'],
-                section_id=content.get_next_editable_section_id(section.slug)))
+                brief_id=brief['id']))
 
 
 @buyers.route(
@@ -170,9 +170,20 @@ def update_brief_submission(framework_slug, lot_slug, brief_id, section_id, ques
             errors=errors
         ), 200
 
-    return redirect(
-        url_for(".view_brief_overview", framework_slug=framework_slug, lot_slug=lot_slug, brief_id=brief_id)
-    )
+    # seems particularly inelegant
+    if len(section.questions) == 1:
+        return redirect(
+            url_for(".view_brief_overview", framework_slug=framework_slug, lot_slug=lot_slug, brief_id=brief_id)
+        )
+    else:
+        return redirect(
+            url_for(
+                ".view_brief_section_summary",
+                framework_slug=framework_slug,
+                lot_slug=lot_slug,
+                brief_id=brief_id,
+                section_slug=section.slug)
+        )
 
 
 @buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>', methods=['GET'])
