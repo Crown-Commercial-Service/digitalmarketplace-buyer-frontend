@@ -1,12 +1,13 @@
 {% extends "_base_page.html" %}
 
-{% set title_text = 
-    { 
+{% set title_text =
+    {
         "digital-outcomes": "Find a team to provide an outcome",
         "digital-specialists": "Find an individual specialist",
         "user-research-participants": "Find user research participants",
     }[lot.slug]
 %}
+{% set supplier_type = "outcomes" if lot.slug == 'digital-outcomes' else "specialists" %}
 
 {% block page_title %}
 {{ title_text }} - Digital Marketplace

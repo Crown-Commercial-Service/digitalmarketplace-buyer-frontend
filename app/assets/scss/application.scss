@@ -153,6 +153,7 @@ $path: "/static/images/";
 
   .instruction-list-item-extra-information {
     @include core-19;
+    display: block;
   }
 
   a {
