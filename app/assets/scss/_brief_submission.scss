@@ -5,3 +5,16 @@
 .ready-to-publish-hint {
     color: $secondary-text-colour;
 }
+
+ul.instruction-list-item-extra-information li,
+ol.instruction-list-item-extra-information li {
+  margin-bottom: 0;
+}
+
+img.tick {
+  float: left;
+  margin: 0.2em 5px 0 -22px;
+  @include ie-lte(8) {
+
+  }
+}
