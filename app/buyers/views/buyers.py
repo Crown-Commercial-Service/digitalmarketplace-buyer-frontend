@@ -157,14 +157,18 @@ def update_brief_submission(framework_slug, lot_slug, brief_id, section_id, ques
     if section is None or not section.editable:
         abort(404)
 
-    update_data = section.get_data(request.form)
+    question = section.get_question(question_name)
+    if not question:
+        abort(404)
+
+    update_data = question.get_data(request.form)
 
     try:
         data_api_client.update_brief(
             brief_id,
             update_data,
             updated_by=current_user.email_address,
-            page_questions=[section.get_question(question_name).name]
+            page_questions=question.form_fields
         )
     except HTTPError as e:
         update_data = section.unformat_data(update_data)
@@ -178,7 +182,7 @@ def update_brief_submission(framework_slug, lot_slug, brief_id, section_id, ques
             lot=lot,
             brief_data=brief,
             section=section,
-            question=section.get_question(question_name),
+            question=question,
             errors=errors
         ), 200
 
