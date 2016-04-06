@@ -1,8 +1,12 @@
 {% extends "_base_page.html" %}
 
-{% set title_text = "Find a team to provide an outcome" if lot.slug == 'digital-outcomes' else "Find an individual specialist" %}
-{% set supplier_type = "outcomes" if lot.slug == 'digital-outcomes' else "specialists" %}
-{% set button_text = "Choose location" if lot.slug == 'digital-outcomes' else "Choose specialist role" %}
+{% set title_text = 
+    { 
+        "digital-outcomes": "Find a team to provide an outcome",
+        "digital-specialists": "Find an individual specialist",
+        "user-research-participants": "Find user research participants",
+    }[lot.slug]
+%}
 
 {% block page_title %}
 {{ title_text }} - Digital Marketplace
@@ -34,38 +38,65 @@
     </div>
 
     <div class="column-two-thirds large-paragraph">
-        <p class="padding-bottom-small">There are {{ supplier_count }} suppliers who provide {{ supplier_type }} on the Digital Marketplace.</p>
-        
-        <p>You need to write and publish your requirements so these suppliers can decide:</p>
-        <ul class="list-bullet padding-bottom-small">
-            <li>whether to apply for the work</li>
-            {% if lot.slug == 'digital-outcomes' %}
-              <li>what solution best meets your needs</li>
-            {% endif %}
-        </ul>
-        
-        <p>Once you’ve published your requirements, you’ll need to:</p>
-        <ul class="list-bullet padding-bottom-small">
-            <li>answer supplier questions</li>
-            <li>shortlist and evaluate supplier applications</li>
-            <li>award to the supplier that best meets your needs</li>
-        </ul>
-        
-        <p class="padding-bottom-small">
-            <a href="#">View published requirements</a><br />
-            <a href="#">View supplier A to Z</a><br />
-            <a href="#">Find out how suppliers are evaluated</a><br />
-            <a href="#">How to talk to suppliers before you start</a>
-        </p>
-        <p class="padding-bottom-small">The buying process should take around 1 month.</p>
-        <p class="padding-bottom-small">Read more about <a href="#">how to buy</a>.</p>
+        <div class="marketplace-paragraph">
+            <p>
+                {{
+                    {
+                    "digital-outcomes": "To find a digital outcome, eg a booking system or an accessibility audit, you need to tell suppliers about the situation or problem. They’ll then propose a solution to meet your needs.",
+                    "digital-specialists": "To find a digital specialist, eg a developer or a user researcher, you need to tell suppliers to provide a specialist for a specific piece of work.",
+                    "user-research-participants": "To find user research participants, you need to tell suppliers about the types of participants you want to test your service with. They’ll then tell you what they can do and how much it will cost.",
+                    }[lot.slug]
+                }}
+            </p>
+        </div>
+
+        <h2>Before you start</h2>
+        <ol class="list-number">
+            <li>You can talk to suppliers to prepare your requirements.<br>
+                <a href="#">View a list of suppliers.</a>
+            </li>
+            <li>Get budget approval.</li>
+        </ol>
+
+        <h2>Write and publish your requirements</h2>
+        <ol class="list-number" start="3">
+            <li>Write your requirements and say how you’re going to evaluate {{ "specialists" if lot.slug == "digital-specialists" else "suppliers" }}.</li>
+            <li>Publish your requirements and evaluation criteria so suppliers can apply for the work. This information will be published on the Digital Marketplace where anyone can see it.</li>
+        </ol>
+
+        <h2>Answer supplier questions</h2>
+        <ol class="list-number" start="5">
+            <li>Post all supplier questions and answers on the Digital Marketplace.</li>
+        </ol>
+
+        <h2>Evaluate suppliers</h2>
+        <ol class="list-number" start="6">
+            <li>Shortlist and evaluate {{ "specialists’" if lot.slug == "digital-specialists" else "supplier" }} applications.</li>
+            <li>Award a contract to the specialist that best meets your needs.</li>
+        </ol>
+
+        <p>The buying process should take around {{ "4 weeks" if lot.slug == "digital-outcomes" else "2 weeks" }}.</p>
+        <p>Read more about:</p>
+        <div class="explanation-list">
+            <ul class="list-bullet">
+                <li><a href="#">how to buy</a></li>
+                <li><a href="#">how suppliers have been evaluated</a></li>
+            </ul>
+        </div>
     </div>
-    
+
     <div class="column-two-thirds large-paragraph">
         <form action="{{ url_for('buyers.start_new_brief', framework_slug=framework.slug, lot_slug=lot.slug) }}" method="get">
-            <button type="submit" class="button-save">
-                {{ button_text }}
-            </button>
+
+            {%
+            with
+            label="Create requirement",
+            type="save",
+            name = "create_requirement"
+            %}
+            {% include "toolkit/button.html" %}
+            {% endwith %}
+
         </form>
     </div>
 </div>

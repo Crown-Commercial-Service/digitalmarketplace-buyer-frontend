@@ -8,10 +8,9 @@ from flask_login import current_user
 from app import data_api_client
 from .. import buyers, content_loader
 from ...helpers.buyers_helpers import (
-    add_response_counts_to_briefs, add_unanswered_counts_to_briefs, all_essentials_are_true, brief_can_be_edited,
-    count_unanswered_questions, counts_for_failed_and_eligible_brief_responses, get_framework_and_lot,
-    get_sorted_responses_for_brief, is_brief_associated_with_user
-
+    add_unanswered_counts_to_briefs, all_essentials_are_true, brief_can_be_edited, count_unanswered_questions,
+    counts_for_failed_and_eligible_brief_responses, get_framework_and_lot, get_sorted_responses_for_brief,
+    is_brief_associated_with_user
 )
 
 from dmapiclient import HTTPError
