@@ -34,9 +34,13 @@
 
     </div>
 
-    {% block before_sections %}
-    <!-- section description -->
-    {% endblock %}
+    {% if section.description %}
+      <div class="column-two-thirds">
+        <div class="section-description">
+          {{ section.description|markdown }}
+        </div>
+      </div>
+    {% endif %}
 
     <div class="column-one-whole">
       {% import "toolkit/summary-table.html" as summary %}

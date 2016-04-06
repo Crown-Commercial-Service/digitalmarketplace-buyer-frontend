@@ -18,3 +18,31 @@ img.tick {
 
   }
 }
+
+.section-description {
+   @include core-19;
+   padding-bottom: 30px;
+
+  p {
+    padding-bottom: 10px;
+  }
+
+  p + ul {
+    margin-top: -10px;
+  }
+
+  ul {
+    margin-bottom: 10px;
+    list-style-type: disc;
+    padding-left: 25px;
+  }
+}
+
+.secondary-action-link {
+    margin-top: 30px;
+}
+
+button.button-save + .secondary-action-link,
+input.button-save + .secondary-action-link {
+    margin-top: 5px;
+}
