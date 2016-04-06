@@ -1,8 +1,8 @@
-{% extends "buyers/_base_brief_overview_page.html" %}
+{% extends "_base_page.html" %}
 
-{% block page_title %}{{ brief_data.lotName }} requirements summary – Digital Marketplace{% endblock %}
+{% import "macros/brief_links.html" as brief_links %}
 
-{% import "macros/submission.html" as submission %}
+{% block page_title %}{{ brief_data.title or brief_data.lotName }} – Digital Marketplace{% endblock %}
 
 {% block breadcrumb %}
   {%
@@ -17,7 +17,147 @@
   {% endwith %}
 {% endblock %}
 
-{% block after_sections %}
+{% block main_content %}
+  <div class="grid-row">
+
+    {% block before_heading %}{% endblock %}
+    <div class="column-two-thirds">
+      {% with
+        heading = brief_data.get('title', brief_data['lotName']),
+        context = 'Overview'
+      %}
+        {% include "toolkit/page-heading.html" %}
+      {% endwith %}
+
+    {% block before_sections %}{% endblock %}
+
+      <ol class="instruction-list">
+
+        {% with
+          steps = [
+            {
+              'title': 'Write requirements',
+              'description': 'Before you can publish your requirements, you must complete:'
+            },
+            {
+              'title': 'Publish requirements',
+              'description': 'Before you can publish your requirements, you must complete:'
+            },
+            {
+              'title': 'Answer supplier questions',
+              'description': 'When you’ve published your requirements, you must answer all supplier questions.',
+              'links': [
+                {
+                  'href': '/',
+                  'text': 'How to manage supplier questions'
+                }
+              ]
+            },
+            {
+              'title': 'Choose the shortlist',
+              'description': 'After the application deadline, shortlist the suppliers who applied.',
+              'links': [
+                {
+                  'href': '/',
+                  'text': 'How to shortlist suppliers',
+                }
+              ]
+            },
+            {
+              'title': 'Assess the shortlist',
+              'links': [
+                {
+                  'href': '/',
+                  'text': 'How to assess suppliers'
+                }
+              ]
+            },
+            {
+              'title': 'Award the supplier that best meets your needs',
+              'links': [
+                {
+                  'href': '/',
+                  'text': 'How to award a contract'
+                }
+              ]
+            }
+          ]
+        %}
+
+        {% for step in steps %}
+          {% set step_number = loop.index %}
+          <li class="instruction-list-item divider">
+            <h2 class="instruction-list-item-body">{{ step.title }}</h2>
+            {% if step.description %}
+              <p class="instruction-list-item-extra-information">{{ step.description }}</p>
+            {% endif %}
+            {% if step_number in step_sections %}
+              {% if step_sections.count(step_number) == 1 %}
+                {% set section = sections.sections[step_sections.index(step_number)] %}
+                <a class="instruction-list-item-extra-information" href="{{ brief_links.brief_link_url('grandparent', section, framework, lot, brief_data) }}">
+                  {{ section.name|lower }}
+                </a>
+              {% else %}
+                <ul class="instruction-list-item-extra-information">
+                  {% for section in sections %}
+                    {% if section.step == step_number %}
+                    <li>
+                      {% if completed_sections[section.slug]  %}
+                        <img class="tick" src="{{ asset_path }}svg/tick.svg" alt="done" width="15" height="14" />
+                      {% endif %}
+                      <a href="{{ brief_links.brief_link_url('grandparent', section, framework, lot, brief_data) }}">{{ section.name|lower }}</a>
+                    </li>
+                    {% endif %}
+                  {% endfor %}
+                </ul>
+              {% endif %}
+            {% endif %}
+            {% if step.links %}
+              {% if step.links|length == 1 %}
+                <a class="instruction-list-item-extra-information" href="{{ step.links[0].href }}">{{ step.links[0].text }}</a>
+              {% else %}
+                <ul class="instruction-list-item-extra-information">
+                  {% for link in step.links %}
+                    <li>
+                      <a href="{{ link.href }}">{{ link.text }}</a>
+                    </li>
+                  {% endfor %}
+                </ul>
+              {% endif %}
+            {% endif %}
+          </li>
+        {% endfor %}
+        {% endwith %}
+      </ol>
+    </div>
+
+    {% if brief_data.status == "live" %}
+    <div class="column-one-whole">
+      {% import "toolkit/summary-table.html" as summary %}
+
+      {{ summary.heading("Clarification questions", id="clarification-questions") }}
+      {% call(question) summary.list_table(
+        brief_data.clarificationQuestions,
+        field_headings=[
+          "Question",
+          "Answer"
+        ],
+        field_headings_visible=False,
+        empty_message="No clarification questions have been answered yet"
+      ) %}
+
+        {% call summary.row() %}
+          {% call summary.field(first=True, wide=False) -%}
+            <span aria-label="question">{{ question.number }}.</span>
+            {{ question.question }}
+          {%- endcall %}
+          {{ summary.text(question.answer) }}
+        {% endcall %}
+      {% endcall %}
+
+    </div>
+    {% endif %}
+  </div>
 
   {% if brief_data.status == "live" %}
   <a href="{{ url_for(".add_clarification_question", framework_slug=framework.slug, lot_slug=lot.slug, brief_id=brief_data.id) }}">Answer a clarification question</a>
