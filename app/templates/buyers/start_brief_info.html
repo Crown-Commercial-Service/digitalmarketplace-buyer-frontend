@@ -7,7 +7,6 @@
         "user-research-participants": "Find user research participants",
     }[lot.slug]
 %}
-{% set supplier_type = "outcomes" if lot.slug == 'digital-outcomes' else "specialists" %}
 
 {% block page_title %}
 {{ title_text }} - Digital Marketplace
@@ -90,12 +89,11 @@
         <form action="{{ url_for('buyers.start_new_brief', framework_slug=framework.slug, lot_slug=lot.slug) }}" method="get">
 
             {%
-            with
-            label="Create requirement",
-            type="save",
-            name = "create_requirement"
+                with
+                label="Create requirement",
+                type="save"
             %}
-            {% include "toolkit/button.html" %}
+                {% include "toolkit/button.html" %}
             {% endwith %}
 
         </form>

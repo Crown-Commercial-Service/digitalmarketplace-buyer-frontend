@@ -187,7 +187,7 @@ def update_brief_submission(framework_slug, lot_slug, brief_id, section_id, ques
         ), 200
 
     # seems particularly inelegant
-    if len(section.questions) == 1:
+    if len(section.questions) == 1 and not section.description:
         return redirect(
             url_for(".view_brief_overview", framework_slug=framework_slug, lot_slug=lot_slug, brief_id=brief_id)
         )
