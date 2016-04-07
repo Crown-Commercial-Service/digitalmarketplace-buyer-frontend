@@ -149,6 +149,7 @@ class TestBuyersHelpers(unittest.TestCase):
                 {"id": "three", "niceToHaveRequirements": [True, True, False, False, True]},
                 {"id": "five", "niceToHaveRequirements": [True, True, True, True, True]},
                 {"id": "four", "niceToHaveRequirements": [True, True, True, True, False]},
+                {"id": "one", "niceToHaveRequirements": [False, False, False, True, False]},
                 {"id": "four", "niceToHaveRequirements": [True, True, True, True, False]},
             ]
         }
@@ -159,5 +160,6 @@ class TestBuyersHelpers(unittest.TestCase):
             {'id': 'four', 'niceToHaveRequirements': [True, True, True, True, False]},
             {'id': 'four', 'niceToHaveRequirements': [True, True, True, True, False]},
             {'id': 'three', 'niceToHaveRequirements': [True, True, False, False, True]},
+            {"id": "one", "niceToHaveRequirements": [False, False, False, True, False]},
             {'id': 'zero', 'niceToHaveRequirements': [False, False, False, False, False]}
         ]
