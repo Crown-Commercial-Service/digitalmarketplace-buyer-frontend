@@ -90,7 +90,8 @@ def all_essentials_are_true(brief_response):
 
 def get_sorted_responses_for_brief(brief_id, data_api_client):
     brief_responses = data_api_client.find_brief_responses(brief_id)['briefResponses']
-    return sorted(brief_responses,
-                  key=lambda k: len([nice for nice in k['niceToHaveRequirements'] if nice is True]),
-                  reverse=True
-                  )
+    return sorted(
+        brief_responses,
+        key=lambda k: len([nice for nice in k['niceToHaveRequirements'] if nice is True]),
+        reverse=True
+    )
