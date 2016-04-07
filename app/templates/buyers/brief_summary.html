@@ -95,7 +95,7 @@
     </div>
   {% endif %}
 
-  {% if brief_data.status == "live" and clarification_questions_open %}
+  {% if brief_data.status == "live" %}
   <a href="{{ url_for(".add_clarification_question", framework_slug=framework.slug, lot_slug=lot.slug, brief_id=brief_data.id) }}">Answer a clarification question</a>
   {% endif %}
 {% endblock %}
