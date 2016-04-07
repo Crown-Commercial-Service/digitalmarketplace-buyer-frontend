@@ -1,0 +1,105 @@
+{% extends "_base_page.html" %}
+
+{% block page_title %}Responses to {{ brief_data.title or brief_data.lotName }} – Digital Marketplace{% endblock %}
+
+{% block breadcrumb %}
+    {%
+        with items = [
+        {
+            "link": "/",
+            "label": "Digital Marketplace"
+        },
+        {
+            "link": "/buyers",
+            "label": "Your Requirements"
+        }
+        ]
+    %}
+        {% include "toolkit/breadcrumb.html" %}
+    {% endwith %}
+{% endblock %}
+
+{% set responses_count = response_counts['failed'] + response_counts['eligible'] %}
+
+{% block main_content %}
+<div class="grid-row">
+    <div class="column-two-thirds">
+        {% with
+        heading = ("Responses to &lsquo;" + brief_data.get('title', brief_data['lotName']) + "&rsquo;")|safe,
+        smaller = true
+        %}
+        {% include "toolkit/page-heading.html" %}
+        {% endwith %}
+    </div>
+</div>
+
+<div class="grid-row">
+    <div class="column-two-thirds">
+        <div class="marketplace-paragraph">
+          <p>
+          {% if responses_count ==  1 %}
+              {{ responses_count }} supplier responded to your requirements.
+              They did {% if response_counts['eligible'] == 0 %} not{% endif %} meet all your essential requirements.
+          {% else %}
+              {{ responses_count }} suppliers responded to your requirements.
+              Of these, {{ response_counts['eligible'] }} {{ pluralize(response_counts['eligible'], "meets", "meet") }} all your essential requirements.
+          {% endif %}
+
+          {% if response_counts['eligible'] > 0 %}
+            {% if response_counts['eligible'] == 1 %}
+              You now need to respond to this eligible supplier.
+            {% else %}
+              You now need to respond to these eligible suppliers.
+            {% endif %}
+              (Suppliers that did not meet all your essential requirements have already been told that they were unsuccessful.)
+          {% endif %}
+          </p>
+        </div>
+
+        {% if response_counts['eligible'] > 0 %}
+            {%
+            with
+            items = [
+                {
+                "body": "Download the file of responses from eligible suppliers:",
+                "documents": [
+                {
+                    "title": ("Supplier responses to &lsquo;" + brief_data.get('title', brief_data['lotName']) + "&rsquo;")|safe,
+                    "link": url_for('buyers.download_brief_responses', framework_slug=framework.slug, lot_slug=lot.slug, brief_id=brief_data.id),
+                    "file_type": "CSV",
+                    "download": "True"
+                }
+                ]
+                } if brief_data.get("status") == "closed"
+                  else { "body": "Download the file of responses from eligible suppliers (it will be available here once applications have closed)." },
+                {
+                "body": "Sort the eligible suppliers by availabilty, price and whatever other factors you specified in the brief.",
+                "extra": "The file is already sorted with suppliers with the most nice-to-haves at the top."
+                },
+                {
+                "body": "Pick your favourite that you're going to award the contract to"
+                },
+                {
+                "body": "Send emails to all the eligible suppliers",
+                "important": "You must respond to all suppliers listed to let them know if they were successful or not"
+                }
+            ]
+            %}
+                {% include "toolkit/instruction-list.html" %}
+            {% endwith %}
+        
+        {% else %}
+        
+        <div class="marketplace-paragraph">
+            <p>
+                You did not receive any eligible responses so you'll have to try again.
+            </p>
+            <p>
+                MASSIVE TODO: DON'T FORGET TO GET NEW COPY FOR THIS PART OF THE PAGE TOO.
+            </p>
+        </div>
+        
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -59,6 +59,39 @@ def add_unanswered_counts_to_briefs(briefs):
     return briefs
 
 
+def add_response_counts_to_briefs(briefs, data_api_client):
+    for brief in briefs:
+        responses = data_api_client.find_brief_responses(brief_id=brief['id'])["briefResponses"]
+        brief['responses_count'] = len(responses)
+
+    return briefs
+
+
 def clarification_questions_open(brief):
     # TODO: Implement this properly
     return True
+
+
+def counts_for_failed_and_eligible_brief_responses(brief_id, data_api_client):
+    brief_responses = data_api_client.find_brief_responses(brief_id)['briefResponses']
+    failed_count = 0
+    eligible_count = 0
+    for brief_response in brief_responses:
+        if all_essentials_are_true(brief_response):
+            eligible_count += 1
+        else:
+            failed_count += 1
+    return failed_count, eligible_count
+
+
+def all_essentials_are_true(brief_response):
+    return all(brief_response['essentialRequirements'])
+
+
+def get_sorted_responses_for_brief(brief_id, data_api_client):
+    brief_responses = data_api_client.find_brief_responses(brief_id)['briefResponses']
+    return sorted(
+        brief_responses,
+        key=lambda k: len([nice for nice in k['niceToHaveRequirements'] if nice is True]),
+        reverse=True
+    )
