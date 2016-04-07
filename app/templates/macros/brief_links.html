@@ -1,5 +1,5 @@
 {% macro brief_link_url(from, section, framework, lot, brief) %}
-  {% if section.questions|length > 1 %}
+  {% if section.has_summary_page %}
     {{ url_for('.view_brief_section_summary', framework_slug=framework.slug, lot_slug=lot.slug, brief_id=brief.id, section_slug=section.slug) }}
   {% else %}
     {% if from == 'grandparent' %}
