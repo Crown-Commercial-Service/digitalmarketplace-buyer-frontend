@@ -174,12 +174,7 @@ def update_brief_submission(framework_slug, lot_slug, brief_id, section_id, ques
             errors=errors
         ), 200
 
-    # seems particularly inelegant
-    if len(section.questions) == 1 and not section.description:
-        return redirect(
-            url_for(".view_brief_overview", framework_slug=framework_slug, lot_slug=lot_slug, brief_id=brief_id)
-        )
-    else:
+    if section.has_summary_page:
         return redirect(
             url_for(
                 ".view_brief_section_summary",
@@ -188,6 +183,10 @@ def update_brief_submission(framework_slug, lot_slug, brief_id, section_id, ques
                 brief_id=brief_id,
                 section_slug=section.slug)
         )
+
+    return redirect(
+        url_for(".view_brief_overview", framework_slug=framework_slug, lot_slug=lot_slug, brief_id=brief_id)
+    )
 
 
 @buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>', methods=['GET'])
