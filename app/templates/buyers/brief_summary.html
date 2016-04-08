@@ -66,15 +66,14 @@
   {% endif %}
 {% endblock %}
 
-
 {% block after_sections %}
   {% if not delete_requested %}
     <div class="grid-row">
 
       <div class="column-one-third">
-        {% if brief_data.status == 'draft' and can_publish and framework.status == 'live' %}
-          <div class="space-underneath">
-            {% include "buyers/_complete_brief.html" %}
+        {% if brief_data.status == 'draft' %}
+          <div class="padding-bottom-small">
+            <a href ="{{ url_for('buyers.publish_brief', framework_slug=framework.slug, lot_slug=lot.slug, brief_id=brief_data.id) }}">Publish brief</a>
           </div>
         {% endif %}
         {% if framework.status == 'live' and brief_data.status == 'draft' %}

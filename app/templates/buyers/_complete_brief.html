@@ -1,9 +1,0 @@
-<form action="#" method="POST">
-  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-  {% with type = "save", label = "Ready to publish" %}
-    {% include "toolkit/button.html" %}
-  {% endwith %}
-</form>
-<p class="last-edited ready-to-publish-hint">
-  You will have a chance to review everything before this is published.
-</p>

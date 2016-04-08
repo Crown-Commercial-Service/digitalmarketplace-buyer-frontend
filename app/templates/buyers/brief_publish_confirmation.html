@@ -1,0 +1,64 @@
+{% extends "_base_page.html" %}
+
+{% block page_title %}Your account - Digital Marketplace{% endblock %}
+
+{% block breadcrumb %}
+    {%
+        with items = [
+        {
+            "link": "/",
+            "label": "Digital Marketplace"
+        }
+        ]
+    %}
+    {% include "toolkit/breadcrumb.html" %}
+    {% endwith %}
+{% endblock %}
+
+{% block main_content %}
+
+<div class='grid-row'>
+  <div class='column-two-thirds large-paragraph'>
+    {% with
+        heading = "Publish your requirements and evaluation criteria",
+        smaller = True,
+        with_breadcrumb = True
+    %}
+        {% include "toolkit/page-heading.html" %}
+    {% endwith %}
+    <p class="dmspeak">All requirements are published on the Digital Marketplace where anyone can see them.</p>
+
+    <p><strong>Suppliers will be able to apply for:</strong></p>
+    <p class="dmspeak">2 weeks ending at midnight.</p>
+
+    <p><strong>Supplier questions will be sent to:</strong></p>
+    <p class="dmspeak">{{ email_address }}</p>
+    <p class="dmspeak">Ensure this email address will be monitored. If you’re away while suppliers can still ask questions, you should make sure your emails are forwarded to a colleague.</p>
+
+    {% if unanswered_required > 0 %}
+      <p class="dmspeak"><strong>You still need to complete the following questions before the brief can be published:</strong></p>
+      {% for section in flattened_brief %}
+      <ol>
+        <li>
+            {% if section.answer_required %}
+                <a href="{{ url_for('.edit_brief_submission', framework_slug=framework_slug, lot_slug=brief_data.lot, brief_id=brief_data.id, section_id=section.section_id) }}">{{ section.question }}</a>
+            {% endif %}
+        </li>
+      </ol>
+      {% endfor %}
+    {% else %}
+      <form action="{{ url_for('.publish_brief', framework_slug=framework_slug, lot_slug=lot_slug, brief_id=brief_id) }}" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+        {%
+        with
+        type = "save",
+        label = "Publish Requirements"
+        %}
+        {% include "toolkit/button.html" %}
+        {% endwith %}
+      </form>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}

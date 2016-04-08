@@ -8,9 +8,9 @@ from flask_login import current_user
 from app import data_api_client
 from .. import buyers, content_loader
 from ...helpers.buyers_helpers import (
-    add_unanswered_counts_to_briefs, all_essentials_are_true, brief_can_be_edited, count_unanswered_questions,
-    counts_for_failed_and_eligible_brief_responses, get_framework_and_lot, get_sorted_responses_for_brief,
-    is_brief_associated_with_user
+    all_essentials_are_true, counts_for_failed_and_eligible_brief_responses,
+    get_framework_and_lot, get_sorted_responses_for_brief, is_brief_associated_with_user, count_unanswered_questions,
+    brief_can_be_edited, add_unanswered_counts_to_briefs, get_flattened_brief
 )
 
 from dmapiclient import HTTPError
@@ -192,14 +192,9 @@ def view_brief_summary(framework_slug, lot_slug, brief_id):
         {'lot': lot['slug']}
     )
     sections = content.summary(brief)
+    flattened_brief = get_flattened_brief(sections)
     unanswered_required, unanswered_optional = count_unanswered_questions(sections)
     delete_requested = True if request.args.get('delete_requested') else False
-
-    flattened_brief = []
-    for section in sections:
-        for question in section.questions:
-            question.section_id = section.id
-            flattened_brief.append(question)
 
     brief['clarificationQuestions'] = [
         dict(question, number=index+1)
@@ -307,6 +302,46 @@ def download_brief_responses(framework_slug, lot_slug, brief_id):
             "Content-Type": "text/csv; header=present"
         }
     ), 200
+
+
+@buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/publish', methods=['GET', 'POST'])
+def publish_brief(framework_slug, lot_slug, brief_id):
+    framework, lot = get_framework_and_lot(framework_slug, lot_slug, data_api_client,
+                                           status='live', must_allow_brief=True)
+
+    brief = data_api_client.get_brief(brief_id)["briefs"]
+    if not is_brief_associated_with_user(brief, current_user.id):
+        abort(404)
+    brief_users = brief['users'][0]
+    brief_user_name = brief_users['name']
+
+    content = content_loader.get_manifest(framework_slug, 'edit_brief').filter(
+        {'lot': lot['slug']}
+    )
+    sections = content.summary(brief)
+
+    unanswered_required, unanswered_optional = count_unanswered_questions(sections)
+    if request.method == 'POST':
+        if (unanswered_required > 0):
+            abort(400, 'There are still unanswered required questions')
+        data_api_client.update_brief_status(brief_id, 'live', brief_user_name)
+        return redirect(
+            url_for('.view_brief_summary', framework_slug=framework_slug, lot_slug=lot_slug,
+                    brief_id=brief_id))
+    else:
+        flattened_brief = get_flattened_brief(sections)
+        email_address = brief_users['emailAddress']
+
+        return render_template(
+            "buyers/brief_publish_confirmation.html",
+            email_address=email_address,
+            unanswered_required=unanswered_required,
+            framework_slug=framework_slug,
+            flattened_brief=flattened_brief,
+            brief_data=brief,
+            lot_slug=lot_slug,
+            brief_id=brief_id
+        ), 200
 
 
 @buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/delete', methods=['POST'])
