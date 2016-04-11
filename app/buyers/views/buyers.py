@@ -419,8 +419,37 @@ def delete_a_brief(framework_slug, lot_slug, brief_id):
         )
 
 
-@buyers.route("/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/answer-question",
-              methods=["GET", "POST"])
+@buyers.route(
+    "/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/clarification-questions",
+    methods=["GET"])
+def clarification_questions(framework_slug, lot_slug, brief_id):
+
+    framework, lot = get_framework_and_lot(framework_slug, lot_slug, data_api_client,
+                                           status="live", must_allow_brief=True)
+
+    brief = data_api_client.get_brief(brief_id)["briefs"]
+    if not is_brief_associated_with_user(brief, current_user.id):
+        abort(404)
+
+    if brief["status"] != "live":
+        abort(404)
+
+    brief['clarificationQuestions'] = [
+        dict(question, number=index+1)
+        for index, question in enumerate(brief['clarificationQuestions'])
+    ]
+
+    return render_template(
+        "buyers/clarification_questions.html",
+        framework=framework,
+        lot=lot,
+        brief_data=brief,
+    )
+
+
+@buyers.route(
+    "/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/clarification-questions/answer-question",
+    methods=["GET", "POST"])
 def add_clarification_question(framework_slug, lot_slug, brief_id):
 
     framework, lot = get_framework_and_lot(framework_slug, lot_slug, data_api_client,
@@ -447,8 +476,8 @@ def add_clarification_question(framework_slug, lot_slug, brief_id):
                                                              current_user.email_address)
 
             return redirect(
-                url_for('.view_brief_overview', framework_slug=framework_slug, lot_slug=lot_slug,
-                        brief_id=brief_id) + "#clarification-questions")
+                url_for('.clarification_questions', framework_slug=framework_slug, lot_slug=lot_slug,
+                        brief_id=brief_id))
         except HTTPError as e:
             if e.status_code != 400:
                 raise
