@@ -50,6 +50,10 @@
                 {
                   'href': '/',
                   'text': 'How to manage supplier questions'
+                },
+                {
+                  'href': url_for(".clarification_questions",framework_slug=framework.slug, lot_slug=lot.slug, brief_id=brief_data.id),
+                  'text': 'Publish supplier questions and answers'
                 }
               ]
             },
@@ -131,35 +135,5 @@
       </ol>
     </div>
 
-    {% if brief_data.status == "live" %}
-    <div class="column-one-whole">
-      {% import "toolkit/summary-table.html" as summary %}
-
-      {{ summary.heading("Clarification questions", id="clarification-questions") }}
-      {% call(question) summary.list_table(
-        brief_data.clarificationQuestions,
-        field_headings=[
-          "Question",
-          "Answer"
-        ],
-        field_headings_visible=False,
-        empty_message="No clarification questions have been answered yet"
-      ) %}
-
-        {% call summary.row() %}
-          {% call summary.field(first=True, wide=False) -%}
-            <span aria-label="question">{{ question.number }}.</span>
-            {{ question.question }}
-          {%- endcall %}
-          {{ summary.text(question.answer) }}
-        {% endcall %}
-      {% endcall %}
-
-    </div>
-    {% endif %}
   </div>
-
-  {% if brief_data.status == "live" %}
-  <a href="{{ url_for(".add_clarification_question", framework_slug=framework.slug, lot_slug=lot.slug, brief_id=brief_data.id) }}">Answer a clarification question</a>
-  {% endif %}
 {% endblock %}
