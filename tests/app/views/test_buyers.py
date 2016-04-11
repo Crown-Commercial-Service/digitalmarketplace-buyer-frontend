@@ -5,6 +5,7 @@ from ...helpers import BaseApplicationTest
 from dmapiclient import api_stubs, HTTPError
 import mock
 from lxml import html
+import pytest
 
 
 @mock.patch('app.buyers.views.buyers.data_api_client')
@@ -40,6 +41,7 @@ class TestBuyerDashboard(BaseApplicationTest):
             assert live_row[0] == "A live brief"
             assert live_row[1] == "Thursday 04 February 2016"
 
+    @pytest.mark.skip(reason="no counts on dashboard until API response includes them")
     def test_closed_brief_response_count(self, data_api_client):
         with self.app.app_context():
             self.login_as_buyer()

@@ -59,14 +59,6 @@ def add_unanswered_counts_to_briefs(briefs):
     return briefs
 
 
-def add_response_counts_to_briefs(briefs, data_api_client):
-    for brief in briefs:
-        responses = data_api_client.find_brief_responses(brief_id=brief['id'])["briefResponses"]
-        brief['responses_count'] = len(responses)
-
-    return briefs
-
-
 def counts_for_failed_and_eligible_brief_responses(brief_id, data_api_client):
     brief_responses = data_api_client.find_brief_responses(brief_id)['briefResponses']
     failed_count = 0

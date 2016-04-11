@@ -8,9 +8,9 @@ from flask_login import current_user
 from app import data_api_client
 from .. import buyers, content_loader
 from ...helpers.buyers_helpers import (
-    add_response_counts_to_briefs, all_essentials_are_true, count_suppliers_on_lot,
-    counts_for_failed_and_eligible_brief_responses, get_framework_and_lot, get_sorted_responses_for_brief,
-    is_brief_associated_with_user, count_unanswered_questions, brief_can_be_edited, add_unanswered_counts_to_briefs
+    all_essentials_are_true, count_suppliers_on_lot, counts_for_failed_and_eligible_brief_responses,
+    get_framework_and_lot, get_sorted_responses_for_brief, is_brief_associated_with_user, count_unanswered_questions,
+    brief_can_be_edited, add_unanswered_counts_to_briefs
 )
 
 from dmapiclient import HTTPError
@@ -21,10 +21,7 @@ def buyer_dashboard():
     user_briefs = data_api_client.find_briefs(current_user.id).get('briefs', [])
     draft_briefs = add_unanswered_counts_to_briefs([brief for brief in user_briefs if brief['status'] == 'draft'])
     live_briefs = [brief for brief in user_briefs if brief['status'] == 'live']
-    closed_briefs = add_response_counts_to_briefs(
-        [brief for brief in user_briefs if brief['status'] == 'closed'],
-        data_api_client
-    )
+    closed_briefs = [brief for brief in user_briefs if brief['status'] == 'closed']
 
     return render_template(
         'buyers/dashboard.html',
