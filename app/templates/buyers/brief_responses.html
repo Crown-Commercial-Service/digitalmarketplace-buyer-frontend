@@ -12,6 +12,10 @@
         {
             "link": "/buyers",
             "label": "Your Requirements"
+        },
+        {
+            "link": url_for('buyers.view_brief_summary', framework_slug=framework.slug, lot_slug=lot.slug, brief_id=brief_data.id),
+            "label": brief_data.title
         }
         ]
     %}
@@ -62,10 +66,7 @@
             %}
                 {% include "toolkit/documents.html" %}
             {% endwith %}
-        
-        {% else %}
-        
-        <div class="marketplace-paragraph">
+            {% else %}
             <p>
                 You did not receive any eligible responses so you'll have to try again.
             </p>
@@ -73,8 +74,14 @@
                 MASSIVE TODO: DON'T FORGET TO GET NEW COPY FOR THIS PART OF THE PAGE TOO.
             </p>
         </div>
-        
         {% endif %}
+            {%
+                with
+                url = url_for('buyers.view_brief_summary', framework_slug=framework.slug, lot_slug=lot.slug, brief_id=brief_data.id),
+                text = "Back to overview"
+            %}
+        {% include "toolkit/secondary-action-link.html" %}
+        {% endwith %}
     </div>
 </div>
 {% endblock %}
