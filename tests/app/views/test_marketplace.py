@@ -335,6 +335,17 @@ class TestBriefPage(BaseApplicationTest):
         assert_equal(contract_length_key[0], 'Contract length')
         assert_equal(contract_length_value[0], '4 weeks')
 
+    def test_dos_brief_has_question_and_answer_session_details_link(self):
+        brief_id = self.brief['briefs']['id']
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
+
+        document = html.fromstring(res.get_data(as_text=True))
+        qa_session_link_text = document.xpath(
+            '//a[@href="/suppliers/opportunities/{}/question-and-answer-session"]/text()'.format(brief_id)
+        )[0].strip()
+
+        assert qa_session_link_text == "Log in to view question and answer session details"
+
     def test_dos_brief_has_questions_and_answers(self):
         brief_id = self.brief['briefs']['id']
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
