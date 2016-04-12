@@ -25,7 +25,7 @@
 <div class="grid-row">
     <div class="column-two-thirds">
         {% with
-        heading = ("Responses to &lsquo;" + brief_data.get('title', brief_data['lotName']) + "&rsquo;")|safe,
+        heading = ("Shortlist suppliers")|safe,
         smaller = true
         %}
         {% include "toolkit/page-heading.html" %}
@@ -35,57 +35,32 @@
 
 <div class="grid-row">
     <div class="column-two-thirds">
-        <div class="marketplace-paragraph">
-          <p>
+        <div class="dmspeak">
           {% if responses_count ==  1 %}
-              {{ responses_count }} supplier responded to your requirements.
-              They did {% if response_counts['eligible'] == 0 %} not{% endif %} meet all your essential requirements.
-          {% else %}
-              {{ responses_count }} suppliers responded to your requirements.
-              Of these, {{ response_counts['eligible'] }} {{ pluralize(response_counts['eligible'], "meets", "meet") }} all your essential requirements.
+            <p>
+                <span class='visual-emphasis'>{{ responses_count }} eligible {{ pluralize(response_counts['eligible'], "supplier", "suppliers") }}</span>
+                responded to your requirements and {{ pluralize(response_counts['eligible'], "meets", "meet") }} all your essential skills and experience.
+            </p>
+            <p>
+                Suppliers that did not meet all your essential requirements have already been told that they were unsuccessful.
+            </p>
           {% endif %}
-
           {% if response_counts['eligible'] > 0 %}
-            {% if response_counts['eligible'] == 1 %}
-              You now need to respond to this eligible supplier.
-            {% else %}
-              You now need to respond to these eligible suppliers.
-            {% endif %}
-              (Suppliers that did not meet all your essential requirements have already been told that they were unsuccessful.)
-          {% endif %}
-          </p>
-        </div>
-
-        {% if response_counts['eligible'] > 0 %}
+          <p>
+            Download and the list of suppliers responses and follow the guidance on <a href="https://www.gov.uk/guidance/how-to-shortlist-digital-outcomes-and-specialists-suppliers">how to shortlist suppliers</a>.
+          </p> 
             {%
             with
             items = [
                 {
-                "body": "Download the file of responses from eligible suppliers:",
-                "documents": [
-                {
-                    "title": ("Supplier responses to &lsquo;" + brief_data.get('title', brief_data['lotName']) + "&rsquo;")|safe,
+                    "title": ("Download supplier responses to &lsquo;" + brief_data.get('title', brief_data['lotName']) + "&rsquo;")|safe,
                     "link": url_for('buyers.download_brief_responses', framework_slug=framework.slug, lot_slug=lot.slug, brief_id=brief_data.id),
                     "file_type": "CSV",
                     "download": "True"
                 }
-                ]
-                } if brief_data.get("status") == "closed"
-                  else { "body": "Download the file of responses from eligible suppliers (it will be available here once applications have closed)." },
-                {
-                "body": "Sort the eligible suppliers by availabilty, price and whatever other factors you specified in the brief.",
-                "extra": "The file is already sorted with suppliers with the most nice-to-haves at the top."
-                },
-                {
-                "body": "Pick your favourite that you're going to award the contract to"
-                },
-                {
-                "body": "Send emails to all the eligible suppliers",
-                "important": "You must respond to all suppliers listed to let them know if they were successful or not"
-                }
             ]
             %}
-                {% include "toolkit/instruction-list.html" %}
+                {% include "toolkit/documents.html" %}
             {% endwith %}
         
         {% else %}
