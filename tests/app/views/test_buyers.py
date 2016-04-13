@@ -305,7 +305,7 @@ class TestEditBriefSubmission(BaseApplicationTest):
 
         res = self.client.get(
             "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists"
-            "/1/edit/description-of-work/organisation")
+            "/1234/edit/description-of-work/organisation")
 
         assert res.status_code == 200
         document = html.fromstring(res.get_data(as_text=True))
@@ -354,7 +354,7 @@ class TestEditBriefSubmission(BaseApplicationTest):
 
         res = self.client.get(
             "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists"
-            "/1/edit/description-of-work/organisation")
+            "/1234/edit/description-of-work/organisation")
 
         assert res.status_code == 404
 
@@ -370,7 +370,7 @@ class TestEditBriefSubmission(BaseApplicationTest):
 
         res = self.client.get(
             "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists"
-            "/1/edit/description-of-work/organisation")
+            "/1234/edit/description-of-work/organisation")
 
         assert res.status_code == 404
 
@@ -386,7 +386,7 @@ class TestEditBriefSubmission(BaseApplicationTest):
 
         res = self.client.get(
             "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-octopuses"
-            "/1/edit/description-of-work/organisation")
+            "/1234/edit/description-of-work/organisation")
 
         assert res.status_code == 404
 
@@ -402,7 +402,7 @@ class TestEditBriefSubmission(BaseApplicationTest):
 
         res = self.client.get(
             "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists"
-            "/1/edit/description-of-work/organisation")
+            "/1234/edit/description-of-work/organisation")
 
         assert res.status_code == 404
 
@@ -419,7 +419,7 @@ class TestEditBriefSubmission(BaseApplicationTest):
 
         res = self.client.get(
             "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists"
-            "/1/edit/description-of-work/organisation")
+            "/1234/edit/description-of-work/organisation")
 
         assert res.status_code == 404
 
@@ -436,7 +436,7 @@ class TestEditBriefSubmission(BaseApplicationTest):
 
         res = self.client.get(
             "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists"
-            "/1/not-a-real-section")
+            "/1234/not-a-real-section")
 
         assert res.status_code == 404
 
@@ -453,7 +453,7 @@ class TestEditBriefSubmission(BaseApplicationTest):
 
         res = self.client.get(
             "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists"
-            "/1/edit/description-of-work/not-a-real-question")
+            "/1234/edit/description-of-work/not-a-real-question")
 
         assert res.status_code == 404
 
@@ -951,7 +951,7 @@ class TestBriefSummaryPage(BaseApplicationTest):
             data_api_client.get_brief.return_value = brief_json
 
             res = self.client.get(
-                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1"
+                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234"
             )
 
             assert res.status_code == 200
@@ -980,7 +980,7 @@ class TestBriefSummaryPage(BaseApplicationTest):
             data_api_client.get_brief.return_value = brief_json
 
             res = self.client.get(
-                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1"
+                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234"
             )
 
             assert res.status_code == 200
@@ -1008,7 +1008,7 @@ class TestBriefSummaryPage(BaseApplicationTest):
             data_api_client.get_brief.return_value = brief_json
 
             res = self.client.get(
-                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1/clarification-questions"  # noqa
+                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/clarification-questions"  # noqa
             )
 
             assert res.status_code == 200
@@ -1037,7 +1037,7 @@ class TestBriefSummaryPage(BaseApplicationTest):
             data_api_client.get_brief.return_value = brief_json
 
             res = self.client.get(
-                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1/clarification-questions"  # noqa
+                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/clarification-questions"  # noqa
             )
 
             assert res.status_code == 200
@@ -1061,7 +1061,7 @@ class TestBriefSummaryPage(BaseApplicationTest):
             data_api_client.get_brief.return_value = api_stubs.brief()
 
             res = self.client.get(
-                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1"
+                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234"
             )
 
             assert res.status_code == 404
@@ -1079,7 +1079,7 @@ class TestBriefSummaryPage(BaseApplicationTest):
             data_api_client.get_brief.return_value = api_stubs.brief(user_id=234)
 
             res = self.client.get(
-                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1"
+                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234"
             )
 
             assert res.status_code == 404
@@ -1102,7 +1102,7 @@ class TestBriefSummaryPage(BaseApplicationTest):
             content_loader.get_manifest.return_value = content_fixture.get_manifest('dos', 'edit_brief')
 
             res = self.client.get(
-                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1"
+                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234"
             )
 
             assert res.status_code == 200
@@ -1392,7 +1392,7 @@ class TestViewBriefResponsesPage(BaseApplicationTest):
 
         self.login_as_buyer()
         res = self.client.get(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1/responses"
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1234/responses"
         )
         page = res.get_data(as_text=True)
 
@@ -1412,7 +1412,7 @@ class TestViewBriefResponsesPage(BaseApplicationTest):
 
         self.login_as_buyer()
         res = self.client.get(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1/responses"
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1234/responses"
         )
         document = html.fromstring(res.get_data(as_text=True))
         csv_link = document.xpath(
@@ -1436,7 +1436,7 @@ class TestViewBriefResponsesPage(BaseApplicationTest):
 
         self.login_as_buyer()
         res = self.client.get(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1/responses"
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1234/responses"
         )
         page = res.get_data(as_text=True)
         document = html.fromstring(page)
@@ -1460,7 +1460,7 @@ class TestViewBriefResponsesPage(BaseApplicationTest):
 
         self.login_as_buyer()
         res = self.client.get(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1/responses"
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1234/responses"
         )
 
         assert res.status_code == 404
@@ -1477,7 +1477,7 @@ class TestViewBriefResponsesPage(BaseApplicationTest):
 
         self.login_as_buyer()
         res = self.client.get(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1/responses"
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1234/responses"
         )
 
         assert res.status_code == 404
