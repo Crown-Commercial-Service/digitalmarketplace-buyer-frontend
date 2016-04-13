@@ -61,7 +61,7 @@
           {% if question.answer_required or question.is_empty %}
             {% if brief_data.get('status') == 'draft' %}
               {% call summary.field() %}
-                <a href="{{ url_for('buyers.edit_brief_question', framework_slug=framework.slug, lot_slug=brief_data.lot, brief_id=brief_data.id, section_slug=section.slug, question_id=question.id) }}">{{ question.empty_message or "Not answered" }}</a>
+                <a href="{{ url_for('buyers.edit_brief_question', framework_slug=framework.slug, lot_slug=lot.slug, brief_id=brief_data.id, section_slug=section.slug, question_id=question.id) }}">{{ question.empty_message or "Not answered" }}</a>
               {% endcall %}
             {% else %}
               {{ summary.text("Not answered") }}
@@ -76,7 +76,7 @@
                 Optional
               {% endcall %}
             {% elif not question.answer_required %}
-              {{ summary.edit_link("Edit", url_for("buyers.edit_brief_question", framework_slug=framework.slug, lot_slug=brief_data.lot, brief_id=brief_data.id, section_slug=section.slug, question_id=question.id)) }}
+              {{ summary.edit_link("Edit", url_for("buyers.edit_brief_question", framework_slug=framework.slug, lot_slug=lot.slug, brief_id=brief_data.id, section_slug=section.slug, question_id=question.id)) }}
             {% else %}
               {% call summary.field() %}{% endcall %}
             {% endif %}

@@ -1,0 +1,9 @@
+name: Required 3
+depends:
+  - "on": "lot"
+    being: ['digital-specialists']
+type: multiquestion
+question: 'Required 3'
+questions:
+  - required3_1
+  - required3_2
