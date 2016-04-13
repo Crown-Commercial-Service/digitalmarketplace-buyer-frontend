@@ -587,6 +587,126 @@ class TestStartBriefInfoPage(BaseApplicationTest):
 
 
 @mock.patch('app.buyers.views.buyers.data_api_client')
+class TestPublishBrief(BaseApplicationTest):
+    def test_publish_brief(self, data_api_client):
+        self.login_as_buyer()
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='live',
+            lots=[
+                api_stubs.lot(slug='digital-specialists', allows_brief=True)
+            ]
+        )
+
+        brief_json = api_stubs.brief(status="draft")
+        brief_questions = brief_json['briefs']
+        brief_questions['specialistRole'] = 'communicationsManager'
+        brief_questions['location'] = 'somewhere'
+        brief_questions['organisation'] = 'test organisation'
+        brief_questions['backgroundInformation'] = 'test background info'
+        brief_questions['startDate'] = 'startDate'
+        brief_questions['contractLength'] = 'A very long time'
+        brief_questions['importantDates'] = 'Near future'
+        brief_questions['essentialRequirements'] = 'Everything'
+        brief_questions['evaluationType'] = 'test evaluation type'
+        data_api_client.get_brief.return_value = brief_json
+
+        res = self.client.post("/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
+                               "digital-specialists/1234/publish")
+        assert res.status_code == 302
+        assert data_api_client.update_brief_status.called
+        assert res.location == "http://localhost/buyers/frameworks/digital-outcomes-and-specialists/" \
+                               "requirements/digital-specialists/1234"
+
+    def test_publish_brief_with_unanswered_required_questions(self, data_api_client):
+        self.login_as_buyer()
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='live',
+            lots=[
+                api_stubs.lot(slug='digital-specialists', allows_brief=True)
+            ]
+        )
+
+        data_api_client.get_brief.return_value = api_stubs.brief(status="draft")
+
+        res = self.client.post("/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
+                               "digital-specialists/1234/publish")
+        assert res.status_code == 400
+        assert not data_api_client.update_brief_status.called
+
+    def test_404_if_brief_does_not_belong_to_user(self, data_api_client):
+        self.login_as_buyer()
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='live',
+            lots=[
+                api_stubs.lot(slug='digital-specialists', allows_brief=True)
+            ]
+        )
+        data_api_client.get_brief.return_value = api_stubs.brief(user_id=234)
+
+        res = self.client.post(
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
+            "digital-specialists/1234/edit/your-organisation",
+            data={
+                "organisation": "GDS"
+            })
+
+        assert res.status_code == 404
+        assert not data_api_client.update_brief.called
+
+    def test_publish_button_available_if_questions_answered(self, data_api_client):
+        self.login_as_buyer()
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='live',
+            lots=[
+                api_stubs.lot(slug='digital-specialists', allows_brief=True)
+            ]
+        )
+
+        brief_json = api_stubs.brief(status="draft")
+        brief_questions = brief_json['briefs']
+        brief_questions['specialistRole'] = 'communicationsManager'
+        brief_questions['location'] = 'somewhere'
+        brief_questions['organisation'] = 'test organisation'
+        brief_questions['backgroundInformation'] = 'test background info'
+        brief_questions['startDate'] = 'startDate'
+        brief_questions['contractLength'] = 'A very long time'
+        brief_questions['importantDates'] = 'Near future'
+        brief_questions['essentialRequirements'] = 'Everything'
+        brief_questions['evaluationType'] = 'test evaluation type'
+        data_api_client.get_brief.return_value = brief_json
+
+        res = self.client.get("/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
+                              "digital-specialists/1234/publish")
+        page_html = res.get_data(as_text=True)
+
+        assert res.status_code == 200
+        assert 'Publish Requirements' in page_html
+
+    def test_publish_button_unavailable_if_questions_not_answered(self, data_api_client):
+        self.login_as_buyer()
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='live',
+            lots=[
+                api_stubs.lot(slug='digital-specialists', allows_brief=True)
+            ]
+        )
+
+        data_api_client.get_brief.return_value = api_stubs.brief(status="draft")
+
+        res = self.client.get("/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
+                              "digital-specialists/1234/publish")
+        page_html = res.get_data(as_text=True)
+
+        assert res.status_code == 200
+        assert 'Publish Requirements' not in page_html
+
+
+@mock.patch('app.buyers.views.buyers.data_api_client')
 class TestDeleteBriefSubmission(BaseApplicationTest):
     def test_delete_brief_submission_click_delete_button(self, data_api_client):
         self.login_as_buyer()

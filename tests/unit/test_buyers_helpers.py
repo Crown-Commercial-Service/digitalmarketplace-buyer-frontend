@@ -163,3 +163,14 @@ class TestBuyersHelpers(unittest.TestCase):
             {"id": "one", "niceToHaveRequirements": [False, False, False, True, False]},
             {'id': 'zero', 'niceToHaveRequirements': [False, False, False, False, False]}
         ]
+
+    def test_get_flattened_brief(self):
+        data_api_client = mock.Mock()
+        brief = data_api_client.api_stubs.brief(status="draft")
+        content = content_loader.get_manifest('dos', 'edit_brief').filter(
+            {'lot': 'digital-specialists'}
+        )
+        sections = content.summary(brief)
+        flattened_brief = helpers.buyers_helpers.get_flattened_brief(sections)
+
+        assert flattened_brief[0].id == 'required1'
