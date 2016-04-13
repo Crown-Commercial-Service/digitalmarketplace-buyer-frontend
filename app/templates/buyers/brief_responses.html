@@ -42,16 +42,16 @@
         <div class="dmspeak">
           {% if responses_count ==  1 %}
             <p>
-                <span class='visual-emphasis'>{{ responses_count }} eligible {{ pluralize(response_counts['eligible'], "supplier", "suppliers") }}</span>
+                <span class='visual-emphasis'>{{ responses_count }} {{ pluralize(response_counts['eligible'], "supplier", "suppliers") }}</span>
                 responded to your requirements and {{ pluralize(response_counts['eligible'], "meets", "meet") }} all your essential skills and experience.
             </p>
             <p>
-                Suppliers that did not meet all your essential requirements have already been told that they were unsuccessful.
+                Suppliers that did not meet all your essential requirements have already been told they were unsuccessful.
             </p>
           {% endif %}
           {% if response_counts['eligible'] > 0 %}
           <p>
-            Download and the list of suppliers responses and follow the guidance on <a href="https://www.gov.uk/guidance/how-to-shortlist-digital-outcomes-and-specialists-suppliers">how to shortlist suppliers</a>.
+            Download the list of supplier responses and follow the guidance on <a href="https://www.gov.uk/guidance/how-to-shortlist-digital-outcomes-and-specialists-suppliers">how to shortlist</a>.
           </p> 
             {%
             with
@@ -68,11 +68,17 @@
             {% endwith %}
             {% else %}
             <p>
-                You did not receive any eligible responses so you'll have to try again.
+                No suppliers met your requirements.
             </p>
-            <p>
-                MASSIVE TODO: DON'T FORGET TO GET NEW COPY FOR THIS PART OF THE PAGE TOO.
-            </p>
+            <div class='explanation-list'>
+                <p class='lead'>
+                   If you still need this service, start the buying process again. You should consider: 
+                </p>
+                <ul class='list-bullet'>
+                    <li>talking to suppliers before you start</li>
+                    <li>rewriting your requirements</li>
+                </ul>
+            </div>
         </div>
         {% endif %}
             {%
