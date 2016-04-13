@@ -8,9 +8,9 @@ from flask_login import current_user
 from app import data_api_client
 from .. import buyers, content_loader
 from ...helpers.buyers_helpers import (
-    all_essentials_are_true, count_suppliers_on_lot, counts_for_failed_and_eligible_brief_responses,
-    get_framework_and_lot, get_sorted_responses_for_brief, is_brief_associated_with_user, count_unanswered_questions,
-    brief_can_be_edited, add_unanswered_counts_to_briefs
+    add_unanswered_counts_to_briefs, all_essentials_are_true, brief_can_be_edited, count_unanswered_questions,
+    counts_for_failed_and_eligible_brief_responses, get_framework_and_lot, get_sorted_responses_for_brief,
+    is_brief_associated_with_user
 )
 
 from dmapiclient import HTTPError
@@ -40,8 +40,7 @@ def info_page_for_starting_a_brief(framework_slug, lot_slug):
     return render_template(
         "buyers/start_brief_info.html",
         framework=framework,
-        lot=lot,
-        supplier_count=count_suppliers_on_lot(framework, lot)
+        lot=lot
     ), 200
 
 
