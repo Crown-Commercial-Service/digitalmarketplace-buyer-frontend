@@ -1,13 +1,18 @@
 -
   name: Section 1
+  step: 1
   questions:
     - required1
     - optional1
 -
   name: Section 2
+  step: 1
   questions:
     - required2
 -
   name: Section 4
+  step: 2
+  description: |
+    This is a description of section 4
   questions:
     - optional2
