@@ -26,17 +26,17 @@
     %}
         {% include "toolkit/page-heading.html" %}
     {% endwith %}
-    <p class="dmspeak">All requirements are published on the Digital Marketplace where anyone can see them.</p>
+    <p class="padding-bottom-small">All requirements are published on the Digital Marketplace where anyone can see them.</p>
 
     <p><strong>Suppliers will be able to apply for:</strong></p>
-    <p class="dmspeak">2 weeks ending at midnight.</p>
+    <p class="padding-bottom-small">2 weeks ending at midnight.</p>
 
     <p><strong>Supplier questions will be sent to:</strong></p>
-    <p class="dmspeak">{{ email_address }}</p>
-    <p class="dmspeak">Ensure this email address will be monitored. If you’re away while suppliers can still ask questions, you should make sure your emails are forwarded to a colleague.</p>
+    <p class="padding-bottom-small">{{ email_address }}</p>
+    <p class="padding-bottom-small">Ensure this email address will be monitored. If you’re away while suppliers can still ask questions, you should make sure your emails are forwarded to a colleague.</p>
 
     {% if unanswered_required > 0 %}
-      <p class="dmspeak"><strong>You still need to complete the following questions before the brief can be published:</strong></p>
+      <p class="padding-bottom-small"><strong>You still need to complete the following questions before the brief can be published:</strong></p>
       {% for section in flattened_brief %}
       <ol>
         <li>
