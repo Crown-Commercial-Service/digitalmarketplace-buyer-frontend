@@ -312,6 +312,91 @@ class TestEditBriefSubmission(BaseApplicationTest):
         assert document.xpath('//h1')[0].text_content().strip() == "Your organisation"
 
     @mock.patch("app.buyers.views.buyers.content_loader")
+    def test_edit_brief_submission_return_link_to_section_summary_if_section_has_description(
+            self, content_loader, data_api_client
+    ):
+        self.login_as_buyer()
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='live',
+            lots=[
+                api_stubs.lot(slug='digital-specialists', allows_brief=True)
+            ]
+        )
+        data_api_client.get_brief.return_value = api_stubs.brief()
+
+        content_fixture = ContentLoader('tests/fixtures/content')
+        content_fixture.load_manifest('dos', 'data', 'edit_brief')
+        content_loader.get_manifest.return_value = content_fixture.get_manifest('dos', 'edit_brief')
+
+        res = self.client.get(
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists"
+            "/1234/edit/section-4/optional2")
+
+        assert res.status_code == 200
+        document = html.fromstring(res.get_data(as_text=True))
+        assert document.xpath('//h1')[0].text_content().strip() == "Optional 2"
+        document.xpath(
+            '//form//div[contains(@class, "secondary-action-link")]/a'
+        )[0].get('url') == "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/section-4"  # noqa
+
+    @mock.patch("app.buyers.views.buyers.content_loader")
+    def test_edit_brief_submission_return_link_to_section_summary_if_other_questions(self, content_loader,
+    data_api_client):  # noqa
+        self.login_as_buyer()
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='live',
+            lots=[
+                api_stubs.lot(slug='digital-specialists', allows_brief=True)
+            ]
+        )
+        data_api_client.get_brief.return_value = api_stubs.brief()
+
+        content_fixture = ContentLoader('tests/fixtures/content')
+        content_fixture.load_manifest('dos', 'data', 'edit_brief')
+        content_loader.get_manifest.return_value = content_fixture.get_manifest('dos', 'edit_brief')
+
+        res = self.client.get(
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists"
+            "/1234/edit/section-1/required1")
+
+        assert res.status_code == 200
+        document = html.fromstring(res.get_data(as_text=True))
+        assert document.xpath('//h1')[0].text_content().strip() == "Required 1"
+        document.xpath(
+            '//form//div[contains(@class, "secondary-action-link")]/a'
+        )[0].get('url') == "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/section-1"  # noqa
+
+    @mock.patch("app.buyers.views.buyers.content_loader")
+    def test_edit_brief_submission_return_link_to_brief_overview_if_single_question(self, content_loader,
+    data_api_client):  # noqa
+        self.login_as_buyer()
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='live',
+            lots=[
+                api_stubs.lot(slug='digital-specialists', allows_brief=True)
+            ]
+        )
+        data_api_client.get_brief.return_value = api_stubs.brief()
+
+        content_fixture = ContentLoader('tests/fixtures/content')
+        content_fixture.load_manifest('dos', 'data', 'edit_brief')
+        content_loader.get_manifest.return_value = content_fixture.get_manifest('dos', 'edit_brief')
+
+        res = self.client.get(
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists"
+            "/1234/edit/section-2/required2")
+
+        assert res.status_code == 200
+        document = html.fromstring(res.get_data(as_text=True))
+        assert document.xpath('//h1')[0].text_content().strip() == "Required 2"
+        document.xpath(
+            '//form//div[contains(@class, "secondary-action-link")]/a'
+        )[0].get('url') == "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/section-2"  # noqa
+
+    @mock.patch("app.buyers.views.buyers.content_loader")
     def test_edit_brief_submission_multiquestion(self, content_loader, data_api_client):
         self.login_as_buyer()
         data_api_client.get_framework.return_value = api_stubs.framework(
