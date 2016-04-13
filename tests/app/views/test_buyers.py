@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 from ...helpers import BaseApplicationTest
 from dmapiclient import api_stubs, HTTPError
+from dmutils.content_loader import ContentLoader
 import mock
 from lxml import html
 import pytest
@@ -950,6 +951,46 @@ class TestBriefSummaryPage(BaseApplicationTest):
             )
 
             assert res.status_code == 404
+
+    @mock.patch("app.buyers.views.buyers.content_loader")
+    def test_links_to_sections_go_to_the_correct_pages_whether_they_be_sections_or_questions(self, content_loader, data_api_client):  # noqa
+        with self.app.app_context():
+            self.login_as_buyer()
+            data_api_client.get_framework.return_value = api_stubs.framework(
+                slug='digital-outcomes-and-specialists',
+                status='live',
+                lots=[
+                    api_stubs.lot(slug='digital-specialists', allows_brief=True),
+                ]
+            )
+            data_api_client.get_brief.return_value = api_stubs.brief()
+
+            content_fixture = ContentLoader('tests/fixtures/content')
+            content_fixture.load_manifest('dos', 'data', 'edit_brief')
+            content_loader.get_manifest.return_value = content_fixture.get_manifest('dos', 'edit_brief')
+
+            res = self.client.get(
+                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1"
+            )
+
+            assert res.status_code == 200
+
+            document = html.fromstring(res.get_data(as_text=True))
+            section_steps = document.xpath(
+                '//*[@id="content"]/div/div/ol[contains(@class, "instruction-list")]')
+            section_1_link = section_steps[0].xpath('li//a[contains(text(), "section 1")]')
+            section_2_link = section_steps[0].xpath('li//a[contains(text(), "section 2")]')
+            section_4_link = section_steps[0].xpath('li//a[contains(text(), "section 4")]')
+
+            # section with multiple questions
+            assert section_1_link[0].get('href').strip() == \
+                '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/section-1'
+            # section with single question
+            assert section_2_link[0].get('href').strip() == \
+                '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/edit/section-2/required2'  # noqa
+            # section with single question and a description
+            assert section_4_link[0].get('href').strip() == \
+                '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/section-4'
 
 
 @mock.patch("app.buyers.views.buyers.data_api_client")
