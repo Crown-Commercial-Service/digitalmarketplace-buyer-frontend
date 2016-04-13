@@ -1,7 +1,5 @@
 from flask import abort
 
-from ..buyers import content_loader
-
 
 def get_framework_and_lot(framework_slug, lot_slug, data_api_client, status=None, must_allow_brief=False):
     framework = data_api_client.get_framework(framework_slug)['frameworks']
@@ -48,7 +46,7 @@ def count_unanswered_questions(brief_attributes):
     return unanswered_required, unanswered_optional
 
 
-def add_unanswered_counts_to_briefs(briefs):
+def add_unanswered_counts_to_briefs(briefs, content_loader):
     for brief in briefs:
         content = content_loader.get_manifest(brief.get('frameworkSlug'), 'edit_brief').filter(
             {'lot': brief.get('lotSlug')}

@@ -536,7 +536,7 @@ class TestUpdateBriefSubmission(BaseApplicationTest):
         assert not data_api_client.update_brief.called
 
 
-@mock.patch('app.buyers.views.buyers.data_api_client')
+@mock.patch('app.main.views.digital_outcomes_and_specialists.data_api_client')
 class TestStartBriefInfoPage(BaseApplicationTest):
     def test_show_start_brief_info_page(self, data_api_client):
         with self.app.app_context():
