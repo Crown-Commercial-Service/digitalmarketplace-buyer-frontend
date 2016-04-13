@@ -1,3 +1,4 @@
+name: 'Optional 2'
 depends:
   - "on": "lot"
     being: ['digital-specialists']
