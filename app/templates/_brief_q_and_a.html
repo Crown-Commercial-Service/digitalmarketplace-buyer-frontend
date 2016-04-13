@@ -1,6 +1,6 @@
 {% import "toolkit/summary-table.html" as summary %}
 
-{% if not brief.clarificationQuestionsAreClosed %}
+{% if (not brief.clarificationQuestionsAreClosed) and brief.questionAndAnswerSessionDetails %}
   {{ summary.heading("Question and answer session", id="question-and-answer-session") }}
   <a href="/suppliers/opportunities/{{ brief.id }}/question-and-answer-session">
     {% if current_user.is_authenticated() and current_user.role == 'supplier' %}
