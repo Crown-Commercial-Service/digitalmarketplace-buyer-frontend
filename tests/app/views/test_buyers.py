@@ -311,6 +311,36 @@ class TestEditBriefSubmission(BaseApplicationTest):
         document = html.fromstring(res.get_data(as_text=True))
         assert document.xpath('//h1')[0].text_content().strip() == "Your organisation"
 
+    @mock.patch("app.buyers.views.buyers.content_loader")
+    def test_edit_brief_submission_multiquestion(self, content_loader, data_api_client):
+        self.login_as_buyer()
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='live',
+            lots=[
+                api_stubs.lot(slug='digital-specialists', allows_brief=True),
+            ]
+        )
+        data_api_client.get_brief.return_value = api_stubs.brief()
+
+        content_fixture = ContentLoader('tests/fixtures/content')
+        content_fixture.load_manifest('dos', 'data', 'edit_brief')
+        content_loader.get_manifest.return_value = content_fixture.get_manifest('dos', 'edit_brief')
+
+        res = self.client.get(
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/edit/section-5/required3")  # noqa
+
+        assert res.status_code == 200
+
+        document = html.fromstring(res.get_data(as_text=True))
+        assert document.xpath('//h1')[0].text_content().strip() == "Required 3"
+        assert document.xpath(
+            '//*[@id="required3_1"]//span[contains(@class, "question-heading")]/p'
+        )[0].text_content().strip() == "Required 3_1"
+        assert document.xpath(
+            '//*[@id="required3_2"]//span[contains(@class, "question-heading")]/p'
+        )[0].text_content().strip() == "Required 3_2"
+
     def test_404_if_brief_does_not_belong_to_user(self, data_api_client):
         self.login_as_buyer()
         data_api_client.get_framework.return_value = api_stubs.framework(

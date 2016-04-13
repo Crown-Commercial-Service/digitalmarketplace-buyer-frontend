@@ -1,0 +1,10 @@
+depends:
+  - "on": "lot"
+    being: ['digital-specialists']
+type: boolean
+filterLabel: 'Required 3_1'
+validations:
+  -
+    name: answer_required
+    message: 'This question requires an answer.'
+question: 'Required 3_1'
