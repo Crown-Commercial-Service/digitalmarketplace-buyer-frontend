@@ -486,6 +486,108 @@ class TestUpdateBriefSubmission(BaseApplicationTest):
             updated_by='buyer@email.com'
         )
 
+    @mock.patch("app.buyers.views.buyers.content_loader")
+    def test_post_update_if_multiple_questions_redirects_to_section_summary(self, content_loader, data_api_client):
+        self.login_as_buyer()
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='live',
+            lots=[
+                api_stubs.lot(slug='digital-specialists', allows_brief=True),
+            ]
+        )
+        data_api_client.get_brief.return_value = api_stubs.brief()
+
+        content_fixture = ContentLoader('tests/fixtures/content')
+        content_fixture.load_manifest('dos', 'data', 'edit_brief')
+        content_loader.get_manifest.return_value = content_fixture.get_manifest('dos', 'edit_brief')
+
+        res = self.client.post(
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
+            "digital-specialists/1234/edit/section-1/required1",
+            data={
+                "required1": True
+            })
+
+        assert res.status_code == 302
+        data_api_client.update_brief.assert_called_with(
+            '1234',
+            {"required1": True},
+            page_questions=['required1'],
+            updated_by='buyer@email.com'
+        )
+        assert res.headers['Location'].endswith(
+            'buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/section-1'
+        ) is True
+
+    @mock.patch("app.buyers.views.buyers.content_loader")
+    def test_post_update_if_section_description_redirects_to_section_summary(self, content_loader, data_api_client):
+        self.login_as_buyer()
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='live',
+            lots=[
+                api_stubs.lot(slug='digital-specialists', allows_brief=True),
+            ]
+        )
+        data_api_client.get_brief.return_value = api_stubs.brief()
+
+        content_fixture = ContentLoader('tests/fixtures/content')
+        content_fixture.load_manifest('dos', 'data', 'edit_brief')
+        content_loader.get_manifest.return_value = content_fixture.get_manifest('dos', 'edit_brief')
+
+        res = self.client.post(
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
+            "digital-specialists/1234/edit/section-4/optional2",
+            data={
+                "optional2": True
+            })
+
+        assert res.status_code == 302
+        data_api_client.update_brief.assert_called_with(
+            '1234',
+            {"optional2": True},
+            page_questions=['optional2'],
+            updated_by='buyer@email.com'
+        )
+        assert res.headers['Location'].endswith(
+            'buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/section-4'
+        ) is True
+
+    @mock.patch("app.buyers.views.buyers.content_loader")
+    def test_post_update_if_single_question_no_description_redirects_to_overview(self, content_loader, data_api_client):
+        self.login_as_buyer()
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='live',
+            lots=[
+                api_stubs.lot(slug='digital-specialists', allows_brief=True),
+            ]
+        )
+        data_api_client.get_brief.return_value = api_stubs.brief()
+
+        content_fixture = ContentLoader('tests/fixtures/content')
+        content_fixture.load_manifest('dos', 'data', 'edit_brief')
+        content_loader.get_manifest.return_value = content_fixture.get_manifest('dos', 'edit_brief')
+
+        res = self.client.post(
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
+            "digital-specialists/1234/edit/section-2/required2",
+            data={
+                "required2": True
+            })
+
+        assert res.status_code == 302
+        data_api_client.update_brief.assert_called_with(
+            '1234',
+            {"required2": True},
+            page_questions=['required2'],
+            updated_by='buyer@email.com'
+        )
+        assert res.headers['Location'].endswith(
+            'buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234'
+        ) is True
+
     def test_404_if_brief_does_not_belong_to_user(self, data_api_client):
         self.login_as_buyer()
         data_api_client.get_framework.return_value = api_stubs.framework(
