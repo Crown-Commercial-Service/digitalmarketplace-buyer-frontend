@@ -10,11 +10,11 @@
         "label": "Digital Marketplace"
       },
       {
-        "link": url_for(".view_brief_overview", framework_slug=brief_data.frameworkSlug, lot_slug=brief_data.lotSlug, brief_id=brief_data.id),
-        "label": brief_data.title
+        "link": url_for(".view_brief_overview", framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id),
+        "label": brief.title
       },
       {
-        "link": url_for(".view_brief_section_summary", framework_slug=brief_data.frameworkSlug, lot_slug=brief_data.lotSlug, brief_id=brief_data.id, section_slug=section.slug),
+        "link": url_for(".view_brief_section_summary", framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id, section_slug=section.slug),
         "label": section.name
       }
     ]
@@ -36,7 +36,7 @@
 
   {%
     with
-    url = brief_links.brief_link_url('child', section, brief_data) ,
+    url = brief_links.brief_link_url('child', section, brief) ,
     text = "Return to {}".format('overview' if section.questions|length == 1 else section.name|lower)
   %}
     {% include "toolkit/secondary-action-link.html" %}

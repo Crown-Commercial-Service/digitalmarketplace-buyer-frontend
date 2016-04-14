@@ -10,8 +10,8 @@
         "label": "Digital Marketplace"
       },
       {
-        "link": url_for(".view_brief_overview", framework_slug=brief_data.frameworkSlug, lot_slug=brief_data.lotSlug, brief_id=brief_data.id),
-        "label": brief_data.title
+        "link": url_for(".view_brief_overview", framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id),
+        "label": brief.title
       }
     ]
   %}
@@ -27,7 +27,7 @@
       {% with
         heading = "Clarification questions",
         smaller = true,
-        context = brief_data.get('title', brief_data['lotName'])
+        context = brief.get('title', brief['lotName'])
       %}
         {% include "toolkit/page-heading.html" %}
       {% endwith %}
@@ -39,7 +39,7 @@
 
       {{ summary.heading("Clarification questions", id="clarification-questions") }}
       {% call(question) summary.list_table(
-        brief_data.clarificationQuestions,
+        brief.clarificationQuestions,
         field_headings=[
           "Question",
           "Answer"
@@ -60,11 +60,11 @@
     </div>
   </div>
 
-  <a href="{{ url_for(".add_clarification_question", framework_slug=brief_data.frameworkSlug, lot_slug=brief_data.lotSlug, brief_id=brief_data.id) }}">Answer a clarification question</a>
+  <a href="{{ url_for(".add_clarification_question", framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id) }}">Answer a clarification question</a>
 
   {%
     with
-    url = url_for(".view_brief_overview", framework_slug=brief_data.frameworkSlug, lot_slug=brief_data.lotSlug, brief_id=brief_data.id),
+    url = url_for(".view_brief_overview", framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id),
     text = "Return to overview"
   %}
     {% include "toolkit/secondary-action-link.html" %}

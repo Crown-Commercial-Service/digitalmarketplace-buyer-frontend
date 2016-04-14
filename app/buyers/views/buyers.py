@@ -46,7 +46,7 @@ def start_new_brief(framework_slug, lot_slug):
 
     return render_template(
         "buyers/create_brief_question.html",
-        brief_data={},
+        brief={},
         section=section,
         question=section.questions[0],
     ), 200
@@ -82,7 +82,7 @@ def create_new_brief(framework_slug, lot_slug):
         return render_template(
             "buyers/create_brief_question.html",
             data=update_data,
-            brief_data={},
+            brief={},
             section=section,
             question=section.questions[0],
             errors=errors
@@ -120,7 +120,7 @@ def view_brief_overview(framework_slug, lot_slug, brief_id):
     return render_template(
         "buyers/brief_overview.html",
         confirm_remove=request.args.get("confirm_remove", None),
-        brief_data=brief,
+        brief=brief,
         sections=sections,
         completed_sections=completed_sections,
         step_sections=[section.step for section in sections if hasattr(section, 'step')],
@@ -145,7 +145,7 @@ def view_brief_section_summary(framework_slug, lot_slug, brief_id, section_slug)
 
     return render_template(
         "buyers/section_summary.html",
-        brief_data=brief,
+        brief=brief,
         section=section
     ), 200
 
@@ -173,7 +173,7 @@ def edit_brief_question(framework_slug, lot_slug, brief_id, section_slug, questi
 
     return render_template(
         "buyers/edit_brief_question.html",
-        brief_data=brief,
+        brief=brief,
         section=section,
         question=question
     ), 200
@@ -215,7 +215,7 @@ def update_brief_submission(framework_slug, lot_slug, brief_id, section_id, ques
         brief.update(update_data)
         return render_template(
             "buyers/edit_brief_question.html",
-            brief_data=brief,
+            brief=brief,
             section=section,
             question=question,
             errors=errors
@@ -254,7 +254,7 @@ def view_brief_responses(framework_slug, lot_slug, brief_id):
     return render_template(
         "buyers/brief_responses.html",
         response_counts={"failed": failed_count, "eligible": eligible_count},
-        brief_data=brief
+        brief=brief
     ), 200
 
 
@@ -360,7 +360,7 @@ def publish_brief(framework_slug, lot_slug, brief_id):
             email_address=email_address,
             unanswered_required=unanswered_required,
             sections=sections,
-            brief_data=brief
+            brief=brief
         ), 200
 
 
@@ -403,7 +403,7 @@ def clarification_questions(framework_slug, lot_slug, brief_id):
 
     return render_template(
         "buyers/clarification_questions.html",
-        brief_data=brief,
+        brief=brief,
     )
 
 
