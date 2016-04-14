@@ -823,6 +823,9 @@ class TestPublishBrief(BaseApplicationTest):
         brief_questions['importantDates'] = 'Near future'
         brief_questions['essentialRequirements'] = 'Everything'
         brief_questions['evaluationType'] = 'test evaluation type'
+        brief_questions['culturalWeighting'] = 10
+        brief_questions['priceWeighting'] = 80
+        brief_questions['technicalWeighting'] = 10
         data_api_client.get_brief.return_value = brief_json
 
         res = self.client.post("/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
@@ -891,6 +894,9 @@ class TestPublishBrief(BaseApplicationTest):
         brief_questions['importantDates'] = 'Near future'
         brief_questions['essentialRequirements'] = 'Everything'
         brief_questions['evaluationType'] = 'test evaluation type'
+        brief_questions['culturalWeighting'] = 10
+        brief_questions['priceWeighting'] = 80
+        brief_questions['technicalWeighting'] = 10
         data_api_client.get_brief.return_value = brief_json
 
         res = self.client.get("/buyers/frameworks/digital-outcomes-and-specialists/requirements/"

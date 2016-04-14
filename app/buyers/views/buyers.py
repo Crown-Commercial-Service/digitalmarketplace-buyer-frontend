@@ -375,10 +375,9 @@ def publish_brief(framework_slug, lot_slug, brief_id):
             abort(400, 'There are still unanswered required questions')
         data_api_client.update_brief_status(brief_id, 'live', brief_user_name)
         return redirect(
-            url_for('.view_brief_summary', framework_slug=framework_slug, lot_slug=lot_slug,
+            url_for('.view_brief_overview', framework_slug=framework_slug, lot_slug=lot_slug,
                     brief_id=brief_id))
     else:
-        flattened_brief = get_flattened_brief(sections)
         email_address = brief_users['emailAddress']
 
         return render_template(
@@ -386,7 +385,7 @@ def publish_brief(framework_slug, lot_slug, brief_id):
             email_address=email_address,
             unanswered_required=unanswered_required,
             framework_slug=framework_slug,
-            flattened_brief=flattened_brief,
+            sections=sections,
             brief_data=brief,
             lot_slug=lot_slug,
             brief_id=brief_id

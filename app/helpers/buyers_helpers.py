@@ -25,15 +25,6 @@ def brief_can_be_edited(brief):
     return brief.get('status') == 'draft'
 
 
-def get_flattened_brief(sections):
-    flattened_brief = []
-    for section in sections:
-        for question in section.questions:
-            question.section_id = section.id
-            flattened_brief.append(question)
-    return flattened_brief
-
-
 def count_unanswered_questions(brief_attributes):
     unanswered_required, unanswered_optional = (0, 0)
     for section in brief_attributes:
