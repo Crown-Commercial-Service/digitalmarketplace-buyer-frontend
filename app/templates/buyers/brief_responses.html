@@ -23,8 +23,6 @@
     {% endwith %}
 {% endblock %}
 
-{% set responses_count = response_counts['failed'] + response_counts['eligible'] %}
-
 {% block main_content %}
 <div class="grid-row">
     <div class="column-two-thirds">
@@ -40,19 +38,18 @@
 <div class="grid-row">
     <div class="column-two-thirds">
         <div class="dmspeak">
-          {% if responses_count ==  1 %}
+          {% if response_counts['eligible'] > 0 %}
             <p>
-                <span class='visual-emphasis'>{{ responses_count }} {{ pluralize(response_counts['eligible'], "supplier", "suppliers") }}</span>
+                <span class='visual-emphasis'>{{ response_counts['eligible'] }} {{ pluralize(response_counts['eligible'], "supplier", "suppliers") }}</span>
                 responded to your requirements and {{ pluralize(response_counts['eligible'], "meets", "meet") }} all your essential skills and experience.
             </p>
             <p>
                 Suppliers that did not meet all your essential requirements have already been told they were unsuccessful.
             </p>
-          {% endif %}
-          {% if response_counts['eligible'] > 0 %}
-          <p>
-            Download the list of supplier responses and follow the guidance on <a href="https://www.gov.uk/guidance/how-to-shortlist-digital-outcomes-and-specialists-suppliers">how to shortlist</a>.
-          </p> 
+
+            <p>
+              Download the list of supplier responses and follow the guidance on <a href="https://www.gov.uk/guidance/how-to-shortlist-digital-outcomes-and-specialists-suppliers">how to shortlist</a>.
+            </p> 
             {%
             with
             items = [
@@ -66,7 +63,8 @@
             %}
                 {% include "toolkit/documents.html" %}
             {% endwith %}
-            {% else %}
+            
+          {% else %}
             <p>
                 No suppliers met your requirements.
             </p>
@@ -81,12 +79,13 @@
             </div>
         </div>
         {% endif %}
-            {%
-                with
-                url = url_for('buyers.view_brief_summary', framework_slug=framework.slug, lot_slug=lot.slug, brief_id=brief_data.id),
-                text = "Back to overview"
-            %}
-        {% include "toolkit/secondary-action-link.html" %}
+        
+        {%
+            with
+            url = url_for('buyers.view_brief_summary', framework_slug=framework.slug, lot_slug=lot.slug, brief_id=brief_data.id),
+            text = "Back to overview"
+        %}
+            {% include "toolkit/secondary-action-link.html" %}
         {% endwith %}
     </div>
 </div>
