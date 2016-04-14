@@ -1190,7 +1190,7 @@ class TestViewBriefResponsesPage(BaseApplicationTest):
             "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1/responses"
         )
         page = res.get_data(as_text=True)
-        print("PAGE 1: {}".format(page))
+
         assert res.status_code == 200
         assert "2 suppliers" in page
         assert "responded to your requirements and meet all your essential skills and experience." in page
@@ -1263,7 +1263,6 @@ class TestViewBriefResponsesPage(BaseApplicationTest):
         assert self._strip_whitespace(csv_link.text_content()) == \
             "CSVdocument:Downloadsupplierresponsesto‘Ineedathingtodoathing’"
 
-    @pytest.mark.skip(reason="waiting for clarification of desired behaviour")
     def test_page_does_not_show_csv_download_link_if_brief_open(self, data_api_client):
         data_api_client.find_brief_responses.return_value = self.two_good_three_bad_responses
         data_api_client.get_framework.return_value = api_stubs.framework(
@@ -1287,8 +1286,7 @@ class TestViewBriefResponsesPage(BaseApplicationTest):
 
         assert res.status_code == 200
         assert len(csv_link) == 0
-        assert "Download the file of responses from eligible suppliers (it will be available here once applications " \
-               "have closed)." in page
+        assert "The file will be available here once applications have closed." in page
 
     def test_404_if_brief_does_not_belong_to_buyer(self, data_api_client):
         data_api_client.get_framework.return_value = api_stubs.framework(

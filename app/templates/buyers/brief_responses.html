@@ -49,21 +49,28 @@
 
             <p>
               Download the list of supplier responses and follow the guidance on <a href="https://www.gov.uk/guidance/how-to-shortlist-digital-outcomes-and-specialists-suppliers">how to shortlist</a>.
-            </p> 
-            {%
-            with
-            items = [
-                {
-                    "title": ("Download supplier responses to &lsquo;" + brief_data.get('title', brief_data['lotName']) + "&rsquo;")|safe,
-                    "link": url_for('buyers.download_brief_responses', framework_slug=framework.slug, lot_slug=lot.slug, brief_id=brief_data.id),
-                    "file_type": "CSV",
-                    "download": "True"
-                }
-            ]
-            %}
-                {% include "toolkit/documents.html" %}
-            {% endwith %}
-            
+            </p>
+
+            {% if brief_data.get("status") == "closed" %}
+                {%
+                with
+                items = [
+                    {
+                        "title": ("Download supplier responses to &lsquo;" + brief_data.get('title', brief_data['lotName']) + "&rsquo;")|safe,
+                        "link": url_for('buyers.download_brief_responses', framework_slug=framework.slug, lot_slug=lot.slug, brief_id=brief_data.id),
+                        "file_type": "CSV",
+                        "download": "True"
+                    }
+                ]
+                %}
+                    {% include "toolkit/documents.html" %}
+                {% endwith %}
+            {% else %}
+            <p>
+                The file will be available here once applications have closed.
+            </p>
+            {% endif %}
+
           {% else %}
             <p>
                 No suppliers met your requirements.
