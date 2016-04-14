@@ -1,11 +1,11 @@
-{% macro brief_link_url(from, section, framework, lot, brief) %}
+{% macro brief_link_url(from, section, brief) %}
   {% if section.has_summary_page %}
-    {{ url_for('.view_brief_section_summary', framework_slug=framework.slug, lot_slug=lot.slug, brief_id=brief.id, section_slug=section.slug) }}
+    {{ url_for('.view_brief_section_summary', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id, section_slug=section.slug) }}
   {% else %}
     {% if from == 'grandparent' %}
-      {{ url_for('.edit_brief_question', framework_slug=framework.slug, lot_slug=lot.slug, brief_id=brief.id, section_slug=section.slug, question_id=section.questions[0].id) }}
+      {{ url_for('.edit_brief_question', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id, section_slug=section.slug, question_id=section.questions[0].id) }}
     {% else %}
-      {{ url_for('.view_brief_overview', framework_slug=framework.slug, lot_slug=lot.slug, brief_id=brief.id) }}
+      {{ url_for('.view_brief_overview', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id) }}
     {% endif %}
   {% endif %}
 {% endmacro %}

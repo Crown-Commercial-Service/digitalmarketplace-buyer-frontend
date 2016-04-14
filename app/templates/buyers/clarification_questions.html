@@ -10,7 +10,7 @@
         "label": "Digital Marketplace"
       },
       {
-        "link": url_for(".view_brief_overview", framework_slug=framework.slug, lot_slug=lot.slug, brief_id=brief_data.id),
+        "link": url_for(".view_brief_overview", framework_slug=brief_data.frameworkSlug, lot_slug=brief_data.lotSlug, brief_id=brief_data.id),
         "label": brief_data.title
       }
     ]
@@ -60,11 +60,11 @@
     </div>
   </div>
 
-  <a href="{{ url_for(".add_clarification_question", framework_slug=framework.slug, lot_slug=lot.slug, brief_id=brief_data.id) }}">Answer a clarification question</a>
+  <a href="{{ url_for(".add_clarification_question", framework_slug=brief_data.frameworkSlug, lot_slug=brief_data.lotSlug, brief_id=brief_data.id) }}">Answer a clarification question</a>
 
   {%
     with
-    url = url_for(".view_brief_overview", framework_slug=framework.slug, lot_slug=lot.slug, brief_id=brief_data.id),
+    url = url_for(".view_brief_overview", framework_slug=brief_data.frameworkSlug, lot_slug=brief_data.lotSlug, brief_id=brief_data.id),
     text = "Return to overview"
   %}
     {% include "toolkit/secondary-action-link.html" %}

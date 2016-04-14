@@ -290,6 +290,87 @@ class TestCreateNewBrief(BaseApplicationTest):
         )
 
 
+class TestEveryDamnPage(BaseApplicationTest):
+
+    # @mock.patch("app.buyers.views.buyers.content_loader")
+    def _load_page(self, url, status_code, method='get', data=None):
+        data = {} if data is None else data
+        baseurl = "/buyers/frameworks/digital-outcomes-and-specialists/requirements"
+
+        with mock.patch('app.buyers.views.buyers.content_loader') as content_loader, \
+                mock.patch('app.buyers.views.buyers.data_api_client') as data_api_client:
+            self.login_as_buyer()
+            data_api_client.get_framework.return_value = api_stubs.framework(
+                slug='digital-outcomes-and-specialists',
+                status='live',
+                lots=[
+                    api_stubs.lot(slug='digital-specialists', allows_brief=True),
+                    api_stubs.lot(slug='digital-outcomes', allows_brief=True)
+                ]
+            )
+            data_api_client.get_brief.return_value = api_stubs.brief()
+            content_fixture = ContentLoader('tests/fixtures/content')
+            content_fixture.load_manifest('dos', 'data', 'edit_brief')
+            content_loader.get_manifest.return_value = content_fixture.get_manifest('dos', 'edit_brief')
+
+            res = getattr(self.client, method)(
+                "{}{}".format(baseurl, url),
+                data=data)
+            assert res.status_code == status_code
+
+    # These should all work as expected
+
+    def test_wrong_lot_get_view_brief_overview(self):
+        self._load_page("/digital-specialists/1234", 200)
+
+    def test_wrong_lot_get_view_section_summary(self):
+        self._load_page("/digital-specialists/1234/section-1", 200)
+
+    def test_wrong_lot_get_edit_brief_question(self):
+        self._load_page("/digital-specialists/1234/edit/section-1/required1", 200)
+
+    def test_wrong_lot_post_edit_brief_question(self):
+        data = {"required1": True}
+        self._load_page("/digital-specialists/1234/edit/section-1/required1", 302, method='post', data=data)
+
+    def test_wrong_lot_get_view_brief_responses(self):
+        self._load_page("/digital-specialists/1234/responses", 200)
+
+    # get and post are the same for publishing
+    def test_wrong_lot_publish_brief(self):
+        self._load_page("/digital-specialists/1234/publish", 200)
+
+    def test_wrong_lot_post_delete_a_brief(self):
+        data = {"delete_confirmed": True}
+        self._load_page("/digital-specialists/1234/delete", 302, method='post', data=data)
+
+    # Wrong lots
+
+    def test_get_view_brief_overview(self):
+        self._load_page("/digital-outcomes/1234", 404)
+
+    def test_get_view_section_summary(self):
+        self._load_page("/digital-outcomes/1234/section-1", 404)
+
+    def test_get_edit_brief_question(self):
+        self._load_page("/digital-outcomes/1234/edit/section-1/required1", 404)
+
+    def test_post_edit_brief_question(self):
+        data = {"required1": True}
+        self._load_page("/digital-outcomes/1234/edit/section-1/required1", 404, method='post', data=data)
+
+    def test_get_view_brief_responses(self):
+        self._load_page("/digital-outcomes/1234/responses", 404)
+
+    # get and post are the same for publishing
+    def test_publish_brief(self):
+        self._load_page("/digital-outcomes/1234/publish", 404)
+
+    def test_post_delete_a_brief(self):
+        data = {"delete_confirmed": True}
+        self._load_page("/digital-outcomes/1234/delete", 404, method='post', data=data)
+
+
 @mock.patch('app.buyers.views.buyers.data_api_client')
 class TestEditBriefSubmission(BaseApplicationTest):
     def test_edit_brief_submission(self, data_api_client):
@@ -1484,7 +1565,7 @@ class TestViewBriefResponsesPage(BaseApplicationTest):
                 api_stubs.lot(slug='digital-outcomes', allows_brief=True),
             ]
         )
-        data_api_client.get_brief.return_value = api_stubs.brief()
+        data_api_client.get_brief.return_value = api_stubs.brief(lot_slug="digital-outcomes")
 
         self.login_as_buyer()
         res = self.client.get(
@@ -1549,7 +1630,7 @@ class TestViewBriefResponsesPage(BaseApplicationTest):
                 api_stubs.lot(slug='digital-outcomes', allows_brief=True),
             ]
         )
-        data_api_client.get_brief.return_value = api_stubs.brief(status='closed')
+        data_api_client.get_brief.return_value = api_stubs.brief(lot_slug="digital-outcomes", status='closed')
 
         self.login_as_buyer()
         res = self.client.get(
@@ -1573,7 +1654,7 @@ class TestViewBriefResponsesPage(BaseApplicationTest):
                 api_stubs.lot(slug='digital-outcomes', allows_brief=True),
             ]
         )
-        data_api_client.get_brief.return_value = api_stubs.brief(status='live')
+        data_api_client.get_brief.return_value = api_stubs.brief(lot_slug="digital-outcomes", status='live')
 
         self.login_as_buyer()
         res = self.client.get(
@@ -1597,7 +1678,7 @@ class TestViewBriefResponsesPage(BaseApplicationTest):
                 api_stubs.lot(slug='digital-outcomes', allows_brief=True),
             ]
         )
-        data_api_client.get_brief.return_value = api_stubs.brief(user_id=234)
+        data_api_client.get_brief.return_value = api_stubs.brief(lot_slug="digital-outcomes", user_id=234)
 
         self.login_as_buyer()
         res = self.client.get(
@@ -1614,7 +1695,7 @@ class TestViewBriefResponsesPage(BaseApplicationTest):
                 api_stubs.lot(slug='digital-outcomes', allows_brief=False),
             ]
         )
-        data_api_client.get_brief.return_value = api_stubs.brief()
+        data_api_client.get_brief.return_value = api_stubs.brief(lot_slug="digital-outcomes")
 
         self.login_as_buyer()
         res = self.client.get(

@@ -52,7 +52,7 @@
                   'text': 'How to manage supplier questions'
                 },
                 {
-                  'href': url_for(".clarification_questions",framework_slug=framework.slug, lot_slug=lot.slug, brief_id=brief_data.id),
+                  'href': url_for(".clarification_questions",framework_slug=brief_data.frameworkSlug, lot_slug=brief_data.lotSlug, brief_id=brief_data.id),
                   'text': 'Publish supplier questions and answers'
                 }
               ]
@@ -98,7 +98,7 @@
             {% if step_number in step_sections %}
               {% if step_sections.count(step_number) == 1 %}
                 {% set section = sections.sections[step_sections.index(step_number)] %}
-                <a class="instruction-list-item-extra-information" href="{{ brief_links.brief_link_url('grandparent', section, framework, lot, brief_data) }}">
+                <a class="instruction-list-item-extra-information" href="{{ brief_links.brief_link_url('grandparent', section, brief_data) }}">
                   {{ section.name|lower }}
                 </a>
               {% else %}
@@ -109,7 +109,7 @@
                       {% if completed_sections[section.slug]  %}
                         <img class="tick" src="{{ asset_path }}svg/tick.svg" alt="done" width="15" height="14" />
                       {% endif %}
-                      <a href="{{ brief_links.brief_link_url('grandparent', section, framework, lot, brief_data) }}">{{ section.name|lower }}</a>
+                      <a href="{{ brief_links.brief_link_url('grandparent', section, brief_data) }}">{{ section.name|lower }}</a>
                     </li>
                     {% endif %}
                   {% endfor %}

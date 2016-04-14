@@ -10,7 +10,7 @@
         "label": "Digital Marketplace"
       },
       {
-        "link": url_for(".view_brief_overview", framework_slug=framework.slug, lot_slug=lot.slug, brief_id=brief_data.id),
+        "link": url_for(".view_brief_overview", framework_slug=brief_data.frameworkSlug, lot_slug=brief_data.lotSlug, brief_id=brief_data.id),
         "label": brief_data.title
       }
     ]
@@ -61,7 +61,7 @@
           {% if question.answer_required or question.is_empty %}
             {% if brief_data.get('status') == 'draft' %}
               {% call summary.field() %}
-                <a href="{{ url_for('buyers.edit_brief_question', framework_slug=framework.slug, lot_slug=lot.slug, brief_id=brief_data.id, section_slug=section.slug, question_id=question.id) }}">{{ question.empty_message or "Not answered" }}</a>
+                <a href="{{ url_for('buyers.edit_brief_question', framework_slug=brief_data.frameworkSlug, lot_slug=brief_data.lotSlug, brief_id=brief_data.id, section_slug=section.slug, question_id=question.id) }}">{{ question.empty_message or "Not answered" }}</a>
               {% endcall %}
             {% else %}
               {{ summary.text("Not answered") }}
@@ -76,7 +76,7 @@
                 Optional
               {% endcall %}
             {% elif not question.answer_required %}
-              {{ summary.edit_link("Edit", url_for("buyers.edit_brief_question", framework_slug=framework.slug, lot_slug=lot.slug, brief_id=brief_data.id, section_slug=section.slug, question_id=question.id)) }}
+              {{ summary.edit_link("Edit", url_for("buyers.edit_brief_question", framework_slug=brief_data.frameworkSlug, lot_slug=brief_data.lotSlug, brief_id=brief_data.id, section_slug=section.slug, question_id=question.id)) }}
             {% else %}
               {% call summary.field() %}{% endcall %}
             {% endif %}
@@ -90,7 +90,7 @@
 
   {%
     with
-    url = url_for(".view_brief_overview", framework_slug=framework.slug, lot_slug=lot.slug, brief_id=brief_data.id),
+    url = url_for(".view_brief_overview", framework_slug=brief_data.frameworkSlug, lot_slug=brief_data.lotSlug, brief_id=brief_data.id),
     text = "Return to overview"
   %}
     {% include "toolkit/secondary-action-link.html" %}
