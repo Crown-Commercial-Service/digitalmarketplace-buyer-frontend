@@ -53,7 +53,15 @@
         <h2>Before you start</h2>
         <ol class="list-number">
             <li>You can talk to suppliers to prepare your requirements.<br>
-                <a href="#">View a list of suppliers.</a>
+                <a href="https://assets.digitalmarketplace.service.gov.uk/catalogues/digital-outcomes-and-specialists/{{ lot.slug }}-suppliers.csv">
+                    View a list of suppliers
+                </a> (CSV, {{
+                                {
+                                "digital-outcomes": "???",
+                                "digital-specialists": "XXX",
+                                "user-research-participants": "YYY",
+                                }[lot.slug]
+                            }}K).
             </li>
             <li>Get budget approval.</li>
         </ol>
@@ -72,15 +80,15 @@
         <h2>Evaluate suppliers</h2>
         <ol class="list-number" start="6">
             <li>Shortlist and evaluate {{ "specialists’" if lot.slug == "digital-specialists" else "supplier" }} applications.</li>
-            <li>Award a contract to the specialist that best meets your needs.</li>
+            <li>Award a contract to the {{ "specialist’" if lot.slug == "digital-specialists" else "supplier" }} that best meets your needs.</li>
         </ol>
 
         <p>The buying process should take around 2 weeks.</p>
         <p>Read more about:</p>
         <div class="explanation-list">
             <ul class="list-bullet">
-                <li><a href="#">how to buy</a></li>
-                <li><a href="#">how suppliers have been evaluated</a></li>
+                <li><a href="https://www.gov.uk/guidance/digital-outcomes-and-specialists-buyers-guide">how to buy</a></li>
+                <li><a href="https://www.gov.uk/guidance/how-digital-marketplace-suppliers-have-been-evaluated">how suppliers have been evaluated</a></li>
             </ul>
         </div>
     </div>
