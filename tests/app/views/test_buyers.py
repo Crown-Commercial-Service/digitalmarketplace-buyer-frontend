@@ -1192,8 +1192,52 @@ class TestViewBriefResponsesPage(BaseApplicationTest):
         page = res.get_data(as_text=True)
 
         assert res.status_code == 200
-        assert "5 suppliers responded to your requirements." in page
-        assert "Of these, 2 meet all your essential requirements" in page
+        assert "2 suppliers" in page
+        assert "responded to your requirements and meet all your essential skills and experience." in page
+
+    def test_page_does_not_pluralise_for_single_response(self, data_api_client):
+        data_api_client.find_brief_responses.return_value = {
+            "briefResponses": [{"essentialRequirements": [True, True, True, True, True]}]
+        }
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='live',
+            lots=[
+                api_stubs.lot(slug='digital-outcomes', allows_brief=True),
+            ]
+        )
+        data_api_client.get_brief.return_value = api_stubs.brief()
+
+        self.login_as_buyer()
+        res = self.client.get(
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1/responses"
+        )
+        page = res.get_data(as_text=True)
+        assert res.status_code == 200
+        assert "1 supplier" in page
+        assert "responded to your requirements and meets all your essential skills and experience." in page
+
+    def test_page_shows_correct_message_if_no_eligible_suppliers(self, data_api_client):
+        data_api_client.find_brief_responses.return_value = {
+            "briefResponses": [{"essentialRequirements": [True, False, True, True, True]}]
+        }
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='live',
+            lots=[
+                api_stubs.lot(slug='digital-outcomes', allows_brief=True),
+            ]
+        )
+        data_api_client.get_brief.return_value = api_stubs.brief()
+
+        self.login_as_buyer()
+        res = self.client.get(
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1/responses"
+        )
+        page = res.get_data(as_text=True)
+
+        assert res.status_code == 200
+        assert "No suppliers met your essential skills and experience requirements." in page
 
     def test_page_shows_csv_download_link_if_brief_closed(self, data_api_client):
         data_api_client.find_brief_responses.return_value = self.two_good_three_bad_responses
@@ -1217,7 +1261,7 @@ class TestViewBriefResponsesPage(BaseApplicationTest):
 
         assert res.status_code == 200
         assert self._strip_whitespace(csv_link.text_content()) == \
-            "CSVdocument:Supplierresponsesto‘Ineedathingtodoathing’"
+            "CSVdocument:Downloadsupplierresponsesto‘Ineedathingtodoathing’"
 
     def test_page_does_not_show_csv_download_link_if_brief_open(self, data_api_client):
         data_api_client.find_brief_responses.return_value = self.two_good_three_bad_responses
@@ -1242,8 +1286,7 @@ class TestViewBriefResponsesPage(BaseApplicationTest):
 
         assert res.status_code == 200
         assert len(csv_link) == 0
-        assert "Download the file of responses from eligible suppliers (it will be available here once applications " \
-               "have closed)." in page
+        assert "The file will be available here once applications have closed." in page
 
     def test_404_if_brief_does_not_belong_to_buyer(self, data_api_client):
         data_api_client.get_framework.return_value = api_stubs.framework(

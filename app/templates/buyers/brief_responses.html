@@ -12,6 +12,10 @@
         {
             "link": "/buyers",
             "label": "Your Requirements"
+        },
+        {
+            "link": url_for('buyers.view_brief_summary', framework_slug=framework.slug, lot_slug=lot.slug, brief_id=brief_data.id),
+            "label": brief_data.title
         }
         ]
     %}
@@ -19,13 +23,11 @@
     {% endwith %}
 {% endblock %}
 
-{% set responses_count = response_counts['failed'] + response_counts['eligible'] %}
-
 {% block main_content %}
 <div class="grid-row">
     <div class="column-two-thirds">
         {% with
-        heading = ("Responses to &lsquo;" + brief_data.get('title', brief_data['lotName']) + "&rsquo;")|safe,
+        heading = "Shortlist suppliers",
         smaller = true
         %}
         {% include "toolkit/page-heading.html" %}
@@ -35,71 +37,66 @@
 
 <div class="grid-row">
     <div class="column-two-thirds">
-        <div class="marketplace-paragraph">
-          <p>
-          {% if responses_count ==  1 %}
-              {{ responses_count }} supplier responded to your requirements.
-              They did {% if response_counts['eligible'] == 0 %} not{% endif %} meet all your essential requirements.
-          {% else %}
-              {{ responses_count }} suppliers responded to your requirements.
-              Of these, {{ response_counts['eligible'] }} {{ pluralize(response_counts['eligible'], "meets", "meet") }} all your essential requirements.
-          {% endif %}
-
+        <div class="dmspeak">
           {% if response_counts['eligible'] > 0 %}
-            {% if response_counts['eligible'] == 1 %}
-              You now need to respond to this eligible supplier.
-            {% else %}
-              You now need to respond to these eligible suppliers.
-            {% endif %}
-              (Suppliers that did not meet all your essential requirements have already been told that they were unsuccessful.)
-          {% endif %}
-          </p>
-        </div>
+            <p>
+                <span class='visual-emphasis'>{{ response_counts['eligible'] }} {{ pluralize(response_counts['eligible'], "supplier", "suppliers") }}</span>
+                responded to your requirements and {{ pluralize(response_counts['eligible'], "meets", "meet") }} all your essential skills and experience.
+            </p>
+            <p>
+                Suppliers that did not meet all your essential requirements have already been told they were unsuccessful.
+            </p>
 
-        {% if response_counts['eligible'] > 0 %}
-            {%
-            with
-            items = [
-                {
-                "body": "Download the file of responses from eligible suppliers:",
-                "documents": [
-                {
-                    "title": ("Supplier responses to &lsquo;" + brief_data.get('title', brief_data['lotName']) + "&rsquo;")|safe,
-                    "link": url_for('buyers.download_brief_responses', framework_slug=framework.slug, lot_slug=lot.slug, brief_id=brief_data.id),
-                    "file_type": "CSV",
-                    "download": "True"
-                }
+            <p>
+              Download the list of supplier responses and follow the guidance on <a href="https://www.gov.uk/guidance/how-to-shortlist-digital-outcomes-and-specialists-suppliers">how to shortlist</a>.
+            </p>
+
+            {% if brief_data.get("status") == "closed" %}
+                {%
+                with
+                items = [
+                    {
+                        "title": ("Download supplier responses to &lsquo;" + brief_data.get('title', brief_data['lotName']) + "&rsquo;")|safe,
+                        "link": url_for('buyers.download_brief_responses', framework_slug=framework.slug, lot_slug=lot.slug, brief_id=brief_data.id),
+                        "file_type": "CSV",
+                        "download": "True"
+                    }
                 ]
-                } if brief_data.get("status") == "closed"
-                  else { "body": "Download the file of responses from eligible suppliers (it will be available here once applications have closed)." },
-                {
-                "body": "Sort the eligible suppliers by availabilty, price and whatever other factors you specified in the brief.",
-                "extra": "The file is already sorted with suppliers with the most nice-to-haves at the top."
-                },
-                {
-                "body": "Pick your favourite that you're going to award the contract to"
-                },
-                {
-                "body": "Send emails to all the eligible suppliers",
-                "important": "You must respond to all suppliers listed to let them know if they were successful or not"
-                }
-            ]
-            %}
-                {% include "toolkit/instruction-list.html" %}
-            {% endwith %}
-        
-        {% else %}
-        
-        <div class="marketplace-paragraph">
+                %}
+                    {% include "toolkit/documents.html" %}
+                {% endwith %}
+            {% else %}
             <p>
-                You did not receive any eligible responses so you'll have to try again.
+                The file will be available here once applications have closed.
+            </p>
+            {% endif %}
+
+          {% else %}
+            <p>
+                No suppliers met your essential skills and experience requirements.
             </p>
             <p>
-                MASSIVE TODO: DON'T FORGET TO GET NEW COPY FOR THIS PART OF THE PAGE TOO.
+                All the suppliers who applied have already been told they were unsuccessful.
             </p>
+            <div class='explanation-list'>
+                <p class='lead'>
+                    If you still need this service, you should start the buying process again. Consider: 
+                </p>
+                <ul class='list-bullet'>
+                    <li>talking to suppliers before you start</li>
+                    <li>rewriting your requirements</li>
+                </ul>
+            </div>
         </div>
-        
         {% endif %}
+        
+        {%
+            with
+            url = url_for('buyers.view_brief_summary', framework_slug=framework.slug, lot_slug=lot.slug, brief_id=brief_data.id),
+            text = "Back to overview"
+        %}
+            {% include "toolkit/secondary-action-link.html" %}
+        {% endwith %}
     </div>
 </div>
 {% endblock %}
