@@ -1,4 +1,16 @@
 {% import "toolkit/summary-table.html" as summary %}
+
+{% if (not brief.clarificationQuestionsAreClosed) and brief.questionAndAnswerSessionDetails %}
+  {{ summary.heading("Question and answer session", id="question-and-answer-session") }}
+  <a href="/suppliers/opportunities/{{ brief.id }}/question-and-answer-session">
+    {% if current_user.is_authenticated() and current_user.role == 'supplier' %}
+      View question and answer session details
+    {% else %}
+      Log in to view question and answer session details
+    {% endif %}
+  </a>
+{% endif %}
+
 {{ summary.heading("Questions asked by suppliers", id="clarification-questions") }}
 {% call(question) summary.list_table(
   brief.clarificationQuestions,
@@ -28,5 +40,5 @@
     {% endif %}
   </a>
 {% elif brief.status == 'live' %}
-  The deadline for asking clarification questions was {{ brief.clarificationQuestionsClosedAt|dateformat }}.
+  The deadline for asking questions about this opportunity was {{ brief.clarificationQuestionsClosedAt|dateformat }}.
 {% endif %}
