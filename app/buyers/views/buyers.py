@@ -98,7 +98,10 @@ def create_new_brief(framework_slug, lot_slug):
             "buyers/edit_brief_question.html",
             framework=framework,
             data=update_data,
-            section=section.get('title'),
+            brief_data={},
+            section=section,
+            question=section.questions[0],
+            lot=lot,
             errors=errors
         ), 400
 
@@ -125,7 +128,15 @@ def edit_brief_question(framework_slug, lot_slug, brief_id, section_slug, questi
         {'lot': lot['slug']}
     )
     section = content.get_section(section_slug)
+    # https://github.com/alphagov/digitalmarketplace-supplier-frontend/blob/master/app/main/views/services.py#L381
+    # if section and (question_id is not None):
+    #    section = section.get_question_as_section(question_id)
+
     if section is None or not section.editable:
+        abort(404)
+
+    question = section.get_question(question_id)
+    if not question:
         abort(404)
 
     return render_template(
@@ -134,14 +145,14 @@ def edit_brief_question(framework_slug, lot_slug, brief_id, section_slug, questi
         lot=lot,
         brief_data=brief,
         section=section,
-        question=section.get_question(question_id)
+        question=question
     ), 200
 
 
 @buyers.route(
-    '/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/edit/<section_id>/<question_name>',
+    '/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/edit/<section_id>/<question_id>',
     methods=['POST'])
-def update_brief_submission(framework_slug, lot_slug, brief_id, section_id, question_name):
+def update_brief_submission(framework_slug, lot_slug, brief_id, section_id, question_id):
 
     framework, lot = get_framework_and_lot(framework_slug, lot_slug, data_api_client,
                                            status='live', must_allow_brief=True)
@@ -157,7 +168,7 @@ def update_brief_submission(framework_slug, lot_slug, brief_id, section_id, ques
     if section is None or not section.editable:
         abort(404)
 
-    question = section.get_question(question_name)
+    question = section.get_question(question_id)
     if not question:
         abort(404)
 

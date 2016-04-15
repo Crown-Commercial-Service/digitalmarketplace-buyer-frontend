@@ -28,11 +28,21 @@
 
     <div class="grid-row">
       <div class="column-two-thirds">
+          {% if question.type != 'multiquestion' %}
             {% if errors and errors[question.id] %}
               {{ forms[question.type](question, brief_data, errors) }}
             {% else %}
               {{ forms[question.type](question, brief_data, {}) }}
             {% endif %}
+          {% else %}
+            {% for question in question.questions %}
+              {% if errors and errors[question.id] %}
+                {{ forms[question.type](question, brief_data, errors) }}
+              {% else %}
+                {{ forms[question.type](question, brief_data, {}) }}
+              {% endif %}
+            {% endfor %}
+          {% endif %}
           <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
           {% block save_button %}{% endblock %}
 
