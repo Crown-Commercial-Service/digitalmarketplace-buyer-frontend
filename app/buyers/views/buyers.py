@@ -199,7 +199,6 @@ def view_brief_overview(framework_slug, lot_slug, brief_id):
         {'lot': lot['slug']}
     )
     sections = content.summary(brief)
-    delete_requested = True if request.args.get('delete_requested') else False
 
     completed_sections = {}
     for section in sections:
@@ -220,7 +219,6 @@ def view_brief_overview(framework_slug, lot_slug, brief_id):
         sections=sections,
         completed_sections=completed_sections,
         step_sections=[section.step for section in sections if hasattr(section, 'step')],
-        delete_requested=delete_requested,
     ), 200
 
 
