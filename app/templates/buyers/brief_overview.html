@@ -17,50 +17,7 @@
   {% endwith %}
 {% endblock %}
 
-{% block before_heading %}
-  {% if delete_requested %}
-    <div class="column-one-whole">
-      <form action="{{ url_for('buyers.delete_a_brief', framework_slug=framework.slug, lot_slug=lot.slug, brief_id=brief_data.id) }}" method="POST">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-        <input type="hidden" name="delete_confirmed" value="true" />
-        <div class="banner-destructive-with-action">
-          <p class="banner-message">
-            Are you sure you want to delete these requirements?
-          </p>
-          <button type="submit" class="button-destructive banner-action">Yes, delete</button>
-        </div>
-      </form>
-    </div>
-  {% endif %}
-{% endblock %}
-
 {% block after_sections %}
-  {% if not delete_requested %}
-    <div class="grid-row">
-
-      <div class="column-one-third">
-        {% if brief_data.status == 'draft' %}
-          <div class="padding-bottom-small">
-            <a href ="{{ url_for('buyers.publish_brief', framework_slug=framework.slug, lot_slug=lot.slug, brief_id=brief_data.id) }}">Publish brief</a>
-          </div>
-        {% endif %}
-        {% if framework.status == 'live' and brief_data.status == 'draft' %}
-        <form action="{{ url_for('buyers.delete_a_brief', framework_slug=framework.slug, lot_slug=lot.slug, brief_id=brief_data.id) }}" method="POST">
-          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-          {% with
-            type = "destructive",
-            label = "Delete"
-          %}
-            {% include "toolkit/button.html" %}
-          {% endwith %}
-        </form>
-        {% endif %}
-      </div>
-      <div class="column-two-thirds">
-        &nbsp;
-      </div>
-    </div>
-  {% endif %}
 
   {% if brief_data.status == "live" %}
   <a href="{{ url_for(".add_clarification_question", framework_slug=framework.slug, lot_slug=lot.slug, brief_id=brief_data.id) }}">Answer a clarification question</a>
