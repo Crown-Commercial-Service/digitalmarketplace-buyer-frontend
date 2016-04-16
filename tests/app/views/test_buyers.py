@@ -1538,7 +1538,7 @@ class TestViewBriefResponsesPage(BaseApplicationTest):
                 api_stubs.lot(slug='digital-outcomes', allows_brief=True),
             ]
         )
-        data_api_client.get_brief.return_value = api_stubs.brief()
+        data_api_client.get_brief.return_value = api_stubs.brief(lot_slug="digital-outcomes")
 
         self.login_as_buyer()
         res = self.client.get(
@@ -1560,7 +1560,7 @@ class TestViewBriefResponsesPage(BaseApplicationTest):
                 api_stubs.lot(slug='digital-outcomes', allows_brief=True),
             ]
         )
-        data_api_client.get_brief.return_value = api_stubs.brief()
+        data_api_client.get_brief.return_value = api_stubs.brief(lot_slug="digital-outcomes")
 
         self.login_as_buyer()
         res = self.client.get(
