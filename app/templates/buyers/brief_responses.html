@@ -14,8 +14,8 @@
             "label": "Your Requirements"
         },
         {
-            "link": url_for('buyers.view_brief_summary', framework_slug=framework.slug, lot_slug=lot.slug, brief_id=brief_data.id),
-            "label": brief_data.title
+            "link": url_for('buyers.view_brief_overview', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id),
+            "label": brief.title
         }
         ]
     %}
@@ -51,13 +51,13 @@
               Download the list of supplier responses and follow the guidance on <a href="https://www.gov.uk/guidance/how-to-shortlist-digital-outcomes-and-specialists-suppliers">how to shortlist</a>.
             </p>
 
-            {% if brief_data.get("status") == "closed" %}
+            {% if brief.get("status") == "closed" %}
                 {%
                 with
                 items = [
                     {
-                        "title": ("Download supplier responses to &lsquo;" + brief_data.get('title', brief_data['lotName']) + "&rsquo;")|safe,
-                        "link": url_for('buyers.download_brief_responses', framework_slug=framework.slug, lot_slug=lot.slug, brief_id=brief_data.id),
+                        "title": ("Download supplier responses to &lsquo;" + brief.get('title', brief['lotName']) + "&rsquo;")|safe,
+                        "link": url_for('buyers.download_brief_responses', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id),
                         "file_type": "CSV",
                         "download": "True"
                     }
@@ -92,7 +92,7 @@
         
         {%
             with
-            url = url_for('buyers.view_brief_summary', framework_slug=framework.slug, lot_slug=lot.slug, brief_id=brief_data.id),
+            url = url_for('buyers.view_brief_overview', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id),
             text = "Back to overview"
         %}
             {% include "toolkit/secondary-action-link.html" %}
