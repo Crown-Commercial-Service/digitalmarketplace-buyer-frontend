@@ -8,9 +8,9 @@ from flask_login import current_user
 from app import data_api_client
 from .. import buyers, content_loader
 from ...helpers.buyers_helpers import (
-    all_essentials_are_true, counts_for_failed_and_eligible_brief_responses,
+    get_flattened_brief, all_essentials_are_true, counts_for_failed_and_eligible_brief_responses,
     get_framework_and_lot, get_sorted_responses_for_brief, is_brief_associated_with_user, count_unanswered_questions,
-    brief_can_be_edited, add_unanswered_counts_to_briefs, get_flattened_brief
+    brief_can_be_edited, add_unanswered_counts_to_briefs
 )
 
 from dmapiclient import HTTPError
@@ -19,7 +19,8 @@ from dmapiclient import HTTPError
 @buyers.route('/buyers')
 def buyer_dashboard():
     user_briefs = data_api_client.find_briefs(current_user.id).get('briefs', [])
-    draft_briefs = add_unanswered_counts_to_briefs([brief for brief in user_briefs if brief['status'] == 'draft'])
+    draft_briefs = add_unanswered_counts_to_briefs([brief for brief in user_briefs if brief['status'] == 'draft'],
+                                                   content_loader)
     live_briefs = [brief for brief in user_briefs if brief['status'] == 'live']
     closed_briefs = [brief for brief in user_briefs if brief['status'] == 'closed']
 
@@ -29,19 +30,6 @@ def buyer_dashboard():
         live_briefs=live_briefs,
         closed_briefs=closed_briefs
     )
-
-
-@buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>', methods=['GET'])
-def info_page_for_starting_a_brief(framework_slug, lot_slug):
-
-    framework, lot = get_framework_and_lot(framework_slug, lot_slug, data_api_client,
-                                           status='live', must_allow_brief=True)
-
-    return render_template(
-        "buyers/start_brief_info.html",
-        framework=framework,
-        lot=lot
-    ), 200
 
 
 @buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/create', methods=['GET'])

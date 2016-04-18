@@ -97,9 +97,7 @@ class TestBuyersHelpers(unittest.TestCase):
             'required1': True,
         }]
 
-        helpers.buyers_helpers.content_loader = content_loader
-
-        assert helpers.buyers_helpers.add_unanswered_counts_to_briefs(briefs) == [{
+        assert helpers.buyers_helpers.add_unanswered_counts_to_briefs(briefs, content_loader) == [{
             'status': 'draft',
             'frameworkSlug': 'dos',
             'lotSlug': 'digital-specialists',

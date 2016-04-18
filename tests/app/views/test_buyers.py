@@ -537,56 +537,6 @@ class TestUpdateBriefSubmission(BaseApplicationTest):
 
 
 @mock.patch('app.buyers.views.buyers.data_api_client')
-class TestStartBriefInfoPage(BaseApplicationTest):
-    def test_show_start_brief_info_page(self, data_api_client):
-        with self.app.app_context():
-            self.login_as_buyer()
-            data_api_client.get_framework.return_value = api_stubs.framework(
-                slug='digital-outcomes-and-specialists',
-                status='live',
-                lots=[
-                    api_stubs.lot(slug='digital-specialists', allows_brief=True),
-                ]
-            )
-
-            res = self.client.get(
-                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists")
-            assert res.status_code == 200
-            document = html.fromstring(res.get_data(as_text=True))
-            assert document.xpath('//h1')[0].text_content().strip() == "Find an individual specialist"
-
-    def test_404_if_lot_does_not_allow_brief(self, data_api_client):
-        with self.app.app_context():
-            self.login_as_buyer()
-            data_api_client.get_framework.return_value = api_stubs.framework(
-                slug='digital-outcomes-and-specialists',
-                status='live',
-                lots=[
-                    api_stubs.lot(slug='digital-specialists', allows_brief=False)
-                ]
-            )
-
-            res = self.client.get(
-                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists")
-            assert res.status_code == 404
-
-    def test_404_if_framework_status_is_not_live_(self, data_api_client):
-        with self.app.app_context():
-            self.login_as_buyer()
-            data_api_client.get_framework.return_value = api_stubs.framework(
-                slug='digital-outcomes-and-specialists',
-                status='open',
-                lots=[
-                    api_stubs.lot(slug='digital-specialists', allows_brief=True),
-                ]
-            )
-
-            res = self.client.get(
-                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists")
-            assert res.status_code == 404
-
-
-@mock.patch('app.buyers.views.buyers.data_api_client')
 class TestPublishBrief(BaseApplicationTest):
     def test_publish_brief(self, data_api_client):
         self.login_as_buyer()
