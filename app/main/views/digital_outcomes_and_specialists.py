@@ -9,9 +9,8 @@ from ...main import main
 
 @main.route('/buyers/frameworks/<framework_slug>/requirements/user-research-studios', methods=['GET'])
 def studios_start_page(framework_slug):
-    framework = data_api_client.get_framework(framework_slug)['frameworks']
-    if framework['status'] != 'live':
-        abort(404)
+    # Check framework is live and has the user-research-studios lot
+    get_framework_and_lot(framework_slug, 'user-research-studios', data_api_client, status='live')
 
     return render_template(
         "buyers/studios_start_page.html"
