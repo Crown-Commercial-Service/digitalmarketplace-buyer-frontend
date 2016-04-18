@@ -102,7 +102,7 @@
           {% set step_number = loop.index %}
           <li class="instruction-list-item divider">
             <h2 class="instruction-list-item-body">
-              <span class="step-number">{{ step_number }}. </span>
+              <span class="step-number" role="presentation">{{ step_number }}. </span>
               {{ step.title }}</h2>
             {% if step.description %}
               <p class="instruction-list-item-extra-information">{{ step.description }}</p>
