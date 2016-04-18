@@ -11,11 +11,22 @@ ol.instruction-list-item-extra-information li {
   margin-bottom: 0;
 }
 
-img.tick {
+.tick {
   float: left;
-  margin: 0.2em 5px 0 -22px;
-  @include ie-lte(8) {
+  width: 15px;
+  height: 14px;
+  margin: 0.2em 5px 0 0;
 
+  img {
+    display: block;
+  }
+
+  @include ie-lte(8) {
+    background: url('/static/images/tick.png') 0 0 no-repeat;
+
+    img {
+      display: none;
+    }
   }
 }
 
