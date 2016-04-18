@@ -6,16 +6,15 @@
     color: $secondary-text-colour;
 }
 
-ul.instruction-list-item-extra-information li,
-ol.instruction-list-item-extra-information li {
-  margin-bottom: 0;
-}
-
 .tick {
   float: left;
   width: 15px;
   height: 14px;
-  margin: 0.2em 5px 0 0;
+  margin: (3 / 16) * 1em 5px 0 0;
+
+  @include media(tablet) {
+    margin-top: (5.5 / 19) * 1em;
+  }
 
   img {
     display: block;
@@ -27,6 +26,29 @@ ol.instruction-list-item-extra-information li {
     img {
       display: none;
     }
+  }
+}
+
+ul.instruction-list-item-extra-information li,
+ol.instruction-list-item-extra-information li {
+  margin-bottom: 0;
+}
+
+ol.steps {
+  list-style: none;
+  padding-left: 0;
+
+  .instruction-list-item-extra-information {
+    margin-left: (30 / 19) * 1em; // 25px in ems
+  }
+
+  .step-number {
+    min-width: (30 / 27) * 1em; // 25px in ems
+    float: left;
+  }
+
+  .tick {
+    margin-left: (30 / 19) * -1em; // -25px in ems
   }
 }
 
