@@ -12,7 +12,7 @@
         },
         {
           "link": url_for(".buyer_dashboard"),
-          "label": "Your requirements"
+          "label": "Your account"
         },
         {
           "link": url_for(".view_brief_overview", framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id),
@@ -20,7 +20,7 @@
         }
       ]
   %}
-  {% include "toolkit/breadcrumb.html" %}
+    {% include "toolkit/breadcrumb.html" %}
   {% endwith %}
 {% endblock %}
 
