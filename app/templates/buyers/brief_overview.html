@@ -117,7 +117,9 @@
                     {% if section.step == step_number %}
                     <li>
                       {% if completed_sections[section.slug]  %}
-                        <img class="tick" src="{{ asset_path }}svg/tick.svg" alt="done" width="15" height="14" />
+                        <span class="tick">
+                          <img src="{{ asset_path }}svg/tick.svg" alt="done" width="15" height="14" />
+                        </span>
                       {% endif %}
                       <a href="{{ brief_links.brief_link_url('grandparent', section, brief) }}">{{ section.name|lower }}</a>
                     </li>
