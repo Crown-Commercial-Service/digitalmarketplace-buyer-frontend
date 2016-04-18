@@ -59,6 +59,8 @@ def start_new_brief(framework_slug, lot_slug):
     return render_template(
         "buyers/create_brief_question.html",
         brief={},
+        framework=framework,
+        lot=lot,
         section=section,
         question=section.questions[0],
     ), 200
@@ -95,6 +97,8 @@ def create_new_brief(framework_slug, lot_slug):
             "buyers/create_brief_question.html",
             data=update_data,
             brief={},
+            framework=framework,
+            lot=lot,
             section=section,
             question=section.questions[0],
             errors=errors
@@ -362,7 +366,7 @@ def publish_brief(framework_slug, lot_slug, brief_id):
 
     unanswered_required, unanswered_optional = count_unanswered_questions(sections)
     if request.method == 'POST':
-        if (unanswered_required > 0):
+        if unanswered_required > 0:
             abort(400, 'There are still unanswered required questions')
         data_api_client.update_brief_status(brief_id, 'live', brief_user_name)
         return redirect(

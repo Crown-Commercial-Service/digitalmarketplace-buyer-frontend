@@ -3,6 +3,7 @@
 {% block page_title %}Clarification questions – Digital Marketplace{% endblock %}
 
 {% block breadcrumb %}
+  {# TODO: this is the wrong label, probably #}
   {%
     with items = [
       {
@@ -10,8 +11,8 @@
         "label": "Digital Marketplace"
       },
       {
-        "link": url_for(".view_brief_overview", framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id),
-        "label": brief.title
+        "link": url_for(".buyer_dashboard"),
+        "label": "Your account"
       }
     ]
   %}
@@ -60,7 +61,7 @@
     </div>
   </div>
 
-  <a href="{{ url_for(".add_clarification_question", framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id) }}">Answer a clarification question</a>
+  <a href="{{ url_for('.add_clarification_question', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id) }}">Answer a clarification question</a>
 
   {%
     with

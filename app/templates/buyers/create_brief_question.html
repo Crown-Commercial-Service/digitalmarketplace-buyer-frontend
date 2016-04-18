@@ -3,11 +3,16 @@
 {% import "macros/brief_links.html" as brief_links %}
 
 {% block breadcrumb %}
+  {# TODO: this is the wrong label, probably #}
   {%
     with items = [
       {
         "link": "/",
         "label": "Digital Marketplace"
+      },
+      {
+        "link": url_for(".info_page_for_starting_a_brief", framework_slug=framework.slug, lot_slug=lot.slug),
+        "label": lot.name
       }
     ]
   %}
