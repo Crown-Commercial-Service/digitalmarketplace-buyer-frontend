@@ -40,47 +40,57 @@
               'description': 'Before you can publish your requirements, you must complete:'
             },
             {
-              'title': 'Publish requirements',
+              'title': 'Set how you’ll evaluate suppliers',
               'description': 'Before you can publish your requirements, you must complete:'
+            },
+            {
+              'title': 'Publish requirements',
+              'links': [
+                {
+                  'href': url_for(".publish_brief",framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id),
+                  'text': 'Review and publish your requirements',
+                }
+              ]
             },
             {
               'title': 'Answer supplier questions',
               'description': 'When you’ve published your requirements, you must answer all supplier questions.',
               'links': [
                 {
-                  'href': '/',
-                  'text': 'How to manage supplier questions'
+                  'href': url_for(".clarification_questions",framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id),
+                  'text': 'Publish questions and answers'
                 },
                 {
-                  'href': url_for(".clarification_questions",framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id),
-                  'text': 'Publish supplier questions and answers'
+                  'href': 'https://www.gov.uk/guidance/how-to-answer-supplier-questions-on-the-digital-marketplace',
+                  'text': 'How to answer supplier questions'
                 }
               ]
             },
             {
-              'title': 'Choose the shortlist',
+              'title': 'Shortlist',
               'description': 'After the application deadline, shortlist the suppliers who applied.',
               'links': [
                 {
-                  'href': '/',
+                  'href': 'https://www.gov.uk/guidance/how-to-shortlist-digital-outcomes-and-specialists-suppliers',
                   'text': 'How to shortlist suppliers',
                 }
               ]
             },
             {
-              'title': 'Assess the shortlist',
+              'title': 'Evaluate',
+              'description': 'Evaluate your shortlist using the criteria and methods you published with your requirements.',
               'links': [
                 {
-                  'href': '/',
-                  'text': 'How to assess suppliers'
+                  'href': 'https://www.gov.uk/guidance/how-to-evaluate-digital-outcomes-and-specialists-suppliers',
+                  'text': 'How to evaluate suppliers'
                 }
               ]
             },
             {
-              'title': 'Award the supplier that best meets your needs',
+              'title': 'Award a contract',
               'links': [
                 {
-                  'href': '/',
+                  'href': 'https://www.gov.uk/guidance/how-to-award-a-contract-when-you-buy-services',
                   'text': 'How to award a contract'
                 }
               ]
@@ -99,7 +109,7 @@
               {% if step_sections.count(step_number) == 1 %}
                 {% set section = sections.sections[step_sections.index(step_number)] %}
                 <a class="instruction-list-item-extra-information" href="{{ brief_links.brief_link_url('grandparent', section, brief) }}">
-                  {{ section.name|lower }}
+                  {{ section.name }}
                 </a>
               {% else %}
                 <ul class="instruction-list-item-extra-information">
