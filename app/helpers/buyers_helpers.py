@@ -16,6 +16,12 @@ def get_framework_and_lot(framework_slug, lot_slug, data_api_client, status=None
     return framework, lot
 
 
+def is_brief_correct(brief, framework_slug, lot_slug, current_user_id):
+    return brief['frameworkSlug'] == framework_slug and \
+        brief['lotSlug'] == lot_slug and \
+        is_brief_associated_with_user(brief, current_user_id)
+
+
 def is_brief_associated_with_user(brief, current_user_id):
     user_ids = [user.get('id') for user in brief.get('users', [])]
     return current_user_id in user_ids
@@ -23,15 +29,6 @@ def is_brief_associated_with_user(brief, current_user_id):
 
 def brief_can_be_edited(brief):
     return brief.get('status') == 'draft'
-
-
-def get_flattened_brief(sections):
-    flattened_brief = []
-    for section in sections:
-        for question in section.questions:
-            question.section_id = section.id
-            flattened_brief.append(question)
-    return flattened_brief
 
 
 def count_unanswered_questions(brief_attributes):

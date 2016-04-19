@@ -25,6 +25,7 @@ $path: "/static/images/";
 @import "toolkit/_link-button.scss";
 @import "toolkit/_notification-banners.scss";
 @import "toolkit/_page-headings.scss";
+@import "toolkit/_secondary-action-link.scss";
 @import "toolkit/_service-id.scss";
 @import "toolkit/_temporary-message.scss";
 @import "toolkit/forms/_hint.scss";
@@ -132,4 +133,30 @@ $path: "/static/images/";
 
 .padding-bottom-small {
   padding-bottom: 10px;
+}
+
+.instruction-list {
+  @include bold-27;
+  padding-left: 1em; // 27px
+
+  @include media( $min-width: $site-width + (2 * (27px + $gutter) ) ) {
+    padding-left: 0;
+  }
+}
+
+.instruction-list-item {
+
+  h2 {
+    @include bold-27;
+    margin-bottom: 10px;
+  }
+
+  .instruction-list-item-extra-information {
+    @include core-19;
+    display: block;
+  }
+
+  a {
+    text-decoration: none;
+  }
 }

@@ -8,9 +8,9 @@ from flask_login import current_user
 from app import data_api_client
 from .. import buyers, content_loader
 from ...helpers.buyers_helpers import (
-    get_flattened_brief, all_essentials_are_true, counts_for_failed_and_eligible_brief_responses,
-    get_framework_and_lot, get_sorted_responses_for_brief, is_brief_associated_with_user, count_unanswered_questions,
-    brief_can_be_edited, add_unanswered_counts_to_briefs
+    all_essentials_are_true, counts_for_failed_and_eligible_brief_responses,
+    get_framework_and_lot, get_sorted_responses_for_brief, count_unanswered_questions,
+    brief_can_be_edited, add_unanswered_counts_to_briefs, is_brief_correct
 )
 
 from dmapiclient import HTTPError
@@ -45,10 +45,10 @@ def start_new_brief(framework_slug, lot_slug):
     section = content.get_section(content.get_next_editable_section_id())
 
     return render_template(
-        "buyers/edit_brief_section.html",
-        framework=framework,
-        data={},
-        section=section
+        "buyers/create_brief_question.html",
+        brief={},
+        section=section,
+        question=section.questions[0],
     ), 200
 
 
@@ -80,109 +80,37 @@ def create_new_brief(framework_slug, lot_slug):
         errors = section.get_error_messages(e.message)
 
         return render_template(
-            "buyers/edit_brief_section.html",
-            framework=framework,
+            "buyers/create_brief_question.html",
             data=update_data,
+            brief={},
             section=section,
+            question=section.questions[0],
             errors=errors
         ), 400
 
     return redirect(
-        url_for(".edit_brief_submission",
+        url_for(".view_brief_overview",
                 framework_slug=framework_slug,
                 lot_slug=lot_slug,
-                brief_id=brief['id'],
-                section_id=content.get_next_editable_section_id(section.slug)))
-
-
-@buyers.route(
-    '/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/edit/<section_id>',
-    methods=['GET'])
-def edit_brief_submission(framework_slug, lot_slug, brief_id, section_id):
-
-    framework, lot = get_framework_and_lot(framework_slug, lot_slug, data_api_client,
-                                           status='live', must_allow_brief=True)
-
-    brief = data_api_client.get_brief(brief_id)["briefs"]
-    if not is_brief_associated_with_user(brief, current_user.id) or not brief_can_be_edited(brief):
-        abort(404)
-
-    content = content_loader.get_manifest(framework_slug, 'edit_brief').filter(
-        {'lot': lot['slug']}
-    )
-    section = content.get_section(section_id)
-    if section is None or not section.editable:
-        abort(404)
-
-    return render_template(
-        "buyers/edit_brief_section.html",
-        framework=framework,
-        data=brief,
-        section=section
-    ), 200
-
-
-@buyers.route(
-    '/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/edit/<section_id>',
-    methods=['POST'])
-def update_brief_submission(framework_slug, lot_slug, brief_id, section_id):
-
-    framework, lot = get_framework_and_lot(framework_slug, lot_slug, data_api_client,
-                                           status='live', must_allow_brief=True)
-
-    brief = data_api_client.get_brief(brief_id)["briefs"]
-    if not is_brief_associated_with_user(brief, current_user.id) or not brief_can_be_edited(brief):
-        abort(404)
-
-    content = content_loader.get_manifest(framework_slug, 'edit_brief').filter(
-        {'lot': lot['slug']}
-    )
-    section = content.get_section(section_id)
-    if section is None or not section.editable:
-        abort(404)
-
-    update_data = section.get_data(request.form)
-
-    try:
-        data_api_client.update_brief(
-            brief_id,
-            update_data,
-            updated_by=current_user.email_address,
-            page_questions=section.get_field_names()
-        )
-    except HTTPError as e:
-        update_data = section.unformat_data(update_data)
-        errors = section.get_error_messages(e.message)
-
-        return render_template(
-            "buyers/edit_brief_section.html",
-            framework=framework,
-            data=update_data,
-            section=section,
-            errors=errors
-        ), 200
-
-    return redirect(
-        url_for(".view_brief_summary", framework_slug=framework_slug, lot_slug=lot_slug, brief_id=brief_id)
-    )
+                brief_id=brief['id']))
 
 
 @buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>', methods=['GET'])
-def view_brief_summary(framework_slug, lot_slug, brief_id):
-
-    framework, lot = get_framework_and_lot(framework_slug, lot_slug, data_api_client, must_allow_brief=True)
-
+def view_brief_overview(framework_slug, lot_slug, brief_id):
+    get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
     brief = data_api_client.get_brief(brief_id)["briefs"]
-    if not is_brief_associated_with_user(brief, current_user.id):
+
+    if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id):
         abort(404)
 
-    content = content_loader.get_manifest(framework_slug, 'edit_brief').filter(
-        {'lot': lot['slug']}
-    )
+    content = content_loader.get_manifest(brief['frameworkSlug'], 'edit_brief').filter({'lot': brief['lotSlug']})
     sections = content.summary(brief)
-    flattened_brief = get_flattened_brief(sections)
-    unanswered_required, unanswered_optional = count_unanswered_questions(sections)
     delete_requested = True if request.args.get('delete_requested') else False
+
+    completed_sections = {}
+    for section in sections:
+        required, optional = count_unanswered_questions([section])
+        completed_sections[section.slug] = True if required == 0 else False
 
     brief['clarificationQuestions'] = [
         dict(question, number=index+1)
@@ -190,53 +118,163 @@ def view_brief_summary(framework_slug, lot_slug, brief_id):
     ]
 
     return render_template(
-        "buyers/brief_summary.html",
-        framework=framework,
-        lot=lot,
+        "buyers/brief_overview.html",
         confirm_remove=request.args.get("confirm_remove", None),
-        brief_data=brief,
-        flattened_brief=flattened_brief,
-        unanswered_required=unanswered_required,
-        unanswered_optional=unanswered_optional,
-        can_publish=not unanswered_required,
-        delete_requested=delete_requested
+        brief=brief,
+        sections=sections,
+        completed_sections=completed_sections,
+        step_sections=[section.step for section in sections if hasattr(section, 'step')],
+        delete_requested=delete_requested,
     ), 200
+
+
+@buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/<section_slug>', methods=['GET'])
+def view_brief_section_summary(framework_slug, lot_slug, brief_id, section_slug):
+    get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
+    brief = data_api_client.get_brief(brief_id)["briefs"]
+
+    if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id) or not brief_can_be_edited(brief):
+        abort(404)
+
+    content = content_loader.get_manifest(brief['frameworkSlug'], 'edit_brief').filter({'lot': brief['lotSlug']})
+    sections = content.summary(brief)
+    section = sections.get_section(section_slug)
+
+    if not section:
+        abort(404)
+
+    return render_template(
+        "buyers/section_summary.html",
+        brief=brief,
+        section=section
+    ), 200
+
+
+@buyers.route(
+    '/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/edit/<section_slug>/<question_id>',
+    methods=['GET'])
+def edit_brief_question(framework_slug, lot_slug, brief_id, section_slug, question_id):
+    get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
+    brief = data_api_client.get_brief(brief_id)["briefs"]
+
+    if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id) or not brief_can_be_edited(brief):
+        abort(404)
+
+    content = content_loader.get_manifest(brief['frameworkSlug'], 'edit_brief').filter(
+        {'lot': brief['lotSlug']}
+    )
+    section = content.get_section(section_slug)
+    if section is None or not section.editable:
+        abort(404)
+
+    question = section.get_question(question_id)
+    if not question:
+        abort(404)
+
+    return render_template(
+        "buyers/edit_brief_question.html",
+        brief=brief,
+        section=section,
+        question=question
+    ), 200
+
+
+@buyers.route(
+    '/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/edit/<section_id>/<question_id>',
+    methods=['POST'])
+def update_brief_submission(framework_slug, lot_slug, brief_id, section_id, question_id):
+    get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
+    brief = data_api_client.get_brief(brief_id)["briefs"]
+
+    if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id) or not brief_can_be_edited(brief):
+        abort(404)
+
+    content = content_loader.get_manifest(brief['frameworkSlug'], 'edit_brief').filter({'lot': brief['lotSlug']})
+    section = content.get_section(section_id)
+    if section is None or not section.editable:
+        abort(404)
+
+    question = section.get_question(question_id)
+    if not question:
+        abort(404)
+
+    update_data = question.get_data(request.form)
+
+    try:
+        data_api_client.update_brief(
+            brief_id,
+            update_data,
+            updated_by=current_user.email_address,
+            page_questions=question.form_fields
+        )
+    except HTTPError as e:
+        update_data = section.unformat_data(update_data)
+        errors = section.get_error_messages(e.message)
+
+        # we need the brief_id to build breadcrumbs and the update_data to fill in the form.
+        brief.update(update_data)
+        return render_template(
+            "buyers/edit_brief_question.html",
+            brief=brief,
+            section=section,
+            question=question,
+            errors=errors
+        ), 400
+
+    if section.has_summary_page:
+        return redirect(
+            url_for(
+                ".view_brief_section_summary",
+                framework_slug=brief['frameworkSlug'],
+                lot_slug=brief['lotSlug'],
+                brief_id=brief['id'],
+                section_slug=section.slug)
+        )
+
+    return redirect(
+        url_for(
+            ".view_brief_overview",
+            framework_slug=brief['frameworkSlug'],
+            lot_slug=brief['lotSlug'],
+            brief_id=brief['id']
+        )
+    )
 
 
 @buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/responses', methods=['GET'])
 def view_brief_responses(framework_slug, lot_slug, brief_id):
-
-    framework, lot = get_framework_and_lot(framework_slug, lot_slug, data_api_client, must_allow_brief=True)
-
+    get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
     brief = data_api_client.get_brief(brief_id)["briefs"]
-    if not is_brief_associated_with_user(brief, current_user.id):
+
+    if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id):
         abort(404)
 
     failed_count, eligible_count = counts_for_failed_and_eligible_brief_responses(brief["id"], data_api_client)
 
     return render_template(
         "buyers/brief_responses.html",
-        framework=framework,
-        lot=lot,
         response_counts={"failed": failed_count, "eligible": eligible_count},
-        brief_data=brief
+        brief=brief
     ), 200
 
 
 @buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/responses/download',
               methods=['GET'])
 def download_brief_responses(framework_slug, lot_slug, brief_id):
-    framework, lot = get_framework_and_lot(framework_slug, lot_slug, data_api_client, must_allow_brief=True)
-
+    get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
     brief = data_api_client.get_brief(brief_id)["briefs"]
-    if not is_brief_associated_with_user(brief, current_user.id):
+
+    if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id):
         abort(404)
+
     if brief['status'] != "closed":
         abort(404)
 
     sorted_brief_responses = get_sorted_responses_for_brief(brief_id, data_api_client)
 
-    content = content_loader.get_manifest(framework['slug'], 'output_brief_response').filter({'lot': lot['slug']})
+    content = content_loader.get_manifest(brief['frameworkSlug'], 'output_brief_response').filter(
+        {'lot': brief['lotSlug']}
+    )
     section = content.get_section('view-response-to-requirements')
 
     column_headings = []
@@ -294,18 +332,16 @@ def download_brief_responses(framework_slug, lot_slug, brief_id):
 
 @buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/publish', methods=['GET', 'POST'])
 def publish_brief(framework_slug, lot_slug, brief_id):
-    framework, lot = get_framework_and_lot(framework_slug, lot_slug, data_api_client,
-                                           status='live', must_allow_brief=True)
-
+    get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
     brief = data_api_client.get_brief(brief_id)["briefs"]
-    if not is_brief_associated_with_user(brief, current_user.id):
+
+    if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id) or not brief_can_be_edited(brief):
         abort(404)
+
+    content = content_loader.get_manifest(brief['frameworkSlug'], 'edit_brief').filter({'lot': brief['lotSlug']})
     brief_users = brief['users'][0]
     brief_user_name = brief_users['name']
 
-    content = content_loader.get_manifest(framework_slug, 'edit_brief').filter(
-        {'lot': lot['slug']}
-    )
     sections = content.summary(brief)
 
     unanswered_required, unanswered_optional = count_unanswered_questions(sections)
@@ -314,32 +350,26 @@ def publish_brief(framework_slug, lot_slug, brief_id):
             abort(400, 'There are still unanswered required questions')
         data_api_client.update_brief_status(brief_id, 'live', brief_user_name)
         return redirect(
-            url_for('.view_brief_summary', framework_slug=framework_slug, lot_slug=lot_slug,
-                    brief_id=brief_id))
+            url_for('.view_brief_overview', framework_slug=brief['frameworkSlug'], lot_slug=brief['lotSlug'],
+                    brief_id=brief['id']))
     else:
-        flattened_brief = get_flattened_brief(sections)
         email_address = brief_users['emailAddress']
 
         return render_template(
             "buyers/brief_publish_confirmation.html",
             email_address=email_address,
             unanswered_required=unanswered_required,
-            framework_slug=framework_slug,
-            flattened_brief=flattened_brief,
-            brief_data=brief,
-            lot_slug=lot_slug,
-            brief_id=brief_id
+            sections=sections,
+            brief=brief
         ), 200
 
 
 @buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/delete', methods=['POST'])
 def delete_a_brief(framework_slug, lot_slug, brief_id):
-
-    # Don't need the return values here; the call is just to test conditions on lot and framework
     get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
-
     brief = data_api_client.get_brief(brief_id)["briefs"]
-    if not is_brief_associated_with_user(brief, current_user.id):
+
+    if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id) or not brief_can_be_edited(brief):
         abort(404)
 
     if request.form.get('delete_confirmed'):
@@ -348,26 +378,49 @@ def delete_a_brief(framework_slug, lot_slug, brief_id):
         return redirect(url_for('.buyer_dashboard'))
     else:
         return redirect(
-            url_for('.view_brief_summary', framework_slug=framework_slug, lot_slug=lot_slug,
-                    brief_id=brief_id, delete_requested=True)
+            url_for('.view_brief_overview', framework_slug=brief['frameworkSlug'], lot_slug=brief['lotSlug'],
+                    brief_id=brief['id'], delete_requested=True)
         )
 
 
-@buyers.route("/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/answer-question",
-              methods=["GET", "POST"])
-def add_clarification_question(framework_slug, lot_slug, brief_id):
-
-    framework, lot = get_framework_and_lot(framework_slug, lot_slug, data_api_client,
-                                           status="live", must_allow_brief=True)
-
+@buyers.route(
+    "/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/clarification-questions",
+    methods=["GET"])
+def clarification_questions(framework_slug, lot_slug, brief_id):
+    get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
     brief = data_api_client.get_brief(brief_id)["briefs"]
-    if not is_brief_associated_with_user(brief, current_user.id):
+
+    if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id):
         abort(404)
 
     if brief["status"] != "live":
         abort(404)
 
-    content = content_loader.get_manifest(framework_slug, "clarification_question")
+    brief['clarificationQuestions'] = [
+        dict(question, number=index+1)
+        for index, question in enumerate(brief['clarificationQuestions'])
+    ]
+
+    return render_template(
+        "buyers/clarification_questions.html",
+        brief=brief,
+    )
+
+
+@buyers.route(
+    "/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/clarification-questions/answer-question",
+    methods=["GET", "POST"])
+def add_clarification_question(framework_slug, lot_slug, brief_id):
+    get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
+    brief = data_api_client.get_brief(brief_id)["briefs"]
+
+    if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id):
+        abort(404)
+
+    if brief["status"] != "live":
+        abort(404)
+
+    content = content_loader.get_manifest(brief['frameworkSlug'], "clarification_question")
     section = content.get_section(content.get_next_editable_section_id())
 
     errors = {}
@@ -381,8 +434,8 @@ def add_clarification_question(framework_slug, lot_slug, brief_id):
                                                              current_user.email_address)
 
             return redirect(
-                url_for('.view_brief_summary', framework_slug=framework_slug, lot_slug=lot_slug,
-                        brief_id=brief_id) + "#clarification-questions")
+                url_for('.clarification_questions', framework_slug=brief['frameworkSlug'], lot_slug=brief['lotSlug'],
+                        brief_id=brief['id']))
         except HTTPError as e:
             if e.status_code != 400:
                 raise
@@ -391,8 +444,6 @@ def add_clarification_question(framework_slug, lot_slug, brief_id):
 
     return render_template(
         "buyers/answer_question.html",
-        framework=framework,
-        lot=lot,
         brief=brief,
         data=request.form,
         section=section,

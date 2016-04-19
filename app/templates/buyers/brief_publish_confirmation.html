@@ -37,17 +37,19 @@
 
     {% if unanswered_required > 0 %}
       <p class="padding-bottom-small"><strong>You still need to complete the following questions before the brief can be published:</strong></p>
-      {% for section in flattened_brief %}
-      <ol>
-        <li>
-            {% if section.answer_required %}
-                <a href="{{ url_for('.edit_brief_submission', framework_slug=framework_slug, lot_slug=brief_data.lot, brief_id=brief_data.id, section_id=section.section_id) }}">{{ section.question }}</a>
-            {% endif %}
-        </li>
-      </ol>
+      {% for section in sections %}
+        {% for question in section.questions %}
+          {% if question.answer_required %}
+            <ol>
+              <li>
+                <a href="{{ url_for('.edit_brief_question', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id, section_slug=section.slug, question_id=question.id) }}">{{ question.question }}</a>
+              </li>
+            </ol>
+          {% endif %}
+        {% endfor %}
       {% endfor %}
     {% else %}
-      <form action="{{ url_for('.publish_brief', framework_slug=framework_slug, lot_slug=lot_slug, brief_id=brief_id) }}" method="POST">
+      <form action="{{ url_for('.publish_brief', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id) }}" method="POST">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
         {%
         with

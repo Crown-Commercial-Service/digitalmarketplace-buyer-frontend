@@ -78,7 +78,7 @@ class TestBuyersHelpers(unittest.TestCase):
             'status': 'draft',
             'frameworkSlug': 'dos',
             'lotSlug': 'digital-specialists',
-            'required1': True,
+            'required1': True
             }
         content = content_loader.get_manifest('dos', 'edit_brief').filter(
             {'lot': 'digital-specialists'}
@@ -86,7 +86,7 @@ class TestBuyersHelpers(unittest.TestCase):
         sections = content.summary(brief)
 
         unanswered_required, unanswered_optional = helpers.buyers_helpers.count_unanswered_questions(sections)
-        assert unanswered_required == 1
+        assert unanswered_required == 2
         assert unanswered_optional == 2
 
     def test_add_unanswered_counts_to_briefs(self):
@@ -94,7 +94,7 @@ class TestBuyersHelpers(unittest.TestCase):
             'status': 'draft',
             'frameworkSlug': 'dos',
             'lotSlug': 'digital-specialists',
-            'required1': True,
+            'required1': True
         }]
 
         assert helpers.buyers_helpers.add_unanswered_counts_to_briefs(briefs, content_loader) == [{
@@ -102,10 +102,9 @@ class TestBuyersHelpers(unittest.TestCase):
             'frameworkSlug': 'dos',
             'lotSlug': 'digital-specialists',
             'required1': True,
-            'unanswered_required': 1,
+            'unanswered_required': 2,
             'unanswered_optional': 2
-        }
-        ]
+        }]
 
     def test_all_essentials_are_true(self):
         assert helpers.buyers_helpers.all_essentials_are_true(
@@ -161,14 +160,3 @@ class TestBuyersHelpers(unittest.TestCase):
             {"id": "one", "niceToHaveRequirements": [False, False, False, True, False]},
             {'id': 'zero', 'niceToHaveRequirements': [False, False, False, False, False]}
         ]
-
-    def test_get_flattened_brief(self):
-        data_api_client = mock.Mock()
-        brief = data_api_client.api_stubs.brief(status="draft")
-        content = content_loader.get_manifest('dos', 'edit_brief').filter(
-            {'lot': 'digital-specialists'}
-        )
-        sections = content.summary(brief)
-        flattened_brief = helpers.buyers_helpers.get_flattened_brief(sections)
-
-        assert flattened_brief[0].id == 'required1'

@@ -1,13 +1,27 @@
 -
   name: Section 1
+  editable: true
+  step: 1
   questions:
     - required1
     - optional1
 -
   name: Section 2
+  editable: true
+  step: 1
   questions:
     - required2
 -
   name: Section 4
+  editable: true
+  step: 2
+  description: |
+    This is a description of section 4
   questions:
     - optional2
+-
+  name: Section 5
+  editable: true
+  step: 2
+  questions:
+    - required3

@@ -5,3 +5,44 @@
 .ready-to-publish-hint {
     color: $secondary-text-colour;
 }
+
+ul.instruction-list-item-extra-information li,
+ol.instruction-list-item-extra-information li {
+  margin-bottom: 0;
+}
+
+img.tick {
+  float: left;
+  margin: 0.2em 5px 0 -22px;
+  @include ie-lte(8) {
+
+  }
+}
+
+.section-description {
+   @include core-19;
+   padding-bottom: 30px;
+
+  p {
+    padding-bottom: 10px;
+  }
+
+  p + ul {
+    margin-top: -10px;
+  }
+
+  ul {
+    margin-bottom: 10px;
+    list-style-type: disc;
+    padding-left: 25px;
+  }
+}
+
+.secondary-action-link {
+    margin-top: 30px;
+}
+
+button.button-save + .secondary-action-link,
+input.button-save + .secondary-action-link {
+    margin-top: 5px;
+}
