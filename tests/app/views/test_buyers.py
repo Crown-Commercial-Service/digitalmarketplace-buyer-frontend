@@ -417,9 +417,9 @@ class TestEditBriefSubmission(BaseApplicationTest):
         assert res.status_code == 200
         document = html.fromstring(res.get_data(as_text=True))
         assert document.xpath('//h1')[0].text_content().strip() == "Optional 2"
-        document.xpath(
+        assert document.xpath(
             '//form//div[contains(@class, "secondary-action-link")]/a'
-        )[0].get('url') == "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/section-4"  # noqa
+        )[0].get('href').strip() == "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/section-4"  # noqa
 
     @mock.patch("app.buyers.views.buyers.content_loader")
     def test_edit_brief_submission_return_link_to_section_summary_if_other_questions(self, content_loader,
@@ -445,9 +445,9 @@ class TestEditBriefSubmission(BaseApplicationTest):
         assert res.status_code == 200
         document = html.fromstring(res.get_data(as_text=True))
         assert document.xpath('//h1')[0].text_content().strip() == "Required 1"
-        document.xpath(
+        assert document.xpath(
             '//form//div[contains(@class, "secondary-action-link")]/a'
-        )[0].get('url') == "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/section-1"  # noqa
+        )[0].get('href').strip() == "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/section-1"  # noqa
 
     @mock.patch("app.buyers.views.buyers.content_loader")
     def test_edit_brief_submission_return_link_to_brief_overview_if_single_question(self, content_loader,
@@ -473,9 +473,9 @@ class TestEditBriefSubmission(BaseApplicationTest):
         assert res.status_code == 200
         document = html.fromstring(res.get_data(as_text=True))
         assert document.xpath('//h1')[0].text_content().strip() == "Required 2"
-        document.xpath(
+        assert document.xpath(
             '//form//div[contains(@class, "secondary-action-link")]/a'
-        )[0].get('url') == "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/section-2"  # noqa
+        )[0].get('href').strip() == "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234"  # noqa
 
     @mock.patch("app.buyers.views.buyers.content_loader")
     def test_edit_brief_submission_multiquestion(self, content_loader, data_api_client):
