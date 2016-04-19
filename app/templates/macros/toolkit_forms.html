@@ -30,7 +30,7 @@
   {%
     with
     name=question_content.id,
-    number_of_items=10,
+    number_of_items=question_content.get('number_of_items', 10),
     question=question_content.question|markdown,
     hint=(question_content.hint or '')|markdown,
     values=data[question_content.id],

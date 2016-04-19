@@ -279,7 +279,7 @@ class TestCreateNewBrief(BaseApplicationTest):
         anchor = document.cssselect('div.validation-masthead a[href="#title"]')
 
         assert len(anchor) == 1
-        assert "Requirements title" in anchor[0].text_content().strip()
+        assert "Title" in anchor[0].text_content().strip()
         data_api_client.create_brief.assert_called_with(
             'digital-outcomes-and-specialists',
             'digital-specialists',
@@ -390,7 +390,7 @@ class TestEditBriefSubmission(BaseApplicationTest):
 
         assert res.status_code == 200
         document = html.fromstring(res.get_data(as_text=True))
-        assert document.xpath('//h1')[0].text_content().strip() == "Your organisation"
+        assert document.xpath('//h1')[0].text_content().strip() == "Organisation the work is for"
 
     @mock.patch("app.buyers.views.buyers.content_loader")
     def test_edit_brief_submission_return_link_to_section_summary_if_section_has_description(
@@ -895,18 +895,25 @@ class TestPublishBrief(BaseApplicationTest):
 
         brief_json = api_stubs.brief(status="draft")
         brief_questions = brief_json['briefs']
-        brief_questions['specialistRole'] = 'communicationsManager'
-        brief_questions['location'] = 'somewhere'
-        brief_questions['organisation'] = 'test organisation'
-        brief_questions['backgroundInformation'] = 'test background info'
-        brief_questions['startDate'] = 'startDate'
-        brief_questions['contractLength'] = 'A very long time'
-        brief_questions['importantDates'] = 'Near future'
-        brief_questions['essentialRequirements'] = 'Everything'
-        brief_questions['evaluationType'] = 'test evaluation type'
-        brief_questions['culturalWeighting'] = 10
-        brief_questions['priceWeighting'] = 80
-        brief_questions['technicalWeighting'] = 10
+        brief_questions.update({
+            'backgroundInformation': 'test background info',
+            'contractLength': 'A very long time',
+            'culturalFitCriteria': ['CULTURAL', 'FIT'],
+            'culturalWeighting': 10,
+            'essentialRequirements': 'Everything',
+            'evaluationType': 'test evaluation type',
+            'existingTeam': 'team team team',
+            'importantDates': 'Near future',
+            'location': 'somewhere',
+            'organisation': 'test organisation',
+            'priceWeighting': 80,
+            'specialistRole': 'communicationsManager',
+            'specialistWork': 'work work work',
+            'startDate': 'startDate',
+            'technicalWeighting': 10,
+            'workingArrangements': 'arrangements',
+            'workplaceAddress': 'address',
+        })
         data_api_client.get_brief.return_value = brief_json
 
         res = self.client.post("/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
@@ -966,18 +973,25 @@ class TestPublishBrief(BaseApplicationTest):
 
         brief_json = api_stubs.brief(status="draft")
         brief_questions = brief_json['briefs']
-        brief_questions['specialistRole'] = 'communicationsManager'
-        brief_questions['location'] = 'somewhere'
-        brief_questions['organisation'] = 'test organisation'
-        brief_questions['backgroundInformation'] = 'test background info'
-        brief_questions['startDate'] = 'startDate'
-        brief_questions['contractLength'] = 'A very long time'
-        brief_questions['importantDates'] = 'Near future'
-        brief_questions['essentialRequirements'] = 'Everything'
-        brief_questions['evaluationType'] = 'test evaluation type'
-        brief_questions['culturalWeighting'] = 10
-        brief_questions['priceWeighting'] = 80
-        brief_questions['technicalWeighting'] = 10
+        brief_questions.update({
+            'backgroundInformation': 'test background info',
+            'contractLength': 'A very long time',
+            'culturalFitCriteria': ['CULTURAL', 'FIT'],
+            'culturalWeighting': 10,
+            'essentialRequirements': 'Everything',
+            'evaluationType': 'test evaluation type',
+            'existingTeam': 'team team team',
+            'importantDates': 'Near future',
+            'location': 'somewhere',
+            'organisation': 'test organisation',
+            'priceWeighting': 80,
+            'specialistRole': 'communicationsManager',
+            'specialistWork': 'work work work',
+            'startDate': 'startDate',
+            'technicalWeighting': 10,
+            'workingArrangements': 'arrangements',
+            'workplaceAddress': 'address',
+        })
         data_api_client.get_brief.return_value = brief_json
 
         res = self.client.get("/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
@@ -985,7 +999,7 @@ class TestPublishBrief(BaseApplicationTest):
         page_html = res.get_data(as_text=True)
 
         assert res.status_code == 200
-        assert 'Publish Requirements' in page_html
+        assert 'Publish Requirements' in page_html, page_html
 
     def test_publish_button_unavailable_if_questions_not_answered(self, data_api_client):
         self.login_as_buyer()
@@ -1467,7 +1481,7 @@ class TestAddBriefClarificationQuestion(BaseApplicationTest):
         document = html.fromstring(res.get_data(as_text=True))
 
         assert res.status_code == 400
-        assert len(document.cssselect("#error-question")) == 1
+        assert len(document.cssselect(".validation-message")) == 1, res.get_data(as_text=True)
 
     def test_api_error(self, data_api_client):
         self.login_as_buyer()

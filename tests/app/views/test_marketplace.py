@@ -330,9 +330,9 @@ class TestBriefPage(BaseApplicationTest):
 
         assert_equal(section_heading.get('id'), 'opportunity-attributes-1')
         assert_equal(section_heading.text.strip(), 'Overview')
-        assert_equal(start_date_key[0], 'Start date')
+        assert_equal(start_date_key[0], 'Expected start date')
         assert_equal(start_date_value[0], '01/03/2016')
-        assert_equal(contract_length_key[0], 'Contract length')
+        assert_equal(contract_length_key[0], 'Expected contract length')
         assert_equal(contract_length_value[0], '4 weeks')
 
     def test_dos_brief_has_question_and_answer_session_details_link(self):
