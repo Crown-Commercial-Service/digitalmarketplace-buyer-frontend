@@ -2,12 +2,24 @@
 
 {% import "macros/brief_links.html" as brief_links %}
 
+{% set previous_title_text =
+    {
+        "digital-outcomes": "Find a team to provide an outcome",
+        "digital-specialists": "Find an individual specialist",
+        "user-research-participants": "Find user research participants",
+    }[lot.slug]
+%}
+
 {% block breadcrumb %}
   {%
     with items = [
       {
         "link": "/",
         "label": "Digital Marketplace"
+      },
+      {
+        "link": url_for("main.info_page_for_starting_a_brief", framework_slug=framework.slug, lot_slug=lot.slug),
+        "label": previous_title_text
       }
     ]
   %}

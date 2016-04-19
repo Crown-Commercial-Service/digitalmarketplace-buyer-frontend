@@ -3,16 +3,24 @@
 {% block page_title %}Your account - Digital Marketplace{% endblock %}
 
 {% block breadcrumb %}
-    {%
-        with items = [
-        {
-            "link": "/",
-            "label": "Digital Marketplace"
-        }
-        ]
-    %}
+  {%
+    with items = [
+      {
+        "link": "/",
+        "label": "Digital Marketplace"
+      },
+      {
+        "link": url_for(".buyer_dashboard"),
+        "label": "Your account"
+      },
+      {
+        "link": url_for(".view_brief_overview", framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id),
+        "label": brief.title
+      }
+    ]
+  %}
     {% include "toolkit/breadcrumb.html" %}
-    {% endwith %}
+  {% endwith %}
 {% endblock %}
 
 {% block main_content %}

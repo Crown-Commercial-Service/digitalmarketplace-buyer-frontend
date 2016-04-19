@@ -373,6 +373,32 @@ class TestEveryDamnPage(BaseApplicationTest):
 
 @mock.patch('app.buyers.views.buyers.data_api_client')
 class TestEditBriefSubmission(BaseApplicationTest):
+
+    def _test_breadcrumbs_on_question_page(self, response, has_summary_page=False, section_name=None):
+        breadcrumbs = html.fromstring(response.get_data(as_text=True)).xpath(
+            '//*[@id="global-breadcrumb"]/nav/ol/li'
+        )
+
+        breadcrumbs_we_expect = [
+            ('Digital Marketplace', '/'),
+            ('Your account', '/buyers'),
+            ('I need a thing to do a thing',
+             '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234')
+        ]
+        if has_summary_page and section_name:
+            breadcrumbs_we_expect.append((
+                section_name,
+                '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/{}'.format(
+                    section_name.lower().replace(' ', '-')
+                )
+            ))
+
+        assert len(breadcrumbs) == len(breadcrumbs_we_expect)
+
+        for index, link in enumerate(breadcrumbs_we_expect):
+            assert breadcrumbs[index].find('a').text_content().strip() == link[0]
+            assert breadcrumbs[index].find('a').get('href').strip() == link[1]
+
     def test_edit_brief_submission(self, data_api_client):
         self.login_as_buyer()
         data_api_client.get_framework.return_value = api_stubs.framework(
@@ -417,9 +443,10 @@ class TestEditBriefSubmission(BaseApplicationTest):
         assert res.status_code == 200
         document = html.fromstring(res.get_data(as_text=True))
         assert document.xpath('//h1')[0].text_content().strip() == "Optional 2"
-        document.xpath(
+        assert document.xpath(
             '//form//div[contains(@class, "secondary-action-link")]/a'
-        )[0].get('url') == "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/section-4"  # noqa
+        )[0].get('href').strip() == "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/section-4"  # noqa
+        self._test_breadcrumbs_on_question_page(response=res, has_summary_page=True, section_name='Section 4')
 
     @mock.patch("app.buyers.views.buyers.content_loader")
     def test_edit_brief_submission_return_link_to_section_summary_if_other_questions(self, content_loader,
@@ -445,9 +472,10 @@ class TestEditBriefSubmission(BaseApplicationTest):
         assert res.status_code == 200
         document = html.fromstring(res.get_data(as_text=True))
         assert document.xpath('//h1')[0].text_content().strip() == "Required 1"
-        document.xpath(
+        assert document.xpath(
             '//form//div[contains(@class, "secondary-action-link")]/a'
-        )[0].get('url') == "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/section-1"  # noqa
+        )[0].get('href').strip() == "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/section-1"  # noqa
+        self._test_breadcrumbs_on_question_page(response=res, has_summary_page=True, section_name='Section 1')
 
     @mock.patch("app.buyers.views.buyers.content_loader")
     def test_edit_brief_submission_return_link_to_brief_overview_if_single_question(self, content_loader,
@@ -473,9 +501,10 @@ class TestEditBriefSubmission(BaseApplicationTest):
         assert res.status_code == 200
         document = html.fromstring(res.get_data(as_text=True))
         assert document.xpath('//h1')[0].text_content().strip() == "Required 2"
-        document.xpath(
+        assert document.xpath(
             '//form//div[contains(@class, "secondary-action-link")]/a'
-        )[0].get('url') == "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/section-2"  # noqa
+        )[0].get('href').strip() == "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234"  # noqa
+        self._test_breadcrumbs_on_question_page(response=res, has_summary_page=False)
 
     @mock.patch("app.buyers.views.buyers.content_loader")
     def test_edit_brief_submission_multiquestion(self, content_loader, data_api_client):
