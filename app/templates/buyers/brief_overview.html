@@ -53,6 +53,7 @@
                 {
                   'href': url_for(".publish_brief",framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id),
                   'text': 'Review and publish your requirements',
+                  'allowed_statuses': 'draft'
                 }
               ]
             },
@@ -62,11 +63,13 @@
               'links': [
                 {
                   'href': url_for(".clarification_questions",framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id),
-                  'text': 'Publish questions and answers'
+                  'text': 'Publish questions and answers',
+                  'allowed_statuses': 'live'
                 },
                 {
                   'href': 'https://www.gov.uk/guidance/how-to-answer-supplier-questions-on-the-digital-marketplace',
-                  'text': 'How to answer supplier questions'
+                  'text': 'How to answer supplier questions',
+                  'allowed_statuses': ['draft', 'live']
                 }
               ]
             },
@@ -77,6 +80,7 @@
                 {
                   'href': 'https://www.gov.uk/guidance/how-to-shortlist-digital-outcomes-and-specialists-suppliers',
                   'text': 'How to shortlist suppliers',
+                  'allowed_statuses': ['draft', 'live']
                 }
               ]
             },
@@ -86,7 +90,8 @@
               'links': [
                 {
                   'href': 'https://www.gov.uk/guidance/how-to-evaluate-digital-outcomes-and-specialists-suppliers',
-                  'text': 'How to evaluate suppliers'
+                  'text': 'How to evaluate suppliers',
+                  'allowed_statuses': ['draft', 'live']
                 }
               ]
             },
@@ -95,7 +100,8 @@
               'links': [
                 {
                   'href': 'https://www.gov.uk/guidance/how-to-award-a-contract-when-you-buy-services',
-                  'text': 'How to award a contract'
+                  'text': 'How to award a contract',
+                  'allowed_statuses': ['draft', 'live']
                 }
               ]
             }
@@ -111,7 +117,7 @@
             {% if step.description %}
               <p class="instruction-list-item-extra-information">{{ step.description }}</p>
             {% endif %}
-            {% if step_number in step_sections %}
+            {% if step_number in step_sections and brief.status == 'draft' %}
               {% if step_sections.count(step_number) == 1 %}
                 {% set section = sections.sections[step_sections.index(step_number)] %}
                 <a class="instruction-list-item-extra-information" href="{{ brief_links.brief_link_url('grandparent', section, brief) }}">
@@ -140,9 +146,11 @@
               {% else %}
                 <ul class="instruction-list-item-extra-information">
                   {% for link in step.links %}
-                    <li>
-                      <a href="{{ link.href }}">{{ link.text }}</a>
-                    </li>
+                    {% if brief.status in link.allowed_statuses %}
+                      <li>
+                        <a href="{{ link.href }}">{{ link.text }}</a>
+                      </li>
+                    {% endif %}
                   {% endfor %}
                 </ul>
               {% endif %}
