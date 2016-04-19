@@ -101,7 +101,7 @@
         {%
           with
             heading = temporary_message.heading,
-            subheading = temporary_message.subheading,
+            subheading = temporary_message.subheading|safe,
             messages = temporary_message.messages,
             message = temporary_message.message
         %}
