@@ -378,15 +378,9 @@ def delete_a_brief(framework_slug, lot_slug, brief_id):
     if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id) or not brief_can_be_edited(brief):
         abort(404)
 
-    if request.form.get('delete_confirmed'):
         data_api_client.delete_brief(brief_id, current_user.email_address)
         flash({"requirements_deleted": brief.get("title")})
         return redirect(url_for('.buyer_dashboard'))
-    else:
-        return redirect(
-            url_for('.view_brief_overview', framework_slug=brief['frameworkSlug'], lot_slug=brief['lotSlug'],
-                    brief_id=brief['id'], delete_requested=True)
-        )
 
 
 @buyers.route(
