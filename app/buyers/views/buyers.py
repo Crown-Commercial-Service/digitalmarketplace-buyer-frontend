@@ -10,7 +10,7 @@ from .. import buyers, content_loader
 from ...helpers.buyers_helpers import (
     all_essentials_are_true, counts_for_failed_and_eligible_brief_responses,
     get_framework_and_lot, get_sorted_responses_for_brief, count_unanswered_questions,
-    brief_can_be_edited, add_unanswered_counts_to_briefs, is_brief_correct
+    brief_can_be_edited, add_unanswered_counts_to_briefs, is_brief_correct, get_publishing_dates
 )
 
 from dmapiclient import HTTPError
@@ -360,13 +360,15 @@ def publish_brief(framework_slug, lot_slug, brief_id):
                     brief_id=brief['id']))
     else:
         email_address = brief_users['emailAddress']
+        dates = get_publishing_dates()
 
         return render_template(
             "buyers/brief_publish_confirmation.html",
             email_address=email_address,
             unanswered_required=unanswered_required,
             sections=sections,
-            brief=brief
+            brief=brief,
+            dates=dates
         ), 200
 
 
