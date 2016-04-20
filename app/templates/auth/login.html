@@ -104,7 +104,15 @@
             {% if form.password.errors %}
                 </div>
             {% endif %}
-
+            
+            {%
+              with
+              url = url_for('.request_password_reset'),
+              text = "Forgotten password"
+            %}
+              {% include "toolkit/secondary-action-link.html" %}
+            {% endwith %}
+            
             {%
               with
               type = "save",
@@ -112,11 +120,16 @@
             %}
               {% include "toolkit/button.html" %}
             {% endwith %}
-            <header class="page-heading-smaller">
-                <p class="context">
-                    <a href="{{ url_for('.request_password_reset') }}">Forgotten password</a>
-                </p>
-            </header>
+
+            {%
+              with
+              url = url_for('.create_buyer_account'),
+              text = "Create a buyer account",
+              bigger = true
+            %}
+              {% include "toolkit/secondary-action-link.html" %}
+            {% endwith %}
+            
         </div>
     </div>
 </form>

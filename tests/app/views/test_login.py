@@ -56,7 +56,7 @@ class TestLogin(BaseApplicationTest):
         assert 'Secure;' in res.headers['Set-Cookie']
 
     @mock.patch('app.main.views.login.data_api_client')
-    def test_should_redirect_to_buyer_dashboard_on_buyer_login(self, data_api_client):
+    def test_should_redirect_to_homepage_on_buyer_login(self, data_api_client):
         with self.app.app_context():
             data_api_client.authenticate_user.return_value = self.user(123, "email@email.com", None, None, 'Name')
             res = self.client.post("/login", data={
@@ -64,7 +64,7 @@ class TestLogin(BaseApplicationTest):
                 'password': '1234567890'
             })
             assert res.status_code == 302
-            assert res.location == 'http://localhost/buyers'
+            assert res.location == 'http://localhost/'
             assert 'Secure;' in res.headers['Set-Cookie']
 
     def test_should_redirect_logged_in_supplier_to_supplier_dashboard(self):
@@ -73,11 +73,11 @@ class TestLogin(BaseApplicationTest):
         assert res.status_code == 302
         assert res.location == 'http://localhost/suppliers'
 
-    def test_should_redirect_logged_in_buyer_to_buyer_dashboard(self):
+    def test_should_redirect_logged_in_buyer_to_homepage(self):
         self.login_as_buyer()
         res = self.client.get("/login")
         assert res.status_code == 302
-        assert res.location == 'http://localhost/buyers'
+        assert res.location == 'http://localhost/'
 
     def test_should_redirect_logged_in_admin_to_admin_dashboard(self):
         self.login_as_admin()
@@ -149,7 +149,7 @@ class TestLogin(BaseApplicationTest):
         assert res.location == 'http://localhost/suppliers'
 
     @mock.patch('app.main.views.login.data_api_client')
-    def test_bad_next_url_takes_buyer_user_to_buyer_dashboard(self, data_api_client):
+    def test_bad_next_url_takes_buyer_user_to_homepage(self, data_api_client):
         with self.app.app_context():
             data_api_client.authenticate_user.return_value = self.user(123, "email@email.com", None, None, 'Name')
             res = self.client.post("/login?next=http://badness.com",
@@ -158,7 +158,7 @@ class TestLogin(BaseApplicationTest):
                                        'password': '1234567890'
                                    })
         assert res.status_code == 302
-        assert res.location == 'http://localhost/buyers'
+        assert res.location == 'http://localhost/'
 
     def test_should_have_cookie_on_redirect(self):
         with self.app.app_context():
