@@ -41,16 +41,27 @@
           steps = [
             {
               'title': 'Write requirements',
-              'description': 'Before you can publish your requirements, you must complete:',
-              'allowed_statuses': ['draft']
+              'description': {
+                'draft': 'Before you can publish your requirements, you must complete:',
+                'live': 'Done',
+                'closed': 'Done',
+              },
             },
             {
               'title': 'Set how you’ll evaluate suppliers',
-              'description': 'Before you can publish your requirements, you must complete:',
-              'allowed_statuses': ['draft']
+              'description': {
+                'draft': 'Before you can publish your requirements, you must complete:',
+                'live': 'Done',
+                'closed': 'Done',
+              },
             },
             {
               'title': 'Publish requirements',
+              'description': {
+                'draft': '',
+                'live': 'Your requirements are open for applications until {}.'.format(brief.applicationsClosedAt | dateformat),
+                'closed': 'Your requirements closed for applications on {}.'.format(brief.applicationsClosedAt | dateformat),
+              },
               'links': [
                 {
                   'href': url_for(".publish_brief",framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id),
@@ -66,7 +77,11 @@
             },
             {
               'title': 'Answer supplier questions',
-              'description': 'When you’ve published your requirements, you must answer all supplier questions.',
+              'description': {
+                'draft': 'When you’ve published your requirements, you must answer all supplier questions.',
+                'live': 'You must answer all questions by {}. Suppliers will send you questions by email.'.format(brief.clarificationQuestionsPublishedBy | dateformat),
+                'closed': 'Done',
+              },
               'links': [
                 {
                   'href': url_for(".clarification_questions",framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id),
@@ -76,13 +91,23 @@
                 {
                   'href': 'https://www.gov.uk/guidance/how-to-answer-supplier-questions-on-the-digital-marketplace',
                   'text': 'How to answer supplier questions',
+                  'allowed_statuses': ['draft', 'live']
                 }
               ]
             },
             {
               'title': 'Shortlist',
-              'description': 'After the application deadline, shortlist the suppliers who applied.',
+              'description': {
+                'draft': 'After the application deadline, shortlist the suppliers who applied.',
+                'live': 'After the application deadline, shortlist the suppliers who applied.',
+                'closed': 'You can view and shortlist suppliers who best meet your needs.',
+              },
               'links': [
+                {
+                  'href': url_for(".view_brief_responses", framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id),
+                  'text': 'View and shortlist suppliers',
+                  'allowed_statuses': ['closed']
+                },
                 {
                   'href': 'https://www.gov.uk/guidance/how-to-shortlist-digital-outcomes-and-specialists-suppliers',
                   'text': 'How to shortlist suppliers',
@@ -91,7 +116,11 @@
             },
             {
               'title': 'Evaluate',
-              'description': 'Evaluate your shortlist using the criteria and methods you published with your requirements.',
+              'description': {
+                'draft': 'Evaluate your shortlist using the criteria and methods you published with your requirements.',
+                'live': 'Evaluate your shortlist using the criteria and methods you published with your requirements.',
+                'closed': 'Evaluate your shortlist using the criteria and methods you published with your requirements.',
+              },
               'links': [
                 {
                   'href': 'https://www.gov.uk/guidance/how-to-evaluate-digital-outcomes-and-specialists-suppliers',
@@ -101,6 +130,11 @@
             },
             {
               'title': 'Award a contract',
+              'description': {
+                'draft': 'You must give your chosen supplier a contract before they start work.',
+                'live': 'You must give your chosen supplier a contract before they start work.',
+                'closed': 'You must give your chosen supplier a contract before they start work.',
+              },
               'links': [
                 {
                   'href': 'https://www.gov.uk/guidance/how-to-award-a-contract-when-you-buy-services',
@@ -117,10 +151,8 @@
             <h2 class="instruction-list-item-body">
               <span class="step-number" role="presentation">{{ step_number }}. </span>
               {{ step.title }}</h2>
-            {% if step.description and (not step.allowed_statuses or brief.status in step.allowed_statuses) %}
-              <p class="instruction-list-item-extra-information">{{ step.description }}</p>
-            {% elif 'draft' in step.allowed_statuses and brief.status not in step.allowed_statuses %}
-              <p class="instruction-list-item-extra-information">Done</p>
+            {% if step.description %}
+              <p class="instruction-list-item-extra-information">{{ step.description[brief.status] }}</p>
             {% endif %}
             {% if step_number in step_sections and brief.status == 'draft' %}
               {% if step_sections.count(step_number) == 1 %}

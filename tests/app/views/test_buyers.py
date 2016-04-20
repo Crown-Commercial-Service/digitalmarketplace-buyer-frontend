@@ -1259,7 +1259,7 @@ class TestBriefSummaryPage(BaseApplicationTest):
             assert (document.xpath('//h1')[0]).text_content().strip() == "I need a thing to do a thing"
             assert [e.text_content() for e in document.xpath('//main[@id="content"]//ul/li/a')] == [
                 'View published requirements',
-                'How to answer supplier questions',
+                'View and shortlist suppliers',
                 'How to shortlist suppliers',
                 'How to evaluate suppliers',
                 'How to award a contract',
