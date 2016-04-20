@@ -1056,7 +1056,7 @@ class TestPublishBrief(BaseApplicationTest):
 
 @mock.patch('app.buyers.views.buyers.data_api_client')
 class TestDeleteBriefSubmission(BaseApplicationTest):
-    def test_delete_brief_submission_click_delete_button(self, data_api_client):
+    def test_delete_brief_submission(self, data_api_client):
         self.login_as_buyer()
         data_api_client.get_framework.return_value = api_stubs.framework(
             slug='digital-outcomes-and-specialists',
@@ -1068,35 +1068,12 @@ class TestDeleteBriefSubmission(BaseApplicationTest):
         data_api_client.get_brief.return_value = api_stubs.brief()
 
         res = self.client.post(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
-            "digital-specialists/1234/delete",
-            data={})
-
-        assert res.status_code == 302
-        assert not data_api_client.delete_brief.called
-        assert res.location == "http://localhost/buyers/frameworks/digital-outcomes-and-specialists/requirements/" \
-                               "digital-specialists/1234?delete_requested=True"
-
-    def test_delete_brief_submission_click_confirm_delete_button(self, data_api_client):
-        self.login_as_buyer()
-        data_api_client.get_framework.return_value = api_stubs.framework(
-            slug='digital-outcomes-and-specialists',
-            status='live',
-            lots=[
-                api_stubs.lot(slug='digital-specialists', allows_brief=True)
-            ]
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/delete"
         )
-        data_api_client.get_brief.return_value = api_stubs.brief()
 
-        res = self.client.post(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
-            "digital-specialists/1234/delete",
-            data={"delete_confirmed": True})
-
-        data_api_client.delete_brief.assert_called_with('1234', 'buyer@email.com')
         assert res.status_code == 302
+        assert data_api_client.delete_brief.called
         assert res.location == "http://localhost/buyers"
-        self.assert_flashes('requirements_deleted')
 
     def test_404_if_framework_is_not_live(self, data_api_client):
         self.login_as_buyer()
@@ -1110,29 +1087,29 @@ class TestDeleteBriefSubmission(BaseApplicationTest):
         data_api_client.get_brief.return_value = api_stubs.brief()
 
         res = self.client.post(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
-            "digital-specialists/1234/delete",
-            data={"delete_confirmed": True})
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/delete",
+        )
 
         assert res.status_code == 404
+        assert not data_api_client.delete_brief.called
 
-    def test_404_if_framework_does_not_allow_brief(self, data_api_client):
+    def test_cannot_delete_live_brief(self, data_api_client):
         self.login_as_buyer()
         data_api_client.get_framework.return_value = api_stubs.framework(
             slug='digital-outcomes-and-specialists',
             status='live',
             lots=[
-                api_stubs.lot(slug='digital-specialists', allows_brief=False)
+                api_stubs.lot(slug='digital-specialists', allows_brief=True)
             ]
         )
-        data_api_client.get_brief.return_value = api_stubs.brief()
+        data_api_client.get_brief.return_value = api_stubs.brief(status='live')
 
         res = self.client.post(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
-            "digital-specialists/1234/delete",
-            data={"delete_confirmed": True})
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/delete",
+        )
 
         assert res.status_code == 404
+        assert not data_api_client.delete_brief.called
 
     def test_404_if_brief_does_not_belong_to_user(self, data_api_client):
         self.login_as_buyer()
@@ -1192,8 +1169,7 @@ class TestBriefSummaryPage(BaseApplicationTest):
                 'How to award a contract',
             ]
 
-            # ~TODO: this shouldn't show up for draft briefs
-            # assert "Publish supplier questions and answers" not in page_html
+            assert document.xpath('//a[contains(text(), "Delete")]')
 
     def test_show_live_brief_summary_page(self, data_api_client):
         with self.app.app_context():
@@ -1229,8 +1205,7 @@ class TestBriefSummaryPage(BaseApplicationTest):
                 'How to award a contract',
             ]
 
-            # ~TODO: this should show up for live briefs
-            # assert "Publish supplier questions and answers" in page_html
+            assert not document.xpath('//a[contains(text(), "Delete")]')
 
     def test_show_closed_brief_summary_page(self, data_api_client):
         with self.app.app_context():
@@ -1264,6 +1239,8 @@ class TestBriefSummaryPage(BaseApplicationTest):
                 'How to evaluate suppliers',
                 'How to award a contract',
             ]
+
+            assert not document.xpath('//a[contains(text(), "Delete")]')
 
     def test_show_clarification_questions_page_for_live_brief_with_no_questions(self, data_api_client):
         with self.app.app_context():

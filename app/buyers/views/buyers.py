@@ -101,7 +101,8 @@ def create_new_brief(framework_slug, lot_slug):
 
 @buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>', methods=['GET'])
 def view_brief_overview(framework_slug, lot_slug, brief_id):
-    get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
+    framework, lot = get_framework_and_lot(
+        framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
     brief = data_api_client.get_brief(brief_id)["briefs"]
 
     if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id):
@@ -123,6 +124,7 @@ def view_brief_overview(framework_slug, lot_slug, brief_id):
 
     return render_template(
         "buyers/brief_overview.html",
+        framework=framework,
         confirm_remove=request.args.get("confirm_remove", None),
         brief=brief,
         sections=sections,
@@ -376,15 +378,9 @@ def delete_a_brief(framework_slug, lot_slug, brief_id):
     if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id) or not brief_can_be_edited(brief):
         abort(404)
 
-    if request.form.get('delete_confirmed'):
-        data_api_client.delete_brief(brief_id, current_user.email_address)
-        flash({"requirements_deleted": brief.get("title")})
-        return redirect(url_for('.buyer_dashboard'))
-    else:
-        return redirect(
-            url_for('.view_brief_overview', framework_slug=brief['frameworkSlug'], lot_slug=brief['lotSlug'],
-                    brief_id=brief['id'], delete_requested=True)
-        )
+    data_api_client.delete_brief(brief_id, current_user.email_address)
+    flash({"requirements_deleted": brief.get("title")})
+    return redirect(url_for('.buyer_dashboard'))
 
 
 @buyers.route(
