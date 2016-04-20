@@ -322,7 +322,7 @@ class TestBriefPage(BaseApplicationTest):
         document = html.fromstring(res.get_data(as_text=True))
 
         brief_important_dates = document.xpath(
-            '//table[@class="summary-item-body"][1]/tbody/tr')
+            '(//table[@class="summary-item-body"])[1]/tbody/tr')
 
         assert_equal(len(brief_important_dates), 3)
         assert_true(brief_important_dates[0].xpath(
