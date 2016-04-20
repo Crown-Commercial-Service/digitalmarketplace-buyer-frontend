@@ -1178,6 +1178,19 @@ class TestBriefSummaryPage(BaseApplicationTest):
             document = html.fromstring(page_html)
 
             assert (document.xpath('//h1')[0]).text_content().strip() == "I need a thing to do a thing"
+            assert [e.text_content() for e in document.xpath('//main[@id="content"]//ul/li/a')] == [
+                'title',
+                'specialist role',
+                'location',
+                'description of work',
+                'shortlist criteria',
+                'evaluation criteria',
+                'Review and publish your requirements',
+                'How to answer supplier questions',
+                'How to shortlist suppliers',
+                'How to evaluate suppliers',
+                'How to award a contract',
+            ]
 
             # ~TODO: this shouldn't show up for draft briefs
             # assert "Publish supplier questions and answers" not in page_html
@@ -1207,9 +1220,50 @@ class TestBriefSummaryPage(BaseApplicationTest):
             document = html.fromstring(page_html)
 
             assert (document.xpath('//h1')[0]).text_content().strip() == "I need a thing to do a thing"
+            assert [e.text_content() for e in document.xpath('//main[@id="content"]//ul/li/a')] == [
+                'View published requirements',
+                'Publish questions and answers',
+                'How to answer supplier questions',
+                'How to shortlist suppliers',
+                'How to evaluate suppliers',
+                'How to award a contract',
+            ]
 
             # ~TODO: this should show up for live briefs
             # assert "Publish supplier questions and answers" in page_html
+
+    def test_show_closed_brief_summary_page(self, data_api_client):
+        with self.app.app_context():
+            self.login_as_buyer()
+            data_api_client.get_framework.return_value = api_stubs.framework(
+                slug='digital-outcomes-and-specialists',
+                status='live',
+                lots=[
+                    api_stubs.lot(slug='digital-specialists', allows_brief=True),
+                ]
+            )
+            brief_json = api_stubs.brief(status="closed")
+            brief_json['briefs']['publishedAt'] = "2016-04-02T20:10:00.00000Z"
+            brief_json['briefs']['specialistRole'] = 'communicationsManager'
+            brief_json['briefs']["clarificationQuestionsAreClosed"] = True
+            data_api_client.get_brief.return_value = brief_json
+
+            res = self.client.get(
+                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234"
+            )
+
+            assert res.status_code == 200
+            page_html = res.get_data(as_text=True)
+            document = html.fromstring(page_html)
+
+            assert (document.xpath('//h1')[0]).text_content().strip() == "I need a thing to do a thing"
+            assert [e.text_content() for e in document.xpath('//main[@id="content"]//ul/li/a')] == [
+                'View published requirements',
+                'How to answer supplier questions',
+                'How to shortlist suppliers',
+                'How to evaluate suppliers',
+                'How to award a contract',
+            ]
 
     def test_show_clarification_questions_page_for_live_brief_with_no_questions(self, data_api_client):
         with self.app.app_context():
