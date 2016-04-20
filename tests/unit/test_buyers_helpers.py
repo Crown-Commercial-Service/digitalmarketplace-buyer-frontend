@@ -150,8 +150,9 @@ class TestBuyersHelpers(unittest.TestCase):
                 {"id": "four", "niceToHaveRequirements": [True, True, True, True, False]},
             ]
         }
+        brief = {"id": 1, "niceToHaveRequirements": ["Nice", "to", "have", "yes", "please"]}
 
-        assert helpers.buyers_helpers.get_sorted_responses_for_brief(1, data_api_client) == [
+        assert helpers.buyers_helpers.get_sorted_responses_for_brief(brief, data_api_client) == [
             {'id': 'five', 'niceToHaveRequirements': [True, True, True, True, True]},
             {'id': 'five', 'niceToHaveRequirements': [True, True, True, True, True]},
             {'id': 'four', 'niceToHaveRequirements': [True, True, True, True, False]},
@@ -159,4 +160,22 @@ class TestBuyersHelpers(unittest.TestCase):
             {'id': 'three', 'niceToHaveRequirements': [True, True, False, False, True]},
             {"id": "one", "niceToHaveRequirements": [False, False, False, True, False]},
             {'id': 'zero', 'niceToHaveRequirements': [False, False, False, False, False]}
+        ]
+
+    def test_get_sorted_responses_does_not_sort_if_no_nice_to_haves(self):
+        data_api_client = mock.Mock()
+        data_api_client.find_brief_responses.return_value = {
+            "briefResponses": [
+                {"id": "five"},
+                {"id": "zero"},
+                {"id": "three"},
+                {"id": "five"}
+            ]
+        }
+        brief = {"id": 1, "niceToHaveRequirements": []}
+        assert helpers.buyers_helpers.get_sorted_responses_for_brief(brief, data_api_client) == [
+            {"id": "five"},
+            {"id": "zero"},
+            {"id": "three"},
+            {"id": "five"}
         ]

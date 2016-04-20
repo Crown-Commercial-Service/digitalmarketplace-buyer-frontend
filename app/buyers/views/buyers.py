@@ -276,7 +276,7 @@ def download_brief_responses(framework_slug, lot_slug, brief_id):
     if brief['status'] != "closed":
         abort(404)
 
-    sorted_brief_responses = get_sorted_responses_for_brief(brief_id, data_api_client)
+    sorted_brief_responses = get_sorted_responses_for_brief(brief, data_api_client)
 
     content = content_loader.get_manifest(brief['frameworkSlug'], 'output_brief_response').filter(
         {'lot': brief['lotSlug']}
