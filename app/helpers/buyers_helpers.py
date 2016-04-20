@@ -72,10 +72,13 @@ def all_essentials_are_true(brief_response):
     return all(brief_response['essentialRequirements'])
 
 
-def get_sorted_responses_for_brief(brief_id, data_api_client):
-    brief_responses = data_api_client.find_brief_responses(brief_id)['briefResponses']
-    return sorted(
-        brief_responses,
-        key=lambda k: len([nice for nice in k['niceToHaveRequirements'] if nice is True]),
-        reverse=True
-    )
+def get_sorted_responses_for_brief(brief, data_api_client):
+    brief_responses = data_api_client.find_brief_responses(brief['id'])['briefResponses']
+    if brief.get("niceToHaveRequirements"):
+        return sorted(
+            brief_responses,
+            key=lambda k: len([nice for nice in k['niceToHaveRequirements'] if nice is True]),
+            reverse=True
+        )
+    else:
+        return brief_responses
