@@ -1264,7 +1264,7 @@ class TestBriefSummaryPage(BaseApplicationTest):
             assert res.status_code == 200
             page_html = res.get_data(as_text=True)
             assert "Clarification questions" in page_html
-            assert "No clarification questions have been answered yet" in page_html
+            assert "No questions or answers have been published" in page_html
             assert "Answer a clarification question" in page_html
 
     def test_show_clarification_questions_page_for_live_brief_with_one_question(self, data_api_client):
@@ -1296,7 +1296,7 @@ class TestBriefSummaryPage(BaseApplicationTest):
             assert "Why is my question a question?" in page_html
             assert "Because" in page_html
             assert "Answer a clarification question" in page_html
-            assert "No clarification questions have been answered yet" not in page_html
+            assert "No questions or answers have been published" not in page_html
 
     def test_404_if_framework_does_not_allow_brief(self, data_api_client):
         with self.app.app_context():
