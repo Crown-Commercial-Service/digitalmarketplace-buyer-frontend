@@ -33,12 +33,12 @@ def index_g_cloud():
 
 @main.route('/g-cloud/framework')
 def framework_g_cloud():
-    return render_template('content/framework-g-cloud.html')
+    return redirect('https://www.gov.uk/guidance/the-g-cloud-framework-on-the-digital-marketplace', 301)
 
 
 @main.route('/buyers-guide')
 def buyers_guide():
-    return render_template('content/buyers-guide.html')
+    return redirect('https://www.gov.uk/guidance/g-cloud-buyers-guide', 301)
 
 
 @main.route('/suppliers-guide')
@@ -48,12 +48,12 @@ def suppliers_guide():
 
 @main.route('/g-cloud/buyers-guide')
 def buyers_guide_g_cloud():
-    return render_template('content/buyers-guide-g-cloud.html')
+    return redirect('https://www.gov.uk/guidance/g-cloud-buyers-guide', 301)
 
 
 @main.route('/g-cloud/suppliers-guide')
 def suppliers_guide_g_cloud():
-    return render_template('content/suppliers-guide-g-cloud.html')
+    return redirect('https://www.gov.uk/guidance/g-cloud-suppliers-guide', 301)
 
 
 @main.route('/g-cloud/services/<service_id>')
