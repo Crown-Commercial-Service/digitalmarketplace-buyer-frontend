@@ -25,7 +25,7 @@
     {% block before_heading %}{% endblock %}
     <div class="column-two-thirds">
       {% with
-        heading = "Clarification questions",
+        heading = "Supplier questions",
         smaller = true,
         context = brief.get('title', brief['lotName'])
       %}
@@ -37,7 +37,7 @@
     <div class="column-one-whole">
       {% import "toolkit/summary-table.html" as summary %}
 
-      {{ summary.heading("Clarification questions", id="clarification-questions") }}
+      {{ summary.heading("Supplier questions", id="clarification-questions") }}
       {% call(question) summary.list_table(
         brief.clarificationQuestions,
         field_headings=[
@@ -45,7 +45,7 @@
           "Answer"
         ],
         field_headings_visible=False,
-        empty_message="No clarification questions have been answered yet"
+        empty_message="No questions or answers have been published"
       ) %}
 
         {% call summary.row() %}
@@ -60,7 +60,7 @@
     </div>
   </div>
 
-  <a href="{{ url_for('.add_clarification_question', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id) }}">Answer a clarification question</a>
+  <a href="{{ url_for('.add_clarification_question', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id) }}">Answer a supplier question</a>
 
   {%
     with
