@@ -1,7 +1,9 @@
 {% import "toolkit/summary-table.html" as summary %}
 {% call(item) summary.list_table(
   [
-    {"label": "Published", "value": brief.publishedAt|dateformat}
+    {"label": "Published", "value": brief.publishedAt|dateformat},
+    {"label": "Deadline for asking questions", "value": brief.clarificationQuestionsClosedAt|dateformat},
+    {"label": "Closing date for applications", "value": brief.applicationsClosedAt|dateformat}
   ],
   caption="Important dates",
   field_headings=[
