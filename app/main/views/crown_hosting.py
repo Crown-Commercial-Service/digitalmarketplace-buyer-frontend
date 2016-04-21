@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from flask import render_template
+from flask import render_template, redirect
 from ...main import main
 
 
@@ -14,6 +14,5 @@ def index_crown_hosting():
 
 @main.route('/crown-hosting/framework')
 def framework_crown_hosting():
-    return render_template(
-        'content/framework-crown-hosting.html'
-    )
+    return redirect(
+        'https://www.gov.uk/guidance/the-crown-hosting-data-centres-framework-on-the-digital-marketplace', 301)
