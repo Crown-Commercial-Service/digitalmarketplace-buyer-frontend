@@ -29,7 +29,7 @@
     <div class="column-one-whole">
     {% with
         context = brief.title,
-        heading = "Answer a clarification question"
+        heading = "Publish questions and answers"
     %}
     {% include "toolkit/page-heading.html" %}
     {% endwith %}
@@ -38,6 +38,24 @@
 
   <div class="grid-row">
     <div class="column-two-thirds">
+
+      <div class="dmspeak">
+        <p>
+          You must make sure that suppliers have access to the same information about the work.
+          This means all suppliers will have an equal opportunity to win the contract.
+        </p>
+        <p>
+          You must publish all questions and answers.
+        </p>
+        <p>
+          All published questions and answers will be public.
+          They'll appear at the bottom of your published requirements page.
+        </p>
+        <p>
+          Read more about <a href="https://www.gov.uk/guidance/how-to-answer-supplier-questions-on-the-digital-marketplace">how to manage supplier questions</a>.
+        </p>
+      </div>
+
       <form method="post">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
 
