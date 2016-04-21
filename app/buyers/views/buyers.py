@@ -443,9 +443,10 @@ def add_clarification_question(framework_slug, lot_slug, brief_id):
             status_code = 400
 
     return render_template(
-        "buyers/answer_question.html",
+        "buyers/edit_brief_question.html",
         brief=brief,
         data=request.form,
         section=section,
+        question=section.questions[0],
         errors=errors
     ), status_code
