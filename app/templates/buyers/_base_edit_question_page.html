@@ -35,6 +35,11 @@
               {{ forms[question.type](question, brief, {}) }}
             {% endif %}
           {% else %}
+            {% if question.question_advice %}
+              <span class="question-advice">
+                {{ question.question_advice|markdown }}
+              </span>
+            {% endif %}
             {% for question in question.questions %}
               {% if errors and errors[question.id] %}
                 {{ forms[question.type](question, brief, errors) }}
