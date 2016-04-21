@@ -1,7 +1,7 @@
 {% extends "_base_page.html" %}
 {% import "macros/toolkit_forms.html" as forms %}
 
-{% block page_title %}Answer a Clarification Question{% endblock %}
+{% block page_title %}{{ brief.title }} - {{ section.name }}{% endblock %}
 
 {% block breadcrumb %}
   {% with
@@ -29,7 +29,7 @@
     <div class="column-one-whole">
     {% with
         context = brief.title,
-        heading = "Answer a clarification question"
+        heading = section.name
     %}
     {% include "toolkit/page-heading.html" %}
     {% endwith %}
@@ -38,6 +38,13 @@
 
   <div class="grid-row">
     <div class="column-two-thirds">
+
+      {% if section.description %}
+        <span class="question-advice">
+          {{ section.description|markdown }}
+        </span>
+      {% endif %}
+
       <form method="post">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
 
@@ -47,7 +54,7 @@
 
         {% with
             type = "save",
-            label = "Publish clarification question"
+            label = "Publish question and answer"
         %}
           {% include "toolkit/button.html" %}
         {% endwith %}
