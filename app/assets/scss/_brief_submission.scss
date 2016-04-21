@@ -53,22 +53,8 @@ ol.steps {
 }
 
 .section-description {
-   @include core-19;
+   @extend %markdown-description;
    padding-bottom: 30px;
-
-  p {
-    padding-bottom: 10px;
-  }
-
-  p + ul {
-    margin-top: -10px;
-  }
-
-  ul {
-    margin-bottom: 10px;
-    list-style-type: disc;
-    padding-left: 25px;
-  }
 }
 
 .secondary-action-link {

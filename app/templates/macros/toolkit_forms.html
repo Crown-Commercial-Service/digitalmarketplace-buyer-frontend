@@ -2,7 +2,9 @@
   {%
     with
     question=question_content.question|markdown,
-    hint=(question_content.hint or '')|markdown,
+    question_advice=question_content.question_advice,
+    hint=question_content.hint,
+    optional=question_content.optional,
     name=question_content.id,
     value=data[question_content.id],
     error=errors.get(question_content.id)['message']
@@ -15,7 +17,9 @@
   {%
     with
     question=question_content.question|markdown,
-    hint=(question_content.hint or '')|markdown,
+    question_advice=question_content.question_advice,
+    hint=question_content.hint,
+    optional=question_content.optional,
     name=question_content.id,
     value=data[question_content.id],
     large=True,
@@ -32,7 +36,9 @@
     name=question_content.id,
     number_of_items=question_content.get('number_of_items', 10),
     question=question_content.question|markdown,
-    hint=(question_content.hint or '')|markdown,
+    question_advice=question_content.question_advice,
+    hint=question_content.hint,
+    optional=question_content.optional,
     values=data[question_content.id],
     id=question_content.id,
     error=errors.get(question_content.id)['message']
@@ -46,7 +52,9 @@
     with
     name=question_content.id,
     question=question_content.question|markdown,
-    hint=(question_content.hint or '')|markdown,
+    question_advice=question_content.question_advice,
+    hint=question_content.hint,
+    optional=question_content.optional,
     value=data[question_content.id],
     id=question_content.id,
     options=question_content.options,
@@ -63,7 +71,9 @@
     with
     name=question_content.id,
     question=question_content.question|markdown,
-    hint=(question_content.hint or '')|markdown,
+    question_advice=question_content.question_advice,
+    hint=question_content.hint,
+    optional=question_content.optional,
     hint_underneath=(question_content.hint_underneath or False),
     value=data[question_content.id],
     id=question_content.id,
@@ -81,7 +91,9 @@
     with
     name=question_content.id,
     question=question_content.question|markdown,
-    hint=(question_content.hint or '')|markdown,
+    question_advice=question_content.question_advice,
+    hint=question_content.hint,
+    optional=question_content.optional,
     value=data[question_content.id],
     id=question_content.id,
     type='boolean',
@@ -104,7 +116,9 @@
     price_unit=data.get(question_content.fields.price_unit),
     price_interval=data.get(question_content.fields.price_interval),
     hours_for_price=data.get(question_content.fields.hours_for_price),
-    hint=(question_content.hint or '')|markdown,
+    question_advice=question_content.question_advice,
+    hint=question_content.hint,
+    optional=question_content.optional,
     id=question_content.id,
     error=errors.get(question_content.id)['message'],
     question_number=question_number
@@ -120,7 +134,9 @@
     unit_position="after",
     unit="%",
     question=question_content.question|markdown,
-    hint=(question_content.hint or '')|markdown,
+    question_advice=question_content.question_advice,
+    hint=question_content.hint,
+    optional=question_content.optional,
     name=question_content.id,
     value=data[question_content.id],
     error=errors.get(question_content.id)['message'],

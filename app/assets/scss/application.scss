@@ -36,15 +36,14 @@ $path: "/static/images/";
 @import "toolkit/forms/_textboxes.scss";
 @import "toolkit/forms/_validation.scss";
 @import "toolkit/search/_search-result.scss";
-@import "toolkit/shared_scss/_lists.scss";
 @import "toolkit/_secondary-action-link.scss";
 
 /* Blocks shared between multiple selectors */
 @import "shared_placeholders/_temporary-messages.scss";
 
 /* Classes shared between multiple apps */
-@import "shared_scss/_lists.scss";
-@import "shared_scss/_dmspeak.scss";
+@import "toolkit/shared_scss/_lists.scss";
+@import "toolkit/shared_scss/_dmspeak.scss";
 
 #wrapper {
   @extend %site-width-container;
