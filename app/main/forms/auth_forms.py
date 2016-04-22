@@ -6,24 +6,24 @@ from dmutils.forms import StripWhitespaceStringField
 
 class LoginForm(Form):
     email_address = StripWhitespaceStringField('Email address', validators=[
-        DataRequired(message="Email address must be provided"),
-        Email(message="Please enter a valid email address")
+        DataRequired(message="You must provide an email address"),
+        Email(message="You must provide a valid email address")
     ])
     password = PasswordField('Password', validators=[
-        DataRequired(message="Please enter your password")
+        DataRequired(message="You must provide your password")
     ])
 
 
 class EmailAddressForm(Form):
     email_address = StripWhitespaceStringField('Email address', validators=[
-        DataRequired(message="Email address must be provided"),
-        Email(message="Please enter a valid email address")
+        DataRequired(message="You must provide an email address"),
+        Email(message="You must provide a valid email address")
     ])
 
 
 class ChangePasswordForm(Form):
     password = PasswordField('Password', validators=[
-        DataRequired(message="Please enter a new password"),
+        DataRequired(message="You must enter a new password"),
         Length(min=10,
                max=50,
                message="Passwords must be between 10 and 50 characters"
@@ -37,7 +37,7 @@ class ChangePasswordForm(Form):
 
 class CreateUserForm(Form):
     name = StripWhitespaceStringField('Your name', validators=[
-        DataRequired(message="Please enter a name"),
+        DataRequired(message="You must enter a name"),
         Length(min=1,
                max=255,
                message="Names must be between 1 and 255 characters"
@@ -45,7 +45,7 @@ class CreateUserForm(Form):
     ])
 
     password = PasswordField('Password', validators=[
-        DataRequired(message="Please enter a password"),
+        DataRequired(message="You must enter a password"),
         Length(min=10,
                max=50,
                message="Passwords must be between 10 and 50 characters"
