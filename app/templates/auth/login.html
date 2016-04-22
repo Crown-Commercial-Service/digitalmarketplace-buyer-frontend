@@ -53,7 +53,7 @@
         <ul>
         {% for field_name, field_errors in form.errors|dictsort if field_errors %}
         {% for error in field_errors %}
-          <li><a href="#{{ form[field_name].id }}" class="validation-masthead-link">{{ form[field_name].label.text }}</a></li>
+          <li><a href="#{{ form[field_name].name }}" class="validation-masthead-link">{{ form[field_name].label.text }}</a></li>
         {% endfor %}
         {% endfor %}
         </ul>
@@ -75,7 +75,7 @@
             {% if form.email_address.errors %}
                 <div class="validation-wrapper">
             {% endif %}
-                <div class="question">
+                <div class="question" id="{{ form.email_address.name }}">
                     {{ form.email_address.label(class="question-heading-with-hint") }}
                     <p class="hint">
                         Enter the email address you used to register with the Digital Marketplace
@@ -94,7 +94,7 @@
             {% if form.password.errors %}
                 <div class="validation-wrapper">
             {% endif %}
-                <div class="question">
+                <div class="question" id="{{ form.password.name }}">
                     {{ form.password.label(class="question-heading") }}
                     {% if form.password.errors %}
                     <p class="validation-message" id="error-password-textbox">

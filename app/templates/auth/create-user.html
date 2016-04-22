@@ -4,6 +4,21 @@
 
 {% block main_content %}
 
+{% if form.errors|length > 1 %}
+    <div class="validation-masthead" aria-labelledby="validation-masthead-heading">
+        <h3 class="validation-masthead-heading" id="validation-masthead-heading">
+            There was a problem with the details you gave for:
+        </h3>
+        <ul>
+        {% for field_name, field_errors in form.errors|dictsort if field_errors %}
+        {% for error in field_errors %}
+          <li><a href="#{{ form[field_name].name }}" class="validation-masthead-link">{{ form[field_name].label.text }}</a></li>
+        {% endfor %}
+        {% endfor %}
+        </ul>
+    </div>
+{% endif %}
+
 {%
   with
   smaller = true,
@@ -23,7 +38,7 @@
                 {% if form.name.errors %}
                 <div class="validation-wrapper">
                     {% endif %}
-                    <div class="question">
+                    <div class="question" id="{{ form.name.name }}">
                         {{ form.name.label(class="question-heading-with-hint") }}
                         <p class="hint">
                             Enter the name to be referred to on the Digital Marketplace
@@ -42,7 +57,7 @@
                 {% if form.password.errors %}
                 <div class="validation-wrapper">
             {% endif %}
-                <div class="question">
+                <div class="question" id="{{ form.password.name }}">
                     {{ form.password.label(class="question-heading-with-hint") }}
                     <p class="hint">
                       Must be between 10 and 50 characters
