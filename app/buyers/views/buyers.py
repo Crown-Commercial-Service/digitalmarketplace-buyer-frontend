@@ -422,6 +422,7 @@ def add_supplier_question(framework_slug, lot_slug, brief_id):
 
     content = content_loader.get_manifest(brief['frameworkSlug'], "clarification_question")
     section = content.get_section(content.get_next_editable_section_id())
+    update_data = section.get_data(request.form)
 
     errors = {}
     status_code = 200
@@ -429,8 +430,8 @@ def add_supplier_question(framework_slug, lot_slug, brief_id):
     if request.method == "POST":
         try:
             data_api_client.add_brief_clarification_question(brief_id,
-                                                             request.form.get("question", ""),
-                                                             request.form.get("answer", ""),
+                                                             update_data['question'],
+                                                             update_data['answer'],
                                                              current_user.email_address)
 
             return redirect(
@@ -439,13 +440,13 @@ def add_supplier_question(framework_slug, lot_slug, brief_id):
         except HTTPError as e:
             if e.status_code != 400:
                 raise
+            brief.update(update_data)
             errors = section.get_error_messages(e.message)
             status_code = 400
 
     return render_template(
         "buyers/edit_brief_question.html",
         brief=brief,
-        data=request.form,
         section=section,
         question=section.questions[0],
         errors=errors
