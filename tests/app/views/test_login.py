@@ -8,13 +8,13 @@ from ...helpers import BaseApplicationTest
 from lxml import html
 import mock
 
-EMAIL_EMPTY_ERROR = "Email address must be provided"
-EMAIL_INVALID_ERROR = "Please enter a valid email address"
+EMAIL_EMPTY_ERROR = "You must provide an email address"
+EMAIL_INVALID_ERROR = "You must provide a valid email address"
 EMAIL_SENT_MESSAGE = "If the email address you've entered belongs to a Digital Marketplace account, we'll send a link to reset the password."  # noqa
-PASSWORD_EMPTY_ERROR = "Please enter your password"
+PASSWORD_EMPTY_ERROR = "You must provide your password"
 PASSWORD_INVALID_ERROR = "Passwords must be between 10 and 50 characters"
 PASSWORD_MISMATCH_ERROR = "The passwords you entered do not match"
-NEW_PASSWORD_EMPTY_ERROR = "Please enter a new password"
+NEW_PASSWORD_EMPTY_ERROR = "You must enter a new password"
 NEW_PASSWORD_CONFIRM_EMPTY_ERROR = "Please confirm your new password"
 
 USER_CREATION_EMAIL_ERROR = "Failed to send user creation email."
@@ -532,7 +532,7 @@ class TestBuyersCreation(BaseApplicationTest):
         assert res.status_code == 400
         data = res.get_data(as_text=True)
         assert 'Create a buyer account' in data
-        assert 'Please enter a valid email address' in data
+        assert 'You must provide a valid email address' in data
 
     def test_should_raise_validation_error_for_empty_email_address(self):
         res = self.client.post(
@@ -543,7 +543,7 @@ class TestBuyersCreation(BaseApplicationTest):
         assert res.status_code == 400
         data = res.get_data(as_text=True)
         assert 'Create a buyer account' in data
-        assert 'Email address must be provided' in data
+        assert 'You must provide an email address' in data
 
     @mock.patch('app.main.views.login.data_api_client')
     def test_should_show_error_page_for_unrecognised_email_domain(self, data_api_client):
@@ -677,8 +677,8 @@ class TestCreateUser(BaseApplicationTest):
 
         assert res.status_code == 400
         for message in [
-            "Please enter a name",
-            "Please enter a password"
+            "You must enter a name",
+            "You must enter a password"
         ]:
             assert message in res.get_data(as_text=True)
 
@@ -694,7 +694,7 @@ class TestCreateUser(BaseApplicationTest):
 
         assert res.status_code == 400
         for message in [
-            "Please enter a name",
+            "You must enter a name",
             "Passwords must be between 10 and 50 characters"
         ]:
             assert message in res.get_data(as_text=True)
