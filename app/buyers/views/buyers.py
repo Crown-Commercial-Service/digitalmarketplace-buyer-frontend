@@ -384,9 +384,9 @@ def delete_a_brief(framework_slug, lot_slug, brief_id):
 
 
 @buyers.route(
-    "/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/clarification-questions",
+    "/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/supplier-questions",
     methods=["GET"])
-def clarification_questions(framework_slug, lot_slug, brief_id):
+def supplier_questions(framework_slug, lot_slug, brief_id):
     get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
     brief = data_api_client.get_brief(brief_id)["briefs"]
 
@@ -402,15 +402,15 @@ def clarification_questions(framework_slug, lot_slug, brief_id):
     ]
 
     return render_template(
-        "buyers/clarification_questions.html",
+        "buyers/supplier_questions.html",
         brief=brief,
     )
 
 
 @buyers.route(
-    "/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/clarification-questions/answer-question",
+    "/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/supplier-questions/answer-question",
     methods=["GET", "POST"])
-def add_clarification_question(framework_slug, lot_slug, brief_id):
+def add_supplier_question(framework_slug, lot_slug, brief_id):
     get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
     brief = data_api_client.get_brief(brief_id)["briefs"]
 
@@ -434,7 +434,7 @@ def add_clarification_question(framework_slug, lot_slug, brief_id):
                                                              current_user.email_address)
 
             return redirect(
-                url_for('.clarification_questions', framework_slug=brief['frameworkSlug'], lot_slug=brief['lotSlug'],
+                url_for('.supplier_questions', framework_slug=brief['frameworkSlug'], lot_slug=brief['lotSlug'],
                         brief_id=brief['id']))
         except HTTPError as e:
             if e.status_code != 400:
