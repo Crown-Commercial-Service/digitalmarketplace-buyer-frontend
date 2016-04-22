@@ -1258,12 +1258,12 @@ class TestBriefSummaryPage(BaseApplicationTest):
             data_api_client.get_brief.return_value = brief_json
 
             res = self.client.get(
-                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/clarification-questions"  # noqa
+                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/supplier-questions"  # noqa
             )
 
             assert res.status_code == 200
             page_html = res.get_data(as_text=True)
-            assert "Clarification questions" in page_html
+            assert "Supplier questions" in page_html
             assert "No questions or answers have been published" in page_html
             assert "Answer a supplier question" in page_html
 
@@ -1287,12 +1287,12 @@ class TestBriefSummaryPage(BaseApplicationTest):
             data_api_client.get_brief.return_value = brief_json
 
             res = self.client.get(
-                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/clarification-questions"  # noqa
+                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/supplier-questions"  # noqa
             )
 
             assert res.status_code == 200
             page_html = res.get_data(as_text=True)
-            assert "Clarification questions" in page_html
+            assert "Supplier questions" in page_html
             assert "Why is my question a question?" in page_html
             assert "Because" in page_html
             assert "Answer a supplier question" in page_html
@@ -1391,7 +1391,7 @@ class TestAddBriefClarificationQuestion(BaseApplicationTest):
 
         res = self.client.get(
             "/buyers/frameworks/digital-outcomes-and-specialists/requirements"
-            "/digital-specialists/1234/clarification-questions/answer-question")
+            "/digital-specialists/1234/supplier-questions/answer-question")
 
         assert res.status_code == 200
 
@@ -1409,7 +1409,7 @@ class TestAddBriefClarificationQuestion(BaseApplicationTest):
 
         res = self.client.post(
             "/buyers/frameworks/digital-outcomes-and-specialists/requirements"
-            "/digital-specialists/1234/clarification-questions/answer-question",
+            "/digital-specialists/1234/supplier-questions/answer-question",
             data={
                 "question": "Why?",
                 "answer": "Because",
@@ -1421,7 +1421,7 @@ class TestAddBriefClarificationQuestion(BaseApplicationTest):
 
         # test that the redirect ends up on the right page
         assert res.headers['Location'].endswith(
-            '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/clarification-questions'  # noqa
+            '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/supplier-questions'  # noqa
         ) is True
 
     def test_404_if_framework_is_not_live(self, data_api_client):
@@ -1439,7 +1439,7 @@ class TestAddBriefClarificationQuestion(BaseApplicationTest):
 
         res = self.client.post(
             "/buyers/frameworks/digital-outcomes-and-specialists/requirements"
-            "/digital-specialists/1234/clarification-questions/answer-question",
+            "/digital-specialists/1234/supplier-questions/answer-question",
             data={
                 "question": "Why?",
                 "answer": "Because",
@@ -1463,7 +1463,7 @@ class TestAddBriefClarificationQuestion(BaseApplicationTest):
 
         res = self.client.post(
             "/buyers/frameworks/digital-outcomes-and-specialists/requirements"
-            "/digital-specialists/1234/clarification-questions/answer-question",
+            "/digital-specialists/1234/supplier-questions/answer-question",
             data={
                 "question": "Why?",
                 "answer": "Because",
@@ -1487,7 +1487,7 @@ class TestAddBriefClarificationQuestion(BaseApplicationTest):
 
         res = self.client.post(
             "/buyers/frameworks/digital-outcomes-and-specialists/requirements"
-            "/digital-specialists/1234/clarification-questions/answer-question",
+            "/digital-specialists/1234/supplier-questions/answer-question",
             data={
                 "question": "Why?",
                 "answer": "Because",
@@ -1511,7 +1511,7 @@ class TestAddBriefClarificationQuestion(BaseApplicationTest):
 
         res = self.client.post(
             "/buyers/frameworks/digital-outcomes-and-specialists/requirements"
-            "/digital-specialists/1234/clarification-questions/answer-question",
+            "/digital-specialists/1234/supplier-questions/answer-question",
             data={
                 "question": "Why?",
                 "answer": "Because",
@@ -1537,7 +1537,7 @@ class TestAddBriefClarificationQuestion(BaseApplicationTest):
 
         res = self.client.post(
             "/buyers/frameworks/digital-outcomes-and-specialists/requirements"
-            "/digital-specialists/1234/clarification-questions/answer-question",
+            "/digital-specialists/1234/supplier-questions/answer-question",
             data={
                 "question": "Why?",
                 "answer": "Because",
@@ -1563,7 +1563,7 @@ class TestAddBriefClarificationQuestion(BaseApplicationTest):
 
         res = self.client.post(
             "/buyers/frameworks/digital-outcomes-and-specialists/requirements"
-            "/digital-specialists/1234/clarification-questions/answer-question",
+            "/digital-specialists/1234/supplier-questions/answer-question",
             data={
                 "question": "Why?",
                 "answer": "Because",
