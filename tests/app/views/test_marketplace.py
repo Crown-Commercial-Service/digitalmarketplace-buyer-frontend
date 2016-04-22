@@ -433,6 +433,7 @@ class TestBriefPage(BaseApplicationTest):
         brief = self.brief.copy()
         brief['briefs']['status'] = "closed"
         brief['briefs']['publishedAt'] = "2000-01-25T12:00:00.000000Z"
+        brief['briefs']['applicationsClosedAt'] = "2000-02-25T12:00:00.000000Z"
         self._data_api_client.get_brief.return_value = brief
         brief_id = brief['briefs']['id']
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
@@ -441,6 +442,7 @@ class TestBriefPage(BaseApplicationTest):
 
         apply_links = document.xpath('//a[@href="/suppliers/opportunities/{}/responses/create"]'.format(brief_id))
         assert len(apply_links) == 0
+        assert '25 February 2000' in document.xpath('//p[@class="banner-message"]')[0].text_content()
 
     def test_dos_brief_specialist_role_displays_label(self):
         brief_id = self.brief['briefs']['id']

@@ -26,7 +26,7 @@
       with
       type = "temporary-message",
       heading = "This opportunity is closed for applications.",
-      message = "The deadline was {}.".format(brief.clarificationQuestionsClosedAt|dateformat)|safe
+      message = "The deadline was {}.".format(brief.applicationsClosedAt|dateformat)
     %}
       {% include "toolkit/notification-banner.html" %}
     {% endwith %}
