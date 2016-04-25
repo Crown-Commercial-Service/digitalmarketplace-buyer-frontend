@@ -187,7 +187,7 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
         )
         sidebar_link_texts = [str(item).strip() for item in sidebar_links]
 
-        assert 'View supplier opportunities' in sidebar_link_texts
+        assert 'Digital Outcomes and Specialists opportunities' in sidebar_link_texts
         assert 'Create a supplier account' in sidebar_link_texts
         assert 'View your services and account information' not in sidebar_link_texts
 
@@ -209,7 +209,7 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
         )
         sidebar_link_texts = [str(item).strip() for item in sidebar_links]
 
-        assert 'View supplier opportunities' in sidebar_link_texts
+        assert 'Digital Outcomes and Specialists opportunities' in sidebar_link_texts
         assert 'View your services and account information' in sidebar_link_texts
         assert 'Create a supplier account' not in sidebar_link_texts
 
