@@ -95,6 +95,7 @@ def list_opportunities(framework_slug):
 
     return render_template('briefs_catalogue.html',
                            framework=framework,
+                           lot_names=[lot['name'] for lot in framework['lots'] if lot['allowsBrief']],
                            briefs=briefs,
                            prev_link=parse_link(links, 'prev'),
                            next_link=parse_link(links, 'next')
