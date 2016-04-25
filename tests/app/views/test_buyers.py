@@ -337,8 +337,6 @@ class TestEveryDamnPage(BaseApplicationTest):
         self._load_page("/digital-specialists/1234/responses", 200)
 
     # get and post are the same for publishing
-    def test_wrong_lot_publish_brief(self):
-        self._load_page("/digital-specialists/1234/publish", 200)
 
     def test_wrong_lot_post_delete_a_brief(self):
         data = {"delete_confirmed": True}
