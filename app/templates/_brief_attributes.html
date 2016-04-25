@@ -19,6 +19,9 @@
 {% endcall %}
 {% for section in content.summary(brief) %}
     {{ summary.heading(section.name, id="opportunity-attributes-{}".format(loop.index)) }}
+     {% if section.summary_page_description %}
+          {{ summary.description(section.summary_page_description) }}
+        {% endif %}
     {% call(item) summary.list_table(
       section.questions,
       caption=section.name,
