@@ -1823,7 +1823,7 @@ class TestDownloadBriefResponsesCsv(BaseApplicationTest):
 
         # There are only the two eligible responses included
         assert len(lines) == 4
-        assert lines[0] == "Supplier,Availability,Day rate,Nice1,Nice2,Nice3,Email address"
+        assert lines[0] == "Supplier,Date the specialist can start work,Day rate,Nice1,Nice2,Nice3,Email address"
         # The response with two nice-to-haves is sorted to above the one with only one
         assert lines[1] == "Kev's Pies,A week Friday,£3.50,False,True,True,test2@email.com"
         assert lines[2] == "Kev's Butties,Next Tuesday,£1.49,True,False,False,test1@email.com"
@@ -1846,7 +1846,7 @@ class TestDownloadBriefResponsesCsv(BaseApplicationTest):
         lines = page.split('\n')
 
         assert len(lines) == 4
-        assert lines[0] == "Supplier,Availability,Day rate,Nice1,Nice2,Nice3,Email address"
+        assert lines[0] == "Supplier,Date the specialist can start work,Day rate,Nice1,Nice2,Nice3,Email address"
         # The values with internal commas are surrounded by quotes, and all other characters appear as in the data
         assert lines[1] == 'Kev\'s \'Pies,&quot;A week Friday&rdquot;,&euro;3.50,False,True,True,"te,st2@email.com"'
         assert lines[2] == '"K,ev’s ""Bu,tties",❝Next — Tuesday❞,"¥1.49,",True,False,False,test1@email.com'
