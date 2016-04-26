@@ -18,12 +18,15 @@
 
 {% block main_content %}
 
-    {% with heading="Supplier opportunities" %}
+    {% with heading="{} opportunities".format(framework.name) %}
         {% include "toolkit/page-heading.html" %}
     {% endwith %}
-    
+
     <div class="grid-row">
         <section class="column-two-thirds">
+            <div class="marketplace-paragraph">
+              <p>View buyer requirements for {{ lot_names | map('lower') | join(", ") }}.</p>
+            </div>
             {% include '_briefs_list.html' %}
             {% include '_briefs_pagination.html' %}
         </section>

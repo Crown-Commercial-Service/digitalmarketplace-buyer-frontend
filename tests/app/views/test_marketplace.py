@@ -467,12 +467,21 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         self._data_api_client.stop()
 
     def test_catalogue_of_briefs_page(self):
+        self._data_api_client.get_framework.return_value = {'frameworks': {
+            'name': "Digital Outcomes and Specialists",
+            'lots': [
+                {'name': 'Lot 1', 'allowsBrief': True},
+                {'name': 'Lot 2', 'allowsBrief': False},
+                {'name': 'Lot 3', 'allowsBrief': True}
+            ]
+        }}
         res = self.client.get('/digital-outcomes-and-specialists/opportunities')
         assert_equal(200, res.status_code)
         document = html.fromstring(res.get_data(as_text=True))
 
         heading = document.xpath('//h1/text()')[0].strip()
-        assert heading == "Supplier opportunities"
+        assert heading == "Digital Outcomes and Specialists opportunities"
+        assert 'lot 1, lot 3' in document.xpath('//div[@class="marketplace-paragraph"]/p/text()')[0]
 
     def test_catalogue_of_briefs_page_shows_pagination_if_more_pages(self):
         res = self.client.get('/digital-outcomes-and-specialists/opportunities')
