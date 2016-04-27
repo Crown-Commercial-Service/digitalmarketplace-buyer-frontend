@@ -459,5 +459,6 @@ def add_supplier_question(framework_slug, lot_slug, brief_id):
         brief=brief,
         section=section,
         question=section.questions[0],
+        button_label="Publish question and answer",
         errors=errors
     ), status_code
