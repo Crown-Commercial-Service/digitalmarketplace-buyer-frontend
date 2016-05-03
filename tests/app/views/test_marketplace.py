@@ -159,6 +159,33 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
 
         self._load_homepage(framework_slugs_and_statuses, framework_messages)
 
+    def test_homepage_sidebar_message_exists_gcloud_8_coming(self):
+
+        framework_slugs_and_statuses = [
+            ('g-cloud-8', 'coming'),
+            ('digital-outcomes-and-specialists', 'live')
+        ]
+        framework_messages = [
+            u"Provide cloud software and support to the public sector.",
+            u"You need an account to receive notifications about when you can apply."
+        ]
+
+        self._load_homepage(framework_slugs_and_statuses, framework_messages)
+
+    def test_homepage_sidebar_message_exists_gcloud_8_open(self):
+
+        framework_slugs_and_statuses = [
+            ('g-cloud-8', 'open'),
+            ('digital-outcomes-and-specialists', 'live')
+        ]
+        framework_messages = [
+            u"Provide cloud software and support to the public sector",
+            u"You need an account to apply.",
+            u"The application deadline is 5pm BST, 21 June 2016."
+        ]
+
+        self._load_homepage(framework_slugs_and_statuses, framework_messages)
+
     def test_homepage_sidebar_message_exists_g_cloud_7_pending(self):
 
         framework_slugs_and_statuses = [
@@ -187,7 +214,7 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
         )
         sidebar_link_texts = [str(item).strip() for item in sidebar_links]
 
-        assert 'Digital Outcomes and Specialists opportunities' in sidebar_link_texts
+        assert 'View Digital Outcomes and Specialists opportunities' in sidebar_link_texts
         assert 'Create a supplier account' in sidebar_link_texts
         assert 'View your services and account information' not in sidebar_link_texts
 
@@ -209,7 +236,7 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
         )
         sidebar_link_texts = [str(item).strip() for item in sidebar_links]
 
-        assert 'Digital Outcomes and Specialists opportunities' in sidebar_link_texts
+        assert 'View Digital Outcomes and Specialists opportunities' in sidebar_link_texts
         assert 'View your services and account information' in sidebar_link_texts
         assert 'Create a supplier account' not in sidebar_link_texts
 

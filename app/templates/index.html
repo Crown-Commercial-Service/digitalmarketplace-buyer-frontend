@@ -92,33 +92,23 @@
   </div>
     <div class="supplier-messages column-one-third">
       <aside role="complementary" aria-labelledby="supplier-message-heading">
-        
+
       {% if temporary_message or current_user.role == 'supplier' or dos_is_live %}
           <h2 id="supplier-message-heading">Sell services</h2>
       {% endif %}
-        
-      {% if temporary_message %}
-        {%
-          with
-            heading = temporary_message.heading,
-            subheading = temporary_message.subheading,
-            messages = temporary_message.messages,
-            message = temporary_message.message
-        %}
-          {% include "toolkit/{}.html".format(temporary_message.template_name) %}
-        {% endwith %}
-      {% endif %}
-        
+
       {% if dos_is_live %}
+
+      {% set opportunities %}
         <div class="padding-bottom-small">
           <p>
             <a href="/digital-outcomes-and-specialists/opportunities" class="top-level-link">
-              Digital Outcomes and Specialists opportunities
+              View Digital Outcomes and Specialists opportunities
             </a>
           </p>
         </div>
-        
-        {% if current_user.role != 'supplier' %}
+      {% endset %}
+      {% set selling %}
         <div class="padding-bottom-small">
           <p>
             <a href="/suppliers/create" class="top-level-link">
@@ -127,10 +117,31 @@
           </p>
           <p>Receive updates about opportunities to sell on the Digital Marketplace.</p>
         </div>
-        {% endif %}
-        
+      {% endset %}
+      {% else %}
+        {% set opportunities = '' %}
+        {% set selling = '' %}
       {% endif %}
-        
+
+      {{ opportunities|safe }}
+
+      {% if temporary_message %}
+        {%
+          with
+            heading = temporary_message.heading,
+            main = True,
+            subheading = temporary_message.subheading,
+            messages = temporary_message.messages,
+            message = temporary_message.message
+        %}
+          {% include "toolkit/temporary-message.html" %}
+        {% endwith %}
+      {% endif %}
+
+      {% if current_user.role != 'supplier' %}
+          {{ selling|safe }}
+      {% endif %}
+
       {% if current_user.role == 'supplier' %}
         <div class="padding-bottom-small">
           <p>
