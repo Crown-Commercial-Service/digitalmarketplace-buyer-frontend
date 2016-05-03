@@ -42,7 +42,7 @@
     <p class="padding-bottom-small">Ensure this email address will be monitored. If you’re away while suppliers can still ask questions, you should make sure your emails are forwarded to a colleague.</p>
 
     {% if unanswered_required > 0 %}
-      <p class="padding-bottom-small"><strong>You still need to complete the following questions before the brief can be published:</strong></p>
+      <p class="padding-bottom-small"><strong>You still need to complete the following questions before the requirements can be published:</strong></p>
       {% for section in sections %}
         {% for question in section.questions %}
           {% if question.answer_required %}
