@@ -233,7 +233,7 @@ class TestServicePage(BaseApplicationTest):
             unavailable_banner.heading_text(),
             '{} stopped offering this service on {}'.format(
                 self.service['services']['supplierName'],
-                'Tuesday 05 January 2016.'
+                'Tuesday 5 January 2016.'
             )
         )
         assert_equal(
@@ -266,7 +266,7 @@ class TestServicePage(BaseApplicationTest):
             unavailable_banner.heading_text(),
             '{} stopped offering this service on {}'.format(
                 self.service['services']['supplierName'],
-                'Tuesday 05 January 2016.'
+                'Tuesday 5 January 2016.'
             )
         )
         assert_equal(
@@ -304,7 +304,7 @@ class TestServicePage(BaseApplicationTest):
             unavailable_banner.body_text(),
             'The {} framework expired on {}. Any existing contracts with {} are still valid.'.format(
                 self.service['services']['frameworkName'],
-                'Tuesday 05 January 2016',
+                'Tuesday 5 January 2016',
                 self.service['services']['supplierName']
             )
         )
