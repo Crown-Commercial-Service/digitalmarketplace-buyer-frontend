@@ -20,45 +20,47 @@
 <div class="index-page grid-row">
   <div class="column-two-thirds">
     <h2 class="marketplace-homepage-subheading">Find technology or people for digital projects in the public sector</h2>
+    {% set buyer_dashboard = [] %}
+    {% set dss_items = [] %}
+    {% set dos_items = [] %}
+    {% set g_cloud_subtext = '' %}
+    {% set crown_hosting_subtext = '' %}
+
     {% if dos_is_live %}
       {% set
         dos_items = [
           {
-            "link": url_for("main.info_page_for_starting_a_brief", framework_slug='digital-outcomes-and-specialists', lot_slug='digital-specialists'),
+            "link": url_for("main.info_page_for_starting_a_brief", framework_slug=dos_is_live.slug, lot_slug='digital-specialists'),
             "title": "Find an individual specialist",
             "body": "eg a developer or user researcher",
           },
           {
-            "link": url_for("main.info_page_for_starting_a_brief", framework_slug='digital-outcomes-and-specialists', lot_slug='digital-outcomes'),
+            "link": url_for("main.info_page_for_starting_a_brief", framework_slug=dos_is_live.slug, lot_slug='digital-outcomes'),
             "title": "Find a team to provide an outcome",
             "body": "eg a booking system or accessibility audit",
           },
           {
-            "link": url_for("main.info_page_for_starting_a_brief", framework_slug='digital-outcomes-and-specialists', lot_slug='user-research-participants'),
+            "link": url_for("main.info_page_for_starting_a_brief", framework_slug=dos_is_live.slug, lot_slug='user-research-participants'),
             "title": "Find user research participants",
             "body": "eg people from a specific user group to test your service",
           },
           {
-            "link": url_for("main.studios_start_page", framework_slug='digital-outcomes-and-specialists'),
+            "link": url_for("main.studios_start_page", framework_slug=dos_is_live.slug),
             "title": "Find a user research lab",
             "body": "eg a room to conduct research sessions",
           },
         ]
       %}
-      {% set dss_items = [] %}
-        {% if current_user.role == 'buyer' %}
-          {% set buyer_dashboard = [
-              {
-                "link": "/buyers",
-                "title": "View your requirements and supplier responses",
-              },
-            ]
-          %}
-        {% else %}
-          {% set buyer_dashboard = [] %}
-        {% endif %}
+      {% if current_user.role == 'buyer' %}
+        {% set buyer_dashboard = [
+            {
+              "link": "/buyers",
+              "title": "View your requirements and supplier responses",
+            },
+          ]
+        %}
+      {% endif %}
     {% else %}
-      {% set dos_items = [] %}
       {% set dss_items = [
           {
             "link": "https://digitalservicesstore.service.gov.uk/",
@@ -68,7 +70,9 @@
           }
         ]
       %}
-      {% set buyer_dashboard = [] %}
+      {% set g_cloud_subtext = "Procurement framework: <a href='/g-cloud/framework'>G&#8209;Cloud</a>" %}
+      {% set crown_hosting_subtext = "Procurement framework: <a href='/crown-hosting/framework'>Crown Hosting Data Centres</a>" %}
+
     {% endif %}
 
     {% with
@@ -77,48 +81,51 @@
           "link": "/g-cloud",
           "title": "Find cloud technology and support",
           "body": "eg web hosting or IT health checks",
-          "subtext": "Procurement framework: <a href='/g-cloud/framework'>G&#8209;Cloud</a>" if not dos_is_live else None
+          "subtext": g_cloud_subtext
         },
         {
           "link": "/crown-hosting",
           "title": "Buy physical datacentre space for legacy systems",
           "body": "eg for services that can’t be migrated to the cloud",
-          "subtext": "Procurement framework: <a href='/crown-hosting/framework'>Crown Hosting Data Centres</a>" if not dos_is_live else None
+          "subtext": crown_hosting_subtext
         },
       ] + dss_items + buyer_dashboard
     %}
       {% include "toolkit/browse-list.html" %}
     {% endwith %}
-  </div>
+    </div>
+
     <div class="supplier-messages column-one-third">
       <aside role="complementary" aria-labelledby="supplier-message-heading">
-        
+
       {% if temporary_message or current_user.role == 'supplier' or dos_is_live %}
           <h2 id="supplier-message-heading">Sell services</h2>
       {% endif %}
-        
+
+      {% if dos_is_live %}
+        <div class="padding-bottom-small">
+            <p>
+              <a href="/digital-outcomes-and-specialists/opportunities" class="top-level-link">
+                View Digital Outcomes and Specialists opportunities
+              </a>
+            </p>
+        </div>
+      {% endif %}
+
       {% if temporary_message %}
         {%
           with
             heading = temporary_message.heading,
+            main = True,
             subheading = temporary_message.subheading,
             messages = temporary_message.messages,
             message = temporary_message.message
         %}
-          {% include "toolkit/{}.html".format(temporary_message.template_name) %}
+          {% include "toolkit/temporary-message.html" %}
         {% endwith %}
       {% endif %}
-        
-      {% if dos_is_live %}
-        <div class="padding-bottom-small">
-          <p>
-            <a href="/digital-outcomes-and-specialists/opportunities" class="top-level-link">
-              Digital Outcomes and Specialists opportunities
-            </a>
-          </p>
-        </div>
-        
-        {% if current_user.role != 'supplier' %}
+
+      {% if current_user.role != 'supplier' %}
         <div class="padding-bottom-small">
           <p>
             <a href="/suppliers/create" class="top-level-link">
@@ -127,11 +134,7 @@
           </p>
           <p>Receive updates about opportunities to sell on the Digital Marketplace.</p>
         </div>
-        {% endif %}
-        
-      {% endif %}
-        
-      {% if current_user.role == 'supplier' %}
+      {% elif current_user.role == 'supplier' %}
         <div class="padding-bottom-small">
           <p>
             <a href="/suppliers" class="top-level-link">
@@ -140,7 +143,7 @@
           </p>
         </div>
       {% endif %}
-        
+
       </aside>
     </div>
 </div>

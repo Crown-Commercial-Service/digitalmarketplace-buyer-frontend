@@ -13,6 +13,9 @@ $path: "/static/images/";
 
 @import "_reset.scss";
 
+/* Blocks shared between multiple selectors */
+@import "shared_placeholders/_temporary-messages.scss";
+
 // Digtial Marketplace Front-end toolkit styles
 @import "toolkit/_breadcrumb.scss";
 @import "toolkit/_browse-list.scss";
@@ -37,9 +40,6 @@ $path: "/static/images/";
 @import "toolkit/forms/_validation.scss";
 @import "toolkit/search/_search-result.scss";
 @import "toolkit/_secondary-action-link.scss";
-
-/* Blocks shared between multiple selectors */
-@import "shared_placeholders/_temporary-messages.scss";
 
 /* Classes shared between multiple apps */
 @import "toolkit/shared_scss/_lists.scss";

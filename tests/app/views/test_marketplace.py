@@ -133,28 +133,29 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
         else:
             self._assert_message_container_is_empty(response_data)
 
-    def test_homepage_sidebar_message_exists_dos_coming(self):
+    def test_homepage_sidebar_message_exists_gcloud_8_coming(self):
 
         framework_slugs_and_statuses = [
-            ('g-cloud-7', 'pending'),
-            ('digital-outcomes-and-specialists', 'coming')
+            ('g-cloud-8', 'coming'),
+            ('digital-outcomes-and-specialists', 'live')
         ]
         framework_messages = [
-            u"Become a Digital Outcomes and Specialists supplier",
-            u"Digital Outcomes and Specialists will be open for applications soon."
+            u"Provide cloud software and support to the public sector.",
+            u"You need an account to receive notifications about when you can apply."
         ]
 
         self._load_homepage(framework_slugs_and_statuses, framework_messages)
 
-    def test_homepage_sidebar_message_exists_dos_open(self):
+    def test_homepage_sidebar_message_exists_gcloud_8_open(self):
 
         framework_slugs_and_statuses = [
-            ('g-cloud-7', 'pending'),
-            ('digital-outcomes-and-specialists', 'open')
+            ('g-cloud-8', 'open'),
+            ('digital-outcomes-and-specialists', 'live')
         ]
         framework_messages = [
-            u"Become a Digital Outcomes and Specialists supplier",
-            u"Digital Outcomes and Specialists is open for applications."
+            u"Provide cloud software and support to the public sector",
+            u"You need an account to apply.",
+            u"The application deadline is 5pm BST, 21 June 2016."
         ]
 
         self._load_homepage(framework_slugs_and_statuses, framework_messages)
@@ -187,7 +188,7 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
         )
         sidebar_link_texts = [str(item).strip() for item in sidebar_links]
 
-        assert 'Digital Outcomes and Specialists opportunities' in sidebar_link_texts
+        assert 'View Digital Outcomes and Specialists opportunities' in sidebar_link_texts
         assert 'Create a supplier account' in sidebar_link_texts
         assert 'View your services and account information' not in sidebar_link_texts
 
@@ -209,37 +210,9 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
         )
         sidebar_link_texts = [str(item).strip() for item in sidebar_links]
 
-        assert 'Digital Outcomes and Specialists opportunities' in sidebar_link_texts
+        assert 'View Digital Outcomes and Specialists opportunities' in sidebar_link_texts
         assert 'View your services and account information' in sidebar_link_texts
         assert 'Create a supplier account' not in sidebar_link_texts
-
-    @mock.patch('app.main.views.marketplace.data_api_client')
-    def test_no_homepage_sidebar_messages_are_shown_to_not_logged_in_users_before_dos_is_live(self, data_api_client):
-        data_api_client.find_frameworks.return_value = self._find_frameworks([
-            ('digital-outcomes-and-specialists', 'standstill')
-        ])
-        res = self.client.get('/')
-
-        assert res.status_code == 200
-        self._assert_message_container_is_empty(res.get_data(as_text=True))
-
-    def test_homepage_sidebar_message_doesnt_exist_without_frameworks(self):
-        framework_slugs_and_statuses = [
-            ('g-cloud-2', 'expired'),
-            ('g-cloud-3', 'expired'),
-            ('g-cloud-4', 'expired')
-        ]
-
-        # there are no messages
-        self._load_homepage(framework_slugs_and_statuses, None)
-
-    @mock.patch('app.main.views.marketplace.data_api_client')
-    def test_api_error_message_doesnt_exist(self, data_api_client):
-
-        data_api_client.find_frameworks.side_effect = APIError()
-        res = self.client.get('/')
-        assert_equal(200, res.status_code)
-        self._assert_message_container_is_empty(res.get_data(as_text=True))
 
     # here we've given an valid framework with a valid status but there is no message.yml file to read from
     @mock.patch('app.main.views.marketplace.data_api_client')
