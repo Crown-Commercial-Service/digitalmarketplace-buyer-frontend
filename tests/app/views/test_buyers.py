@@ -36,11 +36,11 @@ class TestBuyerDashboard(BaseApplicationTest):
             tables = document.xpath('//table')
             draft_row = [cell.text_content().strip() for cell in tables[0].xpath('.//tbody/tr/td')]
             assert draft_row[0] == "A draft brief"
-            assert draft_row[1] == "Tuesday 02 February 2016"
+            assert draft_row[1] == "Tuesday 2 February 2016"
 
             live_row = [cell.text_content().strip() for cell in tables[1].xpath('.//tbody/tr/td')]
             assert live_row[0] == "A live brief"
-            assert live_row[1] == "Thursday 04 February 2016"
+            assert live_row[1] == "Thursday 4 February 2016"
 
     @pytest.mark.skip(reason="no counts on dashboard until API response includes them")
     def test_closed_brief_response_count(self, data_api_client):
