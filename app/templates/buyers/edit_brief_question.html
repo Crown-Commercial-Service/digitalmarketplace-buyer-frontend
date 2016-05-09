@@ -44,7 +44,7 @@
   {%
     with
     url = brief_links.brief_link_url('child', section, brief) ,
-    text = "Return to {}".format('overview' if section.questions|length == 1 else section.name|lower)
+    text = "Return to {}".format(section.name|lower if section.has_summary_page else 'overview')
   %}
     {% include "toolkit/secondary-action-link.html" %}
   {% endwith %}

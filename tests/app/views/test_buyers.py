@@ -440,10 +440,10 @@ class TestEditBriefSubmission(BaseApplicationTest):
 
         assert res.status_code == 200
         document = html.fromstring(res.get_data(as_text=True))
+        secondary_action_link = document.xpath('//form//div[contains(@class, "secondary-action-link")]/a')[0]
         assert document.xpath('//h1')[0].text_content().strip() == "Optional 2"
-        assert document.xpath(
-            '//form//div[contains(@class, "secondary-action-link")]/a'
-        )[0].get('href').strip() == "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/section-4"  # noqa
+        assert secondary_action_link.get('href').strip() == "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/section-4"  # noqa
+        assert secondary_action_link.text_content().strip() == "Return to section 4"
         self._test_breadcrumbs_on_question_page(response=res, has_summary_page=True, section_name='Section 4')
 
     @mock.patch("app.buyers.views.buyers.content_loader")
@@ -469,10 +469,10 @@ class TestEditBriefSubmission(BaseApplicationTest):
 
         assert res.status_code == 200
         document = html.fromstring(res.get_data(as_text=True))
+        secondary_action_link = document.xpath('//form//div[contains(@class, "secondary-action-link")]/a')[0]
         assert document.xpath('//h1')[0].text_content().strip() == "Required 1"
-        assert document.xpath(
-            '//form//div[contains(@class, "secondary-action-link")]/a'
-        )[0].get('href').strip() == "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/section-1"  # noqa
+        assert secondary_action_link.get('href').strip() == "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/section-1"  # noqa
+        assert secondary_action_link.text_content().strip() == "Return to section 1"
         self._test_breadcrumbs_on_question_page(response=res, has_summary_page=True, section_name='Section 1')
 
     @mock.patch("app.buyers.views.buyers.content_loader")
@@ -498,10 +498,10 @@ class TestEditBriefSubmission(BaseApplicationTest):
 
         assert res.status_code == 200
         document = html.fromstring(res.get_data(as_text=True))
+        secondary_action_link = document.xpath('//form//div[contains(@class, "secondary-action-link")]/a')[0]
         assert document.xpath('//h1')[0].text_content().strip() == "Required 2"
-        assert document.xpath(
-            '//form//div[contains(@class, "secondary-action-link")]/a'
-        )[0].get('href').strip() == "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234"  # noqa
+        assert secondary_action_link.get('href').strip() == "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234"  # noqa
+        assert secondary_action_link.text_content().strip() == "Return to overview"
         self._test_breadcrumbs_on_question_page(response=res, has_summary_page=False)
 
     @mock.patch("app.buyers.views.buyers.content_loader")
