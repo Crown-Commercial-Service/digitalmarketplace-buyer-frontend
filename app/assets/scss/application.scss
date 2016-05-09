@@ -56,7 +56,6 @@ $path: "/static/images/";
 // Buyers app styles
 @import "_brief_submission.scss";
 @import "_footer.scss";
-@import "_forms.scss";
 @import "_table.scss";
 @import "_text.scss";
 @import "_notice.scss";
@@ -89,7 +88,7 @@ $path: "/static/images/";
     padding-top: 7px;
     padding-bottom: 13px;
   }
-  
+
   .phase-banner {
     border-bottom: 0px;
 
@@ -97,7 +96,7 @@ $path: "/static/images/";
       margin-left: 3px;
     }
   }
-  
+
   .phase-banner p {
     margin: -6px 0 10px;
     color: white;
