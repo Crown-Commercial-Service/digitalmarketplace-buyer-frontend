@@ -25,27 +25,28 @@
     {% set dos_items = [] %}
     {% set g_cloud_subtext = '' %}
     {% set crown_hosting_subtext = '' %}
+    {% set dos_slug = 'digital-outcomes-and-specialists' %}
 
     {% if dos_is_live %}
       {% set
         dos_items = [
           {
-            "link": url_for("main.info_page_for_starting_a_brief", framework_slug=dos_is_live.slug, lot_slug='digital-specialists'),
+            "link": url_for("main.info_page_for_starting_a_brief", framework_slug=dos_slug, lot_slug='digital-specialists'),
             "title": "Find an individual specialist",
             "body": "eg a developer or user researcher",
           },
           {
-            "link": url_for("main.info_page_for_starting_a_brief", framework_slug=dos_is_live.slug, lot_slug='digital-outcomes'),
+            "link": url_for("main.info_page_for_starting_a_brief", framework_slug=dos_slug, lot_slug='digital-outcomes'),
             "title": "Find a team to provide an outcome",
             "body": "eg a booking system or accessibility audit",
           },
           {
-            "link": url_for("main.info_page_for_starting_a_brief", framework_slug=dos_is_live.slug, lot_slug='user-research-participants'),
+            "link": url_for("main.info_page_for_starting_a_brief", framework_slug=dos_slug, lot_slug='user-research-participants'),
             "title": "Find user research participants",
             "body": "eg people from a specific user group to test your service",
           },
           {
-            "link": url_for("main.studios_start_page", framework_slug=dos_is_live.slug),
+            "link": url_for("main.studios_start_page", framework_slug=dos_slug),
             "title": "Find a user research lab",
             "body": "eg a room to conduct research sessions",
           },
