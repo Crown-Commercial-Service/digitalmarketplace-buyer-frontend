@@ -1,6 +1,6 @@
 from flask import Blueprint, current_app, flash
 from flask_login import current_user, login_required
-from dmutils.content_loader import ContentLoader
+from dmcontent.content_loader import ContentLoader
 
 buyers = Blueprint('buyers', __name__)
 

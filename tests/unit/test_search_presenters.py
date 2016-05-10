@@ -2,7 +2,7 @@ import os
 import json
 import unittest
 from mock import Mock
-from dmutils.content_loader import ContentLoader
+from dmcontent.content_loader import ContentLoader
 from werkzeug.datastructures import MultiDict
 
 from app.presenters.search_presenters import filters_for_lot, set_filter_states

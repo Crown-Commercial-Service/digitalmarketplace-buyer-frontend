@@ -2,7 +2,7 @@ import os
 import re
 from jinja2 import Template
 from dmutils.service_attribute import Attribute
-from dmutils.formats import format_service_price
+from dmcontent.formats import format_service_price
 
 try:
     from urllib.parse import urlparse

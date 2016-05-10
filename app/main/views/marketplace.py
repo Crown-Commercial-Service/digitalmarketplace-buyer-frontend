@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from flask import abort, current_app, render_template, request
 
 from dmapiclient import APIError
-from dmutils.content_loader import ContentNotFoundError
+from dmcontent.content_loader import ContentNotFoundError
 
 from ...main import main
 from ...helpers.shared_helpers import get_one_framework_by_status_in_order_of_preference, parse_link

@@ -4,7 +4,7 @@ from flask_wtf.csrf import CsrfProtect
 
 import dmapiclient
 from dmutils import init_app, flask_featureflags
-from dmutils.content_loader import ContentLoader
+from dmcontent.content_loader import ContentLoader
 from dmutils.user import User
 
 from config import configs
