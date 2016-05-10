@@ -4,7 +4,7 @@ import datetime
 from werkzeug.exceptions import NotFound
 
 import app.helpers as helpers
-from dmutils.content_loader import ContentLoader
+from dmcontent.content_loader import ContentLoader
 
 from dmapiclient import api_stubs
 
