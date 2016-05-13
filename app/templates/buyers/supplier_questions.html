@@ -38,6 +38,7 @@
       {% import "toolkit/summary-table.html" as summary %}
 
       {{ summary.heading("Supplier questions", id="clarification-questions") }}
+      {{ summary.top_link("Answer a supplier question", url_for('.add_supplier_question', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id)) }}
       {% call(question) summary.list_table(
         brief.clarificationQuestions,
         field_headings=[
@@ -60,7 +61,6 @@
     </div>
   </div>
 
-  <a href="{{ url_for('.add_supplier_question', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id) }}">Answer a supplier question</a>
 
   {%
     with
