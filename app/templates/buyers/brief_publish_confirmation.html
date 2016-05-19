@@ -94,7 +94,7 @@
           {{ summary.text("You must have published answers to all suppliers’ questions.") }}
         {% endcall %}
         {% call summary.row(no_border=True) %}
-          {{ summary.text("If {} is a Saturday or Sunday, you need to have published all questions and answers by the Friday before.".format(dates.answers_close | shortdateformat), border=True) }}
+          {{ summary.text("If {} is a Saturday or Sunday, publish all questions and answers by the Friday before.".format(dates.answers_close | shortdateformat), border=True) }}
         {% endcall %}
         {% call summary.row(bold_border=True) %}
           {{ summary.field_heading_date(dates.closing_date | shortdateformat, scope='row') }}
