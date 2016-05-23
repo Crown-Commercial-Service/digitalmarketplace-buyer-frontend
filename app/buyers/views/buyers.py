@@ -379,6 +379,7 @@ def publish_brief(framework_slug, lot_slug, brief_id):
             dates=dates
         ), 200
 
+
 @buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/timeline', methods=['GET'])
 def view_brief_timeline(framework_slug, lot_slug, brief_id):
     get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)

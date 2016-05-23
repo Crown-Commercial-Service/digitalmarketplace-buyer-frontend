@@ -1195,7 +1195,8 @@ class TestBriefSummaryPage(BaseApplicationTest):
 
             assert (document.xpath('//h1')[0]).text_content().strip() == "I need a thing to do a thing"
             assert [e.text_content() for e in document.xpath('//main[@id="content"]//ul/li/a')] == [
-                'View published requirements',
+                'View question and answer dates',
+                'View your published requirements',
                 'Publish questions and answers',
                 'How to answer supplier questions',
                 'How to shortlist suppliers',
@@ -1231,7 +1232,7 @@ class TestBriefSummaryPage(BaseApplicationTest):
 
             assert (document.xpath('//h1')[0]).text_content().strip() == "I need a thing to do a thing"
             assert [e.text_content() for e in document.xpath('//main[@id="content"]//ul/li/a')] == [
-                'View published requirements',
+                'View your published requirements',
                 'View and shortlist suppliers',
                 'How to shortlist suppliers',
                 'How to evaluate suppliers',
