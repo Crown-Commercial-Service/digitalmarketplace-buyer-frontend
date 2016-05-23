@@ -85,17 +85,21 @@ def get_sorted_responses_for_brief(brief, data_api_client):
         return brief_responses
 
 
-def get_publishing_dates():
+def get_publishing_dates(brief=None):
     application_open_days = 14
     questions_open_days = application_open_days - 7
     answers_open_days = application_open_days - 1
 
     dates = {}
-
-    dates['today'] = datetime.utcnow().replace(hour=23, minute=59, second=59, microsecond=0)
-    dates['questions_close'] = dates['today'] + timedelta(days=questions_open_days)
-    dates['answers_close'] = dates['today'] + timedelta(days=answers_open_days)
-    dates['closing_date'] = dates['today'] + timedelta(days=application_open_days)
-    dates['application_open_weeks'] = application_open_days//7
-    dates['closing_time'] = '{d:%I:%M %p}'.format(d=dates['closing_date']).lower()
+    if brief is not None and brief.get('publishedAt'):
+        dates['questions_close'] = brief['clarificationQuestionsClosedAt']
+        dates['answers_close'] = brief['clarificationQuestionsPublishedBy']
+        dates['closing_date'] = brief['applicationsClosedAt']
+    else:
+        dates['today'] = datetime.utcnow().replace(hour=23, minute=59, second=59, microsecond=0)
+        dates['questions_close'] = dates['today'] + timedelta(days=questions_open_days)
+        dates['answers_close'] = dates['today'] + timedelta(days=answers_open_days)
+        dates['closing_date'] = dates['today'] + timedelta(days=application_open_days)
+        dates['application_open_weeks'] = application_open_days//7
+        dates['closing_time'] = '{d:%I:%M %p}'.format(d=dates['closing_date']).lower()
     return dates
