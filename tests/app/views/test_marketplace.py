@@ -453,7 +453,7 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
 
         heading = document.xpath('//h1/text()')[0].strip()
         assert heading == "Digital Outcomes and Specialists opportunities"
-        assert 'lot 1, lot 3' in document.xpath('//div[@class="marketplace-paragraph"]/p/text()')[0]
+        assert 'lot 1 and lot 3' in document.xpath('//div[@class="marketplace-paragraph"]/p/text()')[0]
 
     def test_catalogue_of_briefs_page_shows_pagination_if_more_pages(self):
         res = self.client.get('/digital-outcomes-and-specialists/opportunities')
