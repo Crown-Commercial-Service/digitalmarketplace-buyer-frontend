@@ -1030,7 +1030,7 @@ class TestPublishBrief(BaseApplicationTest):
         page_html = res.get_data(as_text=True)
 
         assert res.status_code == 200
-        assert 'Publish Requirements' in page_html, page_html
+        assert 'Publish requirements' in page_html, page_html
 
     def test_publish_button_unavailable_if_questions_not_answered(self, data_api_client):
         self.login_as_buyer()
@@ -1049,7 +1049,7 @@ class TestPublishBrief(BaseApplicationTest):
         page_html = res.get_data(as_text=True)
 
         assert res.status_code == 200
-        assert 'Publish Requirements' not in page_html
+        assert 'Publish requirements' not in page_html
 
 
 @mock.patch('app.buyers.views.buyers.data_api_client')
