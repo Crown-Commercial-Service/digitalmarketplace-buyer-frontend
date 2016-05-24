@@ -388,22 +388,11 @@ def view_brief_timeline(framework_slug, lot_slug, brief_id):
     if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id) or brief_can_be_edited(brief):
         abort(404)
 
-    content = content_loader.get_manifest(brief['frameworkSlug'], 'edit_brief').filter({'lot': brief['lotSlug']})
-    sections = content.summary(brief)
-    question_and_answers = {}
-    question_and_answers_content = sections.get_question('questionAndAnswerSessionDetails')
-    question_and_answers['id'] = question_and_answers_content['id']
-
-    for section in sections:
-        if section.get_question('questionAndAnswerSessionDetails') == question_and_answers_content:
-            question_and_answers['slug'] = section['id']
-
     dates = get_publishing_dates(brief)
 
     return render_template(
         "buyers/brief_publish_confirmation.html",
         email_address=brief['users'][0]['emailAddress'],
-        question_and_answers=question_and_answers,
         published=True,
         brief=brief,
         dates=dates
