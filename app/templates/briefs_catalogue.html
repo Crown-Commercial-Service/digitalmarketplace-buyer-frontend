@@ -25,7 +25,7 @@
     <div class="grid-row">
         <section class="column-two-thirds">
             <div class="marketplace-paragraph">
-              <p>View buyer requirements for {{ lot_names | map('lower') | join(", ") }}.</p>
+              <p>View buyer requirements for {{ lot_names | map('lower') | smartjoin }}.</p>
             </div>
             {% include '_briefs_list.html' %}
             {% include '_briefs_pagination.html' %}
