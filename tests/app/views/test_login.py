@@ -859,6 +859,7 @@ class TestCreateUser(BaseApplicationTest):
             'role': 'buyer',
             'password': 'validpassword',
             'emailAddress': 'test@email.com',
+            'phoneNumber': '',
             'name': 'valid name'
         })
 
@@ -882,6 +883,7 @@ class TestCreateUser(BaseApplicationTest):
             'role': 'buyer',
             'password': 'validpassword',
             'emailAddress': 'test@email.com',
+            'phoneNumber': '',
             'name': 'valid name'
         })
 
@@ -903,6 +905,7 @@ class TestCreateUser(BaseApplicationTest):
             'role': mock.ANY,
             'password': 'validpassword',
             'emailAddress': mock.ANY,
+            'phoneNumber': '',
             'name': 'valid name'
         })
 
@@ -922,7 +925,8 @@ class TestCreateUser(BaseApplicationTest):
             'role': mock.ANY,
             'password': '  validpassword  ',
             'emailAddress': mock.ANY,
-            'name': 'valid name'
+            'name': 'valid name',
+            'phoneNumber': '',
         })
 
     @mock.patch('app.main.views.login.data_api_client')
