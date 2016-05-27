@@ -1,7 +1,7 @@
 from flask_wtf import Form
 from wtforms import PasswordField
-from wtforms.validators import DataRequired, Email, EqualTo, Length
-from dmutils.forms import StripWhitespaceStringField
+from wtforms.validators import DataRequired, Email, EqualTo, Length, Regexp
+from dmutils.forms import StripWhitespaceStringField, StringField
 
 
 class LoginForm(Form):
@@ -58,6 +58,15 @@ class CreateUserForm(Form):
             Length(min=1,
                    max=255,
                    message="Names must be between 1 and 255 characters"
+                   )
+        ]
+    )
+
+    phone_number = StringField(
+        'Phone number', id="input_phone_number",
+        validators=[
+            Regexp("^$|^\\+?([\\d\\s()-]){6,20}$",
+                   message="Phone numbers must be between 6 and 20 characters."
                    )
         ]
     )
