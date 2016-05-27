@@ -385,7 +385,7 @@ def view_brief_timeline(framework_slug, lot_slug, brief_id):
     get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
     brief = data_api_client.get_brief(brief_id)["briefs"]
 
-    if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id) or brief_can_be_edited(brief):
+    if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id) or brief.get('status') != 'live':
         abort(404)
 
     dates = get_publishing_dates(brief)
