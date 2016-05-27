@@ -3,4 +3,5 @@
 //= include analytics/_dm-analytics.js
 //= include analytics/_register.js
 //= include analytics/_pageViews.js
+//= include analytics/_events.js
 //= include analytics/_init.js
