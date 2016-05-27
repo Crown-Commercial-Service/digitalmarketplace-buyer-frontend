@@ -6,23 +6,36 @@ describe("GOVUK.Analytics", function () {
     spyOn(window, 'ga');
   });
 
-  describe('when created', function() {
+  describe('when initialised', function () {
+
+    it('should initialise pageviews, events and virtual pageviews', function () {
+      spyOn(window.GOVUK.GDM.analytics, 'register');
+      spyOn(window.GOVUK.GDM.analytics.pageViews, 'init');
+      spyOn(window.GOVUK.GDM.analytics.events, 'init');
+
+      window.GOVUK.GDM.analytics.init();
+
+      expect(window.GOVUK.GDM.analytics.register).toHaveBeenCalled();
+      expect(window.GOVUK.GDM.analytics.pageViews.init).toHaveBeenCalled();
+      expect(window.GOVUK.GDM.analytics.events.init).toHaveBeenCalled();
+    });
+  });
+
+  describe('when registered', function() {
     var universalSetupArguments;
 
     beforeEach(function() {
-      analytics = new window.GOVUK.Analytics({
-        universalId: 'universal-id',
-        cookieDomain: 'www.digitalmarketplace.service.gov.uk'
-      });
+      GOVUK.GDM.analytics.init();
       universalSetupArguments = window.ga.calls.allArgs();
     });
 
     it('configures a universal tracker', function() {
-      expect(universalSetupArguments[0]).toEqual(['create', 'universal-id', {
-        'cookieDomain': 'www.digitalmarketplace.service.gov.uk'
+      var trackerId = 'UA-49258698-1';
+      expect(universalSetupArguments[0]).toEqual(['create', trackerId, {
+        'cookieDomain': document.domain
       }]);
     });
-  })
+  });
 
   describe('when setting up cross-domain tracking', function () {
     var sortCalls = function (calls) {
