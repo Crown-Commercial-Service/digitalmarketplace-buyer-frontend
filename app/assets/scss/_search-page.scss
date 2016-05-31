@@ -24,6 +24,7 @@ em.search-result-highlighted-text {
     }
 
     ul {
+      @include core-16;
       list-style: none;
       padding-left: 0;
       margin: 5px 0 $gutter;
