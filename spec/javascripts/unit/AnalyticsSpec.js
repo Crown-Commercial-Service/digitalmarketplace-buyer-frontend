@@ -92,4 +92,102 @@ describe("GOVUK.Analytics", function () {
       expect(gaMethodCalls.callsTo('linker:autoLink')[0]).toEqual([['digitalservicesstore.service.gov.uk']]);
     });
   });
+
+  describe('link tracking', function () {
+    var mockLink,
+        assetHost = 'https://assets.digitalmarketplace.service.gov.uk';
+
+    beforeEach(function () {
+      mockLink = document.createElement('a');
+      window.ga.calls.reset();
+    });
+
+    it('sends the right event when a supplier responses download link is clicked', function() {
+      spyOn(GOVUK.GDM.analytics.location, "pathname")
+        .and
+        .returnValue('/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1/responses');
+
+      $(mockLink).append('<span class="document-icon">CSV</span><span> document:</span></span>');
+
+      mockLink.appendChild(document.createTextNode('Download supplier responses to ‘Brief 1’'));
+      mockLink.href = assetHost + '/digital-outcomes-and-specialists/communications/catalogues/digital-specialists-suppliers.csv';
+      GOVUK.GDM.analytics.events.supplierListDownload({ 'target': mockLink });
+      expect(window.ga.calls.first().args).toEqual(['send', {
+        'hitType': 'event',
+        'eventCategory': 'download',
+        'eventAction': 'csv',
+        'eventLabel': 'supplier response list | outcomes | 1',
+        'transport': 'beacon'
+      }]);
+    });
+
+    it('sends the right event when a list of user research labs download link is clicked', function() {
+      spyOn(GOVUK.GDM.analytics.location, "pathname")
+        .and
+        .returnValue('/buyers/frameworks/digital-outcomes-and-specialists/requirements/user-research-studios');
+
+      $(mockLink).append('<span class="document-icon">CSV</span><span> document:</span></span>');
+      mockLink.appendChild(document.createTextNode('List of labs'));
+      mockLink.href = assetHost + '/digital-outcomes-and-specialists/communications/catalogues/user-research-studios.csv';
+      GOVUK.GDM.analytics.events.supplierListDownload({ 'target': mockLink });
+      expect(window.ga.calls.first().args).toEqual(['send', {
+        'hitType': 'event',
+        'eventCategory': 'download',
+        'eventAction': 'csv',
+        'eventLabel': 'list of user research labs',
+        'transport': 'beacon'
+      }]);
+    });
+ 
+    it('sends the right event when a list of user research participants download link is clicked', function() {
+      spyOn(GOVUK.GDM.analytics.location, "pathname")
+        .and
+        .returnValue('/buyers/frameworks/digital-outcomes-and-specialists/requirements/user-research-participants');
+
+      mockLink.appendChild(document.createTextNode('Download list of suppliers.'));
+      mockLink.href = assetHost + '/digital-outcomes-and-specialists/communications/catalogues/user-research-participants-suppliers.csv';
+      GOVUK.GDM.analytics.events.supplierListDownload({ 'target': mockLink });
+      expect(window.ga.calls.first().args).toEqual(['send', {
+        'hitType': 'event',
+        'eventCategory': 'download',
+        'eventAction': 'csv',
+        'eventLabel': 'list of user research participant suppliers',
+        'transport': 'beacon'
+      }]);
+    });
+ 
+    it('sends the right event when a list of suppliers for digital specialists download link is clicked', function() {
+      spyOn(GOVUK.GDM.analytics.location, "pathname")
+        .and
+        .returnValue('/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists');
+
+      mockLink.appendChild(document.createTextNode('Download list of suppliers.'));
+      mockLink.href = assetHost + '/digital-outcomes-and-specialists/communications/catalogues/digital-specialists-suppliers.csv';
+      GOVUK.GDM.analytics.events.supplierListDownload({ 'target': mockLink });
+      expect(window.ga.calls.first().args).toEqual(['send', {
+        'hitType': 'event',
+        'eventCategory': 'download',
+        'eventAction': 'csv',
+        'eventLabel': 'list of specialists suppliers',
+        'transport': 'beacon'
+      }]);
+    });
+ 
+    it('sends the right event when a list of suppliers for digital outcomes download link is clicked', function() {
+      spyOn(GOVUK.GDM.analytics.location, "pathname")
+        .and
+        .returnValue('/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes');
+
+      mockLink.appendChild(document.createTextNode('Download list of suppliers.'));
+      mockLink.href = assetHost + '/digital-outcomes-and-specialists/communications/catalogues/digital-outcomes-suppliers.csv';
+      GOVUK.GDM.analytics.events.supplierListDownload({ 'target': mockLink });
+      expect(window.ga.calls.first().args).toEqual(['send', {
+        'hitType': 'event',
+        'eventCategory': 'download',
+        'eventAction': 'csv',
+        'eventLabel': 'list of outcomes suppliers',
+        'transport': 'beacon'
+      }]);
+    });
+  });
 });
