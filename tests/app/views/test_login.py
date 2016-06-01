@@ -851,7 +851,8 @@ class TestCreateUser(BaseApplicationTest):
             '/create-user/{}'.format(token),
             data={
                 'password': 'validpassword',
-                'name': 'valid name'
+                'name': 'valid name',
+                'phone_number': '020-7930-4832'
             }
         )
 
@@ -859,7 +860,7 @@ class TestCreateUser(BaseApplicationTest):
             'role': 'buyer',
             'password': 'validpassword',
             'emailAddress': 'test@email.com',
-            'phoneNumber': '',
+            'phoneNumber': '020-7930-4832',
             'name': 'valid name'
         })
 
@@ -875,6 +876,7 @@ class TestCreateUser(BaseApplicationTest):
             '/create-user/{}'.format(token),
             data={
                 'password': 'validpassword',
+                'phone_number': '020-7930-4832',
                 'name': 'valid name'
             }
         )
@@ -883,7 +885,7 @@ class TestCreateUser(BaseApplicationTest):
             'role': 'buyer',
             'password': 'validpassword',
             'emailAddress': 'test@email.com',
-            'phoneNumber': '',
+            'phoneNumber': '020-7930-4832',
             'name': 'valid name'
         })
 
@@ -897,7 +899,9 @@ class TestCreateUser(BaseApplicationTest):
             '/create-user/{}'.format(token),
             data={
                 'password': 'validpassword',
-                'name': '  valid name  '
+                'name': '  valid name  ',
+                'phone_number': '020-7930-4832'
+
             }
         )
 
@@ -905,7 +909,7 @@ class TestCreateUser(BaseApplicationTest):
             'role': mock.ANY,
             'password': 'validpassword',
             'emailAddress': mock.ANY,
-            'phoneNumber': '',
+            'phoneNumber': '020-7930-4832',
             'name': 'valid name'
         })
 
@@ -917,7 +921,9 @@ class TestCreateUser(BaseApplicationTest):
             '/create-user/{}'.format(token),
             data={
                 'password': '  validpassword  ',
-                'name': 'valid name  '
+                'name': 'valid name  ',
+                'phone_number': '020-7930-4832'
+
             }
         )
 
@@ -926,7 +932,7 @@ class TestCreateUser(BaseApplicationTest):
             'password': '  validpassword  ',
             'emailAddress': mock.ANY,
             'name': 'valid name',
-            'phoneNumber': '',
+            'phoneNumber': '020-7930-4832',
         })
 
     @mock.patch('app.main.views.login.data_api_client')
