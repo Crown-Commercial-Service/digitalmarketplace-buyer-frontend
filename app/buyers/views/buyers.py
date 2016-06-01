@@ -380,6 +380,25 @@ def publish_brief(framework_slug, lot_slug, brief_id):
         ), 200
 
 
+@buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/timeline', methods=['GET'])
+def view_brief_timeline(framework_slug, lot_slug, brief_id):
+    get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
+    brief = data_api_client.get_brief(brief_id)["briefs"]
+
+    if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id) or brief.get('status') != 'live':
+        abort(404)
+
+    dates = get_publishing_dates(brief)
+
+    return render_template(
+        "buyers/brief_publish_confirmation.html",
+        email_address=brief['users'][0]['emailAddress'],
+        published=True,
+        brief=brief,
+        dates=dates
+    ), 200
+
+
 @buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/delete', methods=['POST'])
 def delete_a_brief(framework_slug, lot_slug, brief_id):
     get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)

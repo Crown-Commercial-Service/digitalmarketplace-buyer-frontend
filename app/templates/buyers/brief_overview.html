@@ -84,8 +84,13 @@
                   'allowed_statuses': ['draft']
                 },
                 {
+                  'href': url_for(".view_brief_timeline",framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id),
+                  'text': 'View question and answer dates',
+                  'allowed_statuses': ['live']
+                },
+                {
                   'href': url_for("main.get_brief_by_id", framework_slug=brief.frameworkSlug, brief_id=brief.id),
-                  'text': 'View published requirements',
+                  'text': 'View your published requirements',
                   'allowed_statuses': ['live', 'closed']
                 }
               ]

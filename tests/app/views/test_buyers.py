@@ -1195,7 +1195,8 @@ class TestBriefSummaryPage(BaseApplicationTest):
 
             assert (document.xpath('//h1')[0]).text_content().strip() == "I need a thing to do a thing"
             assert [e.text_content() for e in document.xpath('//main[@id="content"]//ul/li/a')] == [
-                'View published requirements',
+                'View question and answer dates',
+                'View your published requirements',
                 'Publish questions and answers',
                 'How to answer supplier questions',
                 'How to shortlist suppliers',
@@ -1231,7 +1232,7 @@ class TestBriefSummaryPage(BaseApplicationTest):
 
             assert (document.xpath('//h1')[0]).text_content().strip() == "I need a thing to do a thing"
             assert [e.text_content() for e in document.xpath('//main[@id="content"]//ul/li/a')] == [
-                'View published requirements',
+                'View your published requirements',
                 'View and shortlist suppliers',
                 'How to shortlist suppliers',
                 'How to evaluate suppliers',
@@ -1879,3 +1880,83 @@ class TestDownloadBriefResponsesCsv(BaseApplicationTest):
         self.login_as_buyer()
         res = self.client.get(self.url)
         assert res.status_code == 404
+
+
+@mock.patch('app.buyers.views.buyers.data_api_client')
+class TestViewQuestionAndAnswerDates(BaseApplicationTest):
+    def test_show_question_and_answer_dates_for_published_brief(self, data_api_client):
+        with self.app.app_context():
+            self.login_as_buyer()
+            data_api_client.get_framework.return_value = api_stubs.framework(
+                slug='digital-outcomes-and-specialists',
+                status='live',
+                lots=[
+                    api_stubs.lot(slug='digital-specialists', allows_brief=True),
+                ]
+            )
+            brief_json = api_stubs.brief(status="live")
+            brief_json['briefs']['publishedAt'] = "2016-04-02T20:10:00.00000Z"
+            brief_json['briefs']['clarificationQuestionsClosedAt'] = "2016-04-12T23:59:00.00000Z"
+            brief_json['briefs']['clarificationQuestionsPublishedBy'] = "2016-04-14T23:59:00.00000Z"
+            brief_json['briefs']['applicationsClosedAt'] = "2016-04-16T23:59:00.00000Z"
+            brief_json['briefs']['specialistRole'] = 'communicationsManager'
+            brief_json['briefs']["clarificationQuestionsAreClosed"] = True
+            data_api_client.get_brief.return_value = brief_json
+
+            res = self.client.get(
+                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/timeline"
+            )
+
+            assert res.status_code == 200
+            page_html = res.get_data(as_text=True)
+            document = html.fromstring(page_html)
+
+            assert (document.xpath('//h1')[0]).text_content().strip() == "Question and answer dates"
+            assert all(
+                date in
+                [e.text_content() for e in document.xpath('//main[@id="content"]//th/span')]
+                for date in ['2 April', '12 April', '14 April', '16 April']
+            )
+
+    def test_do_not_show_question_and_answer_dates_for_draft_brief(self, data_api_client):
+        with self.app.app_context():
+            self.login_as_buyer()
+            data_api_client.get_framework.return_value = api_stubs.framework(
+                slug='digital-outcomes-and-specialists',
+                status='live',
+                lots=[
+                    api_stubs.lot(slug='digital-specialists', allows_brief=True),
+                ]
+            )
+            brief_json = api_stubs.brief(status="draft")
+            brief_json['briefs']['specialistRole'] = 'communicationsManager'
+            brief_json['briefs']["clarificationQuestionsAreClosed"] = True
+            data_api_client.get_brief.return_value = brief_json
+
+            res = self.client.get(
+                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/timeline"
+            )
+
+            assert res.status_code == 404
+
+    def test_do_not_show_question_and_answer_dates_for_closed_brief(self, data_api_client):
+        with self.app.app_context():
+            self.login_as_buyer()
+            data_api_client.get_framework.return_value = api_stubs.framework(
+                slug='digital-outcomes-and-specialists',
+                status='live',
+                lots=[
+                    api_stubs.lot(slug='digital-specialists', allows_brief=True),
+                ]
+            )
+            brief_json = api_stubs.brief(status="closed")
+            brief_json['briefs']['publishedAt'] = "2016-04-02T20:10:00.00000Z"
+            brief_json['briefs']['specialistRole'] = 'communicationsManager'
+            brief_json['briefs']["clarificationQuestionsAreClosed"] = True
+            data_api_client.get_brief.return_value = brief_json
+
+            res = self.client.get(
+                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/timeline"
+            )
+
+            assert res.status_code == 404

@@ -28,20 +28,22 @@
 <div class='grid-row'>
   <div class='column-two-thirds large-paragraph'>
     {% with
-        heading = "Publish your requirements and evaluation criteria",
+        heading = "Publish your requirements and evaluation criteria" if not published else "Question and answer dates",
         smaller = True,
         with_breadcrumb = True
     %}
         {% include "toolkit/page-heading.html" %}
     {% endwith %}
-    <p class="padding-bottom-small">All requirements are published on the Digital Marketplace where anyone can see them.</p>
-    <p class="padding-bottom-small">All requirements are open for {{ dates.application_open_weeks }} weeks.</p>
-    <p class="padding-bottom-small">If you publish your requirements today ({{ dates.today | shortdateformat }}), suppliers will be able to apply until {{ dates.closing_time }}, {{ dates.closing_date | shortdateformat}}.</p>
+    {% if not published %}
+      <p class="padding-bottom-small">All requirements are published on the Digital Marketplace where anyone can see them.</p>
+      <p class="padding-bottom-small">All requirements are open for {{ dates.application_open_weeks }} weeks.</p>
+      <p class="padding-bottom-small">If you publish your requirements today ({{ dates.today | shortdateformat }}), suppliers will be able to apply until {{ dates.closing_time }}, {{ dates.closing_date | shortdateformat}}.</p>
+    {% endif %}
+    <p><strong>Supplier questions will be sent to:</strong></p>
+    <p class="padding-bottom-small">{{ email_address }}</p>
+    <p class="padding-bottom-small">Ensure this email address {% if not published %}will be{% else %}is{% endif %} monitored. If you’re away while suppliers can still ask questions, you should make sure your emails are forwarded to a colleague.</p>
 
-    <p class="padding-bottom-small"><strong>Supplier questions will be sent to:</strong> {{ email_address }}</p>
-    <p class="padding-bottom-small">Ensure this email address will be monitored. If you’re away while suppliers can still ask questions, you should make sure your emails are forwarded to a colleague.</p>
-
-    {% if unanswered_required > 0 %}
+    {% if not published and unanswered_required > 0 %}
       <p class="padding-bottom-small"><strong>You still need to complete the following questions before your requirements can be published:</strong></p>
       {% for section in sections %}
         {% for question in section.questions %}
@@ -60,8 +62,8 @@
         row_bold_borders=True,
         text_large = True,
         no_bottom_border=True,
-        caption="If you publish today, you must be aware of the following dates:",
-        caption_visible=True,
+        caption="If you publish today, you must be aware of the following dates:" if not published,
+        caption_visible=not published,
         field_headings=[
           "Date",
           "Notice",
@@ -69,14 +71,16 @@
         field_headings_visible=False
       ) %}
         {% call summary.row(no_border=True) %}
-          {{ summary.field_heading_date("Today", scope='row') }}
+          {{ summary.field_heading_date("Today" if not published else (brief.publishedAt | shortdateformat), scope='row') }}
           {{ summary.text("Suppliers can apply and ask questions about your requirements.") }}
         {% endcall %}
         {% if brief.questionAndAnswerSessionDetails %}
           {% call summary.row(bold_border=True) %}
             {{ summary.field_heading_date("Before {}".format(dates.questions_close | shortdateformat), rowspan='3', scope='row') }}
             {{ summary.text_bold("Details of your question and answer session") }}
-            {{ summary.edit_link("Edit", url_for('.edit_brief_question', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id, section_slug=question_and_answers.slug, question_id=question_and_answers.id)) }}
+            {% if not published %}
+              {{ summary.edit_link("Edit", url_for('.edit_brief_question', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id, section_slug=question_and_answers.slug, question_id=question_and_answers.id)) }}
+            {% endif %}
           {% endcall %}
           {% call summary.row(no_border=True) %}
             {{ summary.text(brief.questionAndAnswerSessionDetails) }}
@@ -101,16 +105,18 @@
           {{ summary.text("The last day suppliers can apply.") }}
         {% endcall %}
       {% endcall %}
-      <form action="{{ url_for('.publish_brief', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id) }}" method="POST">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-        {%
-        with
-        type = "save",
-        label = "Publish requirements"
-        %}
-        {% include "toolkit/button.html" %}
-        {% endwith %}
-      </form>
+      {% if not published %}
+        <form action="{{ url_for('.publish_brief', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id) }}" method="POST">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+          {%
+          with
+          type = "save",
+          label = "Publish requirements"
+          %}
+          {% include "toolkit/button.html" %}
+          {% endwith %}
+        </form>
+      {% endif %}
     {% endif %}
 
     {%
