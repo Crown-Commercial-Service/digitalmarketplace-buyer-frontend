@@ -65,8 +65,9 @@ class CreateUserForm(Form):
     phone_number = StringField(
         'Phone number', id="input_phone_number",
         validators=[
-            Regexp("^$|^\\+?([\\d\\s()-]){6,20}$",
-                   message="Phone numbers must be between 6 and 20 characters."
+            Regexp("^$|^\\+?([\\d\\s()-]){9,20}$",
+                   message=("Phone numbers must be at least 9 characters long. "
+                            "They can only include digits, spaces, plus and minus signs, and brackets.")
                    )
         ]
     )
