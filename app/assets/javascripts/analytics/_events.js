@@ -15,15 +15,14 @@
   };
 
   var LinkClick = function (e) {
-      var $target = $(e.target);
-
-      this.text = $target.text(),
-      this.href = $target.prop('href');
+      this.$target = $(e.target);
+      this.text = this.$target.text(),
+      this.href = this.$target.prop('href');
 
       // if the node clicked wasn't the link but a child of it
-      if ($target[0].nodeName.toLowerCase() !== 'a') {
-        $target = $target.closest('a');
-        this.href = $target.prop('href');
+      if (this.$target[0].nodeName.toLowerCase() !== 'a') {
+        this.$target = this.$target.closest('a');
+        this.href = this.$target.prop('href');
       }
   };
   
@@ -45,17 +44,23 @@
       return url.match(currentHostRegExp) !== null;
   };
   LinkClick.prototype.fileType = function () {
-      /*
-         File type matching based on those in:
-         https://github.com/alphagov/digitalmarketplace-utils/blob/8251d45f47593bd73c5e3b993e1734b5ee505b4b/dmutils/documents.py#L105
+      var match = this.href.match(/\.(pdf|pda|odt|ods|odp|zip|csv)$/),
+          getExtensionFromHTML;
 
-         CSV added to support suppliers download
-      */
-      var match = this.href.match(/\.(pdf|pda|odt|ods|odp|zip|csv)$/);
+      getExtensionFromHTML = function ($link) {
+        var $linkIcon = $link.find('.document-icon').clone();
+
+        if (!$linkIcon.length) { return false; }
+
+        $linkIcon.find('span').remove();
+        return $linkIcon.text().toLowerCase();
+      };
+
       if (match !== null) { 
         return match[1];
+      } else {
+        return getExtensionFromHTML(this.$target);
       }
-      return false;
   };
   
   var downloadLinkLabel = function (linkClick) {
