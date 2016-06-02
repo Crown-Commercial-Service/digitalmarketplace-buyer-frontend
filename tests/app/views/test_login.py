@@ -892,6 +892,45 @@ class TestCreateUser(BaseApplicationTest):
         assert res.status_code == 400
 
     @mock.patch('app.main.views.login.data_api_client')
+    def test_should_create_user_if_no_phone_number(self, data_api_client):
+
+        token = self._generate_token()
+        res = self.client.post(
+            '/create-user/{}'.format(token),
+            data={
+                'password': 'validpassword',
+                'name': 'valid name',
+                'phone_number': None
+            }
+        )
+
+        data_api_client.create_user.assert_called_once_with({
+            'role': 'buyer',
+            'password': 'validpassword',
+            'emailAddress': 'test@email.com',
+            'phoneNumber': '',
+            'name': 'valid name'
+        })
+
+        assert res.status_code == 302
+        assert res.location == 'http://localhost/'
+
+    @mock.patch('app.main.views.login.data_api_client')
+    def test_should_return_an_error_if_bad_phone_number(self, data_api_client):
+
+        token = self._generate_token()
+        res = self.client.post(
+            '/create-user/{}'.format(token),
+            data={
+                'password': 'validpassword',
+                'name': 'valid name',
+                'phone_number': 'Not a number'
+            }
+        )
+
+        assert res.status_code == 400
+
+    @mock.patch('app.main.views.login.data_api_client')
     def test_should_strip_whitespace_surrounding_create_user_name_field(self, data_api_client):
         data_api_client.get_user.return_value = None
         token = self._generate_token()
