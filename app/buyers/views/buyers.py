@@ -364,7 +364,7 @@ def publish_brief(framework_slug, lot_slug, brief_id):
         data_api_client.update_brief_status(brief_id, 'live', brief_user_name)
         return redirect(
             url_for('.view_brief_overview', framework_slug=brief['frameworkSlug'], lot_slug=brief['lotSlug'],
-                    brief_id=brief['id']))
+                    brief_id=brief['id'], published='true'))
     else:
         email_address = brief_users['emailAddress']
         dates = get_publishing_dates()
