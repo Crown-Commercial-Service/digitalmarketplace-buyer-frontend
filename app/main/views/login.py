@@ -302,6 +302,7 @@ def submit_create_user(encoded_token):
             user = data_api_client.create_user({
                 'name': form.name.data,
                 'password': form.password.data,
+                'phoneNumber': form.phone_number.data,
                 'emailAddress': token.get('email_address'),
                 'role': 'buyer'
             })

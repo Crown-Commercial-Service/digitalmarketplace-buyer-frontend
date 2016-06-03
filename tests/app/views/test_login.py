@@ -851,7 +851,8 @@ class TestCreateUser(BaseApplicationTest):
             '/create-user/{}'.format(token),
             data={
                 'password': 'validpassword',
-                'name': 'valid name'
+                'name': 'valid name',
+                'phone_number': '020-7930-4832'
             }
         )
 
@@ -859,6 +860,7 @@ class TestCreateUser(BaseApplicationTest):
             'role': 'buyer',
             'password': 'validpassword',
             'emailAddress': 'test@email.com',
+            'phoneNumber': '020-7930-4832',
             'name': 'valid name'
         })
 
@@ -874,6 +876,7 @@ class TestCreateUser(BaseApplicationTest):
             '/create-user/{}'.format(token),
             data={
                 'password': 'validpassword',
+                'phone_number': '020-7930-4832',
                 'name': 'valid name'
             }
         )
@@ -882,8 +885,48 @@ class TestCreateUser(BaseApplicationTest):
             'role': 'buyer',
             'password': 'validpassword',
             'emailAddress': 'test@email.com',
+            'phoneNumber': '020-7930-4832',
             'name': 'valid name'
         })
+
+        assert res.status_code == 400
+
+    @mock.patch('app.main.views.login.data_api_client')
+    def test_should_create_user_if_no_phone_number(self, data_api_client):
+
+        token = self._generate_token()
+        res = self.client.post(
+            '/create-user/{}'.format(token),
+            data={
+                'password': 'validpassword',
+                'name': 'valid name',
+                'phone_number': None
+            }
+        )
+
+        data_api_client.create_user.assert_called_once_with({
+            'role': 'buyer',
+            'password': 'validpassword',
+            'emailAddress': 'test@email.com',
+            'phoneNumber': '',
+            'name': 'valid name'
+        })
+
+        assert res.status_code == 302
+        assert res.location == 'http://localhost/'
+
+    @mock.patch('app.main.views.login.data_api_client')
+    def test_should_return_an_error_if_bad_phone_number(self, data_api_client):
+
+        token = self._generate_token()
+        res = self.client.post(
+            '/create-user/{}'.format(token),
+            data={
+                'password': 'validpassword',
+                'name': 'valid name',
+                'phone_number': 'Not a number'
+            }
+        )
 
         assert res.status_code == 400
 
@@ -895,7 +938,9 @@ class TestCreateUser(BaseApplicationTest):
             '/create-user/{}'.format(token),
             data={
                 'password': 'validpassword',
-                'name': '  valid name  '
+                'name': '  valid name  ',
+                'phone_number': '020-7930-4832'
+
             }
         )
 
@@ -903,6 +948,7 @@ class TestCreateUser(BaseApplicationTest):
             'role': mock.ANY,
             'password': 'validpassword',
             'emailAddress': mock.ANY,
+            'phoneNumber': '020-7930-4832',
             'name': 'valid name'
         })
 
@@ -914,7 +960,9 @@ class TestCreateUser(BaseApplicationTest):
             '/create-user/{}'.format(token),
             data={
                 'password': '  validpassword  ',
-                'name': 'valid name  '
+                'name': 'valid name  ',
+                'phone_number': '020-7930-4832'
+
             }
         )
 
@@ -922,7 +970,8 @@ class TestCreateUser(BaseApplicationTest):
             'role': mock.ANY,
             'password': '  validpassword  ',
             'emailAddress': mock.ANY,
-            'name': 'valid name'
+            'name': 'valid name',
+            'phoneNumber': '020-7930-4832',
         })
 
     @mock.patch('app.main.views.login.data_api_client')
