@@ -950,7 +950,7 @@ class TestPublishBrief(BaseApplicationTest):
         assert res.status_code == 302
         assert data_api_client.update_brief_status.called
         assert res.location == "http://localhost/buyers/frameworks/digital-outcomes-and-specialists/" \
-                               "requirements/digital-specialists/1234"
+                               "requirements/digital-specialists/1234?published=true"
 
     def test_publish_brief_with_unanswered_required_questions(self, data_api_client):
         self.login_as_buyer()
