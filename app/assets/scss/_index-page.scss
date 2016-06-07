@@ -44,7 +44,7 @@
       height: 50px;
 
       @include media(tablet) {
-        margin-right: 7.6em;
+        margin-right: 8em;
       }
     }
 
@@ -53,10 +53,10 @@
       width: 100%;
 
       @include media(tablet) {
-        width: 7.6em;
+        width: 8em;
         position: absolute;
         top: 0;
-        right: -7.6em;
+        right: -8em;
         margin-right: $gutter-half;
       }
       padding-top: 5px;
