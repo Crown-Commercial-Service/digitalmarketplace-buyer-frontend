@@ -66,8 +66,8 @@ class Config(object):
 
     # LOGGING
     DM_LOG_LEVEL = 'DEBUG'
+    DM_LOG_PATH = None
     DM_APP_NAME = 'buyer-frontend'
-    DM_LOG_PATH = '/var/log/digitalmarketplace/application.log'
     DM_DOWNSTREAM_REQUEST_ID_HEADER = 'X-Amz-Cf-Id'
 
     @staticmethod
@@ -110,22 +110,30 @@ class Development(Config):
     SHARED_EMAIL_KEY = "very_secret"
 
 
-class Preview(Config):
-    pass
-
-
 class Live(Config):
-    DM_HTTP_PROTO = 'https'
+    """Base config for deployed environments"""
     DEBUG = False
+    DM_LOG_PATH = '/var/log/digitalmarketplace/application.log'
+    DM_HTTP_PROTO = 'https'
+
+
+class Preview(Live):
+    pass
 
 
 class Staging(Live):
     pass
 
+
+class Production(Live):
+    pass
+
+
 configs = {
     'development': Development,
+    'test': Test,
+
     'preview': Preview,
     'staging': Staging,
-    'production': Live,
-    'test': Test,
+    'production': Production,
 }
