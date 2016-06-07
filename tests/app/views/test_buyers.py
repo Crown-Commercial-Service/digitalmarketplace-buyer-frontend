@@ -1125,13 +1125,11 @@ class TestBriefSummaryPage(BaseApplicationTest):
                 'specialist role',
                 'location',
                 'description of work',
-                'shortlist criteria',
-                'evaluation criteria',
                 'Review and publish your requirements',
                 'How to answer supplier questions',
                 'How to shortlist suppliers',
                 'How to evaluate suppliers',
-                'How to award a contract',
+                'How to award a contract'
             ]
 
             assert document.xpath('//a[contains(text(), "Delete")]')
