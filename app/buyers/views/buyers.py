@@ -363,6 +363,7 @@ def publish_brief(framework_slug, lot_slug, brief_id):
             abort(400, 'There are still unanswered required questions')
         data_api_client.update_brief_status(brief_id, 'live', brief_user_name)
         return redirect(
+            # the 'published' parameter is for tracking this request by analytics
             url_for('.view_brief_overview', framework_slug=brief['frameworkSlug'], lot_slug=brief['lotSlug'],
                     brief_id=brief['id'], published='true'))
     else:
