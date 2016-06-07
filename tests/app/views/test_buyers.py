@@ -42,39 +42,6 @@ class TestBuyerDashboard(BaseApplicationTest):
             assert live_row[0] == "A live brief"
             assert live_row[1] == "Thursday 4 February 2016"
 
-    @pytest.mark.skip(reason="no counts on dashboard until API response includes them")
-    def test_closed_brief_response_count(self, data_api_client):
-        with self.app.app_context():
-            self.login_as_buyer()
-            data_api_client.find_briefs.return_value = {
-                "briefs": [
-                    {"status": "closed",
-                     "id": 12,
-                     "title": "A closed brief",
-                     "createdAt": "2016-02-01T00:00:00.000000Z",
-                     "publishedAt": "2016-02-04T12:00:00.000000Z",
-                     "frameworkSlug": "digital-outcomes-and-specialists"},
-                ]
-            }
-            data_api_client.find_brief_responses.return_value = {
-                "links": [],
-                "briefResponses": [
-                    {"empty": "empty"},
-                ]
-            }
-
-            res = self.client.get("/buyers")
-            document = html.fromstring(res.get_data(as_text=True))
-
-            assert res.status_code == 200
-
-            cell = document.xpath(
-                "//caption[contains(text(), 'Closed requirements')]"
-                "//following-sibling::tbody/tr[1]/td[last()]"
-            )[0]
-
-            assert "1 responses" in cell.text_content()
-
 
 @mock.patch('app.buyers.views.buyers.data_api_client')
 class TestStartNewBrief(BaseApplicationTest):
