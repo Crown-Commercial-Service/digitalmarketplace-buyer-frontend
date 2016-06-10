@@ -42,39 +42,6 @@ class TestBuyerDashboard(BaseApplicationTest):
             assert live_row[0] == "A live brief"
             assert live_row[1] == "Thursday 4 February 2016"
 
-    @pytest.mark.skip(reason="no counts on dashboard until API response includes them")
-    def test_closed_brief_response_count(self, data_api_client):
-        with self.app.app_context():
-            self.login_as_buyer()
-            data_api_client.find_briefs.return_value = {
-                "briefs": [
-                    {"status": "closed",
-                     "id": 12,
-                     "title": "A closed brief",
-                     "createdAt": "2016-02-01T00:00:00.000000Z",
-                     "publishedAt": "2016-02-04T12:00:00.000000Z",
-                     "frameworkSlug": "digital-outcomes-and-specialists"},
-                ]
-            }
-            data_api_client.find_brief_responses.return_value = {
-                "links": [],
-                "briefResponses": [
-                    {"empty": "empty"},
-                ]
-            }
-
-            res = self.client.get("/buyers")
-            document = html.fromstring(res.get_data(as_text=True))
-
-            assert res.status_code == 200
-
-            cell = document.xpath(
-                "//caption[contains(text(), 'Closed requirements')]"
-                "//following-sibling::tbody/tr[1]/td[last()]"
-            )[0]
-
-            assert "1 responses" in cell.text_content()
-
 
 @mock.patch('app.buyers.views.buyers.data_api_client')
 class TestStartNewBrief(BaseApplicationTest):
@@ -1154,17 +1121,15 @@ class TestBriefSummaryPage(BaseApplicationTest):
 
             assert (document.xpath('//h1')[0]).text_content().strip() == "I need a thing to do a thing"
             assert [e.text_content() for e in document.xpath('//main[@id="content"]//ul/li/a')] == [
-                'title',
-                'specialist role',
-                'location',
-                'description of work',
-                'shortlist criteria',
-                'evaluation criteria',
+                'Title',
+                'Specialist role',
+                'Location',
+                'Description of work',
                 'Review and publish your requirements',
                 'How to answer supplier questions',
                 'How to shortlist suppliers',
                 'How to evaluate suppliers',
-                'How to award a contract',
+                'How to award a contract'
             ]
 
             assert document.xpath('//a[contains(text(), "Delete")]')
@@ -1359,9 +1324,9 @@ class TestBriefSummaryPage(BaseApplicationTest):
             document = html.fromstring(res.get_data(as_text=True))
             section_steps = document.xpath(
                 '//*[@id="content"]/div/div/ol[contains(@class, "instruction-list")]')
-            section_1_link = section_steps[0].xpath('li//a[contains(text(), "section 1")]')
-            section_2_link = section_steps[0].xpath('li//a[contains(text(), "section 2")]')
-            section_4_link = section_steps[0].xpath('li//a[contains(text(), "section 4")]')
+            section_1_link = section_steps[0].xpath('li//a[contains(text(), "Section 1")]')
+            section_2_link = section_steps[0].xpath('li//a[contains(text(), "Section 2")]')
+            section_4_link = section_steps[0].xpath('li//a[contains(text(), "Section 4")]')
 
             # section with multiple questions
             assert section_1_link[0].get('href').strip() == \
