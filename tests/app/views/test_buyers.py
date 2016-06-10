@@ -1121,10 +1121,10 @@ class TestBriefSummaryPage(BaseApplicationTest):
 
             assert (document.xpath('//h1')[0]).text_content().strip() == "I need a thing to do a thing"
             assert [e.text_content() for e in document.xpath('//main[@id="content"]//ul/li/a')] == [
-                'title',
-                'specialist role',
-                'location',
-                'description of work',
+                'Title',
+                'Specialist role',
+                'Location',
+                'Description of work',
                 'Review and publish your requirements',
                 'How to answer supplier questions',
                 'How to shortlist suppliers',
@@ -1324,9 +1324,9 @@ class TestBriefSummaryPage(BaseApplicationTest):
             document = html.fromstring(res.get_data(as_text=True))
             section_steps = document.xpath(
                 '//*[@id="content"]/div/div/ol[contains(@class, "instruction-list")]')
-            section_1_link = section_steps[0].xpath('li//a[contains(text(), "section 1")]')
-            section_2_link = section_steps[0].xpath('li//a[contains(text(), "section 2")]')
-            section_4_link = section_steps[0].xpath('li//a[contains(text(), "section 4")]')
+            section_1_link = section_steps[0].xpath('li//a[contains(text(), "Section 1")]')
+            section_2_link = section_steps[0].xpath('li//a[contains(text(), "Section 2")]')
+            section_4_link = section_steps[0].xpath('li//a[contains(text(), "Section 4")]')
 
             # section with multiple questions
             assert section_1_link[0].get('href').strip() == \
