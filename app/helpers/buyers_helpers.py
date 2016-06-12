@@ -32,6 +32,11 @@ def brief_can_be_edited(brief):
     return brief.get('status') == 'draft'
 
 
+def section_has_at_least_one_required_question(section):
+    required_questions = [q for q in section.questions if not q.get('optional')]
+    return len(required_questions) > 0
+
+
 def count_unanswered_questions(brief_attributes):
     unanswered_required, unanswered_optional = (0, 0)
     for section in brief_attributes:
