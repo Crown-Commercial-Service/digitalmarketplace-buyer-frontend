@@ -74,6 +74,22 @@ class TestBuyersHelpers(unittest.TestCase):
         assert helpers.buyers_helpers.brief_can_be_edited(api_stubs.brief(status='draft')['briefs']) is True
         assert helpers.buyers_helpers.brief_can_be_edited(api_stubs.brief(status='live')['briefs']) is False
 
+    def test_section_has_at_least_one_required_question(self):
+        content = content_loader.get_manifest('dos', 'edit_brief').filter(
+            {'lot': 'digital-specialists'}
+        )
+
+        sections_with_required_questions = {
+            'section-1': True,
+            'section-2': True,
+            'section-4': False,
+            'section-5': True
+        }
+
+        for section in content.sections:
+            assert helpers.buyers_helpers.section_has_at_least_one_required_question(section) \
+                == sections_with_required_questions[section.slug]
+
     def test_count_unanswered_questions(self):
         brief = {
             'status': 'draft',
