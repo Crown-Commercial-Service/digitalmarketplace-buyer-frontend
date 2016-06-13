@@ -4,12 +4,16 @@
     <nav id="proposition-menu">
       <a href="/" id="proposition-name">Digital Marketplace</a>
       <ul id="proposition-links">
-        {% if current_user.email_address %}
+        {% if current_user.is_authenticated() %}
+          {% if current_user.role == 'buyer' %}
+            <li><a href="{{ url_for('buyers.buyer_dashboard') }}">View your account</a></li>
+          {% elif current_user.role == 'supplier' %}
+            <li><a href="/suppliers">View your account</a></li>
+          {% endif %}
         <li><a class="home" href="{{ url_for('main.logout') }}">Log out</a></li>
         {% else %}
         <li><a class="home" href="{{ url_for('main.render_login') }}">Log in</a></li>
         {% endif %}
-        <li><a href="/suppliers/create">Create supplier account</a></li>
       </ul>
     </nav>
   </div>
