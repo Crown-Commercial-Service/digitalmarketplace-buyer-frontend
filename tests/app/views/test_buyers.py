@@ -1125,6 +1125,8 @@ class TestBriefSummaryPage(BaseApplicationTest):
                 'Specialist role',
                 'Location',
                 'Description of work',
+                'Shortlist and evaluation process',
+                'Describe question and answer session',
                 'Review and publish your requirements',
                 'How to answer supplier questions',
                 'How to shortlist suppliers',

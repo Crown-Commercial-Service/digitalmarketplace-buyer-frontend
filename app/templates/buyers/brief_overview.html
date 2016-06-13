@@ -175,17 +175,7 @@
               <p class="instruction-list-item-extra-information">{{ step.description[brief.status] }}</p>
             {% endif %}
             {% if step_number in step_sections and brief.status == 'draft' %}
-              {% if step_sections.count(step_number) == 1 %}
-                {% set section = sections.sections[step_sections.index(step_number)] %}
-                <a class="instruction-list-item-extra-information" href="{{ brief_links.brief_link_url('grandparent', section, brief) }}">
-                  {% if completed_sections[section.slug]  %}
-                    <span class="tick">
-                      <img src="{{ asset_path }}svg/tick.svg" alt="done" width="15" height="14" />
-                    </span>
-                  {% endif %}
-                  {{ section.name }}
-                </a>
-              {% else %}
+
                 <ul class="instruction-list-item-extra-information">
                   {% for section in sections %}
                     {% if section.step == step_number %}
@@ -200,7 +190,6 @@
                     {% endif %}
                   {% endfor %}
                 </ul>
-              {% endif %}
             {% endif %}
             {% if step.links %}
               <ul class="instruction-list-item-extra-information">
