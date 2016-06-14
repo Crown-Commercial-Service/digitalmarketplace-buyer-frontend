@@ -18,7 +18,6 @@
 {% set dos_slug = 'digital-outcomes-and-specialists' %}
 {% set dos_is_live = frameworks.get('digital-outcomes-and-specialists', {}).status == "live" %}
 {% set dos_items = [] %}
-{% set buyer_dashboard = [] %}
 
 {% if dos_is_live %}
   {% set
@@ -45,15 +44,6 @@
       },
     ]
   %}
-  {% if current_user.role == 'buyer' %}
-    {% set buyer_dashboard = [
-        {
-          "link": "/buyers",
-          "title": "View your requirements and supplier responses",
-        },
-      ]
-    %}
-  {% endif %}
 {% endif %}
 
 <div class="index-page grid-row">
@@ -71,7 +61,7 @@
           "title": "Buy physical datacentre space for legacy systems",
           "body": "eg for services that can’t be migrated to the cloud",
         },
-      ] + buyer_dashboard
+      ]
     %}
       {% include "toolkit/browse-list.html" %}
     {% endwith %}
@@ -115,14 +105,6 @@
           </a>
         </p>
         <p>Get updates about opportunities to sell on the Digital Marketplace.</p>
-      </div>
-    {% elif current_user.role == 'supplier' %}
-      <div class="padding-bottom-small">
-        <p>
-          <a href="/suppliers" class="top-level-link">
-            View your services and account information
-          </a>
-        </p>
       </div>
     {% endif %}
 
