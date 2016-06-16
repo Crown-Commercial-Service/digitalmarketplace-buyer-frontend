@@ -63,23 +63,6 @@ class TestHomepageBrowseList(BaseApplicationTest):
             assert link_texts[-1] == "Buy physical datacentre space for legacy systems"
             assert "Find specialists to work on digital projects" not in link_texts
 
-    @mock.patch('app.main.views.marketplace.data_api_client')
-    def test_buyer_dashboard_link_exists_when_dos_is_live_and_buyer_logged_in(self, data_api_client):
-        with self.app.app_context():
-            data_api_client.find_frameworks.return_value = {"frameworks": [
-                {"slug": "digital-outcomes-and-specialists",
-                 "status": "live"}
-            ]}
-            self.login_as_buyer()
-
-            res = self.client.get("/")
-            document = html.fromstring(res.get_data(as_text=True))
-
-            assert res.status_code == 200
-
-            link_texts = [item.text_content().strip() for item in document.cssselect('.browse-list-item a')]
-            assert link_texts[-1] == "View your requirements and supplier responses"
-
 
 class TestHomepageSidebarMessage(BaseApplicationTest):
     def setup(self):
@@ -189,7 +172,6 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
 
         assert 'View Digital Outcomes and Specialists opportunities' in sidebar_link_texts
         assert 'Create a supplier account' in sidebar_link_texts
-        assert 'View your services and account information' not in sidebar_link_texts
 
     @mock.patch('app.main.views.marketplace.data_api_client')
     def test_homepage_sidebar_messages_when_logged_in(self, data_api_client):
@@ -210,7 +192,6 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
         sidebar_link_texts = [str(item).strip() for item in sidebar_links]
 
         assert 'View Digital Outcomes and Specialists opportunities' in sidebar_link_texts
-        assert 'View your services and account information' in sidebar_link_texts
         assert 'Create a supplier account' not in sidebar_link_texts
 
     # here we've given an valid framework with a valid status but there is no message.yml file to read from
