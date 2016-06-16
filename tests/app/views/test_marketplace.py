@@ -137,7 +137,7 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
         framework_messages = [
             u"Provide cloud software and support to the public sector",
             u"You need an account to apply.",
-            u"The application deadline is 5pm BST, 21 June 2016."
+            u"The application deadline is 5pm BST, 23 June 2016."
         ]
 
         self._load_homepage(framework_slugs_and_statuses, framework_messages)
