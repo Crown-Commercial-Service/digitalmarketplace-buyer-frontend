@@ -157,3 +157,9 @@ $path: "/static/images/";
     text-decoration: none;
   }
 }
+
+.summary-item-body {
+  a {
+    word-break: break-all;
+  }
+}
