@@ -1,4 +1,3 @@
-import re
 from flask_wtf import Form
 from wtforms import PasswordField
 from wtforms.validators import DataRequired, EqualTo, Length, Regexp
@@ -11,7 +10,6 @@ class LoginForm(Form):
         validators=[
             DataRequired(message="You must provide an email address"),
             Regexp("^[^@^\s]+@[^@^\.^\s]+(\.[^@^\.^\s]+)+$",
-                   flags=re.IGNORECASE,
                    message="You must provide a valid email address")
         ]
     )
@@ -29,7 +27,6 @@ class EmailAddressForm(Form):
         validators=[
             DataRequired(message="You must provide an email address"),
             Regexp("^[^@^\s]+@[^@^\.^\s]+(\.[^@^\.^\s]+)+$",
-                   flags=re.IGNORECASE,
                    message="You must provide a valid email address")
         ]
     )
