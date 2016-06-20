@@ -534,6 +534,17 @@ class TestBuyersCreation(BaseApplicationTest):
         assert 'Create a buyer account' in data
         assert 'You must provide a valid email address' in data
 
+    def test_should_raise_validation_error_for_email_address_with_two_at_symbols(self):
+        res = self.client.post(
+            '/buyers/create',
+            data={'email_address': 'not-an@email@gov.uk'},
+            follow_redirects=True
+        )
+        assert res.status_code == 400
+        data = res.get_data(as_text=True)
+        assert 'Create a buyer account' in data
+        assert 'You must provide a valid email address' in data
+
     def test_should_raise_validation_error_for_empty_email_address(self):
         res = self.client.post(
             '/buyers/create',
