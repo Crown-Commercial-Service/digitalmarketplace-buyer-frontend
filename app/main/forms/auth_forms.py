@@ -10,7 +10,7 @@ class LoginForm(Form):
         'Email address', id="input_email_address",
         validators=[
             DataRequired(message="You must provide an email address"),
-            Regexp("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$",
+            Regexp("^[^@^\s]+@[^@^\.^\s]+(\.[^@^\.^\s]+)+$",
                    flags=re.IGNORECASE,
                    message="You must provide a valid email address")
         ]
@@ -28,7 +28,7 @@ class EmailAddressForm(Form):
         'Email address', id="input_email_address",
         validators=[
             DataRequired(message="You must provide an email address"),
-            Regexp("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$",
+            Regexp("^[^@^\s]+@[^@^\.^\s]+(\.[^@^\.^\s]+)+$",
                    flags=re.IGNORECASE,
                    message="You must provide a valid email address")
         ]
