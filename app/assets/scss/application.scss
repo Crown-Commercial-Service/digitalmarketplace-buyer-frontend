@@ -158,6 +158,10 @@ $path: "/static/images/";
   }
 }
 
+.break-link {
+  word-break: break-all;
+}
+
 .summary-item-body {
   a {
     word-break: break-all;
