@@ -1,3 +1,20 @@
+.instruction-list-item {
+
+  h2 {
+    @include bold-27;
+    margin-bottom: 10px;
+  }
+
+  .instruction-list-item-top {
+    @include core-19;
+    display: block;
+  }
+
+  a {
+    text-decoration: none;
+  }
+}
+
 .last-edited {
     margin: 10px 0 15px 0;
 }
@@ -29,8 +46,8 @@
   }
 }
 
-ul.instruction-list-item-extra-information li,
-ol.instruction-list-item-extra-information li {
+ul.instruction-list-item-top li,
+ol.instruction-list-item-top li {
   margin-bottom: 0;
 }
 
@@ -38,7 +55,7 @@ ol.steps {
   list-style: none;
   padding-left: 0;
 
-  .instruction-list-item-extra-information {
+  .instruction-list-item-top {
     margin-left: (30 / 19) * 1em; // 25px in ems
   }
 

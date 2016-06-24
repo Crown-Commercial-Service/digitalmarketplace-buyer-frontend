@@ -141,23 +141,6 @@ $path: "/static/images/";
   }
 }
 
-.instruction-list-item {
-
-  h2 {
-    @include bold-27;
-    margin-bottom: 10px;
-  }
-
-  .instruction-list-item-extra-information {
-    @include core-19;
-    display: block;
-  }
-
-  a {
-    text-decoration: none;
-  }
-}
-
 .break-link {
   display: inline-block;
   word-break: break-all;
