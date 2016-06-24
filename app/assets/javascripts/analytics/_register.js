@@ -10,10 +10,8 @@
       GOVUK.Analytics.load();
       GOVUK.analytics = new GOVUK.Analytics({
         universalId: universalId,
-        cookieDomain: cookieDomain,
-        receiveCrossDomainTracking: true
+        cookieDomain: cookieDomain
       });
-      GOVUK.analytics.addLinkedTrackerDomain('digitalservicesstore.service.gov.uk');
     }
   };
 })(window);
