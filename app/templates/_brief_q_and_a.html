@@ -27,7 +27,7 @@
       <span aria-label="question">{{ question.number }}.</span>
       {{ question.question }}
     {%- endcall %}
-    {{ summary.text(question.answer) }}
+    {{ summary.text(question.answer | format_links) }}
   {% endcall %}
 {% endcall %}
 

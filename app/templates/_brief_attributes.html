@@ -33,7 +33,7 @@
     ) %}
       {% call summary.row() %}
         {{ summary.field_name(item.label) }}
-        {{ summary[item.type](item.value) }}
+        {{ summary[item.type](item.value) | format_links}}
       {% endcall %}
     {% endcall %}
 {% endfor %}
