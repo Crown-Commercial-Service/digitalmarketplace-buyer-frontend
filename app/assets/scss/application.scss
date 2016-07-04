@@ -159,11 +159,13 @@ $path: "/static/images/";
 }
 
 .break-link {
+  display: inline-block;
   word-break: break-all;
 }
 
 .summary-item-body {
   a {
+    display: inline-block;
     word-break: break-all;
   }
 }
