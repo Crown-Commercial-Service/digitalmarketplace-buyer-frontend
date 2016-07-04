@@ -324,12 +324,7 @@ def submit_create_user(encoded_token):
 
 @main.route('/create-your-account-complete', methods=['GET'])
 def create_your_account_complete():
-    if 'email_sent_to' in session:
-        email_address = session['email_sent_to']
-    else:
-        email_address = "the email address you supplied"
-    session.clear()
-    session['email_sent_to'] = email_address
+    email_address = session.setdefault("email_sent_to", "the email address you supplied")
     return render_template(
         "auth/create-your-account-complete.html",
         email_address=email_address), 200
