@@ -55,41 +55,8 @@ describe("GOVUK.Analytics", function () {
 
     it('configures a universal tracker', function() {
       expect(universalSetupArguments[0]).toEqual(['create', 'UA-49258698-1', {
-        'cookieDomain': document.domain,
-        'allowLinker': true
+        'cookieDomain': document.domain
       }]);
-    });
-
-    it('sets up cross-domain tracking', function () {
-      var gaMethodCalls = new SortCallsToGaByMethod(window.ga.calls.all());
-      // require linker plugin
-      expect(gaMethodCalls.callsTo('require')[0]).toEqual(['linker']);
-      // autolink the second domain
-      expect(gaMethodCalls.callsTo('linker:autoLink')[0]).toEqual([['digitalservicesstore.service.gov.uk']]);
-    });
-  });
-
-  describe('when setting up cross-domain tracking', function () {
-    beforeEach(function() {
-      window.ga.calls.reset();
-      analytics = new window.GOVUK.Analytics({
-        universalId: 'universal-id',
-        cookieDomain: 'www.digitalmarketplace.service.gov.uk',
-        receiveCrossDomainTracking: true
-      });
-      analytics.trackPageview();
-      analytics.addLinkedTrackerDomain('digitalservicesstore.service.gov.uk');
-    });
-
-    it('only sets up one tracker', function () {
-      var gaMethodCalls = new SortCallsToGaByMethod(window.ga.calls.all());
-
-      // require linker plugin
-      expect(gaMethodCalls.callsTo('require').length).toEqual(1);
-      expect(gaMethodCalls.callsTo('require')[0]).toEqual(['linker']);
-      // autolink the second domain
-      expect(gaMethodCalls.callsTo('linker:autoLink').length).toEqual(1);
-      expect(gaMethodCalls.callsTo('linker:autoLink')[0]).toEqual([['digitalservicesstore.service.gov.uk']]);
     });
   });
 
