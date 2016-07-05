@@ -7,3 +7,4 @@ applications:
       env:
           BUILD_CMD: scripts/cf_build.sh
           DM_DATA_API_URL: https://dm-dev-api.apps.staging.digital.gov.au/
+          DM_SEARCH_API_URL: https://dm-dev-search-api.apps.staging.digital.gov.au/
