@@ -295,7 +295,7 @@ def download_brief_responses(framework_slug, lot_slug, brief_id):
     # Build header row from manifest and add it to the list of rows
     for question in section.questions:
         question_key_sequence.append(question.id)
-        if question['type'] == 'boolean_list' and question.id in brief:
+        if question['type'] == 'boolean_list' and brief.get(question.id):
             column_headings.extend(brief[question.id])
             boolean_list_questions.append(question.id)
         else:

@@ -1701,77 +1701,79 @@ class TestViewBriefResponsesPage(BaseApplicationTest):
 
 @mock.patch("app.buyers.views.buyers.data_api_client")
 class TestDownloadBriefResponsesCsv(BaseApplicationTest):
-    url = "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/responses" \
-          "/download"
-    brief = api_stubs.brief(status='closed')
-    brief['briefs']['essentialRequirements'] = ["E1", "E2"]
-    brief['briefs']['niceToHaveRequirements'] = ["Nice1", "Nice2", "Nice3"]
+    url = "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/responses/download"
 
-    brief_responses = {
-        "briefResponses": [
-            {
-                "supplierName": "Kev's Butties",
-                "availability": "Next Tuesday",
-                "dayRate": "£1.49",
-                "essentialRequirements": [True, True],
-                "niceToHaveRequirements": [True, False, False],
-                "respondToEmailAddress": "test1@email.com",
-            },
-            {
-                "supplierName": "Kev's Pies",
-                "availability": "A week Friday",
-                "dayRate": "£3.50",
-                "essentialRequirements": [True, True],
-                "niceToHaveRequirements": [False, True, True],
-                "respondToEmailAddress": "test2@email.com",
-            },
-            {
-                "supplierName": "Kev's Doughnuts",
-                "availability": "As soon as the sugar is delivered",
-                "dayRate": "£10 a dozen",
-                "essentialRequirements": [True, False],
-                "niceToHaveRequirements": [True, True, False],
-                "respondToEmailAddress": "test3@email.com",
-            },
-            {
-                "supplierName": "Kev's Fried Noodles",
-                "availability": "After Christmas",
-                "dayRate": "£12.35",
-                "essentialRequirements": [False, True],
-                "niceToHaveRequirements": [True, True, True],
-                "respondToEmailAddress": "test4@email.com",
-            },
-            {
-                "supplierName": "Kev's Pizza",
-                "availability": "Within the hour",
-                "dayRate": "£350",
-                "essentialRequirements": [False, False],
-                "niceToHaveRequirements": [False, False, False],
-                "respondToEmailAddress": "test5@email.com",
-            },
-        ]
-    }
+    def setup(self):
+        super(TestDownloadBriefResponsesCsv, self).setup()
+        self.brief = api_stubs.brief(status='closed')
+        self.brief['briefs']['essentialRequirements'] = ["E1", "E2"]
+        self.brief['briefs']['niceToHaveRequirements'] = ["Nice1", "Nice2", "Nice3"]
 
-    tricky_character_responses = {
-        "briefResponses": [
-            {
-                "supplierName": "K,ev’s \"Bu,tties",
-                "availability": "❝Next — Tuesday❞",
-                "dayRate": "¥1.49,",
-                "essentialRequirements": [True, True],
-                "niceToHaveRequirements": [True, False, False],
-                "respondToEmailAddress": "test1@email.com",
-            },
-            {
-                "supplierName": "Kev\'s \'Pies",
-                "availability": "&quot;A week Friday&rdquot;",
-                "dayRate": "&euro;3.50",
-                "essentialRequirements": [True, True],
-                "niceToHaveRequirements": [False, True, True],
-                "respondToEmailAddress": "te,st2@email.com",
-            },
-        ]
-    }
+        self.brief_responses = {
+            "briefResponses": [
+                {
+                    "supplierName": "Kev's Butties",
+                    "availability": "Next Tuesday",
+                    "dayRate": "£1.49",
+                    "essentialRequirements": [True, True],
+                    "niceToHaveRequirements": [True, False, False],
+                    "respondToEmailAddress": "test1@email.com",
+                },
+                {
+                    "supplierName": "Kev's Pies",
+                    "availability": "A week Friday",
+                    "dayRate": "£3.50",
+                    "essentialRequirements": [True, True],
+                    "niceToHaveRequirements": [False, True, True],
+                    "respondToEmailAddress": "test2@email.com",
+                },
+                {
+                    "supplierName": "Kev's Doughnuts",
+                    "availability": "As soon as the sugar is delivered",
+                    "dayRate": "£10 a dozen",
+                    "essentialRequirements": [True, False],
+                    "niceToHaveRequirements": [True, True, False],
+                    "respondToEmailAddress": "test3@email.com",
+                },
+                {
+                    "supplierName": "Kev's Fried Noodles",
+                    "availability": "After Christmas",
+                    "dayRate": "£12.35",
+                    "essentialRequirements": [False, True],
+                    "niceToHaveRequirements": [True, True, True],
+                    "respondToEmailAddress": "test4@email.com",
+                },
+                {
+                    "supplierName": "Kev's Pizza",
+                    "availability": "Within the hour",
+                    "dayRate": "£350",
+                    "essentialRequirements": [False, False],
+                    "niceToHaveRequirements": [False, False, False],
+                    "respondToEmailAddress": "test5@email.com",
+                },
+            ]
+        }
+
+        self.tricky_character_responses = {
+            "briefResponses": [
+                {
+                    "supplierName": "K,ev’s \"Bu,tties",
+                    "availability": "❝Next — Tuesday❞",
+                    "dayRate": "¥1.49,",
+                    "essentialRequirements": [True, True],
+                    "niceToHaveRequirements": [True, False, False],
+                    "respondToEmailAddress": "test1@email.com",
+                },
+                {
+                    "supplierName": "Kev\'s \'Pies",
+                    "availability": "&quot;A week Friday&rdquot;",
+                    "dayRate": "&euro;3.50",
+                    "essentialRequirements": [True, True],
+                    "niceToHaveRequirements": [False, True, True],
+                    "respondToEmailAddress": "te,st2@email.com",
+                },
+            ]
+        }
 
     def test_csv_includes_all_eligible_responses_and_no_ineligible_responses(self, data_api_client):
         data_api_client.find_brief_responses.return_value = self.brief_responses
@@ -1796,6 +1798,31 @@ class TestDownloadBriefResponsesCsv(BaseApplicationTest):
         assert lines[1] == "Kev's Pies,A week Friday,£3.50,False,True,True,test2@email.com"
         assert lines[2] == "Kev's Butties,Next Tuesday,£1.49,True,False,False,test1@email.com"
         assert lines[-1] == ""
+
+    def test_download_brief_responses_for_brief_without_nice_to_haves(self, data_api_client):
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='live',
+            lots=[
+                api_stubs.lot(slug='digital-specialists', allows_brief=True),
+            ]
+        )
+
+        for response in self.brief_responses['briefResponses']:
+            del response["niceToHaveRequirements"]
+        data_api_client.find_brief_responses.return_value = self.brief_responses
+
+        data_api_client.get_brief.return_value = self.brief
+
+        self.login_as_buyer()
+
+        del self.brief['briefs']['niceToHaveRequirements']
+        res = self.client.get(self.url)
+        assert res.status_code, 200
+
+        self.brief['briefs']['niceToHaveRequirements'] = []
+        res = self.client.get(self.url)
+        assert res.status_code, 200
 
     def test_csv_handles_tricky_characters(self, data_api_client):
         data_api_client.find_brief_responses.return_value = self.tricky_character_responses
