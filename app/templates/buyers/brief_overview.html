@@ -172,11 +172,11 @@
               <span class="step-number" role="presentation">{{ step_number }}. </span>
               {{ step.title }}</h2>
             {% if step.description %}
-              <p class="instruction-list-item-extra-information">{{ step.description[brief.status] }}</p>
+              <p class="instruction-list-item-top">{{ step.description[brief.status] }}</p>
             {% endif %}
             {% if step_number in step_sections and brief.status == 'draft' %}
 
-                <ul class="instruction-list-item-extra-information">
+                <ul class="instruction-list-item-top">
                   {% for section in sections %}
                     {% if section.step == step_number %}
                     <li>
@@ -192,7 +192,7 @@
                 </ul>
             {% endif %}
             {% if step.links %}
-              <ul class="instruction-list-item-extra-information">
+              <ul class="instruction-list-item-top">
                 {% for link in step.links %}
                   {% if not link.allowed_statuses or brief.status in link.allowed_statuses %}
                     <li>
