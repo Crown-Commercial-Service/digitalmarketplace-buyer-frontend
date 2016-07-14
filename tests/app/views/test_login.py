@@ -7,6 +7,7 @@ from dmutils.email import generate_token, MandrillException
 from ...helpers import BaseApplicationTest
 from lxml import html
 import mock
+from flask import session
 
 EMAIL_EMPTY_ERROR = "You must provide an email address"
 EMAIL_INVALID_ERROR = "You must provide a valid email address"
@@ -522,6 +523,23 @@ class TestBuyersCreation(BaseApplicationTest):
         )
         assert res.status_code == 200
         assert 'Activate your account' in res.get_data(as_text=True)
+
+    @mock.patch('app.main.views.login.send_email')
+    @mock.patch('app.main.views.login.data_api_client')
+    def test_creating_account_doesnt_affect_csrf_token(self, data_api_client, send_email):
+        with self.client as c:
+            res = c.get(
+                '/buyers/create',
+            )
+            original_csrf_token = session.get("csrf_token")
+            assert original_csrf_token
+        with self.client as c2:
+            res2 = c2.post(
+                '/buyers/create',
+                data={'email_address': 'definitely.definitely.definitely.valid@test.gov.uk'},
+                follow_redirects=True
+            )
+            assert session.get("csrf_token") == original_csrf_token
 
     def test_should_raise_validation_error_for_invalid_email_address(self):
         res = self.client.post(
