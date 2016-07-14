@@ -1,4 +1,5 @@
 *.pyc
+*.swp
 .vimrc
 .DS_store
 venv
