@@ -36,7 +36,7 @@
 {%
   with
     smaller = true,
-    heading = "Create a buyer account"
+    heading = "Sign up to see more"
 %}
 {% include "toolkit/page-heading.html" %}
 {% endwith %}
@@ -59,11 +59,10 @@
       %}
         {% include "toolkit/forms/textbox.html" %}
       {% endwith %}
-      <p>We will send an account activation email to this address. You will then be able to set your password.</p>
       {%
         with
           type = "save",
-          label = "Create account"
+          label = "Sign up"
       %}
       {% include "toolkit/button.html" %}
       {% endwith %}
