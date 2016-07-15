@@ -1,0 +1,62 @@
+<html>
+	<head>
+		<title>
+			Supplier Catalogue
+		</title>
+	</head>
+	<body>
+		<div>
+			<form action="{{ search_url }}">
+				<div>
+					<h2>Search by</h2>
+					<fieldset>
+						<label for=q>Keyword</label>
+						<input id=q type=search value="{{ search_keywords }}">
+					</fieldset>
+				</div>
+				<div>
+					<h2>Filter by</h2>
+					{% for filter in filters %}
+					<fieldset>
+						<label>{{ filter.name }}</label>
+						{% for option in filter.options %}
+						<label><input type=checkbox name="{{ option.name }}" value="{{ option.value }}" {% if option.checked %}checked{% endif %}>{{ option.label }}</label>
+						{% endfor %}
+					</fieldset>
+					{% endfor %}
+				</div>
+				<input type=submit value=Apply>
+				<a href='#' class=clear-all>Clear all</a>
+			</form>
+		</div>
+		<div>
+			<span>{{ num_results }} suppliers found</span>
+			{% for result in results %}
+			<div>
+				<h2>{{ result.title }}</h2>
+				<div>{{ result.description }}</div>
+				<div>
+					{% for badge in result.badges %}
+					<div class="{{ badge.css_class }}">{{ badge.label }}</div>
+					{% endfor %}
+				</div>
+				<div>
+					<h3>Service categories</h3>
+					{% for category in result.categories %}
+					<div>{{ category.label }}</div>
+					{% endfor %}
+				</div>
+				<div>
+					<dl>
+						{% for detail in result.extra_details %}
+						<dt>{{ detail.key }}</dt>
+						<dd>{{ detail.value }}</dt>
+						{% endfor %}
+					</dl>
+					<a href="{{ result.url }}">See supplier's profile</a>
+				</div>
+			</div>
+			{% endfor %}
+		</div>
+	</body>
+</html>
