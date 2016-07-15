@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from flask_login import current_user
 from flask import abort, current_app, render_template, request
 
 from dmapiclient import APIError
@@ -65,6 +66,12 @@ def get_brief_by_id(framework_slug, brief_id):
     if brief['status'] not in ['live', 'closed']:
         abort(404, "Opportunity '{}' can not be found".format(brief_id))
 
+    if getattr(current_user, "supplier_id", None) is None:
+        # user unauthenticated or not a supplier
+        brief_responses = None
+    else:
+        brief_responses = data_api_client.find_brief_responses(brief_id, current_user.supplier_id)["briefResponses"]
+
     brief['clarificationQuestions'] = [
         dict(question, number=index+1)
         for index, question in enumerate(brief['clarificationQuestions'])
@@ -76,7 +83,8 @@ def get_brief_by_id(framework_slug, brief_id):
     return render_template(
         'brief.html',
         brief=brief,
-        content=brief_content
+        brief_responses=brief_responses,
+        content=brief_content,
     )
 
 

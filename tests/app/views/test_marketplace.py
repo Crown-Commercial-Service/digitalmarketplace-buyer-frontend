@@ -404,6 +404,67 @@ class TestBriefPage(BaseApplicationTest):
         assert 'qualityAssurance' not in res.get_data(as_text=True)
         assert 'Quality assurance analyst' in res.get_data(as_text=True)
 
+    @staticmethod
+    def _assert_start_application(document, brief_id):
+        assert len(document.xpath(
+            '//a[@href="{0}"][contains(normalize-space(text()), normalize-space("{1}"))]'.format(
+                "/suppliers/opportunities/{}/responses/create".format(brief_id),
+                "Start application",
+            )
+        )) == 1
+
+    @staticmethod
+    def _assert_view_application(document, brief_id):
+        assert len(document.xpath(
+            '//a[@href="{0}"][contains(normalize-space(text()), normalize-space("{1}"))]'.format(
+                "/suppliers/opportunities/{}/responses/result".format(brief_id),
+                "View your application",
+            )
+        )) == 1
+
+    def test_unauthenticated_start_application(self):
+        brief_id = self.brief['briefs']['id']
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
+        assert_equal(200, res.status_code)
+        document = html.fromstring(res.get_data(as_text=True))
+
+        self._assert_start_application(document, brief_id)
+
+    def test_buyer_start_application(self):
+        self.login_as_buyer()
+        brief_id = self.brief['briefs']['id']
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
+        assert_equal(200, res.status_code)
+        document = html.fromstring(res.get_data(as_text=True))
+
+        self._assert_start_application(document, brief_id)
+
+    def test_supplier_start_application(self):
+        self.login_as_supplier()
+        # mocking that we haven't applied
+        self._data_api_client.find_brief_responses.return_value = {
+            "briefResponses": [],
+        }
+        brief_id = self.brief['briefs']['id']
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
+        assert_equal(200, res.status_code)
+        document = html.fromstring(res.get_data(as_text=True))
+
+        self._assert_start_application(document, brief_id)
+
+    def test_supplier_applied_view_application(self):
+        self.login_as_supplier()
+        # mocking that we have applied
+        self._data_api_client.find_brief_responses.return_value = {
+            "briefResponses": [{"lazy": "mock"}],
+        }
+        brief_id = self.brief['briefs']['id']
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
+        assert_equal(200, res.status_code)
+        document = html.fromstring(res.get_data(as_text=True))
+
+        self._assert_view_application(document, brief_id)
+
 
 class TestCatalogueOfBriefsPage(BaseApplicationTest):
     def setup(self):
