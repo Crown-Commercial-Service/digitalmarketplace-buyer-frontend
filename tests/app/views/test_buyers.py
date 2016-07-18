@@ -1131,7 +1131,8 @@ class TestBriefSummaryPage(BaseApplicationTest):
                 'How to answer supplier questions',
                 'How to shortlist suppliers',
                 'How to evaluate suppliers',
-                'How to award a contract'
+                'How to award a contract',
+                'View the Digital Outcomes and Specialists contract',
             ]
 
             assert document.xpath('//a[contains(text(), "Delete")]')
@@ -1169,6 +1170,7 @@ class TestBriefSummaryPage(BaseApplicationTest):
                 'How to shortlist suppliers',
                 'How to evaluate suppliers',
                 'How to award a contract',
+                'View the Digital Outcomes and Specialists contract',
             ]
 
             assert not document.xpath('//a[contains(text(), "Delete")]')
@@ -1204,6 +1206,7 @@ class TestBriefSummaryPage(BaseApplicationTest):
                 'How to shortlist suppliers',
                 'How to evaluate suppliers',
                 'How to award a contract',
+                'View the Digital Outcomes and Specialists contract',
             ]
 
             assert not document.xpath('//a[contains(text(), "Delete")]')
