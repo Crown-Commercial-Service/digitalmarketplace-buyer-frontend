@@ -61,7 +61,7 @@
 {% endif %}
 
 {% with
-  heading = "Log in to the Digital Marketplace"
+  heading = "Log in to see more"
 %}
   {% include "toolkit/page-heading.html" %}
 {% endwith %}
@@ -77,9 +77,6 @@
             {% endif %}
                 <div class="question" id="{{ form.email_address.name }}">
                     {{ form.email_address.label(class="question-heading-with-hint") }}
-                    <p class="hint">
-                        Enter the email address you used to register with the Digital Marketplace
-                    </p>
                     {% if form.email_address.errors %}
                     <p class="validation-message" id="error-email-address-textbox">
                         {% for error in form.email_address.errors %}{{ error }}{% endfor %}
@@ -126,7 +123,7 @@
             {%
               with
               url = url_for('.create_buyer_account'),
-              text = "Create a buyer account",
+              text = "Sign up",
               bigger = true
             %}
               {% include "toolkit/secondary-action-link.html" %}
