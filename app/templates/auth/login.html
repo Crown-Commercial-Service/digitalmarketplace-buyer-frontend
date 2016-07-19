@@ -2,6 +2,8 @@
 
 {% block page_title %}Log in – Digital Marketplace{% endblock %}
 
+{% block phase_banner %}{% endblock %}
+
 {% block main_content %}
 
 {% with messages = get_flashed_messages(with_categories=true) %}
@@ -115,6 +117,7 @@
             {%
               with
               type = "save",
+              role = "button",
               label = "Log in"
             %}
               {% include "toolkit/button.html" %}

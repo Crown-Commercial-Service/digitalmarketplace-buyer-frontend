@@ -2,37 +2,19 @@
 
 {% block page_title %}Digital Marketplace{% endblock %}
 
-{% block top_header %}
-<header class="marketplace-homepage-heading">
-  {% include "_phase_banner.html" %}
-  <h1>
-    Welcome to the Digital Marketplace
-  </h1>
-</header>
-{% endblock %}
-
 {% block phase_banner %}{% endblock %}
 
 {% block main_content %}
 
-<div class="index-page grid-row">
-  <div class="column-one-whole">
-    <p>
-      The Digital Marketplace will make it easier for government departments to view and connect with suppliers of ICT products and services. You can use the Marketplace to research and shortlist potential suppliers or post opportunities for products and services you need.
-    </p>
-    <p>
-      <a href="#">Learn more about the Digital Marketplace <span class="fa fa-chevron-right"></span></a>
-    </p>
-    <p>
-    {%
-      with
-        type = "view",
-        label = "View the catalogue"
-    %}
-    {% include "toolkit/button.html" %}
-    {% endwith %}
-    </p>
-  </div>
-</div>
+<small>Government Buyer</small>
+<h2>I am looking for technology, people or a desired outcome for my project or program.</h2>
+<button>Log in to find digital specialists</button>
+<p>or <a href="/buyers/create">create a buyer account</a></p>
+
+<hr>
+
+<small>ICT Supplier</small>
+<h2>I have an ICT product or service to offer.</h2>
+<p>Text text text and <a href="mailto:enquires@digitalmarketplace.gov.au">enquires@digitalmarketplace.gov.au</a></p>
 
 {% endblock %}

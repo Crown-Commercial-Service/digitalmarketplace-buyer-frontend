@@ -3,6 +3,8 @@
 
 {% block page_title %}Create buyer account – Digital Marketplace{% endblock %}
 
+{% block phase_banner %}{% endblock %}
+
 {% block breadcrumb %}
 {%
   with items = [
@@ -63,6 +65,7 @@
       {%
         with
           type = "save",
+          role = "button",
           label = "Create account"
       %}
       {% include "toolkit/button.html" %}
