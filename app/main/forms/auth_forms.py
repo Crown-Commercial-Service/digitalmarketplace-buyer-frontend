@@ -54,7 +54,7 @@ class ChangePasswordForm(Form):
 
 class CreateUserForm(Form):
     name = StripWhitespaceStringField(
-        'Your name', id="input_name",
+        'Full name', id="input_name",
         validators=[
             DataRequired(message="You must enter a name"),
             Length(min=1,

@@ -24,13 +24,15 @@
 {%
   with
   smaller = true,
-  heading = "Create a new Digital Marketplace account",
+  heading = "Create a buyer account",
   context = email_address
 %}
   {% include "toolkit/page-heading.html" %}
 {% endwith %}
 
-
+    <p>
+        To finish creating your account for the Digital Marketplace, please provide the following details.
+    </p>
     <form autocomplete="off" action="{{ url_for('.submit_create_user', encoded_token=token) }}" method="POST" id="createUserForm">
 
         <div class="grid-row">
@@ -43,7 +45,7 @@
                     <div class="question" id="{{ form.name.name }}">
                         {{ form.name.label(class="question-heading-with-hint") }}
                         <p class="hint">
-                            Enter the name to be referred to on the Digital Marketplace
+                            This name will be used throughout the Digital Marketplace.
                         </p>
                         {% if form.name.errors %}
                         <p class="validation-message" id="error-name-textbox">
@@ -78,7 +80,8 @@
             {%
               with
               type = "save",
-              label = "Create account"
+              role = "button",
+              label = "Save and take me to the catalogue"
             %}
               {% include "toolkit/button.html" %}
             {% endwith %}
