@@ -2,114 +2,19 @@
 
 {% block page_title %}Digital Marketplace{% endblock %}
 
-{% block top_header %}
-<header class="marketplace-homepage-heading">
-  {% include "_phase_banner.html" %}
-  <h1>
-    Digital Marketplace
-  </h1>
-</header>
-{% endblock %}
-
 {% block phase_banner %}{% endblock %}
 
 {% block main_content %}
 
-{% set dos_slug = 'digital-outcomes-and-specialists' %}
-{% set dos_is_live = frameworks.get('digital-outcomes-and-specialists', {}).status == "live" %}
-{% set dos_items = [] %}
+<small>Government Buyer</small>
+<h2>I am looking for technology, people or a desired outcome for my project or program.</h2>
+<button>Log in to find digital specialists</button>
+<p>or <a href="#">create a buyer account</a></p>
 
-{% if dos_is_live %}
-  {% set
-    dos_items = [
-      {
-        "link": url_for("main.info_page_for_starting_a_brief", framework_slug=dos_slug, lot_slug='digital-specialists'),
-        "title": "Find an individual specialist",
-        "body": "eg a developer or user researcher",
-      },
-      {
-        "link": url_for("main.info_page_for_starting_a_brief", framework_slug=dos_slug, lot_slug='digital-outcomes'),
-        "title": "Find a team to provide an outcome",
-        "body": "eg a booking system or accessibility audit",
-      },
-      {
-        "link": url_for("main.info_page_for_starting_a_brief", framework_slug=dos_slug, lot_slug='user-research-participants'),
-        "title": "Find user research participants",
-        "body": "eg people from a specific user group to test your service",
-      },
-      {
-        "link": url_for("main.studios_start_page", framework_slug=dos_slug),
-        "title": "Find a user research lab",
-        "body": "eg a room to conduct research sessions",
-      },
-    ]
-  %}
-{% endif %}
+<hr>
 
-<div class="index-page grid-row">
-  <div class="column-two-thirds">
-    <h2 class="marketplace-homepage-subheading">Find technology or people for digital projects in the public sector</h2>
-    {% with
-      items = dos_items + [
-        {
-          "link": "/g-cloud",
-          "title": "Find cloud technology and support",
-          "body": "eg web hosting or IT health checks",
-        },
-        {
-          "link": "/crown-hosting",
-          "title": "Buy physical datacentre space for legacy systems",
-          "body": "eg for services that can’t be migrated to the cloud",
-        },
-      ]
-    %}
-      {% include "toolkit/browse-list.html" %}
-    {% endwith %}
-  </div>
-
-  <div class="supplier-messages column-one-third">
-    <aside role="complementary" aria-labelledby="supplier-message-heading">
-
-    {% if temporary_message or current_user.role == 'supplier' or dos_is_live %}
-        <h2 id="supplier-message-heading">Sell services</h2>
-    {% endif %}
-
-    {% if dos_is_live %}
-      <div class="padding-bottom-small">
-          <p>
-            <a href="/digital-outcomes-and-specialists/opportunities" class="top-level-link">
-              View Digital Outcomes and Specialists opportunities
-            </a>
-          </p>
-      </div>
-    {% endif %}
-
-    {% if temporary_message %}
-      {%
-        with
-          heading = temporary_message.heading,
-          main = True,
-          subheading = temporary_message.subheading,
-          messages = temporary_message.messages,
-          message = temporary_message.message
-      %}
-        {% include "toolkit/temporary-message.html" %}
-      {% endwith %}
-    {% endif %}
-
-    {% if current_user.role != 'supplier' %}
-      <div class="padding-bottom-small">
-        <p>
-          <a href="/suppliers/create" class="top-level-link">
-            Create a supplier account
-          </a>
-        </p>
-        <p>Get updates about opportunities to sell on the Digital Marketplace.</p>
-      </div>
-    {% endif %}
-
-    </aside>
-  </div>
-</div>
+<small>ICT Supplier</small>
+<h2>I have an ICT product or service to offer.</h2>
+<p>Text text text and <a href="mailto:enquires@digitalmarketplace.gov.au">enquires@digitalmarketplace.gov.au</a></p>
 
 {% endblock %}
