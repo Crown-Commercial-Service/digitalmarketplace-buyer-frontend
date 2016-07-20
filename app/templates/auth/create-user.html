@@ -39,9 +39,9 @@
         This name will be used throughout the Digital Marketplace.
       </span>
       {% if form.name.errors %}
-        {{ form.name(class="invalid") }}
+        {{ form.name(class="invalid",extra_aria_describedby="name-hint") }}
       {% else %}
-        {{ form.name() }}
+        {{ form.name(extra_aria_describedby="name-hint") }}
       {% endif %}
     </p>
 
@@ -51,9 +51,9 @@
         Must be between 10 and 50 characters
       </span>
       {% if form.password.errors %}
-        {{ form.password(class="invalid") }}
+        {{ form.password(class="invalid",extra_aria_describedby="password-hint") }}
       {% else %}
-        {{ form.password() }}
+        {{ form.password(extra_aria_describedby="password-hint") }}
       {% endif %}
     </p>
 
