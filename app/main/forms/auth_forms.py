@@ -6,7 +6,7 @@ from dmutils.forms import StripWhitespaceStringField, StringField
 
 class LoginForm(Form):
     email_address = StripWhitespaceStringField(
-        'Email address', id="input_email_address",
+        'Email', id="input_email_address",
         validators=[
             DataRequired(message="You must provide an email address"),
             Regexp("^[^@^\s]+@[^@^\.^\s]+(\.[^@^\.^\s]+)+$",
@@ -23,7 +23,7 @@ class LoginForm(Form):
 
 class EmailAddressForm(Form):
     email_address = StripWhitespaceStringField(
-        'Email address', id="input_email_address",
+        'Email', id="input_email_address",
         validators=[
             DataRequired(message="You must provide an email address"),
             Regexp("^[^@^\s]+@[^@^\.^\s]+(\.[^@^\.^\s]+)+$",

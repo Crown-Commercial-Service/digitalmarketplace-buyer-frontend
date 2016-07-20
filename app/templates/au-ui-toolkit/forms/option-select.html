@@ -1,0 +1,15 @@
+<div class="govuk-option-select" {% if closed_on_load %}data-closed-on-load="true"{% endif %}>
+  <div class="container-head js-container-head">
+    <div class="option-select-label">{{ label }}</div>
+  </div>
+  <div class="options-container" id="{{ options_container_id }}">
+    <div class="js-auto-height-inner">
+      {% for option in options %}
+        <label for="{{ option.id }}">
+          <input name="{{ option.name }}" value="{{ option.value }}" id="{{ option.id }}" type="checkbox" aria-controls=""{% if option.checked %} checked="checked"{% endif %}>
+          {{ option.label }}
+        </label>
+      {% endfor %}
+    </div>
+  </div>
+</div>

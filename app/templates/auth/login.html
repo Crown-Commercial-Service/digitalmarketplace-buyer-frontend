@@ -5,134 +5,119 @@
 {% block phase_banner %}{% endblock %}
 
 {% block main_content %}
-
-{% with messages = get_flashed_messages(with_categories=true) %}
-{% if messages %}
-{% for category, message in messages %}
+<article id="content" class="content-main">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+  {% for category, message in messages %}
     {% if category == 'error' %}
       <div class="banner-destructive-without-action">
     {% elif category != 'must_login' %}
       <div class="banner-success-without-action">
     {% endif %}
-            {% if message == 'no_account' %}
-              <p class="banner-message">
-                Make sure you've entered the right email address and password.
-                Accounts are locked after 5 failed attempts. If you think your
-                account has been locked, email
-                <a href="mailto:enquiries@digitalmarketplace.service.gov.uk">enquiries@digitalmarketplace.service.gov.uk</a>.
-              </p>
-            {% elif message == 'password_updated' %}
-              <p class="banner-message">
-                You have successfully changed your password.
-              </p>
-            {% elif message == 'password_not_updated' %}
-              <p class="banner-message">
-                Could not update password due to an error.
-              </p>
-            {% elif message == 'supplier-role-required' %}
-              <p class="banner-message">
-                You must log in with a supplier account to see this page.
-              </p>
-            {% elif message == 'buyer-role-required' %}
-              <p class="banner-message">
-                  You must log in with a buyer account to see this page.
-              </p>
-            {% elif category != 'must_login' %}
-              {{ message }}
-            {% endif %}
+      {% if message == 'no_account' %}
+        <p class="callout">
+          Make sure you've entered the right email address and password.
+          Accounts are locked after 5 failed attempts. If you think your
+          account has been locked, email
+          <a href="mailto:enquiries@digitalmarketplace.service.gov.uk">enquiries@digitalmarketplace.service.gov.uk</a>.
+        </p>
+      {% elif message == 'password_updated' %}
+        <p class="callout">
+          You have successfully changed your password.
+        </p>
+      {% elif message == 'password_not_updated' %}
+        <p class="callout">
+          Could not update password due to an error.
+        </p>
+      {% elif message == 'supplier-role-required' %}
+        <p class="callout">
+          You must log in with a supplier account to see this page.
+        </p>
+      {% elif message == 'buyer-role-required' %}
+        <p class="callout">
+            You must log in with a buyer account to see this page.
+        </p>
+      {% elif category != 'must_login' %}
+        {{ message }}
+      {% endif %}
     {% if category != 'must_login' %}
       </div>
     {% endif %}
-{% endfor %}
-{% endif %}
-{% endwith %}
+  {% endfor %}
+  {% endif %}
+  {% endwith %}
 
-{% if form.errors|length > 1 %}
-    <div class="validation-masthead" aria-labelledby="validation-masthead-heading">
-        <h3 class="validation-masthead-heading" id="validation-masthead-heading">
-            There was a problem with the details you gave for:
-        </h3>
-        <ul>
-        {% for field_name, field_errors in form.errors|dictsort if field_errors %}
+  {% if form.errors|length > 1 %}
+    <p class="callout--warning">
+      There was a problem with the details you gave for:<br>
+      {% for field_name, field_errors in form.errors|dictsort if field_errors %}
         {% for error in field_errors %}
-          <li><a href="#{{ form[field_name].name }}" class="validation-masthead-link">{{ form[field_name].label.text }}</a></li>
+        - <a href="#{{ form[field_name].name }}">{{ form[field_name].label.text }}</a><br>
         {% endfor %}
-        {% endfor %}
-        </ul>
-    </div>
-{% endif %}
+      {% endfor %}
+    </p>
+  {% endif %}
 
-{% with
-  heading = "Log in to see more"
-%}
-  {% include "toolkit/page-heading.html" %}
-{% endwith %}
+  {% with
+    heading = "Log in to see more"
+  %}
+    {% include "au-ui-toolkit/page-heading.html" %}
+  {% endwith %}
 
-<form autocomplete="off" action="{{ url_for('.process_login', next=next) }}" method="POST">
-    <div class="grid-row">
-        <div class="column-two-thirds">
+  <form action="{{ url_for('.process_login', next=next) }}" method="POST">
 
-            {{ form.hidden_tag() }}
+    {{ form.hidden_tag() }}
 
-            {% if form.email_address.errors %}
-                <div class="validation-wrapper">
-            {% endif %}
-                <div class="question" id="{{ form.email_address.name }}">
-                    {{ form.email_address.label(class="question-heading-with-hint") }}
-                    {% if form.email_address.errors %}
-                    <p class="validation-message" id="error-email-address-textbox">
-                        {% for error in form.email_address.errors %}{{ error }}{% endfor %}
-                    </p>
-                    {% endif %}
-                    {{ form.email_address(class="text-box", autocomplete="off") }}
-                </div>
-            {% if form.email_address.errors %}
-                </div>
-            {% endif %}
+    <p id="{{ form.email_address.name }}">
+      {{ form.email_address.label() }}
+      {% if form.email_address.errors %}
+        {{ form.email_address(class="invalid") }}
+      {% else %}
+        {{ form.email_address() }}
+      {% endif %}
+    </p>
 
-            {% if form.password.errors %}
-                <div class="validation-wrapper">
-            {% endif %}
-                <div class="question" id="{{ form.password.name }}">
-                    {{ form.password.label(class="question-heading") }}
-                    {% if form.password.errors %}
-                    <p class="validation-message" id="error-password-textbox">
-                        {% for error in form.password.errors %}{{ error }}{% endfor %}
-                    </p>
-                    {% endif %}
-                    {{ form.password(class="text-box", autocomplete="off") }}
-                </div>
-            {% if form.password.errors %}
-                </div>
-            {% endif %}
-            
-            {%
-              with
-              url = url_for('.request_password_reset'),
-              text = "Forgotten password"
-            %}
-              {% include "toolkit/secondary-action-link.html" %}
-            {% endwith %}
-            
-            {%
-              with
-              type = "save",
-              role = "button",
-              label = "Log in"
-            %}
-              {% include "toolkit/button.html" %}
-            {% endwith %}
+    <p id="{{ form.password.name }}">
+      {{ form.password.label() }}
+      {% if form.password.errors %}
+        {{ form.password(class="invalid",autocomplete="off") }}
+      {% else %}
+        {{ form.password(autocomplete="off") }}
+      {% endif %}
+    </p>
 
-            {%
-              with
-              url = url_for('.create_buyer_account'),
-              text = "Sign up",
-              bigger = true
-            %}
-              {% include "toolkit/secondary-action-link.html" %}
-            {% endwith %}
-            
-        </div>
-    </div>
-</form>
+    <p>
+    {%
+      with
+      url = url_for('.request_password_reset'),
+      text = "Forgotten password"
+    %}
+      {% include "au-ui-toolkit/secondary-action-link.html" %}
+    {% endwith %}
+    </p>
+
+    <p>
+    {%
+      with
+      type = "save",
+      role = "button",
+      label = "Log in"
+    %}
+      {% include "au-ui-toolkit/button.html" %}
+    {% endwith %}
+    </p>
+
+    <p>
+    {%
+      with
+      url = url_for('.create_buyer_account'),
+      text = "Sign up",
+      bigger = true
+    %}
+      {% include "au-ui-toolkit/secondary-action-link.html" %}
+    {% endwith %}
+    </p>
+              
+  </form>
+</article>
 {% endblock %}

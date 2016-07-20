@@ -5,88 +5,66 @@
 {% block phase_banner %}{% endblock %}
 
 {% block main_content %}
+<article id="content" class="content-main">
+  {% if form.errors|length > 1 %}
+  <p class="callout--warning">
+    There was a problem with the details you gave for:<br>
+    {% for field_name, field_errors in form.errors|dictsort if field_errors %}
+      {% for error in field_errors %}
+    - <a href="#{{ form[field_name].name }}" class="validation-masthead-link">{{ form[field_name].label.text }}</a><br>
+      {% endfor %}
+    {% endfor %}
+  </p>
+  {% endif %}
 
-{% if form.errors|length > 1 %}
-    <div class="validation-masthead" aria-labelledby="validation-masthead-heading">
-        <h3 class="validation-masthead-heading" id="validation-masthead-heading">
-            There was a problem with the details you gave for:
-        </h3>
-        <ul>
-        {% for field_name, field_errors in form.errors|dictsort if field_errors %}
-        {% for error in field_errors %}
-          <li><a href="#{{ form[field_name].name }}" class="validation-masthead-link">{{ form[field_name].label.text }}</a></li>
-        {% endfor %}
-        {% endfor %}
-        </ul>
-    </div>
-{% endif %}
+  {%
+    with
+    smaller = true,
+    heading = "Create a buyer account",
+    context = email_address
+  %}
+    {% include "toolkit/page-heading.html" %}
+  {% endwith %}
 
-{%
-  with
-  smaller = true,
-  heading = "Create a buyer account",
-  context = email_address
-%}
-  {% include "toolkit/page-heading.html" %}
-{% endwith %}
+  <p>
+    To finish creating your account for the Digital Marketplace, please provide the following details.
+  </p>
 
-    <p>
-        To finish creating your account for the Digital Marketplace, please provide the following details.
+  <form autocomplete="off" action="{{ url_for('.submit_create_user', encoded_token=token) }}" method="POST" id="createUserForm">
+    {{ form.hidden_tag() }}
+
+    <p id="{{ form.name.name }}">
+      {{ form.name.label() }}
+      <span class="hint" id="name-hint">
+        This name will be used throughout the Digital Marketplace.
+      </span>
+      {% if form.name.errors %}
+        {{ form.name(class="invalid") }}
+      {% else %}
+        {{ form.name() }}
+      {% endif %}
     </p>
-    <form autocomplete="off" action="{{ url_for('.submit_create_user', encoded_token=token) }}" method="POST" id="createUserForm">
 
-        <div class="grid-row">
-            <div class="column-two-thirds">
-                {{ form.hidden_tag() }}
+    <p id="{{ form.password.name }}">
+      {{ form.password.label() }}
+      <span class="hint" id="password-hint">
+        Must be between 10 and 50 characters
+      </span>
+      {% if form.password.errors %}
+        {{ form.password(class="invalid") }}
+      {% else %}
+        {{ form.password() }}
+      {% endif %}
+    </p>
 
-                {% if form.name.errors %}
-                <div class="validation-wrapper">
-                    {% endif %}
-                    <div class="question" id="{{ form.name.name }}">
-                        {{ form.name.label(class="question-heading-with-hint") }}
-                        <p class="hint">
-                            This name will be used throughout the Digital Marketplace.
-                        </p>
-                        {% if form.name.errors %}
-                        <p class="validation-message" id="error-name-textbox">
-                            {% for error in form.name.errors %}{{ error }}{% endfor %}
-                        </p>
-                        {% endif %}
-                        {{ form.name(class="text-box", autocomplete="off") }}
-                    </div>
-                    {% if form.name.errors %}
-                </div>
-                {% endif %}
-
-                {% if form.password.errors %}
-                    <div class="validation-wrapper">
-                {% endif %}
-                    <div class="question" id="{{ form.password.name }}">
-                        {{ form.password.label(class="question-heading-with-hint") }}
-                        <p class="hint">
-                          Must be between 10 and 50 characters
-                        </p>
-                        {% if form.password.errors %}
-                        <p class="validation-message" id="error-password-textbox">
-                            {% for error in form.password.errors %}{{ error }}{% endfor %}
-                        </p>
-                        {% endif %}
-                        {{ form.password(class="text-box", autocomplete="off") }}
-                    </div>
-                {% if form.password.errors %}
-                    </div>
-                {% endif %}
-
-            {%
-              with
-              type = "save",
-              role = "button",
-              label = "Save and take me to the catalogue"
-            %}
-              {% include "toolkit/button.html" %}
-            {% endwith %}
-            </div>
-        </div>
-    </form>
-
+    {%
+      with
+      type = "save",
+      role = "button",
+      label = "Save and take me to the catalogue"
+    %}
+      {% include "au-ui-toolkit/button.html" %}
+    {% endwith %}
+  </form>
+</article>
 {% endblock %}
