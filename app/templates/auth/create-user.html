@@ -5,66 +5,65 @@
 {% block phase_banner %}{% endblock %}
 
 {% block main_content %}
-<article id="content" class="content-main">
-  {% if form.errors|length > 1 %}
-  <p class="callout--warning">
-    There was a problem with the details you gave for:<br>
-    {% for field_name, field_errors in form.errors|dictsort if field_errors %}
-      {% for error in field_errors %}
-    - <a href="#{{ form[field_name].name }}" class="validation-masthead-link">{{ form[field_name].label.text }}</a><br>
-      {% endfor %}
+
+{% if form.errors|length > 1 %}
+<p class="callout--warning">
+  There was a problem with the details you gave for:<br>
+  {% for field_name, field_errors in form.errors|dictsort if field_errors %}
+    {% for error in field_errors %}
+  - <a href="#{{ form[field_name].name }}" class="validation-masthead-link">{{ form[field_name].label.text }}</a><br>
     {% endfor %}
+  {% endfor %}
+</p>
+{% endif %}
+
+{%
+  with
+  smaller = true,
+  heading = "Create a buyer account",
+  context = email_address
+%}
+  {% include "toolkit/page-heading.html" %}
+{% endwith %}
+
+<p>
+  To finish creating your account for the Digital Marketplace, please provide the following details.
+</p>
+
+<form autocomplete="off" action="{{ url_for('.submit_create_user', encoded_token=token) }}" method="POST" id="createUserForm">
+  {{ form.hidden_tag() }}
+
+  <p id="{{ form.name.name }}">
+    {{ form.name.label() }}
+    <span class="hint" id="name-hint">
+      This name will be used throughout the Digital Marketplace.
+    </span>
+    {% if form.name.errors %}
+      {{ form.name(class="invalid",extra_aria_describedby="name-hint") }}
+    {% else %}
+      {{ form.name(extra_aria_describedby="name-hint") }}
+    {% endif %}
   </p>
-  {% endif %}
+
+  <p id="{{ form.password.name }}">
+    {{ form.password.label() }}
+    <span class="hint" id="password-hint">
+      Must be between 10 and 50 characters
+    </span>
+    {% if form.password.errors %}
+      {{ form.password(class="invalid",extra_aria_describedby="password-hint") }}
+    {% else %}
+      {{ form.password(extra_aria_describedby="password-hint") }}
+    {% endif %}
+  </p>
 
   {%
     with
-    smaller = true,
-    heading = "Create a buyer account",
-    context = email_address
+    type = "save",
+    role = "button",
+    label = "Save and take me to the catalogue"
   %}
-    {% include "toolkit/page-heading.html" %}
+    {% include "au-ui-toolkit/button.html" %}
   {% endwith %}
-
-  <p>
-    To finish creating your account for the Digital Marketplace, please provide the following details.
-  </p>
-
-  <form autocomplete="off" action="{{ url_for('.submit_create_user', encoded_token=token) }}" method="POST" id="createUserForm">
-    {{ form.hidden_tag() }}
-
-    <p id="{{ form.name.name }}">
-      {{ form.name.label() }}
-      <span class="hint" id="name-hint">
-        This name will be used throughout the Digital Marketplace.
-      </span>
-      {% if form.name.errors %}
-        {{ form.name(class="invalid",extra_aria_describedby="name-hint") }}
-      {% else %}
-        {{ form.name(extra_aria_describedby="name-hint") }}
-      {% endif %}
-    </p>
-
-    <p id="{{ form.password.name }}">
-      {{ form.password.label() }}
-      <span class="hint" id="password-hint">
-        Must be between 10 and 50 characters
-      </span>
-      {% if form.password.errors %}
-        {{ form.password(class="invalid",extra_aria_describedby="password-hint") }}
-      {% else %}
-        {{ form.password(extra_aria_describedby="password-hint") }}
-      {% endif %}
-    </p>
-
-    {%
-      with
-      type = "save",
-      role = "button",
-      label = "Save and take me to the catalogue"
-    %}
-      {% include "au-ui-toolkit/button.html" %}
-    {% endwith %}
-  </form>
-</article>
+</form>
 {% endblock %}

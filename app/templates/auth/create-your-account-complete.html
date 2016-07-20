@@ -21,16 +21,14 @@
 #}
 
 {% block main_content %}
-<article id="content" class="content-main">
-  {%
-    with
-      heading = "Activate your account"
-  %}
-  {% include "toolkit/page-heading.html" %}
-  {% endwith %}
+{%
+  with
+    heading = "Activate your account"
+%}
+{% include "toolkit/page-heading.html" %}
+{% endwith %}
 
-  <p>
-    Please go to your email inbox for {{ email_address }} and click on the link to activate your account.
-  </p>
-</article>
+<p>
+  Please go to your email inbox for {{ email_address }} and click on the link to activate your account.
+</p>
 {% endblock %}
