@@ -4,6 +4,17 @@ from wtforms.validators import DataRequired, EqualTo, Length, Regexp
 from dmutils.forms import StripWhitespaceStringField, StringField
 
 
+class StripWhitespaceStringField(StripWhitespaceStringField):
+    # WTForm errors when kwargs are passed from template contains dashes. As some html attributes needs to contain
+    # dashes, following piece of code helps.
+    # {{ form.email_address(extra_aria_describedby="here") }} will output the attribute aria-describedby="here"
+    def __call__(self, **kwargs):
+        print list(kwargs)
+        for key in list(kwargs):
+            if key.startswith('extra_'):
+                kwargs[key[6:].replace('_', '-')] = kwargs.pop(key)
+        return super(StripWhitespaceStringField, self).__call__(**kwargs)
+
 class LoginForm(Form):
     email_address = StripWhitespaceStringField(
         'Email address', id="input_email_address",
