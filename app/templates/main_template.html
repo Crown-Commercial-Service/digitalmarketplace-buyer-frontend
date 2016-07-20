@@ -2,61 +2,64 @@
 <!DOCTYPE html>
 <!--[if lt IE 9]><html class="lte-ie8" lang="{{ html_lang|default('en') }}"><![endif]-->
 <!--[if gt IE 8]><!--><html lang="{{ html_lang|default('en') }}"><!--<![endif]-->
-  <head>
-    <meta charset="utf-8" />
-    <title>{% block page_title %}GOV.AU - The best place to find government services and information{% endblock %}</title>
+<head>
+  <meta charset="utf-8" />
+  <title>{% block page_title %}GOV.AU - The best place to find government services and information{% endblock %}</title>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.16/webfont.js"></script>
-    <script>
-      WebFont.load({
-        google: {
-          families: ['Open+Sans:400italic,700,400:latin,latin-ext']
-        }
-      });
-    </script>
+  <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.16/webfont.js"></script>
+  <script>
+    WebFont.load({
+      google: {
+        families: ['Open+Sans:400italic,700,400:latin,latin-ext']
+      }
+    });
+  </script>
 
-    <link rel="stylesheet" type="text/css" href="https://gov-au-ui-kit.apps.staging.digital.gov.au/latest/ui-kit.min.css"/>
-    <script type="text/javascript" src="https://gov-au-ui-kit.apps.staging.digital.gov.au/latest/ui-kit.min.js"></script>
+  <link rel="shortcut icon" href="{{ asset_path }}images/favicon.png" type="image/x-icon" />
 
-    <link rel="shortcut icon" href="{{ asset_path }}images/favicon.png" type="image/x-icon" />
+  <link rel="apple-touch-icon-precomposed" sizes="152x152" href="{{ asset_path }}images/apple-touch-icon.png">
+  <link rel="apple-touch-icon-precomposed" sizes="120x120" href="{{ asset_path }}images/apple-touch-icon.png">
+  <link rel="apple-touch-icon-precomposed" sizes="76x76" href="{{ asset_path }}images/apple-touch-icon.png">
+  <link rel="apple-touch-icon-precomposed" href="{{ asset_path }}images/apple-touch-icon.png">
 
-    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="{{ asset_path }}images/apple-touch-icon.png">
-    <link rel="apple-touch-icon-precomposed" sizes="120x120" href="{{ asset_path }}images/apple-touch-icon.png">
-    <link rel="apple-touch-icon-precomposed" sizes="76x76" href="{{ asset_path }}images/apple-touch-icon.png">
-    <link rel="apple-touch-icon-precomposed" href="{{ asset_path }}images/apple-touch-icon.png">
+  {% block head %}{% endblock %}
 
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" href="https://gov-au-ui-kit.apps.staging.digital.gov.au/latest/ui-kit.min.css"/>
+  <script type="text/javascript" src="https://gov-au-ui-kit.apps.staging.digital.gov.au/latest/ui-kit.min.js"></script>
 
-    {% block head %}{% endblock %}
-  </head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <body class="{% block body_classes %}{% endblock %}">
-    <script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
+</head>
 
-    {% block body_start %}{% endblock %}
+<body class="{% block body_classes %}{% endblock %}">
+  <script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
 
-    <div class="skip-to">
-      <a href="#content">Skip to main content</a>
-      <a href="#nav">Skip to section navigation</a>
-    </div>
+  {% block body_start %}{% endblock %}
 
-    <header role="banner" id="global-header" class="{% block header_class %}{% endblock %}">
-        <section class="govau--header">
-          <div class="wrapper">
-            <div class="govau--logo">
-              <a href="{{ homepage_url|default('https://www.gov.uk') }}" title="{{ logo_link_title|default('Go to the GOV.UK homepage') }}" class="logo">Digital Marketplace</a> <span class="badge--beta">beta</span>
-            </div>
-          </div>
-        </section>
-        <section class="hero">
-          <div class="wrapper">
-            <span class="site-title">Welcome to the Digital Marketplace</span>
-            <p class="tagline">The Digital Marketplace will make it easier for government departments to view and connect with suppliers of ICT products and services. You can use the Marketplace to research and shortlist potential suppliers or post opportunities for products and services you need.</p>
-          </div>
-        </section>
-    </header>
+  <div class="skip-to">
+    <a href="#content">Skip to main content</a>
+    <!-- <a href="#nav">Skip to section navigation</a> -->
+  </div>
 
+  <header role="banner" class="{% block header_class %}{% endblock %}">
+
+    <section class="govau--header">
+      <div class="wrapper">
+        <div class="govau--logo">
+          <a href="{{ homepage_url|default('/digitalmarketplace') }}" title="{{ logo_link_title|default('Go to the Digital Marketplace homepage') }}" class="logo">Digital Marketplace</a> <span class="badge--beta">beta</span>
+        </div>
+      </div>
+    </section>
+
+    {% block hero %}{% endblock %}
+
+  </header>
+
+  {% block breadcrumb %}{% endblock %}
+
+  <main>
     {% block content %}{% endblock %}
+  </main>
 
   <footer role="contentinfo">
     <div class="wrapper">
@@ -82,17 +85,11 @@
               <li><a href="javascript:void(0)">Example global link</a></li>
             </ul>
           </nav>
-          <p>&copy; Commonwealth of Australia <br>
-          <a href="https://github.com/AusDTO/gov-au-ui-kit/blob/master/LICENSE.md">Licensed under the MIT License.</a></p>
-        </div>
-      </section>
+          <p>&copy; Commonwealth of Australia</p>
+          </div>
+        </section>
       </div>
     </footer>
 
-    <div id="global-app-error" class="app-error hidden"></div>
-
-    <script src="{{ asset_path }}javascripts/govuk-template.js"></script>
-
-    {% block body_end %}{% endblock %}
   </body>
-</html>
+  </html>

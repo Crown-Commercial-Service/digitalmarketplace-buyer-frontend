@@ -4,29 +4,18 @@
   {% include "_stylesheets.html" %}
 {% endblock %}
 
-{% block cookie_message %}
-  {% include "_cookie_message.html" %}
+{% block header_class %}
+  with-proposition
 {% endblock %}
-
-{% block header_class %}with-proposition{% endblock %}
 
 {% block proposition_header %}
   {% include "_proposition_header.html" %}
 {% endblock %}
 
 {% block content %}
-    {% block top_header %}
-    {% endblock %}
-{% block phase_banner %}
-  {% include "_phase_banner.html" %}
-{% endblock %}
-  {% block breadcrumb %}{% endblock %}
-  <div id="wrapper">
-    <main id="content" role="main">
-      {% block main_content %}
-      {% endblock %}
-    </main>
-  </div>
+  <article class="content-main">
+    {% block main_content %}{% endblock %}
+  </article>
 {% endblock %}
 
 {% block footer_top %}
@@ -34,12 +23,12 @@
 {% endblock %}
 
 {% block footer_support_links %}
-    <h2 class="visuallyhidden">Support links</h2>
-    <ul>
-        <li><a href="/terms-and-conditions" class="terms-and-conditions">Terms and conditions</a></li>
-        <li><a href="/cookies">Cookies</a></li>
-        <li>Built by the <a href="https://www.gov.uk/government/organisations/government-digital-service">Government Digital Service</a></li>
-    </ul>
+  <h2 class="visuallyhidden">Support links</h2>
+  <ul>
+    <li><a href="/terms-and-conditions" class="terms-and-conditions">Terms and conditions</a></li>
+    <li><a href="/cookies">Cookies</a></li>
+    <li>Built by the <a href="https://www.gov.uk/government/organisations/government-digital-service">Government Digital Service</a></li>
+  </ul>
 {% endblock %}
 
 {% block body_end %}
