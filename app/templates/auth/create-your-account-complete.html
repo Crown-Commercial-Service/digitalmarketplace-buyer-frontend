@@ -3,6 +3,9 @@
 
 {% block page_title %}Activate your account - Digital Marketplace{% endblock %}
 
+{% block phase_banner %}{% endblock %}
+
+{#
 {% block breadcrumb %}
 {%
   with items = [
@@ -15,10 +18,10 @@
 {% include "toolkit/breadcrumb.html" %}
 {% endwith %}
 {% endblock %}
+#}
 
 {% block main_content %}
-
-<div class="single-question-page">
+<article id="content" class="content-main">
   {%
     with
       heading = "Activate your account"
@@ -26,14 +29,8 @@
   {% include "toolkit/page-heading.html" %}
   {% endwith %}
 
-  <div class="grid-row">
-    <div class="column-two-thirds">
-      <p>
-        An email has been sent to {{ email_address }}.
-        You need to click on the link in the email to activate your account.
-      </p>
-    </div>
-  </div>
-</div>
-
+  <p>
+    Please go to your email inbox for {{ email_address }} and click on the link to activate your account.
+  </p>
+</article>
 {% endblock %}

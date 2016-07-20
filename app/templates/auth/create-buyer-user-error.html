@@ -2,42 +2,41 @@
 
 {% block page_title %}Create account error – Digital Marketplace{% endblock %}
 
+{% block phase_banner %}{% endblock %}
+
 {% block main_content %}
+
+<article id="content" class="content-main">
 
 {% if error == 'invalid_buyer_domain' %}
 
-  <div class="grid-row">
-    <div class="column-two-thirds error-page">
-      <header class="page-heading-smaller">
-        <h1>You must use a public sector email address</h1>
-      </header>
-      <p>
-        You must be employed by, or represent, a public sector organisation to create a buyer account.
-      </p>
-      <p>
-        The email you used doesn't belong to a recognised public sector domain.
-      </p>
-      <div class="explanation-list">
-        <p class="lead">
-          <a href="{{ url_for('.create_buyer_account') }}">Create an account using a different email address</a> or email
-          <a href="mailto:enquiries@digitalmarketplace.service.gov.uk">enquiries@digitalmarketplace.service.gov.uk</a> if:
-        </p>
-        <ul class="list-bullet">
-          <li>
-            you think your domain should be recognised
-          </li>
-          <li>
-            you still can't create an account
-          </li>
-        </ul>
-      </div>
-      
-    </div>
+  <header>
+    <h1>You must use a public sector email address</h1>
+  </header>
+  <p>
+    You must be employed by, or represent, a public sector organisation to create a buyer account.
+  </p>
+  <p>
+    The email you used doesn't belong to a recognised public sector domain.
+  </p>
+  <div>
+    <p>
+      <a href="{{ url_for('.create_buyer_account') }}">Create an account using a different email address</a> or email
+      <a href="mailto:enquiries@digitalmarketplace.service.gov.uk">enquiries@digitalmarketplace.gov.au</a> if:
+    </p>
+    <ul>
+      <li>
+        you think your domain should be recognised
+      </li>
+      <li>
+        you still can't create an account
+      </li>
+    </ul>
   </div>
 
 {% elif not token %}
 
-  <header class="page-heading-smaller">
+  <header>
     <h1>Expired link</h1>
   </header>
   <p>
@@ -50,7 +49,7 @@
 
   {% if not user.active %}
   
-    <header class="page-heading-smaller">
+    <header>
       <h1>Your account has been deactivated.</h1>
     </header>
     <p>
@@ -59,7 +58,7 @@
   
   {% elif user.locked %}
   
-    <header class="page-heading-smaller">
+    <header>
       <h1>Your account has been locked.</h1>
     </header>
     <p>
@@ -68,7 +67,7 @@
 
   {% elif user.role == 'supplier' %}
   
-    <header class="page-heading-smaller">
+    <header>
       <h1>The details you provided are registered with a supplier.</h1>
     </header>
     <p>Your email address is already registered as an account with ‘{{ user.supplier_name }}’.</p>
@@ -81,7 +80,7 @@
   
   {% else %}
   
-    <header class="page-heading-smaller">
+    <header>
       <h1>Account already exists</h1>
     </header>
   
@@ -91,4 +90,5 @@
   
   {% endif %}
 {% endif %}
+</article>
 {% endblock %}
