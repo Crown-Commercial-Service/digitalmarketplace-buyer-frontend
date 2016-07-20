@@ -19,7 +19,7 @@ npm_install:
 	npm install
 
 frontend_build:
-	npm run --silent frontend-build:production
+	npm run frontend-build:watch
 
 test: show_environment frontend_build test_pep8 test_python test_javascript
 
