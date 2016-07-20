@@ -6,17 +6,19 @@
   "engine" : "node >= 4.2",
   "dependencies" : {
     "bower": "1.5.2",
-    "gulp" : "3.8.7",
+    "gulp" : "^3.9.1",
+    "gulp-connect": "^4.1.0",
     "gulp-uglify" : "1.4.0",
     "gulp-sourcemaps": "1.5.2",
     "del" : "1.1.1",
-    "gulp-sass" : "2.0.4",
+    "gulp-sass" : "^2.3.1",
+    "gulp-sass-lint": "^1.2.0",
     "gulp-shell" : "0.2.9",
     "gulp-filelog" : "0.4.1",
     "gulp-include": "1.1.1",
-    "govuk_frontend_toolkit" : "4.12.0",
     "gulp-jasmine-phantom": "3.0.0",
-	"phantomjs-prebuilt": "2.1.7"
+    "smoothscroll": "^0.2.2",
+  	"phantomjs-prebuilt": "2.1.7"
   },
   "scripts": {
     "test" : "./node_modules/gulp/bin/gulp.js test",
@@ -26,5 +28,8 @@
     "frontend-build:watch" : "./node_modules/gulp/bin/gulp.js watch",
     "test": "./node_modules/gulp/bin/gulp.js test",
     "postinstall": "npm run frontend-install"
+  },
+  "devDependencies": {
+    "fs": "0.0.2"
   }
 }
