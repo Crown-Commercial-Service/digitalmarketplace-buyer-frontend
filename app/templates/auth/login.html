@@ -5,119 +5,118 @@
 {% block phase_banner %}{% endblock %}
 
 {% block main_content %}
-<article id="content" class="content-main">
-  {% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-  {% for category, message in messages %}
-    {% if category == 'error' %}
-      <div class="banner-destructive-without-action">
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+  {% if category == 'error' %}
+    <div class="banner-destructive-without-action">
+  {% elif category != 'must_login' %}
+    <div class="banner-success-without-action">
+  {% endif %}
+    {% if message == 'no_account' %}
+      <p class="callout">
+        Make sure you've entered the right email address and password.
+        Accounts are locked after 5 failed attempts. If you think your
+        account has been locked, email
+        <a href="mailto:enquiries@digitalmarketplace.service.gov.uk">enquiries@digitalmarketplace.service.gov.uk</a>.
+      </p>
+    {% elif message == 'password_updated' %}
+      <p class="callout">
+        You have successfully changed your password.
+      </p>
+    {% elif message == 'password_not_updated' %}
+      <p class="callout">
+        Could not update password due to an error.
+      </p>
+    {% elif message == 'supplier-role-required' %}
+      <p class="callout">
+        You must log in with a supplier account to see this page.
+      </p>
+    {% elif message == 'buyer-role-required' %}
+      <p class="callout">
+          You must log in with a buyer account to see this page.
+      </p>
     {% elif category != 'must_login' %}
-      <div class="banner-success-without-action">
+      {{ message }}
     {% endif %}
-      {% if message == 'no_account' %}
-        <p class="callout">
-          Make sure you've entered the right email address and password.
-          Accounts are locked after 5 failed attempts. If you think your
-          account has been locked, email
-          <a href="mailto:enquiries@digitalmarketplace.service.gov.uk">enquiries@digitalmarketplace.service.gov.uk</a>.
-        </p>
-      {% elif message == 'password_updated' %}
-        <p class="callout">
-          You have successfully changed your password.
-        </p>
-      {% elif message == 'password_not_updated' %}
-        <p class="callout">
-          Could not update password due to an error.
-        </p>
-      {% elif message == 'supplier-role-required' %}
-        <p class="callout">
-          You must log in with a supplier account to see this page.
-        </p>
-      {% elif message == 'buyer-role-required' %}
-        <p class="callout">
-            You must log in with a buyer account to see this page.
-        </p>
-      {% elif category != 'must_login' %}
-        {{ message }}
-      {% endif %}
-    {% if category != 'must_login' %}
-      </div>
-    {% endif %}
-  {% endfor %}
+  {% if category != 'must_login' %}
+    </div>
   {% endif %}
-  {% endwith %}
+{% endfor %}
+{% endif %}
+{% endwith %}
 
-  {% if form.errors|length > 1 %}
-    <p class="callout--warning">
-      There was a problem with the details you gave for:<br>
-      {% for field_name, field_errors in form.errors|dictsort if field_errors %}
-        {% for error in field_errors %}
-        - <a href="#{{ form[field_name].name }}">{{ form[field_name].label.text }}</a><br>
-        {% endfor %}
+{% if form.errors|length > 1 %}
+  <p class="callout--warning">
+    There was a problem with the details you gave for:<br>
+    {% for field_name, field_errors in form.errors|dictsort if field_errors %}
+      {% for error in field_errors %}
+      - <a href="#{{ form[field_name].name }}">{{ form[field_name].label.text }}</a><br>
       {% endfor %}
-    </p>
-  {% endif %}
+    {% endfor %}
+  </p>
+{% endif %}
 
-  {% with
-    heading = "Log in to see more"
+{% with
+  heading = "Log in to see more"
+%}
+  {% include "au-ui-toolkit/page-heading.html" %}
+{% endwith %}
+
+<form action="{{ url_for('.process_login', next=next) }}" method="POST">
+
+  {{ form.hidden_tag() }}
+
+  <p id="{{ form.email_address.name }}">
+    {{ form.email_address.label() }}
+    {% if form.email_address.errors %}
+      {{ form.email_address(class="invalid") }}
+    {% else %}
+      {{ form.email_address() }}
+    {% endif %}
+  </p>
+
+  <p id="{{ form.password.name }}">
+    {{ form.password.label() }}
+    {% if form.password.errors %}
+      {{ form.password(class="invalid",autocomplete="off") }}
+    {% else %}
+      {{ form.password(autocomplete="off") }}
+    {% endif %}
+  </p>
+
+  <p>
+  {%
+    with
+    url = url_for('.request_password_reset'),
+    text = "Forgotten password"
   %}
-    {% include "au-ui-toolkit/page-heading.html" %}
+    {% include "au-ui-toolkit/secondary-action-link.html" %}
   {% endwith %}
+  </p>
 
-  <form action="{{ url_for('.process_login', next=next) }}" method="POST">
+  <p>
+  {%
+    with
+    type = "save",
+    role = "button",
+    label = "Log in"
+  %}
+    {% include "au-ui-toolkit/button.html" %}
+  {% endwith %}
+  </p>
 
-    {{ form.hidden_tag() }}
-
-    <p id="{{ form.email_address.name }}">
-      {{ form.email_address.label() }}
-      {% if form.email_address.errors %}
-        {{ form.email_address(class="invalid") }}
-      {% else %}
-        {{ form.email_address() }}
-      {% endif %}
-    </p>
-
-    <p id="{{ form.password.name }}">
-      {{ form.password.label() }}
-      {% if form.password.errors %}
-        {{ form.password(class="invalid",autocomplete="off") }}
-      {% else %}
-        {{ form.password(autocomplete="off") }}
-      {% endif %}
-    </p>
-
-    <p>
-    {%
-      with
-      url = url_for('.request_password_reset'),
-      text = "Forgotten password"
-    %}
-      {% include "au-ui-toolkit/secondary-action-link.html" %}
-    {% endwith %}
-    </p>
-
-    <p>
-    {%
-      with
-      type = "save",
-      role = "button",
-      label = "Log in"
-    %}
-      {% include "au-ui-toolkit/button.html" %}
-    {% endwith %}
-    </p>
-
-    <p>
-    {%
-      with
-      url = url_for('.create_buyer_account'),
-      text = "Sign up",
-      bigger = true
-    %}
-      {% include "au-ui-toolkit/secondary-action-link.html" %}
-    {% endwith %}
-    </p>
-              
-  </form>
-</article>
+  <p>
+  {%
+    with
+    url = url_for('.create_buyer_account'),
+    text = "Sign up",
+    bigger = true
+  %}
+    {% include "au-ui-toolkit/secondary-action-link.html" %}
+  {% endwith %}
+  </p>
+            
+</form>
 {% endblock %}

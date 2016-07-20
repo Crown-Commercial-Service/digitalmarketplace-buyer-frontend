@@ -21,50 +21,49 @@
 #}
 
 {% block main_content %}
-<article id="content" class="content-main">
-  {% if form.errors %}
-    <p class="callout--warning">
-      There was a problem with the details you gave for:<br>
-      {% for field_name, field_errors in form.errors|dictsort if field_errors %}
-        {% for error in field_errors %}
-      - <a href="#{{ form[field_name].name }}" class="validation-masthead-link">{{ form[field_name].label.text }}</a><br>
-        {% endfor %}
-      {% endfor %}
-    </p>
-  {% endif %}
 
+{% if form.errors %}
+  <p class="callout--warning">
+    There was a problem with the details you gave for:<br>
+    {% for field_name, field_errors in form.errors|dictsort if field_errors %}
+      {% for error in field_errors %}
+    - <a href="#{{ form[field_name].name }}" class="validation-masthead-link">{{ form[field_name].label.text }}</a><br>
+      {% endfor %}
+    {% endfor %}
+  </p>
+{% endif %}
+
+{%
+  with
+    smaller = true,
+    heading = "Create a buyer account"
+%}
+{% include "toolkit/page-heading.html" %}
+{% endwith %}
+
+<p>
+  You must be employed by, or represent, a public sector organisation.
+</p>
+
+<form method="POST" action="{{ url_for('.submit_create_buyer_account') }}">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
   {%
     with
-      smaller = true,
-      heading = "Create a buyer account"
+      question = "Your email address",
+      hint = "We will send an account activation email to this address. You'll then be able to set your password.",
+      name = "email_address",
+      value = email_address,
+      error = form.email_address.errors[0]
   %}
-  {% include "toolkit/page-heading.html" %}
+    {% include "au-ui-toolkit/forms/textbox.html" %}
   {% endwith %}
-
-  <p>
-    You must be employed by, or represent, a public sector organisation.
-  </p>
-
-  <form method="POST" action="{{ url_for('.submit_create_buyer_account') }}">
-    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-    {%
-      with
-        question = "Your email address",
-        hint = "We will send an account activation email to this address. You'll then be able to set your password.",
-        name = "email_address",
-        value = email_address,
-        error = form.email_address.errors[0]
-    %}
-      {% include "au-ui-toolkit/forms/textbox.html" %}
-    {% endwith %}
-    {%
-      with
-        type = "save",
-        role = "button",
-        label = "Create account"
-    %}
-    {% include "au-ui-toolkit/button.html" %}
-    {% endwith %}
-  </form>
-</article>
+  {%
+    with
+      type = "save",
+      role = "button",
+      label = "Create account"
+  %}
+  {% include "au-ui-toolkit/button.html" %}
+  {% endwith %}
+</form>
 {% endblock %}
