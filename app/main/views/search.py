@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
+import json
+import os
 from flask import abort, render_template, request, redirect, current_app
+from app.api_client.data import DataAPIClient
 
 from ...main import main
 from app import search_api_client, data_api_client, content_loader
@@ -18,7 +21,7 @@ Result = namedtuple('Result', 'title description badges categories extra_details
 @main.route('/search/suppliers')
 def supplier_search():
     filters = [
-        Filter('Service categories', [
+        Filter('Capabilities', [
             Option('category', 'pm', 'Product Management', False),
             Option('category', 'ba', 'Business Analysis', True),
             Option('category', 'dm', 'Delivery Management and Agile Coaching', False),
@@ -29,12 +32,15 @@ def supplier_search():
             Option('category', 'acc', 'Inclusive Design and Accessibility', False),
             Option('category', 'dta', 'Digital Transformation Advisors', False),
         ]),
-        Filter('Roles', [
-            Option('role', 'tl', 'Technical Lead', False),
-            Option('role', 'dev', 'Developer', False),
-            Option('role', 'hck', 'Ethical Hacker', False),
-            Option('role', 'ops', 'Web Devops Engineer', False),
-        ])
+
+        # Roles are deprecated
+#        Filter('Roles', [
+#            Option('role', 'tl', 'Technical Lead', False),
+#            Option('role', 'dev', 'Developer', False),
+#            Option('role', 'hck', 'Ethical Hacker', False),
+#            Option('role', 'ops', 'Web Devops Engineer', False),
+#        ])
+
     ]
     results = [
         Result(
@@ -61,6 +67,29 @@ def supplier_search():
             '/'
         ),
     ]
+
+#    query = json.dumps({
+#        "query": {
+#            "match": {
+#                "name": 'a'
+#            }
+#        }
+#    })
+
+#    query = """
+#        {
+#    "query": {
+#        "term": {
+#            {title}: {a}
+#        }
+#    }
+#}
+#    """
+
+
+#    response = DataAPIClient().find_suppliers(data=query)
+#    print response
+
     return render_template(
         'search_suppliers.html',
         title='Supplier Catalogue',

@@ -15,10 +15,13 @@
 					</fieldset>
 				</div>
 				<div>
+                    <div>
 					<h2>Filter by</h2>
+                     <a href='#' class=clear-all>Clear all</a>
+                    </div>
 					{% for filter in filters %}
+                        <label>{{ filter.name }}</label>
 					<fieldset>
-						<label>{{ filter.name }}</label>
 						{% for option in filter.options %}
 						<label><input type=checkbox name="{{ option.name }}" value="{{ option.value }}" {% if option.checked %}checked{% endif %}>{{ option.label }}</label>
 						{% endfor %}
@@ -26,7 +29,6 @@
 					{% endfor %}
 				</div>
 				<input type=submit value=Apply>
-				<a href='#' class=clear-all>Clear all</a>
 			</form>
 		</div>
 		<div>
