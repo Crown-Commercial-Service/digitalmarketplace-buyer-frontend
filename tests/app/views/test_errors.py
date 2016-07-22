@@ -4,8 +4,9 @@ import mock
 from nose.tools import assert_equal, assert_true
 from dmapiclient import HTTPError
 from ...helpers import BaseApplicationTest
+import pytest
 
-
+@pytest.mark.skipif(True, reason='gcloud out of scope')
 @mock.patch('app.main.views.g_cloud.search_api_client')
 class TestErrors(BaseApplicationTest):
     def test_404(self, search_api_mock):

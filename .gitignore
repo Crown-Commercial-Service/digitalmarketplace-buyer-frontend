@@ -8,6 +8,7 @@ npm-debug.log
 app/static/*
 govuk_template
 digital_marketplace_frontend_toolkit
+.env
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
