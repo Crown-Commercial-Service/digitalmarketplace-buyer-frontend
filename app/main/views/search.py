@@ -34,12 +34,12 @@ def supplier_search():
         ]),
 
         # Roles are deprecated
-#        Filter('Roles', [
-#            Option('role', 'tl', 'Technical Lead', False),
-#            Option('role', 'dev', 'Developer', False),
-#            Option('role', 'hck', 'Ethical Hacker', False),
-#            Option('role', 'ops', 'Web Devops Engineer', False),
-#        ])
+        #        Filter('Roles', [
+        #            Option('role', 'tl', 'Technical Lead', False),
+        #            Option('role', 'dev', 'Developer', False),
+        #            Option('role', 'hck', 'Ethical Hacker', False),
+        #            Option('role', 'ops', 'Web Devops Engineer', False),
+        #        ])
 
     ]
     results = [
@@ -67,28 +67,6 @@ def supplier_search():
             '/'
         ),
     ]
-
-
-
-#    query = """
-#        {
-#    "query": {
-#        "term": {
-#            {title}: {a}
-#        }
-#    }
-#}
-#    """
-
-#    query = json.dumps({
-#            "query": {
-#                "match": {
-#                    "title": 'a'
-#                }
-#            }
-#        })
-#    response = DataAPIClient().find_suppliers(data=query)
-#    print response
 
     return render_template(
         'search_suppliers.html',

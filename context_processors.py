@@ -1,5 +1,6 @@
 from flask_login import current_user
 
+
 def user_context():
     """
     Makes user data available throughout the template with variable current_user

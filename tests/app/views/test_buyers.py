@@ -10,6 +10,7 @@ import pytest
 
 pytestmark = pytest.mark.skipif(True, reason='frameworks out of scope')
 
+
 @mock.patch('app.buyers.views.buyers.data_api_client')
 class TestBuyerDashboard(BaseApplicationTest):
     def test_buyer_dashboard(self, data_api_client):
