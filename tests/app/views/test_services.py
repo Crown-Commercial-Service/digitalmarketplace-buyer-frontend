@@ -8,6 +8,7 @@ import pytest
 
 pytestmark = pytest.mark.skipif(True, reason='gcloud out of scope')
 
+
 class UnavailableBanner(object):
 
     def __init__(self, document):

@@ -14,6 +14,7 @@ from flask import has_request_context, request, current_app
 base_url = os.environ.get('DM_DATA_API_URL', '')
 auth_token = os.environ.get('DM_DATA_API_AUTH_TOKEN', '')
 
+
 class BaseAPIClient(object):
     def __init__(self, base_url=None, auth_token=None, enabled=True):
         self.base_url = base_url
@@ -36,7 +37,6 @@ class BaseAPIClient(object):
         if not self.enabled:
             return None
 
-
         url = urlparse.urljoin(base_url, url)
 
         headers = {
@@ -57,7 +57,6 @@ class BaseAPIClient(object):
             api_error = HTTPError.create(e)
             print "API %s request on %s failed with %s '%s'" % (method, url, api_error.status_code, api_error.message)
             raise api_error
-
 
     def _add_request_id_header(self, headers):
         if not has_request_context():

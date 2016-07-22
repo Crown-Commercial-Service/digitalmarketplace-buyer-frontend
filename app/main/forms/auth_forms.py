@@ -15,6 +15,7 @@ class StripWhitespaceStringField(StripWhitespaceStringField):
                 kwargs[key[6:].replace('_', '-')] = kwargs.pop(key)
         return super(StripWhitespaceStringField, self).__call__(**kwargs)
 
+
 class LoginForm(Form):
     email_address = StripWhitespaceStringField(
         'Email', id="input_email_address",

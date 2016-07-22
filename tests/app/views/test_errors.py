@@ -6,6 +6,7 @@ from dmapiclient import HTTPError
 from ...helpers import BaseApplicationTest
 import pytest
 
+
 @pytest.mark.skipif(True, reason='gcloud out of scope')
 @mock.patch('app.main.views.g_cloud.search_api_client')
 class TestErrors(BaseApplicationTest):

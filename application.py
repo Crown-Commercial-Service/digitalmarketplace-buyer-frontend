@@ -20,4 +20,3 @@ if __name__ == '__main__':
         manager.run()
     finally:
         application.logger.info('Manager finished')
-

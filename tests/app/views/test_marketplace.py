@@ -9,6 +9,7 @@ import pytest
 
 pytestmark = pytest.mark.skipif(True, reason='TODO: fix these tests')
 
+
 class TestApplication(BaseApplicationTest):
     def setup(self):
         super(TestApplication, self).setup()
