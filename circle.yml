@@ -1,0 +1,11 @@
+## Customize test commands
+dependencies:
+  override:
+    - npm install
+    - pip install -r requirements_for_test.txt
+test:
+  pre:
+    - npm run frontend-build:production
+  override:
+    - pep8 .
+    - py.test
