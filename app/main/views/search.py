@@ -23,7 +23,7 @@ def supplier_search():
     filters = [
         Filter('Capabilities', [
             Option('category', 'pm', 'Product Management', False),
-            Option('category', 'ba', 'Business Analysis', True),
+            Option('category', 'ba', 'Business Analysis', False),
             Option('category', 'dm', 'Delivery Management and Agile Coaching', False),
             Option('category', 'ur', 'User Research', False),
             Option('category', 'sd', 'Service Design and Interaction Design', False),
@@ -68,13 +68,7 @@ def supplier_search():
         ),
     ]
 
-#    query = json.dumps({
-#        "query": {
-#            "match": {
-#                "name": 'a'
-#            }
-#        }
-#    })
+
 
 #    query = """
 #        {
@@ -86,7 +80,13 @@ def supplier_search():
 #}
 #    """
 
-
+#    query = json.dumps({
+#            "query": {
+#                "match": {
+#                    "title": 'a'
+#                }
+#            }
+#        })
 #    response = DataAPIClient().find_suppliers(data=query)
 #    print response
 
@@ -97,5 +97,7 @@ def supplier_search():
         search_keywords='',
         filters=filters,
         num_results=len(results),
-        results=results
+        results=results,
+        results_from='0',
+        results_to=len(results)
     )

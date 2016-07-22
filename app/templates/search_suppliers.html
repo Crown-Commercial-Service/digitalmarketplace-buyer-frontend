@@ -28,11 +28,17 @@
 					</fieldset>
 					{% endfor %}
 				</div>
-				<input type=submit value=Apply>
+				<input type=submit value="Apply filter results">
 			</form>
+        <a href="" style="">I don't see what I need</a>
 		</div>
 		<div>
-			<span>{{ num_results }} suppliers found</span>
+			<div>{{ num_results }} Suppliers</div>
+
+            <div>
+                <span>Sort By:</span> <span>A to Z</span>
+            </div>
+
 			{% for result in results %}
 			<div>
 				<h2>{{ result.title }}</h2>
