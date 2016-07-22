@@ -4,7 +4,9 @@ import re
 from lxml import html
 from nose.tools import assert_equal, assert_in, assert_false, assert_true
 from ...helpers import BaseApplicationTest
+import pytest
 
+pytestmark = pytest.mark.skipif(True, reason='gcloud out of scope')
 
 class UnavailableBanner(object):
 
