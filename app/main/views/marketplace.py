@@ -53,6 +53,7 @@ def index():
 def my_template(template_slug):
     return render_template('%s.html' % template_slug)
 
+
 @main.route('/cookies')
 def cookies():
     return render_template('content/cookies.html')
