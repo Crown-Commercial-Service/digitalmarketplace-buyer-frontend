@@ -1,0 +1,338 @@
+/*
+Forms
+
+Keep forms as simple as possible&mdash;only ask what is needed for the transaction.
+
+Ask only 1 question per page.
+
+<hr />
+
+This guidance is in part adapted from [GOV.UK elements](http://govuk-elements.herokuapp.com/) under [Open Government Licence v3.0](https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/).
+
+Style guide: Forms
+*/
+
+/*
+Form controls
+
+Style guide: Forms.0 Form controls
+*/
+
+/*
+Text input
+
+A single line text input. By default users can enter any combination of letters, numbers or symbols.
+
+Markup:
+<form>
+  <p>
+    <label for="textin">A text input field:</label>
+    <input name="textin" id="textin" type="text" />
+  </p>
+  <p>
+    <label for="numberin">A number input field:</label>
+    <input name="numberin" id="numberin" type="number" pattern="[0-9]*" />
+  </p>
+  <p>
+    <label for="textinvalid">An invalid field:</label>
+    <input name="textinvalid" id="textinvalid" type="text" class="invalid" />
+  </p>
+    <p>
+    <label for="textvalid">A valid field:</label>
+    <input name="textvalid" id="textvalid" type="text" class="valid" />
+  </p>
+  <p>
+    <label for="textdisabled">A disabled field:</label>
+    <input name="textdisabled" id="textdisabled" type="text" disabled />
+  </p>
+</form>
+
+<strong>Tip:</strong> To show a number-pad on iPhones, when a number field is focussed, add a pattern attribute to the input element like this: <pre>pattern="[0-9]*"</pre>
+Source: <a href="https://www.gov.uk/service-manual/user-centred-design/resources/patterns/dates.html#memorable-dates">GOV.UK "Dates" design pattern</a>
+
+Style guide: Forms.0 Form controls.1 Text input
+*/
+
+/*
+Optional & mandatory fields
+
+Only ask for the information you absolutely need. Don't mark mandatory fields with asterisks.
+
+If you have to ask for optional information, mark the field labels with '(optional)'.
+
+Style guide: Forms.1 Optional & mandatory fields
+*/
+
+/*
+Labels
+
+All forms fields should have labels. Don't hide labels, unless the surrounding context makes them unnecessary.
+
+Tell the user what they need to enter into the field. Label text should be short and direct. Avoid colons at the end of labels.
+
+Align labels above their fields. They should be associated with form fields using the `for` attribute.
+
+Markup:
+<form>
+  <label class="form-label" for="full-name">Full name</label>
+  <input class="form-control" id="full-name" type="text" />
+</form>
+
+Style guide: Forms.2 Labels
+*/
+
+/*
+Hint text
+
+Use hint text to give the user contextual help about how to provide the information.
+
+The hint text should be above the form field and always visible.
+
+Make sure screen readers can read hint text correctly (use the correct ARIA tags).
+
+Markup:
+<form>
+  <label for="name">Full name</label>
+  <span class="hint" id="name-hint">Your name is on your birth certificate.</span>
+  <input type="text" id="name" aria-describedby="name-hint" />
+</form>
+
+Style guide: Forms.3 HintText
+*/
+
+%base-input {
+  width: 100%;
+  outline-offset: 0;
+  border: 2px solid $border-colour;
+  border-radius: 0;
+  background-color: $background-colour;
+  padding: $tiny-spacing;
+
+  &:invalid,
+  &.invalid {
+    outline: 2px solid $error-colour;
+  }
+
+  &.valid {
+    outline: 2px solid $success-colour;
+  }
+
+  &:focus {
+    outline: 2px solid $focus-colour;
+  }
+
+  &:disabled,
+  &[disabled] {
+    cursor: not-allowed;
+    opacity: .5;
+  }
+
+}
+
+form {
+
+  fieldset,
+  p {
+    margin: 0 0 $medium-spacing 0;
+    padding: 0;
+    border: none;
+  }
+
+  label {
+    display: block;
+  }
+
+  .hint {
+    display: block;
+    color: $body-text-colour;
+    font-size: rem(14);
+  }
+
+  [type='text'],
+  [type='number'],
+  [type='email'],
+  [type='password'] {
+    @extend %base-input;
+  }
+
+  /*
+  Textarea input
+
+  A multi-line text input that can be resized vertically by the user.
+
+  Markup:
+  <form>
+    <label for="texta">An input for longer responses:</label>
+    <textarea name="texta" id="texta"></textarea>
+  </form>
+
+  Style guide: Forms.TextAreaInput
+  */
+
+  textarea {
+    @extend %base-input;
+    resize: vertical;
+  }
+
+
+  input {
+    &[type='radio'],
+    &[type='checkbox'] {
+      @extend %base-input;
+      height: 1px;
+      // hide the native widget but keep it in the tab order
+      left: -10000px;
+      position: absolute;
+      visibility: visible;
+      width: 1px;
+
+      &:focus + label {
+        outline: 1px solid $border-colour;
+      }
+
+      &:invalid + label {
+        color: $error-colour;
+
+        &::before {
+          border-color: $error-colour;
+        }
+      }
+
+      + label {
+        display: inline-block;
+        margin-bottom: 8px;
+        padding: 15px 0 15px 60px;
+        position: relative;
+        width: 100%;
+
+        @include media($tablet) {
+          padding: 12px 0 12px 60px;
+        }
+
+        &::before {
+          display: inline-block;
+          height: 27px;
+          position: absolute;
+          text-align: center;
+          top: 13px;
+          width: 27px;
+
+          @include media($tablet) {
+            top: 9px;
+          }
+        }
+      }
+    }
+  }
+
+  /*
+Radio button input
+
+A collection of mutually exclusive options.
+
+Markup:
+<form>
+          <fieldset>
+            <legend>Would you like?</legend>
+            <input id="yes" name="reply" type="radio" value="Yes"/>
+            <label for="yes">Yes</label>
+            <input id="no" name="reply" type="radio" value="No"/>
+            <label for="no">No</label>
+          </fieldset>
+</form>
+
+Style guide: Forms.RadioButtonInput
+*/
+  input[type='radio'] {
+    & + label {
+      &::before {
+        border: 2px solid $body-text-colour;
+        border-radius: 50%;
+        content: '';
+        left: 18px;
+      }
+    }
+
+    &:checked + label {
+      font-weight: bold;
+
+      &::before {
+        border-radius: 50%;
+        content: '';
+      }
+
+      &::after {
+        width: 17px;
+        height: 17px;
+        background-color: $body-text-colour;
+        border: 1px solid transparent;
+        border-radius: 50%;
+        content: '';
+        left: 23px;
+        top: 18px;
+        position: absolute;
+
+        @include media($tablet) {
+          top: 14px;
+        }
+      }
+    }
+  }
+
+  /*
+Checkbox input
+
+A collection of options where any number of options can be chosen.
+
+Markup:
+<form>
+        <fieldset>
+          <legend>Which would you like?</legend>
+          <input id="aaa" name="reply" type="checkbox" value="AAA"/>
+          <label for="aaa">AAA</label>
+          <input id="bbb" name="reply" type="checkbox" value="BBB"/>
+          <label for="bbb">BBB</label>
+           <input id="ccc" name="reply" type="checkbox" value="CCC"/>
+          <label for="ccc">CCC</label>
+        </fieldset>
+</form>
+
+Style guide: Forms.CheckboxInput
+*/
+  input[type='checkbox'] + label {
+    &::before {
+      left: 20px;
+      border: 2px solid $body-text-colour;
+      content: '';
+      @include media($tablet) {
+        top: 9px;
+      }
+    }
+  }
+
+  input[type='checkbox'] {
+    &:checked + label {
+      font-weight: bold;
+
+      &::before {
+        font-size: 18px;
+        content: '';
+      }
+
+      &::after {
+        width: 17px;
+        height: 17px;
+        background-color: $body-text-colour;
+        border: 1px solid transparent;
+        content: '';
+        left: 25px;
+        top: 18px;
+        position: absolute;
+
+        @include media($tablet) {
+          top: 14px;
+        }
+      }
+    }
+  }
+}

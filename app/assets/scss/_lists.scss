@@ -1,0 +1,7 @@
+.list-vertical--fourths>li p,
+.list-vertical--thirds>li p,
+.list-vertical>li p {
+  @include media($desktop) {
+    min-height: auto;
+  }
+}
