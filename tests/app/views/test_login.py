@@ -9,22 +9,20 @@ from lxml import html
 import mock
 import pytest
 
-pytestmark = pytest.mark.skipif(True, reason='TODO: fix these tests')
-
-EMAIL_EMPTY_ERROR = "You must provide an email address"
-EMAIL_INVALID_ERROR = "You must provide a valid email address"
 EMAIL_SENT_MESSAGE = "If the email address you've entered belongs to a Digital Marketplace account, we'll send a link to reset the password."  # noqa
-PASSWORD_EMPTY_ERROR = "You must provide your password"
-PASSWORD_INVALID_ERROR = "Passwords must be between 10 and 50 characters"
-PASSWORD_MISMATCH_ERROR = "The passwords you entered do not match"
-NEW_PASSWORD_EMPTY_ERROR = "You must enter a new password"
-NEW_PASSWORD_CONFIRM_EMPTY_ERROR = "Please confirm your new password"
 
 USER_CREATION_EMAIL_ERROR = "Failed to send user creation email."
 PASSWORD_RESET_EMAIL_ERROR = "Failed to send password reset."
 
 TOKEN_CREATED_BEFORE_PASSWORD_LAST_CHANGED_ERROR = "This password reset link is invalid."
 USER_LINK_EXPIRED_ERROR = "The link you used to create an account may have expired."
+
+
+def has_validation_errors(data, field_name):
+    document = html.fromstring(data)
+
+    form_field = document.xpath('//input[@name="{}"]'.format(field_name))
+    return 'invalid' in form_field[0].classes
 
 
 class TestLogin(BaseApplicationTest):
@@ -47,7 +45,7 @@ class TestLogin(BaseApplicationTest):
     def test_should_show_login_page(self):
         res = self.client.get("/login")
         assert res.status_code == 200
-        assert "Log in to the Digital Marketplace" in res.get_data(as_text=True)
+        assert "Log in to see more" in res.get_data(as_text=True)
 
     def test_should_redirect_to_supplier_dashboard_on_supplier_login(self):
         res = self.client.post("/login", data={
@@ -195,19 +193,21 @@ class TestLogin(BaseApplicationTest):
 
     def test_should_be_validation_error_if_no_email_or_password(self):
         res = self.client.post("/login", data={})
-        content = self.strip_all_whitespace(res.get_data(as_text=True))
+        data = res.get_data(as_text=True)
         assert res.status_code == 400
-        assert self.strip_all_whitespace(EMAIL_EMPTY_ERROR) in content
-        assert self.strip_all_whitespace(PASSWORD_EMPTY_ERROR) in content
+
+        assert has_validation_errors(data, 'email_address')
+        assert has_validation_errors(data, 'password')
 
     def test_should_be_validation_error_if_invalid_email(self):
         res = self.client.post("/login", data={
             'email_address': 'invalid',
             'password': '1234567890'
         })
-        content = self.strip_all_whitespace(res.get_data(as_text=True))
+        data = res.get_data(as_text=True)
         assert res.status_code == 400
-        assert self.strip_all_whitespace(EMAIL_INVALID_ERROR) in content
+        assert has_validation_errors(data, 'email_address')
+        assert not has_validation_errors(data, 'password')
 
 
 class TestResetPassword(BaseApplicationTest):
@@ -236,17 +236,17 @@ class TestResetPassword(BaseApplicationTest):
 
     def test_email_should_not_be_empty(self):
         res = self.client.post("/reset-password", data={})
-        content = self.strip_all_whitespace(res.get_data(as_text=True))
+        data = res.get_data(as_text=True)
         assert res.status_code == 400
-        assert self.strip_all_whitespace(EMAIL_EMPTY_ERROR) in content
+        assert has_validation_errors(data, 'email_address')
 
     def test_email_should_be_valid(self):
         res = self.client.post("/reset-password", data={
             'email_address': 'invalid'
         })
-        content = self.strip_all_whitespace(res.get_data(as_text=True))
+        data = res.get_data(as_text=True)
         assert res.status_code == 400
-        assert self.strip_all_whitespace(EMAIL_INVALID_ERROR) in content
+        assert has_validation_errors(data, 'email_address')
 
     @mock.patch('app.main.views.login.send_email')
     def test_redirect_to_same_page_on_success(self, send_email):
@@ -296,9 +296,10 @@ class TestResetPassword(BaseApplicationTest):
                 'password': '',
                 'confirm_password': ''
             })
+            data = res.get_data(as_text=True)
             assert res.status_code == 400
-            assert NEW_PASSWORD_EMPTY_ERROR in res.get_data(as_text=True)
-            assert NEW_PASSWORD_CONFIRM_EMPTY_ERROR in res.get_data(as_text=True)
+            assert has_validation_errors(data, 'password')
+            assert has_validation_errors(data, 'confirm_password')
 
     def test_password_should_be_over_ten_chars_long(self):
         with self.app.app_context():
@@ -312,8 +313,9 @@ class TestResetPassword(BaseApplicationTest):
                 'password': '123456789',
                 'confirm_password': '123456789'
             })
+            data = res.get_data(as_text=True)
             assert res.status_code == 400
-            assert PASSWORD_INVALID_ERROR in res.get_data(as_text=True)
+            assert has_validation_errors(data, 'password')
 
     def test_password_should_be_under_51_chars_long(self):
         with self.app.app_context():
@@ -329,8 +331,9 @@ class TestResetPassword(BaseApplicationTest):
                 'confirm_password':
                     '123456789012345678901234567890123456789012345678901'
             })
+            data = res.get_data(as_text=True)
             assert res.status_code == 400
-            assert PASSWORD_INVALID_ERROR in res.get_data(as_text=True)
+            assert has_validation_errors(data, 'password')
 
     def test_passwords_should_match(self):
         with self.app.app_context():
@@ -345,7 +348,9 @@ class TestResetPassword(BaseApplicationTest):
                 'confirm_password': '0123456789'
             })
             assert res.status_code == 400
-            assert PASSWORD_MISMATCH_ERROR in res.get_data(as_text=True)
+
+            assert not has_validation_errors(res.get_data(as_text=True), 'password')
+            assert has_validation_errors(res.get_data(as_text=True), 'confirm_password')
 
     def test_redirect_to_login_page_on_success(self):
         with self.app.app_context():
@@ -444,22 +449,14 @@ class TestResetPassword(BaseApplicationTest):
 
 
 class TestLoginFormsNotAutofillable(BaseApplicationTest):
-    def _forms_and_inputs_not_autofillable(
-            self, url, expected_title, expected_lede=None
-    ):
+    def _forms_and_inputs_not_autofillable(self, url, expected_title):
         response = self.client.get(url)
         assert response.status_code == 200
 
         document = html.fromstring(response.get_data(as_text=True))
 
-        page_title = document.xpath(
-            '//main[@id="content"]//h1/text()')[0].strip()
+        page_title = document.xpath('//h1/text()')[0].strip()
         assert expected_title == page_title
-
-        if expected_lede:
-            page_lede = document.xpath(
-                '//main[@id="content"]//p[@class="lede"]/text()')[0].strip()
-            assert expected_lede == page_lede
 
         forms = document.xpath('//main[@id="content"]//form')
 
@@ -474,7 +471,7 @@ class TestLoginFormsNotAutofillable(BaseApplicationTest):
     def test_login_form_and_inputs_not_autofillable(self):
         self._forms_and_inputs_not_autofillable(
             "/login",
-            "Log in to the Digital Marketplace"
+            "Log in to see more"
         )
 
     def test_request_password_reset_form_and_inputs_not_autofillable(self):
@@ -505,7 +502,6 @@ class TestLoginFormsNotAutofillable(BaseApplicationTest):
         self._forms_and_inputs_not_autofillable(
             url,
             "Reset password",
-            "Reset password for email@email.com"
         )
 
 
@@ -534,8 +530,9 @@ class TestBuyersCreation(BaseApplicationTest):
         )
         assert res.status_code == 400
         data = res.get_data(as_text=True)
+
         assert 'Create a buyer account' in data
-        assert 'You must provide a valid email address' in data
+        assert has_validation_errors(data, 'email_address')
 
     def test_should_raise_validation_error_for_email_address_with_two_at_symbols(self):
         res = self.client.post(
@@ -546,7 +543,7 @@ class TestBuyersCreation(BaseApplicationTest):
         assert res.status_code == 400
         data = res.get_data(as_text=True)
         assert 'Create a buyer account' in data
-        assert 'You must provide a valid email address' in data
+        assert has_validation_errors(data, 'email_address')
 
     def test_should_raise_validation_error_for_empty_email_address(self):
         res = self.client.post(
@@ -557,7 +554,7 @@ class TestBuyersCreation(BaseApplicationTest):
         assert res.status_code == 400
         data = res.get_data(as_text=True)
         assert 'Create a buyer account' in data
-        assert 'You must provide an email address' in data
+        assert has_validation_errors(data, 'email_address')
 
     @mock.patch('app.main.views.login.data_api_client')
     def test_should_show_error_page_for_unrecognised_email_domain(self, data_api_client):
@@ -659,10 +656,8 @@ class TestCreateUser(BaseApplicationTest):
 
         assert res.status_code == 200
         for message in [
-            "Create a new Digital Marketplace account",
+            "Create a buyer account",
             "test@email.com",
-            '<input type="submit" class="button-save"  value="Create account" />',
-            '<form autocomplete="off" action="/create-user/%s" method="POST" id="createUserForm">' % token
         ]:
             assert message in res.get_data(as_text=True)
 
@@ -690,11 +685,8 @@ class TestCreateUser(BaseApplicationTest):
         )
 
         assert res.status_code == 400
-        for message in [
-            "You must enter a name",
-            "You must enter a password"
-        ]:
-            assert message in res.get_data(as_text=True)
+        assert has_validation_errors(res.get_data(as_text=True), 'name')
+        assert has_validation_errors(res.get_data(as_text=True), 'password')
 
     def test_should_be_an_error_if_too_short_name_and_password(self):
         token = self._generate_token()
@@ -707,11 +699,8 @@ class TestCreateUser(BaseApplicationTest):
         )
 
         assert res.status_code == 400
-        for message in [
-            "You must enter a name",
-            "Passwords must be between 10 and 50 characters"
-        ]:
-            assert message in res.get_data(as_text=True)
+        assert has_validation_errors(res.get_data(as_text=True), 'name')
+        assert has_validation_errors(res.get_data(as_text=True), 'password')
 
     def test_should_be_an_error_if_too_long_name_and_password(self):
         with self.app.app_context():
@@ -730,12 +719,13 @@ class TestCreateUser(BaseApplicationTest):
 
             assert res.status_code == 400
             for message in [
-                "Names must be between 1 and 255 characters",
-                "Passwords must be between 10 and 50 characters",
-                "Create a new Digital Marketplace account",
+                "Create a buyer account",
                 "test@email.com"
             ]:
                 assert message in res.get_data(as_text=True)
+
+            assert has_validation_errors(res.get_data(as_text=True), 'name')
+            assert has_validation_errors(res.get_data(as_text=True), 'password')
 
     @mock.patch('app.main.views.login.data_api_client')
     def test_should_return_an_error_if_user_exists_and_is_a_buyer(self, data_api_client):
