@@ -1041,7 +1041,7 @@ class TestPublishBrief(BaseApplicationTest):
         page_html = res.get_data(as_text=True)
 
         assert res.status_code == 200
-        assert 'You must set how long your requirements will be open for ' not in page_html
+        assert 'This will show you what the supplier application deadline will be' not in page_html
         assert 'Your requirements will be open for 2 weeks' in page_html
 
     def test_correct_content_is_displayed_if_no_requirementLength_is_set(self, data_api_client):
@@ -1061,7 +1061,7 @@ class TestPublishBrief(BaseApplicationTest):
         page_html = res.get_data(as_text=True)
 
         assert res.status_code == 200
-        assert 'You must set how long your requirements will be open for' in page_html
+        assert 'This will show you what the supplier application deadline will be' in page_html
         assert 'Your requirements will be open for' not in page_html
 
     def test_correct_content_is_displayed_if_requirementLength_is_1_week(self, data_api_client):
@@ -1087,7 +1087,7 @@ class TestPublishBrief(BaseApplicationTest):
 
         assert res.status_code == 200
         assert 'Your requirements will be open for 1 week.' in page_html
-        assert 'You must set how long your requirements will be open for ' not in page_html
+        assert 'This will show you what the supplier application deadline will be' not in page_html
         assert 'Your requirements will be open for 2 weeks' not in page_html
 
     def test_correct_content_is_displayed_if_requirementLength_is_2_weeks(self, data_api_client):
@@ -1113,7 +1113,7 @@ class TestPublishBrief(BaseApplicationTest):
 
         assert res.status_code == 200
         assert 'Your requirements will be open for 2 weeks.' in page_html
-        assert 'You must set how long your requirements will be open for ' not in page_html
+        assert 'This will show you what the supplier application deadline will be' not in page_html
         assert 'Your requirements will be open for 1 week' not in page_html
 
     def test_correct_content_is_displayed_if_requirementLength_is_not_set(self, data_api_client):
@@ -1140,7 +1140,7 @@ class TestPublishBrief(BaseApplicationTest):
 
         assert res.status_code == 200
         assert 'Your requirements will be open for 2 weeks.' not in page_html
-        assert 'You must set how long your requirements will be open for ' in page_html
+        assert 'This will show you what the supplier application deadline will be' in page_html
         assert 'Your requirements will be open for 1 week' not in page_html
         assert not document.xpath('//a[contains(text(), "Set how long your requirements will be live for")]')
 

@@ -40,10 +40,9 @@
         <p>All requirements are published on the Digital Marketplace where anyone can see them.</p>
       </div>
         {% if brief.lotSlug == 'digital-specialists' and not brief.requirementsLength %}
-          <p><strong>You must set how long your requirements will be open for.</strong></p>
-          <p>You must set how long your requirements will be open for so you can see the dates you need to be aware of if you publish today.</p>
+          <p><a href="{{ url_for('.edit_brief_question', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id, section_slug='set-how-long-your-requirements-will-be-live-for', question_id='requirementsLength') }}">Set how long your requirements will be open for</a></p>
           <div class="dmspeak">
-            <p><a href="{{ url_for('.edit_brief_question', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id, section_slug='set-how-long-your-requirements-will-be-live-for', question_id='requirementsLength') }}">Set how long your requirements will be open for</a></p>
+            <p>This will show you what the supplier application deadline will be if you publish your requirements today.</p>
           </div>
         {% else %}
           <p>Your requirements will be open for {{ dates.application_open_weeks }} {{ pluralize(dates.application_open_weeks, "week", "weeks") }}.</p>
@@ -53,12 +52,12 @@
         {% endif %}
     {% endif %}
 
-    <p><strong>Supplier questions will be sent to:</strong></p>
+    <p>Supplier questions will be sent to:</p>
     <div class="dmspeak">
       <p>{{ email_address }}</p>
     </div>
     <div class="dmspeak">
-      <p>Ensure this email address {% if not published %}will be{% else %}is{% endif %} monitored. If you’re away while suppliers can still ask questions, you should make sure your emails are forwarded to a colleague.</p>
+      <p>Make sure this email address {% if not published %}will be{% else %}is{% endif %} monitored. If you’re away while suppliers can still ask questions, you should make sure your emails are forwarded to a colleague.</p>
     </div>
 
     {% if not published and unanswered_required > 0 %}
