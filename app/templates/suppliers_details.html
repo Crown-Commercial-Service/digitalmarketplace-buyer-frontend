@@ -1,7 +1,8 @@
 {% extends "_base_page.html" %}
 
-{% block page_title %}{{ supplier.name }} – Digital Marketplace{% endblock %}
+{% block page_title %}{#{{ supplier.name }}#} Alpha Digital Consulting Group – Digital Marketplace{% endblock %}
 
+{#
 {% block breadcrumb %}
   {%
     with
@@ -27,39 +28,203 @@
     {% include "toolkit/breadcrumb.html" %}
   {% endwith %}
 {% endblock %}
+#}
 
 {% block main_content %}
 
+<a class="see-more" href="#">Back to catalogue of suppliers and capabilities</a>
+
 {%
   with
-  heading = supplier.name,
-  context = "Digital Marketplace supplier",
+  heading = "Chaotic Moon",
   smaller = True
 %}
   {% include "toolkit/page-heading.html" %}
 {% endwith %}
 
-<div class="grid-row supplier-profile">
-    {% if supplier.description or supplier.clients %}
-      <div class="column-two-thirds">
-          <p class="supplier-description">
-              {{ supplier.description }}
-          </p>
-      </div>
-    {% endif %}
+<p>
+  Alpha Digital Consulting Group helps government and businesses with digital strategy, web design, website build, and CMS implementation.
+</p>
 
-    <aside role="complementary" class="column-one-third" aria-label="Supplier contact">
-      {%
-        with
-        organisation_type = "supplier",
-        organisation = supplier.name,
-        telephone = supplier.contactInformation[0].phoneNumber,
-        contact_name = supplier.contactInformation[0].contactName,
-        email_address = supplier.contactInformation[0].email
-      %}
-        {% include "toolkit/contact-details.html" %}
-      {% endwith %}
-    </aside>
-</div>
+<hr>
 
+<ul class="list-horizontal">
+  <li>
+    <div style="flex: 0 0 35%; margin-right: 1.6em;">
+      Supplier capabilities
+    </div>
+    <article>
+      <footer class="tags">
+        <dl>
+          <dt></dt>
+        </dl>
+        <dd>
+          <a href="#">Agile coach</a>
+        </dd>
+        <dd>
+          <a href="#">Business analyst</a>
+        </dd>
+        <dd>
+          <a href="#">Delivery manager</a>
+        </dd>
+        <dd>
+          <a href="#">Developer</a>
+        </dd>
+        <dd>
+          <a href="#">Ethical Hacker</a>
+        </dd>
+        <dd>
+          <a href="#">Digital transformation advisor</a>
+        </dd>
+        <dd>
+          <a href="#">Inclusive designer</a>
+        </dd>
+        <dd>
+          <a href="#">Interaction designer</a>
+        </dd>
+        <dd>
+          <a href="#">Performance analyst</a>
+        </dd>
+        <dd>
+          <a href="#">Product manager</a>
+        </dd>
+        <dd>
+          <a href="#">Service designer</a>
+        </dd>
+        <dd>
+          <a href="#">Technical lead</a>
+        </dd>
+        <dd>
+          <a href="#">User researcher</a>
+        </dd>
+        <dd>
+          <a href="#">Web devops engineer</a>
+        </dd>
+      </footer>
+    </article>
+  </li>
+  <li>
+    <div style="flex: 0 0 35%; margin-right: 1.6em;">
+      Contact
+    </div>
+    <article>
+      <p>
+        <strong>Name</strong><br>
+        Kris Kringle
+      </p>
+      <p>
+        <strong>Email</strong><br>
+        <a href="#">info@alpha.com.au</a>
+      </p>
+      <p>
+        <strong>Phone</strong><br>
+        02 8394 0000
+      </p>
+    </article>
+  </li>
+  <li>
+    <div style="flex: 0 0 35%; margin-right: 1.6em;">
+      Company Details
+    </div>
+    <article>
+      <p>
+        <strong>ABN</strong><br>
+        43 096 505 123
+      </p>
+      <p>
+        <strong>Website</strong><br>
+        <a href="#">www.alphadigital.com.au</a>
+      </p>
+      <p>
+        <strong>LinkedIn profile</strong><br>
+        <a href="#">https://au.linkedin.com/in/alphadigital</a>
+      </p>
+    </article>
+  </li>
+  <li>
+    <div style="flex: 0 0 35%; margin-right: 1.6em;">
+      Address
+    </div>
+    <article>
+      <p>
+        Level 5, 77 Devon Street<br>
+        Surry Hills<br>
+        Sydney<br>
+        NSW 2010
+      </p>
+    </article>
+  </li>
+  <li>
+    <div style="flex: 0 0 35%; margin-right: 1.6em;">
+      References
+    </div>
+    <article>
+      Upcoming information
+    </article>
+  </li>
+  <li>
+    <div style="flex: 0 0 35%; margin-right: 1.6em;">
+      Endorsements
+    </div>
+    <article>
+      Upcoming information
+    </article>
+  </li>
+  <li>
+    <div style="flex: 0 0 35%; margin-right: 1.6em;">
+      Case studies
+    </div>
+    <article>
+      Upcoming information
+    </article>
+  </li>
+  <li>
+    <div style="flex: 0 0 35%; margin-right: 1.6em;">
+      Guide to rates<br>
+      <small>Day rates</small>
+    </div>
+    <article>
+      <table class="content-table">
+        <thead>
+          <tr>
+            <th scope="col">Roles</th>
+            <th scope="col">Junior</th>
+            <th scope="col">Senior</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Agile coach</th>
+            <td>N/A</td>
+            <td>$1000</td>
+          </tr>
+          <tr>
+            <th scope="row">Digital transformation advisor</th>
+            <td>$700</td>
+            <td>$1000</td>
+          </tr>
+          <tr>
+            <th scope="row">Interaction designer</th>
+            <td>$800</td>
+            <td>$1000</td>
+          </tr>
+          <tr>
+            <th scope="row">Performance analyst</th>
+            <td>$800</td>
+            <td>$1000</td>
+          </tr>
+        </tbody>
+      </table>
+    </article>
+  </li>
+</ul>
+
+<p>
+  <strong>What to do next?</strong><br>
+  You can make contact with this supplier <a href="#">info@alpha.com.au</a>
+</p>
+
+<p>
+  <a class="see-more" href="#">Back to catalogue of suppliers and capabilities</a>
+</p>
 {% endblock %}
