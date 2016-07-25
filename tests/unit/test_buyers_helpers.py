@@ -196,21 +196,3 @@ class TestBuyersHelpers(unittest.TestCase):
             {"id": "three"},
             {"id": "five"}
         ]
-
-    def test_get_publishing_dates_formats_time(self):
-        with mock.patch('app.helpers.buyers_helpers.datetime') as mock_date:
-            mock_date.utcnow.return_value = datetime.datetime(2015, 5, 22, 20, 39, 39, 417900)
-
-            assert helpers.buyers_helpers.datetime.utcnow() == datetime.datetime(2015, 5, 22, 20, 39, 39, 417900)
-            assert helpers.buyers_helpers.get_publishing_dates()['closing_time'] == '11:59 pm'
-
-    def test_get_publish_dates_are_correct(self):
-        with mock.patch('app.helpers.buyers_helpers.datetime') as mock_date:
-            mock_date.utcnow.return_value = datetime.datetime(2015, 5, 22, 20, 39, 39, 417900)
-
-            assert helpers.buyers_helpers.get_publishing_dates()['questions_close'] == datetime.datetime(
-                2015, 5, 29, 23, 59, 59)
-            assert helpers.buyers_helpers.get_publishing_dates()['answers_close'] == datetime.datetime(
-                2015, 6, 4, 23, 59, 59)
-            assert helpers.buyers_helpers.get_publishing_dates()['closing_date'] == datetime.datetime(
-                2015, 6, 5, 23, 59, 59)
