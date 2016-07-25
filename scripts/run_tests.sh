@@ -1,3 +1,3 @@
-#!/usr/bin/sh
+#!/bin/sh
 pep8 .
 py.test
