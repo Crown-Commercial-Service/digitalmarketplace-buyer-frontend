@@ -99,4 +99,48 @@
 
 </div>
 </body>
+			{% for result in results %}
+			<div>
+				<h2>{{ result.title }}</h2>
+				<div>{{ result.description }}</div>
+				<div>
+					{% for badge in result.badges %}
+					<div class="{{ badge.css_class }}">{{ badge.label }}</div>
+					{% endfor %}
+				</div>
+				<div>
+					<h3>Service capabilities</h3>
+					{% for category in result.categories %}
+					<div>{{ category.label }}</div>
+					{% endfor %}
+				</div>
+{#				<div>#} {# This is for later stage #}
+{#					<dl>#}
+{#						{% for detail in result.extra_details %}#}
+{#						<dt>{{ detail.key }}</dt>#}
+{#						<dd>{{ detail.value }}</dt>#}
+{#						{% endfor %}#}
+{#					</dl>#}
+{#					<a href="{{ result.url }}">See supplier's profile</a>#}
+{#				</div>#}
+			</div>
+			{% endfor %}
+		</div>
+        <div>
+            <div>
+                page {{ page }} of {{ last_page }}
+            </div>
+
+            <div>
+                <ul>
+                    {% for pg in pages %}
+                        <li class="{% if pg == page %}current{% endif %}">
+                            <a href="?page={{ pg }}{% for cat in cat_list %}&category={{ cat }}{% endfor %}">{{ pg }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            
+        </div>
+	</body>
 </html>
