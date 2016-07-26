@@ -1,6 +1,6 @@
 {% extends "_base_page.html" %}
 
-{% block page_title %}{#{{ supplier.name }}#} Alpha Digital Consulting Group – Digital Marketplace{% endblock %}
+{% block page_title %}{{ supplier.name }} – Digital Marketplace{% endblock %}
 
 {#
 {% block breadcrumb %}
@@ -36,15 +36,17 @@
 
 {%
   with
-  heading = "Chaotic Moon",
+  heading = supplier.name,
   smaller = True
 %}
   {% include "toolkit/page-heading.html" %}
 {% endwith %}
 
+{% if supplier.description %}
 <p>
-  Alpha Digital Consulting Group helps government and businesses with digital strategy, web design, website build, and CMS implementation.
+  {{ supplier.description }}
 </p>
+{% endif %}
 
 <hr>
 
@@ -58,51 +60,15 @@
         <dl>
           <dt></dt>
         </dl>
+        {% for category in supplier_categories|sort() %}
         <dd>
-          <a href="#">Agile coach</a>
+          <a href="#">{{ category }}</a>
         </dd>
-        <dd>
-          <a href="#">Business analyst</a>
-        </dd>
-        <dd>
-          <a href="#">Delivery manager</a>
-        </dd>
-        <dd>
-          <a href="#">Developer</a>
-        </dd>
-        <dd>
-          <a href="#">Ethical Hacker</a>
-        </dd>
-        <dd>
-          <a href="#">Digital transformation advisor</a>
-        </dd>
-        <dd>
-          <a href="#">Inclusive designer</a>
-        </dd>
-        <dd>
-          <a href="#">Interaction designer</a>
-        </dd>
-        <dd>
-          <a href="#">Performance analyst</a>
-        </dd>
-        <dd>
-          <a href="#">Product manager</a>
-        </dd>
-        <dd>
-          <a href="#">Service designer</a>
-        </dd>
-        <dd>
-          <a href="#">Technical lead</a>
-        </dd>
-        <dd>
-          <a href="#">User researcher</a>
-        </dd>
-        <dd>
-          <a href="#">Web devops engineer</a>
-        </dd>
+        {% endfor %}
       </footer>
     </article>
   </li>
+  {% for contact in supplier.contacts %}
   <li>
     <div style="flex: 0 0 35%; margin-right: 1.6em;">
       Contact
@@ -110,18 +76,19 @@
     <article>
       <p>
         <strong>Name</strong><br>
-        Kris Kringle
+        {{ contact.name }}
       </p>
       <p>
         <strong>Email</strong><br>
-        <a href="#">info@alpha.com.au</a>
+        <a href="#">{{ contact.email }}</a>
       </p>
       <p>
         <strong>Phone</strong><br>
-        02 8394 0000
+        {{ contact.phone }}
       </p>
     </article>
   </li>
+  {% endfor %}
   <li>
     <div style="flex: 0 0 35%; margin-right: 1.6em;">
       Company Details
@@ -129,16 +96,20 @@
     <article>
       <p>
         <strong>ABN</strong><br>
-        43 096 505 123
+        {{ supplier.abn }}
       </p>
+      {% if supplier.website %}
       <p>
         <strong>Website</strong><br>
-        <a href="#">www.alphadigital.com.au</a>
+        <a href="{{ supplier.website }}">{{ supplier.website }}</a>
       </p>
+      {% endif %}
+      {% for link in supplier.extraLinks %}
       <p>
-        <strong>LinkedIn profile</strong><br>
-        <a href="#">https://au.linkedin.com/in/alphadigital</a>
+        <strong>{{ link.label }}</strong><br>
+        <a href="{{ link.url }}">{{ link.url }}</a>
       </p>
+      {% endfor %}
     </article>
   </li>
   <li>
@@ -147,21 +118,24 @@
     </div>
     <article>
       <p>
-        Level 5, 77 Devon Street<br>
-        Surry Hills<br>
-        Sydney<br>
-        NSW 2010
+        {{ supplier.address.addressLine }}<br>
+        {{ supplier.address.suburb }}<br>
+        {{ supplier.address.state }} {{ supplier.address.postalCode }}
       </p>
     </article>
   </li>
+  {% if supplier.references %}
   <li>
     <div style="flex: 0 0 35%; margin-right: 1.6em;">
       References
     </div>
+    {% for reference in supplier.references %}
     <article>
       Upcoming information
     </article>
+    {% endfor %}
   </li>
+  {% endif %}
   <li>
     <div style="flex: 0 0 35%; margin-right: 1.6em;">
       Endorsements
@@ -188,31 +162,16 @@
         <thead>
           <tr>
             <th scope="col">Roles</th>
-            <th scope="col">Junior</th>
-            <th scope="col">Senior</th>
+            <th scope="col">Rate</th>
           </tr>
         </thead>
         <tbody>
+          {% for price in supplier.prices|sort(attribute='serviceRole.role')|sort(attribute='serviceRole.category') %}
           <tr>
-            <th scope="row">Agile coach</th>
-            <td>N/A</td>
-            <td>$1000</td>
+            <th scope="row">{{ price.serviceRole.role }}</th>
+            <td>${{ price.dailyRate }}</td>
           </tr>
-          <tr>
-            <th scope="row">Digital transformation advisor</th>
-            <td>$700</td>
-            <td>$1000</td>
-          </tr>
-          <tr>
-            <th scope="row">Interaction designer</th>
-            <td>$800</td>
-            <td>$1000</td>
-          </tr>
-          <tr>
-            <th scope="row">Performance analyst</th>
-            <td>$800</td>
-            <td>$1000</td>
-          </tr>
+          {% endfor %}
         </tbody>
       </table>
     </article>
