@@ -4,7 +4,7 @@
 <!--[if gt IE 8]><!--><html lang="{{ html_lang|default('en') }}"><!--<![endif]-->
 <head>
   <meta charset="utf-8" />
-  <title>{% block page_title %}GOV.AU - The best place to find government services and information{% endblock %}</title>
+  <title>{% block page_title %}Marketplace - The place to do ICT business with government{% endblock %}</title>
 
   <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.16/webfont.js"></script>
   <script>
@@ -26,6 +26,8 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
+  <script type="text/javascript" src="https://gov-au-ui-kit.apps.staging.digital.gov.au/latest/ui-kit.min.js"></script>
+
 </head>
 
 <body class="{% block body_classes %}{% endblock %}">
@@ -43,11 +45,39 @@
     <section class="govau--header">
       <div class="wrapper">
         <div class="govau--logo">
-          <a href="{{ homepage_url|default('/digitalmarketplace') }}" title="{{ logo_link_title|default('Go to the Digital Marketplace homepage') }}" class="logo">Digital Marketplace</a> <span class="badge--beta">beta</span>
+          <a href="{{ homepage_url|default('/') }}" title="{{ logo_link_title|default('Go to the GOV.AU homepage') }}" class="logo">GOV.AU</a>
         </div>
       </div>
     </section>
-
+    <section class="marketplace--header">
+      <div class="wrapper">
+        {% if url_for('.index') != request.path %}
+        <div class="marketplace--logo">
+          <a href="{{ url_for('.index') }}" title="{{ logo_link_title|default('Go to the Marketplace homepage') }}" class="logo">Marketplace</a> <span class="badge--beta">beta</span>
+        </div>
+        {% endif %}
+        <div class="feedback" tabindex="1">
+          <ul class="inline-links--inverted">
+            {% if not current_user.is_authenticated() %}
+            <li><a href="{{ url_for('.create_buyer_account') }}">Register</a></li>
+            <li><a href="{{ url_for('.render_login') }}">Log in</a></li>
+            {% else %}
+            <li><a href="{{ url_for('.logout') }}>Log out</a></li>
+            {% endif %}
+          </ul>
+        </div>
+        <nav class="global-nav" aria-label="global navigation" tabindex="2">
+          <ul>
+            <li><a href="{{ url_for('.supplier_search') }}">Catalogue</a></li>
+            <li><a href="{{ url_for('.ideation') }}">Ideation</a></li>
+            <li><a href="{{ url_for('.new_seller') }}">New seller</a></li>
+            <li><a href="{{ url_for('.pitch') }}">Pitch</a></li>
+            <li><a href="{{ url_for('.about_us') }}">About</a></li>
+            <li><a href="{{ url_for('.roles_and_services') }}">Roles and services</a></li>
+          </ul>
+        </nav>
+      </div>
+    </section>
     {% block hero %}{% endblock %}
 
   </header>
@@ -60,33 +90,45 @@
 
   <footer role="contentinfo">
     <div class="wrapper">
+      <section class="footer-top">
+        <nav>
+          <ul>
+            <li><h3>About</h3></li>
+            <li><a href="{{ url_for('.about_us') }}">About us</a></li>
+            <li><a href="{{ url_for('.contact_us') }}">Contact us</a></li>
+            <li><a href="{{ url_for('.terms_of_use') }}">Terms of Use</a></li>
+            <li><a href="{{ url_for('.privacy_policy') }}">Privacy Policy</a></li>
+          </ul>
+          <ul>
+            <li><h3>Using the Marketplace</h3></li>
+            <li><a href="{{ url_for('.index') }}">Home</a></li>
+            <li><a href="{{ url_for('.supplier_search') }}">Marketplace catalogue</a></li>
+            <li><a href="{{ url_for('.roles_and_services') }}">Roles and services</a></li>
+            <li><a href="{{ url_for('.buyers_guide') }}">Buyers' guide</a></li>
+          </ul>
+          <ul>
+            <li><h3>Marketplace brought to you by the <a href="//dto.gov.au">DTO</a></h3></li>
+            <li><a href="//dto.gov.au/blog/">DTO blog</a></li>
+            <li><a href="//twitter.com/DTO">DTO twitter</a></li>
+            <li><a href="//github.com/AusDTO">DTO github</a></li>
+          </ul>
+          <ul>
+            <li><h3>DTO resources</h3></li>
+            <li><a href="//dto.gov.au/our-work/">Our work</a></li>
+            <li><a href="//dto.gov.au/standard/">Digital Service Standard</a></li>
+            <li><a href="//dto.gov.au/design-guides/">Design guides</a></li>
+          </ul>
+        </nav>
+      </section>
       <section>
         <div class="footer-logo">
           <img alt="Australian Government Coat of Arms" src="{{ asset_path }}images/gov-au-coat-of-arms-white01.svg">
         </div>
-        <div class="footer-links">
-          <nav>
-            <ul>
-              <li><a href="javascript:void(0)">Example global link</a></li>
-              <li><a href="javascript:void(0)">Example global link</a></li>
-              <li><a href="javascript:void(0)">Example global link</a></li>
-            </ul>
-            <ul>
-              <li><a href="javascript:void(0)">Example global link</a></li>
-              <li><a href="javascript:void(0)">Example global link</a></li>
-              <li><a href="javascript:void(0)">Example global link</a></li>
-            </ul>
-            <ul>
-              <li><a href="javascript:void(0)">Example global link</a></li>
-              <li><a href="javascript:void(0)">Example global link</a></li>
-              <li><a href="javascript:void(0)">Example global link</a></li>
-            </ul>
-          </nav>
-          <p>&copy; Commonwealth of Australia</p>
-          </div>
-        </section>
-      </div>
-    </footer>
+        <p>&copy; Commonwealth of Australia <br>
+        <a href="https://github.com/AusDTO/gov-au-ui-kit/blob/master/LICENSE.md">Licensed under the MIT License.</a></p>
+      </section>
+    </div>
+  </footer>
 
   </body>
   </html>
