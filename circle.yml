@@ -1,11 +1,15 @@
-## Customize test commands
+machine:
+  timezone:
+    Australia/Sydney
 dependencies:
   override:
-    - npm install
-    - pip install -r requirements_for_test.txt
+    - ./scripts/ci_build.sh
 test:
-  pre:
-    - npm run frontend-build:production
   override:
-    - pep8 .
-    - py.test
+    - ./scripts/run_tests.sh
+
+deployment:
+  development:
+    branch: master
+    commands:
+      - ./scripts/ci_deploy.sh

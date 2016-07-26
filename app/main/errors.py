@@ -2,7 +2,7 @@
 
 from flask import render_template
 from . import main
-from dmapiclient import APIError
+from ..api_client.error import APIError
 
 
 @main.app_errorhandler(APIError)
