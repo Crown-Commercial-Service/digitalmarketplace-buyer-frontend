@@ -6,7 +6,6 @@ from flask_login import current_user
 from flask import abort, current_app, flash, redirect, render_template, request, session, url_for, get_flashed_messages
 from flask_login import logout_user, login_user
 
-from dmapiclient import HTTPError
 from dmapiclient.audit import AuditTypes
 from dmutils.user import User
 from dmutils.email import (
@@ -18,6 +17,7 @@ from ..forms.auth_forms import LoginForm, EmailAddressForm, ChangePasswordForm, 
 from ...helpers import hash_email
 from ...helpers.login_helpers import redirect_logged_in_user
 from ... import data_api_client
+from ...api_client.error import HTTPError
 
 
 @main.route('/login', methods=["GET"])
