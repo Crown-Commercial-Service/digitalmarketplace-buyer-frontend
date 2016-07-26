@@ -5,7 +5,7 @@
 
   <li>
         {% if current_lot %}
-        <a href="{{ url_for('.search', q=search_keywords) }}">All categories</a>
+        <a href="{{ url_for('.search_services', q=search_keywords) }}">All categories</a>
         {% else %}
         All categories
         {% endif %}
@@ -15,7 +15,7 @@
       <li>{{ lot.label }}</li>
     {% else %}
       <li>
-        <a href="{{ url_for('.search', q=search_keywords, lot=lot.lot) }}">{{ lot.label }}</a>
+        <a href="{{ url_for('.search_services', q=search_keywords, lot=lot.lot) }}">{{ lot.label }}</a>
       </li>
     {% endif %}
   {% endfor %}

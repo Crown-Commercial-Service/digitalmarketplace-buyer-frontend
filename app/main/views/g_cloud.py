@@ -113,19 +113,25 @@ def get_service_by_id(service_id):
 
 
 @main.route('/g-cloud/search')
-def search():
-    content_builder = content_loader.get_builder('g-cloud-6', 'search_filters')
+def search_services():
+    # the bulk of the possible filter parameters are defined through the content loader. they're all boolean and the
+    # search api uses the same "question" labels as the content for its attributes, so we can really use those labels
+    # verbatim. It also means we can use their human-readable names as defined in the content
+    content_manifest = content_loader.get_manifest('g-cloud-6', 'search_filters')
+    # filters - a seq of dicts describing each parameter group
     filters = filters_for_lot(
         get_lot_from_request(request),
-        content_builder
+        content_manifest
     )
 
-    response = search_api_client.search_services(
-        **build_search_query(request, filters, content_builder)
+    search_api_response = search_api_client.search_services(
+        **build_search_query(request, filters, content_manifest)
     )
 
-    search_results_obj = SearchResults(response)
+    search_results_obj = SearchResults(search_api_response)
 
+    # the search api doesn't supply its own pagination information: use this `pagination` function to figure out what
+    # links to show
     pagination_config = pagination(
         search_results_obj.total,
         current_app.config["DM_SEARCH_PAGE_SIZE"],
@@ -133,16 +139,17 @@ def search():
     )
 
     search_summary = SearchSummary(
-        response['meta']['total'],
+        search_api_response['meta']['total'],
         clean_request_args(request.args, filters),
         filters
     )
 
+    # annotate `filters` with their values as set in this request for re-rendering purposes.
     set_filter_states(filters, request)
     current_lot = get_lot_from_request(request)
 
     return render_template(
-        'search.html',
+        'search/services.html',
         current_lot=current_lot,
         current_lot_label=get_label_for_lot_param(current_lot) if current_lot else None,
         filters=filters,
