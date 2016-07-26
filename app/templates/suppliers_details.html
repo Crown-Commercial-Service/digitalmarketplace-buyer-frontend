@@ -30,9 +30,10 @@
 {% endblock %}
 #}
 
+{% block body_classes %} content-details {% endblock %}
 {% block main_content %}
 
-<a class="see-more" href="#">Back to catalogue of suppliers and capabilities</a>
+<a class="go-back" href="#">Back</a>
 
 {%
   with
@@ -52,28 +53,24 @@
 
 <ul class="list-horizontal">
   <li>
-    <div style="flex: 0 0 35%; margin-right: 1.6em;">
-      Supplier capabilities
-    </div>
+    <h2>Supplier capabilities</h2>
     <article>
       <footer class="tags">
-        <dl>
-          <dt></dt>
+        <dl class="visually-hidden">
+          <dt>Capabilities</dt>
         </dl>
         {% for category in supplier_categories|sort() %}
         <dd>
-          <a href="#">{{ category }}</a>
+          <a href="#" class="disabled">{{ category }}</a>
         </dd>
         {% endfor %}
       </footer>
     </article>
   </li>
-  {% for contact in supplier.contacts %}
   <li>
-    <div style="flex: 0 0 35%; margin-right: 1.6em;">
-      Contact
-    </div>
+    <h2>Contact</h2>
     <article>
+      {% for contact in supplier.contacts %}
       <p>
         <strong>Name</strong><br>
         {{ contact.name }}
@@ -86,13 +83,14 @@
         <strong>Phone</strong><br>
         {{ contact.phone }}
       </p>
+      {% if not loop.last %}
+      <hr>
+      {% endif %}
+      {% endfor %}
     </article>
   </li>
-  {% endfor %}
   <li>
-    <div style="flex: 0 0 35%; margin-right: 1.6em;">
-      Company Details
-    </div>
+    <h2>Company Details</h2>
     <article>
       <p>
         <strong>ABN</strong><br>
@@ -113,9 +111,7 @@
     </article>
   </li>
   <li>
-    <div style="flex: 0 0 35%; margin-right: 1.6em;">
-      Address
-    </div>
+    <h2>Address</h2>
     <article>
       <p>
         {{ supplier.address.addressLine }}<br>
@@ -126,9 +122,7 @@
   </li>
   {% if supplier.references %}
   <li>
-    <div style="flex: 0 0 35%; margin-right: 1.6em;">
-      References
-    </div>
+    <h2>References</h2>
     {% for reference in supplier.references %}
     <article>
       Upcoming information
@@ -137,26 +131,19 @@
   </li>
   {% endif %}
   <li>
-    <div style="flex: 0 0 35%; margin-right: 1.6em;">
-      Endorsements
-    </div>
+    <h2>Endorsements</h2>
     <article>
       Upcoming information
     </article>
   </li>
   <li>
-    <div style="flex: 0 0 35%; margin-right: 1.6em;">
-      Case studies
-    </div>
+    <h2>Case studies</h2>
     <article>
       Upcoming information
     </article>
   </li>
   <li>
-    <div style="flex: 0 0 35%; margin-right: 1.6em;">
-      Guide to rates<br>
-      <small>Day rates</small>
-    </div>
+    <h2>Guide to rates<br><small>Day rates</small></h2>
     <article>
       <table class="content-table">
         <thead>
@@ -178,12 +165,9 @@
   </li>
 </ul>
 
-<p>
-  <strong>What to do next?</strong><br>
-  You can make contact with this supplier <a href="#">info@alpha.com.au</a>
-</p>
+<hr>
 
 <p>
-  <a class="see-more" href="#">Back to catalogue of suppliers and capabilities</a>
+  <a class="go-back" href="#">Back to catalogue of suppliers and capabilities</a>
 </p>
 {% endblock %}

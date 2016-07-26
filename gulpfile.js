@@ -6,6 +6,7 @@ var filelog = require('gulp-filelog');
 var include = require('gulp-include');
 var jasmine = require('gulp-jasmine-phantom');
 var sourcemaps = require('gulp-sourcemaps');
+var svg2png = require('gulp-svg2png');
 
 // Paths
 var environment;
@@ -20,6 +21,11 @@ var staticFolder = repoRoot + 'app/static';
 var govukTemplateFolder = repoRoot + 'bower_components/govuk_template';
 var govukTemplateAssetsFolder = govukTemplateFolder + '/assets';
 var govukTemplateLayoutsFolder = govukTemplateFolder + '/views/layouts';
+var paths = {
+    assetsDir: assetsFolder + '/images',
+    images: assetsFolder + '/images/icons/**/*.+(png|svg|jpg)',
+    outputAssets: staticFolder + '/images',
+};
 
 // JavaScript paths
 var jsSourceFile = assetsFolder + '/javascripts/application.js';
@@ -228,6 +234,17 @@ gulp.task(
   )
 );
 
+gulp.task('ui-kit.img', function() {
+  return gulp.src(paths.images)
+    .pipe(gulp.dest(paths.outputAssets));
+});
+
+gulp.task('svg2png', ['ui-kit.img'], function () {
+  return gulp.src(paths.assetsDir + '/icons/*.svg')
+    .pipe(svg2png())
+    .pipe(gulp.dest(paths.outputAssets + '/icons/'));
+});
+
 gulp.task(
   'copy:govuk_template',
   copyFactory(
@@ -298,7 +315,8 @@ gulp.task(
     'copy:dm_toolkit_assets:templates',
     'copy:images',
     'copy:svg',
-    'copy:govuk_template'
+    'copy:govuk_template',
+    'svg2png'
   ]
 );
 
