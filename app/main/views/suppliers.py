@@ -29,6 +29,20 @@ def is_alpha(character):
     return re.search(reg, character)
 
 
+@main.route('/suppliers/<int:code>')
+def get_supplier(code):
+    try:
+        api_result = data_api_client.get_supplier(code)
+    except APIError as e:
+        if e.status_code == 404:
+            abort(404, "Supplier with code {} does not exist".format(code))
+
+    return render_template(
+        'suppliers_details.html',
+        supplier=api_result['supplier']
+    )
+
+
 @main.route('/g-cloud/suppliers')
 def suppliers_list_by_prefix():
     api_prefix = process_prefix(
