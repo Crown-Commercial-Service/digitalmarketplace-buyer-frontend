@@ -152,4 +152,3 @@ def supplier_search():
         num_pages=pages[-1],
         category_list=category_list
     )
-
