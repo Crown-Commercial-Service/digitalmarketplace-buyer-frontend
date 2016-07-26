@@ -2,16 +2,19 @@
 
   article {
     h1 {
-      margin: $base-spacing/2 0 0;
+      font-size: rem(30);
+      margin: $base-spacing/2 0 0.4em;
+      @include media($tablet) {
+        font-size: rem(44);
+      }
     }
   }
 
   h2 {
-    font-size: rem(24);
+    font-size: rem(22);
     font-weight: $heading-font-weight;
 
     @include media($tablet) {
-      font-size: rem(26);
       flex: 0 0 21.5%;
       margin-right: $base-spacing;
 
