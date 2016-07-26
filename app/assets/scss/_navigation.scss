@@ -1,11 +1,21 @@
 .marketplace--header {
 
+  .global-nav-toggle {
+    font-size: rem(17);
+    font-weight: $base-font-weight;
+  }
+
+
   [class^='inline-links'] {
-    padding: $tiny-spacing*.95 0;
+    padding: $tiny-spacing*1.375 0;
 
     li {
       display: inline-block;
-      margin: 0 $tiny-spacing;
+      margin: 0;
+
+      &:not(:last-child) {
+        margin-right: $base-spacing*.8125;
+      }
     }
   }
 }

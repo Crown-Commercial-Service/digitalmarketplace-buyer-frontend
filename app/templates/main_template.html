@@ -56,24 +56,24 @@
           <a href="{{ url_for('main.index') }}" title="{{ logo_link_title|default('Go to the Marketplace homepage') }}" class="logo">Marketplace</a> <span class="badge--beta">beta</span>
         </div>
         {% endif %}
-        <div class="feedback" tabindex="1">
+        <div class="feedback">
           <ul class="inline-links--inverted">
             {% if not current_user.is_authenticated() %}
-            <li><a href="url_for('main.create_buyer_account') }}">Register</a></li>
-            <li><a href="url_for('main.render_login') }}">Log in</a></li>
+            <li><a href="{{ url_for('main.create_buyer_account') }}">Sign up</a></li>
+            <li><a href="{{ url_for('main.render_login') }}">Log in</a></li>
             {% else %}
-            <li><a href="url_for('main.logout') }}>Log out</a></li>
+            <li><a href="{{ url_for('main.logout') }}">Log out</a></li>
             {% endif %}
           </ul>
         </div>
         <nav class="global-nav" aria-label="global navigation" tabindex="2">
           <ul>
-            <li><a href="url_for('main.supplier_search') }}">Catalogue</a></li>
-            <li><a href="url_for('main.ideation') }}">Ideation</a></li>
-            <li><a href="url_for('main.new_seller') }}">New seller</a></li>
-            <li><a href="url_for('main.pitch') }}">Pitch</a></li>
-            <li><a href="url_for('main.about_us') }}">About</a></li>
-            <li><a href="url_for('main.roles_and_services') }}">Roles and services</a></li>
+            <li><a href="{{ url_for('main.supplier_search') }}">Catalogue</a></li>
+            <li><a href="{{ url_for('main.ideation') }}">Ideation</a></li>
+            <li><a href="{{ url_for('main.new_seller') }}">New seller</a></li>
+            <li><a href="{{ url_for('main.pitch') }}">Pitch</a></li>
+            <li><a href="{{ url_for('main.about_us') }}">About</a></li>
+            <li><a href="{{ url_for('main.roles_and_services') }}">Roles and services</a></li>
           </ul>
         </nav>
       </div>
@@ -94,17 +94,17 @@
         <nav>
           <ul>
             <li><h3>About</h3></li>
-            <li><a href="url_for('main.about_us') }}">About us</a></li>
-            <li><a href="url_for('main.contact_us') }}">Contact us</a></li>
-            <li><a href="url_for('main.terms_of_use') }}">Terms of Use</a></li>
-            <li><a href="url_for('main.privacy_policy') }}">Privacy Policy</a></li>
+            <li><a href="{{ url_for('main.about_us') }}">About us</a></li>
+            <li><a href="{{ url_for('main.contact_us') }}">Contact us</a></li>
+            <li><a href="{{ url_for('main.terms_of_use') }}">Terms of Use</a></li>
+            <li><a href="{{ url_for('main.privacy_policy') }}">Privacy Policy</a></li>
           </ul>
           <ul>
             <li><h3>Using the Marketplace</h3></li>
-            <li><a href="url_for('main.index') }}">Home</a></li>
-            <li><a href="url_for('main.supplier_search') }}">Marketplace catalogue</a></li>
-            <li><a href="url_for('main.roles_and_services') }}">Roles and services</a></li>
-            <li><a href="url_for('main.buyers_guide') }}">Buyers' guide</a></li>
+            <li><a href="{{ url_for('main.index') }}">Home</a></li>
+            <li><a href="{{ url_for('main.supplier_search') }}">Marketplace catalogue</a></li>
+            <li><a href="{{ url_for('main.roles_and_services') }}">Roles and services</a></li>
+            <li><a href="{{ url_for('main.buyers_guide') }}">Buyers' guide</a></li>
           </ul>
           <ul>
             <li><h3>Marketplace brought to you by the <a href="//dto.gov.au">DTO</a></h3></li>
