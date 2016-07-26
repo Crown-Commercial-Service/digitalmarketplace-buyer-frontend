@@ -1,6 +1,6 @@
-<section class="hero">
+<section class="hero{% if url_for('.index') == request.path %}-main{% endif %}">
   <div class="wrapper">
-    <span class="site-title">Welcome to the Digital Marketplace</span>
-    <p class="tagline">The Digital Marketplace will make it easier for government departments to view and connect with suppliers of ICT products and services. You can use the Marketplace to research and shortlist potential suppliers or post opportunities for products and services you need.</p>
+    <h1>MARKETPLACE <span class="badge--beta">beta</span></h1>
+    <p class="tagline">The place to do ICT business with government.</p>
   </div>
 </section>

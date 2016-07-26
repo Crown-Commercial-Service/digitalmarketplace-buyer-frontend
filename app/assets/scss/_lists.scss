@@ -1,8 +1,22 @@
-.list-vertical--fourths>li p,
-.list-vertical--thirds>li p,
-.list-vertical>li p {
-  @include media($desktop) {
-    min-height: auto;
+.home {
+  h2 {
+    &:first-of-type {
+      @include media($tablet) {
+        margin-top: 0;
+      }
+    }
+  }
+  .list-vertical {
+
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+
+    > li {
+      border-width: 0;
+      border-left: solid 1px $border-colour;
+      padding: 0 $base-spacing;
+    }
   }
 }
 

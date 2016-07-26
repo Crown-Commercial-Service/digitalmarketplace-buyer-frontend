@@ -10,15 +10,50 @@
 
 {% block main_content %}
 
-  <h2>Find people for digital projects in the public sector</h2>
-  <p><a href="login" role="button">Log in to find digital specialists</a> or <a href="buyers/create">create a buyer account</a>.</p>
-
-  <hr>
-
-  <h2>Become a digital service supplier</h2>
-  <p>If you are interested in joining the Digital Marketplace in the future or would like more information, please email <a href="mailto:enquiries@digitalmarketplace.gov.au">enquiries@digitalmarketplace.gov.au</a>.</p>
-
-  <h2>Explore challenges, ideas and opportunities to partner</h2>
-  <p>We want to connect government buyers with future suppliers. sTo help help with this process, we would like to hold hackathons and open  challenges for suppliers to register for. If you're interested in hearing more about this, please email <a href="mailto:enquiries@digitalmarketplace.gov.au">enquiries@digitalmarketplace.gov.au</a>.</p>
+  <h2>Government buyers</h2>
+  <ul class="list-vertical">
+    <li>
+      <article>
+        <h3><a href="{{ url_for('.supplier_search') }}">I know the resource I need</a></h3>
+        <p>Find ICT partners to deliver an outcome for your project.</p>
+      </article>
+    </li>
+    <li>
+      <article>
+        <h3><a href="{{ url_for('.ideation') }}">I have a problem to solve</a></h3>
+        <p>Challenge the market to develop new ideas based on a brief or data.</p>
+      </article>
+    </li>
+  </ul>
+  <h2>Sellers</h2>
+  <ul class="list-vertical">
+    <li>
+      <article>
+        <h3><a href="{{ url_for('.new_seller') }}">I want to sell my services</a></h3>
+        <p>List your product or service and build a profile in the Marketplace.</p>
+      </article>
+    </li>
+    <li>
+      <article>
+        <h3><a href="{{ url_for('.pitch') }}">I have an idea to pitch</a></h3>
+        <p>Get in touch to discuss your idea for transforming a government service.</p>
+      </article>
+    </li>
+  </ul>
+  <h2>Learn more</h2>
+   <ul class="list-vertical">
+     <li>
+      <article>
+        <h3><a href="{{ url_for('.about_us') }}">About the Marketplace</a></h3>
+        <p>Find out our purpose, our process and how we comply with regulations.</p>
+      </article>
+     </li>
+     <li>
+      <article>
+        <h3><a href="{{ url_for('.roles_and_services') }}">What roles and services are available</a></h3>
+        <p>Take a closer look at the range of expertise available and range of daily rates.</p>
+      </article>
+     </li>
+   </ul> 
 
 {% endblock %}

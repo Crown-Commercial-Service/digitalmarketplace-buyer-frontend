@@ -33,9 +33,9 @@ class TestHomepageBrowseList(BaseApplicationTest):
         ]
 
         assert headers == [
-            'Find people for digital projects in the public sector',
-            'Become a digital service supplier',
-            'Explore challenges, ideas and opportunities to partner',
+            'Government buyers',
+            'Sellers',
+            'Learn more',
         ]
 
 

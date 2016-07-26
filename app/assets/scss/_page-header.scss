@@ -1,8 +1,102 @@
-.hero {
-  .site-title {
-    // @include span-columns(8);
+.govau--header {
+  background-color: $darker-aqua;
+  padding: $small-spacing 0;
+
+  .logo {
+    font-size: 1.375rem;
   }
+}
+
+.marketplace--header {
+  position: relative;
+  padding: $medium-spacing 0 ($base-spacing * 3);
+  padding-bottom: $medium-spacing;
+  margin-bottom: 0;
+  background-color: $aqua;
+  color: $body-inverted-text-colour;
+
+  @include media($tablet) {
+    padding-bottom: $medium-spacing;
+  }
+
+  .marketplace--logo {
+    float: left;
+
+    @include media($tablet) {
+      padding-bottom: 0;
+    }
+  }
+
+  .logo {
+    @extend h3;
+
+    padding-bottom: 2px;
+    border-bottom: none;
+    color: $body-inverted-text-colour;
+    font-family: $base-sans-serif;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+
+    &:hover,
+    &:focus {
+      border-bottom: 1px;
+    }
+  }
+
+  [class^='badge'] {
+    vertical-align: text-bottom;
+    margin-left: $tiny-spacing;
+  }
+}
+
+.hero {
+  padding: ($base-spacing * 2) 0;
+  margin-bottom: 0;
+  background-color: $hero-bg-inverted-colour;
+  color: $body-text-colour;
+
+  .site-title {
+    @extend h1;
+
+    margin: $tiny-spacing 0;
+    color: $body-text-colour;
+  }
+
   .tagline {
-    // @include span-columns(12);
+    @extend h4;
+    font-weight: $base-font-weight;
+  }
+}
+
+.hero-main {
+  padding: 0 0 ($base-spacing * 3.25);
+  margin-bottom: 0;
+  background-color: $hero-bg-colour;
+  color: $body-inverted-text-colour;
+
+  h1 {
+    margin: 0 0 $tiny-spacing/2;
+    color: $body-inverted-text-colour;
+
+      @include media($tablet) {
+        font-size: 3.75rem;
+      }
+  }
+
+  .tagline {
+    @extend h4;
+    font-weight: $base-font-weight;
+
+    @include media($tablet) {
+      font-size: 1.5rem;
+      margin-top: 0;
+    }
+  }
+
+  [class^='badge'] {
+    @include media($tablet) {
+      vertical-align: text-top;
+    }
   }
 }

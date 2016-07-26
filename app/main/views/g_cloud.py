@@ -36,11 +36,6 @@ def framework_g_cloud():
     return redirect('https://www.gov.uk/guidance/the-g-cloud-framework-on-the-digital-marketplace', 301)
 
 
-@main.route('/buyers-guide')
-def buyers_guide():
-    return redirect('https://www.gov.uk/guidance/g-cloud-buyers-guide', 301)
-
-
 @main.route('/suppliers-guide')
 def suppliers_guide():
     return redirect('/g-cloud/suppliers-guide', 301)

@@ -64,6 +64,51 @@ def terms_and_conditions():
     return render_template('content/terms-and-conditions.html')
 
 
+@main.route('/ideation')
+def ideation():
+    return render_template('content/ideation.html')
+
+
+@main.route('/new-seller')
+def new_seller():
+    return render_template('content/new-seller.html')
+
+
+@main.route('/pitch')
+def pitch():
+    return render_template('content/pitch.html')
+
+
+@main.route('/about-us')
+def about_us():
+    return render_template('content/about-us.html')
+
+
+@main.route('/roles-and-services')
+def roles_and_services():
+    return render_template('content/roles-and-services.html')
+
+
+@main.route('/contact-us')
+def contact_us():
+    return render_template('content/contact-us.html')
+
+
+@main.route('/terms-of-use')
+def terms_of_use():
+    return render_template('content/terms-of-use.html')
+
+
+@main.route('/privacy-policy')
+def privacy_policy():
+    return render_template('content/privacy-policy.html')
+
+
+@main.route('/buyers-guide')
+def buyers_guide():
+    return render_template('content/buyers-guide.html')
+
+
 @main.route('/<framework_slug>/opportunities/<brief_id>')
 def get_brief_by_id(framework_slug, brief_id):
     briefs = data_api_client.get_brief(brief_id)
