@@ -1,0 +1,11 @@
+.marketplace--header {
+
+  [class^='inline-links'] {
+    padding: $tiny-spacing*.95 0;
+
+    li {
+      display: inline-block;
+      margin: 0 $tiny-spacing;
+    }
+  }
+}
