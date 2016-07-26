@@ -60,9 +60,9 @@
         <dl>
           <dt></dt>
         </dl>
-        {% for price in supplier.prices %}
+        {% for category in supplier_categories|sort() %}
         <dd>
-          <a href="#">{{ price.serviceRole.category }}</a>
+          <a href="#">{{ category }}</a>
         </dd>
         {% endfor %}
       </footer>
