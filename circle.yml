@@ -13,4 +13,3 @@ deployment:
     branch: master
     commands:
       - ./scripts/ci_deploy.sh
-
