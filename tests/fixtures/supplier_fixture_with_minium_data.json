@@ -1,22 +1,22 @@
-{
-  "suppliers": {
-    "id": 123456,
-    "name": "Example Company Limited",
-    "description": "",
-    "contactInformation": [
-      {
-        "website": "",
-        "contactName": "John Example",
-        "email": "j@examplecompany.biz",
-        "phoneNumber": "",
-        "address1": "",
-        "city": "",
-        "country": "",
-        "postcode": "F4 K1E"
-      }
-    ],
-    "dunsNumber": "333333333",
-    "eSourcingId": "333333",
-    "clients": []
+{"supplier":
+  {
+    "name": "Example PTY LTD",
+    "longName": "Example PTY LTD (formerly just \"Example\")",
+    "code": 123456,
+    "summary": "An example company",
+    "address": {
+      "addressLine": "0 Foo Street",
+      "suburb": "Brisbane",
+      "state": "QLD",
+      "postalCode": "4120",
+      "country": "Australia"
+    },
+    "website": null,
+    "extraLinks": [],
+    "abn": "50 110 219 460",
+    "acn": "071 408 449",
+    "contacts": [],
+    "references": [],
+    "prices": []
   }
 }
