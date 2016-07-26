@@ -52,6 +52,7 @@ Install new Python dependencies with pip
 
 ```
 npm install
+npm run frontend-build:production
 ```
 
 ### Run the tests
