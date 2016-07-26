@@ -1,6 +1,4 @@
 from __future__ import absolute_import
-import json
-import os
 from app.api_client.error import HTTPError
 
 try:
@@ -11,14 +9,11 @@ except ImportError:
 import requests
 from flask import has_request_context, request, current_app
 
-base_url = os.environ.get('DM_DATA_API_URL', '')
-auth_token = os.environ.get('DM_DATA_API_AUTH_TOKEN', '')
-
 
 class BaseAPIClient(object):
     def __init__(self, base_url=None, auth_token=None, enabled=True):
-        self.base_url = base_url
-        self.auth_token = auth_token
+        self.base_url = base_url or current_app.config.get('DM_DATA_API_URL', '')
+        self.auth_token = auth_token or current_app.config.get('DM_DATA_API_AUTH_TOKEN', '')
         self.enabled = enabled
 
     def _put(self, url, data):
@@ -37,11 +32,11 @@ class BaseAPIClient(object):
         if not self.enabled:
             return None
 
-        url = urlparse.urljoin(base_url, url)
+        url = urlparse.urljoin(self.base_url, url)
 
         headers = {
             "Content-type": "application/json",
-            "Authorization": "Bearer {}".format(auth_token),
+            "Authorization": "Bearer {}".format(self.auth_token),
             "User-agent": "DM-API-Client",
         }
 
@@ -51,7 +46,7 @@ class BaseAPIClient(object):
         try:
             response = requests.request(method, url, headers=headers, json=data, params=params)
             response.raise_for_status()
-            return response.json
+            return response.json()
 
         except requests.RequestException as e:
             api_error = HTTPError.create(e)
