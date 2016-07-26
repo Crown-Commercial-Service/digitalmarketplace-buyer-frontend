@@ -2,6 +2,7 @@
 
 {% block page_title %}{{ supplier.name }} – Digital Marketplace{% endblock %}
 
+{#
 {% block breadcrumb %}
   {%
     with
@@ -27,39 +28,146 @@
     {% include "toolkit/breadcrumb.html" %}
   {% endwith %}
 {% endblock %}
+#}
 
+{% block body_classes %} content-details {% endblock %}
 {% block main_content %}
+
+<a class="go-back" href="#">Back</a>
 
 {%
   with
   heading = supplier.name,
-  context = "Digital Marketplace supplier",
   smaller = True
 %}
   {% include "toolkit/page-heading.html" %}
 {% endwith %}
 
-<div class="grid-row supplier-profile">
-    {% if supplier.description or supplier.clients %}
-      <div class="column-two-thirds">
-          <p class="supplier-description">
-              {{ supplier.description }}
-          </p>
-      </div>
-    {% endif %}
+{% if supplier.description %}
+<p>
+  {{ supplier.description }}
+</p>
+{% endif %}
 
-    <aside role="complementary" class="column-one-third" aria-label="Supplier contact">
-      {%
-        with
-        organisation_type = "supplier",
-        organisation = supplier.name,
-        telephone = supplier.contactInformation[0].phoneNumber,
-        contact_name = supplier.contactInformation[0].contactName,
-        email_address = supplier.contactInformation[0].email
-      %}
-        {% include "toolkit/contact-details.html" %}
-      {% endwith %}
-    </aside>
-</div>
+<hr>
 
+<ul class="list-horizontal">
+  <li>
+    <h2>Supplier capabilities</h2>
+    <article>
+      <footer class="tags">
+        <dl class="visually-hidden">
+          <dt>Capabilities</dt>
+        </dl>
+        {% for category in supplier_categories|sort() %}
+        <dd>
+          <a href="#" class="disabled">{{ category }}</a>
+        </dd>
+        {% endfor %}
+      </footer>
+    </article>
+  </li>
+  <li>
+    <h2>Contact</h2>
+    <article>
+      {% for contact in supplier.contacts %}
+      <p>
+        <strong>Name</strong><br>
+        {{ contact.name }}
+      </p>
+      <p>
+        <strong>Email</strong><br>
+        <a href="#">{{ contact.email }}</a>
+      </p>
+      <p>
+        <strong>Phone</strong><br>
+        {{ contact.phone }}
+      </p>
+      {% if not loop.last %}
+      <hr>
+      {% endif %}
+      {% endfor %}
+    </article>
+  </li>
+  <li>
+    <h2>Company Details</h2>
+    <article>
+      <p>
+        <strong>ABN</strong><br>
+        {{ supplier.abn }}
+      </p>
+      {% if supplier.website %}
+      <p>
+        <strong>Website</strong><br>
+        <a href="{{ supplier.website }}">{{ supplier.website }}</a>
+      </p>
+      {% endif %}
+      {% for link in supplier.extraLinks %}
+      <p>
+        <strong>{{ link.label }}</strong><br>
+        <a href="{{ link.url }}">{{ link.url }}</a>
+      </p>
+      {% endfor %}
+    </article>
+  </li>
+  <li>
+    <h2>Address</h2>
+    <article>
+      <p>
+        {{ supplier.address.addressLine }}<br>
+        {{ supplier.address.suburb }}<br>
+        {{ supplier.address.state }} {{ supplier.address.postalCode }}
+      </p>
+    </article>
+  </li>
+  {% if supplier.references %}
+  <li>
+    <h2>References</h2>
+    {% for reference in supplier.references %}
+    <article>
+      Upcoming information
+    </article>
+    {% endfor %}
+  </li>
+  {% endif %}
+  <li>
+    <h2>Endorsements</h2>
+    <article>
+      Upcoming information
+    </article>
+  </li>
+  <li>
+    <h2>Case studies</h2>
+    <article>
+      Upcoming information
+    </article>
+  </li>
+  <li>
+    <h2>Guide to rates<br><small>Day rates</small></h2>
+    <article>
+      <table class="content-table">
+        <thead>
+          <tr>
+            <th scope="col">Roles</th>
+            <th scope="col">Rate</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for price in supplier.prices|sort(attribute='serviceRole.role')|sort(attribute='serviceRole.category') %}
+          <tr>
+            <th scope="row">{{ price.serviceRole.role }}</th>
+            <td>${{ price.dailyRate }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </article>
+  </li>
+</ul>
+
+<hr>
+
+<p>
+  <a class="go-back" href="#">Back to catalogue of suppliers and capabilities</a>
+</p>
 {% endblock %}

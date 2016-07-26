@@ -1,0 +1,33 @@
+@mixin inline-background-image($img) {
+  background-image: url('/static/images/icons/' + $img + '.png');
+  background-image: none, url('/static/images/icons/' + $img + '.svg'),
+  linear-gradient(transparent, transparent);
+}
+
+.icon-arrow-right {
+  @include inline-background-image('arrow-right');
+}
+
+.icon-arrow-right-white {
+  @include inline-background-image('arrow-right-white');
+}
+
+.icon-arrow-right-aqua {
+  @include inline-background-image('arrow-right-aqua');
+}
+
+.icon-arrow-left-black {
+  @include inline-background-image('arrow-left-black');
+}
+
+.bars {
+  @include inline-background-image('bars');
+}
+
+.close {
+  @include inline-background-image('close');
+}
+
+.chevron-down-navy {
+  @include inline-background-image('chevron-down-navy');
+}

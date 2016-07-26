@@ -1,7 +1,7 @@
 # coding: utf-8
 from __future__ import unicode_literals
 
-from dmapiclient import HTTPError
+from app.api_client.error import HTTPError
 from dmapiclient.audit import AuditTypes
 from dmutils.email import generate_token, MandrillException
 from ...helpers import BaseApplicationTest
