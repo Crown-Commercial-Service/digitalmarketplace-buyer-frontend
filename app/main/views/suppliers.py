@@ -2,6 +2,7 @@
 import re
 
 from flask import render_template
+from flask_login import login_required
 
 from app.main import main
 from app.api_client.data import DataAPIClient
@@ -24,6 +25,7 @@ def is_alpha(character):
 
 
 @main.route('/suppliers/<int:code>')
+@login_required
 def get_supplier(code):
     supplier = DataAPIClient().get_supplier(code)['supplier']
 

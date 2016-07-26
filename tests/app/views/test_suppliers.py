@@ -22,7 +22,15 @@ class TestSuppliersPage(BaseApplicationTest):
     def teardown(self):
         self._data_api_client.stop()
 
+    def test_supplier_details_page_requires_login(self, api_client):
+        api_client.return_value.get_supplier.return_value = self.supplier
+
+        res = self.client.get('/suppliers/1')
+
+        assert res.status_code == 302
+
     def test_should_have_supplier_details_on_supplier_page(self, api_client):
+        self.login_as_buyer()
         api_client.return_value.get_supplier.return_value = self.supplier
 
         res = self.client.get('/suppliers/1')
@@ -32,6 +40,7 @@ class TestSuppliersPage(BaseApplicationTest):
         assert document.xpath('//h1')[0].text.strip() == 'Example PTY LTD'
 
     def test_should_show_supplier_with_minimum_data(self, api_client):
+        self.login_as_buyer()
         api_client.return_value.get_supplier.return_value = self.supplier_with_minimum_data
 
         res = self.client.get('/suppliers/1')
@@ -42,6 +51,7 @@ class TestSuppliersPage(BaseApplicationTest):
         assert 'None' not in res.get_data(as_text=True)
 
     def test_should_return_404_if_supplier_code_doesnt_exist(self, api_client):
+        self.login_as_buyer()
         api_client.return_value.get_supplier.side_effect = APIError(mock.Mock(status_code=404))
 
         res = self.client.get('/suppliers/1')
