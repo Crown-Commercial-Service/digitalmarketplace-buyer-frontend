@@ -162,31 +162,16 @@
         <thead>
           <tr>
             <th scope="col">Roles</th>
-            <th scope="col">Junior</th>
-            <th scope="col">Senior</th>
+            <th scope="col">Rate</th>
           </tr>
         </thead>
         <tbody>
+          {% for price in supplier.prices|sort(attribute='serviceRole.role')|sort(attribute='serviceRole.category') %}
           <tr>
-            <th scope="row">Agile coach</th>
-            <td>N/A</td>
-            <td>$1000</td>
+            <th scope="row">{{ price.serviceRole.role }}</th>
+            <td>${{ price.dailyRate }}</td>
           </tr>
-          <tr>
-            <th scope="row">Digital transformation advisor</th>
-            <td>$700</td>
-            <td>$1000</td>
-          </tr>
-          <tr>
-            <th scope="row">Interaction designer</th>
-            <td>$800</td>
-            <td>$1000</td>
-          </tr>
-          <tr>
-            <th scope="row">Performance analyst</th>
-            <td>$800</td>
-            <td>$1000</td>
-          </tr>
+          {% endfor %}
         </tbody>
       </table>
     </article>
