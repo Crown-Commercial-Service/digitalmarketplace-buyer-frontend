@@ -9,7 +9,7 @@ from lxml import html
 import mock
 import pytest
 
-EMAIL_SENT_MESSAGE = "If the email address you've entered belongs to a Digital Marketplace account, we'll send a link to reset the password."  # noqa
+EMAIL_SENT_MESSAGE = "You recently asked to reset your Marketplace password."  # noqa
 
 USER_CREATION_EMAIL_ERROR = "Failed to send user creation email."
 PASSWORD_RESET_EMAIL_ERROR = "Failed to send password reset."
@@ -566,8 +566,7 @@ class TestBuyersCreation(BaseApplicationTest):
         )
         assert res.status_code == 400
         data = res.get_data(as_text=True)
-        assert "You must use a public sector email address" in data
-        assert "The email you used doesn't belong to a recognised public sector domain." in data
+        assert "To create an account you must be part of an Australian local, state or federal government organisation." in data
 
     @mock.patch('app.main.views.login.data_api_client')
     @mock.patch('app.main.views.login.send_email')
@@ -656,7 +655,7 @@ class TestCreateUser(BaseApplicationTest):
 
         assert res.status_code == 200
         for message in [
-            "Create a buyer account",
+            "Add your name and password",
             "test@email.com",
         ]:
             assert message in res.get_data(as_text=True)
@@ -719,7 +718,7 @@ class TestCreateUser(BaseApplicationTest):
 
             assert res.status_code == 400
             for message in [
-                "Create a buyer account",
+                "Add your name and password",
                 "test@email.com"
             ]:
                 assert message in res.get_data(as_text=True)
@@ -768,7 +767,7 @@ class TestCreateUser(BaseApplicationTest):
         )
 
         assert res.status_code == 400
-        assert "Your account has been locked" in res.get_data(as_text=True)
+        assert "Your account is locked" in res.get_data(as_text=True)
 
     @mock.patch('app.main.views.login.data_api_client')
     def test_should_return_an_error_with_inactive_message_if_user_is_not_active(self, data_api_client):
