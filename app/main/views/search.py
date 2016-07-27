@@ -16,26 +16,27 @@ from collections import namedtuple
 Filter = namedtuple('Filter', 'name options')
 Option = namedtuple('Option', 'name value label checked')
 Badge = namedtuple('Badge', 'css_class label')
-Category = namedtuple('Category', 'label')
+Role = namedtuple('Role', 'label')
 ExtraDetail = namedtuple('ExtraDetail', 'key value')
-Result = namedtuple('Result', 'title description badges categories extra_details url')
+Result = namedtuple('Result', 'title description badges roles extra_details url')
 
 
 @main.route('/search/suppliers')
 def supplier_search():
-    category_list = request.args.getlist('category')
+    role_list_from_request = request.args.getlist('role')
     response = DataAPIClient().get_roles()
-    capabilities = []
-    capabilities_plain = []
-    for role in response['roles']:
-        if role['category'] not in capabilities_plain:
+    role_list = []
+    role_list_plain = []
+    for role_row in response['roles']:
+        role = role_row['role']
+        if role not in role_list_plain:
             # Example: Option('category', 'pm', 'Product Management', False),
-            option = Option('category', role['category'], role['category'], role['category'] in category_list)
-            capabilities.append(option)
-            capabilities_plain.append(role['category'])
+            option = Option('role', role, role, role in role_list_from_request)
+            role_list.append(option)
+            role_list_plain.append(role)
 
     filters = [
-        Filter('Capabilities', capabilities),
+        Filter('Capabilities', role_list),
         ]
 
     #    results = [
@@ -64,19 +65,19 @@ def supplier_search():
     #        ),
     #    ]
 
-    category_queries = []
-    for category in category_list:
-        category_queries.append({
+    role_queries = []
+    for role in role_list_from_request:
+        role_queries.append({
             "query": {
                 "query_string": {
-                    "default_field": "prices.serviceRole.category",
+                    "default_field": "prices.serviceRole.role",
                     "default_operator": "AND",
-                    "query": category
+                    "query": role
                 }
             }
         })
 
-    if category_list:
+    if role_list_from_request:
         query = {
             "query": {
                 "filtered": {
@@ -84,7 +85,7 @@ def supplier_search():
                         "match_all": {}
                     },
                     "filter": {
-                            "or": category_queries,
+                            "or": role_queries,
                     }
                 }
             }
@@ -113,26 +114,26 @@ def supplier_search():
     for supplier in response['hits']['hits']:
         details = supplier['_source']
 
-        categories = []
-        categories_plain = []
+        supplier_roles = []
+        supplier_roles_plain = []
         for price in details['prices']:
-            ca = price['serviceRole']['category']
-            if ca not in categories_plain:
-                categories.append(Category(ca))
-                categories_plain.append(ca)
+            role = price['serviceRole']['role']
+            if role not in supplier_roles_plain:
+                supplier_roles.append(Role(role))
+                supplier_roles_plain.append(role)
 
         result = Result(
             details['name'],
             details['summary'],
             [Badge('badge-security', 'Security clearance'), Badge('badge-tick', 'ABC compliant')],
-            categories,
+            supplier_roles,
             [ExtraDetail('Location', '%s, %s' % (details['address']['suburb'], details['address']['state'])),
              ],
             url_for('.get_supplier', code=details['code']))
 
         results.append(result)
 
-    num_results = response['_shards']['total']
+    num_results = response['hits']['total']
     results_to = num_results if num_results < (page * size) else (page * size)
 
     pages = get_page_list(size, num_results, page)
@@ -150,5 +151,5 @@ def supplier_search():
         pages=pages,
         page=page,
         num_pages=pages[-1],
-        category_list=category_list
+        role_list_from_request=role_list_from_request
     )

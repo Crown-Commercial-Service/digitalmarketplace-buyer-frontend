@@ -61,8 +61,8 @@
             <div>
                 <h3>Service capabilities</h3>
                 <ul>
-                    {% for category in result.categories %}
-                        <li class="{% if category.label in category_list %}selected{% endif %}">{{ category.label }}</li>
+                    {% for role in result.roles %}
+                        <li class="{% if role.label in role_list_from_request %}selected{% endif %}">{{ role.label }}</li>
                     {% endfor %}
                 </ul>
             </div>
@@ -84,14 +84,18 @@
 </div>
 <div>
     <div>
-        page {{ page }} of {{ last_page }}
+        page {{ page }} of {{ num_pages }}
     </div>
 
     <div>
         <ul>
             {% for pg in pages %}
                 <li class="{% if pg == page %}current{% endif %}">
-                    <a href="?page={{ pg }}{% for cat in category_list %}&category={{ cat }}{% endfor %}">{{ pg }}</a>
+                    {% if pg != '...' %}
+                        <a href="?page={{ pg }}{% for role in role_list_from_request %}&role={{ role }}{% endfor %}">{{ pg }}</a>
+                    {% else %}
+                        <span>{{ pg }}</span>
+                    {% endif %}
                 </li>
             {% endfor %}
         </ul>

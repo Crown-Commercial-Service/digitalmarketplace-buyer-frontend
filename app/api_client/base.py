@@ -72,7 +72,7 @@ class BaseAPIClient(object):
         try:
             response = requests.request(method, url, headers=headers, json=data, params=params)
             response.raise_for_status()
-            #            print response.content
+            print response.content
             return response.json()
 
         except requests.RequestException as e:
