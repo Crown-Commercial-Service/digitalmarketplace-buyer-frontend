@@ -2,15 +2,10 @@
 
 {% block head %}
   {% include "_stylesheets.html" %}
+  {% include "_analytics.html" %}
 {% endblock %}
 
-{% block header_class %}
-  with-proposition
-{% endblock %}
-
-{% block proposition_header %}
-  {% include "_proposition_header.html" %}
-{% endblock %}
+{% block sidebar %}{% endblock %}
 
 {% block content %}
   <article id="content" class="content-main">
@@ -19,16 +14,11 @@
 {% endblock %}
 
 {% block footer_top %}
-  {% include "_footer_categories.html" %}
+  {% include "_footer_top.html" %}
 {% endblock %}
 
-{% block footer_support_links %}
-  <h2 class="visuallyhidden">Support links</h2>
-  <ul>
-    <li><a href="/terms-and-conditions" class="terms-and-conditions">Terms and conditions</a></li>
-    <li><a href="/cookies">Cookies</a></li>
-    <li>Built by the <a href="https://www.dto.gov.au/">Digital Transformation Office</a></li>
-  </ul>
+{% block footer %}
+  {% include "_footer.html" %}
 {% endblock %}
 
 {% block body_end %}

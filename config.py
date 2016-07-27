@@ -114,7 +114,6 @@ class Development(Config):
 class Live(Config):
     """Base config for deployed environments"""
     DEBUG = False
-    DM_LOG_PATH = '/var/log/digitalmarketplace/application.log'
     DM_HTTP_PROTO = 'https'
 
 

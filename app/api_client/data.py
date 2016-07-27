@@ -3,15 +3,20 @@ from .base import BaseAPIClient
 
 
 class DataAPIClient(BaseAPIClient):
-
     # Suppliers
-    def find_suppliers(self, data=None):
+    def find_suppliers(self, data=None, params=None):
         return self._get(
             "/suppliers/search",
-            data=data
+            data=data, params=params
         )
 
     def get_supplier(self, supplier_id):
         return self._get(
             "/suppliers/{}".format(supplier_id)
+        )
+
+    def get_roles(self, data=None, params=None):
+        return self._get(
+            "/roles",
+            data=data, params=params
         )

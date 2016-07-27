@@ -20,6 +20,7 @@
 {% endblock %}
 #}
 
+{% block body_classes %} registration-pages form-page {% endblock %}
 {% block main_content %}
 {%
   with
@@ -29,6 +30,6 @@
 {% endwith %}
 
 <p>
-  Please go to your email inbox for {{ email_address }} and click on the link to activate your account.
+  We've sent a message to your email <strong>{{ email_address }}</strong>. Click the link in the email to activate your account.
 </p>
 {% endblock %}

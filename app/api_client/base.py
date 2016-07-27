@@ -1,4 +1,6 @@
 from __future__ import absolute_import
+import json
+import os
 from app.api_client.error import HTTPError
 
 try:
@@ -8,6 +10,28 @@ except ImportError:
 
 import requests
 from flask import has_request_context, request, current_app
+
+
+def pretty_print_request(prep):
+    """
+    Useful to print out the request call. Example-
+    response = requests.Request(method, url, headers=headers, json=data, params=params)
+    prepared = response.prepare()
+    pretty_print_request(prepared)
+
+    At this point it is completely built and ready
+    to be fired; it is "prepared".
+
+    However pay attention at the formatting used in
+    this function because it is programmed to be pretty
+    printed and may differ from the actual request.
+    """
+    print('{}\n{}\n{}\n\n{}'.format(
+        '-----------START-----------',
+        prep.method + ' ' + prep.url,
+        '\n'.join('{}: {}'.format(k, v) for k, v in prep.headers.items()),
+        prep.body,
+        ))
 
 
 class BaseAPIClient(object):
@@ -38,14 +62,14 @@ class BaseAPIClient(object):
             "Content-type": "application/json",
             "Authorization": "Bearer {}".format(self.auth_token),
             "User-agent": "DM-API-Client",
-        }
+            }
 
         headers = self._add_request_id_header(headers)
-        print headers
 
         try:
             response = requests.request(method, url, headers=headers, json=data, params=params)
             response.raise_for_status()
+            print response.content
             return response.json()
 
         except requests.RequestException as e:

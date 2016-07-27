@@ -4,6 +4,8 @@
 <!--[if gt IE 8]><!--><html lang="{{ html_lang|default('en') }}"><!--<![endif]-->
 <head>
   <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <title>{% block page_title %}Marketplace - The place to do ICT business with government{% endblock %}</title>
 
   <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.16/webfont.js"></script>
@@ -22,11 +24,9 @@
   <link rel="apple-touch-icon-precomposed" sizes="76x76" href="{{ asset_path }}images/apple-touch-icon.png">
   <link rel="apple-touch-icon-precomposed" href="{{ asset_path }}images/apple-touch-icon.png">
 
-  {% block head %}{% endblock %}
-
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
   <script type="text/javascript" src="https://gov-au-ui-kit.apps.staging.digital.gov.au/latest/ui-kit.min.js"></script>
+
+  {% block head %}{% endblock %}
 
 </head>
 
@@ -85,48 +85,14 @@
   {% block breadcrumb %}{% endblock %}
 
   <main>
+    {% block sidebar %}{% endblock %}
     {% block content %}{% endblock %}
   </main>
 
   <footer role="contentinfo">
     <div class="wrapper">
-      <section class="footer-top">
-        <nav>
-          <ul>
-            <li><h3>About</h3></li>
-            <li><a href="{{ url_for('main.about_us') }}">About us</a></li>
-            <li><a href="{{ url_for('main.contact_us') }}">Contact us</a></li>
-            <li><a href="{{ url_for('main.terms_of_use') }}">Terms of Use</a></li>
-            <li><a href="{{ url_for('main.privacy_policy') }}">Privacy Policy</a></li>
-          </ul>
-          <ul>
-            <li><h3>Using the Marketplace</h3></li>
-            <li><a href="{{ url_for('main.index') }}">Home</a></li>
-            <li><a href="{{ url_for('main.supplier_search') }}">Marketplace catalogue</a></li>
-            <li><a href="{{ url_for('main.roles_and_services') }}">Roles and services</a></li>
-            <li><a href="{{ url_for('main.buyers_guide') }}">Buyers' guide</a></li>
-          </ul>
-          <ul>
-            <li><h3>Marketplace brought to you by the <a href="//dto.gov.au">DTO</a></h3></li>
-            <li><a href="//dto.gov.au/blog/">DTO blog</a></li>
-            <li><a href="//twitter.com/DTO">DTO twitter</a></li>
-            <li><a href="//github.com/AusDTO">DTO github</a></li>
-          </ul>
-          <ul>
-            <li><h3>DTO resources</h3></li>
-            <li><a href="//dto.gov.au/our-work/">Our work</a></li>
-            <li><a href="//dto.gov.au/standard/">Digital Service Standard</a></li>
-            <li><a href="//dto.gov.au/design-guides/">Design guides</a></li>
-          </ul>
-        </nav>
-      </section>
-      <section>
-        <div class="footer-logo">
-          <img alt="Australian Government Coat of Arms" src="{{ asset_path }}images/gov-au-coat-of-arms-white01.svg">
-        </div>
-        <p>&copy; Commonwealth of Australia <br>
-        <a href="https://github.com/AusDTO/gov-au-ui-kit/blob/master/LICENSE.md">Licensed under the MIT License.</a></p>
-      </section>
+      {% block footer_top %}{% endblock %}
+      {% block footer %}{% endblock %}
     </div>
   </footer>
 

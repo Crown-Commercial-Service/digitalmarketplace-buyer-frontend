@@ -1,0 +1,19 @@
+form {
+
+  label {
+    @extend h4;
+    margin-bottom: 0;
+  }
+
+}
+
+.registration-pages {
+  form {
+    .hint {
+      color: $grey;
+    }
+    .hint-with-error {
+      color: $error-colour;
+    }
+  }
+}
