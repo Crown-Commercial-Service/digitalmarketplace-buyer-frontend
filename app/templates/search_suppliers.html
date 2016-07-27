@@ -52,7 +52,7 @@
             <div>
                 <h2><a href="{{ result.url }}">{{ result.title }}</a></h2>
 
-                <div>{{ result.description }}</div>
+                <div>{% if result.description %}{{ result.description }}{% endif %}</div>
                 <div>
                     {% for badge in result.badges %}
                         <div class="{{ badge.css_class }}">{{ badge.label }}</div>
