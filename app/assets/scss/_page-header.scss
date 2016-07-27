@@ -9,6 +9,8 @@
 }
 
 .marketplace--header {
+  @include link-colours($link-inverted-colour, $link-inverted-colour, $link-colour);
+
   position: relative;
   padding: $medium-spacing 0 ($base-spacing * 3);
   padding-bottom: $medium-spacing;
@@ -67,6 +69,19 @@
   .tagline {
     @extend h4;
     font-weight: $base-font-weight;
+  }
+
+  a {
+    color: $link-colour;
+
+    &:visited {
+      color: $link-colour;
+    }
+
+    &:hover,
+    &:active {
+      color: $navy;
+    }
   }
 }
 

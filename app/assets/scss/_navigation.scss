@@ -1,11 +1,40 @@
-.marketplace--header {
 
-  .global-nav-toggle {
-    font-size: rem(17);
-    font-weight: $base-font-weight;
-    margin: 0;
+.global-nav-toggle {
+  font-size: rem(17);
+  font-weight: $base-font-weight;
+  margin: 0;
+
+  .marketplace--header & {
+    border: 0;
+    border-bottom: 1px solid;
   }
 
+  &::before {
+    @extend %icon-bars;
+    content: '';
+    position: absolute;
+    top: .25em;
+    bottom: .25em;
+    left: ($base-spacing * -1);
+    width: $medium-spacing;
+    background-repeat: no-repeat;
+    background-size: auto 100%;
+  }
+
+  &[aria-expanded='true'] {
+    &::before {
+      @extend %icon-close;
+    }
+  }
+
+  &,
+  &:hover {
+    background-color: transparent;
+    border-color: transparent;
+  }
+}
+
+.marketplace--header {
 
   [class^='inline-links'] {
     padding: $tiny-spacing*.25 0;
@@ -23,4 +52,5 @@
       }
     }
   }
+
 }
