@@ -3,11 +3,12 @@
   .global-nav-toggle {
     font-size: rem(17);
     font-weight: $base-font-weight;
+    margin: 0;
   }
 
 
   [class^='inline-links'] {
-    padding: $tiny-spacing*1.375 0;
+    padding: $tiny-spacing*.25 0;
 
     li {
       display: inline-block;
@@ -15,6 +16,10 @@
 
       &:not(:last-child) {
         margin-right: $base-spacing*.8125;
+      }
+
+      a {
+        padding-bottom: $tiny-spacing*.15;
       }
     }
   }

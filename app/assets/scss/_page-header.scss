@@ -1,9 +1,10 @@
 .govau--header {
-  background-color: $darker-aqua;
+  background-color: $non-black;
   padding: $small-spacing 0;
 
   .logo {
-    font-size: 1.375rem;
+    font-size: 1.12rem;
+    font-weight: $base-font-weight;
   }
 }
 
@@ -30,7 +31,7 @@
   .logo {
     @extend h3;
 
-    padding-bottom: 2px;
+    padding-bottom: 0;
     border-bottom: none;
     color: $body-inverted-text-colour;
     font-family: $base-sans-serif;
@@ -45,7 +46,7 @@
   }
 
   [class^='badge'] {
-    vertical-align: text-bottom;
+    vertical-align: super;
     margin-left: $tiny-spacing;
   }
 }
