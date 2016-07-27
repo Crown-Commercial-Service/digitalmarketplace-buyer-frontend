@@ -16,5 +16,7 @@ def redirect_logged_in_user(next_url=None):
                 return redirect('/admin')
         if next_url and next_url.startswith('/'):
             return redirect(next_url)
+        else:
+            return redirect(url_for('.supplier_search'))
 
     return redirect(url_for('.index'))
