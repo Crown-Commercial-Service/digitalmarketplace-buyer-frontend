@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 from app.api_client.error import HTTPError
 from dmapiclient.audit import AuditTypes
-from dmutils.email import generate_token, MandrillException
+from dmutils.email import generate_token, EmailError
 from ...helpers import BaseApplicationTest
 from lxml import html
 import mock
@@ -424,11 +424,9 @@ class TestResetPassword(BaseApplicationTest):
             send_email.assert_called_once_with(
                 "email@email.com",
                 mock.ANY,
-                "API KEY",
                 "SUBJECT",
                 "EMAIL FROM",
                 "EMAIL NAME",
-                ["password-resets"]
             )
 
     @mock.patch('app.main.views.login.send_email')
@@ -437,7 +435,7 @@ class TestResetPassword(BaseApplicationTest):
     ):
         with self.app.app_context():
 
-            send_email.side_effect = MandrillException(Exception('API is down'))
+            send_email.side_effect = EmailError('API is down')
 
             res = self.client.post(
                 '/reset-password',
@@ -572,7 +570,7 @@ class TestBuyersCreation(BaseApplicationTest):
     @mock.patch('app.main.views.login.send_email')
     def test_should_503_if_email_fails_to_send(self, send_email, data_api_client):
         data_api_client.is_email_address_with_valid_buyer_domain.return_value = True
-        send_email.side_effect = MandrillException("Arrrgh")
+        send_email.side_effect = EmailError("Arrrgh")
         res = self.client.post(
             '/buyers/create',
             data={'email_address': 'valid@test.gov.uk'},
