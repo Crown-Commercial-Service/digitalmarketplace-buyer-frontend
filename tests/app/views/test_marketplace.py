@@ -483,10 +483,11 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
     def test_catalogue_of_briefs_page(self):
         self._data_api_client.get_framework.return_value = {'frameworks': {
             'name': "Digital Outcomes and Specialists",
+            'slug': "digital-outcomes-and-specialists",
             'lots': [
-                {'name': 'Lot 1', 'allowsBrief': True},
-                {'name': 'Lot 2', 'allowsBrief': False},
-                {'name': 'Lot 3', 'allowsBrief': True}
+                {'name': 'Lot 1', 'slug': 'lot-one', 'allowsBrief': True},
+                {'name': 'Lot 2', 'slug': 'lot-two', 'allowsBrief': False},
+                {'name': 'Lot 3', 'slug': 'lot-three', 'allowsBrief': True}
             ]
         }}
         res = self.client.get('/digital-outcomes-and-specialists/opportunities')

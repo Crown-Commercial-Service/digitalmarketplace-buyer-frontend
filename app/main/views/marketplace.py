@@ -10,6 +10,8 @@ from dmcontent.content_loader import ContentNotFoundError
 from ...main import main
 from ...helpers.shared_helpers import get_one_framework_by_status_in_order_of_preference, parse_link
 
+from ..forms.brief_forms import BriefSearchForm
+
 from app import data_api_client, content_loader
 
 
@@ -90,14 +92,17 @@ def get_brief_by_id(framework_slug, brief_id):
 
 @main.route('/<framework_slug>/opportunities')
 def list_opportunities(framework_slug):
-    page = request.args.get('page', default=1, type=int)
     framework = data_api_client.get_framework(framework_slug)['frameworks']
-
     if not framework:
         abort(404, "No framework {}".format(framework_slug))
 
-    api_result = data_api_client.find_briefs(status='live,closed', framework=framework_slug,
-                                             page=page, human=True)
+    # disabling csrf protection as this should only ever be a GET request
+    form = BriefSearchForm(request.args, framework=framework, data_api_client=data_api_client, csrf_enabled=False)
+    if not form.validate():
+        abort(400, "Invalid form data")
+
+    api_result = form.get_briefs()
+
     briefs = api_result["briefs"]
     links = api_result["links"]
 
