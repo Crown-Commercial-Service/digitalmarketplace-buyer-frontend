@@ -47,7 +47,7 @@
         {% else %}
           <p>Your requirements will be open for {{ dates.application_open_weeks }} {{ pluralize(dates.application_open_weeks, "week", "weeks") }}.</p>
           <div class="dmspeak">
-            <p>If you publish your requirements today ({{ dates.today | shortdateformat }}), suppliers will be able to apply until {{ dates.closing_time }}, {{ dates.closing_date | shortdateformat}}.</p>
+            <p>If you publish your requirements today ({{ dates.published_date | shortdateformat }}), suppliers will be able to apply until {{ dates.closing_time }}, {{ dates.closing_date | shortdateformat}}.</p>
           </div>
         {% endif %}
     {% endif %}
