@@ -9,7 +9,7 @@ from lxml import html
 import mock
 import pytest
 
-EMAIL_SENT_MESSAGE = "You recently asked to reset your Marketplace password."  # noqa
+EMAIL_SENT_MESSAGE = "If the email address you've entered belongs to a Marketplace account, we'll send a link to reset the password."  # noqa
 
 USER_CREATION_EMAIL_ERROR = "Failed to send user creation email."
 PASSWORD_RESET_EMAIL_ERROR = "Failed to send password reset."
