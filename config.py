@@ -28,8 +28,8 @@ class Config(object):
 
     PERMANENT_SESSION_LIFETIME = 4*3600
 
-    WTF_CSRF_ENABLED = False
-    WTF_CSRF_TIME_LIMIT = None
+    CSRF_ENABLED = True
+    CSRF_TIME_LIMIT = 8*3600
 
     DM_DATA_API_URL = None
     DM_DATA_API_AUTH_TOKEN = None
@@ -84,7 +84,7 @@ class Config(object):
 class Test(Config):
     DEBUG = True
     DM_LOG_LEVEL = 'CRITICAL'
-    WTF_CSRF_ENABLED = False
+    CSRF_ENABLED = False
 
     DM_DATA_API_URL = "http://localhost:5000"
     DM_DATA_API_AUTH_TOKEN = "myToken"

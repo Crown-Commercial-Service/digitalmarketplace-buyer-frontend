@@ -1,7 +1,11 @@
-from flask_wtf import Form
-from wtforms import PasswordField
+from datetime import timedelta
+
+from flask import current_app, session
+from wtforms import PasswordField, Form
+from wtforms.csrf.session import SessionCSRF
 from wtforms.validators import DataRequired, EqualTo, Length, Regexp
 from dmutils.forms import StripWhitespaceStringField, StringField
+
 
 
 class StripWhitespaceStringField(StripWhitespaceStringField):
@@ -16,7 +20,25 @@ class StripWhitespaceStringField(StripWhitespaceStringField):
         return super(StripWhitespaceStringField, self).__call__(**kwargs)
 
 
-class LoginForm(Form):
+class DmForm(Form):
+
+    class Meta:
+        csrf = True
+        csrf_class = SessionCSRF
+        csrf_secret = None
+        csrf_time_limit = None
+
+        @property
+        def csrf_context(self):
+            return session
+
+    def __init__(self, *args, **kwargs):
+        self.Meta.csrf_secret = current_app.config['SECRET_KEY']
+        self.Meta.csrf_time_limit = timedelta(seconds=current_app.config['CSRF_TIME_LIMIT'])
+        super(DmForm, self).__init__(*args, **kwargs)
+
+
+class LoginForm(DmForm):
     email_address = StripWhitespaceStringField(
         'Email', id="input_email_address",
         validators=[
@@ -33,7 +55,7 @@ class LoginForm(Form):
     )
 
 
-class EmailAddressForm(Form):
+class EmailAddressForm(DmForm):
     email_address = StripWhitespaceStringField(
         'Email', id="input_email_address",
         validators=[
@@ -44,7 +66,7 @@ class EmailAddressForm(Form):
     )
 
 
-class ChangePasswordForm(Form):
+class ChangePasswordForm(DmForm):
     password = PasswordField(
         'Password', id="input_password",
         validators=[
@@ -64,7 +86,7 @@ class ChangePasswordForm(Form):
     )
 
 
-class CreateUserForm(Form):
+class CreateUserForm(DmForm):
     name = StripWhitespaceStringField(
         'Full name', id="input_name",
         validators=[

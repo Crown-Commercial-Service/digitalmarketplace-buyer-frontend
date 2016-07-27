@@ -46,7 +46,7 @@
 </p>
 
 <form method="POST" action="{{ url_for('.submit_create_buyer_account') }}">
-  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+  {{ form.csrf_token }}
   {%
     with
       question = "Your email address",
