@@ -20,14 +20,15 @@ class Config(object):
     VERSION = get_version_label(
         os.path.abspath(os.path.dirname(__file__))
     )
+    URL_PREFIX = '/marketplace'
     SESSION_COOKIE_NAME = 'dm_session'
-    SESSION_COOKIE_PATH = '/'
+    SESSION_COOKIE_PATH = '/marketplace/'
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_SECURE = True
 
     PERMANENT_SESSION_LIFETIME = 4*3600
 
-    WTF_CSRF_ENABLED = True
+    WTF_CSRF_ENABLED = False
     WTF_CSRF_TIME_LIMIT = None
 
     DM_DATA_API_URL = None
@@ -54,11 +55,11 @@ class Config(object):
     RESET_PASSWORD_SALT = 'ResetPasswordSalt'
     INVITE_EMAIL_SALT = 'InviteEmailSalt'
 
-    ASSET_PATH = '/static/'
+    ASSET_PATH = URL_PREFIX + '/static'
     BASE_TEMPLATE_DATA = {
         'header_class': 'with-proposition',
-        'asset_path': ASSET_PATH,
-        'asset_fingerprinter': AssetFingerprinter(asset_root=ASSET_PATH)
+        'asset_path': ASSET_PATH + '/',
+        'asset_fingerprinter': AssetFingerprinter(asset_root=ASSET_PATH + '/')
     }
 
     # Feature Flags
