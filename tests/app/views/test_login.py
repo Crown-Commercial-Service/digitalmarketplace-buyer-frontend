@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 from app.api_client.error import HTTPError
 from dmapiclient.audit import AuditTypes
-from dmutils.email import generate_token, MandrillException
+from dmutils.email import generate_token, EmailError
 from ...helpers import BaseApplicationTest
 from lxml import html
 import mock
@@ -57,7 +57,7 @@ class TestLogin(BaseApplicationTest):
         assert 'Secure;' in res.headers['Set-Cookie']
 
     @mock.patch('app.main.views.login.data_api_client')
-    def test_should_redirect_to_homepage_on_buyer_login(self, data_api_client):
+    def test_should_redirect_to_search_on_buyer_login(self, data_api_client):
         with self.app.app_context():
             data_api_client.authenticate_user.return_value = self.user(123, "email@email.com", None, None, 'Name')
             res = self.client.post("/login", data={
@@ -65,7 +65,7 @@ class TestLogin(BaseApplicationTest):
                 'password': '1234567890'
             })
             assert res.status_code == 302
-            assert res.location == 'http://localhost/'
+            assert res.location == 'http://localhost/search/suppliers'
             assert 'Secure;' in res.headers['Set-Cookie']
 
     def test_should_redirect_logged_in_supplier_to_supplier_dashboard(self):
@@ -74,11 +74,11 @@ class TestLogin(BaseApplicationTest):
         assert res.status_code == 302
         assert res.location == 'http://localhost/suppliers'
 
-    def test_should_redirect_logged_in_buyer_to_homepage(self):
+    def test_should_redirect_logged_in_buyer_to_search(self):
         self.login_as_buyer()
         res = self.client.get("/login")
         assert res.status_code == 302
-        assert res.location == 'http://localhost/'
+        assert res.location == 'http://localhost/search/suppliers'
 
     def test_should_redirect_logged_in_admin_to_admin_dashboard(self):
         self.login_as_admin()
@@ -150,7 +150,7 @@ class TestLogin(BaseApplicationTest):
         assert res.location == 'http://localhost/suppliers'
 
     @mock.patch('app.main.views.login.data_api_client')
-    def test_bad_next_url_takes_buyer_user_to_homepage(self, data_api_client):
+    def test_bad_next_url_takes_buyer_user_to_search(self, data_api_client):
         with self.app.app_context():
             data_api_client.authenticate_user.return_value = self.user(123, "email@email.com", None, None, 'Name')
             res = self.client.post("/login?next=http://badness.com",
@@ -159,7 +159,7 @@ class TestLogin(BaseApplicationTest):
                                        'password': '1234567890'
                                    })
         assert res.status_code == 302
-        assert res.location == 'http://localhost/'
+        assert res.location == 'http://localhost/search/suppliers'
 
     def test_should_have_cookie_on_redirect(self):
         with self.app.app_context():
@@ -424,11 +424,9 @@ class TestResetPassword(BaseApplicationTest):
             send_email.assert_called_once_with(
                 "email@email.com",
                 mock.ANY,
-                "API KEY",
                 "SUBJECT",
                 "EMAIL FROM",
                 "EMAIL NAME",
-                ["password-resets"]
             )
 
     @mock.patch('app.main.views.login.send_email')
@@ -437,7 +435,7 @@ class TestResetPassword(BaseApplicationTest):
     ):
         with self.app.app_context():
 
-            send_email.side_effect = MandrillException(Exception('API is down'))
+            send_email.side_effect = EmailError('API is down')
 
             res = self.client.post(
                 '/reset-password',
@@ -572,7 +570,7 @@ class TestBuyersCreation(BaseApplicationTest):
     @mock.patch('app.main.views.login.send_email')
     def test_should_503_if_email_fails_to_send(self, send_email, data_api_client):
         data_api_client.is_email_address_with_valid_buyer_domain.return_value = True
-        send_email.side_effect = MandrillException("Arrrgh")
+        send_email.side_effect = EmailError("Arrrgh")
         res = self.client.post(
             '/buyers/create',
             data={'email_address': 'valid@test.gov.uk'},
