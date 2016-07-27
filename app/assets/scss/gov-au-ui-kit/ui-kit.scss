@@ -1,18 +1,19 @@
-@import '../vendor/entity';
-@import '../vendor/normalize';
-@import '../vendor/bourbon/bourbon';
+@import './vendor/entity';
+@import './vendor/normalize';
+@import './vendor/bourbon/bourbon';
 
 @import 'grid-settings';
-@import '../vendor/neat/neat';
+@import './vendor/neat/neat';
 
 @import 'variables';
 
 @import 'icons';
 @import 'colours';
 @import 'typography';
+@import 'buttons';
+@import 'links';
 @import 'tables';
 @import 'block-elements';
-@import 'buttons';
 @import 'forms';
 @import 'navigation';
 @import 'lists';
