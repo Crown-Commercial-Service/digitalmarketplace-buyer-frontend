@@ -2,8 +2,9 @@ from .helpers import BaseApplicationTest
 
 
 class TestApplication(BaseApplicationTest):
+
     def test_index(self):
-        response = self.client.get('/')
+        response = self.client.get(self.expand_path('/'))
         assert 200 == response.status_code
 
     def test_404(self):
@@ -24,6 +25,6 @@ class TestApplication(BaseApplicationTest):
         assert "http://localhost/search?q=r&s=t" == response.location
 
     def test_header_xframeoptions_set_to_deny(self):
-        res = self.client.get('/')
+        res = self.client.get(self.expand_path('/'))
         assert 200 == res.status_code
         assert 'DENY', res.headers['X-Frame-Options']

@@ -48,6 +48,7 @@
 
 <form method="POST" action="{{ url_for('.submit_create_buyer_account') }}">
   {{ form.csrf_token }}
+
   {%
     with
       question = "Your email address",

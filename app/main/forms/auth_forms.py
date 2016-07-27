@@ -7,7 +7,6 @@ from wtforms.validators import DataRequired, EqualTo, Length, Regexp
 from dmutils.forms import StripWhitespaceStringField, StringField
 
 
-
 class StripWhitespaceStringField(StripWhitespaceStringField):
     # WTForm errors when kwargs are passed from template contains dashes. As some html attributes needs to contain
     # dashes, following piece of code helps.
@@ -33,8 +32,12 @@ class DmForm(Form):
             return session
 
     def __init__(self, *args, **kwargs):
-        self.Meta.csrf_secret = current_app.config['SECRET_KEY']
-        self.Meta.csrf_time_limit = timedelta(seconds=current_app.config['CSRF_TIME_LIMIT'])
+        if current_app.config['CSRF_ENABLED']:
+            self.Meta.csrf_secret = current_app.config['SECRET_KEY']
+            self.Meta.csrf_time_limit = timedelta(seconds=current_app.config['CSRF_TIME_LIMIT'])
+        else:
+            self.Meta.csrf = False
+            self.Meta.csrf_class = None
         super(DmForm, self).__init__(*args, **kwargs)
 
 

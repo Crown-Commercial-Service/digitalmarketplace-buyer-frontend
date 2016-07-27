@@ -13,7 +13,7 @@ class TestApplication(BaseApplicationTest):
         super(TestApplication, self).setup()
 
     def test_analytics_code_should_be_in_javascript(self):
-        res = self.client.get('/static/javascripts/application.js')
+        res = self.client.get(self.expand_path('/static/javascripts/application.js'))
         assert_equal(200, res.status_code)
         assert_true(
             'trackPageview'
@@ -23,7 +23,7 @@ class TestApplication(BaseApplicationTest):
 class TestHomepageBrowseList(BaseApplicationTest):
     @mock.patch('app.main.views.marketplace.data_api_client')
     def test_homepage_headers(self, data_api_client):
-        res = self.client.get("/")
+        res = self.client.get(self.expand_path('/'))
         document = html.fromstring(res.get_data(as_text=True))
 
         assert res.status_code == 200
@@ -44,7 +44,7 @@ class TestStaticMarketplacePages(BaseApplicationTest):
         super(TestStaticMarketplacePages, self).setup()
 
     def test_cookie_page(self):
-        res = self.client.get('/cookies')
+        res = self.client.get(self.expand_path('/cookies'))
         assert_equal(200, res.status_code)
         assert_true(
             '<h1>Cookies</h1>'
@@ -52,7 +52,7 @@ class TestStaticMarketplacePages(BaseApplicationTest):
         )
 
     def test_cookie_page(self):
-        res = self.client.get('/terms-and-conditions')
+        res = self.client.get(self.expand_path('/terms-and-conditions'))
         assert_equal(200, res.status_code)
         assert_true(
             '<h1>Termsandconditions</h1>'
@@ -60,6 +60,7 @@ class TestStaticMarketplacePages(BaseApplicationTest):
         )
 
 
+@pytest.mark.skip(reason='Briefs not in Australian version')
 class TestBriefPage(BaseApplicationTest):
 
     def setup(self):
@@ -238,6 +239,7 @@ class TestBriefPage(BaseApplicationTest):
         assert 'Quality assurance analyst' in res.get_data(as_text=True)
 
 
+@pytest.mark.skip(reason='Briefs not in Australian version')
 class TestCatalogueOfBriefsPage(BaseApplicationTest):
     def setup(self):
         super(TestCatalogueOfBriefsPage, self).setup()

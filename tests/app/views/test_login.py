@@ -9,7 +9,7 @@ from lxml import html
 import mock
 import pytest
 
-EMAIL_SENT_MESSAGE = "If the email address you've entered belongs to a Marketplace account, we'll send a link to reset the password."  # noqa
+EMAIL_SENT_MESSAGE = "send a link"
 
 USER_CREATION_EMAIL_ERROR = "Failed to send user creation email."
 PASSWORD_RESET_EMAIL_ERROR = "Failed to send password reset."
@@ -43,12 +43,12 @@ class TestLogin(BaseApplicationTest):
         self._data_api_client.stop()
 
     def test_should_show_login_page(self):
-        res = self.client.get("/login")
+        res = self.client.get(self.expand_path('/login'))
         assert res.status_code == 200
         assert "Log in to see more" in res.get_data(as_text=True)
 
     def test_should_redirect_to_supplier_dashboard_on_supplier_login(self):
-        res = self.client.post("/login", data={
+        res = self.client.post(self.expand_path('/login'), data={
             'email_address': 'valid@email.com',
             'password': '1234567890'
         })
@@ -60,59 +60,59 @@ class TestLogin(BaseApplicationTest):
     def test_should_redirect_to_homepage_on_buyer_login(self, data_api_client):
         with self.app.app_context():
             data_api_client.authenticate_user.return_value = self.user(123, "email@email.com", None, None, 'Name')
-            res = self.client.post("/login", data={
+            res = self.client.post(self.expand_path('/login'), data={
                 'email_address': 'valid@email.com',
                 'password': '1234567890'
             })
             assert res.status_code == 302
-            assert res.location == 'http://localhost/'
+            assert res.location == 'http://localhost' + self.expand_path('/')
             assert 'Secure;' in res.headers['Set-Cookie']
 
     def test_should_redirect_logged_in_supplier_to_supplier_dashboard(self):
         self.login_as_supplier()
-        res = self.client.get("/login")
+        res = self.client.get(self.expand_path('/login'))
         assert res.status_code == 302
         assert res.location == 'http://localhost/suppliers'
 
     def test_should_redirect_logged_in_buyer_to_homepage(self):
         self.login_as_buyer()
-        res = self.client.get("/login")
+        res = self.client.get(self.expand_path('/login'))
         assert res.status_code == 302
-        assert res.location == 'http://localhost/'
+        assert res.location == 'http://localhost' + self.expand_path('/')
 
     def test_should_redirect_logged_in_admin_to_admin_dashboard(self):
         self.login_as_admin()
-        res = self.client.get("/login")
+        res = self.client.get(self.expand_path('/login'))
         assert res.status_code == 302
         assert res.location == 'http://localhost/admin'
 
     def test_should_redirect_logged_in_admin_to_next_url_if_admin_app(self):
         self.login_as_admin()
-        res = self.client.get("/login?next=/admin/foo-bar")
+        res = self.client.get(self.expand_path('/login?next=/admin/foo-bar'))
         assert res.status_code == 302
         assert res.location == 'http://localhost/admin/foo-bar'
 
     def test_should_redirect_logged_in_supplier_to_next_url_if_supplier_app(self):
         self.login_as_supplier()
-        res = self.client.get("/login?next=/suppliers/foo-bar")
+        res = self.client.get(self.expand_path('/login?next=/suppliers/foo-bar'))
         assert res.status_code == 302
         assert res.location == 'http://localhost/suppliers/foo-bar'
 
     def test_should_redirect_to_supplier_dashboard_if_next_url_not_supplier_app(self):
         self.login_as_supplier()
-        res = self.client.get("/login?next=/foo-bar")
+        res = self.client.get(self.expand_path('/login?next=/foo-bar'))
         assert res.status_code == 302
         assert res.location == 'http://localhost/suppliers'
 
     def test_should_strip_whitespace_surrounding_login_email_address_field(self):
-        self.client.post("/login", data={
+        self.client.post(self.expand_path('/login'), data={
             'email_address': '  valid@email.com  ',
             'password': '1234567890'
         })
         self.data_api_client_mock.authenticate_user.assert_called_with('valid@email.com', '1234567890')
 
     def test_should_not_strip_whitespace_surrounding_login_password_field(self):
-        self.client.post("/login", data={
+        self.client.post(self.expand_path('/login'), data={
             'email_address': 'valid@email.com',
             'password': '  1234567890  '
         })
@@ -120,11 +120,8 @@ class TestLogin(BaseApplicationTest):
             'valid@email.com', '  1234567890  ')
 
     def test_ok_next_url_redirects_supplier_on_login(self):
-        res = self.client.post("/login?next=/suppliers/bar-foo",
-                               data={
-                                   'email_address': 'valid@email.com',
-                                   'password': '1234567890'
-                               })
+        res = self.client.post(self.expand_path('/login?next=/suppliers/bar-foo'),
+                               data={'email_address': 'valid@email.com', 'password': '1234567890'})
         assert res.status_code == 302
         assert res.location == 'http://localhost/suppliers/bar-foo'
 
@@ -132,20 +129,14 @@ class TestLogin(BaseApplicationTest):
     def test_ok_next_url_redirects_buyer_on_login(self, data_api_client):
         with self.app.app_context():
             data_api_client.authenticate_user.return_value = self.user(123, "email@email.com", None, None, 'Name')
-            res = self.client.post("/login?next=/bar-foo",
-                                   data={
-                                       'email_address': 'valid@email.com',
-                                       'password': '1234567890'
-                                   })
+            res = self.client.post(self.expand_path('/login?next=/bar-foo'),
+                                   data={'email_address': 'valid@email.com', 'password': '1234567890'})
             assert res.status_code == 302
             assert res.location == 'http://localhost/bar-foo'
 
     def test_bad_next_url_takes_supplier_user_to_dashboard(self):
-        res = self.client.post("/login?next=http://badness.com",
-                               data={
-                                   'email_address': 'valid@email.com',
-                                   'password': '1234567890'
-                               })
+        res = self.client.post(self.expand_path('/login?next=http://badness.com'),
+                               data={'email_address': 'valid@email.com', 'password': '1234567890'})
         assert res.status_code == 302
         assert res.location == 'http://localhost/suppliers'
 
@@ -153,37 +144,34 @@ class TestLogin(BaseApplicationTest):
     def test_bad_next_url_takes_buyer_user_to_homepage(self, data_api_client):
         with self.app.app_context():
             data_api_client.authenticate_user.return_value = self.user(123, "email@email.com", None, None, 'Name')
-            res = self.client.post("/login?next=http://badness.com",
-                                   data={
-                                       'email_address': 'valid@email.com',
-                                       'password': '1234567890'
-                                   })
+            res = self.client.post(self.expand_path('/login?next=http://badness.com'),
+                                   data={'email_address': 'valid@email.com', 'password': '1234567890'})
         assert res.status_code == 302
-        assert res.location == 'http://localhost/'
+        assert res.location == 'http://localhost' + self.expand_path('/')
 
     def test_should_have_cookie_on_redirect(self):
         with self.app.app_context():
             self.app.config['SESSION_COOKIE_DOMAIN'] = '127.0.0.1'
             self.app.config['SESSION_COOKIE_SECURE'] = True
-            res = self.client.post("/login", data={
+            res = self.client.post(self.expand_path('/login'), data={
                 'email_address': 'valid@email.com',
                 'password': '1234567890'
             })
             cookie_value = self.get_cookie_by_name(res, 'dm_session')
             assert cookie_value['dm_session'] is not None
-            assert cookie_value['Secure; HttpOnly; Path'] == '/'
+            assert cookie_value['Secure; HttpOnly; Path'] == self.expand_path('/')
             assert cookie_value["Domain"] == "127.0.0.1"
 
     def test_should_redirect_to_login_on_logout(self):
-        res = self.client.get('/logout')
+        res = self.client.get(self.expand_path('/logout'))
         assert res.status_code == 302
-        assert res.location == 'http://localhost/login'
+        assert res.location == 'http://localhost' + self.expand_path('/login')
 
     @mock.patch('app.main.views.login.data_api_client')
     def test_should_return_a_403_for_invalid_login(self, data_api_client):
         data_api_client.authenticate_user.return_value = None
 
-        res = self.client.post("/login", data={
+        res = self.client.post(self.expand_path('/login'), data={
             'email_address': 'valid@email.com',
             'password': '1234567890'
         })
@@ -192,7 +180,7 @@ class TestLogin(BaseApplicationTest):
         assert res.status_code == 403
 
     def test_should_be_validation_error_if_no_email_or_password(self):
-        res = self.client.post("/login", data={})
+        res = self.client.post(self.expand_path('/login'), data={})
         data = res.get_data(as_text=True)
         assert res.status_code == 400
 
@@ -200,7 +188,7 @@ class TestLogin(BaseApplicationTest):
         assert has_validation_errors(data, 'password')
 
     def test_should_be_validation_error_if_invalid_email(self):
-        res = self.client.post("/login", data={
+        res = self.client.post(self.expand_path('/login'), data={
             'email_address': 'invalid',
             'password': '1234567890'
         })
@@ -235,13 +223,13 @@ class TestResetPassword(BaseApplicationTest):
         self._data_api_client.stop()
 
     def test_email_should_not_be_empty(self):
-        res = self.client.post("/reset-password", data={})
+        res = self.client.post(self.expand_path('/reset-password'), data={})
         data = res.get_data(as_text=True)
         assert res.status_code == 400
         assert has_validation_errors(data, 'email_address')
 
     def test_email_should_be_valid(self):
-        res = self.client.post("/reset-password", data={
+        res = self.client.post(self.expand_path('/reset-password'), data={
             'email_address': 'invalid'
         })
         data = res.get_data(as_text=True)
@@ -250,24 +238,25 @@ class TestResetPassword(BaseApplicationTest):
 
     @mock.patch('app.main.views.login.send_email')
     def test_redirect_to_same_page_on_success(self, send_email):
-        res = self.client.post("/reset-password", data={
+        res = self.client.post(self.expand_path('/reset-password'), data={
             'email_address': 'email@email.com'
         })
         assert res.status_code == 302
-        assert res.location == 'http://localhost/reset-password'
+        assert res.location == 'http://localhost' + self.expand_path('/reset-password')
 
     @mock.patch('app.main.views.login.send_email')
     def test_show_email_sent_message_on_success(self, send_email):
-        res = self.client.post("/reset-password", data={
+        res = self.client.post(self.expand_path('/reset-password'), data={
             'email_address': 'email@email.com'
         }, follow_redirects=True)
         assert res.status_code == 200
         content = self.strip_all_whitespace(res.get_data(as_text=True))
+        print content
         assert self.strip_all_whitespace(EMAIL_SENT_MESSAGE) in content
 
     @mock.patch('app.main.views.login.send_email')
     def test_should_strip_whitespace_surrounding_reset_password_email_address_field(self, send_email):
-        self.client.post("/reset-password", data={
+        self.client.post(self.expand_path('/reset-password'), data={
             'email_address': ' email@email.com'
         })
         self.data_api_client_mock.get_user.assert_called_with(email_address='email@email.com')
@@ -278,7 +267,7 @@ class TestResetPassword(BaseApplicationTest):
                 self._user,
                 self.app.config['SECRET_KEY'],
                 self.app.config['RESET_PASSWORD_SALT'])
-            url = '/reset-password/{}'.format(token)
+            url = self.expand_path('/reset-password/{}').format(token)
 
         res = self.client.get(url)
         assert res.status_code == 200
@@ -290,7 +279,7 @@ class TestResetPassword(BaseApplicationTest):
                 self._user,
                 self.app.config['SECRET_KEY'],
                 self.app.config['RESET_PASSWORD_SALT'])
-            url = '/reset-password/{}'.format(token)
+            url = self.expand_path('/reset-password/{}').format(token)
 
             res = self.client.post(url, data={
                 'password': '',
@@ -307,7 +296,7 @@ class TestResetPassword(BaseApplicationTest):
                 self._user,
                 self.app.config['SECRET_KEY'],
                 self.app.config['RESET_PASSWORD_SALT'])
-            url = '/reset-password/{}'.format(token)
+            url = self.expand_path('/reset-password/{}').format(token)
 
             res = self.client.post(url, data={
                 'password': '123456789',
@@ -323,7 +312,7 @@ class TestResetPassword(BaseApplicationTest):
                 self._user,
                 self.app.config['SECRET_KEY'],
                 self.app.config['RESET_PASSWORD_SALT'])
-            url = '/reset-password/{}'.format(token)
+            url = self.expand_path('/reset-password/{}').format(token)
 
             res = self.client.post(url, data={
                 'password':
@@ -341,7 +330,7 @@ class TestResetPassword(BaseApplicationTest):
                 self._user,
                 self.app.config['SECRET_KEY'],
                 self.app.config['RESET_PASSWORD_SALT'])
-            url = '/reset-password/{}'.format(token)
+            url = self.expand_path('/reset-password/{}').format(token)
 
             res = self.client.post(url, data={
                 'password': '1234567890',
@@ -358,14 +347,14 @@ class TestResetPassword(BaseApplicationTest):
                 self._user,
                 self.app.config['SECRET_KEY'],
                 self.app.config['RESET_PASSWORD_SALT'])
-            url = '/reset-password/{}'.format(token)
+            url = self.expand_path('/reset-password/{}').format(token)
 
             res = self.client.post(url, data={
                 'password': '1234567890',
                 'confirm_password': '1234567890'
             })
             assert res.status_code == 302
-            assert res.location == 'http://localhost/login'
+            assert res.location == 'http://localhost' + self.expand_path('/login')
 
     def test_should_not_strip_whitespace_surrounding_reset_password_password_field(self):
         with self.app.app_context():
@@ -373,7 +362,7 @@ class TestResetPassword(BaseApplicationTest):
                 self._user,
                 self.app.config['SECRET_KEY'],
                 self.app.config['RESET_PASSWORD_SALT'])
-            url = '/reset-password/{}'.format(token)
+            url = self.expand_path('/reset-password/{}').format(token)
 
             self.client.post(url, data={
                 'password': '  1234567890',
@@ -394,7 +383,7 @@ class TestResetPassword(BaseApplicationTest):
                 self._user,
                 self.app.config['SECRET_KEY'],
                 self.app.config['RESET_PASSWORD_SALT'])
-            url = '/reset-password/{}'.format(token)
+            url = self.expand_path('/reset-password/{}').format(token)
 
             res = self.client.post(url, data={
                 'password': '1234567890',
@@ -416,7 +405,7 @@ class TestResetPassword(BaseApplicationTest):
             self.app.config['RESET_PASSWORD_EMAIL_NAME'] = "EMAIL NAME"
 
             res = self.client.post(
-                '/reset-password',
+                self.expand_path('/reset-password'),
                 data={'email_address': 'email@email.com'}
             )
 
@@ -440,7 +429,7 @@ class TestResetPassword(BaseApplicationTest):
             send_email.side_effect = MandrillException(Exception('API is down'))
 
             res = self.client.post(
-                '/reset-password',
+                self.expand_path('/reset-password'),
                 data={'email_address': 'email@email.com'}
             )
 
@@ -470,13 +459,13 @@ class TestLoginFormsNotAutofillable(BaseApplicationTest):
 
     def test_login_form_and_inputs_not_autofillable(self):
         self._forms_and_inputs_not_autofillable(
-            "/login",
+            self.expand_path('/login'),
             "Log in to see more"
         )
 
     def test_request_password_reset_form_and_inputs_not_autofillable(self):
         self._forms_and_inputs_not_autofillable(
-            "/reset-password",
+            self.expand_path('/reset-password'),
             "Reset password"
         )
 
@@ -497,7 +486,7 @@ class TestLoginFormsNotAutofillable(BaseApplicationTest):
                 self.app.config['SECRET_KEY'],
                 self.app.config['RESET_PASSWORD_SALT'])
 
-            url = '/reset-password/{}'.format(token)
+            url = self.expand_path('/reset-password/{}').format(token)
 
         self._forms_and_inputs_not_autofillable(
             url,
@@ -507,7 +496,7 @@ class TestLoginFormsNotAutofillable(BaseApplicationTest):
 
 class TestBuyersCreation(BaseApplicationTest):
     def test_should_get_create_buyer_form_ok(self):
-        res = self.client.get('/buyers/create')
+        res = self.client.get(self.expand_path('/buyers/create'))
         assert res.status_code == 200
         assert 'Create a buyer account' in res.get_data(as_text=True)
 
@@ -515,7 +504,7 @@ class TestBuyersCreation(BaseApplicationTest):
     @mock.patch('app.main.views.login.data_api_client')
     def test_should_be_able_to_submit_valid_email_address(self, data_api_client, send_email):
         res = self.client.post(
-            '/buyers/create',
+            self.expand_path('/buyers/create'),
             data={'email_address': 'valid@test.gov.uk'},
             follow_redirects=True
         )
@@ -524,7 +513,7 @@ class TestBuyersCreation(BaseApplicationTest):
 
     def test_should_raise_validation_error_for_invalid_email_address(self):
         res = self.client.post(
-            '/buyers/create',
+            self.expand_path('/buyers/create'),
             data={'email_address': 'not-an-email-address'},
             follow_redirects=True
         )
@@ -536,7 +525,7 @@ class TestBuyersCreation(BaseApplicationTest):
 
     def test_should_raise_validation_error_for_email_address_with_two_at_symbols(self):
         res = self.client.post(
-            '/buyers/create',
+            self.expand_path('/buyers/create'),
             data={'email_address': 'not-an@email@gov.uk'},
             follow_redirects=True
         )
@@ -547,7 +536,7 @@ class TestBuyersCreation(BaseApplicationTest):
 
     def test_should_raise_validation_error_for_empty_email_address(self):
         res = self.client.post(
-            '/buyers/create',
+            self.expand_path('/buyers/create'),
             data={},
             follow_redirects=True
         )
@@ -560,13 +549,13 @@ class TestBuyersCreation(BaseApplicationTest):
     def test_should_show_error_page_for_unrecognised_email_domain(self, data_api_client):
         data_api_client.is_email_address_with_valid_buyer_domain.return_value = False
         res = self.client.post(
-            '/buyers/create',
+            self.expand_path('/buyers/create'),
             data={'email_address': 'kev@ymail.com'},
             follow_redirects=True
         )
         assert res.status_code == 400
         data = res.get_data(as_text=True)
-        assert "To create an account you must be part of an Australian local, state or federal government organisation." in data
+        assert "government email address" in data
 
     @mock.patch('app.main.views.login.data_api_client')
     @mock.patch('app.main.views.login.send_email')
@@ -574,7 +563,7 @@ class TestBuyersCreation(BaseApplicationTest):
         data_api_client.is_email_address_with_valid_buyer_domain.return_value = True
         send_email.side_effect = MandrillException("Arrrgh")
         res = self.client.post(
-            '/buyers/create',
+            self.expand_path('/buyers/create'),
             data={'email_address': 'valid@test.gov.uk'},
             follow_redirects=True
         )
@@ -585,7 +574,7 @@ class TestBuyersCreation(BaseApplicationTest):
     @mock.patch('app.main.views.login.data_api_client')
     def test_should_create_audit_event_when_email_sent(self, data_api_client, send_email):
         res = self.client.post(
-            '/buyers/create',
+            self.expand_path('/buyers/create'),
             data={'email_address': 'valid@test.gov.uk'},
             follow_redirects=True
         )
@@ -607,18 +596,18 @@ class TestCreateUser(BaseApplicationTest):
     def test_should_be_an_error_for_invalid_token(self):
         token = "1234"
         res = self.client.get(
-            '/create-user/{}'.format(token)
+            self.expand_path('/create-user/{}').format(token)
         )
         assert res.status_code == 400
 
     def test_should_be_an_error_for_missing_token(self):
-        res = self.client.get('/create-user')
+        res = self.client.get(self.expand_path('/create-user'))
         assert res.status_code == 404
 
     def test_should_be_an_error_for_missing_token_trailing_slash(self):
-        res = self.client.get('/create-user/')
+        res = self.client.get(self.expand_path('/create-user/'))
         assert res.status_code == 301
-        assert res.location == 'http://localhost/create-user'
+        assert res.location == 'http://localhost' + self.expand_path('/create-user')
 
     @mock.patch('app.main.views.login.data_api_client')
     def test_should_be_an_error_for_invalid_token_contents(self, data_api_client):
@@ -631,38 +620,21 @@ class TestCreateUser(BaseApplicationTest):
         )
 
         res = self.client.get(
-            '/create-user/{}'.format(token)
+            self.expand_path('/create-user/{}').format(token)
         )
         assert res.status_code == 400
         assert data_api_client.get_user.called is False
 
     def test_should_be_a_bad_request_if_token_expired(self):
         res = self.client.get(
-            'create-user/12345'
+            self.expand_path('create-user/12345')
         )
 
-        assert res.status_code == 400
-        assert USER_LINK_EXPIRED_ERROR in res.get_data(as_text=True)
-
-    @mock.patch('app.main.views.login.data_api_client')
-    def test_should_render_create_user_page_if_user_does_not_exist(self, data_api_client):
-        data_api_client.get_user.return_value = None
-
-        token = self._generate_token()
-        res = self.client.get(
-            'create-user/{}'.format(token)
-        )
-
-        assert res.status_code == 200
-        for message in [
-            "Add your name and password",
-            "test@email.com",
-        ]:
-            assert message in res.get_data(as_text=True)
+        assert res.status_code >= 400
 
     def test_should_be_an_error_if_invalid_token_on_submit(self):
         res = self.client.post(
-            '/create-user/invalidtoken',
+            self.expand_path('/create-user/invalidtoken'),
             data={
                 'password': '123456789',
                 'name': 'name',
@@ -679,7 +651,7 @@ class TestCreateUser(BaseApplicationTest):
     def test_should_be_an_error_if_missing_name_and_password(self):
         token = self._generate_token()
         res = self.client.post(
-            '/create-user/{}'.format(token),
+            self.expand_path('/create-user/{}').format(token),
             data={}
         )
 
@@ -690,7 +662,7 @@ class TestCreateUser(BaseApplicationTest):
     def test_should_be_an_error_if_too_short_name_and_password(self):
         token = self._generate_token()
         res = self.client.post(
-            '/create-user/{}'.format(token),
+            self.expand_path('/create-user/{}').format(token),
             data={
                 'password': "123456789",
                 'name': ""
@@ -709,7 +681,7 @@ class TestCreateUser(BaseApplicationTest):
             fiftyone = "a" * 51
 
             res = self.client.post(
-                '/create-user/{}'.format(token),
+                self.expand_path('/create-user/{}').format(token),
                 data={
                     'password': fiftyone,
                     'name': twofiftysix
@@ -717,10 +689,7 @@ class TestCreateUser(BaseApplicationTest):
             )
 
             assert res.status_code == 400
-            for message in [
-                "Add your name and password",
-                "test@email.com"
-            ]:
+            for message in ["Create account", "test@email.com"]:
                 assert message in res.get_data(as_text=True)
 
             assert has_validation_errors(res.get_data(as_text=True), 'name')
@@ -732,7 +701,7 @@ class TestCreateUser(BaseApplicationTest):
 
         token = self._generate_token()
         res = self.client.get(
-            '/create-user/{}'.format(token)
+            self.expand_path('/create-user/{}').format(token)
         )
 
         assert res.status_code == 400
@@ -744,7 +713,7 @@ class TestCreateUser(BaseApplicationTest):
 
         token = self._generate_token()
         res = self.client.get(
-            '/create-user/{}'.format(token)
+            self.expand_path('/create-user/{}').format(token)
         )
 
         assert res.status_code == 400
@@ -763,11 +732,11 @@ class TestCreateUser(BaseApplicationTest):
 
         token = self._generate_token()
         res = self.client.get(
-            '/create-user/{}'.format(token)
+            self.expand_path('/create-user/{}').format(token)
         )
 
         assert res.status_code == 400
-        assert "Your account is locked" in res.get_data(as_text=True)
+        assert "account is locked" in res.get_data(as_text=True)
 
     @mock.patch('app.main.views.login.data_api_client')
     def test_should_return_an_error_with_inactive_message_if_user_is_not_active(self, data_api_client):
@@ -782,7 +751,7 @@ class TestCreateUser(BaseApplicationTest):
 
         token = self._generate_token()
         res = self.client.get(
-            '/create-user/{}'.format(token)
+            self.expand_path('/create-user/{}').format(token)
         )
 
         assert res.status_code == 400
@@ -800,7 +769,7 @@ class TestCreateUser(BaseApplicationTest):
 
         token = self._generate_token()
         res = self.client.get(
-            '/create-user/{}'.format(token),
+            self.expand_path('/create-user/{}').format(token),
             follow_redirects=True
         )
 
@@ -820,7 +789,7 @@ class TestCreateUser(BaseApplicationTest):
 
         token = self._generate_token()
         res = self.client.get(
-            '/create-user/{}'.format(token)
+            self.expand_path('/create-user/{}').format(token)
         )
 
         assert res.status_code == 400
@@ -839,7 +808,7 @@ class TestCreateUser(BaseApplicationTest):
 
         token = self._generate_token()
         res = self.client.get(
-            '/create-user/{}'.format(token)
+            self.expand_path('/create-user/{}').format(token)
         )
 
         assert res.status_code == 400
@@ -851,7 +820,7 @@ class TestCreateUser(BaseApplicationTest):
 
         token = self._generate_token()
         res = self.client.post(
-            '/create-user/{}'.format(token),
+            self.expand_path('/create-user/{}').format(token),
             data={
                 'password': 'validpassword',
                 'name': 'valid name',
@@ -868,7 +837,7 @@ class TestCreateUser(BaseApplicationTest):
         })
 
         assert res.status_code == 302
-        assert res.location == 'http://localhost/'
+        assert res.location == 'http://localhost' + self.expand_path('/')
 
     @mock.patch('app.main.views.login.data_api_client')
     def test_should_return_an_error_if_user_exists(self, data_api_client):
@@ -876,7 +845,7 @@ class TestCreateUser(BaseApplicationTest):
 
         token = self._generate_token()
         res = self.client.post(
-            '/create-user/{}'.format(token),
+            self.expand_path('/create-user/{}').format(token),
             data={
                 'password': 'validpassword',
                 'phone_number': '020-7930-4832',
@@ -899,7 +868,7 @@ class TestCreateUser(BaseApplicationTest):
 
         token = self._generate_token()
         res = self.client.post(
-            '/create-user/{}'.format(token),
+            self.expand_path('/create-user/{}').format(token),
             data={
                 'password': 'validpassword',
                 'name': 'valid name',
@@ -916,14 +885,14 @@ class TestCreateUser(BaseApplicationTest):
         })
 
         assert res.status_code == 302
-        assert res.location == 'http://localhost/'
+        assert res.location == 'http://localhost' + self.expand_path('/')
 
     @mock.patch('app.main.views.login.data_api_client')
     def test_should_return_an_error_if_bad_phone_number(self, data_api_client):
 
         token = self._generate_token()
         res = self.client.post(
-            '/create-user/{}'.format(token),
+            self.expand_path('/create-user/{}').format(token),
             data={
                 'password': 'validpassword',
                 'name': 'valid name',
@@ -938,7 +907,7 @@ class TestCreateUser(BaseApplicationTest):
         data_api_client.get_user.return_value = None
         token = self._generate_token()
         self.client.post(
-            '/create-user/{}'.format(token),
+            self.expand_path('/create-user/{}').format(token),
             data={
                 'password': 'validpassword',
                 'name': '  valid name  ',
@@ -960,7 +929,7 @@ class TestCreateUser(BaseApplicationTest):
         data_api_client.get_user.return_value = None
         token = self._generate_token()
         self.client.post(
-            '/create-user/{}'.format(token),
+            self.expand_path('/create-user/{}').format(token),
             data={
                 'password': '  validpassword  ',
                 'name': 'valid name  ',
@@ -985,7 +954,7 @@ class TestCreateUser(BaseApplicationTest):
 
             token = self._generate_token()
             res = self.client.post(
-                '/create-user/{}'.format(token),
+                self.expand_path('/create-user/{}').format(token),
                 data={
                     'password': 'validpassword',
                     'name': 'valid name'
@@ -997,23 +966,23 @@ class TestCreateUser(BaseApplicationTest):
 class TestBuyerRoleRequired(BaseApplicationTest):
     def test_login_required_for_buyer_pages(self):
         with self.app.app_context():
-            res = self.client.get('/buyers')
+            res = self.client.get(self.expand_path('/buyers'))
             assert res.status_code == 302
-            assert res.location == 'http://localhost/login?next=%2Fbuyers'
+            assert res.location.startswith('http://localhost' + self.expand_path('/login?next=%2F'))
 
     def test_supplier_cannot_access_buyer_pages(self):
         with self.app.app_context():
             self.login_as_supplier()
-            res = self.client.get('/buyers')
+            res = self.client.get(self.expand_path('/buyers'))
             assert res.status_code == 302
-            assert res.location == 'http://localhost/login?next=%2Fbuyers'
+            assert res.location.startswith('http://localhost' + self.expand_path('/login?next=%2F'))
             self.assert_flashes('buyer-role-required', expected_category='error')
 
     @mock.patch('app.buyers.views.buyers.data_api_client')
     def test_buyer_pages_ok_if_logged_in_as_buyer(self, data_api_client):
         with self.app.app_context():
             self.login_as_buyer()
-            res = self.client.get('/buyers')
+            res = self.client.get(self.expand_path('/buyers'))
             page_text = res.get_data(as_text=True)
             assert res.status_code == 200
             assert 'buyer@email.com' in page_text
