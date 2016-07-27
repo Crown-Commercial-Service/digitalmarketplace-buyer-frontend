@@ -3,5 +3,8 @@
     .hint {
       color: $grey;
     }
+    .hint-with-error {
+      color: $error-colour;
+    }
   }
 }
