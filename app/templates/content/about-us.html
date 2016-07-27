@@ -1,15 +1,40 @@
-{% extends "_base_landingpage_with_hero.html" %}
+{% extends "_base_page.html" %}
 
-{% block page_title %}Digital Marketplace{% endblock %}
+{% block page_title %}About us{% endblock %}
 
-{% block body_classes %}home{% endblock %}
+{% block body_classes %}about-us{% endblock %}
 
-{% block landingpage_title %}Getting started{% endblock %}
-{% block landingpage_tagline %}Lorem ipsum dolor sit amet.{% endblock %}
+{% block hero %}
+  {% with
+    site_title='About the Marketplace'|safe, 
+    tagline="We're transforming how government buys digital and technology services, and making it easier for businesses to work with us."
+  %}
+    {% include "_hero.html" %}
+  {% endwith %}
+{% endblock %}
+
+{% block sidebar %}
+  {% with
+    local_nav_toggle='Menu'
+  %}
+    <aside class="sidebar" id="nav">
+      {% include "sidebar/_sample_nav.html" %}
+    </aside>
+  {% endwith %}
+{% endblock %}
 
 {% block main_content %}
+  
+  <nav class="index-links">
+    <h2>In this section</h2>
+    <ul>
+      <li><a href="#heading-2">Heading 2</a></li>
+      <li><a href="#">Another</a></li>
+      <li><a href="#">One more</a></li>
+    </ul>
+  </nav>
 
-  <h2>Supplier Capabilities</h2>
+  <a id="heading-2"></a><h2>Heading 2</h2>
   <p>
     Lorem ipsum dolor sit amet, veniam labores appareat ne eum. Duo doming delicata adipiscing ex, vivendo posidonium est te, an veritus necessitatibus cum. Ferri legere nominavi vim an, vel cu hinc viris tincidunt. Verear audire voluptatum ei mel. Soleat eligendi quo ei. Fugit ceteros inimicus te ius, duo ut laoreet deleniti.
   </p>

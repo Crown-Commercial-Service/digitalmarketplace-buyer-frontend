@@ -1,11 +1,14 @@
 {% extends "_base_page.html" %}
 
-{% block page_title %}Digital Marketplace{% endblock %}
-
 {% block body_classes %}home{% endblock %}
 
 {% block hero %}
-  {% include "heroes/homepage.html" %}
+  {% with
+    site_title='MARKETPLACE <span class="badge--beta">beta</span>'|safe, 
+    tagline='The place to do ICT business with government.'
+  %}
+    {% include "_hero.html" %}
+  {% endwith %}
 {% endblock %}
 
 {% block main_content %}
