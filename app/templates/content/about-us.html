@@ -1,107 +1,96 @@
 {% extends "_base_page.html" %}
 
-{% block page_title %}About us{% endblock %}
+{% block page_title %}About the Marketplace{% endblock %}
 
 {% block body_classes %}about-us{% endblock %}
 
-{% block hero %}
-  {% with
-    site_title='About the Marketplace'|safe, 
-    tagline="We're transforming how government buys digital and technology services, and making it easier for businesses to work with us."
-  %}
-    {% include "_hero.html" %}
-  {% endwith %}
-{% endblock %}
-
-{% block sidebar %}
-  {% with
-    local_nav_toggle='Menu'
-  %}
-    <aside class="sidebar" id="nav">
-      {% include "sidebar/_sample_nav.html" %}
-    </aside>
-  {% endwith %}
-{% endblock %}
-
 {% block main_content %}
   
+  <h1>About the Marketplace</h1>
+  <p>
+    We're transforming how government buys digital and technology services, and making it easier for businesses to work with us.
+  </p>
+
   <nav class="index-links">
     <h2>In this section</h2>
     <ul>
-      <li><a href="#heading-2">Heading 2</a></li>
-      <li><a href="#">Another</a></li>
-      <li><a href="#">One more</a></li>
+      <li><a href="#our-purpose">Our purpose</a></li>
+      <li><a href="#our-process">Our process</a></li>
+      <li><a href="#our-progress">Our progress</a></li>
+      <li><a href="#compliance-with-cprs">Compliance with Commonwealth Procurement Rules?</a></li>
+      <li><a href="#links">Links</a></li>
     </ul>
   </nav>
 
-  <a id="heading-2"></a><h2>Heading 2</h2>
+  <a id="our-purpose"></a><h2>Our purpose</h2>
   <p>
-    Lorem ipsum dolor sit amet, veniam labores appareat ne eum. Duo doming delicata adipiscing ex, vivendo posidonium est te, an veritus necessitatibus cum. Ferri legere nominavi vim an, vel cu hinc viris tincidunt. Verear audire voluptatum ei mel. Soleat eligendi quo ei. Fugit ceteros inimicus te ius, duo ut laoreet deleniti.
+    The Marketplace is an initiative of the <em>National Innovation &amp; Science Agenda</em> in response to a specific ICT industry problem. Currently, startups and small-to-medium suppliers of digital services find it hard to participate in large scale Australian Government ICT procurement, which leaves these key players and their expertise out of the $5 billion annual spend on ICT products and services.
   </p>
-  <ul class="list-vertical--thirds">
+  <p>
+    And so, the purpose of the Marketplace is to create a new arena that makes it easier for all ICT businesses to compete more openly for government contracts, with an end-goal of creating better services for all Australians.
+  </p>
+  <p>
+    For government buyers, the Marketplace is somewhere to discover new ideas, solve problems and find approved ICT partners.
+  </p>
+  <p>
+    For ICT professionals it’s a place to offer products and services, compete for government contracts, pitch ideas and get involved with ideation &mdash; regardless of whether you’re a sole trader, startup or a multinational.
+  </p>
+  <a id="our-process"></a><h2>Our process</h2>
+  <p>
+    First, ICT professionals list their business and services within the Marketplace, currently this is being done by an internal Marketplace team. But soon this will be something suppliers can do themselves.
+  </p>
+  <p>
+    The supplier services are broken down and listed according to the specific field of expertise &mdash; for example 'user research' or 'ethical hacking' &mdash; with upfront price estimates. This approach simplifies procurement and allows greater scope for collaboration and innovation.
+  </p>
+  <p>
+    Government buyers search the Marketplace, identify suitable suppliers and procure the best value option for their project.
+  </p>
+  <p>
+    Government buyers can also challenge the Marketplace to develop solutions to their specific problem or brief.
+  </p>
+  <a id="our-progress"></a><h2>Our progress</h2>
+  <p>
+    The Marketplace is Agile. Which means continuous delivery and improvement through feedback from users. The features of the site will be enhanced and expanded over time in response to user needs. It’s an approach that’s allowed us to come a long way in a short time.
+  </p>
+  <ul class="timeline">
     <li>
-      <article>
-        <h3>Lorem ipsum dolor</h3>
-        <p>
-          Lorem ipsum dolor sit amet, veniam labores appareat ne eum. Duo doming delicata adipiscing ex, vivendo posidonium est te, an veritus necessitatibus cum. Ferri legere nominavi vim an, vel cu hinc viris tincidunt. Verear audire voluptatum ei mel. Soleat eligendi quo ei. Fugit ceteros inimicus te ius, duo ut laoreet deleniti.
-        </p>
-        <p>
-          <a class="see-more" href="#">Find out more</a>
-        </p>
-      </article>
+      <h3>Digital Specialists Panel opened &mdash; March 2016</h3>
+      <ul class="links">
+        <li>
+          <a href="http://www.dto.gov.au/blog/new-panel-to-bring-in-digital-expertise/">Read the blog post</a>
+        </li>
+      </ul>
     </li>
     <li>
-      <article>
-        <h3>Lorem ipsum dolor</h3>
-        <p>
-          Lorem ipsum dolor sit amet, veniam labores appareat ne eum. Duo doming delicata adipiscing ex, vivendo posidonium est te, an veritus necessitatibus cum. Ferri legere nominavi vim an, vel cu hinc viris tincidunt. Verear audire voluptatum ei mel. Soleat eligendi quo ei. Fugit ceteros inimicus te ius, duo ut laoreet deleniti.
-        </p>
-        <p>
-          <a class="see-more" href="#">Find out more</a>
-        </p>
-      </article>
+      <h3>Discovery started &mdash; April 2016</h3>
     </li>
     <li>
-      <article>
-        <h3>Lorem ipsum dolor</h3>
-        <p>
-          Lorem ipsum dolor sit amet, veniam labores appareat ne eum. Duo doming delicata adipiscing ex, vivendo posidonium est te, an veritus necessitatibus cum. Ferri legere nominavi vim an, vel cu hinc viris tincidunt. Verear audire voluptatum ei mel. Soleat eligendi quo ei. Fugit ceteros inimicus te ius, duo ut laoreet deleniti.
-        </p>
-        <p>
-          <a class="see-more" href="#">Find out more</a>
-        </p>
-      </article>
+      <h3>Alpha prototype delivered &mdash; July 2016</h3>
     </li>
     <li>
-      <article>
-        <h3>Lorem ipsum dolor</h3>
-        <p>
-          Lorem ipsum dolor sit amet, veniam labores appareat ne eum. Duo doming delicata adipiscing ex, vivendo posidonium est te, an veritus necessitatibus cum. Ferri legere nominavi vim an, vel cu hinc viris tincidunt. Verear audire voluptatum ei mel. Soleat eligendi quo ei. Fugit ceteros inimicus te ius, duo ut laoreet deleniti.
-        </p>
-        <p>
-          <a class="see-more" href="#">Find out more</a>
-        </p>
-      </article>
+      <h3>Soft Beta launch &mdash; 1 August 2016</h3>
     </li>
     <li>
-      <article>
-        <h3>Lorem ipsum dolor</h3>
-        <p>
-          Lorem ipsum dolor sit amet, veniam labores appareat ne eum. Duo doming delicata adipiscing ex, vivendo posidonium est te, an veritus necessitatibus cum. Ferri legere nominavi vim an, vel cu hinc viris tincidunt. Verear audire voluptatum ei mel. Soleat eligendi quo ei. Fugit ceteros inimicus te ius, duo ut laoreet deleniti.
-        </p>
-        <p>
-          <a class="see-more" href="#">Find out more</a>
-        </p>
-      </article>
+      <h3>Beta launch &mdash; 31 August 2016</h3>
     </li>
   </ul>
-  <article>
-    <h2>Lorem ipsum dolor sit amet</h2>
-    <p>
-      Lorem ipsum dolor sit amet, veniam labores appareat ne eum. Duo doming delicata adipiscing ex, vivendo posidonium est te, an veritus necessitatibus cum. Ferri legere nominavi vim an, vel cu hinc viris tincidunt. Verear audire voluptatum ei mel. Soleat eligendi quo ei. Fugit ceteros inimicus te ius, duo ut laoreet deleniti.
-    </p>
-    <p>
-      <a class="see-more" href="#">Find out more</a>
-    </p>
-  </article>
+  <a id="compliance-with-cprs"></a><h2>Compliance with Commonwealth Procurement Rules?</h2>
+  <p>
+    Every business listed within the Marketplace is listed on the Digital Services Panel (DSP).
+  </p>
+  <p>
+    According to the <a href="http://www.finance.gov.au/procurement/procurement-policy-and-guidance/buying/procurement-practice/panel-and-mul/practice.html">Commonwealth Procurement Rules</a>:
+  </p>
+  <p>
+    This means everyone in government that is in a position to commission ICT products and services can freely use any of the businesses listed in the Marketplace &mdash; for the products or services specified &mdash; without a minimum or maximum spend.
+  </p>
+  <a id="links"></a><h2>Links</h2>
+  <p>
+    <a href="{{ url_for('.supplier_search') }}">Visit the Marketplace catalogue</a><br>
+    to find the ICT expertise you need.
+  </p>
+  <p>
+    <a href="{{ url_for('.buyers_guide') }}">View the Buyers' Guide</a><br>
+    to see how to commission a supplier.
+  </p>
 {% endblock %}
