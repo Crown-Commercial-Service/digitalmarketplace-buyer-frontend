@@ -1,0 +1,13 @@
+
+.form-page {
+  main {
+    .content-main {
+      &:first-child {
+        @include media($desktop) {
+          @include span-columns(10 of 16);
+          @include shift(3);
+        }
+      }
+    }
+  }
+}

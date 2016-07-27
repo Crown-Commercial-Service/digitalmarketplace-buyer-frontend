@@ -4,22 +4,23 @@
 
 {% block phase_banner %}{% endblock %}
 
+{% block body_classes %} registration-pages form-page {% endblock %}
 {% block main_content %}
 
 {% if error == 'invalid_buyer_domain' %}
 
   <header>
-    <h1>You must use a public sector email address</h1>
+    <h1>You need a government email address</h1>
   </header>
   <p>
-    You must be employed by, or represent, a public sector organisation to create a buyer account.
-  </p>
-  <p>
-    The email you used doesn't belong to a recognised public sector domain.
+    To create an account you must be part of an Australian local, state or federal government organisation.
   </p>
   <div>
     <p>
-      <a href="{{ url_for('.create_buyer_account') }}">Create an account using a different email address</a> or email
+      <a href="{{ url_for('.create_buyer_account') }}">Try again with a different email address</a>
+    </p>
+    <p>
+      Or if you believe your email address should be recognised, email
       <a href="mailto:enquiries@digitalmarketplace.gov.au">enquiries@digitalmarketplace.gov.au</a> if:
     </p>
     <ul>
@@ -39,7 +40,7 @@
   </header>
   <p>
     The link you used to create an account may have expired.<br/>
-    Check you’ve entered the correct link or <a href="{{ url_for('.create_buyer_account') }}">send a new one</a>.<br/>
+    Check you’ve entered the correct link or <a href="{{ url_for('.create_buyer_account') }}">request a new link</a>.<br/>
     If you still can’t create an account, email <a href="mailto:enquiries@digitalmarketplace.gov.au">enquiries@digitalmarketplace.gov.au</a>
   </p>
 
@@ -57,10 +58,10 @@
   {% elif user.locked %}
   
     <header>
-      <h1>Your account has been locked.</h1>
+      <h1>Your account is locked.</h1>
     </header>
     <p>
-      Email <a href="mailto:enquiries@digitalmarketplace.gov.au">enquiries@digitalmarketplace.gov.au</a> to unlock your account.
+      To unlock your account email <a href="mailto:enquiries@digitalmarketplace.gov.au">enquiries@digitalmarketplace.gov.au</a>.
     </p>
 
   {% elif user.role == 'supplier' %}

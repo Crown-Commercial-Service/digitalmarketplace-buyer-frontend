@@ -20,6 +20,7 @@
 {% endblock %}
 #}
 
+{% block body_classes %} registration-pages form-page{% endblock %}
 {% block main_content %}
 
 {% if form.errors %}
@@ -42,7 +43,7 @@
 {% endwith %}
 
 <p>
-  You must be employed by, or represent, a public sector organisation.
+  To create an account you must be part of an Australian local, state or federal government organisation.
 </p>
 
 <form method="POST" action="{{ url_for('.submit_create_buyer_account') }}">
@@ -50,7 +51,7 @@
   {%
     with
       question = "Your email address",
-      hint = "We will send an account activation email to this address. You'll then be able to set your password.",
+      hint = "Must be an Australian Government email address ending in .gov.au",
       name = "email_address",
       value = email_address,
       error = form.email_address.errors[0]
@@ -65,5 +66,6 @@
   %}
   {% include "au-ui-toolkit/button.html" %}
   {% endwith %}
+  <p><small>By signing up, you agree to the <a href="{{ url_for('main.terms_of_use') }}">Terms of Use</a> and <a href="{{ url_for('main.privacy_policy') }}">Privacy Policy</a>.</small></p>
 </form>
 {% endblock %}
