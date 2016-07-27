@@ -25,12 +25,12 @@ def is_alpha(character):
 
 
 @main.route('/suppliers/<int:code>')
-@login_required
+#@login_required
 def get_supplier(code):
     supplier = DataAPIClient().get_supplier(code)['supplier']
 
     supplier_categories = set(
-        price['serviceRole']['role'].replace('Junior', '').replace('Senior', '')
+        price['serviceRole']['role'].replace('Junior ', '').replace('Senior ', '')  # Mind the white space after Junior
         for price in supplier['prices']
     )
 

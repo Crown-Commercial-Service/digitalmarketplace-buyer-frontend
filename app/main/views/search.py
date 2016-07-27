@@ -28,7 +28,7 @@ def supplier_search():
     role_list = []
     role_list_plain = []
     for role_row in response['roles']:
-        role = role_row['role']
+        role = role_row['role'].replace('Senior ', '').replace('Junior ', '')  # Mind the white space after Junior
         if role not in role_list_plain:
             # Example: Option('category', 'pm', 'Product Management', False),
             option = Option('role', role, role, role in role_list_from_request)
@@ -117,7 +117,8 @@ def supplier_search():
         supplier_roles = []
         supplier_roles_plain = []
         for price in details['prices']:
-            role = price['serviceRole']['role']
+            # Mind the white space after Junior
+            role = price['serviceRole']['role'].replace('Senior ', '').replace('Junior ', '')
             if role not in supplier_roles_plain:
                 supplier_roles.append(Role(role))
                 supplier_roles_plain.append(role)
