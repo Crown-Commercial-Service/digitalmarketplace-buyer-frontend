@@ -1,11 +1,8 @@
-from datetime import timedelta
-
-from flask import current_app, session
-from wtforms import PasswordField, Form
-from wtforms.csrf.session import SessionCSRF
+from wtforms import PasswordField
 from wtforms.validators import DataRequired, EqualTo, Length, Regexp
 from dmutils.forms import StripWhitespaceStringField, StringField
 
+from app.main.forms.common import DmForm
 
 class StripWhitespaceStringField(StripWhitespaceStringField):
     # WTForm errors when kwargs are passed from template contains dashes. As some html attributes needs to contain
@@ -17,28 +14,6 @@ class StripWhitespaceStringField(StripWhitespaceStringField):
             if key.startswith('extra_'):
                 kwargs[key[6:].replace('_', '-')] = kwargs.pop(key)
         return super(StripWhitespaceStringField, self).__call__(**kwargs)
-
-
-class DmForm(Form):
-
-    class Meta:
-        csrf = True
-        csrf_class = SessionCSRF
-        csrf_secret = None
-        csrf_time_limit = None
-
-        @property
-        def csrf_context(self):
-            return session
-
-    def __init__(self, *args, **kwargs):
-        if current_app.config['CSRF_ENABLED']:
-            self.Meta.csrf_secret = current_app.config['SECRET_KEY']
-            self.Meta.csrf_time_limit = timedelta(seconds=current_app.config['CSRF_TIME_LIMIT'])
-        else:
-            self.Meta.csrf = False
-            self.Meta.csrf_class = None
-        super(DmForm, self).__init__(*args, **kwargs)
 
 
 class LoginForm(DmForm):
