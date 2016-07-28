@@ -8,18 +8,6 @@ from dmapiclient import APIError
 import pytest
 
 
-class TestApplication(BaseApplicationTest):
-    def setup(self):
-        super(TestApplication, self).setup()
-
-    def test_analytics_code_should_be_in_javascript(self):
-        res = self.client.get(self.expand_path('/static/javascripts/application.js'))
-        assert_equal(200, res.status_code)
-        assert_true(
-            'trackPageview'
-            in res.get_data(as_text=True))
-
-
 class TestHomepageBrowseList(BaseApplicationTest):
     @mock.patch('app.main.views.marketplace.data_api_client')
     def test_homepage_headers(self, data_api_client):
