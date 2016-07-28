@@ -33,8 +33,8 @@
 
     <div>
         <span>Sort By:</span>
-        <a href="?page={{ page }}&sort_by={% if sort_by == 'asc' %}desc{% else %}asc{% endif %}{% for role in role_list_from_request %}&role={{ role|replace(' ', '+') }}{% endfor %}"
-                class="sort-btn-{{ sort_by }}">{% if sort_by == 'asc' %}A to Z{% else %}Z to A{% endif %}</a>
+        <a href="?page={{ page }}&sort_by_name={% if sort_by_name == 'asc' %}desc{% else %}asc{% endif %}{% for role in role_list_from_request %}&role={{ role|replace(' ', '+') }}{% endfor %}"
+                class="sort-btn-{{ sort_by_name }}">{% if sort_by_name == 'asc' %}A to Z{% else %}Z to A{% endif %}</a>
     </div>
 
     <div>
@@ -108,7 +108,7 @@
         {% for pg in pages %}
         <li class="{% if pg == page %}current{% endif %}">
           {% if pg != '...' %}
-          <a href="?page={{ pg }}&sort_by={{ sort_by }}{% for role in role_list_from_request %}&role={{ role|replace(' ', '+') }}{% endfor %}">{{ pg }}</a>
+          <a href="?page={{ pg }}&sort_by_name={{ sort_by_name }}{% for role in role_list_from_request %}&role={{ role|replace(' ', '+') }}{% endfor %}">{{ pg }}</a>
           {% else %}
           <span>{{ pg }}</span>
           {% endif %}
