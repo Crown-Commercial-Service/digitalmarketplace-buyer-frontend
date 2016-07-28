@@ -75,7 +75,7 @@
           {% endif %}
         {% endfor %}
       {% endfor %}
-    {% elif not brief.lotSlug == 'digital-specialists' or brief.requirementsLength %}
+    {% elif brief.lotSlug != 'digital-specialists' or brief.requirementsLength %}
       {% import "toolkit/summary-table.html" as summary %}
         {% call summary.mapping_table(
         row_bold_borders=True,
