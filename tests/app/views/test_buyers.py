@@ -1129,7 +1129,7 @@ class TestPublishBrief(BaseApplicationTest):
         brief_json = api_stubs.brief(status="draft")
         brief_questions = brief_json['briefs']
         brief_questions.update({
-            'requirementsLength': ''
+            'requirementsLength': None
         })
         data_api_client.get_brief.return_value = brief_json
 
