@@ -1,13 +1,43 @@
-.marketplace--header {
 
-  .global-nav-toggle {
-    font-size: rem(17);
-    font-weight: $base-font-weight;
+.global-nav-toggle {
+  font-size: rem(17);
+  font-weight: $base-font-weight;
+  margin: 0;
+
+  .marketplace--header & {
+    border: 0;
+    border-bottom: 1px solid;
   }
 
+  &::before {
+    @extend %icon-bars;
+    content: '';
+    position: absolute;
+    top: .25em;
+    bottom: .25em;
+    left: ($base-spacing * -1);
+    width: $medium-spacing;
+    background-repeat: no-repeat;
+    background-size: auto 100%;
+  }
+
+  &[aria-expanded='true'] {
+    &::before {
+      @extend %icon-close;
+    }
+  }
+
+  &,
+  &:hover {
+    background-color: transparent;
+    border-color: transparent;
+  }
+}
+
+.marketplace--header {
 
   [class^='inline-links'] {
-    padding: $tiny-spacing*1.375 0;
+    padding: $tiny-spacing*.25 0;
 
     li {
       display: inline-block;
@@ -16,6 +46,11 @@
       &:not(:last-child) {
         margin-right: $base-spacing*.8125;
       }
+
+      a {
+        padding-bottom: $tiny-spacing*.15;
+      }
     }
   }
+
 }

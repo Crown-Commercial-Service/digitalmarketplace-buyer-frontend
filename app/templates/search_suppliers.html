@@ -2,105 +2,104 @@
 
 {% block page_title %}Suppliers Search – Marketplace{% endblock %}
 
-{% block body_classes %} catalog {% endblock %}
-{% block main_content %}
-    <div>
-        <form action="{{ search_url }}">
+{% block body_classes %}catalog{% endblock %}
+{% block main_class %}sidebar-has-controls{% endblock %}
 
-            {#              ------------------------------- Disable search for now ----------#}
-            {#				<div>#}
-            {#					<h2>Search by</h2>#}
-            {#					<fieldset>#}
-            {#						<label for=q>Keyword</label>#}
-            {#						<input id=q type=search value="{{ search_keywords }}">#}
-            {#					</fieldset>#}
-            {#				</div>#}
-            {#            ------------------------------------------------------------------ #}
+{% block hero %}
+{% with
+  site_title="Welcome to the Marketplace"|safe, 
+  tagline="This is the complete catalogue of approved ICT partners. You can scroll through them all or filter by selecting the capabilities you need from the menu below."|safe,
+  extra_text="Learn more about what each role means"|safe,
+  extra_link="#"|safe
+  %}
+  {% include "_hero.html" %}
+  {% endwith %}
+  {% endblock %}
 
-            <div>
-                <div>
-                    <h2>Filter by</h2>
-                    <a href='/search/suppliers' class=clear-all>Clear all</a>
-                </div>
-                {% for filter in filters %}
-                    <label>{{ filter.name }}</label>
-                    <fieldset>
-                        {% for option in filter.options %}
-                            <label><input type=checkbox name="{{ option.name }}" value="{{ option.value }}"
-                                          {% if option.checked %}checked{% endif %}>{{ option.label }}</label>
-                        {% endfor %}
-                    </fieldset>
-                {% endfor %}
-            </div>
-            <input type=submit value="Apply filter results">
-        </form>
-        <a href="" style="">I don't see what I need</a>
+  {% block sidebar %}
+  {% with
+  local_nav_toggle='Menu'
+  %}
+  <aside class="sidebar" id="nav">
+    {% include "sidebar/_filter_capabilities.html" %}
+  </aside>
+  {% endwith %}
+  {% endblock %}
+
+  {% block main_content %}
+  <div>{% if num_results %}{{ num_results }} Suppliers{% endif %}</div>
+
+  <div>
+
+    {# keep it for later stage. Also, do we really need it? #}
+    {#        <span>Sort By:</span> <span>A to Z</span> #}
+
+    <span>{% if num_results %}Showing {{ results_from }}-{{ results_to }} suppliers of {{ num_results }}
+      {% else %}No results found{% endif %}</span>
     </div>
+    <ul class="list-horizontal">
+      {% for result in results %}
+      <li>
+        <article>
+          <h2><a href="{{ result.url }}">{{ result.title }}</a></h2>
+
+          {% if result.description %}
+          <p>{{ result.description }}</p>
+          {% endif %}
+
+          {% if result.badges %}
+          <p>
+            {% for badge in result.badges %}
+            <span class="{{ badge.css_class }}">{{ badge.label }}</span>
+            {% endfor %}
+          </p>
+          {% endif %}
+
+          {% if result.roles %}
+          <footer class="tags">
+           <dl>
+             <dt>Service capabilities:</dt>
+             {% for role in result.roles %}
+             <dd class="{% if role.label in role_list_from_request %}selected{% endif %}"><a href="#">{{ role.label }}</a></dd>
+             {% endfor %}
+           </dl>
+         </footer>
+         {% endif %}
+
+         {# ----------------------------- This is for later stage ----------------- #}
+         {#				<div>#}
+         {#					<dl>#}
+         {#						{% for detail in result.extra_details %}#}
+         {#						<dt>{{ detail.key }}</dt>#}
+         {#						<dd>{{ detail.value }}</dt>#}
+         {#						{% endfor %}#}
+         {#					</dl>#}
+         {#					<a href="{{ result.url }}">See supplier's profile</a>#}
+         {#				</div>#}
+         {#            -------------------------------------------------------------------------#}
+       </article>
+     </li>
+     {% endfor %}
+   </ul>
+   {% if num_results %}
+   <div>
     <div>
-        <div>{% if num_results %}{{ num_results }} Suppliers{% endif %}</div>
+      page {{ page }} of {{ num_pages }}
+    </div>
 
-        <div>
-
-            {# keep it for later stage. Also, do we really need it? #}
-            {#        <span>Sort By:</span> <span>A to Z</span> #}
-
-            <span>{% if num_results %}Showing {{ results_from }}-{{ results_to }} suppliers of {{ num_results }}
-            {% else %}No results found{% endif %}</span>
-        </div>
-
-        {% for result in results %}
-            <div>
-                <h2><a href="{{ result.url }}">{{ result.title }}</a></h2>
-
-                <div>{% if result.description %}{{ result.description }}{% endif %}</div>
-                <div>
-                    {% for badge in result.badges %}
-                        <div class="{{ badge.css_class }}">{{ badge.label }}</div>
-                    {% endfor %}
-                </div>
-                <div>
-                    <h3>Service capabilities</h3>
-                    <ul>
-                        {% for role in result.roles %}
-                            <li class="{% if role.label in role_list_from_request %}selected{% endif %}">{{ role.label }}</li>
-                        {% endfor %}
-                    </ul>
-                </div>
-
-                {# ----------------------------- This is for later stage ----------------- #}
-                {#				<div>#}
-                {#					<dl>#}
-                {#						{% for detail in result.extra_details %}#}
-                {#						<dt>{{ detail.key }}</dt>#}
-                {#						<dd>{{ detail.value }}</dt>#}
-                {#						{% endfor %}#}
-                {#					</dl>#}
-                {#					<a href="{{ result.url }}">See supplier's profile</a>#}
-                {#				</div>#}
-                {#            -------------------------------------------------------------------------#}
-
-            </div>
+    <div>
+      <ul>
+        {% for pg in pages %}
+        <li class="{% if pg == page %}current{% endif %}">
+          {% if pg != '...' %}
+          <a href="?page={{ pg }}{% for role in role_list_from_request %}&role={{ role }}{% endfor %}">{{ pg }}</a>
+          {% else %}
+          <span>{{ pg }}</span>
+          {% endif %}
+        </li>
         {% endfor %}
+      </ul>
     </div>
-    {% if num_results %}
-        <div>
-            <div>
-                page {{ page }} of {{ num_pages }}
-            </div>
-
-            <div>
-                <ul>
-                    {% for pg in pages %}
-                        <li class="{% if pg == page %}current{% endif %}">
-                            {% if pg != '...' %}
-                                <a href="?page={{ pg }}{% for role in role_list_from_request %}&role={{ role }}{% endfor %}">{{ pg }}</a>
-                            {% else %}
-                                <span>{{ pg }}</span>
-                            {% endif %}
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
-        </div>
-    {% endif %}
-{% endblock %}
+  </div>
+  {% endif %}
+  {% endblock %}

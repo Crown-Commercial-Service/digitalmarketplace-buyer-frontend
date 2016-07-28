@@ -10,7 +10,7 @@ from dmapiclient.audit import AuditTypes
 from dmutils.user import User
 from dmutils.email import (
     decode_invitation_token, decode_password_reset_token, generate_token, send_email,
-    MandrillException
+    EmailError
 )
 from .. import main
 from ..forms.auth_forms import LoginForm, EmailAddressForm, ChangePasswordForm, CreateUserForm
@@ -106,13 +106,11 @@ def send_reset_password_email():
                 send_email(
                     user.email_address,
                     email_body,
-                    current_app.config['DM_MANDRILL_API_KEY'],
                     current_app.config['RESET_PASSWORD_EMAIL_SUBJECT'],
                     current_app.config['RESET_PASSWORD_EMAIL_FROM'],
                     current_app.config['RESET_PASSWORD_EMAIL_NAME'],
-                    ["password-resets"]
                 )
-            except MandrillException as e:
+            except EmailError as e:
                 current_app.logger.error(
                     "Password reset email failed to send. "
                     "error {error} email_hash {email_hash}",
@@ -217,14 +215,12 @@ def submit_create_buyer_account():
                 send_email(
                     email_address,
                     email_body,
-                    current_app.config['DM_MANDRILL_API_KEY'],
                     current_app.config['CREATE_USER_SUBJECT'],
                     current_app.config['RESET_PASSWORD_EMAIL_FROM'],
                     current_app.config['RESET_PASSWORD_EMAIL_NAME'],
-                    ["user-creation"]
                 )
                 session['email_sent_to'] = email_address
-            except MandrillException as e:
+            except EmailError as e:
                 current_app.logger.error(
                     "buyercreate.fail: Create user email failed to send. "
                     "error {error} email_hash {email_hash}",

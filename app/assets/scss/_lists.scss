@@ -57,7 +57,7 @@
   }
 
   &::before {
-    @extend .icon-arrow-left-black;
+    @extend %icon-arrow-left--black;
 
     content: '';
     position: absolute;

@@ -4,6 +4,7 @@ from dmutils.forms import StripWhitespaceStringField, StringField
 
 from app.main.forms.common import DmForm
 
+
 class StripWhitespaceStringField(StripWhitespaceStringField):
     # WTForm errors when kwargs are passed from template contains dashes. As some html attributes needs to contain
     # dashes, following piece of code helps.

@@ -84,7 +84,7 @@
 
   {% block breadcrumb %}{% endblock %}
 
-  <main>
+  <main class="{% block main_class %}{% endblock %}">
     {% block sidebar %}{% endblock %}
     {% block content %}{% endblock %}
   </main>
