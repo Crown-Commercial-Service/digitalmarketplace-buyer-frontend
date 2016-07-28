@@ -91,3 +91,69 @@ class TestSessionlessCsrf(BaseApplicationTest):
                 assert 'invalid' in e.message
             else:
                 raise Exception('Token {} expiry tampering should have been detected'.format(bad_token))
+
+    def test_good_origin(self):
+        environ = {
+            'REMOTE_ADDR': '127.0.0.1',
+            'HTTP_ORIGIN': 'https://localhost:5002/ https://proxy.example.com/',
+        }
+        with self.app.test_request_context(environ_base=environ):
+            uut = self.makeUut()
+            token = uut.generate_csrf_token(None)
+
+            form = DmForm()
+            form.csrf_token.data = token
+
+            uut.validate_csrf_token(form, form.csrf_token)  # no exceptions raised
+
+    def test_bad_origin(self):
+        environ = {
+            'REMOTE_ADDR': '127.0.0.1',
+            'HTTP_ORIGIN': 'https://external.example.com:5002/ https://proxy.example.com/',
+        }
+        with self.app.test_request_context(environ_base=environ):
+            uut = self.makeUut()
+            token = uut.generate_csrf_token(None)
+
+            form = DmForm()
+            form.csrf_token.data = token
+
+            try:
+                uut.validate_csrf_token(form, form.csrf_token)  # no exceptions raised
+            except ValidationError, e:
+                assert 'external' in e.message
+            else:
+                raise Exception('External origin request should have been rejected')
+
+    def test_good_referer(self):
+        environ = {
+            'REMOTE_ADDR': '127.0.0.1',
+            'HTTP_REFERER': 'https://localhost:5002/marketplace/foo',
+        }
+        with self.app.test_request_context(environ_base=environ):
+            uut = self.makeUut()
+            token = uut.generate_csrf_token(None)
+
+            form = DmForm()
+            form.csrf_token.data = token
+
+            uut.validate_csrf_token(form, form.csrf_token)  # no exceptions raised
+
+    def test_bad_referer(self):
+        environ = {
+            'REMOTE_ADDR': '127.0.0.1',
+            'HTTP_REFERER': 'https://external.example.com/xss-vulnerable-page',
+        }
+        with self.app.test_request_context(environ_base=environ):
+            uut = self.makeUut()
+            token = uut.generate_csrf_token(None)
+
+            form = DmForm()
+            form.csrf_token.data = token
+
+            try:
+                uut.validate_csrf_token(form, form.csrf_token)  # no exceptions raised
+            except ValidationError, e:
+                assert 'external' in e.message
+            else:
+                raise Exception('External origin request should have been rejected')

@@ -1,6 +1,7 @@
 import hmac
 from hashlib import sha256
 import time
+import urlparse
 
 from flask import request
 from werkzeug.security import safe_str_cmp
@@ -29,6 +30,9 @@ class SessionlessCsrf(CSRF):
         return hmac.new(self.form_meta.csrf_secret, data, sha256).hexdigest()
 
     def validate_csrf_token(self, form, field):
+        if not (self.origin_check_passes() and self.referer_check_passes()):
+            raise ValidationError('This page must not be used from external sites')
+
         token = field.data
         if not field.data:
             raise ValidationError('CSRF token missing')
@@ -50,6 +54,26 @@ class SessionlessCsrf(CSRF):
         correct_hash_value = self.generate_hash(expiry)
         if not safe_str_cmp(provided_hash_value, correct_hash_value):
             raise ValidationError('CSRF token invalid')
+
+    def is_trusted_origin(self, url):
+        parsed_url = urlparse.urlsplit(url)
+        return parsed_url.netloc == request.host or parsed_url.netloc in self.form_meta.csrf_trusted_origins
+
+    def origin_check_passes(self):
+        if 'Origin' not in request.headers:
+            return True
+
+        origins = request.headers.get('Origin').split()
+        if not origins:
+            return False
+
+        return self.is_trusted_origin(origins[0])
+
+    def referer_check_passes(self):
+        if 'Referer' not in request.headers:
+            return True
+
+        return self.is_trusted_origin(request.headers.get('Referer'))
 
     def now(self):
         return int(time.time())
