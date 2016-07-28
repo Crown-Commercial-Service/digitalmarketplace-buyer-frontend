@@ -15,6 +15,7 @@
 //= include _analytics.js'
 //= include _onready.js'
 //= include _selection-buttons.js
+//= include _main.js
 
 (function(GOVUK, GDM) {
 
