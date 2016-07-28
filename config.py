@@ -40,6 +40,8 @@ class Config(object):
     # matches api(s)
     DM_SEARCH_PAGE_SIZE = 100
 
+    DM_GA_CODE = 'UA-72722909-6'
+
     # This is just a placeholder
     ES_ENABLED = True
 
