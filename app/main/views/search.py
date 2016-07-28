@@ -23,6 +23,8 @@ Result = namedtuple('Result', 'title description badges roles extra_details url'
 
 @main.route('/search/suppliers')
 def supplier_search():
+    sort_order = request.args.get('sort_order', 'asc')  # asc or desc
+    sort_terms = request.args.getlist('sort_term')
     role_list_from_request = request.args.getlist('role')
     response = DataAPIClient().get_roles()
     role_list = []
@@ -77,6 +79,12 @@ def supplier_search():
             }
         })
 
+    sort_queries = []
+    for sort_term in sort_terms:
+        sort_queries.append({
+            sort_term: {"order": sort_order}
+        })
+
     if role_list_from_request:
         query = {
             "query": {
@@ -85,10 +93,11 @@ def supplier_search():
                         "match_all": {}
                     },
                     "filter": {
-                            "or": role_queries,
-                    }
+                        "or": role_queries,
+                        }
                 }
-            }
+            },
+            "sort": sort_queries
         }
 
     else:
@@ -96,7 +105,8 @@ def supplier_search():
             "query": {
                 "match_all": {
                 }
-            }
+            },
+            "sort": sort_queries
         }
 
     page = int(request.args.get('page', 1))
@@ -152,5 +162,8 @@ def supplier_search():
         pages=pages,
         page=page,
         num_pages=pages[-1],
-        role_list_from_request=role_list_from_request
-    )
+        role_list_from_request=role_list_from_request,
+        sort_order=sort_order,
+        sort_terms=sort_terms,
+        sort_term_name_label='A to Z' if sort_order == 'asc' else 'Z to A',
+        )
