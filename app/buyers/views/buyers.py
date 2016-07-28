@@ -373,7 +373,6 @@ def publish_brief(framework_slug, lot_slug, brief_id):
             url_for('.view_brief_overview', framework_slug=brief['frameworkSlug'], lot_slug=brief['lotSlug'],
                     brief_id=brief['id'], published='true'))
     else:
-
         #  requirements length is a required question but is handled separately to other
         #  required questions on the publish page if it's unanswered.
         if sections.get_section('set-how-long-your-requirements-will-be-live-for') and \
