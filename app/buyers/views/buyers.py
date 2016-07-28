@@ -364,10 +364,6 @@ def publish_brief(framework_slug, lot_slug, brief_id):
 
     unanswered_required, unanswered_optional = count_unanswered_questions(sections)
 
-    if sections.get_section('set-how-long-your-requirements-will-be-live-for') and \
-            sections.get_section('set-how-long-your-requirements-will-be-live-for').questions[0].answer_required:
-            unanswered_required -= 1
-
     if request.method == 'POST':
         if unanswered_required > 0:
             abort(400, 'There are still unanswered required questions')
@@ -377,6 +373,13 @@ def publish_brief(framework_slug, lot_slug, brief_id):
             url_for('.view_brief_overview', framework_slug=brief['frameworkSlug'], lot_slug=brief['lotSlug'],
                     brief_id=brief['id'], published='true'))
     else:
+
+        #  requirements length is a required question but is handled separately to other
+        #  required questions on the publish page if it's unanswered.
+        if sections.get_section('set-how-long-your-requirements-will-be-live-for') and \
+                sections.get_section('set-how-long-your-requirements-will-be-live-for').questions[0].answer_required:
+                unanswered_required -= 1
+
         email_address = brief_users['emailAddress']
         dates = get_publishing_dates(brief)
 
