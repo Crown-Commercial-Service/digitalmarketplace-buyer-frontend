@@ -31,10 +31,11 @@
 
   <div>
 
-    <div>
+    <div class="{% if sort_terms %}sort-on{% else %}sort-off{% endif %} sort-by-{{ sort_by }}">
         <span>Sort By:</span>
-        <a href="?page={{ page }}&sort_by_name={% if sort_by_name == 'asc' %}desc{% else %}asc{% endif %}{% for role in role_list_from_request %}&role={{ role|replace(' ', '+') }}{% endfor %}"
-                class="sort-btn-{{ sort_by_name }}">{% if sort_by_name == 'asc' %}A to Z{% else %}Z to A{% endif %}</a>
+        {% with page_number=page, sort_alternate=True, link_label=sort_term_name_label, sort_terms=['name']  %}
+            {% include '_supplier_pagination_link.html' %}
+        {% endwith %}
     </div>
 
     <div>
@@ -108,7 +109,9 @@
         {% for pg in pages %}
         <li class="{% if pg == page %}current{% endif %}">
           {% if pg != '...' %}
-          <a href="?page={{ pg }}&sort_by_name={{ sort_by_name }}{% for role in role_list_from_request %}&role={{ role|replace(' ', '+') }}{% endfor %}">{{ pg }}</a>
+              {% with page_number=pg, sort_alternate=False, link_label=pg  %}
+                {% include '_supplier_pagination_link.html' %}
+            {% endwith %}
           {% else %}
           <span>{{ pg }}</span>
           {% endif %}
