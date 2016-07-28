@@ -7,15 +7,17 @@
 {% block body_classes %} registration-pages form-page {% endblock %}
 {% block main_content %}
 
-{% if form.errors|length > 1 %}
-<p class="callout--warning">
-  There was a problem with the details you gave for:<br>
-  {% for field_name, field_errors in form.errors|dictsort if field_errors %}
-    {% for error in field_errors %}
-  - <a href="#{{ form[field_name].name }}" class="validation-masthead-link">{{ form[field_name].label.text }}</a><br>
+{% if form.errors %}
+  <div class="callout--warning">
+    <p>There was a problem with the details you gave:</p>
+    <ul>
+    {% for field_name, field_errors in form.errors|dictsort if field_errors %}
+      {% for error in field_errors %}
+      <li><a href="#{{ form[field_name].name }}" class="validation-masthead-link">{{ error }}</a></li>
+      {% endfor %}
     {% endfor %}
-  {% endfor %}
-</p>
+    </ul>
+  </div>
 {% endif %}
 
 {%
