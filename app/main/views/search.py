@@ -142,7 +142,7 @@ def supplier_search():
     return render_template(
         'search_suppliers.html',
         title='Supplier Catalogue',
-        search_url='/search/suppliers',
+        search_url=url_for('.supplier_search'),
         search_keywords='',
         filters=filters,
         num_results=num_results,
