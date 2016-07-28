@@ -32,3 +32,9 @@
     background-color: $light-blue;
   }
 }
+
+.about-us {
+  blockquote {
+    quotes: '\2018''\2019''\2018''\2019';
+  }
+}

@@ -54,3 +54,35 @@
   }
 
 }
+
+.scroll-to-top {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  display: none;
+  border-bottom: none !important;
+  text-align: center;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05rem;
+  background-color: $aqua;
+  padding: 1.5rem 1rem 0.5rem;
+  line-height: 1.1rem;
+  color: $white !important;
+  &::before {
+    @extend %icon-chevron-up--white;
+
+    content: '';
+    position: absolute;
+    display: block;
+    width: 0.7em;
+    height: $medium-spacing;
+    top: 0.5rem;
+    left: 50%;
+    background-repeat: no-repeat;
+    background-position: left $tiny-spacing;
+    background-size: (0.8 * $small-spacing) auto;
+    border-bottom: none;
+    transform: translateX(-50%);
+  }
+}

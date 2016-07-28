@@ -32,6 +32,10 @@
   @include inline-background-image('chevron-down--navy');
 }
 
+%icon-chevron-up--white {
+  @include inline-background-image('chevron-up--white');
+}
+
 // Specific functions
 %icon-external-link--aqua {
   @include inline-background-image('external-link--aqua');

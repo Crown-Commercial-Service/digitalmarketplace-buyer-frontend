@@ -1,15 +1,19 @@
 {% extends "_base_page.html" %}
 
-{% block page_title %}About the Marketplace{% endblock %}
+{% block page_title %}Roles and rates{% endblock %}
 
-{% block body_classes %}about-us{% endblock %}
+{% block body_classes %}roles-and-rates{% endblock %}
+
+{% block hero %}
+  {% with
+    site_title ='Roles and rates'|safe,
+    tagline="These are the roles we've have identified as essential for today's digital projects. This list will change over time. If there's a type of expertise you need but don't see listed, request an update by emailing us on <a href=\"mailto:marketplace@digital.gov.au\">marketplace@digital.gov.au</a>."|safe
+  %}
+    {% include "_hero.html" %}
+  {% endwith %}
+{% endblock %}
 
 {% block main_content %}
-  
-  <h1>Roles and rates</h1>
-  <p>
-    These are the roles we’ve have identified as essential for today’s digital projects. This list will change over time. If there’s a type of expertise you need but don’t see listed, request an update by emailing us on <a href="mailto:marketplace@digital.gov.au">marketplace@digital.gov.au</a>.
-  </p>
 
   <nav class="index-links">
     <h2>Roles covered</h2>
@@ -22,13 +26,13 @@
       <li><a href="#ethical-hacker">Ethical hacker</a></li>
       <li><a href="#inclusive-designer">Inclusive designer</a></li>
       <li><a href="#interaction-designer">Interaction designer</a></li>
-      <li><a href="#performance-analyst">Performance analyst</a></li>
+      <li><a href="#performance-web-analyst">Performance and web analyst</a></li>
       <li><a href="#product-manager">Product manager</a></li>
       <li><a href="#service-designer">Service designer</a></li>
       <li><a href="#technical-lead-architect">Technical lead/architect</a></li>
       <li><a href="#user-researcher">User researcher</a></li>
       <li><a href="#web-devops-engineer">Web devops engineer</a></li>
-      <li><a href="#"></a></li>
+      <li><a href="#about-the-rates">About the rates and definitions</a></li>
     </ul>
   </nav>
 
@@ -64,4 +68,590 @@
       </tr>
     </tbody>
   </table>
+  <a id="business-analyst"></a><h2>Business Analyst</h2>
+  <p>
+    Business analysts are familiar with a range of digital/web services and solutions, especially with open source and cloud technologies and using applied Agile development methodologies. They should be excellent communicators able to rationalise complex information for a multi-disciplinary team.
+  </p>
+  <h3>Day rates</h3>
+  <table class="content-table">
+    <thead>
+      <tr>
+        <th scope="col">
+        </th>
+        <th scope="col">
+          Range (low-high)
+        </th>
+        <th scope="col">
+          Median
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">
+          Junior
+        </th>
+        <td>
+          $600 - $1700
+        </td>
+        <td>
+          $1000
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">
+          Senior
+        </th>
+        <td>
+          $1100 - $2000
+        </td>
+        <td>
+          $1600
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="delivery-manager"></a><h2>Delivery Manager</h2>
+  <p>
+    The delivery manager supports the team by identifying and removing the obstacles stopping the team from delivering. Also known as the scrum master, they facilitate the daily stand-up and weekly team meetings, and make sure the backlog and team spaces are up to date.
+  </p>
+  <h3>
+    Day rates
+  </h3>
+  <table class="content-table">
+    <thead>
+      <tr>
+        <th scope="col">
+        </th>
+        <th scope="col">
+          Range (low-high)
+        </th>
+        <th scope="col">
+          Median
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">
+          Junior
+        </th>
+        <td>
+          $800 - $1700
+        </td>
+        <td>
+          $1200
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">
+          Senior
+        </th>
+        <td>
+          $1100 - $1200
+        </td>
+        <td>
+          $1600
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="developer"></a><h2>Developer</h2>
+  <p>
+    Developers build software in a team with a relentless focus on how it will be used. They write quality, well-tested code and try to find the simplest solution to a given problem. Most will specialise in being a frontend or a backend developer: a good team has a mix of both. As they work, they are expected to keep security, accessibility and open standards in mind, and improve (‘refactor’) the technical implementation as they go along.
+  </p>
+  <h3>
+    Day rates
+  </h3>
+  <table class="content-table">
+    <thead>
+      <tr>
+        <th scope="col">
+        </th>
+        <th scope="col">
+          Range (low-high)
+        </th>
+        <th scope="col">
+          Median
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">
+          Junior
+        </th>
+        <td>
+          $500 - $2000
+        </td>
+        <td>
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">
+          Senior
+        </th>
+        <td>
+          $1100 - $2000
+        </td>
+        <td>
+          $1600
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="digital-transformation-advisor"></a><h2>Digital Transformation Advisor</h2>
+  <p>
+    Transformation advisers will provide leadership in delivering new programs of work — either across the DTO, with state/territory and federal government agencies, or across multiple functions.
+  </p>
+  <h3>
+    Day rates
+  </h3>
+  <table class="content-table">
+    <thead>
+      <tr>
+        <th scope="col">
+        </th>
+        <th scope="col">
+          Range (low-high)
+        </th>
+        <th scope="col">
+          Median
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">
+          Senior
+        </th>
+        <td>
+          $1100 - $2000
+        </td>
+        <td>
+          $1600
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="ethical-hacker"></a><h2>Ethical Hacker</h2>
+  <p>
+    An ethical hacker is tasked with continuously discovering, communicating and explaining security vulnerabilities to product teams, and automating this process where practical. In a multi-product, continuous delivery environment, they must meet the challenge of providing the most effective vulnerability information across teams.
+  </p>
+  <h3>
+    Day rates
+  </h3>
+  <table class="content-table">
+    <thead>
+      <tr>
+        <th scope="col">
+        </th>
+        <th scope="col">
+          Range (low-high)
+        </th>
+        <th scope="col">
+          Median
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">
+          Junior
+        </th>
+        <td>
+          $700 - $1400
+        </td>
+        <td>
+          $1100
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">
+          Senior
+        </th>
+        <td>
+          $1100 - $2000
+        </td>
+        <td>
+          $1600
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="inclusive-designer"></a><h2>Inclusive Designer</h2>
+  <p>
+    Inclusive Designers support the team with an in-depth knowledge of best practice in accessible development.
+  </p>
+  <h3>
+    Day rates
+  </h3>
+  <table class="content-table">
+    <thead>
+      <tr>
+        <th scope="col">
+        </th>
+        <th scope="col">
+          Range (low-high)
+        </th>
+        <th scope="col">
+          Median
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">
+          Junior
+        </th>
+        <td>
+        </td>
+        <td>
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">
+          Senior
+        </th>
+        <td>
+          $1100 - $2000
+        </td>
+        <td>
+          $1600
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="interaction-designer"></a><h2>Interaction Designer</h2>
+  <p>
+    A strong interaction designer is critical to any delivery team. They're responsible for designing a user-focused and accessible service, and making use of established design patterns in government. Interaction designers work closely with both the user researcher and the technical people in the team and should have some familiarity with code.
+  </p>
+  <h3>
+    Day rates
+  </h3>
+  <table class="content-table">
+    <thead>
+      <tr>
+        <th scope="col">
+        </th>
+        <th scope="col">
+          Range (low-high)
+        </th>
+        <th scope="col">
+          Median
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">
+          Junior
+        </th>
+        <td>
+        </td>
+        <td>
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">
+          Senior
+        </th>
+        <td>
+          $1100 - $2000
+        </td>
+        <td>
+          $1600
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="performance-web-analyst"></a><h2>Performance and Web Analyst</h2>
+  <p>
+    Digital performance analysts sit at the heart of a team, working to specify, collect and present the key performance data and analysis for their service. They are essential to how the government continuously measures, assesses, and improves performance in transacting with the public. Analysts support service managers by generating new and useful information and translating it into actions that allow them to iteratively improve their service for users.
+  </p>
+  <h3>
+    Day rates
+  </h3>
+  <table class="content-table">
+    <thead>
+      <tr>
+        <th scope="col">
+        </th>
+        <th scope="col">
+          Range (low-high)
+        </th>
+        <th scope="col">
+          Median
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">
+          Junior
+        </th>
+        <td>
+        </td>
+        <td>
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">
+          Senior
+        </th>
+        <td>
+          $1100 - $2000
+        </td>
+        <td>
+          $1600
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="product-manager"></a><h2>Product Manager</h2>
+  <p>
+    The owner of the product backlog, the product manager, is responsible for prioritising user stories, attending daily stand-ups and accepting stories when they are delivered. They are on hand to answer product questions from the delivery team and work closely with the user researchers to make sure the product is meeting user needs.
+  </p>
+  <h3>
+    Day rates
+  </h3>
+  <table class="content-table">
+    <thead>
+      <tr>
+        <th scope="col">
+        </th>
+        <th scope="col">
+          Range (low-high)
+        </th>
+        <th scope="col">
+          Median
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">
+          Junior
+        </th>
+        <td>
+        </td>
+        <td>
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">
+          Senior
+        </th>
+        <td>
+          $1100 - $2000
+        </td>
+        <td>
+          $1600
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="service-designer"></a><h2>Service Designer</h2>
+  <p>
+    The service designer works as part of a multi-disciplined team to design user-focused and successful services. Service designers deliver designs that meet web standards, ensuring key elements are built-in from the outset. They contribute to the development and continual enhancement of products, partnering with colleagues to facilitate a consistent user experience.
+  </p>
+  <h3>
+    Day rates
+  </h3>
+  <table class="content-table">
+    <thead>
+      <tr>
+        <th scope="col">
+        </th>
+        <th scope="col">
+          Range (low-high)
+        </th>
+        <th scope="col">
+          Median
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">
+          Junior
+        </th>
+        <td>
+        </td>
+        <td>
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">
+          Senior
+        </th>
+        <td>
+          $1100 - $2000
+        </td>
+        <td>
+          $1600
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="technical-lead-architect"></a><h2>Technical Lead / Technical Architect</h2>
+  <p>
+    The technical lead is the most senior technical person in the team. Their role is to break down complex problems and lead by example in writing quality code. They engage with non-technical people at all levels of seniority, ensure the product is technically aligned with other areas of the agency, and provide coaching and feedback to other technical members of the team.
+  </p>
+  <p>
+    Technical architects have an equal balance of technical expertise gained through current, hands-on involvement in developing real-world systems, and excellent interpersonal skills allied with the ability to quickly develop strong working relationships in high-pressure environments. They will ideally have experience in development of transformational digital services on existing projects and/or rapid development and scaling of high-volume ‘green field’ services.
+  </p>
+  <h3>
+    Day rates
+  </h3>
+  <table class="content-table">
+    <thead>
+      <tr>
+        <th scope="col">
+        </th>
+        <th scope="col">
+          Range (low-high)
+        </th>
+        <th scope="col">
+          Median
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">
+          Junior
+        </th>
+        <td>
+        </td>
+        <td>
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">
+          Senior
+        </th>
+        <td>
+          $1100 - $2000
+        </td>
+        <td>
+          $1600
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="user-researcher"></a><h2>User Researcher</h2>
+  <p>
+    Working closely with the product manager and the designers in the team, the user researcher is responsible for building understanding of the service's users and their behaviour, and providing insight to the team about how users interact with the service. They take the lead on running fortnightly research sessions with real users, and communicating findings back to the whole team.
+  </p>
+  <h3>
+    Day rates
+  </h3>
+  <table class="content-table">
+    <thead>
+      <tr>
+        <th scope="col">
+        </th>
+        <th scope="col">
+          Range (low-high)
+        </th>
+        <th scope="col">
+          Median
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">
+          Junior
+        </th>
+        <td>
+        </td>
+        <td>
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">
+          Senior
+        </th>
+        <td>
+          $1100 - $2000
+        </td>
+        <td>
+          $1600
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="web-devops-engineer"></a><h2>Web Operations Engineer (Web Devops)</h2>
+  <p>
+    Responsible for keeping the service online, web operations engineers are critical to any digital service. They work closely with developers to make sure that all technology is built with consideration to how it will be operated, and put the foundations in place for the service to be hosted and deployed to preview and live environments. Along with other developers in the team, they are expected to share the out-of-hours support responsibility for the service.
+  </p>
+  <h3>
+    Day rates
+  </h3>
+  <table class="content-table">
+    <thead>
+      <tr>
+        <th scope="col">
+        </th>
+        <th scope="col">
+          Range (low-high)
+        </th>
+        <th scope="col">
+          Median
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">
+          Junior
+        </th>
+        <td>
+        </td>
+        <td>
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">
+          Senior
+        </th>
+        <td>
+          $1100 - $2000
+        </td>
+        <td>
+          $1600
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="about-the-rates"></a><h2>About the rates and definitions</h2>
+  <p>
+    <em>Day rates are indicative</em>
+  </p>
+  <p>
+    The day rates shown are given as a guide only. Each individual seller has their own rates on their seller page which can be accessed through the <a href="{{ url_for('.supplier_search') }}">Marketplace catalogue</a>.
+  </p>
+  <p>
+    <em>How we define a 'senior'</em>
+  </p>
+  <p>
+    Senior roles will need to have a minimum of 5 years experience and are expected to:
+  </p>
+  <ul>
+    <li>
+      build and manage relations with board level stakeholders
+    </li>
+    <li>
+      coach, develop and lead others within the delivery team and stakeholders supporting the team
+    </li>
+    <li>
+      have considerable, demonstrable experience in agile development and leading teams within structured programme and project environments
+    </li>
+    <li>
+      have experience in delivering a range of transactional services through digital/web channels.
+    </li>
+  </ul>
+  <a href="#" class="scroll-to-top">Top</a>
 {% endblock %}
