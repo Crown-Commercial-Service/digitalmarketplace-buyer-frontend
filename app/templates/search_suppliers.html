@@ -31,13 +31,26 @@
 
   <div>
 
-    {# keep it for later stage. Also, do we really need it? #}
-    {#        <span>Sort By:</span> <span>A to Z</span> #}
+    <div>
+        <span>Sort By:</span>
+        <a href="?page={{ page }}&sort_by={% if sort_by == 'asc' %}desc{% else %}asc{% endif %}{% for role in role_list_from_request %}&role={{ role|replace(' ', '+') }}{% endfor %}"
+                class="sort-btn-{{ sort_by }}">{% if sort_by == 'asc' %}A to Z{% else %}Z to A{% endif %}</a>
+    </div>
 
-    <span>{% if num_results %}Showing {{ results_from }}-{{ results_to }} suppliers of {{ num_results }}
-      {% else %}No results found{% endif %}</span>
+    <div>
+      <span>{% if num_results %}Showing {{ results_from }}-{{ results_to }} suppliers of {{ num_results }}{% endif %}</span>
+    </div>
     </div>
     <ul class="list-horizontal">
+
+        {% if not num_results %}
+            <li>
+                <article>
+                    <p>No results found!</p>
+                </article>
+            </li>
+        {% endif %}
+
       {% for result in results %}
       <li>
         <article>
@@ -47,20 +60,22 @@
           <p>{{ result.description }}</p>
           {% endif %}
 
-          {% if result.badges %}
-          <p>
-            {% for badge in result.badges %}
-            <span class="{{ badge.css_class }}">{{ badge.label }}</span>
-            {% endfor %}
-          </p>
-          {% endif %}
+{#          {% if result.badges %}#} {# ----------- for later stage----------- #}
+{#          <p>#}
+{#            {% for badge in result.badges %}#}
+{#            <span class="{{ badge.css_class }}">{{ badge.label }}</span>#}
+{#            {% endfor %}#}
+{#          </p>#}
+{#          {% endif %}#}
 
           {% if result.roles %}
           <footer class="tags">
            <dl>
              <dt>Service capabilities:</dt>
              {% for role in result.roles %}
-             <dd class="{% if role.label in role_list_from_request %}selected{% endif %}"><a href="#">{{ role.label }}</a></dd>
+             <dd class="{% if role.label in role_list_from_request %}selected{% endif %}">
+                 <a href="?role={{ role.label|replace(' ', '+') }}">{{ role.label }}</a>
+             </dd>
              {% endfor %}
            </dl>
          </footer>
@@ -77,6 +92,7 @@
          {#					<a href="{{ result.url }}">See supplier's profile</a>#}
          {#				</div>#}
          {#            -------------------------------------------------------------------------#}
+
        </article>
      </li>
      {% endfor %}
@@ -92,7 +108,7 @@
         {% for pg in pages %}
         <li class="{% if pg == page %}current{% endif %}">
           {% if pg != '...' %}
-          <a href="?page={{ pg }}{% for role in role_list_from_request %}&role={{ role }}{% endfor %}">{{ pg }}</a>
+          <a href="?page={{ pg }}&sort_by={{ sort_by }}{% for role in role_list_from_request %}&role={{ role|replace(' ', '+') }}{% endfor %}">{{ pg }}</a>
           {% else %}
           <span>{{ pg }}</span>
           {% endif %}
