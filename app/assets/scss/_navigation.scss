@@ -27,11 +27,31 @@
     }
   }
 
-  &,
+  &:focus,
   &:hover {
-    background-color: transparent;
+    background-color: $white;
     border-color: transparent;
+    color: $non-black;
   }
+}
+
+.global-nav {
+  li {
+    padding-left: 0;
+
+    a {
+      padding-left: .2rem;
+      
+      &:focus,
+      &:hover {
+        background-color: $white;
+        border-color: transparent;
+        color: $non-black;
+        outline: $body-inverted-text-colour;
+      }
+    }
+
+  }  
 }
 
 .marketplace--header {

@@ -2,15 +2,14 @@
 
 {% block page_title %}Suppliers Search – Marketplace{% endblock %}
 
-{% block body_classes %}catalog{% endblock %}
+{% block body_classes %}catalogue{% endblock %}
 {% block main_class %}sidebar-has-controls{% endblock %}
 
 {% block hero %}
 {% with
-  site_title="Welcome to the Marketplace"|safe, 
-  tagline="This is the complete catalogue of approved ICT partners. You can scroll through them all or filter by selecting the capabilities you need from the menu below."|safe,
-  extra_text="Learn more about what each role means"|safe,
-  extra_link="#"|safe
+  site_title="Welcome to the Marketplace", 
+  tagline="This is the complete catalogue of approved ICT partners. You can scroll through them all or filter by selecting the capabilities you need from the menu below.",
+  extra=('<a href="' + url_for('main.roles_and_services') + '">Learn more about what each role means</a>')
   %}
   {% include "_hero.html" %}
   {% endwith %}
@@ -27,9 +26,7 @@
   {% endblock %}
 
   {% block main_content %}
-  <div>{% if num_results %}{{ num_results }} Suppliers{% endif %}</div>
-
-  <div>
+  {% if num_results %}<p class="number-results"><span>{{ num_results }}</span> suppliers</p>{% endif %}
 
     <div class="{% if sort_terms %}sort-on{% else %}sort-off{% endif %} sort-by-{{ sort_order }}">
         <span>Sort By:</span>
@@ -38,20 +35,12 @@
         {% endwith %}
     </div>
 
-    <div>
-      <span>{% if num_results %}Showing {{ results_from }}-{{ results_to }} suppliers of {{ num_results }}{% endif %}</span>
-    </div>
-    </div>
+    {% if num_results %}
+      <p>Showing {{ results_from }}-{{ results_to }} suppliers of {{ num_results }}
+      {% else %}No results found.</p>
+    {% endif %}
+
     <ul class="list-horizontal">
-
-        {% if not num_results %}
-            <li>
-                <article>
-                    <p>No results found!</p>
-                </article>
-            </li>
-        {% endif %}
-
       {% for result in results %}
       <li>
         <article>
@@ -61,22 +50,20 @@
           <p>{{ result.description }}</p>
           {% endif %}
 
-{#          {% if result.badges %}#} {# ----------- for later stage----------- #}
-{#          <p>#}
-{#            {% for badge in result.badges %}#}
-{#            <span class="{{ badge.css_class }}">{{ badge.label }}</span>#}
-{#            {% endfor %}#}
-{#          </p>#}
-{#          {% endif %}#}
+          {% if result.badges %}
+          <p>
+            {% for badge in result.badges %}
+            <span class="{{ badge.css_class }}">{{ badge.label }}</span>
+            {% endfor %}
+          </p>
+          {% endif %}
 
           {% if result.roles %}
           <footer class="tags">
            <dl>
              <dt>Service capabilities:</dt>
-             {% for role in result.roles %}
-             <dd class="{% if role.label in role_list_from_request %}selected{% endif %}">
-                 <a href="?role={{ role.label|replace(' ', '+') }}">{{ role.label }}</a>
-             </dd>
+             {% for role in result.roles|sort() %}
+             <dd class="{% if role.label in role_list_from_request %}selected{% endif %}"><a href="#">{{ role.label }}</a></dd>
              {% endfor %}
            </dl>
          </footer>
@@ -93,7 +80,6 @@
          {#					<a href="{{ result.url }}">See supplier's profile</a>#}
          {#				</div>#}
          {#            -------------------------------------------------------------------------#}
-
        </article>
      </li>
      {% endfor %}
@@ -109,9 +95,7 @@
         {% for pg in pages %}
         <li class="{% if pg == page %}current{% endif %}">
           {% if pg != '...' %}
-              {% with page_number=pg, sort_alternate=False, link_label=pg  %}
-                {% include '_supplier_pagination_link.html' %}
-            {% endwith %}
+          <a href="?page={{ pg }}{% for role in role_list_from_request %}&role={{ role }}{% endfor %}">{{ pg }}</a>
           {% else %}
           <span>{{ pg }}</span>
           {% endif %}

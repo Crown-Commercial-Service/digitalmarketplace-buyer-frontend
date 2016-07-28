@@ -38,3 +38,34 @@
     quotes: '\2018''\2019''\2018''\2019';
   }
 }
+
+.sidebar {
+
+  h2 {
+    @include clearfix;
+    @extend h3;
+    margin-top: 0;
+    font-weight: $base-font-weight;
+
+    span {
+      @extend p;
+      float: right;
+      margin: .3rem 0 0;
+    }
+  }
+}
+
+.content-main {
+
+  .number-results {
+    span {
+      font-size: rem(32);
+      font-weight: $bold-font-weight;
+    }
+  }
+
+  h2 {
+    font-size: rem(26);
+    font-weight: $bold-font-weight;
+  }
+}
