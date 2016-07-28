@@ -1,4 +1,4 @@
-<h2>Filter by <span><a href="/search/suppliers" class="clear-all">Clear all</a></span></h2>
+<h2>Filter by <span><a href="{{ url_for('main.supplier_search') }}" class="clear-all">Clear all</a></span></h2>
 {% for filter in filters %}
 <form action="{{ search_url }}">
   <details open data-label="accordion-example" aria-expanded="true">
