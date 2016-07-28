@@ -102,14 +102,29 @@ def list_opportunities(framework_slug):
         abort(400, "Invalid form data")
 
     api_result = form.get_briefs()
+    filters = form.get_filters()
 
     briefs = api_result["briefs"]
     links = api_result["links"]
 
+    api_prev_link_args = parse_link(links, "prev")
+    prev_link_args = None
+    if api_prev_link_args:
+        prev_link_args = request.args.copy()
+        prev_link_args.setlist("page", api_prev_link_args.get("page") or ())
+
+    api_next_link_args = parse_link(links, "next")
+    next_link_args = None
+    if api_next_link_args:
+        next_link_args = request.args.copy()
+        next_link_args.setlist("page", api_next_link_args.get("page") or ())
+
     return render_template('briefs_catalogue.html',
                            framework=framework,
-                           lot_names=[lot['name'] for lot in framework['lots'] if lot['allowsBrief']],
+                           form=form,
+                           filters=filters,
                            briefs=briefs,
-                           prev_link=parse_link(links, 'prev'),
-                           next_link=parse_link(links, 'next')
+                           lot_names=tuple(label for id_, label in form.lot.choices),
+                           prev_link_args=prev_link_args,
+                           next_link_args=next_link_args,
                            )

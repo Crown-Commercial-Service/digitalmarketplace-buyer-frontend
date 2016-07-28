@@ -48,3 +48,27 @@ class BriefSearchForm(Form):
             page=self.page.data,
             human=True,
         )
+
+    def get_filters(self):
+        """
+            generate the same "filters" structure as expected by search page templates
+        """
+        if not self.validate():
+            raise ValueError("Will not produce filters for invalid form")
+
+        return [
+            {
+                "label": field.label,
+                "filters": [
+                    {
+                        "label": choice_label,
+                        "name": field.name,
+                        "id": "{}-{}".format(field.id, choice_id),
+                        "value": choice_id,
+                        "checked": field.data and choice_id in field.data,
+                    }
+                    for choice_id, choice_label in field.choices
+                ],
+            }
+            for field in (self.lot, self.status,)
+        ]
