@@ -155,7 +155,7 @@
           </tr>
         </thead>
         <tbody>
-          {% for price in supplier.prices|sort(attribute='serviceRole.role')|sort(attribute='serviceRole.category') %}
+          {% for price in supplier.prices|sort(attribute='serviceRole.role') %}
           <tr>
             <th scope="row">{{ price.serviceRole.role }}</th>
             <td>${{ price.dailyRate }}</td>
