@@ -90,11 +90,9 @@ def supplier_search():
                         }
                 }
             },
-            "sort": [
-                    {
+            "sort": [{
                     "name": {"order": sort_by}
-                }
-            ]
+                }]
         }
 
     else:
@@ -163,4 +161,4 @@ def supplier_search():
         num_pages=pages[-1],
         role_list_from_request=role_list_from_request,
         sort_by=sort_by,
-    )
+        )
