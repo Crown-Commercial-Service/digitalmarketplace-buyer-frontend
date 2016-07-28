@@ -1,8 +1,15 @@
+import re
+
 from wtforms import PasswordField
 from wtforms.validators import DataRequired, EqualTo, Length, Regexp
 from dmutils.forms import StripWhitespaceStringField, StringField
 
 from app.main.forms.common import DmForm
+
+
+email_regex = Regexp(r'^[^@^\s]+@[\d\w-]+(\.[\d\w-]+)+$',
+                     flags=re.UNICODE,
+                     message='You must provide a valid email address')
 
 
 class StripWhitespaceStringField(StripWhitespaceStringField):
@@ -22,8 +29,7 @@ class LoginForm(DmForm):
         'Email', id="input_email_address",
         validators=[
             DataRequired(message="You must provide an email address"),
-            Regexp("^[^@^\s]+@[^@^\.^\s]+(\.[^@^\.^\s]+)+$",
-                   message="You must provide a valid email address")
+            email_regex,
         ]
     )
     password = PasswordField(
@@ -39,8 +45,7 @@ class EmailAddressForm(DmForm):
         'Email', id="input_email_address",
         validators=[
             DataRequired(message="You must provide an email address"),
-            Regexp("^[^@^\s]+@[^@^\.^\s]+(\.[^@^\.^\s]+)+$",
-                   message="You must provide a valid email address")
+            email_regex,
         ]
     )
 

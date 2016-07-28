@@ -198,6 +198,46 @@ class TestLogin(BaseApplicationTest):
         assert has_validation_errors(data, 'email_address')
         assert not has_validation_errors(data, 'password')
 
+    def test_valid_email_formats(self):
+        cases = [
+            'good@example.com',
+            'good-email@example.com',
+            'good-email+plus@example.com',
+            'good@subdomain.example.com',
+            'good@hyphenated-subdomain.example.com',
+        ]
+        for address in cases:
+            res = self.client.post(self.expand_path('/login'), data={
+                'email_address': address,
+                'password': '1234567890'
+            })
+            data = res.get_data(as_text=True)
+            assert res.status_code == 302, address
+
+    def test_invalid_email_formats(self):
+        cases = [
+            '',
+            'bad',
+            'bad@@example.com',
+            'bad @example.com',
+            'bad@.com',
+            'bad.example.com',
+            '@',
+            '@example.com',
+            'bad@',
+            'bad@example.com,bad2@example.com',
+            'bad@example.com bad2@example.com',
+            'bad@example.com,other.example.com',
+        ]
+        for address in cases:
+            res = self.client.post(self.expand_path('/login'), data={
+                'email_address': address,
+                'password': '1234567890'
+            })
+            data = res.get_data(as_text=True)
+            assert res.status_code == 400, address
+            assert has_validation_errors(data, 'email_address'), address
+
 
 class TestResetPassword(BaseApplicationTest):
 
