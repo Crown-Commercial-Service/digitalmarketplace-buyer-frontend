@@ -1,2 +1,2 @@
 {# TODO: create a 'spaceless' like tag and put the following code in multiple lines #}
-<a href="?page={{ page_number }}{% for sort_term in sort_terms %}&sort_term={{ sort_term }}{% endfor %}&sort_by={% if sort_alternate %}{% if sort_by == 'asc' %}desc{% else %}asc{% endif %}{% else %}{{ sort_by }}{% endif %}{% for role in role_list_from_request %}&role={{ role|replace(' ', '+') }}{% endfor %}">{{ link_label }}</a>
+<a href="?page={{ page_number }}{% for sort_term in sort_terms %}&sort_term={{ sort_term }}{% endfor %}&sort_order={% if sort_alternate %}{% if sort_order == 'asc' %}desc{% else %}asc{% endif %}{% else %}{{ sort_order }}{% endif %}{% for role in role_list_from_request %}&role={{ role|replace(' ', '+') }}{% endfor %}">{{ link_label }}</a>

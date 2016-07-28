@@ -31,7 +31,7 @@
 
   <div>
 
-    <div class="{% if sort_terms %}sort-on{% else %}sort-off{% endif %} sort-by-{{ sort_by }}">
+    <div class="{% if sort_terms %}sort-on{% else %}sort-off{% endif %} sort-by-{{ sort_order }}">
         <span>Sort By:</span>
         {% with page_number=page, sort_alternate=True, link_label=sort_term_name_label, sort_terms=['name']  %}
             {% include '_supplier_pagination_link.html' %}
