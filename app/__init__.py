@@ -43,21 +43,6 @@ def create_app(config_name):
     login_manager.login_view = 'main.render_login'
     login_manager.login_message_category = "must_login"
 
-    # @csrf.error_handler
-    def csrf_handler(reason):
-        if 'user_id' not in session:
-            application.logger.info(
-                u'csrf.session_expired: Redirecting user to log in page'
-            )
-
-            return application.login_manager.unauthorized()
-
-        application.logger.info(
-            u'csrf.invalid_token: Aborting request, user_id: {user_id}',
-            extra={'user_id': session['user_id']})
-
-        abort(400, reason)
-
     @application.before_request
     def remove_trailing_slash():
         if request.path != application.config['URL_PREFIX'] + '/' and request.path.endswith('/'):
