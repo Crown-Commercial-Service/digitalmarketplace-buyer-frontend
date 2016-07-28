@@ -149,7 +149,6 @@ class TestLogin(BaseApplicationTest):
         assert res.status_code == 302
         assert res.location == 'http://localhost' + self.expand_path('/search/suppliers')
 
-
     def test_should_have_cookie_on_redirect(self):
         with self.app.app_context():
             self.app.config['SESSION_COOKIE_DOMAIN'] = '127.0.0.1'
