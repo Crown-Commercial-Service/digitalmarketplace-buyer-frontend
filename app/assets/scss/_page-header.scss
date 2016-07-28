@@ -72,16 +72,8 @@
   }
 
   a {
-    color: $link-colour;
-
-    &:visited {
-      color: $link-colour;
-    }
-
-    &:hover,
-    &:active {
-      color: $navy;
-    }
+    @include link-colours($non-black, $white, $non-black);
+    border-bottom: solid 1px $link-colour;
   }
 }
 
@@ -108,6 +100,10 @@
       font-size: 1.5rem;
       margin-top: 0;
     }
+  }
+
+  a {
+    @include link-colours($white, $white, $non-black);
   }
 
   [class^='badge'] {

@@ -1,32 +1,35 @@
-<details open data-label="accordion-example" aria-expanded="true">
-  <summary>Filter by</summary>
-  <div class="accordion-panel">
-    <form action="{{ search_url }}">
+<h2>Filter by <span><a href="/search/suppliers" class="clear-all">Clear all</a></span></h2>
+{% for filter in filters %}
+<form action="{{ search_url }}">
+  <details open data-label="accordion-example" aria-expanded="true">
+    <summary>{{ filter.name }}</summary>
+    <div class="accordion-panel">
 
-      {# Disable search for now #}
-      {# <div>#}
-      {#  <h2>Search by</h2>#}
-      {#  <fieldset>#}
-      {#   <label for="q">Keyword</label>#}
-      {#   <input id="q" type="search" value="{{ search_keywords }}">#}
-      {#  </fieldset>#}
-      {# </div>#}
-      {#            ------------------------------------------------------------------ #}
 
-        <div>
-          <a href="/search/suppliers" class="clear-all">Clear all</a>
-        </div>
-        {% for filter in filters %}
-        <fieldset>
-          <legend>{{ filter.name }}</legend>
-          {% for option in filter.options %}
-          <input id="{{ option.label|replace(" ", "-")|lower }}" type="checkbox" name="{{ option.name }}" value="{{ option.value }}" {% if option.checked %}checked{% endif %}>
-          <label for="{{ option.label|replace(" ", "-")|lower }}">{{ option.label }}</label>
-          {% endfor %}
-        </fieldset>
+      <fieldset>
+        <legend></legend>
+        {% for option in filter.options|sort() %}
+        <input id="{{ option.label|replace(" ", "-")|lower }}" type="checkbox" name="{{ option.name }}" value="{{ option.value }}" {% if option.checked %}checked{% endif %}>
+        <label for="{{ option.label|replace(" ", "-")|lower }}">{{ option.label }}</label>
         {% endfor %}
-      <button>Update filter results</button>
-    </form>
-    <p><a href="{{ url_for('main.roles_and_services') }}">I don't see what I need</a></p>
-  </div>
-</details>
+      </fieldset>
+
+
+    </div>
+  </details>
+
+  {# Disable search for now #}
+  {# <div>#}
+  {#  <h2>Search by</h2>#}
+  {#  <fieldset>#}
+  {#   <label for="q">Keyword</label>#}
+  {#   <input id="q" type="search" value="{{ search_keywords }}">#}
+  {#  </fieldset>#}
+  {# </div>#}
+  {#            ------------------------------------------------------------------ #}
+
+  <button>Update filter results</button>
+  <p><a href="{{ url_for('main.roles_and_services') }}">I don't see what I need</a></p>
+
+</form>
+{% endfor %}
