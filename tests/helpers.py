@@ -18,6 +18,9 @@ class BaseApplicationTest(object):
         self.client = self.app.test_client()
         self.get_user_patch = None
 
+    def expand_path(self, path):
+        return self.app.config['URL_PREFIX'] + path
+
     def teardown(self):
         self.teardown_login()
 
@@ -136,7 +139,7 @@ class BaseApplicationTest(object):
             )
             self.get_user_patch.start()
 
-            self.client.post("/login", data={
+            self.client.post(self.expand_path('/login'), data={
                 'email_address': 'valid@email.com',
                 'password': '1234567890'
             })
@@ -156,7 +159,7 @@ class BaseApplicationTest(object):
             )
             self.get_user_patch.start()
 
-            self.client.post("/login", data={
+            response = self.client.post(self.expand_path('/login'), data={
                 'email_address': 'valid@email.com',
                 'password': '1234567890'
             })
@@ -176,7 +179,7 @@ class BaseApplicationTest(object):
             )
             self.get_user_patch.start()
 
-            self.client.post("/login", data={
+            self.client.post(self.expand_path('/login'), data={
                 'email_address': 'valid@email.com',
                 'password': '1234567890'
             })

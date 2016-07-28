@@ -23,7 +23,7 @@ class TestStatus(BaseApplicationTest):
 
     @mock.patch('app.status.views.data_api_client')
     def test_should_return_200_from_elb_status_check(self, data_api_client):
-        status_response = self.client.get('/_status?ignore-dependencies')
+        status_response = self.client.get(self.expand_path('/_status?ignore-dependencies'))
         assert_equal(200, status_response.status_code)
         assert_false(data_api_client.called)
 
@@ -36,7 +36,7 @@ class TestStatus(BaseApplicationTest):
             'status': 'ok'
         }
 
-        status_response = self.client.get('/_status')
+        status_response = self.client.get(self.expand_path('/_status'))
         assert_equal(200, status_response.status_code)
 
         json_data = json.loads(status_response.get_data().decode('utf-8'))
@@ -56,7 +56,7 @@ class TestStatus(BaseApplicationTest):
             'status': 'ok'
         }
 
-        response = self.client.get('/_status')
+        response = self.client.get(self.expand_path('/_status'))
         assert_equal(500, response.status_code)
 
         json_data = json.loads(response.get_data().decode('utf-8'))
@@ -74,7 +74,7 @@ class TestStatus(BaseApplicationTest):
 
         self._search_api_client.get_status.return_value = None
 
-        response = self.client.get('/_status')
+        response = self.client.get(self.expand_path('/_status'))
         assert_equal(500, response.status_code)
 
         json_data = json.loads(response.get_data().decode('utf-8'))
@@ -97,7 +97,7 @@ class TestStatus(BaseApplicationTest):
             'message': 'Cannot connect to elasticsearch'
         }
 
-        response = self.client.get('/_status')
+        response = self.client.get(self.expand_path('/_status'))
         assert_equal(500, response.status_code)
 
         json_data = json.loads(response.get_data().decode('utf-8'))

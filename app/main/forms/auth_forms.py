@@ -1,7 +1,8 @@
-from flask_wtf import Form
 from wtforms import PasswordField
 from wtforms.validators import DataRequired, EqualTo, Length, Regexp
 from dmutils.forms import StripWhitespaceStringField, StringField
+
+from app.main.forms.common import DmForm
 
 
 class StripWhitespaceStringField(StripWhitespaceStringField):
@@ -16,7 +17,7 @@ class StripWhitespaceStringField(StripWhitespaceStringField):
         return super(StripWhitespaceStringField, self).__call__(**kwargs)
 
 
-class LoginForm(Form):
+class LoginForm(DmForm):
     email_address = StripWhitespaceStringField(
         'Email', id="input_email_address",
         validators=[
@@ -33,7 +34,7 @@ class LoginForm(Form):
     )
 
 
-class EmailAddressForm(Form):
+class EmailAddressForm(DmForm):
     email_address = StripWhitespaceStringField(
         'Email', id="input_email_address",
         validators=[
@@ -44,7 +45,7 @@ class EmailAddressForm(Form):
     )
 
 
-class ChangePasswordForm(Form):
+class ChangePasswordForm(DmForm):
     password = PasswordField(
         'Password', id="input_password",
         validators=[
@@ -64,7 +65,7 @@ class ChangePasswordForm(Form):
     )
 
 
-class CreateUserForm(Form):
+class CreateUserForm(DmForm):
     name = StripWhitespaceStringField(
         'Full name', id="input_name",
         validators=[

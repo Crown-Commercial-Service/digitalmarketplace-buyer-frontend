@@ -3,6 +3,9 @@ import re
 import json
 from nose.tools import assert_equal, assert_true, assert_false, assert_in
 from ...helpers import BaseApplicationTest
+import pytest
+
+pytestmark = pytest.mark.skipif(True, reason='need to be adapted for Australia')
 
 
 def find_pagination_links(res_data):

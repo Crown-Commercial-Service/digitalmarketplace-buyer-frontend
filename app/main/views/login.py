@@ -33,9 +33,9 @@ def render_login():
 
 @main.route('/login', methods=["POST"])
 def process_login():
-    form = LoginForm()
+    form = LoginForm(request.form)
     next_url = request.args.get('next')
-    if form.validate_on_submit():
+    if form.validate():
         user_json = data_api_client.authenticate_user(
             form.email_address.data,
             form.password.data)
@@ -77,8 +77,8 @@ def request_password_reset():
 
 @main.route('/reset-password', methods=["POST"])
 def send_reset_password_email():
-    form = EmailAddressForm()
-    if form.validate_on_submit():
+    form = EmailAddressForm(request.form)
+    if form.validate():
         email_address = form.email_address.data
         user_json = data_api_client.get_user(email_address=email_address)
 
@@ -153,7 +153,7 @@ def reset_password(token):
 
 @main.route('/reset-password/<token>', methods=["POST"])
 def update_password(token):
-    form = ChangePasswordForm()
+    form = ChangePasswordForm(request.form)
     decoded = decode_password_reset_token(token, data_api_client)
     if decoded.get('error', None):
         flash(decoded['error'], 'error')
@@ -163,7 +163,7 @@ def update_password(token):
     email_address = decoded["email"]
     password = form.password.data
 
-    if form.validate_on_submit():
+    if form.validate():
         if data_api_client.update_user_password(user_id, password, email_address):
             current_app.logger.info(
                 "User {user_id} successfully changed their password",
@@ -192,9 +192,9 @@ def create_buyer_account():
 def submit_create_buyer_account():
     current_app.logger.info(
         "buyercreate: post create-buyer-account")
-    form = EmailAddressForm()
+    form = EmailAddressForm(request.form)
 
-    if form.validate_on_submit():
+    if form.validate():
         email_address = form.email_address.data
         if not data_api_client.is_email_address_with_valid_buyer_domain(email_address):
             return render_template(
@@ -273,7 +273,7 @@ def create_user(encoded_token):
 
 @main.route('/create-user/<string:encoded_token>', methods=["POST"])
 def submit_create_user(encoded_token):
-    form = CreateUserForm()
+    form = CreateUserForm(request.form)
 
     token = decode_invitation_token(encoded_token, role='buyer')
     if token is None:
@@ -284,7 +284,7 @@ def submit_create_user(encoded_token):
             token=None), 400
 
     else:
-        if not form.validate_on_submit():
+        if not form.validate():
             current_app.logger.warning(
                 "createuser.invalid: {form_errors}",
                 extra={'form_errors': ", ".join(form.errors)})

@@ -5,6 +5,9 @@ from ...helpers import BaseApplicationTest
 from dmapiclient import api_stubs
 import mock
 from lxml import html
+import pytest
+
+pytestmark = pytest.mark.skipif(True, reason='Buyer views not yet implemented in Australian version')
 
 
 @mock.patch('app.main.views.digital_outcomes_and_specialists.data_api_client')

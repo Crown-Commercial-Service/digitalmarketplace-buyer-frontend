@@ -20,6 +20,7 @@ class Config(object):
     VERSION = get_version_label(
         os.path.abspath(os.path.dirname(__file__))
     )
+    URL_PREFIX = '/marketplace'
     SESSION_COOKIE_NAME = 'dm_session'
     SESSION_COOKIE_PATH = '/'
     SESSION_COOKIE_HTTPONLY = True
@@ -27,8 +28,8 @@ class Config(object):
 
     PERMANENT_SESSION_LIFETIME = 4*3600
 
-    WTF_CSRF_ENABLED = True
-    WTF_CSRF_TIME_LIMIT = None
+    CSRF_ENABLED = True
+    CSRF_TIME_LIMIT = 8*3600
 
     DM_DATA_API_URL = None
     DM_DATA_API_AUTH_TOKEN = None
@@ -54,11 +55,11 @@ class Config(object):
     RESET_PASSWORD_SALT = 'ResetPasswordSalt'
     INVITE_EMAIL_SALT = 'InviteEmailSalt'
 
-    ASSET_PATH = '/static/'
+    ASSET_PATH = URL_PREFIX + '/static'
     BASE_TEMPLATE_DATA = {
         'header_class': 'with-proposition',
-        'asset_path': ASSET_PATH,
-        'asset_fingerprinter': AssetFingerprinter(asset_root=ASSET_PATH)
+        'asset_path': ASSET_PATH + '/',
+        'asset_fingerprinter': AssetFingerprinter(asset_root=ASSET_PATH + '/')
     }
 
     # Feature Flags
@@ -83,7 +84,7 @@ class Config(object):
 class Test(Config):
     DEBUG = True
     DM_LOG_LEVEL = 'CRITICAL'
-    WTF_CSRF_ENABLED = False
+    CSRF_ENABLED = False
 
     DM_DATA_API_URL = "http://localhost:5000"
     DM_DATA_API_AUTH_TOKEN = "myToken"

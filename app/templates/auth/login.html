@@ -67,7 +67,7 @@
 
 <form action="{{ url_for('.process_login', next=next) }}" method="POST">
 
-  {{ form.hidden_tag() }}
+  {{ form.csrf_token }}
 
   <p id="{{ form.email_address.name }}">
     {{ form.email_address.label() }}

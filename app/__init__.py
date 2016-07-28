@@ -1,6 +1,5 @@
 from flask import Flask, request, redirect, session, abort
 from flask_login import LoginManager
-from flask_wtf.csrf import CsrfProtect
 
 import dmapiclient
 from dmutils import init_app, flask_featureflags
@@ -13,7 +12,6 @@ login_manager = LoginManager()
 data_api_client = dmapiclient.DataAPIClient()
 search_api_client = dmapiclient.SearchAPIClient()
 feature_flags = flask_featureflags.FeatureFlag()
-csrf = CsrfProtect()
 
 content_loader = ContentLoader('app/content')
 content_loader.load_manifest('g-cloud-6', 'services', 'search_filters')
@@ -22,7 +20,7 @@ content_loader.load_manifest('digital-outcomes-and-specialists', 'briefs', 'disp
 
 
 def create_app(config_name):
-    application = Flask(__name__)
+    application = Flask(__name__, static_url_path=configs[config_name].ASSET_PATH)
 
     init_app(
         application,
@@ -37,32 +35,17 @@ def create_app(config_name):
     from .status import status as status_blueprint
     from .buyers import buyers as buyers_blueprint
 
-    application.register_blueprint(status_blueprint)
-    application.register_blueprint(main_blueprint)
-    application.register_blueprint(buyers_blueprint)
+    url_prefix = application.config['URL_PREFIX']
+    application.register_blueprint(status_blueprint, url_prefix=url_prefix)
+    application.register_blueprint(main_blueprint, url_prefix=url_prefix)
+    application.register_blueprint(buyers_blueprint, url_prefix=url_prefix)
 
     login_manager.login_view = 'main.render_login'
     login_manager.login_message_category = "must_login"
-    csrf.init_app(application)
-
-    @csrf.error_handler
-    def csrf_handler(reason):
-        if 'user_id' not in session:
-            application.logger.info(
-                u'csrf.session_expired: Redirecting user to log in page'
-            )
-
-            return application.login_manager.unauthorized()
-
-        application.logger.info(
-            u'csrf.invalid_token: Aborting request, user_id: {user_id}',
-            extra={'user_id': session['user_id']})
-
-        abort(400, reason)
 
     @application.before_request
     def remove_trailing_slash():
-        if request.path != '/' and request.path.endswith('/'):
+        if request.path != application.config['URL_PREFIX'] + '/' and request.path.endswith('/'):
             if request.query_string:
                 return redirect(
                     '{}?{}'.format(
