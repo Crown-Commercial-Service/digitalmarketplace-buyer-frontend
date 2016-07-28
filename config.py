@@ -22,7 +22,7 @@ class Config(object):
     )
     URL_PREFIX = '/marketplace'
     SESSION_COOKIE_NAME = 'dm_session'
-    SESSION_COOKIE_PATH = '/marketplace/'
+    SESSION_COOKIE_PATH = '/'
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_SECURE = True
 
@@ -30,7 +30,6 @@ class Config(object):
 
     CSRF_ENABLED = True
     CSRF_TIME_LIMIT = 8*3600
-    CSRF_TRUSTED_ORIGINS = 'localhost:5002;dm-dev.apps.staging.digital.gov.au;dm-buyer-frontend.apps.platform.digital.gov.au;www.gov.au;'  # noqa
 
     DM_DATA_API_URL = None
     DM_DATA_API_AUTH_TOKEN = None
