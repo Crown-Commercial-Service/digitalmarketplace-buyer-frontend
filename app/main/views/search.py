@@ -82,7 +82,7 @@ def supplier_search():
     sort_queries = []
     for sort_term in sort_terms:
         sort_queries.append({
-            sort_term: {"order": sort_order, "mode" : "min"}
+            sort_term: {"order": sort_order, "mode": "min"}
         })
 
     if role_list_from_request:
