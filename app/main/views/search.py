@@ -3,6 +3,7 @@ import json
 from flask.helpers import url_for
 import os
 from flask import abort, render_template, request, redirect, current_app
+from flask_login import login_required
 from app.api_client.data import DataAPIClient
 from app.main.utils import get_page_list
 
@@ -22,6 +23,7 @@ Result = namedtuple('Result', 'title description badges roles extra_details url'
 
 
 @main.route('/search/suppliers')
+@login_required  # TODO Remove for go-live
 def supplier_search():
     sort_order = request.args.get('sort_order', 'asc')  # asc or desc
     sort_terms = request.args.getlist('sort_term')
