@@ -81,7 +81,6 @@ def supplier_search():
 #            }
 #        })
 
-
     sort_queries = []
     allowed_sort_terms = ['name']  # Limit what can be sorted
     for sort_term in sort_terms:
