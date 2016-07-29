@@ -139,7 +139,7 @@ def supplier_search():
             details['summary'],
             [Badge('badge-security', 'Security clearance'), Badge('badge-tick', 'ABC compliant')],
             sorted(supplier_roles),
-            [ExtraDetail('Location', '%s, %s' % (details['address']['suburb'], details['address']['state'])),
+            [ExtraDetail('Location', '%s, %s' % (details['address'].get('suburb', ''), details['address'].get('state'))),
              ],
             url_for('.get_supplier', code=details['code']))
 
