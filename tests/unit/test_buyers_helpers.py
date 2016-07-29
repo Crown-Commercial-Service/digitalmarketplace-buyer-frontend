@@ -65,6 +65,32 @@ class TestBuyersHelpers(unittest.TestCase):
         self.assertRaises(NotFound, helpers.buyers_helpers.get_framework_and_lot, 'digital-outcomes-and-specialists',
                           'digital-specialists', data_api_client, {'must_allow_brief': True})
 
+    def test_is_brief_correct(self):
+        brief = api_stubs.brief(user_id=123, status='live')['briefs']
+
+        assert helpers.buyers_helpers.is_brief_correct(
+            brief, 'digital-outcomes-and-specialists', 'digital-specialists', 123
+        ) is True
+
+        assert helpers.buyers_helpers.is_brief_correct(
+            brief, 'not-digital-outcomes-and-specialists', 'digital-specialists', 123
+        ) is False
+
+        assert helpers.buyers_helpers.is_brief_correct(
+            brief, 'digital-outcomes-and-specialists', 'not-digital-specialists', 123
+        ) is False
+
+        assert helpers.buyers_helpers.is_brief_correct(
+            brief, 'digital-outcomes-and-specialists', 'not-digital-specialists', 124
+        ) is False
+
+        assert helpers.buyers_helpers.is_brief_correct(
+            api_stubs.brief(user_id=123, status='withdrawn')['briefs'],
+            'digital-outcomes-and-specialists',
+            'digital-specialists',
+            123
+        ) is False
+
     def test_is_brief_associated_with_user(self):
         brief = api_stubs.brief(user_id=123)['briefs']
         assert helpers.buyers_helpers.is_brief_associated_with_user(brief, 123) is True
@@ -73,6 +99,10 @@ class TestBuyersHelpers(unittest.TestCase):
     def test_brief_can_be_edited(self):
         assert helpers.buyers_helpers.brief_can_be_edited(api_stubs.brief(status='draft')['briefs']) is True
         assert helpers.buyers_helpers.brief_can_be_edited(api_stubs.brief(status='live')['briefs']) is False
+
+    def test_brief_is_withdrawn(self):
+        assert helpers.buyers_helpers.brief_is_withdrawn(api_stubs.brief(status='withdrawn')['briefs']) is True
+        assert helpers.buyers_helpers.brief_is_withdrawn(api_stubs.brief(status='live')['briefs']) is False
 
     def test_section_has_at_least_one_required_question(self):
         content = content_loader.get_manifest('dos', 'edit_brief').filter(
