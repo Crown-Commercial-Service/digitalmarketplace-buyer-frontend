@@ -96,8 +96,8 @@ def list_opportunities(framework_slug):
     if not framework:
         abort(404, "No framework {}".format(framework_slug))
 
-    api_result = data_api_client.find_briefs(status='live,closed', framework=framework_slug, page=page)
-
+    api_result = data_api_client.find_briefs(status='live,closed', framework=framework_slug,
+                                             page=page, human=True)
     briefs = api_result["briefs"]
     links = api_result["links"]
 

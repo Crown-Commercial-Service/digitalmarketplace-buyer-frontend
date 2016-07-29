@@ -10,11 +10,12 @@ from .. import buyers, content_loader
 from ...helpers.buyers_helpers import (
     all_essentials_are_true, counts_for_failed_and_eligible_brief_responses,
     get_framework_and_lot, get_sorted_responses_for_brief, count_unanswered_questions,
-    brief_can_be_edited, add_unanswered_counts_to_briefs, is_brief_correct, get_publishing_dates,
+    brief_can_be_edited, add_unanswered_counts_to_briefs, is_brief_correct,
     section_has_at_least_one_required_question
 )
 
 from dmapiclient import HTTPError
+from dmutils.dates import get_publishing_dates
 
 
 @buyers.route('/buyers')
@@ -362,6 +363,7 @@ def publish_brief(framework_slug, lot_slug, brief_id):
             question_and_answers['slug'] = section['id']
 
     unanswered_required, unanswered_optional = count_unanswered_questions(sections)
+
     if request.method == 'POST':
         if unanswered_required > 0:
             abort(400, 'There are still unanswered required questions')
@@ -371,8 +373,14 @@ def publish_brief(framework_slug, lot_slug, brief_id):
             url_for('.view_brief_overview', framework_slug=brief['frameworkSlug'], lot_slug=brief['lotSlug'],
                     brief_id=brief['id'], published='true'))
     else:
+        #  requirements length is a required question but is handled separately to other
+        #  required questions on the publish page if it's unanswered.
+        if sections.get_section('set-how-long-your-requirements-will-be-live-for') and \
+                sections.get_section('set-how-long-your-requirements-will-be-live-for').questions[0].answer_required:
+                unanswered_required -= 1
+
         email_address = brief_users['emailAddress']
-        dates = get_publishing_dates()
+        dates = get_publishing_dates(brief)
 
         return render_template(
             "buyers/brief_publish_confirmation.html",
@@ -389,7 +397,6 @@ def publish_brief(framework_slug, lot_slug, brief_id):
 def view_brief_timeline(framework_slug, lot_slug, brief_id):
     get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
     brief = data_api_client.get_brief(brief_id)["briefs"]
-
     if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id) or brief.get('status') != 'live':
         abort(404)
 

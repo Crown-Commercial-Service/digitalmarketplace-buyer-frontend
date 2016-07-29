@@ -909,6 +909,7 @@ class TestPublishBrief(BaseApplicationTest):
             'technicalWeighting': 10,
             'workingArrangements': 'arrangements',
             'workplaceAddress': 'address',
+            'requirementsLength': '1 week'
         })
         data_api_client.get_brief.return_value = brief_json
 
@@ -966,7 +967,6 @@ class TestPublishBrief(BaseApplicationTest):
                 api_stubs.lot(slug='digital-specialists', allows_brief=True)
             ]
         )
-
         brief_json = api_stubs.brief(status="draft")
         brief_questions = brief_json['briefs']
         brief_questions.update({
@@ -989,6 +989,7 @@ class TestPublishBrief(BaseApplicationTest):
             'technicalWeighting': 10,
             'workingArrangements': 'arrangements',
             'workplaceAddress': 'address',
+            'requirementsLength': '1 week'
         })
         data_api_client.get_brief.return_value = brief_json
 
@@ -1009,7 +1010,12 @@ class TestPublishBrief(BaseApplicationTest):
             ]
         )
 
-        data_api_client.get_brief.return_value = api_stubs.brief(status="draft")
+        brief_json = api_stubs.brief(status="draft")
+        brief_questions = brief_json['briefs']
+        brief_questions.update({
+            'requirementsLength': '1 week'
+        })
+        data_api_client.get_brief.return_value = brief_json
 
         res = self.client.get("/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
                               "digital-specialists/1234/publish")
@@ -1017,6 +1023,126 @@ class TestPublishBrief(BaseApplicationTest):
 
         assert res.status_code == 200
         assert 'Publish requirements' not in page_html
+
+    def test_warning_about_setting_requirement_length_is_not_displayed_if_not_specialist_brief(self, data_api_client):
+        self.login_as_buyer()
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='live',
+            lots=[
+                api_stubs.lot(slug='digital-outcomes', allows_brief=True)
+            ]
+        )
+
+        data_api_client.get_brief.return_value = api_stubs.brief(status="draft", lot_slug="digital-outcomes")
+
+        res = self.client.get("/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
+                              "digital-outcomes/1234/publish")
+        page_html = res.get_data(as_text=True)
+
+        assert res.status_code == 200
+        assert 'This will show you what the supplier application deadline will be' not in page_html
+        assert 'Your requirements will be open for 2 weeks' in page_html
+
+    def test_correct_content_is_displayed_if_no_requirementLength_is_set(self, data_api_client):
+        self.login_as_buyer()
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='live',
+            lots=[
+                api_stubs.lot(slug='digital-specialists', allows_brief=True)
+            ]
+        )
+
+        data_api_client.get_brief.return_value = api_stubs.brief(status="draft")
+
+        res = self.client.get("/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
+                              "digital-specialists/1234/publish")
+        page_html = res.get_data(as_text=True)
+
+        assert res.status_code == 200
+        assert 'This will show you what the supplier application deadline will be' in page_html
+        assert 'Your requirements will be open for' not in page_html
+
+    def test_correct_content_is_displayed_if_requirementLength_is_1_week(self, data_api_client):
+        self.login_as_buyer()
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='live',
+            lots=[
+                api_stubs.lot(slug='digital-specialists', allows_brief=True)
+            ]
+        )
+
+        brief_json = api_stubs.brief(status="draft")
+        brief_questions = brief_json['briefs']
+        brief_questions.update({
+            'requirementsLength': '1 week'
+        })
+        data_api_client.get_brief.return_value = brief_json
+
+        res = self.client.get("/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
+                              "digital-specialists/1234/publish")
+        page_html = res.get_data(as_text=True)
+
+        assert res.status_code == 200
+        assert 'Your requirements will be open for 1 week.' in page_html
+        assert 'This will show you what the supplier application deadline will be' not in page_html
+        assert 'Your requirements will be open for 2 weeks' not in page_html
+
+    def test_correct_content_is_displayed_if_requirementLength_is_2_weeks(self, data_api_client):
+        self.login_as_buyer()
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='live',
+            lots=[
+                api_stubs.lot(slug='digital-specialists', allows_brief=True)
+            ]
+        )
+
+        brief_json = api_stubs.brief(status="draft")
+        brief_questions = brief_json['briefs']
+        brief_questions.update({
+            'requirementsLength': '2 weeks'
+        })
+        data_api_client.get_brief.return_value = brief_json
+
+        res = self.client.get("/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
+                              "digital-specialists/1234/publish")
+        page_html = res.get_data(as_text=True)
+
+        assert res.status_code == 200
+        assert 'Your requirements will be open for 2 weeks.' in page_html
+        assert 'This will show you what the supplier application deadline will be' not in page_html
+        assert 'Your requirements will be open for 1 week' not in page_html
+
+    def test_correct_content_is_displayed_if_requirementLength_is_not_set(self, data_api_client):
+        self.login_as_buyer()
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='live',
+            lots=[
+                api_stubs.lot(slug='digital-specialists', allows_brief=True)
+            ]
+        )
+
+        brief_json = api_stubs.brief(status="draft")
+        brief_questions = brief_json['briefs']
+        brief_questions.update({
+            'requirementsLength': None
+        })
+        data_api_client.get_brief.return_value = brief_json
+
+        res = self.client.get("/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
+                              "digital-specialists/1234/publish")
+        page_html = res.get_data(as_text=True)
+        document = html.fromstring(page_html)
+
+        assert res.status_code == 200
+        assert 'Your requirements will be open for 2 weeks.' not in page_html
+        assert 'This will show you what the supplier application deadline will be' in page_html
+        assert 'Your requirements will be open for 1 week' not in page_html
+        assert not document.xpath('//a[contains(text(), "Set how long your requirements will be live for")]')
 
 
 @mock.patch('app.buyers.views.buyers.data_api_client')
@@ -1126,6 +1252,7 @@ class TestBriefSummaryPage(BaseApplicationTest):
                 'Location',
                 'Description of work',
                 'Shortlist and evaluation process',
+                'Set how long your requirements will be live for',
                 'Describe question and answer session',
                 'Review and publish your requirements',
                 'How to answer supplier questions',
@@ -1892,10 +2019,11 @@ class TestViewQuestionAndAnswerDates(BaseApplicationTest):
                 ]
             )
             brief_json = api_stubs.brief(status="live")
-            brief_json['briefs']['publishedAt'] = "2016-04-02T20:10:00.00000Z"
-            brief_json['briefs']['clarificationQuestionsClosedAt'] = "2016-04-12T23:59:00.00000Z"
-            brief_json['briefs']['clarificationQuestionsPublishedBy'] = "2016-04-14T23:59:00.00000Z"
-            brief_json['briefs']['applicationsClosedAt'] = "2016-04-16T23:59:00.00000Z"
+            brief_json['briefs']['requirementsLength'] = '2 weeks'
+            brief_json['briefs']['publishedAt'] = u"2016-04-02T20:10:00.00000Z"
+            brief_json['briefs']['clarificationQuestionsClosedAt'] = u"2016-04-12T23:59:00.00000Z"
+            brief_json['briefs']['clarificationQuestionsPublishedBy'] = u"2016-04-14T23:59:00.00000Z"
+            brief_json['briefs']['applicationsClosedAt'] = u"2016-04-16T23:59:00.00000Z"
             brief_json['briefs']['specialistRole'] = 'communicationsManager'
             brief_json['briefs']["clarificationQuestionsAreClosed"] = True
             data_api_client.get_brief.return_value = brief_json
@@ -1912,7 +2040,7 @@ class TestViewQuestionAndAnswerDates(BaseApplicationTest):
             assert all(
                 date in
                 [e.text_content() for e in document.xpath('//main[@id="content"]//th/span')]
-                for date in ['2 April', '12 April', '14 April', '16 April']
+                for date in ['2 April', '8 April', '15 April', '16 April']
             )
 
     def test_do_not_show_question_and_answer_dates_for_draft_brief(self, data_api_client):
