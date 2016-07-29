@@ -69,3 +69,22 @@
     font-weight: $bold-font-weight;
   }
 }
+
+.callout--hero {
+  @extend %base-callout;
+  @include position(relative, null);
+  background: $darker-aqua;
+  box-shadow: 0 0 0 transparent;
+
+  @include media($desktop) {
+    @include position(absolute, null 0 (-$base-spacing*5) null);
+    @include span-columns(5 of 16);
+    @include shift(2);
+    margin: 0;
+  }
+
+  h2 {
+    @extend h3;
+    font-weight: $base-font-weight;
+  }
+}
