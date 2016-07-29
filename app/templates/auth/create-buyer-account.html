@@ -45,16 +45,28 @@
 {% endwith %}
 
 <p>
-  To create an account you must be part of an Australian local, state or federal government organisation.
+  Please confirm you are:
 </p>
+<ul>
+  <li>an employee under the Public Service Act 1999 (Cth) or</li>
+  <li>an employee under the equivalent State or Territory legislation or</li>
+  <li>
+    have written authorisation from an employee under the Public Service Act 1999 (Cth) or an employee under the equivalent State or Territory legislation to act on behalf of a Commonwealth, State or Territory agency.
+  </li>
+</ul>
 
 <form method="POST" action="{{ url_for('.submit_create_buyer_account') }}">
   {{ form.csrf_token }}
 
+  <fieldset>
+    <input id="confirm-government-emp" name="government-emp-checkbox" type="checkbox">
+    <label for="confirm-government-emp">I am a public service employee or have authorisation, as described above.</label>
+  </fieldset>
+
   {%
     with
       question = "Your email address",
-      hint = "Must be an Australian Government email address ending in .gov.au",
+      hint = 'You must have an email address ending in <strong>.gov.au</strong>.'|safe,
       name = "email_address",
       value = email_address,
       error = form.email_address.errors[0]
@@ -69,6 +81,6 @@
   %}
   {% include "au-ui-toolkit/button.html" %}
   {% endwith %}
-  <p><small>By signing up, you agree to the <a href="{{ url_for('main.terms_of_use') }}">Terms of Use</a> and <a href="{{ url_for('main.privacy_policy') }}">Privacy Policy</a>.</small></p>
+  <p><small>By creating an account, you agree to the <a href="{{ url_for('main.terms_of_use') }}">Terms of Use</a> and <a href="{{ url_for('main.privacy_policy') }}">Privacy Policy</a>.</small></p>
 </form>
 {% endblock %}

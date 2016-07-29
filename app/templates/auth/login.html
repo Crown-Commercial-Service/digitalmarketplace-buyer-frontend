@@ -91,7 +91,7 @@
   {%
     with
     url = url_for('.request_password_reset'),
-    text = "Forgotten password"
+    text = "Forgot your password?"
   %}
     {% include "au-ui-toolkit/secondary-action-link.html" %}
   {% endwith %}
@@ -112,7 +112,7 @@
   {%
     with
     url = url_for('.create_buyer_account'),
-    text = "Sign up",
+    text = "Create a buyer account",
     bigger = true
   %}
     {% include "au-ui-toolkit/secondary-action-link.html" %}
