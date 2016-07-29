@@ -1,3 +1,4 @@
 *.pyc
 tests/
 venv/
+node_modules/
