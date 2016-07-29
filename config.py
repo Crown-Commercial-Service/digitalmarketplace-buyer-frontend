@@ -35,7 +35,6 @@ class Config(object):
     DM_DATA_API_AUTH_TOKEN = None
     DM_SEARCH_API_URL = None
     DM_SEARCH_API_AUTH_TOKEN = None
-    DM_MANDRILL_API_KEY = None
 
     # matches api(s)
     DM_SEARCH_PAGE_SIZE = 100
@@ -93,7 +92,6 @@ class Test(Config):
     DM_SEARCH_API_URL = "http://localhost:5001"
     DM_SEARCH_API_AUTH_TOKEN = "myToken"
 
-    DM_MANDRILL_API_KEY = 'MANDRILL'
     SHARED_EMAIL_KEY = "KEY"
     SECRET_KEY = "KEY"
 
@@ -108,7 +106,6 @@ class Development(Config):
     DM_SEARCH_API_URL = "http://localhost:5001"
     DM_SEARCH_API_AUTH_TOKEN = "myToken"
 
-    DM_MANDRILL_API_KEY = "not_a_real_key"
     SECRET_KEY = "verySecretKey"
     SHARED_EMAIL_KEY = "very_secret"
 
