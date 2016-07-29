@@ -50,14 +50,6 @@
           <p>{{ result.description }}</p>
           {% endif %}
 
-{#          {% if result.badges %}#}{# for future #}
-{#          <p>#}
-{#            {% for badge in result.badges %}#}
-{#            <span class="{{ badge.css_class }}">{{ badge.label }}</span>#}
-{#            {% endfor %}#}
-{#          </p>#}
-{#          {% endif %}#}
-
           {% if result.roles %}
           <footer class="tags">
            <dl>
@@ -70,18 +62,6 @@
            </dl>
          </footer>
          {% endif %}
-
-         {# ----------------------------- This is for later stage ----------------- #}
-         {#				<div>#}
-         {#					<dl>#}
-         {#						{% for detail in result.extra_details %}#}
-         {#						<dt>{{ detail.key }}</dt>#}
-         {#						<dd>{{ detail.value }}</dt>#}
-         {#						{% endfor %}#}
-         {#					</dl>#}
-         {#					<a href="{{ result.url }}">See supplier's profile</a>#}
-         {#				</div>#}
-         {#            -------------------------------------------------------------------------#}
        </article>
      </li>
      {% endfor %}
