@@ -67,26 +67,31 @@
      {% endfor %}
    </ul>
    {% if num_results %}
-   <div>
-    <div>
-      page {{ page }} of {{ num_pages }}
-    </div>
-
-    <div>
-      <ul>
-        {% for pg in pages %}
-        <li class="{% if pg == page %}current{% endif %}">
-          {% if pg != '...' %}
-          {% with page_number=pg, sort_alternate=False, link_label=pg, sort_terms=sort_terms  %}
-                {% include '_supplier_pagination_link.html' %}
+    <hr>
+    <div class="pagination">
+      <div>
+        Page <strong>{{ page }}</strong> of <strong>{{ num_pages }}</strong>
+      </div>
+      <div>
+        <ul class="pagination-controls">
+          {% for pg in pages %}
+          <li class="{% if pg == page %}current{% endif %}">
+            {% if pg != '...' %}
+            {% with page_number=pg, sort_alternate=False, link_label=pg, sort_terms=sort_terms  %}
+              {% include '_supplier_pagination_link.html' %}
             {% endwith %}
-          {% else %}
-          <span>{{ pg }}</span>
+            {% else %}
+            <span>{{ pg }}</span>
+            {% endif %}
+          </li>
+          {% endfor %}
+          {% if page + 1 <= num_pages %}
+            {% with page_number=page+1, sort_alternate=False, link_label="Next >", sort_terms=sort_terms  %}
+              {% include '_supplier_pagination_link.html' %}
+            {% endwith %}
           {% endif %}
-        </li>
-        {% endfor %}
-      </ul>
+        </ul>
+      </div>
     </div>
-  </div>
   {% endif %}
   {% endblock %}
