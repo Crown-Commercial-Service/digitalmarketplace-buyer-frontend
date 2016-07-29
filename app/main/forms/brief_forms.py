@@ -36,7 +36,7 @@ class BriefSearchForm(Form):
 
     def get_briefs(self):
         if not self.validate():
-            raise ValueError("Will not fetch briefs for invalid form")
+            raise ValueError("Invalid form")
 
         statuses = self.status.data or tuple(id for id, label in self.status.choices)
         lots = self.lot.data or tuple(id for id, label in self.lot.choices)
@@ -54,7 +54,7 @@ class BriefSearchForm(Form):
             generate the same "filters" structure as expected by search page templates
         """
         if not self.validate():
-            raise ValueError("Will not produce filters for invalid form")
+            raise ValueError("Invalid form")
 
         return [
             {
@@ -72,3 +72,20 @@ class BriefSearchForm(Form):
             }
             for field in (self.lot, self.status,)
         ]
+
+    def filters_applied(self):
+        """
+            returns boolean indicating whether the results are actually filtered at all
+        """
+        if not self.validate():
+            raise ValueError("Invalid form")
+
+        return bool(
+            (self.lot.data or self.status.data)
+            and not (
+                # also have to ensure we don't just have everything selected
+                    ({id_ for id_, label in self.lot.choices} == set(self.lot.data or ()))
+                and
+                    ({id_ for id_, label in self.status.choices} == set(self.status.data or ()))
+            )
+        )

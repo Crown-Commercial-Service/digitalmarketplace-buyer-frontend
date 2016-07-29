@@ -102,7 +102,6 @@ def list_opportunities(framework_slug):
         abort(400, "Invalid form data")
 
     api_result = form.get_briefs()
-    filters = form.get_filters()
 
     briefs = api_result["briefs"]
     links = api_result["links"]
@@ -122,9 +121,11 @@ def list_opportunities(framework_slug):
     return render_template('search/briefs.html',
                            framework=framework,
                            form=form,
-                           filters=filters,
+                           filters=form.get_filters(),
+                           filters_applied=form.filters_applied(),
                            briefs=briefs,
                            lot_names=tuple(label for id_, label in form.lot.choices),
                            prev_link_args=prev_link_args,
                            next_link_args=next_link_args,
+                           briefs_count=api_result.get("meta", {}).get("total", None),
                            )
