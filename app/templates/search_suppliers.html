@@ -50,13 +50,13 @@
           <p>{{ result.description }}</p>
           {% endif %}
 
-          {% if result.badges %}
-          <p>
-            {% for badge in result.badges %}
-            <span class="{{ badge.css_class }}">{{ badge.label }}</span>
-            {% endfor %}
-          </p>
-          {% endif %}
+{#          {% if result.badges %}#}{# for future #}
+{#          <p>#}
+{#            {% for badge in result.badges %}#}
+{#            <span class="{{ badge.css_class }}">{{ badge.label }}</span>#}
+{#            {% endfor %}#}
+{#          </p>#}
+{#          {% endif %}#}
 
           {% if result.roles %}
           <footer class="tags">
@@ -95,7 +95,9 @@
         {% for pg in pages %}
         <li class="{% if pg == page %}current{% endif %}">
           {% if pg != '...' %}
-          <a href="?page={{ pg }}{% for role in role_list_from_request %}&role={{ role }}{% endfor %}">{{ pg }}</a>
+          {% with page_number=pg, sort_alternate=False, link_label=pg, sort_terms=sort_terms  %}
+                {% include '_supplier_pagination_link.html' %}
+            {% endwith %}
           {% else %}
           <span>{{ pg }}</span>
           {% endif %}
