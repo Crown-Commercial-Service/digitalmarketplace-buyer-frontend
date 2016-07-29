@@ -18,7 +18,7 @@ Option = namedtuple('Option', 'name value label checked')
 Badge = namedtuple('Badge', 'css_class label')
 Role = namedtuple('Role', 'label')
 ExtraDetail = namedtuple('ExtraDetail', 'key value')
-Result = namedtuple('Result', 'title description badges roles extra_details url')
+Result = namedtuple('Result', 'title description badges roles url')
 
 
 @main.route('/search/suppliers')
@@ -139,9 +139,6 @@ def supplier_search():
             details['summary'],
             [Badge('badge-security', 'Security clearance'), Badge('badge-tick', 'ABC compliant')],
             sorted(supplier_roles),
-            [ExtraDetail('Location', u'{0:s}, {1:s}'.format(details['address'].get('suburb', ''),
-                                                            details['address'].get('state', ''))),
-             ],
             url_for('.get_supplier', code=details['code']))
 
         results.append(result)
