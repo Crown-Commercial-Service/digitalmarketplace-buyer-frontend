@@ -35,6 +35,7 @@ class Config(object):
     DM_DATA_API_AUTH_TOKEN = None
     DM_SEARCH_API_URL = None
     DM_SEARCH_API_AUTH_TOKEN = None
+    DM_HTTP_PROTO = 'http'
 
     # matches api(s)
     DM_SEARCH_PAGE_SIZE = 100

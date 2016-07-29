@@ -44,6 +44,10 @@ def create_app(config_name):
     login_manager.login_message_category = "must_login"
 
     @application.before_request
+    def set_scheme():
+        request.environ['wsgi.url_scheme'] = application.config['DM_HTTP_PROTO']
+
+    @application.before_request
     def remove_trailing_slash():
         if request.path != application.config['URL_PREFIX'] + '/' and request.path.endswith('/'):
             if request.query_string:
