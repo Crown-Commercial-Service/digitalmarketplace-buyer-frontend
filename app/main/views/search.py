@@ -27,10 +27,15 @@ Result = namedtuple('Result', 'title description badges roles url')
 def supplier_search():
     sort_order = request.args.get('sort_order', 'asc')  # asc or desc
     sort_terms = request.args.getlist('sort_term')
+
+    if not sort_terms:  # Sort by A-Z for default
+        sort_terms = ['name']
+
     role_list_from_request = request.args.getlist('role')
     response = DataAPIClient().get_roles()
     role_list = []
     role_list_plain = []
+    role_filters = []
     for role_row in response['roles']:
         role = role_row['role'].replace('Senior ', '').replace('Junior ', '')  # Mind the white space after Junior
         if role not in role_list_plain:
@@ -38,6 +43,9 @@ def supplier_search():
             option = Option('role', role, role, role in role_list_from_request)
             role_list.append(option)
             role_list_plain.append(role)
+
+            if role in role_list_from_request:
+                role_filters.append(role_row['role'])
 
     filters = [
         Filter('Capabilities', role_list),
@@ -69,23 +77,25 @@ def supplier_search():
     #        ),
     #    ]
 
-    role_queries = []
-    for role in role_list_from_request:
-        role_queries.append({
-            "query": {
-                "query_string": {
-                    "default_field": "prices.serviceRole.role",
-                    "default_operator": "AND",
-                    "query": role
-                }
-            }
-        })
+#    role_queries = []
+#    for role in role_list_from_request:
+#        role_queries.append({
+#            "term": {
+#                "prices.serviceRole.role": role
+#            }
+#        })
 
     sort_queries = []
+    allowed_sort_terms = ['name']  # Limit what can be sorted
     for sort_term in sort_terms:
-        sort_queries.append({
-            sort_term: {"order": sort_order, "mode": "min"}
-        })
+        if sort_term in allowed_sort_terms:
+
+            if sort_term == 'name':  # Use 'name' in url to keep it clean but query needs to search on not analyzed.
+                sort_term = 'name.not_analyzed'
+
+            sort_queries.append({
+                sort_term: {"order": sort_order, "mode": "min"}
+            })
 
     if role_list_from_request:
         query = {
@@ -95,11 +105,11 @@ def supplier_search():
                         "match_all": {}
                     },
                     "filter": {
-                        "or": role_queries,
+                        "terms": {"prices.serviceRole.role": role_filters},
                         }
                 }
             },
-            "sort": sort_queries
+            "sort": sort_queries,
         }
 
     else:
