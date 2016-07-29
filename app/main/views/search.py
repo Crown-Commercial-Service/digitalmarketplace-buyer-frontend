@@ -27,6 +27,9 @@ Result = namedtuple('Result', 'title description badges roles url')
 def supplier_search():
     sort_order = request.args.get('sort_order', 'asc')  # asc or desc
     sort_terms = request.args.getlist('sort_term')
+    if not sort_terms:
+        sort_terms = ['name']
+        
     role_list_from_request = request.args.getlist('role')
     response = DataAPIClient().get_roles()
     role_list = []
