@@ -78,6 +78,7 @@
 }
 
 .hero-main {
+  @include position(relative, null);
   padding: 0 0 ($base-spacing * 3.25);
   margin-bottom: 0;
   background-color: $hero-bg-colour;
@@ -110,5 +111,11 @@
     @include media($tablet) {
       vertical-align: text-top;
     }
+  }
+}
+
+.content--hero {
+  @include media($desktop) {
+    @include span-columns(9 of 16);
   }
 }

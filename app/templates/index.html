@@ -4,8 +4,10 @@
 
 {% block hero %}
   {% with
-    site_title='MARKETPLACE <span class="badge--beta">beta</span>'|safe, 
-    tagline='The place to do ICT business with government.'
+    site_title='MARKETPLACE <span class="badge--beta">beta</span>', 
+    tagline='Where Australian Government buyers and ICT professionals do business.',
+    callout_title=('<a href="' + url_for('main.about_us') + '">New to the Marketplace?</a>'),
+    callout_text='Find out how it works.'
   %}
     {% include "_hero.html" %}
   {% endwith %}
@@ -17,29 +19,33 @@
   <ul class="list-vertical">
     <li>
       <article>
-        <h3><a href="{{ url_for('.supplier_search') }}">I know the resource I need</a></h3>
+        <h3><a href="{{ url_for('.supplier_search') }}">Find an ICT supplier</a></h3>
         <p>Find ICT partners to deliver an outcome for your project.</p>
+        <p><a href="{{ url_for('.supplier_search') }}" role="button">View the catalogue</a></p>
       </article>
     </li>
     <li>
       <article>
-        <h3><a href="{{ url_for('.ideation') }}">I have a problem to solve</a></h3>
-        <p>Challenge the market to develop new ideas based on a brief or data.</p>
+        <h3><a href="{{ url_for('.ideation') }}">Submit your brief</a></h3>
+        <p>Seek new ideas and solutions for your project from ICT experts around Australia.</p>
+        <p><a href="{{ url_for('.ideation') }}">Read more</a></h3></p>
       </article>
     </li>
   </ul>
-  <h2>Sellers</h2>
+  <h2>ICT suppliers</h2>
   <ul class="list-vertical">
     <li>
       <article>
-        <h3><a href="{{ url_for('.new_seller') }}">I want to sell my services</a></h3>
-        <p>List your product or service and build a profile in the Marketplace.</p>
+        <h3><a href="{{ url_for('.new_seller') }}">Join the Marketplace</a></h3>
+        <p>List your product or service and start building your profile in the Marketplace.</p>
+        <p><a href="{{ url_for('.new_seller') }}">Read more</a></p>
       </article>
     </li>
     <li>
       <article>
-        <h3><a href="{{ url_for('.pitch') }}">I have an idea to pitch</a></h3>
+        <h3><a href="{{ url_for('.pitch') }}">Pitch an idea</a></h3>
         <p>Get in touch to discuss your idea for transforming a government service.</p>
+        <p><a href="{{ url_for('.pitch') }}">Read more</a></p>
       </article>
     </li>
   </ul>
@@ -47,14 +53,16 @@
    <ul class="list-vertical">
      <li>
       <article>
-        <h3><a href="{{ url_for('.about_us') }}">About the Marketplace</a></h3>
-        <p>Find out our purpose, our process and how we comply with regulations.</p>
+        <h3><a href="{{ url_for('.about_us') }}">Services available to buyers</a></h3>
+        <p>Take a closer look at the types of expertise available in the Marketplace.</p>
+        <p><a href="{{ url_for('.about_us') }}">Read more</a></p>
       </article>
      </li>
      <li>
       <article>
-        <h3><a href="{{ url_for('.roles_and_services') }}">What roles and services are available</a></h3>
-        <p>Take a closer look at the range of expertise available and range of daily rates.</p>
+        <h3><a href="{{ url_for('.roles_and_services') }}">Commissioning a supplier</a></h3>
+        <p>Find out how to complete the procurement process using our Buyer’s Guide.</p>
+        <p><a href="{{ url_for('.roles_and_services') }}">Read more</a></p>
       </article>
      </li>
    </ul> 

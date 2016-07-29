@@ -16,6 +16,10 @@
       border-width: 0;
       border-left: solid 1px $border-colour;
       padding: 0 $base-spacing;
+
+      p {
+        min-height: auto;
+      }
     }
   }
 }
