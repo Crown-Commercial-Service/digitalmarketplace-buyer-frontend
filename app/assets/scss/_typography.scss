@@ -1,11 +1,67 @@
+h1 {
+  font-weight: $bold-font-weight;
+}
+
+.bigger {
+  font-size: rem(24);
+}
+
+.content-main {
+
+  .number-results {
+    span {
+      font-size: rem(32);
+      font-weight: $bold-font-weight;
+    }
+  }
+}
+
+.callout--hero {
+  @extend %base-callout;
+  @include position(relative, null);
+  background: $darker-aqua;
+  box-shadow: 0 0 0 transparent;
+
+  @include media($desktop) {
+    @include position(absolute, null 0 (-$base-spacing*5) null);
+    @include span-columns(5 of 16);
+    @include shift(2);
+    margin: 0;
+  }
+
+  h2 {
+    @extend h3;
+    font-weight: $base-font-weight;
+  }
+}
+
+.secondary-page {
+  h1 {
+    font-size: rem(28);
+    margin: 0.8em 0 0.4em;
+    @include media($tablet) {
+      font-size: rem(32);
+    }
+  }
+  h2 {
+    font-size: rem(22);
+    font-weight: $bold-font-weight;
+    margin-top: 2em;
+    min-height: 2em;
+  }
+  blockquote {
+    margin-bottom: 2em;
+  }
+}
+
 .content-details {
 
   article {
     h1 {
-      font-size: rem(30);
+      font-size: rem(28);
       margin: $base-spacing/2 0 0.4em;
       @include media($tablet) {
-        font-size: rem(44);
+        font-size: rem(32);
       }
     }
   }
@@ -52,39 +108,5 @@
       float: right;
       margin: .3rem 0 0;
     }
-  }
-}
-
-.content-main {
-
-  .number-results {
-    span {
-      font-size: rem(32);
-      font-weight: $bold-font-weight;
-    }
-  }
-
-  h2 {
-    font-size: rem(26);
-    font-weight: $bold-font-weight;
-  }
-}
-
-.callout--hero {
-  @extend %base-callout;
-  @include position(relative, null);
-  background: $darker-aqua;
-  box-shadow: 0 0 0 transparent;
-
-  @include media($desktop) {
-    @include position(absolute, null 0 (-$base-spacing*5) null);
-    @include span-columns(5 of 16);
-    @include shift(2);
-    margin: 0;
-  }
-
-  h2 {
-    @extend h3;
-    font-weight: $base-font-weight;
   }
 }

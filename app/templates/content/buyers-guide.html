@@ -2,7 +2,7 @@
 
 {% block page_title %}Buyers' guide{% endblock %}
 
-{% block body_classes %}buyers-guide{% endblock %}
+{% block body_classes %}buyers-guide secondary-page{% endblock %}
 
 {% block main_content %}
   <h1>Buyers' Guide</h1>
@@ -11,13 +11,13 @@
   </p>
   <ul>
     <li>
-      <a href="#">RFQ template</a>
+      <a href="{{ asset_path }}documents/DSPP_RFQ_Template.docx">RFQ template</a>
     </li>
     <li>
-      <a href="#">Work order template</a>
+      <a href="{{ asset_path }}documents/DSPP_Order_Template.docx">Work order template</a>
     </li>
     <li>
-      <a href="#">Deed of standing offer</a>
+      <a href="{{ asset_path }}documents/DSPP_Deed_of_Standing_Offer.pdf">Deed of standing offer</a>
     </li>
   </ul>
   <p>

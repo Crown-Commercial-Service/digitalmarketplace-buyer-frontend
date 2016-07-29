@@ -10,3 +10,12 @@
     border-bottom: 0;
   }
 }
+
+.roles-and-rates {
+  .content-table {
+
+    @include media($tablet) {
+      width: 70%;
+    }
+  }
+}

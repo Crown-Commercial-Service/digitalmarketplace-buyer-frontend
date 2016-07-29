@@ -2,68 +2,54 @@
 
 {% block page_title %}About the Marketplace{% endblock %}
 
-{% block body_classes %}about-us{% endblock %}
-
-{% block hero %}
-  {% with
-    site_title ='About the Marketplace'|safe,
-    tagline="We're transforming how government buys digital and technology services, and making it easier for businesses to work with us."
-  %}
-    {% include "_hero.html" %}
-  {% endwith %}
-{% endblock %}
+{% block body_classes %}about-us secondary-page{% endblock %}
 
 {% block main_content %}
+  
+  <h1>About the Marketplace</h1>
+  <p>We're transforming how government buys digital and technology services.</p>
 
   <nav class="index-links">
-    <h2>In this section</h2>
     <ul>
-      <li><a href="#our-purpose">Our purpose</a></li>
-      <li><a href="#our-process">Our process</a></li>
-      <li><a href="#our-progress">Our progress</a></li>
-      <li><a href="#compliance-with-cprs">Compliance with Commonwealth Procurement Rules?</a></li>
-      <li><a href="#links">Links</a></li>
+      <li><a href="#how-the-marketplace-started">How the Marketplace started</a></li>
+      <li><a href="#how-the-marketplace-works">How the Marketplace works</a></li>
+      <li><a href="#whats-next-for-the-marketplace">What's next for the Marketplace</a></li>
+      <li><a href="#procurement-rules-and-the-marketplace">Procurement rules and the Marketplace</a></li>
     </ul>
   </nav>
 
-  <a id="our-purpose"></a><h2>Our purpose</h2>
+  <a id="how-the-marketplace-started"></a><h2>How the Marketplace started</h2>
   <p>
-    The Marketplace is an initiative of the <em>National Innovation &amp; Science Agenda</em> in response to a specific ICT industry problem. Currently, startups and small-to-medium suppliers of digital services find it hard to participate in large scale Australian Government ICT procurement, which leaves these key players and their expertise out of the $5 billion annual spend on ICT products and services.
+    Recently, startups and small to medium suppliers of digital services have found it difficult to participate in Australian Government procurements for large scale ICT solutions. To make it easier for smaller businesses to compete for government's $5 billion a year spend on ICT, we're creating a new digital marketplace.
   </p>
   <p>
-    And so, the purpose of the Marketplace is to create a new arena that makes it easier for all ICT businesses to compete more openly for government contracts, with an end-goal of creating better services for all Australians.
+    Based on a successful UK model, the GOV.AU Marketplace is an online directory of digital and technological services for government agencies to procure ICT solutions from small to medium-sized enterprises. It's also a place for government buyers to discover new ideas and challenge ICT suppliers to develop more innovative government services. 
   </p>
+  <a id="how-the-marketplace-works"></a><h2>How the Marketplace works</h2>
+  <ul>
+    <li>
+      In the Marketplace, large scale ICT requirements are broken down into <a href="{{ url_for('main.roles_and_services') }}">individual component roles</a>, which scales down procurement and allows greater scope for innovation. 
+    </li>
+    <li>
+      ICT suppliers can <a href="{{ url_for('main.new_seller') }}">join the Marketplace</a> easily.
+    </li>
+    <li>
+      Government buyers can <a href="{{ url_for('main.supplier_search') }}">search the Marketplace</a> for services, identify suitable suppliers and procure the best value option for the project.
+    </li>
+    <li>
+      Government buyers can register their interest in being part of ideation events, hackathons and an upcoming ideation platform, in order to <a href="{{ url_for('main.ideation') }}">challenge ICT suppliers</a> to develop innovative ideas for their projects.
+    </li>
+    <li>
+      ICT suppliers can contact the Marketplace to <a href="{{ url_for('main.pitch') }}">pitch an idea</a> or an improvement to government services.
+    </li>
+  </ul>
+  <a id="whats-next-for-the-marketplace"></a><h2>What's next for the Marketplace</h2>
   <p>
-    For government buyers, the Marketplace is somewhere to discover new ideas, solve problems and find approved ICT partners.
-  </p>
-  <p>
-    For ICT professionals it’s a place to offer products and services, compete for government contracts, pitch ideas and get involved with ideation &mdash; regardless of whether you’re a sole trader, startup or a multinational.
-  </p>
-  <a id="our-process"></a><h2>Our process</h2>
-  <p>
-    First, ICT professionals list their business and services within the Marketplace, currently this is being done by an internal Marketplace team. But soon this will be something suppliers can do themselves.
-  </p>
-  <p>
-    The supplier services are broken down and listed according to the specific field of expertise &mdash; for example 'user research' or 'ethical hacking' &mdash; with upfront price estimates. This approach simplifies procurement and allows greater scope for collaboration and innovation.
-  </p>
-  <p>
-    Government buyers search the Marketplace, identify suitable suppliers and procure the best value option for their project.
-  </p>
-  <p>
-    Government buyers can also challenge the Marketplace to develop solutions to their specific problem or brief.
-  </p>
-  <a id="our-progress"></a><h2>Our progress</h2>
-  <p>
-    The Marketplace is Agile. Which means continuous delivery and improvement through feedback from users. The features of the site will be enhanced and expanded over time in response to user needs. It’s an approach that’s allowed us to come a long way in a short time.
+    The Marketplace is agile. Which means continuous delivery and improvement through feedback from users. The features of the site will be enhanced and expanded over time in response to user needs. It's an approach that's allowed us to come a long way in a short time.
   </p>
   <ul class="timeline">
     <li>
       <h3>Digital Specialists Panel opened &mdash; March 2016</h3>
-      <ul class="links">
-        <li>
-          <a href="http://www.dto.gov.au/blog/new-panel-to-bring-in-digital-expertise/">Read the blog post</a>
-        </li>
-      </ul>
     </li>
     <li>
       <h3>Discovery started &mdash; April 2016</h3>
@@ -78,46 +64,9 @@
       <h3>Beta launch &mdash; 31 August 2016</h3>
     </li>
   </ul>
-  <a id="compliance-with-cprs"></a><h2>Compliance with Commonwealth Procurement Rules?</h2>
+  <a id="procurement-rules-and-the-marketplace"></a><h2>Procurement rules and the Marketplace</h2>
   <p>
-    Every business listed within the Marketplace is listed on the Digital Services Panel (DSP).
-  </p>
-  <p>
-    According to the <a href="http://www.finance.gov.au/procurement/procurement-policy-and-guidance/buying/procurement-practice/panel-and-mul/practice.html">Commonwealth Procurement Rules</a>:
-  </p>
-  <blockquote>
-    <p>
-      In a panel arrangement, a deed of standing offer or a contract exists between an entity and each supplier on the panel detailing:
-    </p>
-    <ul>
-      <li>
-        the type of goods or service the supplier will provide
-      </li>
-      <li>
-        the set/indicative price for the goods or service; and
-      </li>
-      <li>
-        the manner in which the entity will procure the goods or service from the supplier, including any process for competition between panel members, where appropriate.
-      </li>
-    </ul>
-    <p>
-      A contract is formed under a standing offer each time an entity purchases goods or services under the panel arrangement.
-    </p>
-    <p>
-      A panel cannot be used to purchase goods or services that fall outside the scope of the arrangement.
-    </p>
-  </blockquote>
-  <p>
-    This means everyone in government that is in a position to commission ICT products and services can freely use any of the businesses listed in the Marketplace &mdash; for the products or services specified &mdash; without a minimum or maximum spend.
-  </p>
-  <a id="links"></a><h2>Links</h2>
-  <p>
-    <a href="{{ url_for('.supplier_search') }}">Visit the Marketplace catalogue</a><br>
-    to find the ICT expertise you need.
-  </p>
-  <p>
-    <a href="{{ url_for('.buyers_guide') }}">View the Buyers' Guide</a><br>
-    to see how to commission a supplier.
+    Every business listed in our <a href="{{ url_for('main.supplier_search') }}">supplier catalogue</a> is on of the Digital Service Professionals Panel (SON3364729) established through a Request for Tender by the <a href="https://dto.gov.au/">Digital Transformation Office</a>. The Deed of Standing Offer, Quote and Work Order templates are available in the <a href="{{ url_for('.buyers_guide') }}">Buyer’s Guide</a>.
   </p>
   <a href="#" class="scroll-to-top">Top</a>
 {% endblock %}

@@ -12,12 +12,31 @@
 }
 
 .registration-pages {
+
+  p {
+    &.context {
+      color: $grey;
+    }
+  }
+
   form {
     .hint {
       color: $grey;
     }
     .hint-with-error {
       color: $error-colour;
+    }
+    fieldset {
+      label {
+        margin-top: 0;
+        padding-left: rem(40);
+      }
+      input[type='checkbox'] + label::before {
+        left: 0;
+      }
+      input[type='checkbox']:checked + label::after {
+        left: 5px;
+      }
     }
   }
 }
