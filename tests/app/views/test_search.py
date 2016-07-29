@@ -19,12 +19,12 @@ def find_search_summary(res_data):
     return re.findall(
         r'<span class="search-summary-count">.+</span>[^\n]+', res_data)
 
+
 @mock.patch('app.main.views.search.DataAPIClient')
 class TestSearchSuppliers(BaseApplicationTest):
     def test_pagination_links(self, api_client):
         res = self.client.get('/search/suppliers')
         assert 200 == res.status_code
-
 
 
 class TestSearchResults(BaseApplicationTest):
