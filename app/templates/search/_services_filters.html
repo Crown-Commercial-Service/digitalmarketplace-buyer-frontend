@@ -32,13 +32,4 @@
 {% if current_lot %}
 <input type="hidden" name="lot" value="{{ current_lot }}" />
 {% endif %}
-{% for filter in filters %}
-  {%
-    with
-    label = filter.label,
-    options = filter.filters
-  %}
-    {% include "toolkit/forms/option-select.html" %}
-  {% endwith %}
-{% endfor %}
-<button class="button-save" type="submit">Filter</button>
+{% include 'search/_filters.html' %}

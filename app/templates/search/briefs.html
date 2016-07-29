@@ -21,14 +21,20 @@
     {% with heading="{} opportunities".format(framework.name) %}
         {% include "toolkit/page-heading.html" %}
     {% endwith %}
+    <div class="marketplace-paragraph">
+      <p>View buyer requirements for {{ lot_names | map('lower') | smartjoin }}.</p>
+    </div>
 
     <div class="grid-row">
-        <section class="column-two-thirds">
-            <div class="marketplace-paragraph">
-              <p>View buyer requirements for {{ lot_names | map('lower') | smartjoin }}.</p>
-            </div>
-            {% include '_briefs_list.html' %}
-            {% include '_briefs_pagination.html' %}
+        <section class="column-one-third search-page-filters" aria-label="Search filters">
+            <form action="" method="get">
+                {% include 'search/_filters.html' %}
+            </form>
+        </section>
+        <section class="column-two-thirds" aria-label="Opportunities found">
+            {% include 'search/_briefs_summary.html' %}
+            {% include 'search/_briefs_results.html' %}
+            {% include 'search/_briefs_pagination.html' %}
         </section>
     </div>
 

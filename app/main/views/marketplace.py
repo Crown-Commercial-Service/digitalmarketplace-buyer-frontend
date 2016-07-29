@@ -119,7 +119,7 @@ def list_opportunities(framework_slug):
         next_link_args = request.args.copy()
         next_link_args.setlist("page", api_next_link_args.get("page") or ())
 
-    return render_template('briefs_catalogue.html',
+    return render_template('search/briefs.html',
                            framework=framework,
                            form=form,
                            filters=filters,
