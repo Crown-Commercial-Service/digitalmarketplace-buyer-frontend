@@ -1,3 +1,17 @@
+
+.list-horizontal {
+  .tags {
+    a {
+      display: inline-block;
+      line-height: 1.4;
+      @include media($tablet) {
+        display: inline;
+        line-height: 2.1;
+      }
+    }
+  }
+}
+
 .home {
   h2 {
     &:first-of-type {

@@ -74,6 +74,11 @@
       </div>
       <div>
         <ul class="pagination-controls">
+          {% if page - 1 > 0 %}
+            {% with page_number=page-1, sort_alternate=False, link_label="< Back", sort_terms=sort_terms %}
+              {% include '_supplier_pagination_link.html' %}
+            {% endwith %}
+          {% endif %}
           {% for pg in pages %}
           <li class="{% if pg == page %}current{% endif %}">
             {% if pg != '...' %}
