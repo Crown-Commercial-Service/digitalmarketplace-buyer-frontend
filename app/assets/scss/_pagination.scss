@@ -19,6 +19,10 @@
 }
 .pagination-controls {
   list-style: none;
+  padding-left: 0;
+  @include media($tablet) {
+    margin-top: -0.75em;
+  }
   li {
     display: inline-block;
     &.current {

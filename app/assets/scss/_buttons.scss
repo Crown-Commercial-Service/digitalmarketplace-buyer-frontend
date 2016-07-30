@@ -2,6 +2,7 @@ button,
 .button,
 [role='button'],
 [type='button'] {
+  height: auto;
   margin: 0 $small-spacing $small-spacing 0;
 }
 
