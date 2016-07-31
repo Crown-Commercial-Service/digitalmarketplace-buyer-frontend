@@ -5,7 +5,6 @@
 venv
 node_modules
 npm-debug.log
-app/static/*
 govuk_template
 digital_marketplace_frontend_toolkit
 .env
@@ -75,7 +74,8 @@ app/templates/toolkit
 app/content
 
 # Front end generated assets
-app/static
+app/static/*
+!app/static/media
 
 # IDE specific files
 .idea/
