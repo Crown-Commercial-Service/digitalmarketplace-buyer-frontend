@@ -26,7 +26,7 @@
       {% include "toolkit/external-link.html" %}
     {% endwith %}
   {% else %}
-    <div class="meta-item">{{ service.frameworkName }}</div>
+    <p class="framework-name">{{ service.frameworkName }}</p>
   {% endif %}
   <h2 class="sidebar-heading">Service ID</h2>
   {% with id=service.meta.serviceId %}

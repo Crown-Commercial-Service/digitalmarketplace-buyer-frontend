@@ -52,7 +52,7 @@
 
 #meta {
 
-  .meta-item {
+  %meta-item {
     margin-bottom: $gutter;
   }
   
@@ -64,12 +64,16 @@
     display: none;
   }
 
+  .framework-name {
+    @extend %meta-item;
+  }
+  
   .service-id {
-    @extend .meta-item;
+    @extend %meta-item;
   }
 
   .external-link-default {
-    @extend .meta-item;
+    @extend %meta-item;
   }
 }
 
