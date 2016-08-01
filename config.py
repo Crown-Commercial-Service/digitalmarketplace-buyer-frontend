@@ -67,6 +67,7 @@ class Config(object):
 
     # Feature Flags
     RAISE_ERROR_ON_MISSING_FEATURES = True
+    FEATURE_FLAGS_HIDE_SUPPLIERS_NAME_SEARCH = enabled_since('2016-08-01')  # Change to False when it is ready
 
     # LOGGING
     DM_LOG_LEVEL = 'DEBUG'

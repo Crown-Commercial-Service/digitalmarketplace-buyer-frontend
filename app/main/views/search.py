@@ -185,4 +185,5 @@ def supplier_search():
         sort_terms=sort_terms,
         sort_term_name_label='A to Z' if sort_order == 'asc' else 'Z to A',
         keyword=keyword,
+        hide_suppliers_name_search=current_app.config.get('FEATURE_FLAGS_HIDE_SUPPLIERS_NAME_SEARCH', False)
         )
