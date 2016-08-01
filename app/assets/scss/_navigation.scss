@@ -73,6 +73,20 @@
     }
   }
 
+  &.border-bottom-white {
+    border-bottom: 1px solid $white;
+    padding-top: 0.45em;
+    padding-bottom: 0;
+
+    p {
+      margin-bottom: 0.45em;
+    }
+  }
+
+  small {
+    font-size: rem(14);
+  }
+
 }
 
 .scroll-to-top {
@@ -103,6 +117,7 @@
     background-position: left $tiny-spacing;
     background-size: (0.8 * $small-spacing) auto;
     border-bottom: none;
+    -ms-transform: translateX(-50%);
     transform: translateX(-50%);
   }
 }
