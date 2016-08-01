@@ -7291,3 +7291,29 @@ ul.links > li {
   position: static;
   width: auto;
 }
+
+/* line 1, /Users/grant.chan/dto-digitalmarketplace-buyer-frontend/app/assets/scss/_search.scss */
+.sidebar-searchbox {
+  margin: 0;
+  padding: 1em !important;
+}
+
+/* line 6, /Users/grant.chan/dto-digitalmarketplace-buyer-frontend/app/assets/scss/_search.scss */
+.sidebar-searchbox .sidebar-searchbox {
+  width: 100%;
+  outline-offset: 0;
+  border: 2px solid #bbbbbb;
+  border-radius: 0;
+  background-color: #fff;
+  padding: 0.4em !important;
+}
+
+/* line 17, /Users/grant.chan/dto-digitalmarketplace-buyer-frontend/app/assets/scss/_search.scss */
+.sidebar-searchbox .sidebar-searchbutton {
+  margin: 1em 0 0 0;
+}
+
+/* line 22, /Users/grant.chan/dto-digitalmarketplace-buyer-frontend/app/assets/scss/_search.scss */
+.marketplace-sidebar-filter-btn-box {
+  padding: 0 1em;
+}
