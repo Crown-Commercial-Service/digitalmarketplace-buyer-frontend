@@ -7273,3 +7273,9 @@ ul.links > li {
   position: static;
   width: auto;
 }
+
+/* line 11, stdin */
+.marketplace--header a:focus, .marketplace--header a:hover {
+  background-color: #fff;
+  color: #313131;
+}
