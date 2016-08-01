@@ -1252,7 +1252,7 @@ class TestBriefSummaryPage(BaseApplicationTest):
                 'Location',
                 'Description of work',
                 'Shortlist and evaluation process',
-                'Set how long your requirements will be live for',
+                'Set how long your requirements will be open for',
                 'Describe question and answer session',
                 'Review and publish your requirements',
                 'How to answer supplier questions',
