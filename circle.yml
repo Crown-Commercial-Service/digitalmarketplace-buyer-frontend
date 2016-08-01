@@ -2,6 +2,9 @@ machine:
   timezone:
     Australia/Sydney
 
+  post:
+    npm install -g npm@3.x.x
+
 dependencies:
   pre:
     - curl -v -L -o cf-cli_amd64.deb 'https://cli.run.pivotal.io/stable?release=debian64&version=6.17.0&source=github'
