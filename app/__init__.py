@@ -1,10 +1,11 @@
 from flask import Flask, request, redirect, session, abort
-from flask_login import LoginManager
+from flask_login import LoginManager, current_user
 
 import dmapiclient
 from dmutils import init_app, flask_featureflags
 from dmcontent.content_loader import ContentLoader
 from dmutils.user import User
+from helpers.login_helpers import is_authenticated_workaround
 
 from config import configs
 
@@ -65,6 +66,16 @@ def create_app(config_name):
     def refresh_session():
         session.permanent = True
         session.modified = True
+
+    @application.after_request
+    def add_cache_control(response):
+        if request.method != 'GET' or response.status_code in (301, 302):
+            return response
+        if is_authenticated_workaround(current_user):
+            response.cache_control.private = True
+        if response.cache_control.max_age is None:
+            response.cache_control.max_age = application.config['DM_DEFAULT_CACHE_MAX_AGE']
+        return response
 
     return application
 

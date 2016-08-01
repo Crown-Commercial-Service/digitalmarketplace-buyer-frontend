@@ -20,23 +20,40 @@
   local_nav_toggle='Menu'
   %}
   <aside class="sidebar" id="nav">
+
+    <div>
+        <h2>Search by</h2>
+        <form action="{{ search_url }}" method="get">
+            <fieldset>
+                <label for="keyword"></label>
+                <input name="keyword" value="{% if keyword %}{{ keyword }}{% endif %}" placeholder='Company Name' id="keyword">
+                <br>
+                <br>
+                <button type="submit">Search</button>
+            </fieldset>
+        </form>
+    </div>
+
     {% include "sidebar/_filter_capabilities.html" %}
   </aside>
   {% endwith %}
   {% endblock %}
 
   {% block main_content %}
-  {% if num_results %}<p class="number-results"><span>{{ num_results }}</span> suppliers</p>{% endif %}
+  {% if results %}
+      <p class="number-results"><span>{{ num_results }}</span> supplier{% if num_results > 1 %}s{% endif %}</p>
 
-    <div class="{% if sort_terms %}sort-on{% else %}sort-off{% endif %} sort-by-{{ sort_order }}">
-        <span>Sort By:</span>
-        {% with page_number=page, sort_alternate=True, link_label=sort_term_name_label, sort_terms=['name']  %}
-            {% include '_supplier_pagination_link.html' %}
-        {% endwith %}
-    </div>
+        <div class="sort-order-{{ sort_order }}">
+            <span>Sort By:</span>
+            {% with page_number=page, sort_alternate=True, link_label=sort_term_name_label, sort_terms=['name']  %}
+                {% include '_supplier_pagination_link.html' %}
+            {% endwith %}
+        </div>
+  {% endif %}
 
-    {% if num_results %}
-      <p>Showing {{ results_from }}-{{ results_to }} suppliers of {{ num_results }}
+    {% if results %}
+      <p>Showing {{ results_from }}{% if num_results > 1 %}-{{ results_to }}{% endif %}
+          supplier{% if num_results > 1 %}s{% endif %} of {{ num_results }}
       {% else %}No results found.</p>
     {% endif %}
 
@@ -66,7 +83,7 @@
      </li>
      {% endfor %}
    </ul>
-   {% if num_results %}
+   {% if results %}
     <hr>
     <div class="pagination">
       <div>

@@ -45,6 +45,7 @@ class TestLogin(BaseApplicationTest):
     def test_should_show_login_page(self):
         res = self.client.get(self.expand_path('/login'))
         assert res.status_code == 200
+        assert 'private' in res.headers['Cache-Control']
         assert "Log in to see more" in res.get_data(as_text=True)
 
     @mock.patch('app.main.views.login.data_api_client')
@@ -240,7 +241,6 @@ class TestResetPassword(BaseApplicationTest):
         }, follow_redirects=True)
         assert res.status_code == 200
         content = self.strip_all_whitespace(res.get_data(as_text=True))
-        print content
         assert self.strip_all_whitespace(EMAIL_SENT_MESSAGE) in content
 
     @mock.patch('app.main.views.login.send_email')
@@ -261,6 +261,7 @@ class TestResetPassword(BaseApplicationTest):
         res = self.client.get(url)
         assert res.status_code == 200
         assert "Reset password for email@email.com" in res.get_data(as_text=True)
+        assert 'private' in res.headers['Cache-Control']
 
     def test_password_should_not_be_empty(self):
         with self.app.app_context():
@@ -486,6 +487,7 @@ class TestBuyersCreation(BaseApplicationTest):
         res = self.client.get(self.expand_path('/buyers/create'))
         assert res.status_code == 200
         assert 'Create a buyer account' in res.get_data(as_text=True)
+        assert 'private' in res.headers['Cache-Control']
 
     @mock.patch('app.main.views.login.send_email')
     @mock.patch('app.main.views.login.data_api_client')
@@ -800,6 +802,7 @@ class TestCreateUser(BaseApplicationTest):
 
         assert res.status_code == 400
         assert "Account already exists" in res.get_data(as_text=True)
+        assert 'private' in res.headers['Cache-Control']
 
     @mock.patch('app.main.views.login.data_api_client')
     def test_should_create_user_if_user_does_not_exist(self, data_api_client):
@@ -972,5 +975,6 @@ class TestBuyerRoleRequired(BaseApplicationTest):
             res = self.client.get(self.expand_path('/buyers'))
             page_text = res.get_data(as_text=True)
             assert res.status_code == 200
+            assert 'private' in res.headers['Cache-Control']
             assert 'buyer@email.com' in page_text
             assert 'Some Buyer' in page_text
