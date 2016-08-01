@@ -70,10 +70,18 @@ def create_app(config_name):
     def add_cache_control(response):
         if request.method != 'GET' or response.status_code in (301, 302):
             return response
+
+        vary = response.headers.get('Vary', None)
+        if vary:
+            response.headers['Vary'] = vary + ', Cookie'
+        else:
+            response.headers['Vary'] = 'Cookie'
+
         if current_user.is_authenticated:
             response.cache_control.private = True
         if response.cache_control.max_age is None:
             response.cache_control.max_age = application.config['DM_DEFAULT_CACHE_MAX_AGE']
+
         return response
 
     return application
