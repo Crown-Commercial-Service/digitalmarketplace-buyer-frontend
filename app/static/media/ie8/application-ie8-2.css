@@ -5533,10 +5533,38 @@ ul.links > li {
   padding: 0 1em;
 }
 
-/* line 9, stdin */
+/* line 11, stdin */
 
-.list-vertical,
-.list-vertical--thirds,
-.list-vertical--fourths {
-  -js-display: flex;
+.home .list-vertical li,
+.home .list-vertical--thirds li,
+.home .list-vertical--fourths li {
+  width: 100%;
+  display: inline-block;
+  vertical-align: top;
+}
+
+@media screen and (min-width: 768px) {
+  /* line 11, stdin */
+
+  .home .list-vertical li,
+  .home .list-vertical--thirds li,
+  .home .list-vertical--fourths li {
+    width: 50%;
+  }
+}
+
+/* line 24, stdin */
+
+.footer-top nav ul {
+  width: 100%;
+  display: inline-block;
+  vertical-align: top;
+}
+
+@media screen and (min-width: 768px) {
+  /* line 24, stdin */
+
+  .footer-top nav ul {
+    width: 23%;
+  }
 }
