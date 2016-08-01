@@ -7,6 +7,7 @@ var include = require('gulp-include');
 var jasmine = require('gulp-jasmine-phantom');
 var sourcemaps = require('gulp-sourcemaps');
 var svg2png = require('gulp-svg2png');
+var bless = require('gulp-bless');
 
 // Paths
 var environment;
@@ -118,6 +119,19 @@ gulp.task('sass', function () {
   });
 
   return stream;
+});
+
+gulp.task('css', function() {
+  var stream = gulp.src('application-ie8.css')
+      .pipe(filelog('Splitting CSS files'))
+      .pipe(bless({
+        imports: false
+      }))
+      .pipe(gulp.dest('./applicationie8'));
+
+  stream.on('end', function() {
+    console.log('💾  Split CSS saved as .css files in ' + cssDistributionFolder);
+  });
 });
 
 gulp.task('js', function () {
@@ -327,6 +341,7 @@ gulp.task(
   ],
   function() {
     gulp.start('sass');
+    gulp.start('css');
     gulp.start('js');
   }
 );
