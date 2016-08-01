@@ -41,7 +41,7 @@
 
   {% block main_content %}
   {% if results %}
-      <p class="number-results"><span>{{ num_results }}</span> suppliers</p>
+      <p class="number-results"><span>{{ num_results }}</span> supplier{% if num_results > 1 %}s{% endif %}</p>
 
         <div class="sort-order-{{ sort_order }}">
             <span>Sort By:</span>
@@ -52,7 +52,8 @@
   {% endif %}
 
     {% if results %}
-      <p>Showing {{ results_from }}-{{ results_to }} suppliers of {{ num_results }}
+      <p>Showing {{ results_from }}{% if num_results > 1 %}-{{ results_to }}{% endif %}
+          supplier{% if num_results > 1 %}s{% endif %} of {{ num_results }}
       {% else %}No results found.</p>
     {% endif %}
 
