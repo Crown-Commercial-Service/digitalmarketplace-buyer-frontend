@@ -5,3 +5,13 @@ $ie-version: 8;
 $mobile-ie8: false;
 
 @import "application.scss";
+
+.marketplace--header {
+  a {
+    &:focus,
+    &:hover {
+      background-color: $white;
+      color: $non-black;
+    }
+  }
+}
