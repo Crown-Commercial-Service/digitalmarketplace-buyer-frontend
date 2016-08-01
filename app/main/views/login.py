@@ -3,7 +3,7 @@ from __future__ import absolute_import
 import six
 
 from flask_login import current_user
-from flask import abort, current_app, flash, redirect, request, session, url_for, get_flashed_messages
+from flask import abort, current_app, flash, redirect, render_template, request, session, url_for, get_flashed_messages
 from flask_login import logout_user, login_user
 
 from dmapiclient.audit import AuditTypes
@@ -15,7 +15,7 @@ from dmutils.email import (
 from .. import main
 from ..forms.auth_forms import LoginForm, EmailAddressForm, ChangePasswordForm, CreateUserForm
 from ...helpers import hash_email
-from ...helpers.login_helpers import redirect_logged_in_user, render_template_with_csrf
+from ...helpers.login_helpers import redirect_logged_in_user, render_template_with_csrf, is_authenticated_workaround
 from ... import data_api_client
 from ...api_client.error import HTTPError
 
@@ -23,7 +23,7 @@ from ...api_client.error import HTTPError
 @main.route('/login', methods=["GET"])
 def render_login():
     next_url = request.args.get('next')
-    if current_user.is_authenticated() and not get_flashed_messages():
+    if is_authenticated_workaround(current_user) and not get_flashed_messages():
         return redirect_logged_in_user(next_url)
     return render_template_with_csrf(
         "auth/login.html",
@@ -98,7 +98,7 @@ def send_reset_password_email():
 
             url = url_for('main.reset_password', token=token, _external=True)
 
-            email_body = render_template_with_csrf(
+            email_body = render_template(
                 "emails/reset_password_email.html",
                 url=url,
                 locked=user.locked)
@@ -209,7 +209,7 @@ def submit_create_buyer_account():
                 current_app.config['INVITE_EMAIL_SALT']
             )
             url = url_for('main.create_user', encoded_token=token, _external=True)
-            email_body = render_template_with_csrf("emails/create_buyer_user_email.html", url=url)
+            email_body = render_template("emails/create_buyer_user_email.html", url=url)
             # print("CREATE ACCOUNT URL: {}".format(url))
             try:
                 send_email(
