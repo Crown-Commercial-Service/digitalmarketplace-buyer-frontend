@@ -3,7 +3,7 @@ from __future__ import absolute_import
 import six
 
 from flask_login import current_user
-from flask import abort, current_app, flash, redirect, render_template, request, session, url_for, get_flashed_messages
+from flask import abort, current_app, flash, redirect, request, session, url_for, get_flashed_messages
 from flask_login import logout_user, login_user
 
 from dmapiclient.audit import AuditTypes
@@ -15,7 +15,7 @@ from dmutils.email import (
 from .. import main
 from ..forms.auth_forms import LoginForm, EmailAddressForm, ChangePasswordForm, CreateUserForm
 from ...helpers import hash_email
-from ...helpers.login_helpers import redirect_logged_in_user
+from ...helpers.login_helpers import redirect_logged_in_user, render_template_with_csrf
 from ... import data_api_client
 from ...api_client.error import HTTPError
 
@@ -25,10 +25,10 @@ def render_login():
     next_url = request.args.get('next')
     if current_user.is_authenticated() and not get_flashed_messages():
         return redirect_logged_in_user(next_url)
-    return render_template(
+    return render_template_with_csrf(
         "auth/login.html",
         form=LoginForm(),
-        next=next_url), 200
+        next=next_url)
 
 
 @main.route('/login', methods=["POST"])
@@ -44,10 +44,11 @@ def process_login():
                 "login.fail: failed to log in {email_hash}",
                 extra={'email_hash': hash_email(form.email_address.data)})
             flash("no_account", "error")
-            return render_template(
+            return render_template_with_csrf(
                 "auth/login.html",
+                status_code=403,
                 form=form,
-                next=next_url), 403
+                next=next_url)
 
         user = User.from_json(user_json)
 
@@ -57,10 +58,11 @@ def process_login():
         return redirect_logged_in_user(next_url)
 
     else:
-        return render_template(
+        return render_template_with_csrf(
             "auth/login.html",
+            status_code=400,
             form=form,
-            next=next_url), 400
+            next=next_url)
 
 
 @main.route('/logout', methods=["GET"])
@@ -71,8 +73,7 @@ def logout():
 
 @main.route('/reset-password', methods=["GET"])
 def request_password_reset():
-    return render_template("auth/request-password-reset.html",
-                           form=EmailAddressForm()), 200
+    return render_template_with_csrf("auth/request-password-reset.html", form=EmailAddressForm())
 
 
 @main.route('/reset-password', methods=["POST"])
@@ -97,7 +98,7 @@ def send_reset_password_email():
 
             url = url_for('main.reset_password', token=token, _external=True)
 
-            email_body = render_template(
+            email_body = render_template_with_csrf(
                 "emails/reset_password_email.html",
                 url=url,
                 locked=user.locked)
@@ -132,8 +133,7 @@ def send_reset_password_email():
         flash('email_sent')
         return redirect(url_for('.request_password_reset'))
     else:
-        return render_template("auth/request-password-reset.html",
-                               form=form), 400
+        return render_template_with_csrf("auth/request-password-reset.html", status_code=400, form=form)
 
 
 @main.route('/reset-password/<token>', methods=["GET"])
@@ -145,10 +145,10 @@ def reset_password(token):
 
     email_address = decoded['email']
 
-    return render_template("auth/reset-password.html",
-                           email_address=email_address,
-                           form=ChangePasswordForm(),
-                           token=token), 200
+    return render_template_with_csrf("auth/reset-password.html",
+                                     email_address=email_address,
+                                     form=ChangePasswordForm(),
+                                     token=token)
 
 
 @main.route('/reset-password/<token>', methods=["POST"])
@@ -173,19 +173,18 @@ def update_password(token):
             flash('password_not_updated', 'error')
         return redirect(url_for('.render_login'))
     else:
-        return render_template("auth/reset-password.html",
-                               email_address=email_address,
-                               form=form,
-                               token=token), 400
+        return render_template_with_csrf("auth/reset-password.html",
+                                         status_code=400,
+                                         email_address=email_address,
+                                         form=form,
+                                         token=token)
 
 
 @main.route('/buyers/create', methods=["GET"])
 def create_buyer_account():
     form = EmailAddressForm()
 
-    return render_template(
-        "auth/create-buyer-account.html",
-        form=form), 200
+    return render_template_with_csrf("auth/create-buyer-account.html", form=form)
 
 
 @main.route('/buyers/create', methods=['POST'])
@@ -197,9 +196,10 @@ def submit_create_buyer_account():
     if form.validate():
         email_address = form.email_address.data
         if not data_api_client.is_email_address_with_valid_buyer_domain(email_address):
-            return render_template(
+            return render_template_with_csrf(
                 "auth/create-buyer-user-error.html",
-                error='invalid_buyer_domain'), 400
+                status_code=400,
+                error='invalid_buyer_domain')
         else:
             token = generate_token(
                 {
@@ -209,7 +209,7 @@ def submit_create_buyer_account():
                 current_app.config['INVITE_EMAIL_SALT']
             )
             url = url_for('main.create_user', encoded_token=token, _external=True)
-            email_body = render_template("emails/create_buyer_user_email.html", url=url)
+            email_body = render_template_with_csrf("emails/create_buyer_user_email.html", url=url)
             # print("CREATE ACCOUNT URL: {}".format(url))
             try:
                 send_email(
@@ -235,11 +235,11 @@ def submit_create_buyer_account():
 
             return redirect(url_for('.create_your_account_complete'), 302)
     else:
-        return render_template(
+        return render_template_with_csrf(
             "auth/create-buyer-account.html",
+            status_code=400,
             form=form,
-            email_address=form.email_address.data
-        ), 400
+            email_address=form.email_address.data)
 
 
 @main.route('/create-user/<string:encoded_token>', methods=["GET"])
@@ -251,24 +251,26 @@ def create_user(encoded_token):
         current_app.logger.warning(
             "createuser.token_invalid: {encoded_token}",
             extra={'encoded_token': encoded_token})
-        return render_template(
+        return render_template_with_csrf(
             "auth/create-buyer-user-error.html",
-            token=None), 400
+            status_code=400,
+            token=None)
 
     user_json = data_api_client.get_user(email_address=token.get("email_address"))
 
     if not user_json:
-        return render_template(
+        return render_template_with_csrf(
             "auth/create-user.html",
             form=form,
             email_address=token['email_address'],
-            token=encoded_token), 200
+            token=encoded_token)
 
     user = User.from_json(user_json)
-    return render_template(
+    return render_template_with_csrf(
         "auth/create-buyer-user-error.html",
+        status_code=400,
         token=token,
-        user=user), 400
+        user=user)
 
 
 @main.route('/create-user/<string:encoded_token>', methods=["POST"])
@@ -279,20 +281,22 @@ def submit_create_user(encoded_token):
     if token is None:
         current_app.logger.warning("createuser.token_invalid: {encoded_token}",
                                    extra={'encoded_token': encoded_token})
-        return render_template(
+        return render_template_with_csrf(
             "auth/create-buyer-user-error.html",
-            token=None), 400
+            status_code=400,
+            token=None)
 
     else:
         if not form.validate():
             current_app.logger.warning(
                 "createuser.invalid: {form_errors}",
                 extra={'form_errors': ", ".join(form.errors)})
-            return render_template(
+            return render_template_with_csrf(
                 "auth/create-user.html",
+                status_code=400,
                 form=form,
                 token=encoded_token,
-                email_address=token.get('email_address')), 400
+                email_address=token.get('email_address'))
 
         try:
             user = data_api_client.create_user({
@@ -310,10 +314,11 @@ def submit_create_user(encoded_token):
             if e.message != 'invalid_buyer_domain' and e.status_code != 409:
                 raise
 
-            return render_template(
+            return render_template_with_csrf(
                 "auth/create-buyer-user-error.html",
+                status_code=400,
                 error=e.message,
-                token=None), 400
+                token=None)
 
         return redirect_logged_in_user()
 
@@ -326,6 +331,6 @@ def create_your_account_complete():
         email_address = "the email address you supplied"
     session.clear()
     session['email_sent_to'] = email_address
-    return render_template(
+    return render_template_with_csrf(
         "auth/create-your-account-complete.html",
-        email_address=email_address), 200
+        email_address=email_address)

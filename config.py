@@ -36,6 +36,7 @@ class Config(object):
     DM_SEARCH_API_URL = None
     DM_SEARCH_API_AUTH_TOKEN = None
     DM_HTTP_PROTO = 'http'
+    DM_DEFAULT_CACHE_MAX_AGE = 24*3600
 
     # matches api(s)
     DM_SEARCH_PAGE_SIZE = 100
@@ -106,6 +107,7 @@ class Development(Config):
     DM_DATA_API_AUTH_TOKEN = "myToken"
     DM_SEARCH_API_URL = "http://localhost:5001"
     DM_SEARCH_API_AUTH_TOKEN = "myToken"
+    DM_DEFAULT_CACHE_MAX_AGE = 60
 
     SECRET_KEY = "verySecretKey"
     SHARED_EMAIL_KEY = "very_secret"
