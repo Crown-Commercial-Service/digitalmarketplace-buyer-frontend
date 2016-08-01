@@ -5532,3 +5532,11 @@ ul.links > li {
 .marketplace-sidebar-filter-btn-box {
   padding: 0 1em;
 }
+
+/* line 9, stdin */
+
+.list-vertical,
+.list-vertical--thirds,
+.list-vertical--fourths {
+  -js-display: flex;
+}
