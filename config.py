@@ -36,7 +36,7 @@ class Config(object):
     DM_SEARCH_API_URL = None
     DM_SEARCH_API_AUTH_TOKEN = None
     DM_HTTP_PROTO = 'http'
-    DM_DEFAULT_CACHE_MAX_AGE = 24*3600
+    DM_DEFAULT_CACHE_MAX_AGE = 30
 
     # matches api(s)
     DM_SEARCH_PAGE_SIZE = 100
