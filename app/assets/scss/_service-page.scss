@@ -51,6 +51,11 @@
 }
 
 #meta {
+
+  %meta-item {
+    margin-bottom: $gutter;
+  }
+  
   .document-link-with-icon {
     font-size: 16px;
   }
@@ -59,12 +64,16 @@
     display: none;
   }
 
+  .framework-name {
+    @extend %meta-item;
+  }
+  
   .service-id {
-    margin-bottom: $gutter;
+    @extend %meta-item;
   }
 
   .external-link-default {
-    margin-bottom: $gutter;
+    @extend %meta-item;
   }
 }
 

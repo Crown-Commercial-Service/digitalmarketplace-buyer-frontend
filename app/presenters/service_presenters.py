@@ -99,7 +99,7 @@ class Meta(object):
         elif service_data['frameworkName'] == 'G-Cloud 6':
             framework_url = external_url + 'rm1557vi'
         else:
-            framework_url = external_url
+            framework_url = None
         return framework_url
 
     def get_documents(self, service_data):
