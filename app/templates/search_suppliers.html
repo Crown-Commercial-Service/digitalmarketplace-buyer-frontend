@@ -21,6 +21,7 @@
   %}
   <aside class="sidebar" id="nav">
 
+  {% if not hide_suppliers_name_search %}
     <div>
         <h2>Search by</h2>
         <form action="{{ search_url }}" method="get">
@@ -33,6 +34,7 @@
             </fieldset>
         </form>
     </div>
+  {% endif %}
 
     {% include "sidebar/_filter_capabilities.html" %}
   </aside>
