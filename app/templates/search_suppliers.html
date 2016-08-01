@@ -22,11 +22,11 @@
   <aside class="sidebar" id="nav">
 
     <div>
-        <h2>Search</h2>
+        <h2>Search by</h2>
         <form action="{{ search_url }}" method="get">
             <fieldset>
                 <label for="keyword"></label>
-                <input name="keyword" value="{% if keyword %}{{ keyword }}{% endif %}" placeholder='Keyword' id="keyword">
+                <input name="keyword" value="{% if keyword %}{{ keyword }}{% endif %}" placeholder='Company Name' id="keyword">
                 <br>
                 <br>
                 <button type="submit">Search</button>

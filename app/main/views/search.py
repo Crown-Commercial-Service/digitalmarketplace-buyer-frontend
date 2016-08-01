@@ -113,14 +113,12 @@ def supplier_search():
     elif keyword:
         query = {
             "query": {
-                "wildcard": {
-                    "name": {
-                        "value": '*' + keyword + '*'
-                    }
+                "match_phrase_prefix": {
+                    "name": keyword
                 }
             },
-            "sort": sort_queries,
-            }
+            "sort": sort_queries
+        }
 
     else:
         query = {
@@ -129,7 +127,6 @@ def supplier_search():
                 }
             },
             "sort": sort_queries
-
         }
 
     page = int(request.args.get('page', 1))
