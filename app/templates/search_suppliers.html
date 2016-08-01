@@ -20,10 +20,7 @@
   local_nav_toggle='Menu'
   %}
   <aside class="sidebar" id="nav">
-  {% if not hide_suppliers_name_search %}
     {% include "sidebar/_search.html" %}
-  {% endif %}
-
     {% include "sidebar/_filter_capabilities.html" %}
   </aside>
   {% endwith %}

@@ -16,6 +16,10 @@
       }
     });
   </script>
+  <script type="https://cdnjs.cloudflare.com/ajax/libs/flexibility/2.0.1/flexibility.js"></script>
+  <script>
+    flexibility(document.documentElement);
+  </script>
 
   <link rel="shortcut icon" href="{{ asset_path }}images/favicon.png" type="image/x-icon" />
 
@@ -47,11 +51,20 @@
         </div>
       </div>
     </section>
+    <section class="marketplace--header border-bottom-white">
+      <div class="wrapper">
+        <p>
+          <small>
+            This is a private beta. To provide feedback, email us at <a href="mailto:marketplace@digital.gov.au">marketplace@digital.gov.au</a>.
+          </small>
+        </p>
+      </div>
+    </section>
     <section class="marketplace--header">
       <div class="wrapper">
         {% if url_for('main.index') != request.path %}
         <div class="marketplace--logo">
-          <a href="{{ url_for('main.index') }}" title="{{ logo_link_title|default('Go to the Marketplace homepage') }}" class="logo">/Marketplace</a> <span class="badge--beta">beta</span>
+          <a href="{{ url_for('main.index') }}" title="{{ logo_link_title|default('Go to the Marketplace homepage') }}" class="logo">/Marketplace</a> <span class="badge--beta">private beta</span>
         </div>
         {% endif %}
         <div class="feedback">

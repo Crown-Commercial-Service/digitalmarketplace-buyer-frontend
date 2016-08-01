@@ -4658,7 +4658,31 @@ button,
   padding-bottom: 0.06em;
 }
 
-/* line 78, /Users/grant.chan/dto-digitalmarketplace-buyer-frontend/app/assets/scss/_navigation.scss */
+/* line 76, /Users/grant.chan/dto-digitalmarketplace-buyer-frontend/app/assets/scss/_navigation.scss */
+
+.marketplace--header.border-bottom-white {
+  border-bottom: 1px solid #fff;
+  padding-top: 0.45em;
+  padding-bottom: 0;
+}
+
+/* line 81, /Users/grant.chan/dto-digitalmarketplace-buyer-frontend/app/assets/scss/_navigation.scss */
+
+.marketplace--header.border-bottom-white p,
+.marketplace--header.border-bottom-white .sidebar h2 span,
+.sidebar h2 .marketplace--header.border-bottom-white span,
+.marketplace--header.border-bottom-white .sidebar .display span,
+.sidebar .display .marketplace--header.border-bottom-white span {
+  margin-bottom: 0.45em;
+}
+
+/* line 86, /Users/grant.chan/dto-digitalmarketplace-buyer-frontend/app/assets/scss/_navigation.scss */
+
+.marketplace--header small {
+  font-size: 0.875rem;
+}
+
+/* line 92, /Users/grant.chan/dto-digitalmarketplace-buyer-frontend/app/assets/scss/_navigation.scss */
 
 .scroll-to-top {
   position: fixed;
@@ -4676,7 +4700,7 @@ button,
   color: #fff !important;
 }
 
-/* line 92, /Users/grant.chan/dto-digitalmarketplace-buyer-frontend/app/assets/scss/_navigation.scss */
+/* line 106, /Users/grant.chan/dto-digitalmarketplace-buyer-frontend/app/assets/scss/_navigation.scss */
 
 .scroll-to-top::before {
   content: '';
@@ -4690,6 +4714,7 @@ button,
   background-position: left 0.4em;
   background-size: 0.64em auto;
   border-bottom: none;
+  -ms-transform: translateX(-50%);
   transform: translateX(-50%);
 }
 
@@ -5476,12 +5501,4 @@ ul.links > li {
   overflow: visible;
   position: static;
   width: auto;
-}
-
-/* line 11, stdin */
-
-.marketplace--header a:focus,
-.marketplace--header a:hover {
-  background-color: #fff;
-  color: #313131;
 }

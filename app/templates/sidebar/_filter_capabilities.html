@@ -5,7 +5,6 @@
     <summary>{{ filter.name }}</summary>
     <div class="accordion-panel">
 
-
       <fieldset>
         <legend></legend>
         {% for option in filter.options|sort() %}
@@ -20,21 +19,10 @@
     </div>
   </details>
 
-  {# Disable search for now #}
-  {# <div>#}
-  {#  <h2>Search by</h2>#}
-  {#  <fieldset>#}
-  {#   <label for="q">Keyword</label>#}
-  {#   <input id="q" type="search" value="{{ search_keywords }}">#}
-  {#  </fieldset>#}
-  {# </div>#}
-  {#            ------------------------------------------------------------------ #}
-
-
-  <button>Update filter results</button>
-<p><strong>Don't see what you need?</strong> <br>
-To request an update to the Marketplace, email <a href="mailto:marketplace@digital.gov.au">marketplace@digital.gov.au</a>.
-</p>
+  <p>
+    <strong>Don't see what you need?</strong><br>
+    To request an update to the Marketplace, email <a href="mailto:marketplace@digital.gov.au">marketplace@digital.gov.au</a>.
+  </p>
 
 </form>
 {% endfor %}
