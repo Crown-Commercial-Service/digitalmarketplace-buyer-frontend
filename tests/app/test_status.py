@@ -102,7 +102,7 @@ class TestStatus(BaseApplicationTest):
 
         json_data = json.loads(response.get_data().decode('utf-8'))
 
-        assert_equal("error", "{}".format(json_data['status']))
-        assert_equal("error", "{}".format(json_data['api_status']['status']))
-        assert_equal("error", "{}".format(
+        assert_equal(u'error', "{}".format(json_data['status']))
+        assert_equal(u'error', "{}".format(json_data['api_status']['status']))
+        assert_equal(u'error', "{}".format(
             json_data['search_api_status']['status']))

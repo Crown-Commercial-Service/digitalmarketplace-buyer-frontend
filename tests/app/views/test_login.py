@@ -47,15 +47,6 @@ class TestLogin(BaseApplicationTest):
         assert res.status_code == 200
         assert "Log in to see more" in res.get_data(as_text=True)
 
-    def test_should_redirect_to_supplier_dashboard_on_supplier_login(self):
-        res = self.client.post(self.expand_path('/login'), data={
-            'email_address': 'valid@email.com',
-            'password': '1234567890'
-        })
-        assert res.status_code == 302
-        assert res.location == 'http://localhost/suppliers'
-        assert 'Secure;' in res.headers['Set-Cookie']
-
     @mock.patch('app.main.views.login.data_api_client')
     def test_should_redirect_to_search_on_buyer_login(self, data_api_client):
         with self.app.app_context():
@@ -68,41 +59,11 @@ class TestLogin(BaseApplicationTest):
             assert res.location == 'http://localhost' + self.expand_path('/search/suppliers')
             assert 'Secure;' in res.headers['Set-Cookie']
 
-    def test_should_redirect_logged_in_supplier_to_supplier_dashboard(self):
-        self.login_as_supplier()
-        res = self.client.get(self.expand_path('/login'))
-        assert res.status_code == 302
-        assert res.location == 'http://localhost/suppliers'
-
     def test_should_redirect_logged_in_buyer_to_search(self):
         self.login_as_buyer()
         res = self.client.get(self.expand_path('/login'))
         assert res.status_code == 302
         assert res.location == 'http://localhost' + self.expand_path('/search/suppliers')
-
-    def test_should_redirect_logged_in_admin_to_admin_dashboard(self):
-        self.login_as_admin()
-        res = self.client.get(self.expand_path('/login'))
-        assert res.status_code == 302
-        assert res.location == 'http://localhost/admin'
-
-    def test_should_redirect_logged_in_admin_to_next_url_if_admin_app(self):
-        self.login_as_admin()
-        res = self.client.get(self.expand_path('/login?next=/admin/foo-bar'))
-        assert res.status_code == 302
-        assert res.location == 'http://localhost/admin/foo-bar'
-
-    def test_should_redirect_logged_in_supplier_to_next_url_if_supplier_app(self):
-        self.login_as_supplier()
-        res = self.client.get(self.expand_path('/login?next=/suppliers/foo-bar'))
-        assert res.status_code == 302
-        assert res.location == 'http://localhost/suppliers/foo-bar'
-
-    def test_should_redirect_to_supplier_dashboard_if_next_url_not_supplier_app(self):
-        self.login_as_supplier()
-        res = self.client.get(self.expand_path('/login?next=/foo-bar'))
-        assert res.status_code == 302
-        assert res.location == 'http://localhost/suppliers'
 
     def test_should_strip_whitespace_surrounding_login_email_address_field(self):
         self.client.post(self.expand_path('/login'), data={
@@ -119,26 +80,14 @@ class TestLogin(BaseApplicationTest):
         self.data_api_client_mock.authenticate_user.assert_called_with(
             'valid@email.com', '  1234567890  ')
 
-    def test_ok_next_url_redirects_supplier_on_login(self):
-        res = self.client.post(self.expand_path('/login?next=/suppliers/bar-foo'),
-                               data={'email_address': 'valid@email.com', 'password': '1234567890'})
-        assert res.status_code == 302
-        assert res.location == 'http://localhost/suppliers/bar-foo'
-
     @mock.patch('app.main.views.login.data_api_client')
     def test_ok_next_url_redirects_buyer_on_login(self, data_api_client):
         with self.app.app_context():
             data_api_client.authenticate_user.return_value = self.user(123, "email@email.com", None, None, 'Name')
-            res = self.client.post(self.expand_path('/login?next=/bar-foo'),
+            res = self.client.post(self.expand_path('/login?next={}'.format(self.expand_path('/bar-foo'))),
                                    data={'email_address': 'valid@email.com', 'password': '1234567890'})
             assert res.status_code == 302
-            assert res.location == 'http://localhost/bar-foo'
-
-    def test_bad_next_url_takes_supplier_user_to_dashboard(self):
-        res = self.client.post(self.expand_path('/login?next=http://badness.com'),
-                               data={'email_address': 'valid@email.com', 'password': '1234567890'})
-        assert res.status_code == 302
-        assert res.location == 'http://localhost/suppliers'
+            assert res.location == 'http://localhost' + self.expand_path('/bar-foo')
 
     @mock.patch('app.main.views.login.data_api_client')
     def test_bad_next_url_takes_buyer_user_to_search(self, data_api_client):

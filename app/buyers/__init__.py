@@ -1,6 +1,7 @@
 from flask import Blueprint, current_app, flash
 from flask_login import current_user, login_required
 from dmcontent.content_loader import ContentLoader
+from ..helpers.login_helpers import is_authenticated_workaround
 
 buyers = Blueprint('buyers', __name__)
 
@@ -13,7 +14,7 @@ content_loader.load_manifest('digital-outcomes-and-specialists', 'clarification_
 @buyers.before_request
 @login_required
 def require_login():
-    if current_user.is_authenticated() and current_user.role != 'buyer':
+    if is_authenticated_workaround(current_user) and current_user.role != 'buyer':
         flash('buyer-role-required', 'error')
         return current_app.login_manager.unauthorized()
 

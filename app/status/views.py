@@ -32,23 +32,18 @@ def status():
         if api['status'] is None or api['status']['status'] != "ok":
             apis_with_errors.append(api['name'])
 
-    # if no errors found, return as is.  Else, return an error and a message
-    if not apis_with_errors:
-        return jsonify(
-            {api['key']: api['status'] for api in apis},
-            status="ok",
-            version=version,
-            flags=get_flags(current_app)
+    stats = {api['key']: api['status'] for api in apis}
+    stats.update({
+        'version': version,
+        'flags': get_flags(current_app)
+    })
+
+    if apis_with_errors:
+        stats['status'] = 'error'
+        stats['message'] = 'Error connecting to the {}.'.format(
+            ' and the '.join(apis_with_errors)
         )
+        return jsonify(**stats), 500
 
-    message = "Error connecting to the {}.".format(
-        " and the ".join(apis_with_errors)
-    )
-
-    return jsonify(
-        {api['key']: api['status'] for api in apis},
-        status="error",
-        version=version,
-        message=message,
-        flags=get_flags(current_app)
-    ), 500
+    stats['status'] = 'ok'
+    return jsonify(**stats), 200

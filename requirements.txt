@@ -1,8 +1,8 @@
-Flask==0.10.1
-Flask-Login==0.2.11
+Flask==0.11.1
+Flask-Login==0.3.2
 inflection==0.2.1
 unicodecsv==0.14.1
-werkzeug==0.10.4
+Werkzeug==0.11.10
 
 git+https://github.com/AusDTO/dto-digitalmarketplace-utils.git@23.0.0#egg=dto-digitalmarketplace-utils==23.0.0
 git+https://github.com/alphagov/digitalmarketplace-content-loader.git@1.1.0#egg=digitalmarketplace-content-loader==1.1.0
