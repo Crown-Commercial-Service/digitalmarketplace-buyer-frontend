@@ -5,9 +5,9 @@
 {% block hero %}
   {% with
     site_title='/MARKETPLACE <span class="badge--beta">beta</span>', 
-    tagline='Where Australian Government buyers and ICT professionals do business.',
+    tagline='Where government buyers and digital service<br>professionals do business.',
     callout_title=('<a href="' + url_for('main.about_us') + '">New to the Marketplace?</a>'),
-    callout_text='Find out how it works.'
+    callout_text='Discover why the Marketplace was created, how it works and more.'
   %}
     {% include "_hero.html" %}
   {% endwith %}
@@ -20,14 +20,14 @@
     <li>
       <article>
         <h3><a href="{{ url_for('.supplier_search') }}">Find an ICT supplier</a></h3>
-        <p>Find ICT partners to deliver an outcome for your project.</p>
+        <p>Browse the Marketplace for approved digital service professionals.</p>
         <p><a href="{{ url_for('.supplier_search') }}" role="button">View the catalogue</a></p>
       </article>
     </li>
     <li>
       <article>
-        <h3><a href="{{ url_for('.ideation') }}">Submit your brief</a></h3>
-        <p>Seek new ideas and solutions for your project from ICT experts around Australia.</p>
+        <h3><a href="{{ url_for('.ideation') }}">Seek new ideas</a></h3>
+        <p>Get help on your project by sourcing innovation in the Marketplace.</p>
         <p><a href="{{ url_for('.ideation') }}">Read more</a></h3></p>
       </article>
     </li>
@@ -37,7 +37,7 @@
     <li>
       <article>
         <h3><a href="{{ url_for('.new_seller') }}">Join the Marketplace</a></h3>
-        <p>List your product or service and start building your profile in the Marketplace.</p>
+        <p>Start the process of listing your business within the Marketplace.</p>
         <p><a href="{{ url_for('.new_seller') }}">Read more</a></p>
       </article>
     </li>
@@ -54,14 +54,14 @@
      <li>
       <article>
         <h3><a href="{{ url_for('.about_us') }}">Services available to buyers</a></h3>
-        <p>Take a closer look at the types of expertise available in the Marketplace.</p>
+        <p>Take a closer look at the range of expertise available in the Marketplace.</p>
         <p><a href="{{ url_for('.about_us') }}">Read more</a></p>
       </article>
      </li>
      <li>
       <article>
-        <h3><a href="{{ url_for('.roles_and_services') }}">Commissioning a supplier</a></h3>
-        <p>Find out how to complete the procurement process using our Buyer’s Guide.</p>
+        <h3><a href="{{ url_for('.roles_and_services') }}">How to engage a supplier</a></h3>
+        <p>Learn how to complete the procurement process with our buyer's guide.</p>
         <p><a href="{{ url_for('.roles_and_services') }}">Read more</a></p>
       </article>
      </li>

@@ -103,6 +103,9 @@ def terms_of_use():
 def privacy_policy():
     return render_template('content/privacy-policy.html')
 
+@main.route('/disclaimer')
+def disclaimer():
+    return render_template('content/disclaimer.html')
 
 @main.route('/buyers-guide')
 def buyers_guide():
