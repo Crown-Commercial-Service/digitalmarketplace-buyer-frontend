@@ -7,7 +7,7 @@
 
 {% block hero %}
 {% with
-  site_title="Welcome to the Marketplace", 
+  site_title="Welcome to the Marketplace",
   tagline="This is the complete catalogue of approved ICT partners. You can scroll through them all or filter by selecting the capabilities you need from the menu below.",
   extra=('<a href="' + url_for('main.roles_and_services') + '">Learn more about what each role means</a>')
   %}
@@ -20,20 +20,8 @@
   local_nav_toggle='Menu'
   %}
   <aside class="sidebar" id="nav">
-
   {% if not hide_suppliers_name_search %}
-    <div>
-        <h2>Search by</h2>
-        <form action="{{ search_url }}" method="get">
-            <fieldset>
-                <label for="keyword"></label>
-                <input name="keyword" value="{% if keyword %}{{ keyword }}{% endif %}" placeholder='Company Name' id="keyword">
-                <br>
-                <br>
-                <button type="submit">Search</button>
-            </fieldset>
-        </form>
-    </div>
+    {% include "sidebar/_search.html" %}
   {% endif %}
 
     {% include "sidebar/_filter_capabilities.html" %}
@@ -63,7 +51,7 @@
       {% for result in results %}
       <li>
         <article>
-          <h2><a href="{{ result.url }}">{{ result.title }}</a></h2>
+          <h1><a href="{{ result.url }}">{{ result.title }}</a></h1>
 
           {% if result.description %}
           <p>{{ result.description }}</p>

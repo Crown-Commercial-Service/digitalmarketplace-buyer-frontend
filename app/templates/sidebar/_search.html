@@ -1,0 +1,10 @@
+<h2>Search by <span><a href="{{ url_for('main.supplier_search') }}" class="clear-all">Clear</a></span></h2>
+<form action="{{ search_url }}" method="get">
+  <details open data-label="accordion-example" aria-expanded="true">
+  <summary>Supplier name</summary>
+  <div class="accordion-panel sidebar-searchbox">
+    <input name="keyword" value="{% if keyword %}{{ keyword }}{% endif %}" placeholder='' id="keyword" class="sidebar-searchbox">
+    <button type="submit" class="sidebar-searchbutton">Search</button>
+  </div>
+  </details>
+</form>
