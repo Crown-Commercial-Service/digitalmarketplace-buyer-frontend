@@ -18,12 +18,16 @@
   {% endfor %}
   </ul>
   <h2 class="sidebar-heading">Framework</h2>
-  {%
-    with
-    text=service.frameworkName,
-    link=service.meta.externalFrameworkUrl %}
-    {% include "toolkit/external-link.html" %}
-  {% endwith %}
+  {% if service.meta.externalFrameworkUrl is not none %}
+    {%
+      with
+      text=service.frameworkName,
+      link=service.meta.externalFrameworkUrl %}
+      {% include "toolkit/external-link.html" %}
+    {% endwith %}
+  {% else %}
+    <div class="meta-item">{{ service.frameworkName }}</div>
+  {% endif %}
   <h2 class="sidebar-heading">Service ID</h2>
   {% with id=service.meta.serviceId %}
     {% include "toolkit/service-id.html" %}
