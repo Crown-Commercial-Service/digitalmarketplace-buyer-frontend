@@ -15,7 +15,7 @@ from dmutils.email import (
 from .. import main
 from ..forms.auth_forms import LoginForm, EmailAddressForm, ChangePasswordForm, CreateUserForm
 from ...helpers import hash_email
-from ...helpers.login_helpers import redirect_logged_in_user, render_template_with_csrf, is_authenticated_workaround
+from ...helpers.login_helpers import redirect_logged_in_user, render_template_with_csrf
 from ... import data_api_client
 from ...api_client.error import HTTPError
 
@@ -23,7 +23,7 @@ from ...api_client.error import HTTPError
 @main.route('/login', methods=["GET"])
 def render_login():
     next_url = request.args.get('next')
-    if is_authenticated_workaround(current_user) and not get_flashed_messages():
+    if current_user.is_authenticated and not get_flashed_messages():
         return redirect_logged_in_user(next_url)
     return render_template_with_csrf(
         "auth/login.html",
