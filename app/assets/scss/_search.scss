@@ -1,13 +1,24 @@
 .sidebar-searchbox{
   margin: 0;
-  padding:0 !important;
+  // padding:0 !important;
+  padding:1em !important;
 
   .sidebar-searchbox{
-    width:100%;
-    padding:0.6em;
+    // width:100%;
+    // padding:0.6em !important;
+    width: 100%;
+    outline-offset: 0;
+    border: 2px solid #bbbbbb;
+    border-radius: 0;
+    background-color: #fff;
+    padding: 0.4em !important;
   }
 
   .sidebar-searchbutton{
-    margin: 0;
+    margin: 1em 0 0 0;
   }
+}
+
+.marketplace-sidebar-filter-btn-box{
+  padding: 0 1em;
 }
