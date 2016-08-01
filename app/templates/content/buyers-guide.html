@@ -6,18 +6,31 @@
 
 {% block main_content %}
   <h1>Buyers' Guide</h1>
-  <p>
-    Found an ICT professional you’d like to commission? Here are the documents you’ll need to complete the process.
+    <p>
+    Every business listed in our <a href="{{ url_for('main.supplier_search') }}">supplier catalogue</a> is on of the
+      Digital Service Professionals Panel (SON3364729) established through a Request for Tender by the
+      <a href="https://dto.gov.au/">Digital Transformation Office</a>.
   </p>
+    
+  <p>
+    Once you’ve found an ICT supplier you’d like to engage, here are the documents you’ll need to complete the procurement process.
+  </p>
+    <p>
+    <i>Note: When raising purchase orders use category 80101507 - Information Technology Consultation Services.</i>
+    </p>
   <ul>
     <li>
-      <a href="{{ asset_path }}media/documents/DSPP_RFQ_Template.docx">RFQ template</a>
+      <a href="{{ asset_path }}media/documents/DSPP_Order_Template.docx">Work Order template
+      <img src="{{ asset_path }}svg/icon_download.svg" style="height: 1em"></a> <br>
+        <small>This document allows buyers to issue an order without first issuing an RFQ.</small>
+    </li>
+      <li>
+      <a href="{{ asset_path }}media/documents/DSPP_RFQ_Template.docx">RFQ template
+      <img src="{{ asset_path }}svg/icon_download.svg" style="height: 1em"></a>
     </li>
     <li>
-      <a href="{{ asset_path }}media/documents/DSPP_Order_Template.docx">Work order template</a>
-    </li>
-    <li>
-      <a href="{{ asset_path }}media/documents/DSPP_Deed_of_Standing_Offer.pdf">Deed of standing offer</a>
+      <a href="{{ asset_path }}media/documents/DSPP_Deed_of_Standing_Offer.pdf">Deed of Standing Offer
+      <img src="{{ asset_path }}svg/icon_download.svg" style="height: 1em"></a>
     </li>
   </ul>
   <p>
