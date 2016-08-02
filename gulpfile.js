@@ -8,6 +8,7 @@ var jasmine = require('gulp-jasmine-phantom');
 var sourcemaps = require('gulp-sourcemaps');
 var svg2png = require('gulp-svg2png');
 var bless = require('gulp-bless');
+var autoprefixer = require('gulp-autoprefixer');
 
 // Paths
 var environment;
@@ -112,6 +113,11 @@ gulp.task('sass', function () {
     .pipe(
       sass(sassOptions[environment]))
         .on('error', logErrorAndExit)
+    .pipe(autoprefixer({
+        autoprefixer: {
+          browsers: ['last 2 versions', 'ie 8-10']
+        }
+    }))
     .pipe(gulp.dest(cssDistributionFolder));
 
   stream.on('end', function () {
