@@ -175,15 +175,15 @@ class TestMeta(unittest.TestCase):
 
     def test_external_framework_url_returns_correct_suffix(self):
         self.assertEqual(
-            self.meta.get_external_framework_url({'frameworkName': 'G-Cloud 7'}),
+            self.meta.get_external_framework_url({'frameworkSlug': 'g-cloud-7'}),
             'http://ccs-agreements.cabinetoffice.gov.uk/contracts/rm1557vii'
         )
         self.assertEqual(
-            self.meta.get_external_framework_url({'frameworkName': 'G-Cloud 6'}),
-            'http://ccs-agreements.cabinetoffice.gov.uk/contracts/rm1557vi'
+            self.meta.get_external_framework_url({'frameworkSlug': 'g-cloud-6'}),
+            None
         )
         self.assertEqual(
-            self.meta.get_external_framework_url({'frameworkName': 'None'}),
+            self.meta.get_external_framework_url({'frameworkSlug': 'None'}),
             None
         )
 
