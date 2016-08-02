@@ -60,10 +60,14 @@
 {% endif %}
 
 {% with
-  heading = "Log in to see more"
+  heading = "Log in with your buyer account<br>to see more of the Marketplace"
 %}
   {% include "au-ui-toolkit/page-heading.html" %}
 {% endwith %}
+
+<p>
+    Don't have a buyer account? <a href="url_for('.create_buyer_account')">Create one now</a>.
+  </p>
 
 <form action="{{ url_for('.process_login', next=next) }}" method="POST">
 
@@ -108,16 +112,6 @@
   {% endwith %}
   </p>
 
-  <p>
-  {%
-    with
-    url = url_for('.create_buyer_account'),
-    text = "Create a buyer account",
-    bigger = true
-  %}
-    {% include "au-ui-toolkit/secondary-action-link.html" %}
-  {% endwith %}
-  </p>
             
 </form>
 {% endblock %}
