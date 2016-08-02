@@ -12,6 +12,19 @@
         universalId: universalId,
         cookieDomain: cookieDomain
       });
+    },
+
+    // wrapper around access to window.location
+    'location': {
+      'hostname': function () {
+        return root.location.hostname;
+      },
+      'pathname': function () {
+        return root.location.pathname;
+      },
+      'protocol': function () {
+        return root.location.protocol;
+      }
     }
   };
 })(window);

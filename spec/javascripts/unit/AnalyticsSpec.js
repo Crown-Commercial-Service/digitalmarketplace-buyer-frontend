@@ -1,7 +1,7 @@
 describe("GOVUK.Analytics", function () {
   var analytics,
       sortCalls;
-      
+
   SortCallsToGaByMethod = function (calls) {
     var gaMethodCalls = {},
         callNum = calls.length;
@@ -23,7 +23,7 @@ describe("GOVUK.Analytics", function () {
       return this._calls[method];
     }
     return [];
-  }; 
+  };
 
   beforeEach(function () {
     window.ga = function() {};
@@ -124,7 +124,7 @@ describe("GOVUK.Analytics", function () {
         'transport': 'beacon'
       }]);
     });
- 
+
     it('sends the right event when a list of user research participants download link is clicked', function() {
       spyOn(GOVUK.GDM.analytics.location, "pathname")
         .and
@@ -141,7 +141,7 @@ describe("GOVUK.Analytics", function () {
         'transport': 'beacon'
       }]);
     });
- 
+
     it('sends the right event when a list of suppliers for digital specialists download link is clicked', function() {
       spyOn(GOVUK.GDM.analytics.location, "pathname")
         .and
@@ -158,7 +158,7 @@ describe("GOVUK.Analytics", function () {
         'transport': 'beacon'
       }]);
     });
- 
+
     it('sends the right event when a list of suppliers for digital outcomes download link is clicked', function() {
       spyOn(GOVUK.GDM.analytics.location, "pathname")
         .and
@@ -198,5 +198,28 @@ describe("GOVUK.Analytics", function () {
       expect(window.ga.calls.first().args).toEqual([ 'send', 'pageview', { page: 'http://example.com' } ]);
       expect(window.ga.calls.count()).toEqual(1);
     });
+  });
+
+  describe("Opportunities search page", function() {
+    var $counter = $('<span class="search-summary-count">32</span>');
+
+    beforeEach(function () {
+      $(document.body).append($counter);
+    });
+
+    afterEach(function () {
+      $counter.remove();
+    });
+
+    it('should send the number of results as a custom dimension', function() {
+      spyOn(GOVUK.GDM.analytics.location, "pathname")
+        .and
+        .returnValue('/digital-outcomes-and-specialists/opportunities');
+
+      window.GOVUK.GDM.analytics.pageViews.init();
+
+      expect(window.ga.calls.first().args).toEqual(['set', 'dimension21', '32']);
+    });
+
   });
 });
