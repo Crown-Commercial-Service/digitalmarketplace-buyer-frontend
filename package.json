@@ -25,7 +25,7 @@
   },
   "scripts": {
     "test": "./node_modules/gulp/bin/gulp.js test",
-    "frontend-install": "./node_modules/bower/bin/bower install",
+    "frontend-install": "./node_modules/bower/bin/bower install && npm install",
     "frontend-build:development": "./node_modules/gulp/bin/gulp.js build:development",
     "frontend-build:production": "./node_modules/gulp/bin/gulp.js build:production",
     "frontend-build:watch": "./node_modules/gulp/bin/gulp.js watch",
