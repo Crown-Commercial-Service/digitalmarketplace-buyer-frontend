@@ -165,6 +165,10 @@ class TestMeta(unittest.TestCase):
             ['1234', '5678', '9012', '3456']
         )
         self.assertEqual(
+            self.meta.get_service_id({'id': 123456789012345}),
+            ['1234', '5678', '9012', '345']
+        )
+        self.assertEqual(
             self.meta.get_service_id({'id': '5-G4-1046-001'}),
             ['5-G4-1046-001']
         )
