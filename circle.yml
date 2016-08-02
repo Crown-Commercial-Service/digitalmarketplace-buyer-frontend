@@ -1,9 +1,8 @@
 machine:
   timezone:
     Australia/Sydney
-
-  post:
-    - npm install -g npm@3.x.x
+  node:
+    version: 5.5.0
 
 dependencies:
   pre:
