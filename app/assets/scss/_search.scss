@@ -2,18 +2,16 @@
   margin: 0;
 
   >div{
-    padding:0 1em 1em 1em 1em;
-  }
+    padding:0 1em 1em 1em;
 
-  .sidebar-searchbox{
-    // width:100%;
-    // padding:0.6em !important;
-    width: 100%;
-    outline-offset: 0;
-    border: 2px solid #bbbbbb;
-    border-radius: 0;
-    background-color: #fff;
-    padding: 0.4em !important;
+    .sidebar-searchbox{
+      width: 100%;
+      outline-offset: 0;
+      border: 2px solid #bbbbbb;
+      border-radius: 0;
+      background-color: #fff;
+      padding: 0.4em !important;
+    }
   }
 
   .sidebar-searchbutton{
