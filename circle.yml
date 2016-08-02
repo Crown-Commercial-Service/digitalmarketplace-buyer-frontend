@@ -4,12 +4,13 @@ machine:
   timezone:
     Australia/Sydney
   post:
-    - npm install -g npm@3.x.x
     # For monitoring:
     - pip install awscli
     - sudo curl -o /usr/local/bin/ecs-cli https://s3.amazonaws.com/amazon-ecs-cli/ecs-cli-linux-amd64-latest
     - sudo chmod +x /usr/local/bin/ecs-cli
     - /usr/local/bin/ecs-cli --version
+  node:
+    version: 5.5.0
 
 dependencies:
   pre:

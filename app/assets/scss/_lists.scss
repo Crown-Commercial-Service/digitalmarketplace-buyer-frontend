@@ -31,6 +31,10 @@
       border-left: solid 1px $border-colour;
       padding: 0 $base-spacing;
 
+      @include media($tablet) {
+        flex-basis: 40%;
+      }
+
       p {
         min-height: auto;
       }

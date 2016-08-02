@@ -1,7 +1,9 @@
 .sidebar-searchbox{
   margin: 0;
-  // padding:0 !important;
-  padding:1em !important;
+
+  >div{
+    padding:0 1em 1em 1em 1em;
+  }
 
   .sidebar-searchbox{
     // width:100%;
