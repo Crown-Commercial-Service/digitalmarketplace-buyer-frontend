@@ -532,6 +532,9 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         assert set(element.get("value") for element in status_inputs) == {"live", "closed"}
         assert not any(element.get("checked") for element in status_inputs)
 
+        ss_elem = document.xpath("//p[@class='search-summary']")[0]
+        assert self._normalize_whitespace(self._squashed_element_text(ss_elem)) == "2 opportunities"
+
     def test_catalogue_of_briefs_page_filtered(self):
         original_url = "/digital-outcomes-and-specialists/opportunities?page=2&status=live&lot=lot-one&lot=lot-three"
         res = self.client.get(original_url)
@@ -584,6 +587,9 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         assert normalize_qs(parsed_original_url.query) == \
             normalize_qs(parsed_next_url.query) == \
             normalize_qs(parsed_prev_url.query)
+
+        ss_elem = document.xpath("//p[@class='search-summary']")[0]
+        assert self._normalize_whitespace(self._squashed_element_text(ss_elem)) == "2 results"
 
     def test_catalogue_of_briefs_400_if_invalid_status(self):
         res = self.client.get('/digital-outcomes-and-specialists/opportunities?status=pining-for-fjords')
