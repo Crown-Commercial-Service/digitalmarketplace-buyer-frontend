@@ -24,6 +24,9 @@
       },
       'protocol': function () {
         return root.location.protocol;
+      },
+      'search': function () {
+        return root.location.search;
       }
     }
   };
