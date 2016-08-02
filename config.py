@@ -118,7 +118,7 @@ class Live(Config):
     """Base config for deployed environments"""
     DEBUG = False
     DM_HTTP_PROTO = 'https'
-    DM_GA_CODE = 'UA-80975696-1'
+    DM_GA_CODE = 'UA-72722909-5'
 
 
 class Preview(Live):
