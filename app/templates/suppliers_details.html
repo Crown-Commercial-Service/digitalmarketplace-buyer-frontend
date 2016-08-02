@@ -77,7 +77,7 @@
       </p>
       <p>
         <strong>Email</strong><br>
-        <a href="#">{{ contact.email }}</a>
+        <a href="mailto:{{ contact.email }}">{{ contact.email }}</a>
       </p>
       <p>
         <strong>Phone</strong><br>
@@ -99,7 +99,7 @@
       {% if supplier.website %}
       <p>
         <strong>Website</strong><br>
-        <a href="{{ supplier.website }}">{{ supplier.website }}</a>
+        <a href="{{ supplier.website }}" target="_blank">{{ supplier.website }}</a>
       </p>
       {% endif %}
       {% for link in supplier.extraLinks %}
@@ -125,7 +125,7 @@
     <h2>References</h2>
     {% for reference in supplier.references %}
     <article>
-      Upcoming information
+      To be added
     </article>
     {% endfor %}
   </li>
@@ -133,25 +133,25 @@
   <li>
     <h2>Endorsements</h2>
     <article>
-      Upcoming information
+      To be added
     </article>
   </li>
   <li>
     <h2>Case studies</h2>
     <article>
-      Upcoming information
+      To be added
     </article>
   </li>
 
   <li>
-    <h2>Guide to rates<br><small>Day rates</small></h2>
+    <h2>Rate card</h2>
   {% if supplier.prices %}
     <article>
       <table class="content-table">
         <thead>
           <tr>
             <th scope="col">Roles</th>
-            <th scope="col">Rate</th>
+            <th scope="col">Day rates</th>
           </tr>
         </thead>
         <tbody>
