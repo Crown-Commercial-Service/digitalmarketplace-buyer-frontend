@@ -60,7 +60,7 @@
       <div class="wrapper">
         {% if url_for('main.index') != request.path %}
         <div class="marketplace--logo">
-          <a href="{{ url_for('main.index') }}" title="{{ logo_link_title|default('Go to the Marketplace homepage') }}" class="logo">/Marketplace</a> <span class="badge--beta">private beta</span>
+          <a href="{{ url_for('main.index') }}" title="{{ logo_link_title|default('Go to the Marketplace homepage') }}" class="logo">/marketplace</a> <span class="badge--beta">private beta</span>
         </div>
         {% endif %}
         <div class="feedback">
