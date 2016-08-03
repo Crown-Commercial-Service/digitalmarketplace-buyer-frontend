@@ -591,9 +591,9 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         ss_elem = document.xpath("//p[@class='search-summary']")[0]
         assert self._normalize_whitespace(self._squashed_element_text(ss_elem)) == "2 results"
 
-    def test_catalogue_of_briefs_400_if_invalid_status(self):
+    def test_catalogue_of_briefs_404_if_invalid_status(self):
         res = self.client.get('/digital-outcomes-and-specialists/opportunities?status=pining-for-fjords')
-        assert res.status_code == 400
+        assert res.status_code == 404
 
     def test_catalogue_of_briefs_page_shows_pagination_if_more_pages(self):
         res = self.client.get('/digital-outcomes-and-specialists/opportunities')

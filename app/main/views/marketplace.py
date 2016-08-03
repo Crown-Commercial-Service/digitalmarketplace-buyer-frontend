@@ -99,7 +99,7 @@ def list_opportunities(framework_slug):
     # disabling csrf protection as this should only ever be a GET request
     form = BriefSearchForm(request.args, framework=framework, data_api_client=data_api_client, csrf_enabled=False)
     if not form.validate():
-        abort(400, "Invalid form data")
+        abort(404, "Invalid form data")
 
     api_result = form.get_briefs()
 
