@@ -1,0 +1,16 @@
+{
+  "checks": {
+    "gov.au-marketplace_homepage_load": {
+      "handlers": ["default", "slack"],
+      "command": "/opt/sensu/embedded/bin/check-http.rb --timeout 10 --url ${URL} --response-code 200 --query '<title>[^<]*[Mm]arketplace[^<]*</title>'",
+      "interval": 300,
+      "standalone": true
+    },
+    "gov.au-marketplace_catalogue_load": {
+      "handlers": ["default", "slack"],
+      "command": "/opt/sensu/embedded/bin/check-http.rb --timeout 10 --url ${URL}search/suppliers --response-code 200 --query '[sS]uppliers'",
+      "interval": 300,
+      "standalone": true
+    }
+  }
+}
