@@ -319,6 +319,7 @@ def submit_create_user(encoded_token):
                 error=e.message,
                 token=None), 400
 
+        flash('account-created', 'flag')
         return redirect_logged_in_user()
 
 
