@@ -29,6 +29,25 @@ class TestApplication(BaseApplicationTest):
         )
 
 
+class TestHomepageAccountCreationVirtualPageViews(BaseApplicationTest):
+    @mock.patch('app.main.views.marketplace.data_api_client')
+    def test_data_analytics_track_page_view_is_shown_if_account_created_flag_flash_message(self, data_api_client):
+        with self.client.session_transaction() as session:
+            session['_flashes'] = [('flag', 'account-created')]
+
+        res = self.client.get("/")
+        data = res.get_data(as_text=True)
+
+        assert 'data-analytics="trackPageView" data-url="/vpv/?account-created=true"' in data
+
+    @mock.patch('app.main.views.marketplace.data_api_client')
+    def test_data_analytics_track_page_view_not_shown_if_no_account_created_flag_flash_message(self, data_api_client):
+        res = self.client.get("/")
+        data = res.get_data(as_text=True)
+
+        assert 'data-analytics="trackPageView" data-url="/vpv/?account-created=true"' not in data
+
+
 class TestHomepageBrowseList(BaseApplicationTest):
     @mock.patch('app.main.views.marketplace.data_api_client')
     def test_dos_links_not_shown_when_dos_is_pending(self, data_api_client):
