@@ -9,6 +9,8 @@ var sourcemaps = require('gulp-sourcemaps');
 var svg2png = require('gulp-svg2png');
 var bless = require('gulp-bless');
 var autoprefixer = require('gulp-autoprefixer');
+var rename = require('gulp-rename');
+var runSequence = require('run-sequence');
 
 // Paths
 var environment;
@@ -127,16 +129,82 @@ gulp.task('sass', function () {
   return stream;
 });
 
-gulp.task('css', function() {
-  var stream = gulp.src('application-ie8.css')
+gulp.task('split', ['sass'], function(cb) {
+  var stream = gulp.src(cssDistributionFolder + '/application-ie8.css')
       .pipe(filelog('Splitting CSS files'))
       .pipe(bless({
         imports: false
       }))
-      .pipe(gulp.dest('./applicationie8'));
+      .pipe(gulp.dest(cssDistributionFolder))
+      .pipe(rename(function(path) {
+        path.basename = path.basename.replace('blessed', 'part');
+      }));
 
   stream.on('end', function() {
     console.log('💾  Split CSS saved as .css files in ' + cssDistributionFolder);
+  });
+  cb();
+});
+
+gulp.task('rename-1', function() {
+  var fileTypes = [];
+  var complete = function (fileType) {
+    fileTypes.push(fileType);
+    if (fileTypes.length == 2) {
+      cb();
+    }
+  };
+  var logOutputFor = function (fileType) {
+    return function (err, paths) {
+      if (paths !== undefined) {
+        console.log('💥  Deleted the following ' + fileType + ' files:\n', paths.join('\n'));
+      }
+      complete(fileType);
+    };
+  };
+
+  var stream = gulp.src(cssDistributionFolder + '/application-ie8-blessed*')
+      .pipe(filelog('Renaming IE files 1'))
+      .pipe(rename(function(path) {
+        path.basename = ("application-ie8-part-1");
+      }))
+      .pipe(gulp.dest(cssDistributionFolder));
+
+  deleteFiles(cssDistributionFolder + '/application-ie8-blessed1.css', logOutputFor('CSS'));
+
+  stream.on('end', function() {
+    console.log('💾  Rename IE CSS saved as .css files in ' + cssDistributionFolder);
+  });
+});
+
+gulp.task('rename-2', function() {
+  var fileTypes = [];
+  var complete = function (fileType) {
+    fileTypes.push(fileType);
+    if (fileTypes.length == 2) {
+      cb();
+    }
+  };
+  var logOutputFor = function (fileType) {
+    return function (err, paths) {
+      if (paths !== undefined) {
+        console.log('💥  Deleted the following ' + fileType + ' files:\n', paths.join('\n'));
+      }
+      complete(fileType);
+    };
+  };
+
+  var stream = gulp.src(cssDistributionFolder + '/application-ie8.css')
+      .pipe(filelog('Renaming IE files 2'))
+      .pipe(rename(function(path) {
+        path.basename += ("-part-2");
+      }))
+      .pipe(gulp.dest(cssDistributionFolder));
+
+  deleteFiles(cssDistributionFolder + '/application-ie8.css', logOutputFor('CSS'));
+
+  stream.on('end', function() {
+    console.log('💾  Rename IE CSS saved as .css files in ' + cssDistributionFolder);
   });
 });
 
@@ -345,10 +413,13 @@ gulp.task(
   [
     'copy'
   ],
-  function() {
-    gulp.start('sass');
-    gulp.start('css');
-    gulp.start('js');
+  function(cb) {
+    runSequence('sass',
+      'split',
+      'js',
+      'rename-1',
+      'rename-2',
+      cb);
   }
 );
 

@@ -75,7 +75,6 @@ app/content
 
 # Front end generated assets
 app/static/*
-applicationie8/*
 !app/static/media
 
 # IDE specific files
