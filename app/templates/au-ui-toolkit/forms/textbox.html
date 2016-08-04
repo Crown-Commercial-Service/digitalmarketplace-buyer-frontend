@@ -74,6 +74,7 @@
         class="{% if unit %}-with-unit-{{ unit_position }}{% endif %}{% if error %}invalid{% endif %}{% if smaller %} text-box-smaller{% endif %}"
         value="{% if value !=  None %}{{ value }}{% endif %}"
         {% if question_advice or hint %}aria-describedby="{{ [question_advice_id, answer_advice_id]|join(' ') }}"{% endif %}
+        {% if disabled %}disabled="disabled"{% endif %}
       />
       {% if unit_position == "after" %}
         <label for="input-{{ name }}" class="text-box-unit">
