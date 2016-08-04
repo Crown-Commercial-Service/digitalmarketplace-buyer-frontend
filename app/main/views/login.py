@@ -13,6 +13,7 @@ from dmutils.email import (
     EmailError
 )
 from .. import main
+from app.main.forms.auth_forms import BuyerSignupEmailForm
 from ..forms.auth_forms import LoginForm, EmailAddressForm, ChangePasswordForm, CreateUserForm
 from ...helpers import hash_email
 from ...helpers.login_helpers import redirect_logged_in_user
@@ -183,7 +184,7 @@ def update_password(token):
 
 @main.route('/buyers/create', methods=["GET"])
 def create_buyer_account():
-    form = EmailAddressForm()
+    form = BuyerSignupEmailForm()
 
     return render_template_with_csrf("auth/create-buyer-account.html", form=form)
 
@@ -192,7 +193,7 @@ def create_buyer_account():
 def submit_create_buyer_account():
     current_app.logger.info(
         "buyercreate: post create-buyer-account")
-    form = EmailAddressForm(request.form)
+    form = BuyerSignupEmailForm(request.form)
 
     if form.validate():
         email_address = form.email_address.data

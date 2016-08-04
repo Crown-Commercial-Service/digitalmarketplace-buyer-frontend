@@ -27,7 +27,7 @@
   <div class="callout--warning">
     <p>There was a problem with the details you gave:</p>
     <ul>
-    {% for field_name, field_errors in form.errors|dictsort if field_errors %}
+    {% for field_name, field_errors in form.errors|dictsort|reverse if field_errors %}
       {% for error in field_errors %}
       <li><a href="#{{ form[field_name].name }}" class="validation-masthead-link">{{ error }}</a></li>
       {% endfor %}
@@ -58,9 +58,9 @@
 <form method="POST" action="{{ url_for('.submit_create_buyer_account') }}">
   {{ form.csrf_token }}
 
-  <fieldset>
-    <input id="confirm-government-emp" name="government-emp-checkbox" type="checkbox">
-    <label for="confirm-government-emp">I am a public service employee or have authorisation, as described above.</label>
+  <fieldset class="{% if form.government_emp_checkbox.errors[0] %}invalid{% endif %}">
+      {{ form.government_emp_checkbox }}
+      {{ form.government_emp_checkbox.label }}
   </fieldset>
 
   {%

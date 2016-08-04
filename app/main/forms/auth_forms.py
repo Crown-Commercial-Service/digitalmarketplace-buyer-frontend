@@ -1,6 +1,7 @@
 import re
 
 from wtforms import PasswordField
+from wtforms.fields.core import BooleanField
 from wtforms.validators import DataRequired, EqualTo, Length, Regexp
 from dmutils.forms import StripWhitespaceStringField, StringField
 
@@ -48,6 +49,11 @@ class EmailAddressForm(DmForm):
             email_regex,
         ]
     )
+
+
+class BuyerSignupEmailForm(EmailAddressForm):
+    government_emp_checkbox = BooleanField(label='I am a public service employee or have authorisation, \
+        as described above.', validators=[DataRequired(message="You must check the checkbox")])
 
 
 class ChangePasswordForm(DmForm):
