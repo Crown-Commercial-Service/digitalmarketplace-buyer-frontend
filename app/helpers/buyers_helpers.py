@@ -18,9 +18,12 @@ def get_framework_and_lot(framework_slug, lot_slug, data_api_client, status=None
 
 
 def is_brief_correct(brief, framework_slug, lot_slug, current_user_id):
-    return brief['frameworkSlug'] == framework_slug and \
-        brief['lotSlug'] == lot_slug and \
-        is_brief_associated_with_user(brief, current_user_id)
+    return (
+        brief['frameworkSlug'] == framework_slug
+        and brief['lotSlug'] == lot_slug
+        and is_brief_associated_with_user(brief, current_user_id)
+        and not brief_is_withdrawn(brief)
+    )
 
 
 def is_brief_associated_with_user(brief, current_user_id):
@@ -30,6 +33,10 @@ def is_brief_associated_with_user(brief, current_user_id):
 
 def brief_can_be_edited(brief):
     return brief.get('status') == 'draft'
+
+
+def brief_is_withdrawn(brief):
+    return brief.get('status') == 'withdrawn'
 
 
 def section_has_at_least_one_required_question(section):
