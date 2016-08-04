@@ -2,6 +2,8 @@
 
 import mock
 from nose.tools import assert_equal, assert_true, assert_in
+from six import iteritems
+from six.moves.urllib.parse import urlparse, parse_qs
 from lxml import html
 from ...helpers import BaseApplicationTest
 from dmapiclient import APIError
@@ -477,25 +479,121 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         self.briefs = self._get_dos_brief_fixture_data(multi=True)
         self._data_api_client.find_briefs.return_value = self.briefs
 
+        self._data_api_client.get_framework.return_value = {'frameworks': {
+            'name': "Digital Outcomes and Specialists",
+            'slug': "digital-outcomes-and-specialists",
+            'lots': [
+                {'name': 'Lot 1', 'slug': 'lot-one', 'allowsBrief': True},
+                {'name': 'Lot 2', 'slug': 'lot-two', 'allowsBrief': False},
+                {'name': 'Lot 3', 'slug': 'lot-three', 'allowsBrief': True},
+                {'name': 'Lot 4', 'slug': 'lot-four', 'allowsBrief': True},
+            ]
+        }}
+
     def teardown(self):
         self._data_api_client.stop()
 
     def test_catalogue_of_briefs_page(self):
-        self._data_api_client.get_framework.return_value = {'frameworks': {
-            'name': "Digital Outcomes and Specialists",
-            'lots': [
-                {'name': 'Lot 1', 'allowsBrief': True},
-                {'name': 'Lot 2', 'allowsBrief': False},
-                {'name': 'Lot 3', 'allowsBrief': True}
-            ]
-        }}
         res = self.client.get('/digital-outcomes-and-specialists/opportunities')
         assert_equal(200, res.status_code)
         document = html.fromstring(res.get_data(as_text=True))
 
-        heading = document.xpath('//h1/text()')[0].strip()
+        self._data_api_client.get_framework.assert_called_once_with("digital-outcomes-and-specialists")
+        regular_args = {
+            k: v for k, v in iteritems(self._data_api_client.find_briefs.call_args[1]) if k not in ("status", "lot",)
+        }
+        assert regular_args == {
+            "framework": "digital-outcomes-and-specialists",
+            "page": 1,
+            "human": True,
+        }
+        assert set(self._data_api_client.find_briefs.call_args[1]["status"].split(",")) == {"live", "closed"}
+        assert set(self._data_api_client.find_briefs.call_args[1]["lot"].split(",")) == {
+            "lot-one",
+            "lot-three",
+            "lot-four",
+        }
+
+        heading = document.xpath('normalize-space(//h1/text())')
         assert heading == "Digital Outcomes and Specialists opportunities"
-        assert 'lot 1 and lot 3' in document.xpath('//div[@class="marketplace-paragraph"]/p/text()')[0]
+        assert 'lot 1, lot 3 and lot 4' in document.xpath(
+            "normalize-space(//div[@class='marketplace-paragraph']/p/text())"
+        )
+
+        lot_inputs = document.xpath("//form[@method='get']//input[@name='lot']")
+        assert set(element.get("value") for element in lot_inputs) == {
+            "lot-one",
+            "lot-three",
+            "lot-four",
+        }
+        assert not any(element.get("checked") for element in lot_inputs)
+
+        status_inputs = document.xpath("//form[@method='get']//input[@name='status']")
+        assert set(element.get("value") for element in status_inputs) == {"live", "closed"}
+        assert not any(element.get("checked") for element in status_inputs)
+
+        ss_elem = document.xpath("//p[@class='search-summary']")[0]
+        assert self._normalize_whitespace(self._squashed_element_text(ss_elem)) == "2 opportunities"
+
+    def test_catalogue_of_briefs_page_filtered(self):
+        original_url = "/digital-outcomes-and-specialists/opportunities?page=2&status=live&lot=lot-one&lot=lot-three"
+        res = self.client.get(original_url)
+        assert_equal(200, res.status_code)
+        document = html.fromstring(res.get_data(as_text=True))
+
+        self._data_api_client.get_framework.assert_called_once_with("digital-outcomes-and-specialists")
+        regular_args = {
+            k: v for k, v in iteritems(self._data_api_client.find_briefs.call_args[1]) if k not in ("status", "lot",)
+        }
+        assert regular_args == {
+            "framework": "digital-outcomes-and-specialists",
+            "page": 2,
+            "human": True,
+        }
+        assert set(self._data_api_client.find_briefs.call_args[1]["status"].split(",")) == {"live"}
+        assert set(self._data_api_client.find_briefs.call_args[1]["lot"].split(",")) == {"lot-one", "lot-three"}
+
+        heading = document.xpath('normalize-space(//h1/text())')
+        assert heading == "Digital Outcomes and Specialists opportunities"
+        assert 'lot 1, lot 3 and lot 4' in document.xpath(
+            "normalize-space(//div[@class='marketplace-paragraph']/p/text())"
+        )
+
+        lot_inputs = document.xpath("//form[@method='get']//input[@name='lot']")
+        assert {
+            element.get("value"): bool(element.get("checked"))
+            for element in lot_inputs
+        } == {
+            "lot-one": True,
+            "lot-three": True,
+            "lot-four": False,
+        }
+
+        status_inputs = document.xpath("//form[@method='get']//input[@name='status']")
+        assert {
+            element.get("value"): bool(element.get("checked"))
+            for element in status_inputs
+        } == {
+            "live": True,
+            "closed": False,
+        }
+
+        parsed_original_url = urlparse(original_url)
+        parsed_prev_url = urlparse(document.xpath("//li[@class='previous']/a/@href")[0])
+        parsed_next_url = urlparse(document.xpath("//li[@class='next']/a/@href")[0])
+        assert parsed_original_url.path == parsed_prev_url.path == parsed_next_url.path
+
+        normalize_qs = lambda qs: {k: set(v) for k, v in iteritems(parse_qs(qs)) if k != "page"}
+        assert normalize_qs(parsed_original_url.query) == \
+            normalize_qs(parsed_next_url.query) == \
+            normalize_qs(parsed_prev_url.query)
+
+        ss_elem = document.xpath("//p[@class='search-summary']")[0]
+        assert self._normalize_whitespace(self._squashed_element_text(ss_elem)) == "2 results"
+
+    def test_catalogue_of_briefs_404_if_invalid_status(self):
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities?status=pining-for-fjords')
+        assert res.status_code == 404
 
     def test_catalogue_of_briefs_page_shows_pagination_if_more_pages(self):
         res = self.client.get('/digital-outcomes-and-specialists/opportunities')

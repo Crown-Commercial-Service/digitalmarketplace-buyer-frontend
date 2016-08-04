@@ -45,14 +45,14 @@
 </header>
     <div class="grid-row">
         <section class="column-one-third search-page-filters" aria-label="Search filters">
-            <form action="{{ url_for('.search') }}" method="get">
-                {% include '_search_filters.html' %}
+            <form action="{{ url_for('.search_services') }}" method="get">
+                {% include 'search/_services_filters.html' %}
             </form>
         </section>
         <section class="column-two-thirds" aria-label="Services found">
-            {% include '_search_summary.html' %}
-            {% include '_search_results.html' %}
-            {% include '_search_pagination.html' %}
+            {% include 'search/_services_summary.html' %}
+            {% include 'search/_services_results.html' %}
+            {% include 'search/_services_pagination.html' %}
         </section>
     </div>
 {% endblock %}
