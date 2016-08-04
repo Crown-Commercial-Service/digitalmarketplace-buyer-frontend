@@ -6,6 +6,11 @@ h1 {
   font-size: rem(24);
 }
 
+.badge--beta {
+  background-color: $white;
+  color: $aqua;
+}
+
 .content-main {
 
   .number-results {
@@ -92,6 +97,12 @@ h1 {
 .about-us {
   blockquote {
     quotes: '\2018''\2019''\2018''\2019';
+  }
+}
+
+.catalogue {
+  hr:first-of-type {
+    margin: 2em 0 3em;
   }
 }
 

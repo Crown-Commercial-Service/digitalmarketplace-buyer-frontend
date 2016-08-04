@@ -5,20 +5,14 @@
 {% block body_classes %}catalogue{% endblock %}
 {% block main_class %}sidebar-has-controls{% endblock %}
 
-{% block hero %}
-{% with
-  site_title="Supplier catalogue",
-  tagline="Scroll down to view all ICT suppliers, search or filter by selecting the expertise you need from the menu below.",
-  extra=('<a href="' + url_for('main.roles_and_services') + '">Learn what each role means</a>')
-  %}
-  {% include "_hero.html" %}
-  {% endwith %}
-  {% endblock %}
 
   {% block sidebar %}
   {% with
   local_nav_toggle='Menu'
   %}
+  <h1>ICT supplier catalogue</h1>
+  <p><a href="{{ url_for('main.roles_and_services') }}">Learn more about these roles</a></p>
+  <hr>
   <aside class="sidebar" id="nav">
     {% include "sidebar/_filter_capabilities.html" %}
     {% include "sidebar/_search.html" %}
