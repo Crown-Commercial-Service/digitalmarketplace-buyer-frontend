@@ -6,7 +6,7 @@ from wtforms.fields.core import BooleanField
 from wtforms.validators import DataRequired, EqualTo, Length, Regexp
 from dmutils.forms import StripWhitespaceStringField, StringField
 
-from app.main.forms.common import DmForm
+from app.helpers.form_helpers import DmForm
 
 
 email_regex = Regexp(r'^[^@^\s]+@[\d\w-]+(\.[\d\w-]+)+$',

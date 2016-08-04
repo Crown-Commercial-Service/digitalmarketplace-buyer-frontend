@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from ...helpers import BaseApplicationTest
+from app.helpers.form_helpers import FakeCsrf
 from dmapiclient import api_stubs, HTTPError
 from dmcontent.content_loader import ContentLoader
 import mock
@@ -59,6 +60,7 @@ class TestStartNewBrief(BaseApplicationTest):
             res = self.client.get(self.expand_path(
                 '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/create'))
 
+            assert FakeCsrf.valid_token in res.get_data(as_text=True)
             assert res.status_code == 200
 
     def test_404_if_lot_does_not_allow_brief(self, data_api_client):
@@ -126,7 +128,8 @@ class TestCreateNewBrief(BaseApplicationTest):
         res = self.client.post(
             self.expand_path('/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/create'),  # noqa
             data={
-                "title": "Title"
+                'title': 'Title',
+                'csrf_token': FakeCsrf.valid_token,
             })
 
         assert res.status_code == 302
@@ -152,7 +155,8 @@ class TestCreateNewBrief(BaseApplicationTest):
         res = self.client.post(
             self.expand_path('/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/create'),  # noqa
             data={
-                "title": "Title"
+                'title': 'Title',
+                'csrf_token': FakeCsrf.valid_token,
             })
 
         assert res.status_code == 302
@@ -164,6 +168,26 @@ class TestCreateNewBrief(BaseApplicationTest):
             page_questions=['title'],
             updated_by='buyer@email.com'
         )
+
+    def test_csrf_protection(self, data_api_client):
+        self.login_as_buyer()
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='open',
+            lots=[
+                api_stubs.lot(slug='digital-specialists', allows_brief=False)
+            ]
+        )
+
+        res = self.client.post(
+            self.expand_path('/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/create'),  # noqa
+            data={
+                'specialistRole': 'agileCoach',
+                'csrf_token': 'bad_token',
+            })
+
+        assert res.status_code == 400
+        assert not data_api_client.create_brief.called
 
     def test_404_if_lot_does_not_allow_brief(self, data_api_client):
         self.login_as_buyer()
@@ -178,7 +202,8 @@ class TestCreateNewBrief(BaseApplicationTest):
         res = self.client.post(
             self.expand_path('/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/create'),  # noqa
             data={
-                "specialistRole": "agileCoach"
+                'specialistRole': 'agileCoach',
+                'csrf_token': FakeCsrf.valid_token,
             })
 
         assert res.status_code == 404
@@ -197,7 +222,8 @@ class TestCreateNewBrief(BaseApplicationTest):
         res = self.client.post(
             self.expand_path('/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/create'),  # noqa
             data={
-                "specialistRole": "agileCoach"
+                'specialistRole': 'agileCoach',
+                'csrf_token': FakeCsrf.valid_token,
             })
 
         assert res.status_code == 404
@@ -216,7 +242,8 @@ class TestCreateNewBrief(BaseApplicationTest):
         res = self.client.post(
             self.expand_path('/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-octopuses/create'),  # noqa
             data={
-                "specialistRole": "agileCoach"
+                'specialistRole': 'agileCoach',
+                'csrf_token': FakeCsrf.valid_token,
             })
 
         assert res.status_code == 404
@@ -238,7 +265,8 @@ class TestCreateNewBrief(BaseApplicationTest):
         res = self.client.post(
             self.expand_path('/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/create'),  # noqa
             data={
-                "title": "Title"
+                'title': 'Title',
+                'csrf_token': FakeCsrf.valid_token,
             })
         document = html.fromstring(res.get_data(as_text=True))
 
@@ -284,6 +312,7 @@ class TestEveryDamnPage(BaseApplicationTest):
                 "{}{}".format(baseurl, url),
                 data=data)
             assert res.status_code == status_code
+            return res
 
     # These should all work as expected
 
@@ -294,19 +323,24 @@ class TestEveryDamnPage(BaseApplicationTest):
         self._load_page("/digital-specialists/1234/section-1", 200)
 
     def test_wrong_lot_get_edit_brief_question(self):
-        self._load_page("/digital-specialists/1234/edit/section-1/required1", 200)
+        res = self._load_page("/digital-specialists/1234/edit/section-1/required1", 200)
+        assert FakeCsrf.valid_token in res.get_data(as_text=True)
 
     def test_wrong_lot_post_edit_brief_question(self):
-        data = {"required1": True}
+        data = {
+            'required1': True,
+            'csrf_token': FakeCsrf.valid_token,
+        }
         self._load_page("/digital-specialists/1234/edit/section-1/required1", 302, method='post', data=data)
 
     def test_wrong_lot_get_view_brief_responses(self):
         self._load_page("/digital-specialists/1234/responses", 200)
 
-    # get and post are the same for publishing
-
     def test_wrong_lot_post_delete_a_brief(self):
-        data = {"delete_confirmed": True}
+        data = {
+            'delete_confirmed': True,
+            'csrf_token': FakeCsrf.valid_token,
+        }
         self._load_page("/digital-specialists/1234/delete", 302, method='post', data=data)
 
     # Wrong lots
@@ -321,18 +355,27 @@ class TestEveryDamnPage(BaseApplicationTest):
         self._load_page("/digital-outcomes/1234/edit/section-1/required1", 404)
 
     def test_post_edit_brief_question(self):
-        data = {"required1": True}
+        data = {
+            'required1': True,
+            'csrf_token': FakeCsrf.valid_token,
+        }
         self._load_page("/digital-outcomes/1234/edit/section-1/required1", 404, method='post', data=data)
 
     def test_get_view_brief_responses(self):
         self._load_page("/digital-outcomes/1234/responses", 404)
 
-    # get and post are the same for publishing
     def test_publish_brief(self):
-        self._load_page("/digital-outcomes/1234/publish", 404)
+        data = {
+            'delete_confirmed': True,
+            'csrf_token': FakeCsrf.valid_token,
+        }
+        self._load_page("/digital-outcomes/1234/publish", 404, method='post', data=data)
 
     def test_post_delete_a_brief(self):
-        data = {"delete_confirmed": True}
+        data = {
+            'delete_confirmed': True,
+            'csrf_token': FakeCsrf.valid_token,
+        }
         self._load_page("/digital-outcomes/1234/delete", 404, method='post', data=data)
 
 
@@ -641,7 +684,7 @@ class TestUpdateBriefSubmission(BaseApplicationTest):
             '/buyers/frameworks/digital-outcomes-and-specialists/requirements/'
             'digital-specialists/1234/edit/description-of-work/organisation'
         )
-        res = self.client.post(url, data={"organisation": "GDS"})
+        res = self.client.post(url, data={'organisation': 'GDS', 'csrf_token': FakeCsrf.valid_token})
 
         assert res.status_code == 302
         data_api_client.update_brief.assert_called_with(
@@ -671,7 +714,7 @@ class TestUpdateBriefSubmission(BaseApplicationTest):
             '/buyers/frameworks/digital-outcomes-and-specialists/requirements/'
             'digital-specialists/1234/edit/section-1/required1'
         )
-        res = self.client.post(url, data={"required1": True})
+        res = self.client.post(url, data={'required1': True, 'csrf_token': FakeCsrf.valid_token})
 
         assert res.status_code == 302
         data_api_client.update_brief.assert_called_with(
@@ -704,7 +747,7 @@ class TestUpdateBriefSubmission(BaseApplicationTest):
             '/buyers/frameworks/digital-outcomes-and-specialists/requirements/'
             'digital-specialists/1234/edit/section-4/optional2'
         )
-        res = self.client.post(url, data={"optional2": True})
+        res = self.client.post(url, data={'optional2': True, 'csrf_token': FakeCsrf.valid_token})
 
         assert res.status_code == 302
         data_api_client.update_brief.assert_called_with(
@@ -737,8 +780,7 @@ class TestUpdateBriefSubmission(BaseApplicationTest):
             '/buyers/frameworks/digital-outcomes-and-specialists/requirements/'
             'digital-specialists/1234/edit/section-2/required2'
         )
-
-        res = self.client.post(url, data={"required2": True})
+        res = self.client.post(url, data={'required2': True, 'csrf_token': FakeCsrf.valid_token})
         assert res.status_code == 302
         data_api_client.update_brief.assert_called_with(
             '1234',
@@ -749,6 +791,25 @@ class TestUpdateBriefSubmission(BaseApplicationTest):
         assert res.headers['Location'].endswith(
             'buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234'
         ) is True
+
+    def test_csrf_protection(self, data_api_client):
+        self.login_as_buyer()
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='live',
+            lots=[
+                api_stubs.lot(slug='digital-specialists', allows_brief=True)
+            ]
+        )
+        data_api_client.get_brief.return_value = api_stubs.brief(user_id=234)
+
+        url = self.expand_path(
+            '/buyers/frameworks/digital-outcomes-and-specialists/requirements/'
+            'digital-specialists/1234/edit/description-of-work/organisation'
+        )
+        res = self.client.post(url, data={'organisation': 'GDS', 'csrf_token': 'bad_token'})
+        assert res.status_code == 400
+        assert not data_api_client.update_brief.called
 
     def test_404_if_brief_does_not_belong_to_user(self, data_api_client):
         self.login_as_buyer()
@@ -765,7 +826,7 @@ class TestUpdateBriefSubmission(BaseApplicationTest):
             '/buyers/frameworks/digital-outcomes-and-specialists/requirements/'
             'digital-specialists/1234/edit/description-of-work/organisation'
         )
-        res = self.client.post(url, data={"organisation": "GDS"})
+        res = self.client.post(url, data={'organisation': 'GDS', 'csrf_token': FakeCsrf.valid_token})
         assert res.status_code == 404
         assert not data_api_client.update_brief.called
 
@@ -785,7 +846,7 @@ class TestUpdateBriefSubmission(BaseApplicationTest):
             'digital-specialists/1234/edit/description-of-work/organisation'
         )
 
-        res = self.client.post(url, data={"title": "A new title"})
+        res = self.client.post(url, data={'title': 'A new title', 'csrf_token': FakeCsrf.valid_token})
         assert res.status_code == 404
         assert not data_api_client.update_brief.called
 
@@ -805,7 +866,7 @@ class TestUpdateBriefSubmission(BaseApplicationTest):
             'digital-octopuses/1234/edit/description-of-work/organisation'
         )
 
-        res = self.client.post(url, data={"title": "A new title"})
+        res = self.client.post(url, data={'title': 'A new title', 'csrf_token': FakeCsrf.valid_token})
         assert res.status_code == 404
         assert not data_api_client.update_brief.called
 
@@ -824,7 +885,7 @@ class TestUpdateBriefSubmission(BaseApplicationTest):
             '/buyers/frameworks/digital-outcomes-and-specialists/requirements/'
             'digital-specialists/1234/edit/description-of-work/organisation'
         )
-        res = self.client.post(url, data={"title": "A new title"})
+        res = self.client.post(url, data={'title': 'A new title', 'csrf_token': FakeCsrf.valid_token})
 
         assert res.status_code == 404
         assert not data_api_client.update_brief.called
@@ -844,7 +905,7 @@ class TestUpdateBriefSubmission(BaseApplicationTest):
             '/buyers/frameworks/digital-outcomes-and-specialists/requirements/'
             'digital-specialists/1234/edit/description-of-work/organisation'
         )
-        res = self.client.post(url, data={"title": "A new title"})
+        res = self.client.post(url, data={'title': 'A new title', 'csrf_token': FakeCsrf.valid_token})
         assert res.status_code == 404
         assert not data_api_client.update_brief.called
 
@@ -863,7 +924,7 @@ class TestUpdateBriefSubmission(BaseApplicationTest):
             '/buyers/frameworks/digital-outcomes-and-specialists/requirements/'
             'digital-specialists/1234/edit/description-of-work/some-made-up-question'
         )
-        res = self.client.post(url, data={"title": "A new title"})
+        res = self.client.post(url, data={'title': 'A new title', 'csrf_token': FakeCsrf.valid_token})
 
         assert res.status_code == 404
         assert not data_api_client.update_brief.called
@@ -910,10 +971,53 @@ class TestPublishBrief(BaseApplicationTest):
             '/buyers/frameworks/digital-outcomes-and-specialists/requirements/'
             'digital-specialists/1234/publish'
         )
-        res = self.client.post(url)
+        res = self.client.post(url, data={'csrf_token': FakeCsrf.valid_token})
         assert res.status_code == 302
         assert data_api_client.update_brief_status.called
         assert res.location.endswith('/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234?published=true')  # noqa
+
+    def test_csrf_protection(self, data_api_client):
+        self.login_as_buyer()
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='live',
+            lots=[
+                api_stubs.lot(slug='digital-specialists', allows_brief=True)
+            ]
+        )
+
+        brief_json = api_stubs.brief(status="draft")
+        brief_questions = brief_json['briefs']
+        brief_questions.update({
+            'backgroundInformation': 'test background info',
+            'contractLength': 'A very long time',
+            'culturalFitCriteria': ['CULTURAL', 'FIT'],
+            'culturalWeighting': 10,
+            'essentialRequirements': 'Everything',
+            'evaluationType': ['test evaluation type'],
+            'existingTeam': 'team team team',
+            'importantDates': 'Near future',
+            'numberOfSuppliers': 5,
+            'location': 'somewhere',
+            'organisation': 'test organisation',
+            'priceWeighting': 80,
+            'specialistRole': 'communicationsManager',
+            'specialistWork': 'work work work',
+            'startDate': 'startDate',
+            'summary': 'blah',
+            'technicalWeighting': 10,
+            'workingArrangements': 'arrangements',
+            'workplaceAddress': 'address',
+        })
+        data_api_client.get_brief.return_value = brief_json
+
+        url = self.expand_path(
+            '/buyers/frameworks/digital-outcomes-and-specialists/requirements/'
+            'digital-specialists/1234/publish'
+        )
+        res = self.client.post(url, data={'csrf_token': 'bad_token'})
+        assert res.status_code == 400
+        assert not data_api_client.update_brief_status.called
 
     def test_publish_brief_with_unanswered_required_questions(self, data_api_client):
         self.login_as_buyer()
@@ -931,7 +1035,7 @@ class TestPublishBrief(BaseApplicationTest):
             '/buyers/frameworks/digital-outcomes-and-specialists/requirements/'
             'digital-specialists/1234/publish'
         )
-        res = self.client.post(url)
+        res = self.client.post(url, data={'csrf_token': FakeCsrf.valid_token})
         assert res.status_code == 400
         assert not data_api_client.update_brief_status.called
 
@@ -950,7 +1054,7 @@ class TestPublishBrief(BaseApplicationTest):
             '/buyers/frameworks/digital-outcomes-and-specialists/requirements/'
             'digital-specialists/1234/edit/your-organisation'
         )
-        res = self.client.post(url, data={"organisation": "GDS"})
+        res = self.client.post(url, data={'organisation': 'GDS', 'csrf_token': FakeCsrf.valid_token})
 
         assert res.status_code == 404
         assert not data_api_client.update_brief.called
@@ -996,6 +1100,7 @@ class TestPublishBrief(BaseApplicationTest):
         res = self.client.get(url)
         page_html = res.get_data(as_text=True)
 
+        assert FakeCsrf.valid_token in page_html
         assert res.status_code == 200
         assert 'Publish requirements' in page_html, page_html
 
@@ -1024,10 +1129,14 @@ class TestPublishBrief(BaseApplicationTest):
 @mock.patch('app.buyers.views.buyers.data_api_client')
 class TestDeleteBriefSubmission(BaseApplicationTest):
 
-    def _do_request(self):
-        return self.client.post(self.expand_path(
+    def _do_request(self, csrf_token=FakeCsrf.valid_token):
+        url = self.expand_path(
             '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/delete'
-        ))
+        )
+        data = {
+            'csrf_token': csrf_token,
+        }
+        return self.client.post(url, data=data)
 
     def test_delete_brief_submission(self, data_api_client):
         self.login_as_buyer()
@@ -1045,6 +1154,22 @@ class TestDeleteBriefSubmission(BaseApplicationTest):
         assert res.status_code == 302
         assert data_api_client.delete_brief.called
         assert res.location.endswith('/buyers')
+
+    def test_csrf_protection(self, data_api_client):
+        self.login_as_buyer()
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='live',
+            lots=[
+                api_stubs.lot(slug='digital-specialists', allows_brief=True)
+            ]
+        )
+        data_api_client.get_brief.return_value = api_stubs.brief()
+
+        res = self._do_request(csrf_token='bad_token')
+
+        assert res.status_code == 400
+        assert not data_api_client.delete_brief.called
 
     def test_404_if_framework_is_not_live(self, data_api_client):
         self.login_as_buyer()
@@ -1093,7 +1218,11 @@ class TestDeleteBriefSubmission(BaseApplicationTest):
             '/buyers/frameworks/digital-outcomes-and-specialists/requirements/'
             'digital-specialists/1234/delete'
         )
-        res = self.client.post(url, data={"delete_confirmed": True})
+        data = {
+            'delete_confirmed': True,
+            'csrf_token': FakeCsrf.valid_token,
+        }
+        res = self.client.post(url, data=data)
 
         assert res.status_code == 404
 
@@ -1347,7 +1476,7 @@ class TestBriefSummaryPage(BaseApplicationTest):
 @mock.patch("app.buyers.views.buyers.data_api_client")
 class TestAddBriefClarificationQuestion(BaseApplicationTest):
 
-    def _do_request(self):
+    def _do_request(self, csrf_token=FakeCsrf.valid_token):
         url = self.expand_path(
             '/buyers/frameworks/digital-outcomes-and-specialists/requirements'
             '/digital-specialists/1234/supplier-questions/answer-question'
@@ -1355,6 +1484,7 @@ class TestAddBriefClarificationQuestion(BaseApplicationTest):
         data = {
             'question': 'Why?',
             'answer': 'Because',
+            'csrf_token': csrf_token,
         }
         return self.client.post(url, data=data)
 
@@ -1376,6 +1506,7 @@ class TestAddBriefClarificationQuestion(BaseApplicationTest):
         ))
 
         assert res.status_code == 200
+        assert FakeCsrf.valid_token in res.get_data(as_text=True)
 
     def test_add_brief_clarification_question(self, data_api_client):
         self.login_as_buyer()
@@ -1399,6 +1530,24 @@ class TestAddBriefClarificationQuestion(BaseApplicationTest):
         assert res.headers['Location'].endswith(
             '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/supplier-questions'  # noqa
         ) is True
+
+    def test_csrf_protection(self, data_api_client):
+        self.login_as_buyer()
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='live',
+            lots=[
+                api_stubs.lot(slug='digital-specialists', allows_brief=True),
+            ]
+        )
+        brief_json = api_stubs.brief(status='live')
+        brief_json['briefs']['clarificationQuestionsAreClosed'] = False
+        data_api_client.get_brief.return_value = brief_json
+
+        res = self._do_request(csrf_token='bad_token')
+
+        assert res.status_code == 400
+        assert not data_api_client.add_brief_clarification_question.called
 
     def test_404_if_framework_is_not_live(self, data_api_client):
         self.login_as_buyer()

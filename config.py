@@ -89,6 +89,7 @@ class Test(Config):
     DEBUG = True
     DM_LOG_LEVEL = 'CRITICAL'
     CSRF_ENABLED = False
+    CSRF_FAKED = True
 
     DM_DATA_API_URL = "http://localhost:5000"
     DM_DATA_API_AUTH_TOKEN = "myToken"

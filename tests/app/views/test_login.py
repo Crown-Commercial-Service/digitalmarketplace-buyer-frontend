@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from app.api_client.error import HTTPError
+from app.helpers.form_helpers import FakeCsrf
 from dmapiclient.audit import AuditTypes
 from dmutils.email import generate_token, EmailError
 from ...helpers import BaseApplicationTest
@@ -54,7 +55,8 @@ class TestLogin(BaseApplicationTest):
             data_api_client.authenticate_user.return_value = self.user(123, "email@email.com", None, None, 'Name')
             res = self.client.post(self.expand_path('/login'), data={
                 'email_address': 'valid@email.com',
-                'password': '1234567890'
+                'password': '1234567890',
+                'csrf_token': FakeCsrf.valid_token,
             })
             assert res.status_code == 302
             assert res.location == 'http://localhost' + self.expand_path('/search/suppliers')
@@ -69,14 +71,16 @@ class TestLogin(BaseApplicationTest):
     def test_should_strip_whitespace_surrounding_login_email_address_field(self):
         self.client.post(self.expand_path('/login'), data={
             'email_address': '  valid@email.com  ',
-            'password': '1234567890'
+            'password': '1234567890',
+            'csrf_token': FakeCsrf.valid_token,
         })
         self.data_api_client_mock.authenticate_user.assert_called_with('valid@email.com', '1234567890')
 
     def test_should_not_strip_whitespace_surrounding_login_password_field(self):
         self.client.post(self.expand_path('/login'), data={
             'email_address': 'valid@email.com',
-            'password': '  1234567890  '
+            'password': '  1234567890  ',
+            'csrf_token': FakeCsrf.valid_token,
         })
         self.data_api_client_mock.authenticate_user.assert_called_with(
             'valid@email.com', '  1234567890  ')
@@ -85,8 +89,12 @@ class TestLogin(BaseApplicationTest):
     def test_ok_next_url_redirects_buyer_on_login(self, data_api_client):
         with self.app.app_context():
             data_api_client.authenticate_user.return_value = self.user(123, "email@email.com", None, None, 'Name')
-            res = self.client.post(self.expand_path('/login?next={}'.format(self.expand_path('/bar-foo'))),
-                                   data={'email_address': 'valid@email.com', 'password': '1234567890'})
+            data = {
+                'email_address': 'valid@email.com',
+                'password': '1234567890',
+                'csrf_token': FakeCsrf.valid_token,
+            }
+            res = self.client.post(self.expand_path('/login?next={}'.format(self.expand_path('/bar-foo'))), data=data)
             assert res.status_code == 302
             assert res.location == 'http://localhost' + self.expand_path('/bar-foo')
 
@@ -94,8 +102,12 @@ class TestLogin(BaseApplicationTest):
     def test_bad_next_url_takes_buyer_user_to_search(self, data_api_client):
         with self.app.app_context():
             data_api_client.authenticate_user.return_value = self.user(123, "email@email.com", None, None, 'Name')
-            res = self.client.post(self.expand_path('/login?next=http://badness.com'),
-                                   data={'email_address': 'valid@email.com', 'password': '1234567890'})
+            data = {
+                'email_address': 'valid@email.com',
+                'password': '1234567890',
+                'csrf_token': FakeCsrf.valid_token,
+            }
+            res = self.client.post(self.expand_path('/login?next=http://badness.com'), data=data)
         assert res.status_code == 302
         assert res.location == 'http://localhost' + self.expand_path('/search/suppliers')
 
@@ -105,7 +117,8 @@ class TestLogin(BaseApplicationTest):
             self.app.config['SESSION_COOKIE_SECURE'] = True
             res = self.client.post(self.expand_path('/login'), data={
                 'email_address': 'valid@email.com',
-                'password': '1234567890'
+                'password': '1234567890',
+                'csrf_token': FakeCsrf.valid_token,
             })
             cookie_value = self.get_cookie_by_name(res, 'dm_session')
             assert cookie_value['dm_session'] is not None
@@ -123,7 +136,8 @@ class TestLogin(BaseApplicationTest):
 
         res = self.client.post(self.expand_path('/login'), data={
             'email_address': 'valid@email.com',
-            'password': '1234567890'
+            'password': '1234567890',
+            'csrf_token': FakeCsrf.valid_token,
         })
         assert self.strip_all_whitespace("Make sure you've entered the right email address and password") \
             in self.strip_all_whitespace(res.get_data(as_text=True))
@@ -140,7 +154,8 @@ class TestLogin(BaseApplicationTest):
     def test_should_be_validation_error_if_invalid_email(self):
         res = self.client.post(self.expand_path('/login'), data={
             'email_address': 'invalid',
-            'password': '1234567890'
+            'password': '1234567890',
+            'csrf_token': FakeCsrf.valid_token,
         })
         data = res.get_data(as_text=True)
         assert res.status_code == 400
@@ -158,7 +173,8 @@ class TestLogin(BaseApplicationTest):
         for address in cases:
             res = self.client.post(self.expand_path('/login'), data={
                 'email_address': address,
-                'password': '1234567890'
+                'password': '1234567890',
+                'csrf_token': FakeCsrf.valid_token,
             })
             data = res.get_data(as_text=True)
             assert res.status_code == 302, address
@@ -181,7 +197,8 @@ class TestLogin(BaseApplicationTest):
         for address in cases:
             res = self.client.post(self.expand_path('/login'), data={
                 'email_address': address,
-                'password': '1234567890'
+                'password': '1234567890',
+                'csrf_token': FakeCsrf.valid_token,
             })
             data = res.get_data(as_text=True)
             assert res.status_code == 400, address
@@ -213,14 +230,15 @@ class TestResetPassword(BaseApplicationTest):
         self._data_api_client.stop()
 
     def test_email_should_not_be_empty(self):
-        res = self.client.post(self.expand_path('/reset-password'), data={})
+        res = self.client.post(self.expand_path('/reset-password'), data={'csrf_token': FakeCsrf.valid_token})
         data = res.get_data(as_text=True)
         assert res.status_code == 400
         assert has_validation_errors(data, 'email_address')
 
     def test_email_should_be_valid(self):
         res = self.client.post(self.expand_path('/reset-password'), data={
-            'email_address': 'invalid'
+            'email_address': 'invalid',
+            'csrf_token': FakeCsrf.valid_token,
         })
         data = res.get_data(as_text=True)
         assert res.status_code == 400
@@ -229,7 +247,8 @@ class TestResetPassword(BaseApplicationTest):
     @mock.patch('app.main.views.login.send_email')
     def test_redirect_to_same_page_on_success(self, send_email):
         res = self.client.post(self.expand_path('/reset-password'), data={
-            'email_address': 'email@email.com'
+            'email_address': 'email@email.com',
+            'csrf_token': FakeCsrf.valid_token,
         })
         assert res.status_code == 302
         assert res.location == 'http://localhost' + self.expand_path('/reset-password')
@@ -237,7 +256,8 @@ class TestResetPassword(BaseApplicationTest):
     @mock.patch('app.main.views.login.send_email')
     def test_show_email_sent_message_on_success(self, send_email):
         res = self.client.post(self.expand_path('/reset-password'), data={
-            'email_address': 'email@email.com'
+            'email_address': 'email@email.com',
+            'csrf_token': FakeCsrf.valid_token,
         }, follow_redirects=True)
         assert res.status_code == 200
         content = self.strip_all_whitespace(res.get_data(as_text=True))
@@ -246,7 +266,8 @@ class TestResetPassword(BaseApplicationTest):
     @mock.patch('app.main.views.login.send_email')
     def test_should_strip_whitespace_surrounding_reset_password_email_address_field(self, send_email):
         self.client.post(self.expand_path('/reset-password'), data={
-            'email_address': ' email@email.com'
+            'email_address': ' email@email.com',
+            'csrf_token': FakeCsrf.valid_token,
         })
         self.data_api_client_mock.get_user.assert_called_with(email_address='email@email.com')
 
@@ -273,7 +294,8 @@ class TestResetPassword(BaseApplicationTest):
 
             res = self.client.post(url, data={
                 'password': '',
-                'confirm_password': ''
+                'confirm_password': '',
+                'csrf_token': FakeCsrf.valid_token,
             })
             data = res.get_data(as_text=True)
             assert res.status_code == 400
@@ -290,7 +312,8 @@ class TestResetPassword(BaseApplicationTest):
 
             res = self.client.post(url, data={
                 'password': '123456789',
-                'confirm_password': '123456789'
+                'confirm_password': '123456789',
+                'csrf_token': FakeCsrf.valid_token,
             })
             data = res.get_data(as_text=True)
             assert res.status_code == 400
@@ -308,7 +331,8 @@ class TestResetPassword(BaseApplicationTest):
                 'password':
                     '123456789012345678901234567890123456789012345678901',
                 'confirm_password':
-                    '123456789012345678901234567890123456789012345678901'
+                    '123456789012345678901234567890123456789012345678901',
+                'csrf_token': FakeCsrf.valid_token,
             })
             data = res.get_data(as_text=True)
             assert res.status_code == 400
@@ -324,7 +348,8 @@ class TestResetPassword(BaseApplicationTest):
 
             res = self.client.post(url, data={
                 'password': '1234567890',
-                'confirm_password': '0123456789'
+                'confirm_password': '0123456789',
+                'csrf_token': FakeCsrf.valid_token,
             })
             assert res.status_code == 400
 
@@ -341,7 +366,8 @@ class TestResetPassword(BaseApplicationTest):
 
             res = self.client.post(url, data={
                 'password': '1234567890',
-                'confirm_password': '1234567890'
+                'confirm_password': '1234567890',
+                'csrf_token': FakeCsrf.valid_token,
             })
             assert res.status_code == 302
             assert res.location == 'http://localhost' + self.expand_path('/login')
@@ -354,10 +380,12 @@ class TestResetPassword(BaseApplicationTest):
                 self.app.config['RESET_PASSWORD_SALT'])
             url = self.expand_path('/reset-password/{}').format(token)
 
-            self.client.post(url, data={
+            res = self.client.post(url, data={
                 'password': '  1234567890',
-                'confirm_password': '  1234567890'
+                'confirm_password': '  1234567890',
+                'csrf_token': FakeCsrf.valid_token,
             })
+            assert res.status_code == 302
             self.data_api_client_mock.update_user_password.assert_called_with(
                 self._user.get('user'), '  1234567890', self._user.get('email'))
 
@@ -377,7 +405,8 @@ class TestResetPassword(BaseApplicationTest):
 
             res = self.client.post(url, data={
                 'password': '1234567890',
-                'confirm_password': '1234567890'
+                'confirm_password': '1234567890',
+                'csrf_token': FakeCsrf.valid_token,
             }, follow_redirects=True)
 
             assert res.status_code == 200
@@ -396,7 +425,10 @@ class TestResetPassword(BaseApplicationTest):
 
             res = self.client.post(
                 self.expand_path('/reset-password'),
-                data={'email_address': 'email@email.com'}
+                data={
+                    'email_address': 'email@email.com',
+                    'csrf_token': FakeCsrf.valid_token,
+                }
             )
 
             assert res.status_code == 302
@@ -418,7 +450,10 @@ class TestResetPassword(BaseApplicationTest):
 
             res = self.client.post(
                 self.expand_path('/reset-password'),
-                data={'email_address': 'email@email.com'}
+                data={
+                    'email_address': 'email@email.com',
+                    'csrf_token': FakeCsrf.valid_token,
+                }
             )
 
             assert res.status_code == 503
@@ -494,7 +529,10 @@ class TestBuyersCreation(BaseApplicationTest):
     def test_should_be_able_to_submit_valid_email_address(self, data_api_client, send_email):
         res = self.client.post(
             self.expand_path('/buyers/create'),
-            data={'email_address': 'valid@test.gov.uk'},
+            data={
+                'email_address': 'valid@test.gov.uk',
+                'csrf_token': FakeCsrf.valid_token,
+            },
             follow_redirects=True
         )
         assert res.status_code == 200
@@ -503,30 +541,22 @@ class TestBuyersCreation(BaseApplicationTest):
     def test_should_raise_validation_error_for_invalid_email_address(self):
         res = self.client.post(
             self.expand_path('/buyers/create'),
-            data={'email_address': 'not-an-email-address'},
+            data={
+                'email_address': 'not-an-email-address',
+                'csrf_token': FakeCsrf.valid_token,
+            },
             follow_redirects=True
         )
         assert res.status_code == 400
         data = res.get_data(as_text=True)
 
-        assert 'Create a buyer account' in data
-        assert has_validation_errors(data, 'email_address')
-
-    def test_should_raise_validation_error_for_email_address_with_two_at_symbols(self):
-        res = self.client.post(
-            self.expand_path('/buyers/create'),
-            data={'email_address': 'not-an@email@gov.uk'},
-            follow_redirects=True
-        )
-        assert res.status_code == 400
-        data = res.get_data(as_text=True)
         assert 'Create a buyer account' in data
         assert has_validation_errors(data, 'email_address')
 
     def test_should_raise_validation_error_for_empty_email_address(self):
         res = self.client.post(
             self.expand_path('/buyers/create'),
-            data={},
+            data={'csrf_token': FakeCsrf.valid_token},
             follow_redirects=True
         )
         assert res.status_code == 400
@@ -539,7 +569,10 @@ class TestBuyersCreation(BaseApplicationTest):
         data_api_client.is_email_address_with_valid_buyer_domain.return_value = False
         res = self.client.post(
             self.expand_path('/buyers/create'),
-            data={'email_address': 'kev@ymail.com'},
+            data={
+                'email_address': 'valid@test.gov.uk',
+                'csrf_token': FakeCsrf.valid_token,
+            },
             follow_redirects=True
         )
         assert res.status_code == 400
@@ -553,7 +586,10 @@ class TestBuyersCreation(BaseApplicationTest):
         send_email.side_effect = EmailError("Arrrgh")
         res = self.client.post(
             self.expand_path('/buyers/create'),
-            data={'email_address': 'valid@test.gov.uk'},
+            data={
+                'email_address': 'valid@test.gov.uk',
+                'csrf_token': FakeCsrf.valid_token,
+            },
             follow_redirects=True
         )
         assert res.status_code == 503
@@ -564,7 +600,10 @@ class TestBuyersCreation(BaseApplicationTest):
     def test_should_create_audit_event_when_email_sent(self, data_api_client, send_email):
         res = self.client.post(
             self.expand_path('/buyers/create'),
-            data={'email_address': 'valid@test.gov.uk'},
+            data={
+                'email_address': 'valid@test.gov.uk',
+                'csrf_token': FakeCsrf.valid_token,
+            },
             follow_redirects=True
         )
         assert res.status_code == 200
@@ -814,9 +853,13 @@ class TestCreateUser(BaseApplicationTest):
             data={
                 'password': 'validpassword',
                 'name': 'valid name',
-                'phone_number': '020-7930-4832'
+                'phone_number': '020-7930-4832',
+                'csrf_token': FakeCsrf.valid_token,
             }
         )
+
+        assert res.status_code == 302
+        assert res.location == 'http://localhost' + self.expand_path('/')
 
         data_api_client.create_user.assert_called_once_with({
             'role': 'buyer',
@@ -825,9 +868,6 @@ class TestCreateUser(BaseApplicationTest):
             'phoneNumber': '020-7930-4832',
             'name': 'valid name'
         })
-
-        assert res.status_code == 302
-        assert res.location == 'http://localhost' + self.expand_path('/')
 
     @mock.patch('app.main.views.login.data_api_client')
     def test_should_return_an_error_if_user_exists(self, data_api_client):
@@ -839,9 +879,12 @@ class TestCreateUser(BaseApplicationTest):
             data={
                 'password': 'validpassword',
                 'phone_number': '020-7930-4832',
-                'name': 'valid name'
+                'name': 'valid name',
+                'csrf_token': FakeCsrf.valid_token,
             }
         )
+
+        assert res.status_code == 400
 
         data_api_client.create_user.assert_called_once_with({
             'role': 'buyer',
@@ -850,8 +893,6 @@ class TestCreateUser(BaseApplicationTest):
             'phoneNumber': '020-7930-4832',
             'name': 'valid name'
         })
-
-        assert res.status_code == 400
 
     @mock.patch('app.main.views.login.data_api_client')
     def test_should_create_user_if_no_phone_number(self, data_api_client):
@@ -862,9 +903,13 @@ class TestCreateUser(BaseApplicationTest):
             data={
                 'password': 'validpassword',
                 'name': 'valid name',
-                'phone_number': None
+                'phone_number': None,
+                'csrf_token': FakeCsrf.valid_token,
             }
         )
+
+        assert res.status_code == 302
+        assert res.location == 'http://localhost' + self.expand_path('/')
 
         data_api_client.create_user.assert_called_once_with({
             'role': 'buyer',
@@ -873,9 +918,6 @@ class TestCreateUser(BaseApplicationTest):
             'phoneNumber': '',
             'name': 'valid name'
         })
-
-        assert res.status_code == 302
-        assert res.location == 'http://localhost' + self.expand_path('/')
 
     @mock.patch('app.main.views.login.data_api_client')
     def test_should_return_an_error_if_bad_phone_number(self, data_api_client):
@@ -896,16 +938,16 @@ class TestCreateUser(BaseApplicationTest):
     def test_should_strip_whitespace_surrounding_create_user_name_field(self, data_api_client):
         data_api_client.get_user.return_value = None
         token = self._generate_token()
-        self.client.post(
+        res = self.client.post(
             self.expand_path('/create-user/{}').format(token),
             data={
                 'password': 'validpassword',
                 'name': '  valid name  ',
-                'phone_number': '020-7930-4832'
-
+                'phone_number': '020-7930-4832',
+                'csrf_token': FakeCsrf.valid_token,
             }
         )
-
+        assert res.status_code == 302
         data_api_client.create_user.assert_called_once_with({
             'role': mock.ANY,
             'password': 'validpassword',
@@ -918,16 +960,16 @@ class TestCreateUser(BaseApplicationTest):
     def test_should_not_strip_whitespace_surrounding_create_user_password_field(self, data_api_client):
         data_api_client.get_user.return_value = None
         token = self._generate_token()
-        self.client.post(
+        res = self.client.post(
             self.expand_path('/create-user/{}').format(token),
             data={
                 'password': '  validpassword  ',
                 'name': 'valid name  ',
-                'phone_number': '020-7930-4832'
-
+                'phone_number': '020-7930-4832',
+                'csrf_token': FakeCsrf.valid_token,
             }
         )
-
+        assert res.status_code == 302
         data_api_client.create_user.assert_called_once_with({
             'role': mock.ANY,
             'password': '  validpassword  ',
@@ -947,7 +989,8 @@ class TestCreateUser(BaseApplicationTest):
                 self.expand_path('/create-user/{}').format(token),
                 data={
                     'password': 'validpassword',
-                    'name': 'valid name'
+                    'name': 'valid name',
+                    'csrf_token': FakeCsrf.valid_token,
                 }
             )
             assert res.status_code == 503

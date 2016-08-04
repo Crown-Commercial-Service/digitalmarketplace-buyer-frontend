@@ -16,7 +16,8 @@ from .. import main
 from app.main.forms.auth_forms import BuyerSignupEmailForm
 from ..forms.auth_forms import LoginForm, EmailAddressForm, ChangePasswordForm, CreateUserForm
 from ...helpers import hash_email
-from ...helpers.login_helpers import redirect_logged_in_user, render_template_with_csrf
+from ...helpers.login_helpers import redirect_logged_in_user
+from ...helpers.form_helpers import render_template_with_csrf
 from ... import data_api_client
 from ...api_client.error import HTTPError
 
