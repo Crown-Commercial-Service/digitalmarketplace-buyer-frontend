@@ -5,6 +5,7 @@ import json
 import re
 
 from app import create_app, data_api_client
+from app.helpers.form_helpers import FakeCsrf
 from datetime import datetime, timedelta
 from mock import patch
 from werkzeug.http import parse_cookie
@@ -141,7 +142,8 @@ class BaseApplicationTest(object):
 
             self.client.post(self.expand_path('/login'), data={
                 'email_address': 'valid@email.com',
-                'password': '1234567890'
+                'password': '1234567890',
+                'csrf_token': FakeCsrf.valid_token,
             })
 
             login_api_client.authenticate_user.assert_called_once_with(
@@ -161,7 +163,8 @@ class BaseApplicationTest(object):
 
             response = self.client.post(self.expand_path('/login'), data={
                 'email_address': 'valid@email.com',
-                'password': '1234567890'
+                'password': '1234567890',
+                'csrf_token': FakeCsrf.valid_token,
             })
 
             login_api_client.authenticate_user.assert_called_once_with(

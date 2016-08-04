@@ -107,6 +107,7 @@
       {% endcall %}
       {% if not published %}
         <form action="{{ url_for('.publish_brief', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id) }}" method="POST">
+          {{ form.csrf_token }}
           {%
           with
           type = "save",

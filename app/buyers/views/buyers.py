@@ -7,12 +7,13 @@ from flask_login import current_user
 
 from app import data_api_client
 from .. import buyers, content_loader
-from ...helpers.buyers_helpers import (
+from app.helpers.buyers_helpers import (
     all_essentials_are_true, counts_for_failed_and_eligible_brief_responses,
     get_framework_and_lot, get_sorted_responses_for_brief, count_unanswered_questions,
     brief_can_be_edited, add_unanswered_counts_to_briefs, is_brief_correct, get_publishing_dates,
     section_has_at_least_one_required_question
 )
+from app.helpers.form_helpers import render_template_with_csrf, check_csrf, valid_csrf_or_abort
 
 from dmapiclient import HTTPError
 
@@ -45,17 +46,18 @@ def start_new_brief(framework_slug, lot_slug):
 
     section = content.get_section(content.get_next_editable_section_id())
 
-    return render_template(
+    return render_template_with_csrf(
         "buyers/create_brief_question.html",
         brief={},
         framework=framework,
         lot=lot,
         section=section,
         question=section.questions[0],
-    ), 200
+    )
 
 
 @buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/create', methods=['POST'])
+@check_csrf
 def create_new_brief(framework_slug, lot_slug):
 
     framework, lot = get_framework_and_lot(framework_slug, lot_slug, data_api_client,
@@ -82,8 +84,9 @@ def create_new_brief(framework_slug, lot_slug):
         update_data = section.unformat_data(update_data)
         errors = section.get_error_messages(e.message)
 
-        return render_template(
+        return render_template_with_csrf(
             "buyers/create_brief_question.html",
+            status_code=400,
             data=update_data,
             brief={},
             framework=framework,
@@ -91,7 +94,7 @@ def create_new_brief(framework_slug, lot_slug):
             section=section,
             question=section.questions[0],
             errors=errors
-        ), 400
+        )
 
     return redirect(
         url_for(".view_brief_overview",
@@ -126,7 +129,7 @@ def view_brief_overview(framework_slug, lot_slug, brief_id):
         for index, question in enumerate(brief['clarificationQuestions'])
     ]
 
-    return render_template(
+    return render_template_with_csrf(
         "buyers/brief_overview.html",
         framework=framework,
         confirm_remove=request.args.get("confirm_remove", None),
@@ -135,7 +138,7 @@ def view_brief_overview(framework_slug, lot_slug, brief_id):
         completed_sections=completed_sections,
         step_sections=[section.step for section in sections if hasattr(section, 'step')],
         delete_requested=delete_requested,
-    ), 200
+    )
 
 
 @buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/<section_slug>', methods=['GET'])
@@ -181,17 +184,18 @@ def edit_brief_question(framework_slug, lot_slug, brief_id, section_slug, questi
     if not question:
         abort(404)
 
-    return render_template(
+    return render_template_with_csrf(
         "buyers/edit_brief_question.html",
         brief=brief,
         section=section,
         question=question
-    ), 200
+    )
 
 
 @buyers.route(
     '/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/edit/<section_id>/<question_id>',
     methods=['POST'])
+@check_csrf
 def update_brief_submission(framework_slug, lot_slug, brief_id, section_id, question_id):
     get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
     brief = data_api_client.get_brief(brief_id)["briefs"]
@@ -223,13 +227,14 @@ def update_brief_submission(framework_slug, lot_slug, brief_id, section_id, ques
 
         # we need the brief_id to build breadcrumbs and the update_data to fill in the form.
         brief.update(update_data)
-        return render_template(
+        return render_template_with_csrf(
             "buyers/edit_brief_question.html",
+            status_code=400,
             brief=brief,
             section=section,
             question=question,
             errors=errors
-        ), 400
+        )
 
     if section.has_summary_page:
         return redirect(
@@ -363,6 +368,7 @@ def publish_brief(framework_slug, lot_slug, brief_id):
 
     unanswered_required, unanswered_optional = count_unanswered_questions(sections)
     if request.method == 'POST':
+        valid_csrf_or_abort()
         if unanswered_required > 0:
             abort(400, 'There are still unanswered required questions')
         data_api_client.update_brief_status(brief_id, 'live', brief_user_name)
@@ -374,7 +380,7 @@ def publish_brief(framework_slug, lot_slug, brief_id):
         email_address = brief_users['emailAddress']
         dates = get_publishing_dates()
 
-        return render_template(
+        return render_template_with_csrf(
             "buyers/brief_publish_confirmation.html",
             email_address=email_address,
             question_and_answers=question_and_answers,
@@ -382,7 +388,7 @@ def publish_brief(framework_slug, lot_slug, brief_id):
             sections=sections,
             brief=brief,
             dates=dates
-        ), 200
+        )
 
 
 @buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/timeline', methods=['GET'])
@@ -401,10 +407,11 @@ def view_brief_timeline(framework_slug, lot_slug, brief_id):
         published=True,
         brief=brief,
         dates=dates
-    ), 200
+    )
 
 
 @buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/delete', methods=['POST'])
+@check_csrf
 def delete_a_brief(framework_slug, lot_slug, brief_id):
     get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
     brief = data_api_client.get_brief(brief_id)["briefs"]
@@ -463,6 +470,7 @@ def add_supplier_question(framework_slug, lot_slug, brief_id):
 
     if request.method == "POST":
         try:
+            valid_csrf_or_abort()
             data_api_client.add_brief_clarification_question(brief_id,
                                                              update_data['question'],
                                                              update_data['answer'],
@@ -478,11 +486,12 @@ def add_supplier_question(framework_slug, lot_slug, brief_id):
             errors = section.get_error_messages(e.message)
             status_code = 400
 
-    return render_template(
+    return render_template_with_csrf(
         "buyers/edit_brief_question.html",
+        status_code=status_code,
         brief=brief,
         section=section,
         question=section.questions[0],
         button_label="Publish question and answer",
         errors=errors
-    ), status_code
+    )
