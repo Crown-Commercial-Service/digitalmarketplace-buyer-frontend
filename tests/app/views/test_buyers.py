@@ -8,8 +8,6 @@ import mock
 from lxml import html
 import pytest
 
-pytestmark = pytest.mark.skipif(True, reason='frameworks out of scope')
-
 
 @mock.patch('app.buyers.views.buyers.data_api_client')
 class TestBuyerDashboard(BaseApplicationTest):
@@ -30,7 +28,7 @@ class TestBuyerDashboard(BaseApplicationTest):
                 ]
             }
 
-            res = self.client.get("/buyers")
+            res = self.client.get(self.expand_path('/buyers'))
             document = html.fromstring(res.get_data(as_text=True))
 
             assert res.status_code == 200
@@ -58,8 +56,8 @@ class TestStartNewBrief(BaseApplicationTest):
                 ]
             )
 
-            res = self.client.get(
-                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/create")
+            res = self.client.get(self.expand_path(
+                '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/create'))
 
             assert res.status_code == 200
 
@@ -74,8 +72,8 @@ class TestStartNewBrief(BaseApplicationTest):
                 ]
             )
 
-            res = self.client.get(
-                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/create")
+            res = self.client.get(self.expand_path(
+                '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/create'))
 
             assert res.status_code == 404
 
@@ -90,8 +88,8 @@ class TestStartNewBrief(BaseApplicationTest):
                 ]
             )
 
-            res = self.client.get(
-                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/create")
+            res = self.client.get(self.expand_path(
+                '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/create'))
 
             assert res.status_code == 404
 
@@ -107,8 +105,8 @@ class TestStartNewBrief(BaseApplicationTest):
                     ]
                 )
 
-                res = self.client.get(
-                    "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-octopuses/create")
+                res = self.client.get(self.expand_path(
+                    '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-octopuses/create'))
 
                 assert res.status_code == 404
 
@@ -126,7 +124,7 @@ class TestCreateNewBrief(BaseApplicationTest):
         )
 
         res = self.client.post(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/create",
+            self.expand_path('/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/create'),  # noqa
             data={
                 "title": "Title"
             })
@@ -152,7 +150,7 @@ class TestCreateNewBrief(BaseApplicationTest):
         )
 
         res = self.client.post(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/create",
+            self.expand_path('/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/create'),  # noqa
             data={
                 "title": "Title"
             })
@@ -178,7 +176,7 @@ class TestCreateNewBrief(BaseApplicationTest):
         )
 
         res = self.client.post(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/create",
+            self.expand_path('/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/create'),  # noqa
             data={
                 "specialistRole": "agileCoach"
             })
@@ -197,7 +195,7 @@ class TestCreateNewBrief(BaseApplicationTest):
         )
 
         res = self.client.post(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/create",
+            self.expand_path('/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/create'),  # noqa
             data={
                 "specialistRole": "agileCoach"
             })
@@ -216,7 +214,7 @@ class TestCreateNewBrief(BaseApplicationTest):
         )
 
         res = self.client.post(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-octopuses/create",
+            self.expand_path('/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-octopuses/create'),  # noqa
             data={
                 "specialistRole": "agileCoach"
             })
@@ -238,7 +236,7 @@ class TestCreateNewBrief(BaseApplicationTest):
             {"title": "answer_required"})
 
         res = self.client.post(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/create",
+            self.expand_path('/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/create'),  # noqa
             data={
                 "title": "Title"
             })
@@ -264,7 +262,7 @@ class TestEveryDamnPage(BaseApplicationTest):
     # @mock.patch("app.buyers.views.buyers.content_loader")
     def _load_page(self, url, status_code, method='get', data=None):
         data = {} if data is None else data
-        baseurl = "/buyers/frameworks/digital-outcomes-and-specialists/requirements"
+        baseurl = self.expand_path('/buyers/frameworks/digital-outcomes-and-specialists/requirements')
 
         with mock.patch('app.buyers.views.buyers.content_loader') as content_loader, \
                 mock.patch('app.buyers.views.buyers.data_api_client') as data_api_client:
@@ -348,16 +346,17 @@ class TestEditBriefSubmission(BaseApplicationTest):
 
         breadcrumbs_we_expect = [
             ('Digital Marketplace', '/'),
-            ('Your account', '/buyers'),
+            ('Your account', self.expand_path('/buyers')),
             ('I need a thing to do a thing',
-             '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234')
+             self.expand_path('/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234'))  # noqa
         ]
         if has_summary_page and section_name:
+            path = self.expand_path(
+                '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/{}'.format(
+                    section_name.lower().replace(' ', '-')))
             breadcrumbs_we_expect.append((
                 section_name,
-                '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/{}'.format(
-                    section_name.lower().replace(' ', '-')
-                )
+                path,
             ))
 
         assert len(breadcrumbs) == len(breadcrumbs_we_expect)
@@ -377,9 +376,9 @@ class TestEditBriefSubmission(BaseApplicationTest):
         )
         data_api_client.get_brief.return_value = api_stubs.brief()
 
-        res = self.client.get(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists"
-            "/1234/edit/description-of-work/organisation")
+        res = self.client.get(self.expand_path(
+            '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists'
+            '/1234/edit/description-of-work/organisation'))
 
         assert res.status_code == 200
         document = html.fromstring(res.get_data(as_text=True))
@@ -403,15 +402,15 @@ class TestEditBriefSubmission(BaseApplicationTest):
         content_fixture.load_manifest('dos', 'data', 'edit_brief')
         content_loader.get_manifest.return_value = content_fixture.get_manifest('dos', 'edit_brief')
 
-        res = self.client.get(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists"
-            "/1234/edit/section-4/optional2")
+        res = self.client.get(self.expand_path(
+            '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists'
+            '/1234/edit/section-4/optional2'))
 
         assert res.status_code == 200
         document = html.fromstring(res.get_data(as_text=True))
         secondary_action_link = document.xpath('//form//div[contains(@class, "secondary-action-link")]/a')[0]
         assert document.xpath('//h1')[0].text_content().strip() == "Optional 2"
-        assert secondary_action_link.get('href').strip() == "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/section-4"  # noqa
+        assert secondary_action_link.get('href').strip() == self.expand_path('/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/section-4')  # noqa
         assert secondary_action_link.text_content().strip() == "Return to section 4"
         self._test_breadcrumbs_on_question_page(response=res, has_summary_page=True, section_name='Section 4')
 
@@ -432,15 +431,15 @@ class TestEditBriefSubmission(BaseApplicationTest):
         content_fixture.load_manifest('dos', 'data', 'edit_brief')
         content_loader.get_manifest.return_value = content_fixture.get_manifest('dos', 'edit_brief')
 
-        res = self.client.get(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists"
-            "/1234/edit/section-1/required1")
+        res = self.client.get(self.expand_path(
+            '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists'
+            '/1234/edit/section-1/required1'))
 
         assert res.status_code == 200
         document = html.fromstring(res.get_data(as_text=True))
         secondary_action_link = document.xpath('//form//div[contains(@class, "secondary-action-link")]/a')[0]
         assert document.xpath('//h1')[0].text_content().strip() == "Required 1"
-        assert secondary_action_link.get('href').strip() == "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/section-1"  # noqa
+        assert secondary_action_link.get('href').strip() == self.expand_path('/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/section-1')  # noqa
         assert secondary_action_link.text_content().strip() == "Return to section 1"
         self._test_breadcrumbs_on_question_page(response=res, has_summary_page=True, section_name='Section 1')
 
@@ -461,15 +460,15 @@ class TestEditBriefSubmission(BaseApplicationTest):
         content_fixture.load_manifest('dos', 'data', 'edit_brief')
         content_loader.get_manifest.return_value = content_fixture.get_manifest('dos', 'edit_brief')
 
-        res = self.client.get(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists"
-            "/1234/edit/section-2/required2")
+        res = self.client.get(self.expand_path(
+            '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists'
+            '/1234/edit/section-2/required2'))
 
         assert res.status_code == 200
         document = html.fromstring(res.get_data(as_text=True))
         secondary_action_link = document.xpath('//form//div[contains(@class, "secondary-action-link")]/a')[0]
         assert document.xpath('//h1')[0].text_content().strip() == "Required 2"
-        assert secondary_action_link.get('href').strip() == "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234"  # noqa
+        assert secondary_action_link.get('href').strip() == self.expand_path('/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234')  # noqa
         assert secondary_action_link.text_content().strip() == "Return to overview"
         self._test_breadcrumbs_on_question_page(response=res, has_summary_page=False)
 
@@ -489,8 +488,8 @@ class TestEditBriefSubmission(BaseApplicationTest):
         content_fixture.load_manifest('dos', 'data', 'edit_brief')
         content_loader.get_manifest.return_value = content_fixture.get_manifest('dos', 'edit_brief')
 
-        res = self.client.get(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/edit/section-5/required3")  # noqa
+        res = self.client.get(self.expand_path(
+            '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/edit/section-5/required3'))  # noqa
 
         assert res.status_code == 200
 
@@ -514,9 +513,10 @@ class TestEditBriefSubmission(BaseApplicationTest):
         )
         data_api_client.get_brief.return_value = api_stubs.brief(user_id=234)
 
-        res = self.client.get(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists"
-            "/1234/edit/description-of-work/organisation")
+        res = self.client.get(self.expand_path(
+            '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists'
+            '/1234/edit/description-of-work/organisation'
+        ))
 
         assert res.status_code == 404
 
@@ -530,9 +530,10 @@ class TestEditBriefSubmission(BaseApplicationTest):
             ]
         )
 
-        res = self.client.get(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists"
-            "/1234/edit/description-of-work/organisation")
+        res = self.client.get(self.expand_path(
+            '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists'
+            '/1234/edit/description-of-work/organisation'
+        ))
 
         assert res.status_code == 404
 
@@ -546,9 +547,10 @@ class TestEditBriefSubmission(BaseApplicationTest):
             ]
         )
 
-        res = self.client.get(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-octopuses"
-            "/1234/edit/description-of-work/organisation")
+        res = self.client.get(self.expand_path(
+            '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-octopuses'
+            '/1234/edit/description-of-work/organisation'
+        ))
 
         assert res.status_code == 404
 
@@ -562,9 +564,10 @@ class TestEditBriefSubmission(BaseApplicationTest):
             ]
         )
 
-        res = self.client.get(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists"
-            "/1234/edit/description-of-work/organisation")
+        res = self.client.get(self.expand_path(
+            '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists'
+            '/1234/edit/description-of-work/organisation'
+        ))
 
         assert res.status_code == 404
 
@@ -579,9 +582,10 @@ class TestEditBriefSubmission(BaseApplicationTest):
         )
         data_api_client.get_brief.return_value = api_stubs.brief(status='published')
 
-        res = self.client.get(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists"
-            "/1234/edit/description-of-work/organisation")
+        res = self.client.get(self.expand_path(
+            '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists'
+            '/1234/edit/description-of-work/organisation'
+        ))
 
         assert res.status_code == 404
 
@@ -596,9 +600,9 @@ class TestEditBriefSubmission(BaseApplicationTest):
         )
         data_api_client.get_brief.return_value = api_stubs.brief()
 
-        res = self.client.get(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists"
-            "/1234/not-a-real-section")
+        res = self.client.get(self.expand_path(
+            '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists'
+            '/1234/not-a-real-section'))
 
         assert res.status_code == 404
 
@@ -613,9 +617,9 @@ class TestEditBriefSubmission(BaseApplicationTest):
         )
         data_api_client.get_brief.return_value = api_stubs.brief()
 
-        res = self.client.get(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists"
-            "/1234/edit/description-of-work/not-a-real-question")
+        res = self.client.get(self.expand_path(
+            '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists'
+            '/1234/edit/description-of-work/not-a-real-question'))
 
         assert res.status_code == 404
 
@@ -633,12 +637,11 @@ class TestUpdateBriefSubmission(BaseApplicationTest):
         )
         data_api_client.get_brief.return_value = api_stubs.brief()
 
-        res = self.client.post(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
-            "digital-specialists/1234/edit/description-of-work/organisation",
-            data={
-                "organisation": "GDS"
-            })
+        url = self.expand_path(
+            '/buyers/frameworks/digital-outcomes-and-specialists/requirements/'
+            'digital-specialists/1234/edit/description-of-work/organisation'
+        )
+        res = self.client.post(url, data={"organisation": "GDS"})
 
         assert res.status_code == 302
         data_api_client.update_brief.assert_called_with(
@@ -664,12 +667,11 @@ class TestUpdateBriefSubmission(BaseApplicationTest):
         content_fixture.load_manifest('dos', 'data', 'edit_brief')
         content_loader.get_manifest.return_value = content_fixture.get_manifest('dos', 'edit_brief')
 
-        res = self.client.post(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
-            "digital-specialists/1234/edit/section-1/required1",
-            data={
-                "required1": True
-            })
+        url = self.expand_path(
+            '/buyers/frameworks/digital-outcomes-and-specialists/requirements/'
+            'digital-specialists/1234/edit/section-1/required1'
+        )
+        res = self.client.post(url, data={"required1": True})
 
         assert res.status_code == 302
         data_api_client.update_brief.assert_called_with(
@@ -698,12 +700,11 @@ class TestUpdateBriefSubmission(BaseApplicationTest):
         content_fixture.load_manifest('dos', 'data', 'edit_brief')
         content_loader.get_manifest.return_value = content_fixture.get_manifest('dos', 'edit_brief')
 
-        res = self.client.post(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
-            "digital-specialists/1234/edit/section-4/optional2",
-            data={
-                "optional2": True
-            })
+        url = self.expand_path(
+            '/buyers/frameworks/digital-outcomes-and-specialists/requirements/'
+            'digital-specialists/1234/edit/section-4/optional2'
+        )
+        res = self.client.post(url, data={"optional2": True})
 
         assert res.status_code == 302
         data_api_client.update_brief.assert_called_with(
@@ -732,13 +733,12 @@ class TestUpdateBriefSubmission(BaseApplicationTest):
         content_fixture.load_manifest('dos', 'data', 'edit_brief')
         content_loader.get_manifest.return_value = content_fixture.get_manifest('dos', 'edit_brief')
 
-        res = self.client.post(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
-            "digital-specialists/1234/edit/section-2/required2",
-            data={
-                "required2": True
-            })
+        url = self.expand_path(
+            '/buyers/frameworks/digital-outcomes-and-specialists/requirements/'
+            'digital-specialists/1234/edit/section-2/required2'
+        )
 
+        res = self.client.post(url, data={"required2": True})
         assert res.status_code == 302
         data_api_client.update_brief.assert_called_with(
             '1234',
@@ -761,13 +761,11 @@ class TestUpdateBriefSubmission(BaseApplicationTest):
         )
         data_api_client.get_brief.return_value = api_stubs.brief(user_id=234)
 
-        res = self.client.post(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
-            "digital-specialists/1234/edit/description-of-work/organisation",
-            data={
-                "organisation": "GDS"
-            })
-
+        url = self.expand_path(
+            '/buyers/frameworks/digital-outcomes-and-specialists/requirements/'
+            'digital-specialists/1234/edit/description-of-work/organisation'
+        )
+        res = self.client.post(url, data={"organisation": "GDS"})
         assert res.status_code == 404
         assert not data_api_client.update_brief.called
 
@@ -782,13 +780,12 @@ class TestUpdateBriefSubmission(BaseApplicationTest):
         )
         data_api_client.get_brief.return_value = api_stubs.brief()
 
-        res = self.client.post(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
-            "digital-specialists/1234/edit/description-of-work/organisation",
-            data={
-                "title": "A new title"
-            })
+        url = self.expand_path(
+            '/buyers/frameworks/digital-outcomes-and-specialists/requirements/'
+            'digital-specialists/1234/edit/description-of-work/organisation'
+        )
 
+        res = self.client.post(url, data={"title": "A new title"})
         assert res.status_code == 404
         assert not data_api_client.update_brief.called
 
@@ -803,13 +800,12 @@ class TestUpdateBriefSubmission(BaseApplicationTest):
         )
         data_api_client.get_brief.return_value = api_stubs.brief()
 
-        res = self.client.post(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
-            "digital-octopuses/1234/edit/description-of-work/organisation",
-            data={
-                "title": "A new title"
-            })
+        url = self.expand_path(
+            '/buyers/frameworks/digital-outcomes-and-specialists/requirements/'
+            'digital-octopuses/1234/edit/description-of-work/organisation'
+        )
 
+        res = self.client.post(url, data={"title": "A new title"})
         assert res.status_code == 404
         assert not data_api_client.update_brief.called
 
@@ -824,12 +820,11 @@ class TestUpdateBriefSubmission(BaseApplicationTest):
         )
         data_api_client.get_brief.return_value = api_stubs.brief()
 
-        res = self.client.post(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
-            "digital-specialists/1234/edit/description-of-work/organisation",
-            data={
-                "title": "A new title"
-            })
+        url = self.expand_path(
+            '/buyers/frameworks/digital-outcomes-and-specialists/requirements/'
+            'digital-specialists/1234/edit/description-of-work/organisation'
+        )
+        res = self.client.post(url, data={"title": "A new title"})
 
         assert res.status_code == 404
         assert not data_api_client.update_brief.called
@@ -845,13 +840,11 @@ class TestUpdateBriefSubmission(BaseApplicationTest):
         )
         data_api_client.get_brief.return_value = api_stubs.brief(status='live')
 
-        res = self.client.post(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
-            "digital-specialists/1234/edit/description-of-work/organisation",
-            data={
-                "title": "A new title"
-            })
-
+        url = self.expand_path(
+            '/buyers/frameworks/digital-outcomes-and-specialists/requirements/'
+            'digital-specialists/1234/edit/description-of-work/organisation'
+        )
+        res = self.client.post(url, data={"title": "A new title"})
         assert res.status_code == 404
         assert not data_api_client.update_brief.called
 
@@ -866,12 +859,11 @@ class TestUpdateBriefSubmission(BaseApplicationTest):
         )
         data_api_client.get_brief.return_value = api_stubs.brief()
 
-        res = self.client.post(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
-            "digital-specialists/1234/edit/description-of-work/some-made-up-question",
-            data={
-                "title": "A new title"
-            })
+        url = self.expand_path(
+            '/buyers/frameworks/digital-outcomes-and-specialists/requirements/'
+            'digital-specialists/1234/edit/description-of-work/some-made-up-question'
+        )
+        res = self.client.post(url, data={"title": "A new title"})
 
         assert res.status_code == 404
         assert not data_api_client.update_brief.called
@@ -914,12 +906,14 @@ class TestPublishBrief(BaseApplicationTest):
         })
         data_api_client.get_brief.return_value = brief_json
 
-        res = self.client.post("/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
-                               "digital-specialists/1234/publish")
+        url = self.expand_path(
+            '/buyers/frameworks/digital-outcomes-and-specialists/requirements/'
+            'digital-specialists/1234/publish'
+        )
+        res = self.client.post(url)
         assert res.status_code == 302
         assert data_api_client.update_brief_status.called
-        assert res.location == "http://localhost/buyers/frameworks/digital-outcomes-and-specialists/" \
-                               "requirements/digital-specialists/1234?published=true"
+        assert res.location.endswith('/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234?published=true')  # noqa
 
     def test_publish_brief_with_unanswered_required_questions(self, data_api_client):
         self.login_as_buyer()
@@ -933,8 +927,11 @@ class TestPublishBrief(BaseApplicationTest):
 
         data_api_client.get_brief.return_value = api_stubs.brief(status="draft")
 
-        res = self.client.post("/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
-                               "digital-specialists/1234/publish")
+        url = self.expand_path(
+            '/buyers/frameworks/digital-outcomes-and-specialists/requirements/'
+            'digital-specialists/1234/publish'
+        )
+        res = self.client.post(url)
         assert res.status_code == 400
         assert not data_api_client.update_brief_status.called
 
@@ -949,12 +946,11 @@ class TestPublishBrief(BaseApplicationTest):
         )
         data_api_client.get_brief.return_value = api_stubs.brief(user_id=234)
 
-        res = self.client.post(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
-            "digital-specialists/1234/edit/your-organisation",
-            data={
-                "organisation": "GDS"
-            })
+        url = self.expand_path(
+            '/buyers/frameworks/digital-outcomes-and-specialists/requirements/'
+            'digital-specialists/1234/edit/your-organisation'
+        )
+        res = self.client.post(url, data={"organisation": "GDS"})
 
         assert res.status_code == 404
         assert not data_api_client.update_brief.called
@@ -994,8 +990,10 @@ class TestPublishBrief(BaseApplicationTest):
         })
         data_api_client.get_brief.return_value = brief_json
 
-        res = self.client.get("/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
-                              "digital-specialists/1234/publish")
+        url = self.expand_path(
+            '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/publish'
+        )
+        res = self.client.get(url)
         page_html = res.get_data(as_text=True)
 
         assert res.status_code == 200
@@ -1013,8 +1011,10 @@ class TestPublishBrief(BaseApplicationTest):
 
         data_api_client.get_brief.return_value = api_stubs.brief(status="draft")
 
-        res = self.client.get("/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
-                              "digital-specialists/1234/publish")
+        res = self.client.get(self.expand_path(
+            '/buyers/frameworks/digital-outcomes-and-specialists/requirements/'
+            'digital-specialists/1234/publish'
+        ))
         page_html = res.get_data(as_text=True)
 
         assert res.status_code == 200
@@ -1023,6 +1023,12 @@ class TestPublishBrief(BaseApplicationTest):
 
 @mock.patch('app.buyers.views.buyers.data_api_client')
 class TestDeleteBriefSubmission(BaseApplicationTest):
+
+    def _do_request(self):
+        return self.client.post(self.expand_path(
+            '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/delete'
+        ))
+
     def test_delete_brief_submission(self, data_api_client):
         self.login_as_buyer()
         data_api_client.get_framework.return_value = api_stubs.framework(
@@ -1034,13 +1040,11 @@ class TestDeleteBriefSubmission(BaseApplicationTest):
         )
         data_api_client.get_brief.return_value = api_stubs.brief()
 
-        res = self.client.post(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/delete"
-        )
+        res = self._do_request()
 
         assert res.status_code == 302
         assert data_api_client.delete_brief.called
-        assert res.location == "http://localhost/buyers"
+        assert res.location.endswith('/buyers')
 
     def test_404_if_framework_is_not_live(self, data_api_client):
         self.login_as_buyer()
@@ -1053,9 +1057,7 @@ class TestDeleteBriefSubmission(BaseApplicationTest):
         )
         data_api_client.get_brief.return_value = api_stubs.brief()
 
-        res = self.client.post(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/delete",
-        )
+        res = self._do_request()
 
         assert res.status_code == 404
         assert not data_api_client.delete_brief.called
@@ -1071,9 +1073,7 @@ class TestDeleteBriefSubmission(BaseApplicationTest):
         )
         data_api_client.get_brief.return_value = api_stubs.brief(status='live')
 
-        res = self.client.post(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/delete",
-        )
+        res = self._do_request()
 
         assert res.status_code == 404
         assert not data_api_client.delete_brief.called
@@ -1089,10 +1089,11 @@ class TestDeleteBriefSubmission(BaseApplicationTest):
         )
         data_api_client.get_brief.return_value = api_stubs.brief(user_id=234)
 
-        res = self.client.post(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
-            "digital-specialists/1234/delete",
-            data={"delete_confirmed": True})
+        url = self.expand_path(
+            '/buyers/frameworks/digital-outcomes-and-specialists/requirements/'
+            'digital-specialists/1234/delete'
+        )
+        res = self.client.post(url, data={"delete_confirmed": True})
 
         assert res.status_code == 404
 
@@ -1113,16 +1114,16 @@ class TestBriefSummaryPage(BaseApplicationTest):
             brief_json['briefs']['specialistRole'] = 'communicationsManager'
             data_api_client.get_brief.return_value = brief_json
 
-            res = self.client.get(
-                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234"
-            )
+            res = self.client.get(self.expand_path(
+                '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234'
+            ))
 
             assert res.status_code == 200
             page_html = res.get_data(as_text=True)
             document = html.fromstring(page_html)
 
             assert (document.xpath('//h1')[0]).text_content().strip() == "I need a thing to do a thing"
-            assert [e.text_content() for e in document.xpath('//main[@id="content"]//ul/li/a')] == [
+            assert [e.text_content() for e in document.xpath('//*[@id="content"]//ul/li/a')] == [
                 'Title',
                 'Specialist role',
                 'Location',
@@ -1154,16 +1155,16 @@ class TestBriefSummaryPage(BaseApplicationTest):
             brief_json['briefs']["clarificationQuestionsAreClosed"] = True
             data_api_client.get_brief.return_value = brief_json
 
-            res = self.client.get(
-                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234"
-            )
+            res = self.client.get(self.expand_path(
+                '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234'
+            ))
 
             assert res.status_code == 200
             page_html = res.get_data(as_text=True)
             document = html.fromstring(page_html)
 
             assert (document.xpath('//h1')[0]).text_content().strip() == "I need a thing to do a thing"
-            assert [e.text_content() for e in document.xpath('//main[@id="content"]//ul/li/a')] == [
+            assert [e.text_content() for e in document.xpath('//*[@id="content"]//ul/li/a')] == [
                 'View question and answer dates',
                 'View your published requirements',
                 'Publish questions and answers',
@@ -1191,16 +1192,16 @@ class TestBriefSummaryPage(BaseApplicationTest):
             brief_json['briefs']["clarificationQuestionsAreClosed"] = True
             data_api_client.get_brief.return_value = brief_json
 
-            res = self.client.get(
-                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234"
-            )
+            res = self.client.get(self.expand_path(
+                '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234'
+            ))
 
             assert res.status_code == 200
             page_html = res.get_data(as_text=True)
             document = html.fromstring(page_html)
 
             assert (document.xpath('//h1')[0]).text_content().strip() == "I need a thing to do a thing"
-            assert [e.text_content() for e in document.xpath('//main[@id="content"]//ul/li/a')] == [
+            assert [e.text_content() for e in document.xpath('//*[@id="content"]//ul/li/a')] == [
                 'View your published requirements',
                 'View and shortlist suppliers',
                 'How to shortlist suppliers',
@@ -1225,9 +1226,9 @@ class TestBriefSummaryPage(BaseApplicationTest):
             brief_json['briefs']["clarificationQuestionsAreClosed"] = False
             data_api_client.get_brief.return_value = brief_json
 
-            res = self.client.get(
-                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/supplier-questions"  # noqa
-            )
+            res = self.client.get(self.expand_path(
+                '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/supplier-questions'  # noqa
+            ))
 
             assert res.status_code == 200
             page_html = res.get_data(as_text=True)
@@ -1254,9 +1255,9 @@ class TestBriefSummaryPage(BaseApplicationTest):
             brief_json['briefs']["clarificationQuestionsAreClosed"] = True
             data_api_client.get_brief.return_value = brief_json
 
-            res = self.client.get(
-                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/supplier-questions"  # noqa
-            )
+            res = self.client.get(self.expand_path(
+                '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/supplier-questions'  # noqa
+            ))
 
             assert res.status_code == 200
             page_html = res.get_data(as_text=True)
@@ -1278,9 +1279,9 @@ class TestBriefSummaryPage(BaseApplicationTest):
             )
             data_api_client.get_brief.return_value = api_stubs.brief()
 
-            res = self.client.get(
-                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234"
-            )
+            res = self.client.get(self.expand_path(
+                '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234'
+            ))
 
             assert res.status_code == 404
 
@@ -1296,9 +1297,9 @@ class TestBriefSummaryPage(BaseApplicationTest):
             )
             data_api_client.get_brief.return_value = api_stubs.brief(user_id=234)
 
-            res = self.client.get(
-                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234"
-            )
+            res = self.client.get(self.expand_path(
+                '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234'
+            ))
 
             assert res.status_code == 404
 
@@ -1319,9 +1320,9 @@ class TestBriefSummaryPage(BaseApplicationTest):
             content_fixture.load_manifest('dos', 'data', 'edit_brief')
             content_loader.get_manifest.return_value = content_fixture.get_manifest('dos', 'edit_brief')
 
-            res = self.client.get(
-                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234"
-            )
+            res = self.client.get(self.expand_path(
+                '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234'
+            ))
 
             assert res.status_code == 200
 
@@ -1334,17 +1335,29 @@ class TestBriefSummaryPage(BaseApplicationTest):
 
             # section with multiple questions
             assert section_1_link[0].get('href').strip() == \
-                '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/section-1'
+                self.expand_path('/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/section-1')  # noqa
             # section with single question
             assert section_2_link[0].get('href').strip() == \
-                '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/edit/section-2/required2'  # noqa
+                self.expand_path('/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/edit/section-2/required2')  # noqa
             # section with single question and a description
             assert section_4_link[0].get('href').strip() == \
-                '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/section-4'
+                self.expand_path('/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/section-4')  # noqa
 
 
 @mock.patch("app.buyers.views.buyers.data_api_client")
 class TestAddBriefClarificationQuestion(BaseApplicationTest):
+
+    def _do_request(self):
+        url = self.expand_path(
+            '/buyers/frameworks/digital-outcomes-and-specialists/requirements'
+            '/digital-specialists/1234/supplier-questions/answer-question'
+        )
+        data = {
+            'question': 'Why?',
+            'answer': 'Because',
+        }
+        return self.client.post(url, data=data)
+
     def test_show_brief_clarification_question_form(self, data_api_client):
         self.login_as_buyer()
         data_api_client.get_framework.return_value = api_stubs.framework(
@@ -1357,9 +1370,10 @@ class TestAddBriefClarificationQuestion(BaseApplicationTest):
         brief_json['briefs']["clarificationQuestionsAreClosed"] = False
         data_api_client.get_brief.return_value = brief_json
 
-        res = self.client.get(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements"
-            "/digital-specialists/1234/supplier-questions/answer-question")
+        res = self.client.get(self.expand_path(
+            '/buyers/frameworks/digital-outcomes-and-specialists/requirements'
+            '/digital-specialists/1234/supplier-questions/answer-question'
+        ))
 
         assert res.status_code == 200
 
@@ -1375,13 +1389,7 @@ class TestAddBriefClarificationQuestion(BaseApplicationTest):
         brief_json['briefs']["clarificationQuestionsAreClosed"] = False
         data_api_client.get_brief.return_value = brief_json
 
-        res = self.client.post(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements"
-            "/digital-specialists/1234/supplier-questions/answer-question",
-            data={
-                "question": "Why?",
-                "answer": "Because",
-            })
+        res = self._do_request()
 
         assert res.status_code == 302
         data_api_client.add_brief_clarification_question.assert_called_with(
@@ -1405,13 +1413,7 @@ class TestAddBriefClarificationQuestion(BaseApplicationTest):
         brief_json['briefs']["clarificationQuestionsAreClosed"] = False
         data_api_client.get_brief.return_value = brief_json
 
-        res = self.client.post(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements"
-            "/digital-specialists/1234/supplier-questions/answer-question",
-            data={
-                "question": "Why?",
-                "answer": "Because",
-            })
+        res = self._do_request()
 
         assert res.status_code == 404
         assert not data_api_client.add_brief_clarification_question.called
@@ -1429,13 +1431,7 @@ class TestAddBriefClarificationQuestion(BaseApplicationTest):
         brief_json['briefs']["clarificationQuestionsAreClosed"] = False
         data_api_client.get_brief.return_value = brief_json
 
-        res = self.client.post(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements"
-            "/digital-specialists/1234/supplier-questions/answer-question",
-            data={
-                "question": "Why?",
-                "answer": "Because",
-            })
+        res = self._do_request()
 
         assert res.status_code == 404
         assert not data_api_client.add_brief_clarification_question.called
@@ -1453,13 +1449,7 @@ class TestAddBriefClarificationQuestion(BaseApplicationTest):
         brief_json['briefs']["clarificationQuestionsAreClosed"] = False
         data_api_client.get_brief.return_value = brief_json
 
-        res = self.client.post(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements"
-            "/digital-specialists/1234/supplier-questions/answer-question",
-            data={
-                "question": "Why?",
-                "answer": "Because",
-            })
+        res = self._do_request()
 
         assert res.status_code == 404
         assert not data_api_client.add_brief_clarification_question.called
@@ -1477,13 +1467,7 @@ class TestAddBriefClarificationQuestion(BaseApplicationTest):
         brief_json['briefs']["clarificationQuestionsAreClosed"] = False
         data_api_client.get_brief.return_value = brief_json
 
-        res = self.client.post(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements"
-            "/digital-specialists/1234/supplier-questions/answer-question",
-            data={
-                "question": "Why?",
-                "answer": "Because",
-            })
+        res = self._do_request()
 
         assert res.status_code == 404
         assert not data_api_client.add_brief_clarification_question.called
@@ -1503,41 +1487,11 @@ class TestAddBriefClarificationQuestion(BaseApplicationTest):
             mock.Mock(status_code=400),
             {"question": "answer_required"})
 
-        res = self.client.post(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements"
-            "/digital-specialists/1234/supplier-questions/answer-question",
-            data={
-                "question": "Why?",
-                "answer": "Because",
-            })
+        res = self._do_request()
         document = html.fromstring(res.get_data(as_text=True))
 
         assert res.status_code == 400
         assert len(document.cssselect(".validation-message")) == 1, res.get_data(as_text=True)
-
-    def test_api_error(self, data_api_client):
-        self.login_as_buyer()
-        data_api_client.get_framework.return_value = api_stubs.framework(
-            slug="digital-outcomes-and-specialists",
-            status="live",
-            lots=[
-                api_stubs.lot(slug="digital-specialists", allows_brief=True)
-            ])
-        brief_json = api_stubs.brief(status="live")
-        brief_json['briefs']["clarificationQuestionsAreClosed"] = False
-        data_api_client.get_brief.return_value = brief_json
-        data_api_client.add_brief_clarification_question.side_effect = HTTPError(
-            mock.Mock(status_code=500))
-
-        res = self.client.post(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements"
-            "/digital-specialists/1234/supplier-questions/answer-question",
-            data={
-                "question": "Why?",
-                "answer": "Because",
-            })
-
-        assert res.status_code == 500
 
 
 @mock.patch("app.buyers.views.buyers.data_api_client")
@@ -1564,9 +1518,9 @@ class TestViewBriefResponsesPage(BaseApplicationTest):
         data_api_client.get_brief.return_value = api_stubs.brief(lot_slug="digital-outcomes")
 
         self.login_as_buyer()
-        res = self.client.get(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1/responses"
-        )
+        res = self.client.get(self.expand_path(
+            '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1/responses'
+        ))
         page = res.get_data(as_text=True)
 
         assert res.status_code == 200
@@ -1587,9 +1541,9 @@ class TestViewBriefResponsesPage(BaseApplicationTest):
         data_api_client.get_brief.return_value = api_stubs.brief(lot_slug="digital-outcomes")
 
         self.login_as_buyer()
-        res = self.client.get(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1/responses"
-        )
+        res = self.client.get(self.expand_path(
+            '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1/responses'
+        ))
         page = res.get_data(as_text=True)
         assert res.status_code == 200
         assert "1 supplier" in page
@@ -1609,9 +1563,9 @@ class TestViewBriefResponsesPage(BaseApplicationTest):
         data_api_client.get_brief.return_value = api_stubs.brief(lot_slug="digital-outcomes")
 
         self.login_as_buyer()
-        res = self.client.get(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1234/responses"
-        )
+        res = self.client.get(self.expand_path(
+            '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1234/responses'
+        ))
         page = res.get_data(as_text=True)
 
         assert res.status_code == 200
@@ -1629,12 +1583,12 @@ class TestViewBriefResponsesPage(BaseApplicationTest):
         data_api_client.get_brief.return_value = api_stubs.brief(lot_slug="digital-outcomes", status='closed')
 
         self.login_as_buyer()
-        res = self.client.get(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1234/responses"
-        )
+        res = self.client.get(self.expand_path(
+            '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1234/responses'
+        ))
         document = html.fromstring(res.get_data(as_text=True))
         csv_link = document.xpath(
-            '//a[@href="/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1234/responses/download"]'  # noqa
+            '//a[contains(@href, "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1234/responses/download")]'  # noqa
         )[0]
 
         assert res.status_code == 200
@@ -1653,9 +1607,9 @@ class TestViewBriefResponsesPage(BaseApplicationTest):
         data_api_client.get_brief.return_value = api_stubs.brief(lot_slug="digital-outcomes", status='live')
 
         self.login_as_buyer()
-        res = self.client.get(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1234/responses"
-        )
+        res = self.client.get(self.expand_path(
+            '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1234/responses'
+        ))
         page = res.get_data(as_text=True)
         document = html.fromstring(page)
         csv_link = document.xpath(
@@ -1677,9 +1631,9 @@ class TestViewBriefResponsesPage(BaseApplicationTest):
         data_api_client.get_brief.return_value = api_stubs.brief(lot_slug="digital-outcomes", user_id=234)
 
         self.login_as_buyer()
-        res = self.client.get(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1234/responses"
-        )
+        res = self.client.get(self.expand_path(
+            '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1234/responses'
+        ))
 
         assert res.status_code == 404
 
@@ -1694,17 +1648,15 @@ class TestViewBriefResponsesPage(BaseApplicationTest):
         data_api_client.get_brief.return_value = api_stubs.brief(lot_slug="digital-outcomes")
 
         self.login_as_buyer()
-        res = self.client.get(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1234/responses"
-        )
+        res = self.client.get(self.expand_path(
+            '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1234/responses'
+        ))
 
         assert res.status_code == 404
 
 
 @mock.patch("app.buyers.views.buyers.data_api_client")
 class TestDownloadBriefResponsesCsv(BaseApplicationTest):
-    url = "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/responses" \
-          "/download"
     brief = api_stubs.brief(status='closed')
     brief['briefs']['essentialRequirements'] = ["E1", "E2"]
     brief['briefs']['niceToHaveRequirements'] = ["Nice1", "Nice2", "Nice3"]
@@ -1774,6 +1726,13 @@ class TestDownloadBriefResponsesCsv(BaseApplicationTest):
             },
         ]
     }
+
+    def setup(self):
+        super(TestDownloadBriefResponsesCsv, self).setup()
+        self.url = self.expand_path(
+            '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/responses'
+            '/download'
+        )
 
     def test_csv_includes_all_eligible_responses_and_no_ineligible_responses(self, data_api_client):
         data_api_client.find_brief_responses.return_value = self.brief_responses
@@ -1872,20 +1831,18 @@ class TestViewQuestionAndAnswerDates(BaseApplicationTest):
             brief_json['briefs']["clarificationQuestionsAreClosed"] = True
             data_api_client.get_brief.return_value = brief_json
 
-            res = self.client.get(
-                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/timeline"
-            )
+            res = self.client.get(self.expand_path(
+                '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/timeline'
+            ))
 
             assert res.status_code == 200
             page_html = res.get_data(as_text=True)
             document = html.fromstring(page_html)
 
             assert (document.xpath('//h1')[0]).text_content().strip() == "Question and answer dates"
-            assert all(
-                date in
-                [e.text_content() for e in document.xpath('//main[@id="content"]//th/span')]
-                for date in ['2 April', '12 April', '14 April', '16 April']
-            )
+            row_headers = [e.text_content() for e in document.xpath('//*[@id="content"]//th/span')]
+            for date in ['2 April', '12 April', '14 April', '16 April']:
+                assert date in row_headers, date
 
     def test_do_not_show_question_and_answer_dates_for_draft_brief(self, data_api_client):
         with self.app.app_context():
@@ -1902,9 +1859,9 @@ class TestViewQuestionAndAnswerDates(BaseApplicationTest):
             brief_json['briefs']["clarificationQuestionsAreClosed"] = True
             data_api_client.get_brief.return_value = brief_json
 
-            res = self.client.get(
-                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/timeline"
-            )
+            res = self.client.get(self.expand_path(
+                '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/timeline'
+            ))
 
             assert res.status_code == 404
 
@@ -1924,8 +1881,8 @@ class TestViewQuestionAndAnswerDates(BaseApplicationTest):
             brief_json['briefs']["clarificationQuestionsAreClosed"] = True
             data_api_client.get_brief.return_value = brief_json
 
-            res = self.client.get(
-                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/timeline"
-            )
+            res = self.client.get(self.expand_path(
+                '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/timeline'
+            ))
 
             assert res.status_code == 404
