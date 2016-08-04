@@ -23,7 +23,7 @@ def has_validation_errors(data, field_name):
     document = html.fromstring(data)
 
     form_field = document.xpath('//input[@name="{}"]'.format(field_name))
-    return 'invalid' in form_field[0].classes
+    return 'invalid' in form_field[0].classes or 'invalid' in form_field[0].getparent().classes
 
 
 class TestLogin(BaseApplicationTest):
@@ -530,7 +530,8 @@ class TestBuyersCreation(BaseApplicationTest):
         res = self.client.post(
             self.expand_path('/buyers/create'),
             data={
-                'email_address': 'valid@test.gov.uk',
+                'email_address': 'valid@test.gov.au',
+                'government_emp_checkbox': 'checked',
                 'csrf_token': FakeCsrf.valid_token,
             },
             follow_redirects=True
@@ -538,11 +539,30 @@ class TestBuyersCreation(BaseApplicationTest):
         assert res.status_code == 200
         assert 'Activate your account' in res.get_data(as_text=True)
 
+    @mock.patch('app.main.views.login.send_email')
+    @mock.patch('app.main.views.login.data_api_client')
+    def test_require_acknowledgement_of_requirements(self, data_api_client, send_email):
+        res = self.client.post(
+            self.expand_path('/buyers/create'),
+            data={
+                'email_address': 'valid@test.gov.au',
+                # government_emp_checkbox unchecked
+                'csrf_token': FakeCsrf.valid_token,
+            },
+            follow_redirects=True
+        )
+
+        assert res.status_code == 400
+        data = res.get_data(as_text=True)
+        print data
+        assert has_validation_errors(data, 'government_emp_checkbox')
+
     def test_should_raise_validation_error_for_invalid_email_address(self):
         res = self.client.post(
             self.expand_path('/buyers/create'),
             data={
                 'email_address': 'not-an-email-address',
+                'government_emp_checkbox': 'checked',
                 'csrf_token': FakeCsrf.valid_token,
             },
             follow_redirects=True
@@ -571,6 +591,7 @@ class TestBuyersCreation(BaseApplicationTest):
             self.expand_path('/buyers/create'),
             data={
                 'email_address': 'valid@test.gov.uk',
+                'government_emp_checkbox': 'checked',
                 'csrf_token': FakeCsrf.valid_token,
             },
             follow_redirects=True
@@ -588,6 +609,7 @@ class TestBuyersCreation(BaseApplicationTest):
             self.expand_path('/buyers/create'),
             data={
                 'email_address': 'valid@test.gov.uk',
+                'government_emp_checkbox': 'checked',
                 'csrf_token': FakeCsrf.valid_token,
             },
             follow_redirects=True
@@ -602,6 +624,7 @@ class TestBuyersCreation(BaseApplicationTest):
             self.expand_path('/buyers/create'),
             data={
                 'email_address': 'valid@test.gov.uk',
+                'government_emp_checkbox': 'checked',
                 'csrf_token': FakeCsrf.valid_token,
             },
             follow_redirects=True

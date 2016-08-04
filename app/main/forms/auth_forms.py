@@ -1,6 +1,5 @@
 import re
 
-from wtforms import Form
 from wtforms import PasswordField
 from wtforms.fields.core import BooleanField
 from wtforms.validators import DataRequired, EqualTo, Length, Regexp
