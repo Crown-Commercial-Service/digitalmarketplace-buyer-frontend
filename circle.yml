@@ -38,5 +38,10 @@ deployment:
     commands:
       - cf login -a https://api.system.platform.digital.gov.au -o dto -u $CF_USER_PROD -p $CF_PASSWORD_PROD
       - cf target -o dto -s digital-marketplace
-      - cf push -f 'manifest.production.yml'
+      - cf unmap-route dm-buyer-frontend-green apps.platform.digital.gov.au -n dm-buyer
+      - cf push dm-buyer-frontend-green -f 'manifest.production.yml'
+      - cf map-route dm-buyer-frontend-green apps.platform.digital.gov.au -n dm-buyer
+      - cf unmap-route dm-buyer-frontend-blue apps.platform.digital.gov.au -n dm-buyer
+      - cf push dm-buyer-frontend-blue -f 'manifest.production.yml'
+      - cf map-route dm-buyer-frontend-blue apps.platform.digital.gov.au -n dm-buyer
       - DOCKER_COMPOSE_FILE_PATH=./monitoring/docker-compose-ecs.yml DOCKER_IMAGE_NAME=gov-au-marketplace DOCKER_CONTAINER_NAME=gov-au-marketplace ./scripts/ci-monitor-deploy.sh
