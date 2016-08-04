@@ -28,7 +28,7 @@
       {% if delete_requested %}
         <div class="column-one-whole">
           <form action="{{ url_for('buyers.delete_a_brief', framework_slug=framework.slug, lot_slug=brief.lotSlug, brief_id=brief.id) }}" method="POST">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+            {{ form.csrf_token }}
             <input type="hidden" name="delete_confirmed" value="true" />
             <div class="banner-destructive-with-action">
               <p class="banner-message">
