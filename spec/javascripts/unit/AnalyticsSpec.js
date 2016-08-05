@@ -176,4 +176,27 @@ describe("GOVUK.Analytics", function () {
       }]);
     });
   });
+
+  describe("Virtual Page Views", function () {
+    var $analyticsString;
+
+    afterEach(function () {
+      $analyticsString.remove();
+    });
+
+    it("Should not call google analytics without a url", function () {
+      $analyticsString = $("<div data-analytics='trackPageView'/>");
+      $(document.body).append($analyticsString);
+      window.GOVUK.GDM.analytics.virtualPageViews();
+      expect(window.ga.calls.any()).toEqual(false);
+    });
+
+    it("Should call google analytics if url exists", function () {
+      $analyticsString = $("<div data-analytics='trackPageView' data-url='http://example.com'/>");
+      $(document.body).append($analyticsString);
+      window.GOVUK.GDM.analytics.virtualPageViews();
+      expect(window.ga.calls.first().args).toEqual([ 'send', 'pageview', { page: 'http://example.com' } ]);
+      expect(window.ga.calls.count()).toEqual(1);
+    });
+  });
 });

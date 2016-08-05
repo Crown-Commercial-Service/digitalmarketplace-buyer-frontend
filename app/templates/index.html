@@ -46,7 +46,11 @@
   %}
 {% endif %}
 
+{% if 'account-created' in get_flashed_messages(category_filter=["flag"]) %}
+<div class="index-page grid-row" data-analytics="trackPageView" data-url="/vpv/?account-created=true">
+{% else %}
 <div class="index-page grid-row">
+{% endif %}
   <div class="column-two-thirds">
     <h2 class="marketplace-homepage-subheading">Find technology or people for digital projects in the public sector</h2>
     {% with

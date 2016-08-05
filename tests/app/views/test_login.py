@@ -895,6 +895,7 @@ class TestCreateUser(BaseApplicationTest):
 
         assert res.status_code == 302
         assert res.location == 'http://localhost/'
+        self.assert_flashes('account-created', 'flag')
 
     @mock.patch('app.main.views.login.data_api_client')
     def test_should_return_an_error_if_user_exists(self, data_api_client):
