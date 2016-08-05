@@ -69,7 +69,7 @@ class BaseAPIClient(object):
         try:
             response = requests.request(method, url, headers=headers, json=data, params=params)
             response.raise_for_status()
-            if 'roles' in url:
+            if 'roles' not in url:
                 print response.content
             return response.json()
 
