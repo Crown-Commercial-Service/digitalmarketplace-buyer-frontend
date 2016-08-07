@@ -86,7 +86,6 @@ class TestCataloguePage(BaseApplicationTest):
                 found = True
         assert found
 
-
     def test_catalogue_search(self, api_client):
         self._setUp(api_client)
         supplier_name = self.results_json['hits']['hits'][0]['_source']['name']
@@ -99,7 +98,6 @@ class TestCataloguePage(BaseApplicationTest):
                 if element.text_content().strip() == supplier_name:
                     found = True
         assert found
-
 
     def test_clear_buttons_have_valid_url(self, api_client):
         self._setUp(api_client)
