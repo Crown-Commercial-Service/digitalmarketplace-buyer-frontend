@@ -24,7 +24,7 @@ def find_search_summary(res_data):
 @mock.patch('app.main.views.search.DataAPIClient')
 class TestCataloguePage(BaseApplicationTest):
 
-    def _setUp(self, url, api_client):
+    def _setUp(self, api_client, url=''):
         base_url = '/marketplace/search/suppliers'
         url = base_url + url
 
@@ -38,30 +38,30 @@ class TestCataloguePage(BaseApplicationTest):
         self.page = html.fromstring(self.response.get_data(as_text=True))
 
     def test_fixture_has_more_than_8_results_to_test_pagination(self, api_client):
-        self._setUp('', api_client)
+        self._setUp(api_client)
         assert len(self.results_json['hits']['hits']) > 8
 
     def test_catalogue_first_page_loads(self, api_client):
-        self._setUp('', api_client)
+        self._setUp(api_client)
         assert self.response.status_code == 200
 
     def test_catalogue_second_page_loads(self, api_client):
-        self._setUp('?page=2', api_client)
+        self._setUp(api_client, '?page=2')
         assert self.response.status_code == 200
 
     def test_catalogue_has_filter_checkboxes(self, api_client):
-        self._setUp('', api_client)
+        self._setUp(api_client)
         for role_row in self.roles_json['roles']:
             role = role_row['role'].replace('Senior ', '').replace('Junior ', '')  # Mind the white space after Junior
             checkbox = self.page.get_element_by_id(role.lower().replace(' ', '-'), None)
             assert (checkbox is not None and checkbox.name == 'role' and checkbox.type == 'checkbox')
 
     def test_catalogue_first_page_has_correct_number_of_results(self, api_client):
-        self._setUp('', api_client)
+        self._setUp(api_client)
         assert len(self.page.find_class('supplier-result')) == len(self.results_json['hits']['hits'])
 
     def test_catalogue_second_page_has_back_page_link(self, api_client):
-        self._setUp('?page=2', api_client)
+        self._setUp(api_client, '?page=2')
         found = False
         for element, attribute, link, pos in self.page.find_class('pagination')[0].iterlinks():
             if 'page=1' in link:
@@ -69,7 +69,7 @@ class TestCataloguePage(BaseApplicationTest):
         assert found
 
     def test_catalogue_second_page_has_next_page_link(self, api_client):
-        self._setUp('?page=2', api_client)
+        self._setUp(api_client, '?page=2')
         found = False
         for element, attribute, link, pos in self.page.find_class('pagination')[0].iterlinks():
             if 'page=3' in link:
@@ -77,7 +77,7 @@ class TestCataloguePage(BaseApplicationTest):
         assert found
 
     def test_catalogue_pagination_links_have_supplied_query_string(self, api_client):
-        self._setUp('?page=2&sort_term=name&sort_order=desc&role=Agile+Coach&role=Delivery+Manager', api_client)
+        self._setUp(api_client, '?page=2&sort_term=name&sort_order=desc&role=Agile+Coach&role=Delivery+Manager')
         found = False
         for element, attribute, link, pos in self.page.find_class('pagination')[0].iterlinks():
             # Because it can be in any order
@@ -87,3 +87,24 @@ class TestCataloguePage(BaseApplicationTest):
         assert found
 
 
+    def test_catalogue_search(self, api_client):
+        self._setUp(api_client)
+        supplier_name = self.results_json['hits']['hits'][0]['_source']['name']
+
+        self._setUp(api_client, '?keyword=%s' % supplier_name.replace(' ', '+'))
+
+        found = False
+        for result in self.page.find_class('supplier-result'):
+            for element, attribute, link, pos in result.iterlinks():
+                if element.text_content().strip() == supplier_name:
+                    found = True
+        assert found
+
+
+    def test_clear_buttons_have_valid_url(self, api_client):
+        self._setUp(api_client)
+        valid = True
+        for button in self.page.find_class('clear-all'):
+            if button.attrib['href'] != '/marketplace/search/suppliers':
+                valid = False
+        assert valid
