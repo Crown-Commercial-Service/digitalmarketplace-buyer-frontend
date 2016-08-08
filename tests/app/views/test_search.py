@@ -1,3 +1,4 @@
+from flask.helpers import url_for
 import mock
 import re
 import json
@@ -23,7 +24,9 @@ class TestCataloguePage(BaseApplicationTest):
 
     def setup(self):
         super(TestCataloguePage, self).setup()
-        self.base_url = '/marketplace/search/suppliers'
+
+        with self.app.app_context():
+            self.base_url = url_for('main.supplier_search')
 
         self._api_client = mock.patch('app.main.views.search.DataAPIClient').start()
         self._results_per_page = mock.patch('app.main.views.search.SUPPLIER_RESULTS_PER_PAGE', 4).start()
@@ -110,6 +113,6 @@ class TestCataloguePage(BaseApplicationTest):
         response, page = self._get_response_and_page()
         valid = True
         for button in page.find_class('clear-all'):
-            if button.attrib['href'] != self.base_url:
+            if button.attrib['href'] not in self.base_url:
                 valid = False
         assert valid
