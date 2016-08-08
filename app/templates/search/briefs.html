@@ -17,12 +17,15 @@
 {% endblock %}
 
 {% block main_content %}
-
-    {% with heading="{} opportunities".format(framework.name) %}
-        {% include "toolkit/page-heading.html" %}
-    {% endwith %}
-    <div class="marketplace-paragraph">
-      <p>View buyer requirements for {{ lot_names | map('lower') | smartjoin }}.</p>
+    <div class="grid-row">
+      <div class="column-two-thirds">
+        {% with heading="{} opportunities".format(framework.name) %}
+            {% include "toolkit/page-heading.html" %}
+        {% endwith %}
+        <div class="marketplace-paragraph">
+          <p>View buyer requirements for {{ lot_names | map('lower') | smartjoin }}.</p>
+        </div>
+      </div>
     </div>
 
     <div class="grid-row">
