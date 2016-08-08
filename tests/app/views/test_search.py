@@ -1,4 +1,3 @@
-from flask.helpers import url_for
 import mock
 import re
 import json
@@ -20,89 +19,97 @@ def find_search_summary(res_data):
         r'<span class="search-summary-count">.+</span>[^\n]+', res_data)
 
 
-@mock.patch('app.main.views.search.SUPPLIER_RESULTS_PER_PAGE', 4)
-@mock.patch('app.main.views.search.DataAPIClient')
 class TestCataloguePage(BaseApplicationTest):
 
-    def _setUp(self, api_client, url=''):
-        base_url = '/marketplace/search/suppliers'
-        url = base_url + url
+    def setup(self):
+        super(TestCataloguePage, self).setup()
+        self.base_url = '/marketplace/search/suppliers'
+
+        self._api_client = mock.patch('app.main.views.search.DataAPIClient').start()
+        self._results_per_page = mock.patch('app.main.views.search.SUPPLIER_RESULTS_PER_PAGE', 4).start()
 
         self.roles_json = self._get_fixture_data('supplier_roles.json')
         self.results_json = self._get_fixture_data('supplier_results.json')
 
-        api_client.return_value.get_roles.return_value = self.roles_json
-        api_client.return_value.find_suppliers.return_value = self.results_json
+        self._api_client.return_value.get_roles.return_value = self.roles_json
+        self._api_client.return_value.find_suppliers.return_value = self.results_json
 
-        self.response = self.client.get(url)
-        self.page = html.fromstring(self.response.get_data(as_text=True))
+    def _get_response_and_page(self, url=''):
+        response = self.client.get(self.base_url + url)
+        page = html.fromstring(response.get_data(as_text=True))
+        return response, page
 
-    def test_fixture_has_more_than_8_results_to_test_pagination(self, api_client):
-        self._setUp(api_client)
+    def test_fixture_has_more_than_8_results_to_test_pagination(self):
+        """
+        This test is patched to have 4 results per page. So the test data must have 9 or more results to be able to
+        go up to page 3 to test.
+        """
         assert len(self.results_json['hits']['hits']) > 8
 
-    def test_catalogue_first_page_loads(self, api_client):
-        self._setUp(api_client)
-        assert self.response.status_code == 200
+    def test_catalogue_first_page_loads(self):
+        response, page = self._get_response_and_page()
+        assert response.status_code == 200
 
-    def test_catalogue_second_page_loads(self, api_client):
-        self._setUp(api_client, '?page=2')
-        assert self.response.status_code == 200
+    def test_catalogue_second_page_loads(self):
+        response, page = self._get_response_and_page('?page=2')
+        assert response.status_code == 200
 
-    def test_catalogue_has_filter_checkboxes(self, api_client):
-        self._setUp(api_client)
+    def test_catalogue_has_filter_checkboxes(self):
+        response, page = self._get_response_and_page()
+        page = html.fromstring(response.get_data(as_text=True))
         for role_row in self.roles_json['roles']:
             role = role_row['role'].replace('Senior ', '').replace('Junior ', '')  # Mind the white space after Junior
-            checkbox = self.page.get_element_by_id(role.lower().replace(' ', '-'), None)
+            checkbox = page.get_element_by_id(role.lower().replace(' ', '-'), None)
             assert (checkbox is not None and checkbox.name == 'role' and checkbox.type == 'checkbox')
 
-    def test_catalogue_first_page_has_correct_number_of_results(self, api_client):
-        self._setUp(api_client)
-        assert len(self.page.find_class('supplier-result')) == len(self.results_json['hits']['hits'])
+    def test_catalogue_first_page_has_correct_number_of_results(self):
+        response, page = self._get_response_and_page()
+        page = html.fromstring(response.get_data(as_text=True))
+        assert len(page.find_class('supplier-result')) == len(self.results_json['hits']['hits'])
 
-    def test_catalogue_second_page_has_back_page_link(self, api_client):
-        self._setUp(api_client, '?page=2')
+    def test_catalogue_second_page_has_back_page_link(self):
+        response, page = self._get_response_and_page('?page=2')
         found = False
-        for element, attribute, link, pos in self.page.find_class('pagination')[0].iterlinks():
+        for element, attribute, link, pos in page.find_class('pagination')[0].iterlinks():
             if 'page=1' in link:
                 found = True
         assert found
 
-    def test_catalogue_second_page_has_next_page_link(self, api_client):
-        self._setUp(api_client, '?page=2')
+    def test_catalogue_second_page_has_next_page_link(self):
+        response, page = self._get_response_and_page('?page=2')
         found = False
-        for element, attribute, link, pos in self.page.find_class('pagination')[0].iterlinks():
+        for element, attribute, link, pos in page.find_class('pagination')[0].iterlinks():
             if 'page=3' in link:
                 found = True
         assert found
 
-    def test_catalogue_pagination_links_have_supplied_query_string(self, api_client):
-        self._setUp(api_client, '?page=2&sort_term=name&sort_order=desc&role=Agile+Coach&role=Delivery+Manager')
+    def test_catalogue_pagination_links_have_supplied_query_string(self):
+        response, page = self._get_response_and_page('?page=2&sort_term=name&sort_order=desc&role=Agile+Coach&'
+                                                     'role=Delivery+Manager')
         found = False
-        for element, attribute, link, pos in self.page.find_class('pagination')[0].iterlinks():
+        for element, attribute, link, pos in page.find_class('pagination')[0].iterlinks():
             # Because it can be in any order
             if 'page=2' in link and 'sort_term=name' in link and 'sort_order=desc' in link and \
                'role=Agile+Coach' in link and 'role=Delivery+Manager' in link:
                 found = True
         assert found
 
-    def test_catalogue_search(self, api_client):
-        self._setUp(api_client)
+    def test_catalogue_search(self):
         supplier_name = self.results_json['hits']['hits'][0]['_source']['name']
 
-        self._setUp(api_client, '?keyword=%s' % supplier_name.replace(' ', '+'))
+        response, page = self._get_response_and_page('?keyword=%s' % supplier_name.replace(' ', '+'))
 
         found = False
-        for result in self.page.find_class('supplier-result'):
+        for result in page.find_class('supplier-result'):
             for element, attribute, link, pos in result.iterlinks():
                 if element.text_content().strip() == supplier_name:
                     found = True
         assert found
 
-    def test_clear_buttons_have_valid_url(self, api_client):
-        self._setUp(api_client)
+    def test_clear_buttons_have_valid_url(self):
+        response, page = self._get_response_and_page()
         valid = True
-        for button in self.page.find_class('clear-all'):
-            if button.attrib['href'] != '/marketplace/search/suppliers':
+        for button in page.find_class('clear-all'):
+            if button.attrib['href'] != self.base_url:
                 valid = False
         assert valid
