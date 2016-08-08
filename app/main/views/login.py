@@ -7,7 +7,7 @@ from flask import abort, current_app, flash, redirect, render_template, request,
 from flask_login import logout_user, login_user
 
 from dmapiclient.audit import AuditTypes
-from dmutils.user import User
+from dmutils.user import User, hash_email, user_logging_string
 from dmutils.email import (
     decode_invitation_token, decode_password_reset_token, generate_token, send_email,
     EmailError
@@ -15,7 +15,6 @@ from dmutils.email import (
 from .. import main
 from app.main.forms.auth_forms import BuyerSignupEmailForm
 from ..forms.auth_forms import LoginForm, EmailAddressForm, ChangePasswordForm, CreateUserForm
-from ...helpers import hash_email
 from ...helpers.login_helpers import redirect_logged_in_user
 from ...helpers.form_helpers import render_template_with_csrf
 from ... import data_api_client
@@ -55,8 +54,7 @@ def process_login():
         user = User.from_json(user_json)
 
         login_user(user)
-        current_app.logger.info("login.success: role={role} user={email_hash}",
-                                extra={'role': user.role, 'email_hash': hash_email(form.email_address.data)})
+        current_app.logger.info('login.success: {user}', extra={'user': user_logging_string(user)})
         return redirect_logged_in_user(next_url)
 
     else:
@@ -69,6 +67,7 @@ def process_login():
 
 @main.route('/logout', methods=["GET"])
 def logout():
+    current_app.logger.info('logout: {user}', extra={'user': user_logging_string(current_user)})
     logout_user()
     return redirect(url_for('.render_login'))
 
@@ -168,8 +167,8 @@ def update_password(token):
     if form.validate():
         if data_api_client.update_user_password(user_id, password, email_address):
             current_app.logger.info(
-                "User {user_id} successfully changed their password",
-                extra={'user_id': user_id})
+                "User {user_id} ({hashed_email}) successfully changed their password",
+                extra={'user_id': user_id, 'hashed_email': hash_email(email_address)})
             flash('password_updated')
         else:
             flash('password_not_updated', 'error')
@@ -212,7 +211,6 @@ def submit_create_buyer_account():
             )
             url = url_for('main.create_user', encoded_token=token, _external=True)
             email_body = render_template("emails/create_buyer_user_email.html", url=url)
-            # print("CREATE ACCOUNT URL: {}".format(url))
             try:
                 send_email(
                     email_address,

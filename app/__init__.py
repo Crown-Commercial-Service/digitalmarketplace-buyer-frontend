@@ -4,7 +4,7 @@ from flask_login import LoginManager, current_user
 import dmapiclient
 from dmutils import init_app, flask_featureflags
 from dmcontent.content_loader import ContentLoader
-from dmutils.user import User
+from dmutils.user import User, user_logging_string
 
 from config import configs
 
@@ -42,6 +42,16 @@ def create_app(config_name):
 
     login_manager.login_view = 'main.render_login'
     login_manager.login_message_category = "must_login"
+
+    def request_log_handler(response):
+        params = {
+            'method': request.method,
+            'url': request.url,
+            'status': response.status_code,
+            'user': user_logging_string(current_user),
+        }
+        application.logger.info('{method} {url} {status} {user}', extra=params)
+    application.extensions['request_log_handler'] = request_log_handler
 
     @application.before_request
     def set_scheme():
