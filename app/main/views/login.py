@@ -12,11 +12,11 @@ from dmutils.email import (
     decode_invitation_token, decode_password_reset_token, generate_token, send_email,
     EmailError
 )
+from dmutils.forms import render_template_with_csrf
 from .. import main
 from app.main.forms.auth_forms import BuyerSignupEmailForm
 from ..forms.auth_forms import LoginForm, EmailAddressForm, ChangePasswordForm, CreateUserForm
 from ...helpers.login_helpers import redirect_logged_in_user
-from ...helpers.form_helpers import render_template_with_csrf
 from ... import data_api_client
 from ...api_client.error import HTTPError
 

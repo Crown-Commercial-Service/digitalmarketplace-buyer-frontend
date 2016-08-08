@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from ...helpers import BaseApplicationTest
-from app.helpers.form_helpers import FakeCsrf
+from dmutils.forms import FakeCsrf
 from dmapiclient import api_stubs, HTTPError
 from dmcontent.content_loader import ContentLoader
 import mock
