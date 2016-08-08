@@ -1,11 +1,11 @@
+from flask.helpers import url_for
 import mock
 import re
 import json
 from nose.tools import assert_equal, assert_true, assert_false, assert_in
 from ...helpers import BaseApplicationTest
+from lxml import html
 import pytest
-
-pytestmark = pytest.mark.skipif(True, reason='need to be adapted for Australia')
 
 
 def find_pagination_links(res_data):
@@ -20,356 +20,99 @@ def find_search_summary(res_data):
         r'<span class="search-summary-count">.+</span>[^\n]+', res_data)
 
 
-@mock.patch('app.main.views.search.DataAPIClient')
-class TestSearchSuppliers(BaseApplicationTest):
-    def test_pagination_links(self, api_client):
-        res = self.client.get('/search/suppliers')
-        assert 200 == res.status_code
+class TestCataloguePage(BaseApplicationTest):
 
-
-class TestSearchResults(BaseApplicationTest):
     def setup(self):
-        super(TestSearchResults, self).setup()
+        super(TestCataloguePage, self).setup()
 
-        self._search_api_client = mock.patch(
-            'app.main.views.g_cloud.search_api_client'
-        ).start()
+        with self.app.app_context():
+            self.base_url = url_for('main.supplier_search')
 
-        self.search_results = self._get_search_results_fixture_data()
-        self.search_results_multiple_page = \
-            self._get_search_results_multiple_page_fixture_data()
+        self._api_client = mock.patch('app.main.views.search.DataAPIClient').start()
+        self._results_per_page = mock.patch('app.main.views.search.SUPPLIER_RESULTS_PER_PAGE', 4).start()
 
-    def teardown(self):
-        self._search_api_client.stop()
+        self.roles_json = self._get_fixture_data('supplier_roles.json')
+        self.results_json = self._get_fixture_data('supplier_results.json')
 
-    def test_search_page_results_service_links(self):
-        self._search_api_client.search_services.return_value = \
-            self.search_results
+        self._api_client.return_value.get_roles.return_value = self.roles_json
+        self._api_client.return_value.find_suppliers.return_value = self.results_json
 
-        res = self.client.get('/g-cloud/search?q=email')
-        assert_equal(200, res.status_code)
-        assert_true(
-            '<a href="/g-cloud/services/5-G3-0279-010">CDN VDMS</a>'
-            in res.get_data(as_text=True))
+    def _get_response_and_page(self, url=''):
+        response = self.client.get(self.base_url + url)
+        page = html.fromstring(response.get_data(as_text=True))
+        return response, page
 
-    def test_search_page_form(self):
-        self._search_api_client.search_services.return_value = \
-            self.search_results
+    def test_fixture_has_more_than_8_results_to_test_pagination(self):
+        """
+        This test is patched to have 4 results per page. So the test data must have 9 or more results to be able to
+        go up to page 3 to test.
+        """
+        assert len(self.results_json['hits']['hits']) > 8
 
-        res = self.client.get('/g-cloud/search?q=email')
-        assert_equal(200, res.status_code)
-        assert_true(
-            '<form action="/g-cloud/search" method="get">'
-            in res.get_data(as_text=True))
+    def test_catalogue_first_page_loads(self):
+        response, page = self._get_response_and_page()
+        assert response.status_code == 200
 
-    def test_search_page_allows_non_keyword_search(self):
-        self._search_api_client.search_services.return_value = \
-            self.search_results
+    def test_catalogue_second_page_loads(self):
+        response, page = self._get_response_and_page('?page=2')
+        assert response.status_code == 200
 
-        res = self.client.get('/g-cloud/search?lot=saas')
-        assert_equal(200, res.status_code)
-        assert_true(
-            '<a href="/g-cloud/services/5-G3-0279-010">CDN VDMS</a>'
-            in res.get_data(as_text=True))
+    def test_catalogue_has_filter_checkboxes(self):
+        response, page = self._get_response_and_page()
+        page = html.fromstring(response.get_data(as_text=True))
+        for role_row in self.roles_json['roles']:
+            role = role_row['role'].replace('Senior ', '').replace('Junior ', '')  # Mind the white space after Junior
+            checkbox = page.get_element_by_id(role.lower().replace(' ', '-'), None)
+            assert (checkbox is not None and checkbox.name == 'role' and checkbox.type == 'checkbox')
 
-    def test_should_not_render_pagination_on_single_results_page(self):
-        self._search_api_client.search_services.return_value = \
-            self.search_results
+    def test_catalogue_first_page_has_correct_number_of_results(self):
+        response, page = self._get_response_and_page()
+        page = html.fromstring(response.get_data(as_text=True))
+        assert len(page.find_class('supplier-result')) == len(self.results_json['hits']['hits'])
 
-        res = self.client.get('/g-cloud/search?lot=saas')
-        assert_equal(200, res.status_code)
-        assert_false(
-            '<li class="next">'
-            in res.get_data(as_text=True))
-        assert_false(
-            '<li class="previous">'
-            in res.get_data(as_text=True))
+    def test_catalogue_second_page_has_back_page_link(self):
+        response, page = self._get_response_and_page('?page=2')
+        found = False
+        for element, attribute, link, pos in page.find_class('pagination')[0].iterlinks():
+            if 'page=1' in link:
+                found = True
+        assert found
 
-    def test_should_render_pagination_link_on_first_results_page(self):
-        self._search_api_client.search_services.return_value = \
-            self.search_results_multiple_page
+    def test_catalogue_second_page_has_next_page_link(self):
+        response, page = self._get_response_and_page('?page=2')
+        found = False
+        for element, attribute, link, pos in page.find_class('pagination')[0].iterlinks():
+            if 'page=3' in link:
+                found = True
+        assert found
 
-        res = self.client.get('/g-cloud/search?lot=saas')
-        assert_equal(200, res.status_code)
-        assert_true(
-            'previous-next-navigation'
-            in res.get_data(as_text=True))
-        assert_false(
-            '<li class="previous">'
-            in res.get_data(as_text=True))
-        assert_true(
-            '<li class="next">'
-            in res.get_data(as_text=True))
+    def test_catalogue_pagination_links_have_supplied_query_string(self):
+        response, page = self._get_response_and_page('?page=2&sort_term=name&sort_order=desc&role=Agile+Coach&'
+                                                     'role=Delivery+Manager')
+        found = False
+        for element, attribute, link, pos in page.find_class('pagination')[0].iterlinks():
+            # Because it can be in any order
+            if 'page=2' in link and 'sort_term=name' in link and 'sort_order=desc' in link and \
+               'role=Agile+Coach' in link and 'role=Delivery+Manager' in link:
+                found = True
+        assert found
 
-        (next_link,) = find_pagination_links(res.get_data(as_text=True))
-        assert_true('page=2' in next_link)
-        assert_true('lot=saas' in next_link)
+    def test_catalogue_search(self):
+        supplier_name = self.results_json['hits']['hits'][0]['_source']['name']
 
-    def test_should_render_pagination_link_on_second_results_page(self):
-        self._search_api_client.search_services.return_value = \
-            self.search_results_multiple_page
+        response, page = self._get_response_and_page('?keyword=%s' % supplier_name.replace(' ', '+'))
 
-        res = self.client.get('/g-cloud/search?lot=saas&page=2')
-        assert_equal(200, res.status_code)
-        assert_true(
-            'previous-next-navigation'
-            in res.get_data(as_text=True))
-        assert_true(
-            '<li class="previous">'
-            in res.get_data(as_text=True))
-        assert_true(
-            '<li class="next">'
-            in res.get_data(as_text=True))
-        (prev_link, next_link) = find_pagination_links(
-            res.get_data(as_text=True))
+        found = False
+        for result in page.find_class('supplier-result'):
+            for element, attribute, link, pos in result.iterlinks():
+                if element.text_content().strip() == supplier_name:
+                    found = True
+        assert found
 
-        assert_true('page=1' in prev_link)
-        assert_true('lot=saas' in prev_link)
-        assert_true('page=3' in next_link)
-        assert_true('lot=saas' in next_link)
-
-    def test_should_render_total_pages_on_pagination_links(self):
-        self._search_api_client.search_services.return_value = \
-            self.search_results_multiple_page
-
-        res = self.client.get('/g-cloud/search?lot=saas&page=2')
-        assert_equal(200, res.status_code)
-        assert_true(
-            'previous-next-navigation'
-            in res.get_data(as_text=True))
-        assert_true(
-            '<span class="page-numbers">1 of 200</span>'
-            in res.get_data(as_text=True))
-        assert_true(
-            '<span class="page-numbers">3 of 200</span>'
-            in res.get_data(as_text=True))
-
-    def test_should_render_pagination_link_on_last_results_page(self):
-        self._search_api_client.search_services.return_value = \
-            self.search_results_multiple_page
-
-        res = self.client.get('/g-cloud/search?lot=saas&page=200')
-        assert_equal(200, res.status_code)
-        assert_true(
-            'previous-next-navigation'
-            in res.get_data(as_text=True))
-        assert_true(
-            '<li class="previous">'
-            in res.get_data(as_text=True))
-        assert_false(
-            '<li class="next">'
-            in res.get_data(as_text=True))
-
-        (prev_link,) = find_pagination_links(res.get_data(as_text=True))
-        assert_true('page=199' in prev_link)
-        assert_true('lot=saas' in prev_link)
-
-    def test_should_render_summary_for_0_results_in_SaaS_no_keywords(self):
-        self._search_api_client.search_services.return_value = {
-            "services": [],
-            "meta": {
-                "query": {},
-                "total": 0,
-                "took": 3
-            },
-            "links": {}
-        }
-
-        res = self.client.get('/g-cloud/search?lot=saas')
-        assert_equal(200, res.status_code)
-        summary = find_search_summary(res.get_data(as_text=True))[0]
-        assert_true(
-            '<span class="search-summary-count">0</span> results found' +
-            ' in <em>Software as a Service</em>' in summary)
-
-    def test_should_render_summary_for_1_result_in_SaaS_no_keywords(self):
-        return_value = self.search_results_multiple_page
-        return_value["services"] = [return_value["services"][0]]
-        return_value["meta"]["total"] = 1
-        self._search_api_client.search_services.return_value = return_value
-
-        res = self.client.get('/g-cloud/search?lot=saas')
-        assert_equal(200, res.status_code)
-        summary = find_search_summary(res.get_data(as_text=True))[0]
-        assert_true(
-            '<span class="search-summary-count">1</span> result found' +
-            ' in <em>Software as a Service</em>' in summary)
-
-    def test_should_render_summary_for_1_result_in_IaaS_no_keywords(self):
-        return_value = self.search_results_multiple_page
-        return_value["services"] = [return_value["services"][0]]
-        return_value["meta"]["total"] = 1
-        self._search_api_client.search_services.return_value = return_value
-
-        res = self.client.get('/g-cloud/search?lot=iaas')
-        assert_equal(200, res.status_code)
-        summary = find_search_summary(res.get_data(as_text=True))[0]
-        assert_true(
-            '<span class="search-summary-count">1</span> result found' +
-            ' in <em>Infrastructure as a Service</em>' in summary)
-
-    def test_should_render_summary_for_1_result_in_SaaS_with_keywords(self):
-        return_value = self.search_results_multiple_page
-        return_value["services"] = [return_value["services"][0]]
-        return_value["meta"]["total"] = 1
-        self._search_api_client.search_services.return_value = return_value
-
-        res = self.client.get('/g-cloud/search?q=email&lot=saas')
-        assert_equal(200, res.status_code)
-        summary = find_search_summary(res.get_data(as_text=True))[0]
-        assert_true(
-            '<span class="search-summary-count">1</span> result found' +
-            ' containing <em>email</em> in' +
-            ' <em>Software as a Service</em>' in summary)
-
-    def test_should_render_summary_with_a_group_of_1_boolean_filter(self):
-        return_value = self.search_results_multiple_page
-        return_value["services"] = [return_value["services"][0]]
-        return_value["meta"]["total"] = 1
-        self._search_api_client.search_services.return_value = return_value
-
-        res = self.client.get(
-            '/g-cloud/search?q=email&lot=saas&freeOption=true')
-        assert_equal(200, res.status_code)
-        summary = find_search_summary(res.get_data(as_text=True))[0]
-        assert_true(
-            '<span class="search-summary-count">1</span> result found' +
-            ' containing <em>email</em> in' +
-            ' <em>Software as a Service</em>' +
-            ' with a <em>Free option</em>' in summary)
-
-    def test_should_render_summary_with_a_group_of_2_boolean_filters(self):
-        return_value = self.search_results_multiple_page
-        return_value["services"] = [return_value["services"][0]]
-        return_value["meta"]["total"] = 1
-        self._search_api_client.search_services.return_value = return_value
-
-        res = self.client.get(
-            '/g-cloud/search?q=email&lot=saas&freeOption=true' +
-            '&trialOption=true')
-        assert_equal(200, res.status_code)
-        summary = find_search_summary(res.get_data(as_text=True))[0]
-        assert_true(
-            '<span class="search-summary-count">1</span> result found' +
-            ' containing <em>email</em> in' +
-            ' <em>Software as a Service</em>' +
-            ' with a ' in summary)
-        assert_true('<em>Free option</em>' in summary)
-        assert_true('<em>Trial option</em>' in summary)
-
-    def test_should_render_summary_with_a_group_of_1_array_filter(self):
-        return_value = self.search_results_multiple_page
-        return_value["services"] = [return_value["services"][0]]
-        return_value["meta"]["total"] = 1
-        self._search_api_client.search_services.return_value = return_value
-
-        res = self.client.get(
-            '/g-cloud/search?q=email&lot=saas&minimumContractPeriod=hour')
-        assert_equal(200, res.status_code)
-        summary = find_search_summary(res.get_data(as_text=True))[0]
-        assert_true(
-            '<span class="search-summary-count">1</span> result found' +
-            ' containing <em>email</em> in' +
-            ' <em>Software as a Service</em>' +
-            ' with a minimum contract period of an <em>Hour</em>'
-            in summary)
-
-    def test_should_render_summary_with_a_group_of_2_array_filters(self):
-        return_value = self.search_results_multiple_page
-        return_value["services"] = [return_value["services"][0]]
-        return_value["meta"]["total"] = 1
-        self._search_api_client.search_services.return_value = return_value
-
-        res = self.client.get(
-            '/g-cloud/search?q=email&lot=saas&minimumContractPeriod=hour' +
-            '&minimumContractPeriod=day')
-        assert_equal(200, res.status_code)
-        summary = find_search_summary(res.get_data(as_text=True))[0]
-        assert_true(
-            '<span class="search-summary-count">1</span> result found' +
-            ' containing <em>email</em> in' +
-            ' <em>Software as a Service</em>' +
-            ' with a minimum contract period of ' in summary)
-        assert_true('an <em>Hour</em>' in summary)
-        assert_true('a <em>Day</em>' in summary)
-
-    def test_should_render_summary_with_2_groups_of_filters(self):
-        return_value = self.search_results_multiple_page
-        return_value["services"] = [return_value["services"][0]]
-        return_value["meta"]["total"] = 1
-        self._search_api_client.search_services.return_value = return_value
-
-        res = self.client.get(
-            '/g-cloud/search?q=email&lot=saas&freeOption=true' +
-            '&minimumContractPeriod=hour&minimumContractPeriod=day')
-        assert_equal(200, res.status_code)
-        summary = find_search_summary(res.get_data(as_text=True))[0]
-        assert_true(
-            '<span class="search-summary-count">1</span> result found' +
-            ' containing <em>email</em> in' +
-            ' <em>Software as a Service</em>' in summary)
-        assert_true('with a <em>Free option</em>' in summary)
-        assert_true('with a minimum contract period of' in summary)
-        assert_true('an <em>Hour</em>' in summary)
-        assert_true('a <em>Day</em>' in summary)
-
-    def test_should_render_summary_with_3_groups_of_filters(self):
-        return_value = self.search_results_multiple_page
-        return_value["services"] = [return_value["services"][0]]
-        return_value["meta"]["total"] = 1
-        self._search_api_client.search_services.return_value = return_value
-
-        res = self.client.get(
-            '/g-cloud/search?q=email&lot=saas&freeOption=true' +
-            '&minimumContractPeriod=hour&minimumContractPeriod=day' +
-            '&datacentreTier=tia-942+tier+1')
-        assert_equal(200, res.status_code)
-        summary = find_search_summary(res.get_data(as_text=True))[0]
-        assert_true(
-            '<span class="search-summary-count">1</span> result found' +
-            ' containing <em>email</em> in' +
-            ' <em>Software as a Service</em>' in summary)
-        assert_true('with a <em>Free option</em>' in summary)
-        assert_true('with a minimum contract period of' in summary)
-        assert_true('an <em>Hour</em>' in summary)
-        assert_true('a <em>Day</em>' in summary)
-        assert_true('with a datacentre tier of' in summary)
-        assert_true('<em>TIA-942 Tier 1</em>' in summary)
-
-    def test_should_ignore_unknown_arguments(self):
-        return_value = self.search_results_multiple_page
-        return_value["services"] = [return_value["services"][0]]
-        return_value["meta"]["total"] = 1
-        self._search_api_client.search_services.return_value = return_value
-
-        res = self.client.get(
-            '/g-cloud/search?q=&lot=saas' +
-            '&minimumContractPeriod=hr&minimumContractPeriod=dy')
-
-        assert_equal(200, res.status_code)
-
-    def test_query_text_is_escaped(self):
-        return_value = self.search_results_multiple_page
-        return_value["services"] = [return_value["services"][0]]
-        return_value["meta"]["total"] = 1
-        self._search_api_client.search_services.return_value = return_value
-
-        res = self.client.get('/g-cloud/search?q=<div>XSS</div>')
-
-        assert_equal(200, res.status_code)
-        summary = find_search_summary(res.get_data(as_text=True))[0]
-        assert_in('&lt;div&gt;XSS&lt;/div&gt;', summary)
-
-    def test_summary_for_unicode_query_keywords(self):
-        return_value = self.search_results_multiple_page
-        return_value["services"] = [return_value["services"][0]]
-        return_value["meta"]["total"] = 1
-        self._search_api_client.search_services.return_value = return_value
-
-        res = self.client.get(u'/g-cloud/search?q=email+\U0001f47e&lot=saas')
-        assert_equal(200, res.status_code)
-        summary = find_search_summary(res.get_data(as_text=True))[0]
-        assert_true(
-            u'<span class="search-summary-count">1</span> result found' +
-            u' containing <em>email \U0001f47e</em> in' +
-            u' <em>Software as a Service</em>' in summary)
+    def test_clear_buttons_have_valid_url(self):
+        response, page = self._get_response_and_page()
+        valid = True
+        for button in page.find_class('clear-all'):
+            if button.attrib['href'] not in self.base_url:
+                valid = False
+        assert valid

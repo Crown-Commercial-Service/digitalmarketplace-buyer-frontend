@@ -98,6 +98,7 @@ class Test(Config):
 
     SHARED_EMAIL_KEY = "KEY"
     SECRET_KEY = "KEY"
+    SERVER_NAME = 'localhost'
 
 
 class Development(Config):

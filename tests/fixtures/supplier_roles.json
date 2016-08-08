@@ -1,0 +1,142 @@
+{
+  "roles": [
+    {
+      "category": "Product Management",
+      "categoryAbbreviation": "pm",
+      "role": "Junior Product Manager",
+      "roleAbbreviation": "pm-j"
+    },
+    {
+      "category": "Product Management",
+      "categoryAbbreviation": "pm",
+      "role": "Senior Product Manager",
+      "roleAbbreviation": "pm-s"
+    },
+    {
+      "category": "Business Analysis",
+      "categoryAbbreviation": "ba",
+      "role": "Junior Business Analyst",
+      "roleAbbreviation": "ba-j"
+    },
+    {
+      "category": "Business Analysis",
+      "categoryAbbreviation": "ba",
+      "role": "Senior Business Analyst",
+      "roleAbbreviation": "ba-s"
+    },
+    {
+      "category": "Delivery Management and Agile Coaching",
+      "categoryAbbreviation": "dm",
+      "role": "Junior Delivery Manager",
+      "roleAbbreviation": "dm-j"
+    },
+    {
+      "category": "Delivery Management and Agile Coaching",
+      "categoryAbbreviation": "dm",
+      "role": "Senior Delivery Manager",
+      "roleAbbreviation": "dm-s"
+    },
+    {
+      "category": "Delivery Management and Agile Coaching",
+      "categoryAbbreviation": "dm",
+      "role": "Senior Agile Coach",
+      "roleAbbreviation": "ac-s"
+    },
+    {
+      "category": "User Research",
+      "categoryAbbreviation": "ur",
+      "role": "Senior User Research",
+      "roleAbbreviation": "ur-s"
+    },
+    {
+      "category": "Service Design and Interaction Design",
+      "categoryAbbreviation": "sd",
+      "role": "Senior Service Designer",
+      "roleAbbreviation": "sd-s"
+    },
+    {
+      "category": "Service Design and Interaction Design",
+      "categoryAbbreviation": "sd",
+      "role": "Junior Interaction Designer",
+      "roleAbbreviation": "id-j"
+    },
+    {
+      "category": "Service Design and Interaction Design",
+      "categoryAbbreviation": "sd",
+      "role": "Senior Interaction Designer",
+      "roleAbbreviation": "id-s"
+    },
+    {
+      "category": "Technical Architecture, Development, Ethical Hacking and Web Operations",
+      "categoryAbbreviation": "tech",
+      "role": "Senior Technical Lead",
+      "roleAbbreviation": "tl-s"
+    },
+    {
+      "category": "Technical Architecture, Development, Ethical Hacking and Web Operations",
+      "categoryAbbreviation": "tech",
+      "role": "Junior Developer",
+      "roleAbbreviation": "dev-j"
+    },
+    {
+      "category": "Technical Architecture, Development, Ethical Hacking and Web Operations",
+      "categoryAbbreviation": "tech",
+      "role": "Senior Developer",
+      "roleAbbreviation": "dev-s"
+    },
+    {
+      "category": "Technical Architecture, Development, Ethical Hacking and Web Operations",
+      "categoryAbbreviation": "tech",
+      "role": "Junior Ethical Hacker",
+      "roleAbbreviation": "hack-j"
+    },
+    {
+      "category": "Technical Architecture, Development, Ethical Hacking and Web Operations",
+      "categoryAbbreviation": "tech",
+      "role": "Senior Ethical Hacker",
+      "roleAbbreviation": "hack-s"
+    },
+    {
+      "category": "Technical Architecture, Development, Ethical Hacking and Web Operations",
+      "categoryAbbreviation": "tech",
+      "role": "Junior Web Devops Engineer",
+      "roleAbbreviation": "devops-j"
+    },
+    {
+      "category": "Technical Architecture, Development, Ethical Hacking and Web Operations",
+      "categoryAbbreviation": "tech",
+      "role": "Senior Web Devops Engineer",
+      "roleAbbreviation": "devops-s"
+    },
+    {
+      "category": "Performance and Web Analytics",
+      "categoryAbbreviation": "wa",
+      "role": "Junior Web Performance Analyst",
+      "roleAbbreviation": "wa-j"
+    },
+    {
+      "category": "Performance and Web Analytics",
+      "categoryAbbreviation": "wa",
+      "role": "Senior Web Performance Analyst",
+      "roleAbbreviation": "wa-s"
+    },
+    {
+      "category": "Inclusive Design and Accessibility",
+      "categoryAbbreviation": "acc",
+      "role": "Junior Inclusive Designer (accessibility consultant)",
+      "roleAbbreviation": "id-j"
+    },
+    {
+      "category": "Inclusive Design and Accessibility",
+      "categoryAbbreviation": "acc",
+      "role": "Senior Inclusive Designer (accessibility consultant)",
+      "roleAbbreviation": "id-s"
+    },
+    {
+      "category": "Digital Transformation Advisers",
+      "categoryAbbreviation": "dta",
+      "role": "Senior Digital Transformation Adviser",
+      "roleAbbreviation": "dta-s"
+    }
+  ]
+}

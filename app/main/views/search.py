@@ -20,6 +20,8 @@ Role = namedtuple('Role', 'label')
 ExtraDetail = namedtuple('ExtraDetail', 'key value')
 Result = namedtuple('Result', 'title description badges roles url')
 
+SUPPLIER_RESULTS_PER_PAGE = 10
+
 
 @main.route('/search/suppliers')
 def supplier_search():
@@ -130,12 +132,11 @@ def supplier_search():
         }
 
     page = int(request.args.get('page', 1))
-    size = 10  # Number of results per page
-    results_from = (page * size) - size
+    results_from = (page * SUPPLIER_RESULTS_PER_PAGE) - SUPPLIER_RESULTS_PER_PAGE
 
     params = {
         'from': results_from,
-        'size': size
+        'size': SUPPLIER_RESULTS_PER_PAGE
     }
 
     response = DataAPIClient().find_suppliers(data=query, params=params)
@@ -163,9 +164,9 @@ def supplier_search():
         results.append(result)
 
     num_results = response['hits']['total']
-    results_to = num_results if num_results < (page * size) else (page * size)
+    results_to = num_results if num_results < (page * SUPPLIER_RESULTS_PER_PAGE) else (page * SUPPLIER_RESULTS_PER_PAGE)
 
-    pages = get_page_list(size, num_results, page)
+    pages = get_page_list(SUPPLIER_RESULTS_PER_PAGE, num_results, page)
 
     return render_template(
         'search_suppliers.html',
