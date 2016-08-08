@@ -10,7 +10,6 @@
     }[lot.slug]
 %}
 
-{#
 {% block breadcrumb %}
   {%
     with items = [
@@ -27,11 +26,9 @@
     {% include "toolkit/breadcrumb.html" %}
   {% endwith %}
 {% endblock %}
-#}
-
 
 {% block save_button %}
-  <br>
+
   {%
     with
     label="Save and continue",

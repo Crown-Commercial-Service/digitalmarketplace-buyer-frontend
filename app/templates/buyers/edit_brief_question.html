@@ -2,7 +2,6 @@
 
 {% import "macros/brief_links.html" as brief_links %}
 
-{#
 {% block breadcrumb %}
   {% set base_breadcrumbs = [
       {
@@ -30,10 +29,9 @@
     {% include "toolkit/breadcrumb.html" %}
   {% endwith %}
 {% endblock %}
-#}
 
 {% block save_button %}
-
+<br>
   {%
     with
     label= button_label or "Save and continue",
@@ -43,8 +41,6 @@
   %}
     {% include "toolkit/button.html" %}
   {% endwith %}
-
-  <br/><br/>
 
   {%
     with

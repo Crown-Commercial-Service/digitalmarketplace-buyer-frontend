@@ -4,7 +4,6 @@
 
 {% block page_title %}{{ brief.title or brief.lotName }} – Digital Marketplace{% endblock %}
 
-{#
 {% block breadcrumb %}
   {%
     with items = [
@@ -21,7 +20,6 @@
     {% include "toolkit/breadcrumb.html" %}
   {% endwith %}
 {% endblock %}
-#}
 
 {% block main_content %}
   <div class="grid-row">
@@ -209,6 +207,7 @@
         {% endwith %}
 
     </div>
+    <br>
 
   </div>
   {% if not delete_requested %}
