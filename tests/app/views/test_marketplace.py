@@ -610,6 +610,64 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         ss_elem = document.xpath("//p[@class='search-summary']")[0]
         assert self._normalize_whitespace(self._squashed_element_text(ss_elem)) == "2 results"
 
+    def test_catalogue_of_briefs_page_filtered_all_options_selected(self):
+        original_url = "/digital-outcomes-and-specialists/opportunities?status=live&lot=lot-one&lot=lot-three"\
+            "&status=closed&lot=lot-four"
+        res = self.client.get(original_url)
+        assert_equal(200, res.status_code)
+        document = html.fromstring(res.get_data(as_text=True))
+
+        self._data_api_client.get_framework.assert_called_once_with("digital-outcomes-and-specialists")
+        regular_args = {
+            k: v for k, v in iteritems(self._data_api_client.find_briefs.call_args[1]) if k not in ("status", "lot",)
+        }
+        assert regular_args == {
+            "framework": "digital-outcomes-and-specialists",
+            "page": 1,
+            "human": True,
+        }
+        assert set(self._data_api_client.find_briefs.call_args[1]["status"].split(",")) == {"live", "closed"}
+        assert set(self._data_api_client.find_briefs.call_args[1]["lot"].split(",")) == {
+            "lot-one",
+            "lot-three",
+            "lot-four",
+        }
+
+        heading = document.xpath('normalize-space(//h1/text())')
+        assert heading == "Digital Outcomes and Specialists opportunities"
+        assert 'lot 1, lot 3 and lot 4' in document.xpath(
+            "normalize-space(//div[@class='marketplace-paragraph']/p/text())"
+        )
+
+        lot_inputs = document.xpath("//form[@method='get']//input[@name='lot']")
+        assert {
+            element.get("value"): bool(element.get("checked"))
+            for element in lot_inputs
+        } == {
+            "lot-one": True,
+            "lot-three": True,
+            "lot-four": True,
+        }
+
+        status_inputs = document.xpath("//form[@method='get']//input[@name='status']")
+        assert {
+            element.get("value"): bool(element.get("checked"))
+            for element in status_inputs
+        } == {
+            "live": True,
+            "closed": True,
+        }
+
+        parsed_original_url = urlparse(original_url)
+        parsed_next_url = urlparse(document.xpath("//li[@class='next']/a/@href")[0])
+        assert parsed_original_url.path == parsed_next_url.path
+
+        normalize_qs = lambda qs: {k: set(v) for k, v in iteritems(parse_qs(qs)) if k != "page"}
+        assert normalize_qs(parsed_original_url.query) == normalize_qs(parsed_next_url.query)
+
+        ss_elem = document.xpath("//p[@class='search-summary']")[0]
+        assert self._normalize_whitespace(self._squashed_element_text(ss_elem)) == "2 results"
+
     def test_catalogue_of_briefs_404_if_invalid_status(self):
         res = self.client.get('/digital-outcomes-and-specialists/opportunities?status=pining-for-fjords')
         assert res.status_code == 404

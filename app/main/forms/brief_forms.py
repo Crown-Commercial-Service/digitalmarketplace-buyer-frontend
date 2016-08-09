@@ -80,12 +80,4 @@ class BriefSearchForm(Form):
         if not self.validate():
             raise ValueError("Invalid form")
 
-        return bool(
-            (self.lot.data or self.status.data)
-            and not (
-                # also have to ensure we don't just have everything selected
-                    ({id_ for id_, label in self.lot.choices} == set(self.lot.data or ()))
-                and
-                    ({id_ for id_, label in self.status.choices} == set(self.status.data or ()))
-            )
-        )
+        return bool(self.lot.data or self.status.data)
