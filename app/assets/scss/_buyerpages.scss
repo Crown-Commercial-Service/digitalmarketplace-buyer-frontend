@@ -47,3 +47,31 @@ ul.instruction-list-item{
     }
   }
 }
+
+
+// Buyer Brief Radio Selection
+
+#specialistRole{
+
+  input[type='radio'] + label{
+    padding-top: 5px 80px 12px 60px;
+    font-weight: 400;
+    font-size: 1.412em;
+
+    >p{
+      font-weight: 400;
+      font-size: 0.812em;
+    }
+  }
+
+  input[type='radio']:checked + label{
+    font-weight: 700;
+    font-size: 1.412em;
+    outline: 1px solid #717171;
+
+    >p{
+      font-weight: 400;
+      font-size: 0.812em;
+    }
+  }
+}
