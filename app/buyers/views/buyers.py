@@ -375,8 +375,8 @@ def publish_brief(framework_slug, lot_slug, brief_id):
     else:
         #  requirements length is a required question but is handled separately to other
         #  required questions on the publish page if it's unanswered.
-        if sections.get_section('set-how-long-your-requirements-will-be-live-for') and \
-                sections.get_section('set-how-long-your-requirements-will-be-live-for').questions[0].answer_required:
+        if sections.get_section('set-how-long-your-requirements-will-be-open-for') and \
+                sections.get_section('set-how-long-your-requirements-will-be-open-for').questions[0].answer_required:
                 unanswered_required -= 1
 
         email_address = brief_users['emailAddress']
