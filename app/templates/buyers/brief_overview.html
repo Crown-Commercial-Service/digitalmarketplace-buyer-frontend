@@ -41,18 +41,16 @@
       {% endif %}
    {% endblock %}
     <div class="column-two-thirds">
-      <div class="buyer-brief-overview-text">
       {% with
         heading = brief.get('title', brief['lotName']),
         context = 'Overview'
       %}
         {% include "toolkit/page-heading.html" %}
       {% endwith %}
-    </div>
 
     {% block before_sections %}{% endblock %}
 
-
+      <ol class="instruction-list steps">
 
         {% with
           steps = [
@@ -169,18 +167,18 @@
 
         {% for step in steps %}
           {% set step_number = loop.index %}
-
+          <li class="instruction-list-item divider">
             <h2 class="instruction-list-item-body">
               <span class="step-number" role="presentation">{{ step_number }}. </span>
               {{ step.title }}</h2>
             {% if step.description %}
-              <p class="instruction-list-item-information">{{ step.description[brief.status] }}</p>
+              <p class="instruction-list-item-extra-information">{{ step.description[brief.status] }}</p>
             {% endif %}
             {% if step_number in step_sections and brief.status == 'draft' %}
 
-                <ul class="instruction-list-item">
+                <ul class="instruction-list-item-extra-information">
                   {% for section in sections %}
-                    <span class="step-number">{% if section.step == step_number %}</span>
+                    {% if section.step == step_number %}
                     <li>
                       {% if completed_sections[section.slug]  %}
                         <span class="tick">
@@ -194,7 +192,7 @@
                 </ul>
             {% endif %}
             {% if step.links %}
-              <ul class="instruction-list-item">
+              <ul class="instruction-list-item-extra-information">
                 {% for link in step.links %}
                   {% if not link.allowed_statuses or brief.status in link.allowed_statuses %}
                     <li>
@@ -204,12 +202,11 @@
                 {% endfor %}
               </ul>
             {% endif %}
-
+          </li>
         {% endfor %}
         {% endwith %}
-
+      </ol>
     </div>
-    <br>
 
   </div>
   {% if not delete_requested %}
