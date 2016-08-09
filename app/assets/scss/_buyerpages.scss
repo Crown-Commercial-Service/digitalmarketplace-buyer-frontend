@@ -1,0 +1,46 @@
+//Buyer brief overview page
+.buyer-brief-overview-text{
+  p.context{
+    color: #717171;
+    font-size: 1.412rem;
+    margin-bottom: 0;
+  }
+}
+
+h2.instruction-list-item-body{
+  // border-top: 1px solid #ccc;
+  padding-top: 1.25em;
+  font-size: 1.882rem;
+
+  &:first-child{
+    border: none;
+  }
+
+  span{
+    padding-right: 0.625em;
+  }
+}
+
+p.instruction-list-item-information{
+  padding-left: 3em;
+}
+
+ul.instruction-list-item{
+
+  li{
+    list-style: none;
+    padding-left: 1em;
+    font-size: 1.059rem;
+
+    span.tick{
+      position: absolute;
+      margin-left: -1.35em;
+      margin-top: 0.25em;
+    }
+
+    a{
+      font-weight: 700;
+      border-color: #313131;
+    }
+  }
+}
