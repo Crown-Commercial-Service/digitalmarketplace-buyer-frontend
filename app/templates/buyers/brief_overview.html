@@ -180,7 +180,7 @@
 
                 <ul class="instruction-list-item">
                   {% for section in sections %}
-                    <span>{% if section.step == step_number %}</span>
+                    <span class="step-number">{% if section.step == step_number %}</span>
                     <li>
                       {% if completed_sections[section.slug]  %}
                         <span class="tick">

@@ -9,15 +9,18 @@
 
 h2.instruction-list-item-body{
   // border-top: 1px solid #ccc;
-  padding-top: 1.25em;
+  padding-top: 1em;
+  padding-left: 1.625em;
   font-size: 1.882rem;
 
-  &:first-child{
+  &:first-of-type {
     border: none;
+    padding-top: 0;
   }
 
-  span{
-    padding-right: 0.625em;
+  span.step-number{
+    position: absolute;
+    margin-left: -1.625em;
   }
 }
 
@@ -29,7 +32,7 @@ ul.instruction-list-item{
 
   li{
     list-style: none;
-    padding-left: 1em;
+    padding-left: 0.9em;
     font-size: 1.059rem;
 
     span.tick{
