@@ -666,7 +666,7 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         assert normalize_qs(parsed_original_url.query) == normalize_qs(parsed_next_url.query)
 
         ss_elem = document.xpath("//p[@class='search-summary']")[0]
-        assert self._normalize_whitespace(self._squashed_element_text(ss_elem)) == "2 opportunities"
+        assert self._normalize_whitespace(self._squashed_element_text(ss_elem)) == "2 results"
 
     def test_catalogue_of_briefs_404_if_invalid_status(self):
         res = self.client.get('/digital-outcomes-and-specialists/opportunities?status=pining-for-fjords')
