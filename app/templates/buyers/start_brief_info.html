@@ -1,105 +1,100 @@
 {% extends "_base_page.html" %}
 
 {% set title_text =
-    {
-        "digital-outcomes": "Find a team to provide an outcome",
-        "digital-specialists": "Find an individual specialist",
-        "user-research-participants": "Find user research participants",
-    }[lot.slug]
-%}
+  {
+    "digital-outcomes": "Find a team to provide an outcome",
+    "digital-specialists": "Find an individual specialist",
+    "user-research-participants": "Find user research participants",
+  }[lot.slug]
+  %}
 
-{% block page_title %}
-{{ title_text }} - Digital Marketplace
-{% endblock %}
+  {% block page_title %}
+  {{ title_text }} - Digital Marketplace
+  {% endblock %}
 
-{% block breadcrumb %}
+{#}
+  {% block breadcrumb %}
   {%
     with items = [
-      {
-        "link": "/",
-        "label": "Digital Marketplace"
-      }
+    {
+      "link": "/",
+      "label": "Digital Marketplace"
+    }
     ]
-  %}
+    %}
     {% include "toolkit/breadcrumb.html" %}
-  {% endwith %}
-{% endblock %}
+    {% endwith %}
+  {% endblock %}
+#}
 
-{% block main_content %}
+    {% block main_content %}
 
-<div class="grid-row">
-    <div class="column-two-thirds large-paragraph">
-        {% with
-          smaller = true,
-          heading = title_text
-        %}
-        {% include 'toolkit/page-heading.html' %}
-        {% endwith %}
-    </div>
+    {% with
+      smaller = true,
+      heading = title_text
+      %}
+      {% include 'toolkit/page-heading.html' %}
+      {% endwith %}
 
-    <div class="column-two-thirds large-paragraph">
-        <div class="marketplace-paragraph">
-            <p>
-                {{
-                    {
-                    "digital-outcomes": "To find a digital outcome, eg a booking system or an accessibility audit, you need to tell suppliers about the situation or problem. They’ll then propose a solution to meet your needs.",
-                    "digital-specialists": "To find a digital specialist, eg a developer or a user researcher, you need to tell suppliers to provide a specialist for a specific piece of work.",
-                    "user-research-participants": "To find user research participants, you need to tell suppliers about the types of participants you want to test your service with. They’ll then tell you what they can do and how much it will cost.",
-                    }[lot.slug]
-                }}
-            </p>
-        </div>
+      <p>
+        {{
+          {
+            "digital-outcomes": "To find a digital outcome, eg a booking system or an accessibility audit, you need to tell suppliers about the situation or problem. They’ll then propose a solution to meet your needs.",
+            "digital-specialists": "To find a digital specialist, eg a developer or a user researcher, you need to tell suppliers to provide a specialist for a specific piece of work.",
+            "user-research-participants": "To find user research participants, you need to tell suppliers about the types of participants you want to test your service with. They’ll then tell you what they can do and how much it will cost.",
+          }[lot.slug]
+        }}
+      </p>
 
-        <h2>Before you start</h2>
-        <ol class="list-number">
-            <li>You can talk to suppliers to prepare your requirements.<br>
-                <a href="https://assets.digitalmarketplace.service.gov.uk/digital-outcomes-and-specialists/communications/catalogues/{{ lot.slug }}-suppliers.csv">
-                    Download list of suppliers.
-                </a>
-            </li>
-            <li>Get budget approval.</li>
-        </ol>
+      <h2>Before you start</h2>
+      <ol>
+        <li>You can talk to suppliers to prepare your requirements.<br>
+          <a href="https://assets.digitalmarketplace.service.gov.uk/digital-outcomes-and-specialists/communications/catalogues/{{ lot.slug }}-suppliers.csv">
+            Download list of suppliers.
+          </a>
+        </li>
+        <li>Get budget approval.</li>
+      </ol>
 
-        <h2>Write and publish your requirements</h2>
-        <ol class="list-number" start="3">
-            <li>Write your requirements and say how you’re going to evaluate {{ "specialists" if lot.slug == "digital-specialists" else "suppliers" }}.</li>
-            <li>Publish your requirements and evaluation criteria so suppliers can apply for the work. This information will be published on the Digital Marketplace where anyone can see it.</li>
-        </ol>
+      <h2>Write and publish your requirements</h2>
+      <ol start="3">
+        <li>Write your requirements and say how you’re going to evaluate {{ "specialists" if lot.slug == "digital-specialists" else "suppliers" }}.</li>
+        <li>Publish your requirements and evaluation criteria so suppliers can apply for the work. This information will be published on the Digital Marketplace where anyone can see it.</li>
+      </ol>
 
-        <h2>Answer supplier questions</h2>
-        <ol class="list-number" start="5">
-            <li>Post all supplier questions and answers on the Digital Marketplace.</li>
-        </ol>
+      <h2>Answer supplier questions</h2>
+      <ol start="5">
+        <li>Post all supplier questions and answers on the Digital Marketplace.</li>
+      </ol>
 
-        <h2>Evaluate suppliers</h2>
-        <ol class="list-number" start="6">
-            <li>Shortlist and evaluate {{ "specialists’" if lot.slug == "digital-specialists" else "supplier" }} applications.</li>
-            <li>Award a contract to the {{ "specialist" if lot.slug == "digital-specialists" else "supplier" }} that best meets your needs.</li>
-        </ol>
+      <h2>Evaluate suppliers</h2>
+      <ol start="6">
+        <li>Shortlist and evaluate {{ "specialists’" if lot.slug == "digital-specialists" else "supplier" }} applications.</li>
+        <li>Award a contract to the {{ "specialist" if lot.slug == "digital-specialists" else "supplier" }} that best meets your needs.</li>
+      </ol>
 
-        <p>The buying process should take around 4 weeks.</p>
-        <p>Read more about:</p>
-        <div class="explanation-list">
-            <ul class="list-bullet">
-                <li><a href="https://www.gov.uk/guidance/digital-outcomes-and-specialists-buyers-guide">how to buy</a></li>
-                <li><a href="https://www.gov.uk/guidance/how-digital-marketplace-suppliers-have-been-evaluated">how suppliers have been evaluated</a></li>
-            </ul>
-        </div>
-    </div>
+      <p>The buying process should take around 4 weeks.</p>
+      <p>Read more about:</p>
 
-    <div class="column-two-thirds large-paragraph">
-        <form action="{{ url_for('buyers.start_new_brief', framework_slug=framework.slug, lot_slug=lot.slug) }}" method="get">
+      <ul>
+        <li><a href="https://www.gov.uk/guidance/digital-outcomes-and-specialists-buyers-guide">how to buy</a></li>
+        <li><a href="https://www.gov.uk/guidance/how-digital-marketplace-suppliers-have-been-evaluated">how suppliers have been evaluated</a></li>
+      </ul>
 
-            {%
-                with
-                label="Create requirement",
-                type="save"
-            %}
-                {% include "toolkit/button.html" %}
-            {% endwith %}
+
+<br>
+      <form action="{{ url_for('buyers.start_new_brief', framework_slug=framework.slug, lot_slug=lot.slug) }}" method="get">
+
+        {%
+          with
+          label="Create requirement",
+          type="save",
+          role="button"
+          %}
+          {% include "toolkit/button.html" %}
+          {% endwith %}
 
         </form>
-    </div>
-</div>
 
-{% endblock %}
+
+        {% endblock %}

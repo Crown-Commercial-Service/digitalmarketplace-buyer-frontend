@@ -2,6 +2,7 @@
 
 {% block page_title %}Your account - Digital Marketplace{% endblock %}
 
+{#
 {% block breadcrumb %}
   {%
     with items = [
@@ -22,6 +23,7 @@
     {% include "toolkit/breadcrumb.html" %}
   {% endwith %}
 {% endblock %}
+#}
 
 {% block main_content %}
 
@@ -48,11 +50,11 @@
       {% for section in sections %}
         {% for question in section.questions %}
           {% if question.answer_required %}
-            <ol>
+            <ul>
               <li>
                 <a href="{{ url_for('.edit_brief_question', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id, section_slug=section.slug, question_id=question.id) }}">{{ question.question }}</a>
               </li>
-            </ol>
+            </ul>
           {% endif %}
         {% endfor %}
       {% endfor %}
@@ -118,7 +120,7 @@
         </form>
       {% endif %}
     {% endif %}
-
+    <br>
     {%
       with
       url = url_for(".view_brief_overview", framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id),

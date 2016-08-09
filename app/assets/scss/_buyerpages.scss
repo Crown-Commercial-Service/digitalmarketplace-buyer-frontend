@@ -1,0 +1,77 @@
+//Buyer brief overview page
+.buyer-brief-overview-text{
+  p.context{
+    color: #717171;
+    font-size: 1.412rem;
+    margin-bottom: 0;
+  }
+}
+
+h2.instruction-list-item-body{
+  // border-top: 1px solid #ccc;
+  padding-top: 1em;
+  padding-left: 1.625em;
+  font-size: 1.882rem;
+
+  &:first-of-type {
+    border: none;
+    padding-top: 0;
+  }
+
+  span.step-number{
+    position: absolute;
+    margin-left: -1.625em;
+  }
+}
+
+p.instruction-list-item-information{
+  padding-left: 3em;
+}
+
+ul.instruction-list-item{
+
+  li{
+    list-style: none;
+    padding-left: 0.9em;
+    font-size: 1.059rem;
+
+    span.tick{
+      position: absolute;
+      margin-left: -1.35em;
+      margin-top: 0.25em;
+    }
+
+    a{
+      font-weight: 700;
+      border-color: #313131;
+    }
+  }
+}
+
+
+// Buyer Brief Radio Selection
+
+#specialistRole{
+
+  input[type='radio'] + label{
+    padding-top: 5px 80px 12px 60px;
+    font-weight: 400;
+    font-size: 1.412em;
+
+    >p{
+      font-weight: 400;
+      font-size: 0.812em;
+    }
+  }
+
+  input[type='radio']:checked + label{
+    font-weight: 700;
+    font-size: 1.412em;
+    outline: 1px solid #717171;
+
+    >p{
+      font-weight: 400;
+      font-size: 0.812em;
+    }
+  }
+}
