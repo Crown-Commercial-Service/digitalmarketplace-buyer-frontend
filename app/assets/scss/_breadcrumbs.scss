@@ -11,15 +11,15 @@
     margin-bottom: 0.5em;
 
     @include media($mobile) {
-      padding: 0 1.625em;
+      padding: 0.5em 1.625em;
     }
 
     @include media($tablet) {
-      padding: 0 1.25em;
+      padding: 0.5em 1.25em;
     }
 
     @include media($desktop) {
-      padding: 0 2em;
+      padding: 0.5em 2em;
     }
 
     li{
