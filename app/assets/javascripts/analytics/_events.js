@@ -1,19 +1,6 @@
 (function (root, GOVUK) {
   "use strict";
 
-  // wrapper around access to window.location
-  GOVUK.GDM.analytics.location = {
-    'hostname': function () {
-      return root.location.hostname;
-    },
-    'pathname': function () {
-      return root.location.pathname;
-    },
-    'protocol': function () {
-      return root.location.protocol;
-    }
-  };
-
   var LinkClick = function (e) {
       this.$target = $(e.target);
       this.text = this.$target.text(),

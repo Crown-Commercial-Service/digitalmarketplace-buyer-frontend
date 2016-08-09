@@ -1,7 +1,7 @@
 describe("GOVUK.Analytics", function () {
   var analytics,
       sortCalls;
-      
+
   SortCallsToGaByMethod = function (calls) {
     var gaMethodCalls = {},
         callNum = calls.length;
@@ -23,7 +23,7 @@ describe("GOVUK.Analytics", function () {
       return this._calls[method];
     }
     return [];
-  }; 
+  };
 
   beforeEach(function () {
     window.ga = function() {};
@@ -124,7 +124,7 @@ describe("GOVUK.Analytics", function () {
         'transport': 'beacon'
       }]);
     });
- 
+
     it('sends the right event when a list of user research participants download link is clicked', function() {
       spyOn(GOVUK.GDM.analytics.location, "pathname")
         .and
@@ -141,7 +141,7 @@ describe("GOVUK.Analytics", function () {
         'transport': 'beacon'
       }]);
     });
- 
+
     it('sends the right event when a list of suppliers for digital specialists download link is clicked', function() {
       spyOn(GOVUK.GDM.analytics.location, "pathname")
         .and
@@ -158,7 +158,7 @@ describe("GOVUK.Analytics", function () {
         'transport': 'beacon'
       }]);
     });
- 
+
     it('sends the right event when a list of suppliers for digital outcomes download link is clicked', function() {
       spyOn(GOVUK.GDM.analytics.location, "pathname")
         .and
@@ -198,5 +198,99 @@ describe("GOVUK.Analytics", function () {
       expect(window.ga.calls.first().args).toEqual([ 'send', 'pageview', { page: 'http://example.com' } ]);
       expect(window.ga.calls.count()).toEqual(1);
     });
+  });
+
+  describe("Opportunities search page", function() {
+    var $counter = $('<span class="search-summary-count">32</span>');
+
+    beforeEach(function () {
+      $(document.body).append($counter);
+
+      spyOn(GOVUK.GDM.analytics.location, "pathname")
+        .and
+        .returnValue('/digital-outcomes-and-specialists/opportunities');
+    });
+
+    afterEach(function () {
+      $counter.remove();
+    });
+
+    setupQueryString = function (query_string) {
+      spyOn(GOVUK.GDM.analytics.location, "search")
+        .and
+        .returnValue(query_string);
+
+      window.GOVUK.GDM.analytics.pageViews.init();
+    };
+
+    it('should send the number of results as a custom dimension', function() {
+      window.GOVUK.GDM.analytics.pageViews.init();
+
+      expect(window.ga.calls.first().args).toEqual(['set', 'dimension21', '32']);
+    });
+
+    it('should send the category filters as a custom dimension if only one', function() {
+      setupQueryString('?lot=digital-outcomes');
+
+      expect(window.ga.calls.all()[1].args).toEqual(['set', 'dimension23', 'digital-outcomes']);
+    });
+
+    it('should send the category filters as a custom dimension if multiple', function() {
+      setupQueryString('?lot=digital-outcomes&lot=digital-specialists');
+
+      expect(window.ga.calls.all()[1].args).toEqual(['set', 'dimension23', 'digital-outcomes|digital-specialists']);
+    });
+
+    it('should send the category filters as a custom dimension if multiple and in wrong order', function() {
+      setupQueryString('?lot=digital-specialists&lot=digital-outcomes');
+
+      expect(window.ga.calls.all()[1].args).toEqual(['set', 'dimension23', 'digital-outcomes|digital-specialists']);
+    });
+
+    it('should send the status filters as a custom dimension if only one', function() {
+      setupQueryString('?status=closed');
+
+      expect(window.ga.calls.all()[1].args).toEqual(['set', 'dimension24', 'closed']);
+    });
+
+    it('should send the status filters as a custom dimension if multiple', function() {
+      setupQueryString('?status=closed&status=live');
+
+      expect(window.ga.calls.all()[1].args).toEqual(['set', 'dimension24', 'closed|live']);
+    });
+
+    it('should send the status filters as a custom dimension if multiple and in wrong order', function() {
+      setupQueryString('?status=live&status=closed');
+
+      expect(window.ga.calls.all()[1].args).toEqual(['set', 'dimension24', 'closed|live']);
+    });
+
+    it('should send the filter groups as a custom dimension if one', function() {
+      setupQueryString('?status=closed');
+
+      expect(window.ga.calls.all()[2].args).toEqual(['set', 'dimension22', 'status']);
+    });
+
+    it('should send the filter groups as a custom dimension if multiple', function() {
+      setupQueryString('?status=closed&lot=digital-specialists');
+
+      expect(window.ga.calls.all()[3].args).toEqual(['set', 'dimension22', 'lot|status']);
+    });
+
+    it('should send the filter groups as a custom dimension if multiple and wrong order', function() {
+      setupQueryString('?lot=digital-specialists&status=closed');
+
+      expect(window.ga.calls.all()[3].args).toEqual(['set', 'dimension22', 'lot|status']);
+    });
+
+    it('should send the correct custom dimension if all filters are used', function() {
+      setupQueryString('?lot=digital-specialists&status=closed&lot=digital-outcomes&status=live&lot=user-research-participants');
+
+      expect(window.ga.calls.first().args).toEqual(['set', 'dimension21', '32']);
+      expect(window.ga.calls.all()[1].args).toEqual(['set', 'dimension24', 'closed|live']);
+      expect(window.ga.calls.all()[2].args).toEqual(['set', 'dimension23', 'digital-outcomes|digital-specialists|user-research-participants']);
+      expect(window.ga.calls.all()[3].args).toEqual(['set', 'dimension22', 'lot|status']);
+    });
+
   });
 });
