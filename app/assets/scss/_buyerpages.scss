@@ -1,14 +1,20 @@
 //Buyer brief overview page
-.buyer-brief-overview-text{
-  p.context{
-    color: #717171;
-    font-size: 1.412rem;
-    margin-bottom: 0;
+header.page-heading-smaller{
+  h1{
+    &:first-of-type{
+      margin-top: 0.4em;
+    }
   }
 }
 
+p.context{
+  color: lighten($grey, 5%);
+  font-size: 1.5em;
+  margin-bottom: 0.25em;
+  margin-top: 1em;
+}
+
 h2.instruction-list-item-body{
-  // border-top: 1px solid #ccc;
   padding-top: 1em;
   padding-left: 1.625em;
   font-size: 1.882rem;
@@ -45,7 +51,7 @@ ol.instruction-list{
 
     a{
       font-weight: 700;
-      border-color: #313131;
+      border-color: $non-black;
     }
 
     ul{
@@ -86,11 +92,11 @@ ol.instruction-list{
   input[type='radio']:checked + label{
     font-weight: 700;
     font-size: 1.412em;
-    outline: 1px solid #717171;
+    outline: 1px solid $light-grey;
   }
 }
 
-// Buyer Breif tablet
+// Buyer Breif table
 
 table.content-table{
   font-size: 0.825em;
@@ -101,10 +107,10 @@ table.content-table{
   }
 
   tr{
-    border-bottom: 1px solid #BBBBBB;
+    border-bottom: 1px solid $light-grey;
 
     &:first-child{
-      border-top: 1px solid #BBBBBB;
+      border-top: 1px solid $light-grey;
     }
 
     td{
@@ -118,12 +124,16 @@ table.content-table{
       }
 
       &:nth-child(3){
-        color: #717171;
+        color: lighten($grey, 5%);
         text-align: right;
 
         a{
-          color: #717171;
-          border-bottom: 1px solid #717171;
+          color: lighten($grey, 5%);
+          border-bottom: 1px solid $light-grey;
+
+          &:hover{
+            color: $black;
+          }
         }
       }
 
@@ -142,7 +152,7 @@ table.content-table{
 // Evaluation Process
 
 .section-description{
-  h2{    
+  h2{
     font-size: 1.882rem;
   }
 }
