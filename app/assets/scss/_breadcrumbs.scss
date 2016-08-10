@@ -26,26 +26,29 @@
       display: inline;
       // @include link-colours($link-inverted-colour, $link-inverted-colour, $link-colour);
 
-      span{
-        &:after{
-          content:' > ';
-          color: white;
-          // color: #53B0C3;
-          margin: 0 .5em;
-          font-size:0.875rem;
-        }
-
         a{
           font-size:0.875rem;
           color: white;
-        }
+          text-decoration: none;
+          border-bottom:1px solid white;
 
-        // &:last-child{
-        //   &:after{
-        //     content:'';
-        //   }
-        // }
-      }
+          &:after{
+            content:' > ';
+            color: white;
+            border-bottom: 1px solid $aqua;
+            font-size:0.875rem;
+            padding: 0 0.5em;
+          }
+
+          &:hover{
+            background: white;
+            color: black;
+
+            &:after{
+              background: $aqua;
+            }
+          }
+        }
     }
   }
 }

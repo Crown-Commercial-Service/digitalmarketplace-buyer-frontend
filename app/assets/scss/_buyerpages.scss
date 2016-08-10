@@ -70,6 +70,16 @@ ol.instruction-list{
     >p{
       font-weight: 400;
       font-size: 0.812em;
+      margin-bottom: 0.5em;
+      padding-right: 20px;
+    }
+
+    &:before{
+      top: 15px;
+    }
+
+    &:after{
+      top:20px;
     }
   }
 
@@ -77,10 +87,53 @@ ol.instruction-list{
     font-weight: 700;
     font-size: 1.412em;
     outline: 1px solid #717171;
+  }
+}
 
-    >p{
-      font-weight: 400;
-      font-size: 0.812em;
+// Buyer Breif tablet
+
+table.content-table{
+  font-size: 0.825em;
+  margin: 4em 0;
+
+  thead{
+    display: none;
+  }
+
+  tr{
+    border-bottom: 1px solid #BBBBBB;
+
+    &:first-child{
+      border-top: 1px solid #BBBBBB;
+    }
+
+    td{
+      vertical-align: top;
+      padding-left: 0;
+      font-size:1.0625rem;
+
+      &:nth-child(1){
+        font-weight: 700;
+        width: 40%;
+      }
+
+      &:nth-child(3){
+        color: #717171;
+        text-align: right;
+
+        a{
+          color: #717171;
+          border-bottom: 1px solid #717171;
+        }
+      }
+
+      a{
+        border-bottom: 1px solid black;
+      }
+    }
+
+    &:nth-child(even) {
+      background-color:white;
     }
   }
 }
