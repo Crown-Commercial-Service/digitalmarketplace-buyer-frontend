@@ -24,15 +24,17 @@ h2.instruction-list-item-body{
   }
 }
 
-p.instruction-list-item-information{
-  padding-left: 3em;
+p.instruction-list-item-extra-information{
+  padding-left: 2.95em;
 }
 
-ul.instruction-list-item{
+ol.instruction-list{
+  margin-left: 0;
+  padding-left: 0;
+  padding-bottom: 2em;
 
-  li{
+  >li{
     list-style: none;
-    padding-left: 0.9em;
     font-size: 1.059rem;
 
     span.tick{
@@ -44,6 +46,13 @@ ul.instruction-list-item{
     a{
       font-weight: 700;
       border-color: #313131;
+    }
+
+    ul{
+      li{
+        list-style: none;
+        padding-left: 0.75em;
+      }
     }
   }
 }
