@@ -7,7 +7,7 @@ from app.api_client.data import DataAPIClient
 from app.main.utils import get_page_list
 
 from ...main import main
-from app import search_api_client, data_api_client, content_loader
+from app import data_api_client, content_loader
 
 
 # For prototyping

@@ -1,7 +1,7 @@
 from flask import jsonify, current_app, request
 
 from . import status
-from .. import data_api_client, search_api_client
+from .. import data_api_client
 from dmutils.status import get_flags
 
 
@@ -19,11 +19,7 @@ def status():
             'name': '(Data) API',
             'key': 'api_status',
             'status': data_api_client.get_status()
-        }, {
-            'name': 'Search API',
-            'key': 'search_api_status',
-            'status': search_api_client.get_status()
-        }
+        },
     ]
 
     apis_with_errors = []
