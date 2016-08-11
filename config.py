@@ -33,8 +33,6 @@ class Config(object):
 
     DM_DATA_API_URL = None
     DM_DATA_API_AUTH_TOKEN = None
-    DM_SEARCH_API_URL = None
-    DM_SEARCH_API_AUTH_TOKEN = None
     DM_HTTP_PROTO = 'http'
     DM_DEFAULT_CACHE_MAX_AGE = 30
 
@@ -93,8 +91,6 @@ class Test(Config):
 
     DM_DATA_API_URL = "http://localhost:5000"
     DM_DATA_API_AUTH_TOKEN = "myToken"
-    DM_SEARCH_API_URL = "http://localhost:5001"
-    DM_SEARCH_API_AUTH_TOKEN = "myToken"
 
     SHARED_EMAIL_KEY = "KEY"
     SECRET_KEY = "KEY"
@@ -108,8 +104,6 @@ class Development(Config):
 
     DM_DATA_API_URL = "http://localhost:5000"
     DM_DATA_API_AUTH_TOKEN = "myToken"
-    DM_SEARCH_API_URL = "http://localhost:5001"
-    DM_SEARCH_API_AUTH_TOKEN = "myToken"
     DM_DEFAULT_CACHE_MAX_AGE = 60
 
     SECRET_KEY = "verySecretKey"

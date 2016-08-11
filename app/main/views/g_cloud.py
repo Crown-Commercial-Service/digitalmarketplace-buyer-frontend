@@ -23,7 +23,7 @@ from ...helpers.search_helpers import (
 )
 
 from ...exceptions import AuthException
-from app import search_api_client, data_api_client, content_loader
+from app import data_api_client, content_loader
 
 
 @main.route('/g-cloud')
@@ -105,48 +105,3 @@ def get_service_by_id(service_id):
         abort(404, "Service ID '%s' can not be found" % service_id)
     except HTTPError as e:
         abort(e.status_code)
-
-
-@main.route('/g-cloud/search')
-def search():
-    content_builder = content_loader.get_builder('g-cloud-6', 'search_filters')
-    filters = filters_for_lot(
-        get_lot_from_request(request),
-        content_builder
-    )
-
-    response = search_api_client.search_services(
-        **build_search_query(request, filters, content_builder)
-    )
-
-    search_results_obj = SearchResults(response)
-
-    pagination_config = pagination(
-        search_results_obj.total,
-        current_app.config["DM_SEARCH_PAGE_SIZE"],
-        get_page_from_request(request)
-    )
-
-    search_summary = SearchSummary(
-        response['meta']['total'],
-        clean_request_args(request.args, filters),
-        filters
-    )
-
-    set_filter_states(filters, request)
-    current_lot = get_lot_from_request(request)
-
-    return render_template(
-        'search.html',
-        current_lot=current_lot,
-        current_lot_label=get_label_for_lot_param(current_lot) if current_lot else None,
-        filters=filters,
-        lots=LOTS,
-        pagination=pagination_config,
-        search_keywords=get_keywords_from_request(request),
-        search_query=query_args_for_pagination(request.args),
-        services=search_results_obj.search_results,
-        summary=search_summary.markup(),
-        title='Search results',
-        total=search_results_obj.total
-    )
