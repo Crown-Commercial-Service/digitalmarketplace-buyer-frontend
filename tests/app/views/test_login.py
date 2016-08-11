@@ -9,6 +9,7 @@ from ...helpers import BaseApplicationTest
 from lxml import html
 import mock
 import pytest
+from flask import session
 
 EMAIL_SENT_MESSAGE = "send a link"
 

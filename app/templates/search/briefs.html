@@ -1,0 +1,44 @@
+{% extends "_base_page.html" %}
+
+{% block page_title %}
+    Supplier opportunities – {{ framework.name }} – Digital Marketplace
+{% endblock %}
+
+{% block breadcrumb %}
+    {% with items = [
+        {
+        "link": url_for('.index'),
+        "label": "Digital Marketplace"
+        }
+    ]
+    %}
+    {% include "toolkit/breadcrumb.html" %}
+    {% endwith %}
+{% endblock %}
+
+{% block main_content %}
+    <div class="grid-row">
+      <div class="column-two-thirds">
+        {% with heading="{} opportunities".format(framework.name) %}
+            {% include "toolkit/page-heading.html" %}
+        {% endwith %}
+        <div class="marketplace-paragraph">
+          <p>View buyer requirements for {{ lot_names | map('lower') | smartjoin }}.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-row">
+        <section class="column-one-third search-page-filters" aria-label="Search filters">
+            <form action="" method="get">
+                {% include 'search/_filters.html' %}
+            </form>
+        </section>
+        <section class="column-two-thirds" aria-label="Opportunities found">
+            {% include 'search/_briefs_summary.html' %}
+            {% include 'search/_briefs_results.html' %}
+            {% include 'search/_briefs_pagination.html' %}
+        </section>
+    </div>
+
+{% endblock %}

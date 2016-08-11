@@ -3,7 +3,7 @@
     <h2 class="search-result-title">
         <a href="{{ url_for('.get_brief_by_id', framework_slug=framework.slug, brief_id=brief.id) }}">{{ brief.title }}</a>
     </h2>
-    
+
     <ul class="search-result-important-metadata">
         <li class="search-result-metadata-item">
             {{ brief.organisation }}
@@ -12,18 +12,26 @@
             {{ brief.location }}
         </li>
     </ul>
-    
+
     <ul class="search-result-metadata">
         <li class="search-result-metadata-item">
             {{ brief.lotName }}
         </li>
-        <li class="search-result-metadata-item">
-            {% if brief.status == 'closed' %}
+    </ul>
+
+    <ul class="search-result-metadata">
+        {% if brief.status == 'closed' %}
+            <li class="search-result-metadata-item">
                 Closed
-            {% else %}
+            </li>
+        {% else %}
+            <li class="search-result-metadata-item">
+                Published: {{ brief.publishedAt|dateformat }}
+            </li>
+            <li class="search-result-metadata-item">
                 Closing: {{ brief.applicationsClosedAt|dateformat }}
-            {% endif %}
-        </li>
+            </li>
+        {% endif %}
     </ul>
     
     <p class="search-result-excerpt">
