@@ -84,5 +84,8 @@
     "self":"http://localhost:5000/briefs?status=live%2Cclosed&framework=digital-outcomes-and-specialists&page=2",
     "last":"http://localhost:5000/briefs?status=live%2Cclosed&framework=digital-outcomes-and-specialists&page=4",
     "next":"http://localhost:5000/briefs?status=live%2Cclosed&framework=digital-outcomes-and-specialists&page=3"
+  },
+  "meta":{
+    "total":2
   }
 }

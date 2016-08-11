@@ -126,7 +126,8 @@ class TestCreateNewBrief(BaseApplicationTest):
         )
 
         res = self.client.post(
-            self.expand_path('/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/create'),  # noqa
+            self.expand_path(
+                '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/create'),  # noqa
             data={
                 'title': 'Title',
                 'csrf_token': FakeCsrf.valid_token,
@@ -153,7 +154,8 @@ class TestCreateNewBrief(BaseApplicationTest):
         )
 
         res = self.client.post(
-            self.expand_path('/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/create'),  # noqa
+            self.expand_path(
+                '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/create'),  # noqa
             data={
                 'title': 'Title',
                 'csrf_token': FakeCsrf.valid_token,
@@ -180,7 +182,8 @@ class TestCreateNewBrief(BaseApplicationTest):
         )
 
         res = self.client.post(
-            self.expand_path('/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/create'),  # noqa
+            self.expand_path(
+                '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/create'),  # noqa
             data={
                 'specialistRole': 'agileCoach',
                 'csrf_token': 'bad_token',
@@ -200,7 +203,8 @@ class TestCreateNewBrief(BaseApplicationTest):
         )
 
         res = self.client.post(
-            self.expand_path('/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/create'),  # noqa
+            self.expand_path(
+                '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/create'),  # noqa
             data={
                 'specialistRole': 'agileCoach',
                 'csrf_token': FakeCsrf.valid_token,
@@ -220,7 +224,8 @@ class TestCreateNewBrief(BaseApplicationTest):
         )
 
         res = self.client.post(
-            self.expand_path('/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/create'),  # noqa
+            self.expand_path(
+                '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/create'),  # noqa
             data={
                 'specialistRole': 'agileCoach',
                 'csrf_token': FakeCsrf.valid_token,
@@ -240,7 +245,8 @@ class TestCreateNewBrief(BaseApplicationTest):
         )
 
         res = self.client.post(
-            self.expand_path('/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-octopuses/create'),  # noqa
+            self.expand_path(
+                '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-octopuses/create'),  # noqa
             data={
                 'specialistRole': 'agileCoach',
                 'csrf_token': FakeCsrf.valid_token,
@@ -263,7 +269,8 @@ class TestCreateNewBrief(BaseApplicationTest):
             {"title": "answer_required"})
 
         res = self.client.post(
-            self.expand_path('/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/create'),  # noqa
+            self.expand_path(
+                '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/create'),  # noqa
             data={
                 'title': 'Title',
                 'csrf_token': FakeCsrf.valid_token,
@@ -286,7 +293,6 @@ class TestCreateNewBrief(BaseApplicationTest):
 
 
 class TestEveryDamnPage(BaseApplicationTest):
-
     # @mock.patch("app.buyers.views.buyers.content_loader")
     def _load_page(self, url, status_code, method='get', data=None):
         data = {} if data is None else data
@@ -381,7 +387,6 @@ class TestEveryDamnPage(BaseApplicationTest):
 
 @mock.patch('app.buyers.views.buyers.data_api_client')
 class TestEditBriefSubmission(BaseApplicationTest):
-
     def _test_breadcrumbs_on_question_page(self, response, has_summary_page=False, section_name=None):
         breadcrumbs = html.fromstring(response.get_data(as_text=True)).xpath(
             '//*[@id="global-breadcrumb"]/nav/ol/li'
@@ -391,7 +396,8 @@ class TestEditBriefSubmission(BaseApplicationTest):
             ('Digital Marketplace', '/'),
             ('Your account', self.expand_path('/buyers')),
             ('I need a thing to do a thing',
-             self.expand_path('/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234'))  # noqa
+             self.expand_path(
+                 '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234'))  # noqa
         ]
         if has_summary_page and section_name:
             path = self.expand_path(
@@ -453,13 +459,14 @@ class TestEditBriefSubmission(BaseApplicationTest):
         document = html.fromstring(res.get_data(as_text=True))
         secondary_action_link = document.xpath('//form//div[contains(@class, "secondary-action-link")]/a')[0]
         assert document.xpath('//h1')[0].text_content().strip() == "Optional 2"
-        assert secondary_action_link.get('href').strip() == self.expand_path('/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/section-4')  # noqa
+        assert secondary_action_link.get('href').strip() == self.expand_path(
+            '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/section-4')  # noqa
         assert secondary_action_link.text_content().strip() == "Return to section 4"
         self._test_breadcrumbs_on_question_page(response=res, has_summary_page=True, section_name='Section 4')
 
     @mock.patch("app.buyers.views.buyers.content_loader")
     def test_edit_brief_submission_return_link_to_section_summary_if_other_questions(self, content_loader,
-    data_api_client):  # noqa
+                                                                                     data_api_client):  # noqa
         self.login_as_buyer()
         data_api_client.get_framework.return_value = api_stubs.framework(
             slug='digital-outcomes-and-specialists',
@@ -482,13 +489,14 @@ class TestEditBriefSubmission(BaseApplicationTest):
         document = html.fromstring(res.get_data(as_text=True))
         secondary_action_link = document.xpath('//form//div[contains(@class, "secondary-action-link")]/a')[0]
         assert document.xpath('//h1')[0].text_content().strip() == "Required 1"
-        assert secondary_action_link.get('href').strip() == self.expand_path('/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/section-1')  # noqa
+        assert secondary_action_link.get('href').strip() == self.expand_path(
+            '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/section-1')  # noqa
         assert secondary_action_link.text_content().strip() == "Return to section 1"
         self._test_breadcrumbs_on_question_page(response=res, has_summary_page=True, section_name='Section 1')
 
     @mock.patch("app.buyers.views.buyers.content_loader")
     def test_edit_brief_submission_return_link_to_brief_overview_if_single_question(self, content_loader,
-    data_api_client):  # noqa
+                                                                                    data_api_client):  # noqa
         self.login_as_buyer()
         data_api_client.get_framework.return_value = api_stubs.framework(
             slug='digital-outcomes-and-specialists',
@@ -511,7 +519,8 @@ class TestEditBriefSubmission(BaseApplicationTest):
         document = html.fromstring(res.get_data(as_text=True))
         secondary_action_link = document.xpath('//form//div[contains(@class, "secondary-action-link")]/a')[0]
         assert document.xpath('//h1')[0].text_content().strip() == "Required 2"
-        assert secondary_action_link.get('href').strip() == self.expand_path('/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234')  # noqa
+        assert secondary_action_link.get('href').strip() == self.expand_path(
+            '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234')  # noqa
         assert secondary_action_link.text_content().strip() == "Return to overview"
         self._test_breadcrumbs_on_question_page(response=res, has_summary_page=False)
 
@@ -964,6 +973,7 @@ class TestPublishBrief(BaseApplicationTest):
             'technicalWeighting': 10,
             'workingArrangements': 'arrangements',
             'workplaceAddress': 'address',
+            'requirementsLength': '1 week'
         })
         data_api_client.get_brief.return_value = brief_json
 
@@ -974,7 +984,8 @@ class TestPublishBrief(BaseApplicationTest):
         res = self.client.post(url, data={'csrf_token': FakeCsrf.valid_token})
         assert res.status_code == 302
         assert data_api_client.update_brief_status.called
-        assert res.location.endswith('/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234?published=true')  # noqa
+        assert res.location.endswith(
+            '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234?published=true')  # noqa
 
     def test_csrf_protection(self, data_api_client):
         self.login_as_buyer()
@@ -1068,7 +1079,6 @@ class TestPublishBrief(BaseApplicationTest):
                 api_stubs.lot(slug='digital-specialists', allows_brief=True)
             ]
         )
-
         brief_json = api_stubs.brief(status="draft")
         brief_questions = brief_json['briefs']
         brief_questions.update({
@@ -1091,6 +1101,7 @@ class TestPublishBrief(BaseApplicationTest):
             'technicalWeighting': 10,
             'workingArrangements': 'arrangements',
             'workplaceAddress': 'address',
+            'requirementsLength': '1 week'
         })
         data_api_client.get_brief.return_value = brief_json
 
@@ -1114,7 +1125,12 @@ class TestPublishBrief(BaseApplicationTest):
             ]
         )
 
-        data_api_client.get_brief.return_value = api_stubs.brief(status="draft")
+        brief_json = api_stubs.brief(status="draft")
+        brief_questions = brief_json['briefs']
+        brief_questions.update({
+            'requirementsLength': '1 week'
+        })
+        data_api_client.get_brief.return_value = brief_json
 
         res = self.client.get(self.expand_path(
             '/buyers/frameworks/digital-outcomes-and-specialists/requirements/'
@@ -1125,10 +1141,183 @@ class TestPublishBrief(BaseApplicationTest):
         assert res.status_code == 200
         assert 'Publish requirements' not in page_html
 
+    def test_warning_about_setting_requirement_length_is_not_displayed_if_not_specialist_brief(self, data_api_client):
+        self.login_as_buyer()
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='live',
+            lots=[
+                api_stubs.lot(slug='digital-outcomes', allows_brief=True)
+            ]
+        )
+
+        data_api_client.get_brief.return_value = api_stubs.brief(status="draft", lot_slug="digital-outcomes")
+        res = self.client.get(self.expand_path(
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
+            "digital-outcomes/1234/publish"
+        ))
+        page_html = res.get_data(as_text=True)
+
+        assert res.status_code == 200
+        assert 'This will show you what the supplier application deadline will be' not in page_html
+        assert 'Your requirements will be open for 2 weeks' in page_html
+
+    def test_correct_content_is_displayed_if_no_requirementLength_is_set(self, data_api_client):
+        self.login_as_buyer()
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='live',
+            lots=[
+                api_stubs.lot(slug='digital-specialists', allows_brief=True)
+            ]
+        )
+
+        data_api_client.get_brief.return_value = api_stubs.brief(status="draft")
+
+        res = self.client.get(self.expand_path(
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
+            "digital-specialists/1234/publish"
+        ))
+        page_html = res.get_data(as_text=True)
+
+        assert res.status_code == 200
+        assert 'This will show you what the supplier application deadline will be' in page_html
+        assert 'Your requirements will be open for' not in page_html
+
+    def test_correct_content_is_displayed_if_requirementLength_is_1_week(self, data_api_client):
+        self.login_as_buyer()
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='live',
+            lots=[
+                api_stubs.lot(slug='digital-specialists', allows_brief=True)
+            ]
+        )
+
+        brief_json = api_stubs.brief(status="draft")
+        brief_questions = brief_json['briefs']
+        brief_questions.update({
+            'requirementsLength': '1 week'
+        })
+        data_api_client.get_brief.return_value = brief_json
+
+        res = self.client.get(self.expand_path("/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
+                                               "digital-specialists/1234/publish"))
+
+        page_html = res.get_data(as_text=True)
+
+        assert res.status_code == 200
+        assert 'Your requirements will be open for 1 week.' in page_html
+        assert 'This will show you what the supplier application deadline will be' not in page_html
+        assert 'Your requirements will be open for 2 weeks' not in page_html
+
+    def test_correct_content_is_displayed_if_requirementLength_is_2_weeks(self, data_api_client):
+        self.login_as_buyer()
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='live',
+            lots=[
+                api_stubs.lot(slug='digital-specialists', allows_brief=True)
+            ]
+        )
+
+        brief_json = api_stubs.brief(status="draft")
+        brief_questions = brief_json['briefs']
+        brief_questions.update({
+            'requirementsLength': '2 weeks'
+        })
+        data_api_client.get_brief.return_value = brief_json
+
+        res = self.client.get(self.expand_path(
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
+            "digital-specialists/1234/publish"
+        ))
+        page_html = res.get_data(as_text=True)
+
+        assert res.status_code == 200
+        assert 'Your requirements will be open for 2 weeks.' in page_html
+        assert 'This will show you what the supplier application deadline will be' not in page_html
+        assert 'Your requirements will be open for 1 week' not in page_html
+
+    def test_correct_content_is_displayed_if_requirementLength_is_not_set(self, data_api_client):
+        self.login_as_buyer()
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='live',
+            lots=[
+                api_stubs.lot(slug='digital-specialists', allows_brief=True)
+            ]
+        )
+
+        brief_json = api_stubs.brief(status="draft")
+        brief_questions = brief_json['briefs']
+        brief_questions.update({
+            'requirementsLength': None
+        })
+        data_api_client.get_brief.return_value = brief_json
+
+        res = self.client.get(self.expand_path(
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
+            "digital-specialists/1234/publish"
+        ))
+        page_html = res.get_data(as_text=True)
+        document = html.fromstring(page_html)
+
+        assert res.status_code == 200
+        assert 'Your requirements will be open for 2 weeks.' not in page_html
+        assert 'This will show you what the supplier application deadline will be' in page_html
+        assert 'Your requirements will be open for 1 week' not in page_html
+        assert not document.xpath('//a[contains(text(), "Set how long your requirements will be live for")]')
+
+    def test_heading_for_unanswered_questions_not_displayed_if_only_requirements_length_unset(self, data_api_client):
+        self.login_as_buyer()
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='live',
+            lots=[
+                api_stubs.lot(slug='digital-specialists', allows_brief=True)
+            ]
+        )
+
+        brief_json = api_stubs.brief(status="draft")
+        brief_questions = brief_json['briefs']
+        brief_questions.update({
+            'backgroundInformation': 'test background info',
+            'contractLength': 'A very long time',
+            'culturalFitCriteria': ['CULTURAL', 'FIT'],
+            'culturalWeighting': 10,
+            'essentialRequirements': 'Everything',
+            'evaluationType': ['test evaluation type'],
+            'existingTeam': 'team team team',
+            'importantDates': 'Near future',
+            'location': 'somewhere',
+            'numberOfSuppliers': 3,
+            'organisation': 'test organisation',
+            'priceWeighting': 80,
+            'specialistRole': 'communicationsManager',
+            'specialistWork': 'work work work',
+            'startDate': 'startDate',
+            'summary': 'blah',
+            'technicalWeighting': 10,
+            'workingArrangements': 'arrangements',
+            'workplaceAddress': 'address'
+        })
+        data_api_client.get_brief.return_value = brief_json
+
+        res = self.client.get(self.expand_path(
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
+            "digital-specialists/1234/publish"
+        ))
+        page_html = res.get_data(as_text=True)
+        document = html.fromstring(page_html)
+
+        assert res.status_code == 200
+        assert "You still need to complete the following questions before your requirements " \
+               "can be published:" not in page_html
+
 
 @mock.patch('app.buyers.views.buyers.data_api_client')
 class TestDeleteBriefSubmission(BaseApplicationTest):
-
     def _do_request(self, csrf_token=FakeCsrf.valid_token):
         url = self.expand_path(
             '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/delete'
@@ -1263,7 +1452,8 @@ class TestBriefSummaryPage(BaseApplicationTest):
                 'How to answer supplier questions',
                 'How to shortlist suppliers',
                 'How to evaluate suppliers',
-                'How to award a contract'
+                'How to award a contract',
+                'View the Digital Outcomes and Specialists contract',
             ]
 
             assert document.xpath('//a[contains(text(), "Delete")]')
@@ -1301,6 +1491,7 @@ class TestBriefSummaryPage(BaseApplicationTest):
                 'How to shortlist suppliers',
                 'How to evaluate suppliers',
                 'How to award a contract',
+                'View the Digital Outcomes and Specialists contract',
             ]
 
             assert not document.xpath('//a[contains(text(), "Delete")]')
@@ -1336,6 +1527,7 @@ class TestBriefSummaryPage(BaseApplicationTest):
                 'How to shortlist suppliers',
                 'How to evaluate suppliers',
                 'How to award a contract',
+                'View the Digital Outcomes and Specialists contract',
             ]
 
             assert not document.xpath('//a[contains(text(), "Delete")]')
@@ -1356,7 +1548,9 @@ class TestBriefSummaryPage(BaseApplicationTest):
             data_api_client.get_brief.return_value = brief_json
 
             res = self.client.get(self.expand_path(
-                '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/supplier-questions'  # noqa
+                '/buyers/frameworks/digital-outcomes-and-specialists/requirements/'
+                'digital-specialists/1234/supplier-questions'
+                # noqa
             ))
 
             assert res.status_code == 200
@@ -1385,7 +1579,9 @@ class TestBriefSummaryPage(BaseApplicationTest):
             data_api_client.get_brief.return_value = brief_json
 
             res = self.client.get(self.expand_path(
-                '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/supplier-questions'  # noqa
+                '/buyers/frameworks/digital-outcomes-and-specialists/requirements/'
+                'digital-specialists/1234/supplier-questions'
+                # noqa
             ))
 
             assert res.status_code == 200
@@ -1433,7 +1629,8 @@ class TestBriefSummaryPage(BaseApplicationTest):
             assert res.status_code == 404
 
     @mock.patch("app.buyers.views.buyers.content_loader")
-    def test_links_to_sections_go_to_the_correct_pages_whether_they_be_sections_or_questions(self, content_loader, data_api_client):  # noqa
+    def test_links_to_sections_go_to_the_correct_pages_whether_they_be_sections_or_questions(self, content_loader,
+                                                                                             data_api_client):  # noqa
         with self.app.app_context():
             self.login_as_buyer()
             data_api_client.get_framework.return_value = api_stubs.framework(
@@ -1464,18 +1661,20 @@ class TestBriefSummaryPage(BaseApplicationTest):
 
             # section with multiple questions
             assert section_1_link[0].get('href').strip() == \
-                self.expand_path('/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/section-1')  # noqa
+                   self.expand_path(
+                       '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/section-1')  # noqa
             # section with single question
             assert section_2_link[0].get('href').strip() == \
-                self.expand_path('/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/edit/section-2/required2')  # noqa
+                   self.expand_path(
+                       '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/edit/section-2/required2')  # noqa
             # section with single question and a description
             assert section_4_link[0].get('href').strip() == \
-                self.expand_path('/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/section-4')  # noqa
+                   self.expand_path(
+                       '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/section-4')  # noqa
 
 
 @mock.patch("app.buyers.views.buyers.data_api_client")
 class TestAddBriefClarificationQuestion(BaseApplicationTest):
-
     def _do_request(self, csrf_token=FakeCsrf.valid_token):
         url = self.expand_path(
             '/buyers/frameworks/digital-outcomes-and-specialists/requirements'
@@ -1528,7 +1727,9 @@ class TestAddBriefClarificationQuestion(BaseApplicationTest):
 
         # test that the redirect ends up on the right page
         assert res.headers['Location'].endswith(
-            '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/supplier-questions'  # noqa
+            '/buyers/frameworks/digital-outcomes-and-specialists/requirements/'
+            'digital-specialists/1234/supplier-questions'
+            # noqa
         ) is True
 
     def test_csrf_protection(self, data_api_client):
@@ -1737,7 +1938,9 @@ class TestViewBriefResponsesPage(BaseApplicationTest):
         ))
         document = html.fromstring(res.get_data(as_text=True))
         csv_link = document.xpath(
-            '//a[contains(@href, "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1234/responses/download")]'  # noqa
+            '//a[contains(@href, "/buyers/frameworks/digital-outcomes-and-specialists/requirements/'
+            'digital-outcomes/1234/responses/download")]'
+            # noqa
         )[0]
 
         assert res.status_code == 200
@@ -1762,7 +1965,9 @@ class TestViewBriefResponsesPage(BaseApplicationTest):
         page = res.get_data(as_text=True)
         document = html.fromstring(page)
         csv_link = document.xpath(
-            '//a[@href="/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1234/responses/download"]'  # noqa
+            '//a[@href="/buyers/frameworks/digital-outcomes-and-specialists/requirements/'
+            'digital-outcomes/1234/responses/download"]'
+            # noqa
         )
 
         assert res.status_code == 200
@@ -1907,6 +2112,31 @@ class TestDownloadBriefResponsesCsv(BaseApplicationTest):
         assert lines[2] == "Kev's Butties,Next Tuesday,£1.49,True,False,False,test1@email.com"
         assert lines[-1] == ""
 
+    def test_download_brief_responses_for_brief_without_nice_to_haves(self, data_api_client):
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='live',
+            lots=[
+                api_stubs.lot(slug='digital-specialists', allows_brief=True),
+            ]
+        )
+
+        for response in self.brief_responses['briefResponses']:
+            del response["niceToHaveRequirements"]
+        data_api_client.find_brief_responses.return_value = self.brief_responses
+
+        data_api_client.get_brief.return_value = self.brief
+
+        self.login_as_buyer()
+
+        del self.brief['briefs']['niceToHaveRequirements']
+        res = self.client.get(self.url)
+        assert res.status_code, 200
+
+        self.brief['briefs']['niceToHaveRequirements'] = []
+        res = self.client.get(self.url)
+        assert res.status_code, 200
+
     def test_csv_handles_tricky_characters(self, data_api_client):
         data_api_client.find_brief_responses.return_value = self.tricky_character_responses
         data_api_client.get_framework.return_value = api_stubs.framework(
@@ -1922,12 +2152,16 @@ class TestDownloadBriefResponsesCsv(BaseApplicationTest):
         res = self.client.get(self.url)
         page = res.get_data(as_text=True)
         lines = page.split('\n')
+        print lines
 
         assert len(lines) == 4
-        assert lines[0] == "Supplier,Date the specialist can start work,Day rate,Nice1,Nice2,Nice3,Email address"
+        assert lines[0] == ('Supplier,Date the specialist can start work,Day rate,'
+                            'Nice-to-have requirements,Email address')
         # The values with internal commas are surrounded by quotes, and all other characters appear as in the data
-        assert lines[1] == 'Kev\'s \'Pies,&quot;A week Friday&rdquot;,&euro;3.50,False,True,True,"te,st2@email.com"'
-        assert lines[2] == '"K,ev’s ""Bu,tties",❝Next — Tuesday❞,"¥1.49,",True,False,False,test1@email.com'
+        assert lines[1] == ('"K,ev’s ""Bu,tties",❝Next — Tuesday❞,"¥1.49,","[True, False, False]",'
+                            'test1@email.com')
+        assert lines[2] == ('Kev\'s \'Pies,&quot;A week Friday&rdquot;,&euro;3.50'
+                            ',"[False, True, True]","te,st2@email.com"')
         assert lines[-1] == ""
 
     def test_404_if_brief_does_not_belong_to_buyer(self, data_api_client):
@@ -1972,10 +2206,11 @@ class TestViewQuestionAndAnswerDates(BaseApplicationTest):
                 ]
             )
             brief_json = api_stubs.brief(status="live")
-            brief_json['briefs']['publishedAt'] = "2016-04-02T20:10:00.00000Z"
-            brief_json['briefs']['clarificationQuestionsClosedAt'] = "2016-04-12T23:59:00.00000Z"
-            brief_json['briefs']['clarificationQuestionsPublishedBy'] = "2016-04-14T23:59:00.00000Z"
-            brief_json['briefs']['applicationsClosedAt'] = "2016-04-16T23:59:00.00000Z"
+            brief_json['briefs']['requirementsLength'] = '2 weeks'
+            brief_json['briefs']['publishedAt'] = u"2016-04-02T20:10:00.00000Z"
+            brief_json['briefs']['clarificationQuestionsClosedAt'] = u"2016-04-12T23:59:00.00000Z"
+            brief_json['briefs']['clarificationQuestionsPublishedBy'] = u"2016-04-14T23:59:00.00000Z"
+            brief_json['briefs']['applicationsClosedAt'] = u"2016-04-16T23:59:00.00000Z"
             brief_json['briefs']['specialistRole'] = 'communicationsManager'
             brief_json['briefs']["clarificationQuestionsAreClosed"] = True
             data_api_client.get_brief.return_value = brief_json
@@ -1990,7 +2225,7 @@ class TestViewQuestionAndAnswerDates(BaseApplicationTest):
 
             assert (document.xpath('//h1')[0]).text_content().strip() == "Question and answer dates"
             row_headers = [e.text_content() for e in document.xpath('//*[@id="content"]//th/span')]
-            for date in ['2 April', '12 April', '14 April', '16 April']:
+            for date in ['2 April', '8 April', '15 April', '16 April']:
                 assert date in row_headers, date
 
     def test_do_not_show_question_and_answer_dates_for_draft_brief(self, data_api_client):

@@ -1,6 +1,6 @@
+from ..helpers.shared_helpers import chunk_string
 import os
 import re
-from jinja2 import Template
 from dmutils.service_attribute import Attribute
 from dmcontent.formats import format_service_price
 
@@ -90,7 +90,7 @@ class Meta(object):
         if re.findall("[a-zA-Z]", str(id)):
             return [id]
         else:
-            return re.findall("....", str(id))
+            return list(chunk_string(str(id), 4))
 
     def get_external_framework_url(self, service_data):
         external_url = 'http://ccs-agreements.cabinetoffice.gov.uk/contracts/'
@@ -99,7 +99,7 @@ class Meta(object):
         elif service_data['frameworkName'] == 'G-Cloud 6':
             framework_url = external_url + 'rm1557vi'
         else:
-            framework_url = external_url
+            framework_url = None
         return framework_url
 
     def get_documents(self, service_data):

@@ -18,9 +18,12 @@ def get_framework_and_lot(framework_slug, lot_slug, data_api_client, status=None
 
 
 def is_brief_correct(brief, framework_slug, lot_slug, current_user_id):
-    return brief['frameworkSlug'] == framework_slug and \
-        brief['lotSlug'] == lot_slug and \
-        is_brief_associated_with_user(brief, current_user_id)
+    return (
+        brief['frameworkSlug'] == framework_slug
+        and brief['lotSlug'] == lot_slug
+        and is_brief_associated_with_user(brief, current_user_id)
+        and not brief_is_withdrawn(brief)
+    )
 
 
 def is_brief_associated_with_user(brief, current_user_id):
@@ -30,6 +33,10 @@ def is_brief_associated_with_user(brief, current_user_id):
 
 def brief_can_be_edited(brief):
     return brief.get('status') == 'draft'
+
+
+def brief_is_withdrawn(brief):
+    return brief.get('status') == 'withdrawn'
 
 
 def section_has_at_least_one_required_question(section):
@@ -88,23 +95,3 @@ def get_sorted_responses_for_brief(brief, data_api_client):
         )
     else:
         return brief_responses
-
-
-def get_publishing_dates(brief=None):
-    application_open_days = 14
-    questions_open_days = application_open_days - 7
-    answers_open_days = application_open_days - 1
-
-    dates = {}
-    if brief is not None and brief.get('publishedAt'):
-        dates['questions_close'] = brief['clarificationQuestionsClosedAt']
-        dates['answers_close'] = brief['clarificationQuestionsPublishedBy']
-        dates['closing_date'] = brief['applicationsClosedAt']
-    else:
-        dates['today'] = datetime.utcnow().replace(hour=23, minute=59, second=59, microsecond=0)
-        dates['questions_close'] = dates['today'] + timedelta(days=questions_open_days)
-        dates['answers_close'] = dates['today'] + timedelta(days=answers_open_days)
-        dates['closing_date'] = dates['today'] + timedelta(days=application_open_days)
-        dates['application_open_weeks'] = application_open_days//7
-        dates['closing_time'] = '{d:%I:%M %p}'.format(d=dates['closing_date']).lower()
-    return dates

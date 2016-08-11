@@ -124,6 +124,18 @@ class BaseApplicationTest(object):
         return re.sub(r"\s+", "",
                       whitespace_in_this, flags=re.UNICODE)
 
+    @staticmethod
+    def _normalize_whitespace(whitespace_in_this):
+        # NOTE proper xml-standard way of doing this is a little more complex afaik
+        return re.sub(r"\s+", " ",
+                      whitespace_in_this, flags=re.UNICODE).strip()
+
+    @classmethod
+    def _squashed_element_text(cls, element):
+        return element.text + "".join(
+            cls._squashed_element_text(child_element)+child_element.tail for child_element in element
+        )
+
     def teardown_login(self):
         if self.get_user_patch is not None:
             self.get_user_patch.stop()

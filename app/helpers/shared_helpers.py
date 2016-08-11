@@ -25,3 +25,7 @@ def get_one_framework_by_status_in_order_of_preference(frameworks, statuses_in_o
         for framework in frameworks:
             if framework.get('status') == status:
                 return framework
+
+
+def chunk_string(string, chunk_length):
+    return (string[0+i:chunk_length+i] for i in range(0, len(string), chunk_length))

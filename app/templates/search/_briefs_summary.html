@@ -1,0 +1,10 @@
+{% if briefs_count is not none %}
+<p class="search-summary">
+  <span class="search-summary-count">{{ briefs_count }}</span>
+  {% if filters_applied %}
+    {{ pluralize(briefs_count, "result", "results") }}
+  {% else %}
+    {{ pluralize(briefs_count, "opportunity", "opportunities") }}
+  {% endif %}
+</p>
+{% endif %}

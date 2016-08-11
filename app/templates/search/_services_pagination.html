@@ -3,7 +3,7 @@
 
         {% if pagination['show_prev'] %}
         <li class="previous">
-            <a href="{{ url_for('.search', page=pagination['prev_page'], **search_query) }}">
+            <a href="{{ url_for('.search_services', page=pagination['prev_page'], **search_query) }}">
                 Previous <span class="visuallyhidden">page</span>
                 <span class="page-numbers">{{ pagination['prev_page'] }} of {{ pagination['total_pages'] }}</span>
             </a>
@@ -12,7 +12,7 @@
 
         {% if pagination['show_next'] %}
         <li class="next">
-            <a href="{{ url_for('.search', page=pagination['next_page'], **search_query) }}">
+            <a href="{{ url_for('.search_services', page=pagination['next_page'], **search_query) }}">
                 Next <span class="visuallyhidden">page</span>
                 <span class="page-numbers">{{ pagination['next_page'] }} of {{ pagination['total_pages'] }}</span>
             </a>

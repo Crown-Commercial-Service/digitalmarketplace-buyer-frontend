@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from flask_login import current_user
 from flask import abort, current_app, render_template, request
 
 from dmapiclient import APIError
@@ -8,6 +9,8 @@ from dmcontent.content_loader import ContentNotFoundError
 
 from ...main import main
 from ...helpers.shared_helpers import get_one_framework_by_status_in_order_of_preference, parse_link
+
+from ..forms.brief_forms import BriefSearchForm
 
 from app import data_api_client, content_loader
 
@@ -121,6 +124,12 @@ def get_brief_by_id(framework_slug, brief_id):
     if brief['status'] not in ['live', 'closed']:
         abort(404, "Opportunity '{}' can not be found".format(brief_id))
 
+    if getattr(current_user, "supplier_id", None) is None:
+        # user unauthenticated or not a supplier
+        brief_responses = None
+    else:
+        brief_responses = data_api_client.find_brief_responses(brief_id, current_user.supplier_id)["briefResponses"]
+
     brief['clarificationQuestions'] = [
         dict(question, number=index+1)
         for index, question in enumerate(brief['clarificationQuestions'])
@@ -132,27 +141,47 @@ def get_brief_by_id(framework_slug, brief_id):
     return render_template(
         'brief.html',
         brief=brief,
-        content=brief_content
+        brief_responses=brief_responses,
+        content=brief_content,
     )
 
 
 @main.route('/<framework_slug>/opportunities')
 def list_opportunities(framework_slug):
-    page = request.args.get('page', default=1, type=int)
     framework = data_api_client.get_framework(framework_slug)['frameworks']
-
     if not framework:
         abort(404, "No framework {}".format(framework_slug))
 
-    api_result = data_api_client.find_briefs(status='live,closed', framework=framework_slug, page=page)
+    # disabling csrf protection as this should only ever be a GET request
+    form = BriefSearchForm(request.args, framework=framework, data_api_client=data_api_client, csrf_enabled=False)
+    if not form.validate():
+        abort(404, "Invalid form data")
+
+    api_result = form.get_briefs()
 
     briefs = api_result["briefs"]
     links = api_result["links"]
 
-    return render_template('briefs_catalogue.html',
+    api_prev_link_args = parse_link(links, "prev")
+    prev_link_args = None
+    if api_prev_link_args:
+        prev_link_args = request.args.copy()
+        prev_link_args.setlist("page", api_prev_link_args.get("page") or ())
+
+    api_next_link_args = parse_link(links, "next")
+    next_link_args = None
+    if api_next_link_args:
+        next_link_args = request.args.copy()
+        next_link_args.setlist("page", api_next_link_args.get("page") or ())
+
+    return render_template('search/briefs.html',
                            framework=framework,
-                           lot_names=[lot['name'] for lot in framework['lots'] if lot['allowsBrief']],
+                           form=form,
+                           filters=form.get_filters(),
+                           filters_applied=form.filters_applied(),
                            briefs=briefs,
-                           prev_link=parse_link(links, 'prev'),
-                           next_link=parse_link(links, 'next')
+                           lot_names=tuple(label for id_, label in form.lot.choices),
+                           prev_link_args=prev_link_args,
+                           next_link_args=next_link_args,
+                           briefs_count=api_result.get("meta", {}).get("total", None),
                            )
