@@ -1061,6 +1061,7 @@ class TestPublishBrief(BaseApplicationTest):
         page_html = res.get_data(as_text=True)
 
         assert res.status_code == 200
+        assert 'href="/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/edit/set-how-long-your-requirements-will-be-open-for/requirementsLength"' in page_html  # noqa
         assert 'This will show you what the supplier application deadline will be' in page_html
         assert 'Your requirements will be open for' not in page_html
 
