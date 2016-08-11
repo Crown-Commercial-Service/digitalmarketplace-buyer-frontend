@@ -1,3 +1,25 @@
+//Validation
+.validation-masthead{
+  background: rgba(red,0.1);
+  padding: 1.353em;
+  margin: 2em 0;
+
+  h1{
+    font-size: 1.059em;
+  }
+
+  a{
+    width: 99%;
+    border-bottom: 1px solid black;
+    line-height: 2em;
+
+    &::after {
+      content: "\A";
+      white-space: pre;
+    }
+  }
+}
+
 //Buyer brief overview page
 header.page-heading-smaller{
   h1{
@@ -9,7 +31,7 @@ header.page-heading-smaller{
 
 p.context{
   color: lighten($grey, 5%);
-  font-size: 1.5em;
+  font-size: 1.412em;
   margin-bottom: 0.25em;
   margin-top: 1em;
 }
@@ -17,7 +39,7 @@ p.context{
 h2.instruction-list-item-body{
   padding-top: 1em;
   padding-left: 1.625em;
-  font-size: 1.882rem;
+  font-size: 1.882em;
 
   &:first-of-type {
     border: none;
@@ -154,5 +176,73 @@ table.content-table{
 .section-description{
   h2{
     font-size: 1.882rem;
+  }
+}
+
+.validation-wrapper, #technicalWeighting, #culturalWeighting, #priceWeighting{
+  .text-box-smaller{
+    width: 40%;
+  }
+  .text-box-unit{
+    display: inline-block;
+    margin-left: 0.5em;
+  }
+}
+
+
+//checkbox list
+#evaluationType{
+
+  input[type='checkbox'] + label{
+    padding-top: 5px 80px 12px 60px;
+    font-weight: 400;
+    font-size: 1.412em;
+
+    >p{
+      font-weight: 400;
+      font-size: 0.812em;
+      margin-bottom: 0.5em;
+      padding-right: 20px;
+    }
+
+    &:before{
+      top: 15px;
+    }
+
+    &:after{
+      top:20px;
+    }
+  }
+
+  input[type='checkbox']:checked + label{
+    font-weight: 700;
+    font-size: 1.412em;
+    outline: 1px solid $light-grey;
+  }
+}
+
+//criteria
+
+#essentialRequirements, #niceToHaveRequirements{
+
+  .question-heading-with-hint{
+    p{
+      font-size: 2.750em;
+      padding: 0.5em 0 0.25em 0;
+    }
+  }
+
+  .text-box{
+    width: 60%;
+  }
+
+  .list-entry-remove{
+    margin-left: 1em;
+  }
+
+  .button-secondary{
+    background: $grey;
+    border: none;
+    outline: 1px solid white;
   }
 }
