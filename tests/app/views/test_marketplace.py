@@ -50,24 +50,7 @@ class TestHomepageAccountCreationVirtualPageViews(BaseApplicationTest):
 
 class TestHomepageBrowseList(BaseApplicationTest):
     @mock.patch('app.main.views.marketplace.data_api_client')
-    def test_dos_links_not_shown_when_dos_is_pending(self, data_api_client):
-        with self.app.app_context():
-            data_api_client.find_frameworks.return_value = {"frameworks": [
-                {"slug": "digital-outcomes-and-specialists",
-                 "status": "pending"}
-            ]}
-
-            res = self.client.get("/")
-            document = html.fromstring(res.get_data(as_text=True))
-
-            assert res.status_code == 200
-
-            link_texts = [item.text_content().strip() for item in document.cssselect('.browse-list-item a')]
-            assert link_texts[0] == "Find cloud technology and support"
-            assert link_texts[1] == "Buy physical datacentre space for legacy systems"
-
-    @mock.patch('app.main.views.marketplace.data_api_client')
-    def test_dos_links_are_shown_when_dos_is_live(self, data_api_client):
+    def test_dos_links_are_shown(self, data_api_client):
         with self.app.app_context():
             data_api_client.find_frameworks.return_value = {"frameworks": [
                 {"slug": "digital-outcomes-and-specialists",
