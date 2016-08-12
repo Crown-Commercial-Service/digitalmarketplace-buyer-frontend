@@ -45,8 +45,7 @@ class BriefSearchForm(Form):
             status=",".join(statuses),
             lot=",".join(lots),
             framework=self._framework_slug,
-            page=self.page.data,
-            human=True,
+            page=self.page.data
         )
 
     def get_filters(self):
