@@ -52,10 +52,6 @@ h2.instruction-list-item-body{
   }
 }
 
-p.instruction-list-item-extra-information{
-  padding-left: 2.95em;
-}
-
 ol.instruction-list{
   margin-left: 0;
   padding-left: 0;
@@ -69,6 +65,10 @@ ol.instruction-list{
       position: absolute;
       margin-left: -1.35em;
       margin-top: 0.25em;
+    }  
+
+    p.instruction-list-item-top{
+      padding-left: 2.95em;
     }
 
     a{
