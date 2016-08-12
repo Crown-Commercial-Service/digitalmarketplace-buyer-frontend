@@ -96,12 +96,12 @@ class TestBriefPage(BaseApplicationTest):
     def test_dos_brief_404s_if_brief_is_draft(self):
         self.brief['briefs']['status'] = 'draft'
         brief_id = self.brief['briefs']['id']
-        res = self.client.get(self.expand_path('/digital-outcomes-and-specialists/opportunities/{}').format(brief_id))
+        res = self.client.get(self.expand_path('/digital-service-professionals/opportunities/{}').format(brief_id))
         assert_equal(404, res.status_code)
 
     def test_dos_brief_has_correct_title(self):
         brief_id = self.brief['briefs']['id']
-        res = self.client.get(self.expand_path('/digital-outcomes-and-specialists/opportunities/{}').format(brief_id))
+        res = self.client.get(self.expand_path('/digital-service-professionals/opportunities/{}').format(brief_id))
         assert_equal(200, res.status_code)
 
         document = html.fromstring(res.get_data(as_text=True))
@@ -113,7 +113,7 @@ class TestBriefPage(BaseApplicationTest):
         brief_id = self.brief['briefs']['id']
         self.brief['briefs']['clarificationQuestionsClosedAt'] = "2016-03-10T11:08:28.054129Z"
         self.brief['briefs']['applicationsClosedAt'] = "2016-03-11T11:08:28.054129Z"
-        res = self.client.get(self.expand_path('/digital-outcomes-and-specialists/opportunities/{}').format(brief_id))
+        res = self.client.get(self.expand_path('/digital-service-professionals/opportunities/{}').format(brief_id))
         assert_equal(200, res.status_code)
 
         document = html.fromstring(res.get_data(as_text=True))
@@ -137,7 +137,7 @@ class TestBriefPage(BaseApplicationTest):
 
     def test_dos_brief_has_at_least_one_section(self):
         brief_id = self.brief['briefs']['id']
-        res = self.client.get(self.expand_path('/digital-outcomes-and-specialists/opportunities/{}').format(brief_id))
+        res = self.client.get(self.expand_path('/digital-service-professionals/opportunities/{}').format(brief_id))
         assert_equal(200, res.status_code)
 
         document = html.fromstring(res.get_data(as_text=True))
@@ -160,7 +160,7 @@ class TestBriefPage(BaseApplicationTest):
 
     def test_dos_brief_has_question_and_answer_session_details_link(self):
         brief_id = self.brief['briefs']['id']
-        res = self.client.get(self.expand_path('/digital-outcomes-and-specialists/opportunities/{}').format(brief_id))
+        res = self.client.get(self.expand_path('/digital-service-professionals/opportunities/{}').format(brief_id))
 
         document = html.fromstring(res.get_data(as_text=True))
         qa_session_link_text = document.xpath(
@@ -172,20 +172,20 @@ class TestBriefPage(BaseApplicationTest):
     def test_dos_brief_question_and_answer_session_details_hidden_when_questions_closed(self):
         self.brief['briefs']['clarificationQuestionsAreClosed'] = True
         brief_id = self.brief['briefs']['id']
-        res = self.client.get(self.expand_path('/digital-outcomes-and-specialists/opportunities/{})'.format(brief_id)))
+        res = self.client.get(self.expand_path('/digital-service-professionals/opportunities/{})'.format(brief_id)))
 
         assert "/question-and-answer-session" not in res.get_data(as_text=True)
 
     def test_dos_brief_question_and_answer_session_details_hidden_when_empty(self):
         del self.brief['briefs']['questionAndAnswerSessionDetails']
         brief_id = self.brief['briefs']['id']
-        res = self.client.get(self.expand_path('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id)))
+        res = self.client.get(self.expand_path('/digital-service-professionals/opportunities/{}'.format(brief_id)))
 
         assert "/question-and-answer-session" not in res.get_data(as_text=True)
 
     def test_dos_brief_has_questions_and_answers(self):
         brief_id = self.brief['briefs']['id']
-        res = self.client.get(self.expand_path('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id)))
+        res = self.client.get(self.expand_path('/digital-service-professionals/opportunities/{}'.format(brief_id)))
         assert_equal(200, res.status_code)
 
         document = html.fromstring(res.get_data(as_text=True))
@@ -207,7 +207,7 @@ class TestBriefPage(BaseApplicationTest):
     def test_dos_brief_has_different_link_text_for_logged_in_supplier(self):
         self.login_as_supplier()
         brief_id = self.brief['briefs']['id']
-        res = self.client.get(self.expand_path('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id)))
+        res = self.client.get(self.expand_path('/digital-service-professionals/opportunities/{}'.format(brief_id)))
         assert_equal(200, res.status_code)
 
         document = html.fromstring(res.get_data(as_text=True))
@@ -219,7 +219,7 @@ class TestBriefPage(BaseApplicationTest):
 
     def test_can_apply_to_live_brief(self):
         brief_id = self.brief['briefs']['id']
-        res = self.client.get(self.expand_path('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id)))
+        res = self.client.get(self.expand_path('/digital-service-professionals/opportunities/{}'.format(brief_id)))
         assert_equal(200, res.status_code)
         document = html.fromstring(res.get_data(as_text=True))
 
@@ -233,7 +233,7 @@ class TestBriefPage(BaseApplicationTest):
         brief['briefs']['applicationsClosedAt'] = "2000-02-25T12:00:00.000000Z"
         self._data_api_client.get_brief.return_value = brief
         brief_id = brief['briefs']['id']
-        res = self.client.get(self.expand_path('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id)))
+        res = self.client.get(self.expand_path('/digital-service-professionals/opportunities/{}'.format(brief_id)))
         assert_equal(200, res.status_code)
         document = html.fromstring(res.get_data(as_text=True))
 
@@ -243,7 +243,7 @@ class TestBriefPage(BaseApplicationTest):
 
     def test_dos_brief_specialist_role_displays_label(self):
         brief_id = self.brief['briefs']['id']
-        res = self.client.get(self.expand_path('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id)))
+        res = self.client.get(self.expand_path('/digital-service-professionals/opportunities/{}'.format(brief_id)))
 
         assert 'qualityAssurance' not in res.get_data(as_text=True)
         assert 'Quality assurance analyst' in res.get_data(as_text=True)
@@ -268,7 +268,7 @@ class TestBriefPage(BaseApplicationTest):
 
     def test_unauthenticated_start_application(self):
         brief_id = self.brief['briefs']['id']
-        res = self.client.get(self.expand_path('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id)))
+        res = self.client.get(self.expand_path('/digital-service-professionals/opportunities/{}'.format(brief_id)))
         assert_equal(200, res.status_code)
         document = html.fromstring(res.get_data(as_text=True))
 
@@ -277,7 +277,7 @@ class TestBriefPage(BaseApplicationTest):
     def test_buyer_start_application(self):
         self.login_as_buyer()
         brief_id = self.brief['briefs']['id']
-        res = self.client.get(self.expand_path('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id)))
+        res = self.client.get(self.expand_path('/digital-service-professionals/opportunities/{}'.format(brief_id)))
         assert_equal(200, res.status_code)
         document = html.fromstring(res.get_data(as_text=True))
 
@@ -290,7 +290,7 @@ class TestBriefPage(BaseApplicationTest):
             "briefResponses": [],
         }
         brief_id = self.brief['briefs']['id']
-        res = self.client.get(self.expand_path('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id)))
+        res = self.client.get(self.expand_path('/digital-service-professionals/opportunities/{}'.format(brief_id)))
         assert_equal(200, res.status_code)
         document = html.fromstring(res.get_data(as_text=True))
 
@@ -303,7 +303,7 @@ class TestBriefPage(BaseApplicationTest):
             "briefResponses": [{"lazy": "mock"}],
         }
         brief_id = self.brief['briefs']['id']
-        res = self.client.get(self.expand_path('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id)))
+        res = self.client.get(self.expand_path('/digital-service-professionals/opportunities/{}'.format(brief_id)))
         assert_equal(200, res.status_code)
         document = html.fromstring(res.get_data(as_text=True))
 
@@ -322,8 +322,8 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         self._data_api_client.find_briefs.return_value = self.briefs
 
         self._data_api_client.get_framework.return_value = {'frameworks': {
-            'name': "Digital Outcomes and Specialists",
-            'slug': "digital-outcomes-and-specialists",
+            'name': "Digital Service Professionals",
+            'slug': "digital-service-professionals",
             'lots': [
                 {'name': 'Lot 1', 'slug': 'lot-one', 'allowsBrief': True},
                 {'name': 'Lot 2', 'slug': 'lot-two', 'allowsBrief': False},
@@ -336,18 +336,17 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         self._data_api_client.stop()
 
     def test_catalogue_of_briefs_page(self):
-        res = self.client.get(self.expand_path('/digital-outcomes-and-specialists/opportunities'))
+        res = self.client.get(self.expand_path('/digital-service-professionals/opportunities'))
         assert_equal(200, res.status_code)
         document = html.fromstring(res.get_data(as_text=True))
 
-        self._data_api_client.get_framework.assert_called_once_with("digital-outcomes-and-specialists")
+        self._data_api_client.get_framework.assert_called_once_with("digital-service-professionals")
         regular_args = {
             k: v for k, v in iteritems(self._data_api_client.find_briefs.call_args[1]) if k not in ("status", "lot",)
         }
         assert regular_args == {
-            "framework": "digital-outcomes-and-specialists",
+            "framework": "digital-service-professionals",
             "page": 1,
-            "human": True,
         }
         assert set(self._data_api_client.find_briefs.call_args[1]["status"].split(",")) == {"live", "closed"}
         assert set(self._data_api_client.find_briefs.call_args[1]["lot"].split(",")) == {
@@ -357,148 +356,21 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         }
 
         heading = document.xpath('normalize-space(//h1/text())')
-        assert heading == "Digital Outcomes and Specialists opportunities"
+        assert heading == "Digital Service Professionals opportunities"
         assert 'lot 1, lot 3 and lot 4' in document.xpath(
             "normalize-space(//div[@class='marketplace-paragraph']/p/text())"
         )
-
-        lot_inputs = document.xpath("//form[@method='get']//input[@name='lot']")
-        assert set(element.get("value") for element in lot_inputs) == {
-            "lot-one",
-            "lot-three",
-            "lot-four",
-        }
-        assert not any(element.get("checked") for element in lot_inputs)
-
-        status_inputs = document.xpath("//form[@method='get']//input[@name='status']")
-        assert set(element.get("value") for element in status_inputs) == {"live", "closed"}
-        assert not any(element.get("checked") for element in status_inputs)
 
         ss_elem = document.xpath("//p[@class='search-summary']")[0]
         assert self._normalize_whitespace(self._squashed_element_text(ss_elem)) == "2 opportunities"
 
-    def test_catalogue_of_briefs_page_filtered(self):
-        original_url = self.expand_path("/digital-outcomes-and-specialists/opportunities"
-                                        "?page=2&status=live&lot=lot-one&lot=lot-three")
-        res = self.client.get(original_url)
-        assert_equal(200, res.status_code)
-        document = html.fromstring(res.get_data(as_text=True))
-
-        self._data_api_client.get_framework.assert_called_once_with("digital-outcomes-and-specialists")
-        regular_args = {
-            k: v for k, v in iteritems(self._data_api_client.find_briefs.call_args[1]) if k not in ("status", "lot",)
-        }
-        assert regular_args == {
-            "framework": "digital-outcomes-and-specialists",
-            "page": 2,
-            "human": True,
-        }
-        assert set(self._data_api_client.find_briefs.call_args[1]["status"].split(",")) == {"live"}
-        assert set(self._data_api_client.find_briefs.call_args[1]["lot"].split(",")) == {"lot-one", "lot-three"}
-
-        heading = document.xpath('normalize-space(//h1/text())')
-        assert heading == "Digital Outcomes and Specialists opportunities"
-        assert 'lot 1, lot 3 and lot 4' in document.xpath(
-            "normalize-space(//div[@class='marketplace-paragraph']/p/text())"
-        )
-
-        lot_inputs = document.xpath("//form[@method='get']//input[@name='lot']")
-        assert {
-            element.get("value"): bool(element.get("checked"))
-            for element in lot_inputs
-        } == {
-            "lot-one": True,
-            "lot-three": True,
-            "lot-four": False,
-        }
-
-        status_inputs = document.xpath("//form[@method='get']//input[@name='status']")
-        assert {
-            element.get("value"): bool(element.get("checked"))
-            for element in status_inputs
-        } == {
-            "live": True,
-            "closed": False,
-        }
-
-        parsed_original_url = urlparse(original_url)
-        parsed_prev_url = urlparse(document.xpath("//li[@class='previous']/a/@href")[0])
-        parsed_next_url = urlparse(document.xpath("//li[@class='next']/a/@href")[0])
-        assert parsed_original_url.path == parsed_prev_url.path == parsed_next_url.path
-
-        normalize_qs = lambda qs: {k: set(v) for k, v in iteritems(parse_qs(qs)) if k != "page"}
-        assert normalize_qs(parsed_original_url.query) == \
-            normalize_qs(parsed_next_url.query) == \
-            normalize_qs(parsed_prev_url.query)
-
-        ss_elem = document.xpath("//p[@class='search-summary']")[0]
-        assert self._normalize_whitespace(self._squashed_element_text(ss_elem)) == "2 results"
-
-    def test_catalogue_of_briefs_page_filtered_all_options_selected(self):
-        original_url = self.expand_path("/digital-outcomes-and-specialists/opportunities"
-                                        "?status=live&lot=lot-one&lot=lot-three&status=closed&lot=lot-four")
-        res = self.client.get(original_url)
-        assert_equal(200, res.status_code)
-        document = html.fromstring(res.get_data(as_text=True))
-
-        self._data_api_client.get_framework.assert_called_once_with("digital-outcomes-and-specialists")
-        regular_args = {
-            k: v for k, v in iteritems(self._data_api_client.find_briefs.call_args[1]) if k not in ("status", "lot",)
-        }
-        assert regular_args == {
-            "framework": "digital-outcomes-and-specialists",
-            "page": 1,
-            "human": True,
-        }
-        assert set(self._data_api_client.find_briefs.call_args[1]["status"].split(",")) == {"live", "closed"}
-        assert set(self._data_api_client.find_briefs.call_args[1]["lot"].split(",")) == {
-            "lot-one",
-            "lot-three",
-            "lot-four",
-        }
-
-        heading = document.xpath('normalize-space(//h1/text())')
-        assert heading == "Digital Outcomes and Specialists opportunities"
-        assert 'lot 1, lot 3 and lot 4' in document.xpath(
-            "normalize-space(//div[@class='marketplace-paragraph']/p/text())"
-        )
-
-        lot_inputs = document.xpath("//form[@method='get']//input[@name='lot']")
-        assert {
-            element.get("value"): bool(element.get("checked"))
-            for element in lot_inputs
-        } == {
-            "lot-one": True,
-            "lot-three": True,
-            "lot-four": True,
-        }
-
-        status_inputs = document.xpath("//form[@method='get']//input[@name='status']")
-        assert {
-            element.get("value"): bool(element.get("checked"))
-            for element in status_inputs
-        } == {
-            "live": True,
-            "closed": True,
-        }
-
-        parsed_original_url = urlparse(original_url)
-        parsed_next_url = urlparse(document.xpath("//li[@class='next']/a/@href")[0])
-        assert parsed_original_url.path == parsed_next_url.path
-
-        normalize_qs = lambda qs: {k: set(v) for k, v in iteritems(parse_qs(qs)) if k != "page"}
-        assert normalize_qs(parsed_original_url.query) == normalize_qs(parsed_next_url.query)
-
-        ss_elem = document.xpath("//p[@class='search-summary']")[0]
-        assert self._normalize_whitespace(self._squashed_element_text(ss_elem)) == "2 results"
-
     def test_catalogue_of_briefs_404_if_invalid_status(self):
-        res = self.client.get(self.expand_path('/digital-outcomes-and-specialists/opportunities'
+        res = self.client.get(self.expand_path('/digital-service-professionals/opportunities'
                                                '?status=pining-for-fjords'))
         assert res.status_code == 404
 
     def test_catalogue_of_briefs_page_shows_pagination_if_more_pages(self):
-        res = self.client.get(self.expand_path('/digital-outcomes-and-specialists/opportunities'))
+        res = self.client.get(self.expand_path('/digital-service-professionals/opportunities'))
         assert_equal(200, res.status_code)
         page = res.get_data(as_text=True)
         document = html.fromstring(page)
@@ -513,7 +385,7 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
     def test_no_pagination_if_no_more_pages(self):
         del self.briefs['links']['prev']
         del self.briefs['links']['next']
-        res = self.client.get(self.expand_path('/digital-outcomes-and-specialists/opportunities'))
+        res = self.client.get(self.expand_path('/digital-service-professionals/opportunities'))
         assert_equal(200, res.status_code)
         page = res.get_data(as_text=True)
 
