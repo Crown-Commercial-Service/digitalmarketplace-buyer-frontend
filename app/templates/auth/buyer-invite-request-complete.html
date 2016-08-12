@@ -1,0 +1,19 @@
+{% extends "_base_page.html" %}
+
+{% block page_title %}Invitation Request Sent- Digital Marketplace{% endblock %}
+
+{% block phase_banner %}{% endblock %}
+
+{% block body_classes %} registration-pages form-page {% endblock %}
+{% block main_content %}
+{%
+  with
+    heading = "Invitation Request Sent"
+%}
+{% include "toolkit/page-heading.html" %}
+{% endwith %}
+
+<p>
+  Thanks for your invitation request.  It will be reviewed by Marketplace administrators.
+</p>
+{% endblock %}

@@ -1,0 +1,115 @@
+{% extends "_base_page.html" %}
+{% import "toolkit/summary-table.html" as summary %}
+
+{% block page_title %}Create buyer account – Digital Marketplace{% endblock %}
+
+{% block phase_banner %}{% endblock %}
+
+{% block body_classes %} registration-pages form-page{% endblock %}
+{% block main_content %}
+
+{% if form.errors %}
+  <div class="callout--warning">
+    <p>There was a problem with the details you gave:</p>
+    <ul>
+    {% for field_name, field_errors in form.errors|dictsort|reverse if field_errors %}
+      {% for error in field_errors %}
+      <li><a href="#{{ form[field_name].name }}" class="validation-masthead-link">{{ error }}</a></li>
+      {% endfor %}
+    {% endfor %}
+    </ul>
+  </div>
+{% endif %}
+
+{%
+  with
+    smaller = true,
+    heading = "Request a buyer account invitation"
+%}
+{% include "toolkit/page-heading.html" %}
+{% endwith %}
+
+<p>
+  Please confirm you are:
+</p>
+<ul>
+  <li>an employee under the Public Service Act 1999 (Cth) or</li>
+  <li>an employee under the equivalent State or Territory legislation or</li>
+  <li>
+    have written authorisation from an employee under the Public Service Act 1999 (Cth) or an employee under the equivalent State or Territory legislation to act on behalf of a Commonwealth, State or Territory agency.
+  </li>
+</ul>
+
+<form method="POST" action="{{ url_for('.submit_buyer_invite_request') }}">
+  {{ form.csrf_token }}
+
+  <fieldset class="{% if form.government_emp_checkbox.errors[0] %}invalid{% endif %}">
+      {{ form.government_emp_checkbox }}
+      {{ form.government_emp_checkbox.label }}
+  </fieldset>
+
+  {%
+    with
+      question = "Your name",
+      name = "name",
+      value = form.name.data,
+      error = form.name.errors[0]
+  %}
+    {% include "au-ui-toolkit/forms/textbox.html" %}
+  {% endwith %}
+
+  {%
+    with
+      question = "Your email address",
+      hint = 'You must have an email address ending in <strong>.gov.au</strong>.'|safe,
+      name = "email_address",
+      value = form.email_address.data,
+      error = form.email_address.errors[0]
+  %}
+    {% include "au-ui-toolkit/forms/textbox.html" %}
+  {% endwith %}
+
+  {%
+    with
+      question = "Your manager's name",
+      hint = 'We may contact your manager for verification purposes.'|safe,
+      name = "manager_name",
+      value = form.manager_name.data,
+      error = form.manager_name.errors[0]
+  %}
+    {% include "au-ui-toolkit/forms/textbox.html" %}
+  {% endwith %}
+
+  {%
+    with
+      question = "Your manager's email address",
+      hint = 'Your manager must have an email address ending in <strong>.gov.au</strong>.'|safe,
+      name = "manager_email",
+      value = form.manager_email.data,
+      error = form.manager_email.errors[0]
+  %}
+    {% include "au-ui-toolkit/forms/textbox.html" %}
+  {% endwith %}
+
+  {%
+    with
+      question = "Any other information you believe is relevant to your request for access (optional)",
+      hint = '.'|safe,
+      name = "justification",
+      value = form.justification.data,
+      error = form.justification.errors[0]
+  %}
+    {% include "au-ui-toolkit/forms/textbox.html" %}
+  {% endwith %}
+
+  {%
+    with
+      type = "save",
+      role = "button",
+      label = "Request invitation"
+  %}
+  {% include "au-ui-toolkit/button.html" %}
+  {% endwith %}
+  <p><small>By requesting an account invitation, you agree to the <a href="{{ url_for('main.terms_of_use') }}">Terms of Use</a> and <a href="{{ url_for('main.privacy_policy') }}">Privacy Policy</a>.</small></p>
+</form>
+{% endblock %}

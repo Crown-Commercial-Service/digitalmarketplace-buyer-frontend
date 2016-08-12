@@ -518,6 +518,103 @@ class TestLoginFormsNotAutofillable(BaseApplicationTest):
         )
 
 
+class TestBuyerInviteRequest(BaseApplicationTest):
+    complete_invite_request = {
+        'csrf_token': FakeCsrf.valid_token,
+        'government_emp_checkbox': 'checked',
+        'name': 'Me',
+        'email_address': 'me@test.gov.au',
+        'manager_name': 'My Manager',
+        'manager_email': 'manager@test.gov.au',
+        'justification': 'I want one',
+    }
+
+    @mock.patch('app.main.views.login.data_api_client')
+    @mock.patch('app.main.views.login.send_email')
+    def test_should_get_request_form_ok(self, send_email, data_api_client):
+        res = self.client.get(self.expand_path('/buyers/request-invite'))
+        assert res.status_code == 200
+        assert 'private' in res.headers['Cache-Control']
+        data = res.get_data(as_text=True)
+        assert FakeCsrf.valid_token in data
+
+    def post_form(self, **kwargs):
+        data = dict(self.complete_invite_request)
+        data.update(**kwargs)
+        return self.client.post(self.expand_path('/buyers/request-invite'), data=data)
+
+    @mock.patch('app.main.views.login.data_api_client')
+    @mock.patch('app.main.views.login.send_email')
+    def test_should_be_able_to_submit_valid_request(self, send_email, data_api_client):
+        res = self.post_form()
+
+        assert res.status_code == 200
+
+    @mock.patch('app.main.views.login.data_api_client')
+    @mock.patch('app.main.views.login.send_email')
+    def test_require_acknowledgement_of_requirements(self, send_email, data_api_client):
+        res = self.post_form(government_emp_checkbox=None)
+
+        assert res.status_code == 400
+        data = res.get_data(as_text=True)
+        assert has_validation_errors(data, 'government_emp_checkbox')
+
+    @mock.patch('app.main.views.login.data_api_client')
+    @mock.patch('app.main.views.login.send_email')
+    def test_require_name(self, send_email, data_api_client):
+        res = self.post_form(name='')
+
+        assert res.status_code == 400
+        data = res.get_data(as_text=True)
+
+        assert has_validation_errors(data, 'name')
+
+    @mock.patch('app.main.views.login.data_api_client')
+    @mock.patch('app.main.views.login.send_email')
+    def test_require_valid_email_address(self, send_email, data_api_client):
+        res = self.post_form(email_address='@@@')
+
+        assert res.status_code == 400
+        data = res.get_data(as_text=True)
+
+        assert has_validation_errors(data, 'email_address')
+
+    @mock.patch('app.main.views.login.data_api_client')
+    @mock.patch('app.main.views.login.send_email')
+    def test_require_manager_name(self, send_email, data_api_client):
+        res = self.post_form(manager_name='')
+
+        assert res.status_code == 400
+        data = res.get_data(as_text=True)
+
+        assert has_validation_errors(data, 'manager_name')
+
+    @mock.patch('app.main.views.login.data_api_client')
+    @mock.patch('app.main.views.login.send_email')
+    def test_require_valid_manager_email_address(self, send_email, data_api_client):
+        res = self.post_form(manager_email='@@@')
+
+        assert res.status_code == 400
+        data = res.get_data(as_text=True)
+
+        assert has_validation_errors(data, 'manager_email')
+
+    @mock.patch('app.main.views.login.data_api_client')
+    @mock.patch('app.main.views.login.send_email')
+    def test_do_not_require_justification(self, send_email, data_api_client):
+        res = self.post_form(justification=None)
+
+        assert res.status_code == 200
+
+    @mock.patch('app.main.views.login.data_api_client')
+    @mock.patch('app.main.views.login.send_email')
+    def test_should_503_if_email_fails_to_send(self, send_email, data_api_client):
+        data_api_client.is_email_address_with_valid_buyer_domain.return_value = True
+        send_email.side_effect = EmailError("Arrrgh")
+        res = self.post_form()
+        assert res.status_code == 503
+
+
 class TestBuyersCreation(BaseApplicationTest):
     def test_should_get_create_buyer_form_ok(self):
         res = self.client.get(self.expand_path('/buyers/create'))
