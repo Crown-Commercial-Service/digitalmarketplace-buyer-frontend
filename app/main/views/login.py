@@ -15,7 +15,7 @@ from dmutils.email import (
 from dmutils.forms import render_template_with_csrf
 from .. import main
 from app.main.forms.auth_forms import BuyerSignupEmailForm
-from ..forms.auth_forms import LoginForm, EmailAddressForm, ChangePasswordForm, CreateUserForm
+from ..forms.auth_forms import LoginForm, BuyerInviteRequestForm, EmailAddressForm, ChangePasswordForm, CreateUserForm
 from ...helpers.login_helpers import redirect_logged_in_user
 from ... import data_api_client
 from ...api_client.error import HTTPError
@@ -181,6 +181,46 @@ def update_password(token):
                                          token=token)
 
 
+@main.route('/buyers/request-invite', methods=["GET"])
+def buyer_invite_request():
+    form = BuyerInviteRequestForm()
+
+    return render_template_with_csrf('auth/buyer-invite-request.html', form=form)
+
+
+@main.route('/buyers/request-invite', methods=["POST"])
+def submit_buyer_invite_request():
+    form = BuyerInviteRequestForm(request.form)
+
+    # TODO: add buyer domain whitelisting to form validation
+    if not form.validate():
+        return render_template_with_csrf(
+            'auth/buyer-invite-request.html',
+            status_code=400,
+            form=form
+        )
+
+    email_body = render_template("emails/buyer_account_invite_request_email.html", form=form)
+    try:
+        send_email(
+            current_app.config['BUYER_INVITE_REQUEST_ADMIN_EMAIL'],
+            email_body,
+            current_app.config['BUYER_INVITE_REQUEST_SUBJECT'],
+            current_app.config['BUYER_INVITE_REQUEST_EMAIL_FROM'],
+            current_app.config['BUYER_INVITE_REQUEST_EMAIL_NAME'],
+        )
+    except EmailError as e:
+        current_app.logger.error(
+            "buyerinvite.fail: Buyer account invite request email failed to send. "
+            "error {error} invite email_hash {email_hash}",
+            extra={
+                'error': six.text_type(e),
+                'email_hash': hash_email(form.email_address.data)})
+        abort(503, response="Failed to send buyer account invite request email.")
+
+    return render_template('auth/buyer-invite-request-complete.html')
+
+
 @main.route('/buyers/create', methods=["GET"])
 def create_buyer_account():
     form = BuyerSignupEmailForm()
@@ -196,6 +236,7 @@ def submit_create_buyer_account():
 
     if form.validate():
         email_address = form.email_address.data
+        # TODO: add buyer domain whitelisting to form validation
         if not data_api_client.is_email_address_with_valid_buyer_domain(email_address):
             return render_template_with_csrf(
                 "auth/create-buyer-user-error.html",

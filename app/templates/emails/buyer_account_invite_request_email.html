@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+	<title>{{ config['BUYER_INVITE_REQUEST_SUBJECT'] }}</title>
+</head>
+<body>
+
+We've received a request for a buyer account.
+
+<dl>
+	<dt>Name:</dt>
+	<dd>{{ form.name.data }}</dd>
+	<dt>Email address:</dt>
+	<dd>{{ form.email_address.data }}</dd>
+	<dt>Manager's name:</dt>
+	<dd>{{ form.manager_name.data }}</dd>
+	<dt>Manager's email address:</dt>
+	<dd>{{ form.manager_email.data }}</dd>
+	<dt>Optional additional justification:</dt>
+	<dd>{{ form.justification.data }}</dd>
+</dl>
+
+Please review this request and, if accepted, <a href="{{ url_for('main.create_buyer_account', _external=True) }}">create the account</a>.
+
+</body>
+</html>

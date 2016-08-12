@@ -30,6 +30,37 @@ class EmailAddressForm(DmForm):
     )
 
 
+class BuyerInviteRequestForm(EmailAddressForm):
+    government_emp_checkbox = BooleanField(label='I am a public service employee or have authorisation, \
+        as described above.', validators=[DataRequired(message="You must check the checkbox")])
+
+    name = StripWhitespaceStringField(
+        'Your full name', id='name',
+        validators=[
+            DataRequired(message='You must provide your full name'),
+        ]
+    )
+
+    manager_name = StripWhitespaceStringField(
+        'Manager name', id='manager_name',
+        validators=[
+            DataRequired(message='You must provide the name of your manager'),
+        ]
+    )
+
+    manager_email = StripWhitespaceStringField(
+        'Manager email address', id='manager_email',
+        validators=[
+            DataRequired(message='You must provide your manager\'s email address'),
+            email_regex,
+        ]
+    )
+
+    justification = StringField(
+        '', id='justification',
+    )
+
+
 class BuyerSignupEmailForm(EmailAddressForm):
     government_emp_checkbox = BooleanField(label='I am a public service employee or have authorisation, \
         as described above.', validators=[DataRequired(message="You must check the checkbox")])
