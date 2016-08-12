@@ -65,7 +65,7 @@ ol.instruction-list{
       position: absolute;
       margin-left: -1.35em;
       margin-top: 0.25em;
-    }  
+    }
 
     p.instruction-list-item-top{
       padding-left: 2.95em;
@@ -124,6 +124,12 @@ table.content-table{
   font-size: 0.825em;
   margin: 4em 0;
 
+  caption{
+    font-size:1.0625rem;
+    padding-bottom: 1em;
+    text-align: left;
+  }
+
   thead{
     display: none;
   }
@@ -135,10 +141,11 @@ table.content-table{
       border-top: 1px solid $light-grey;
     }
 
-    td{
+    td, th{
       vertical-align: top;
       padding-left: 0;
-      font-size:1.0625rem;
+      // font-size:1.0625rem;
+      font-size: 0.924rem;
 
       &:nth-child(1){
         font-weight: 700;
