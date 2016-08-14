@@ -13,7 +13,7 @@
     <div class="column-two-thirds">
 
       {% with
-        heading = question.question,
+        heading = question.name or question.question,
         smaller = true
       %}
         {% include 'toolkit/page-heading.html' %}
