@@ -74,6 +74,7 @@ class Config(object):
     # Feature Flags
     RAISE_ERROR_ON_MISSING_FEATURES = True
     FEATURE_FLAGS_HIDE_SUPPLIERS_NAME_SEARCH = enabled_since('2016-08-01')  # Change to False when it is ready
+    FEATURE_FLAGS_BRIEF_BUILDER = True
 
     # LOGGING
     DM_LOG_LEVEL = 'DEBUG'
@@ -123,6 +124,7 @@ class Live(Config):
     DEBUG = False
     DM_HTTP_PROTO = 'https'
     DM_GA_CODE = 'UA-72722909-5'
+    FEATURE_FLAGS_BRIEF_BUILDER = False
 
 
 class Preview(Live):

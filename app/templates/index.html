@@ -21,7 +21,13 @@
       <article>
         <h3><a href="{{ url_for('.supplier_search') }}">Find an ICT supplier</a></h3>
         <p>Browse the Marketplace for approved digital service professionals.</p>
-        <p><a href="{{ url_for('.supplier_search') }}" role="button">View the catalogue</a></p>
+        <p>
+          <a href="{{ url_for('.supplier_search') }}" role="button">View the catalogue</a>
+         {% if brief_builder %}
+            Or
+            <a href="{{ url_for('.info_page_for_starting_a_brief', framework_slug='digital-service-professionals', lot_slug='digital-professionals') }}" role="button">Create a brief</a>
+        {% endif %}
+       </p>
       </article>
     </li>
     <li>
