@@ -196,7 +196,8 @@ class BaseApplicationTest(object):
 
             self.client.post(self.expand_path('/login'), data={
                 'email_address': 'valid@email.com',
-                'password': '1234567890'
+                'password': '1234567890',
+                'csrf_token': FakeCsrf.valid_token,
             })
 
             login_api_client.authenticate_user.assert_called_once_with(
