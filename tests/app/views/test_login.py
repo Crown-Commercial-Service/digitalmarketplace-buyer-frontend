@@ -557,6 +557,7 @@ class TestBuyerInviteRequest(BaseApplicationTest):
 
         assert res.status_code == 400
         data = res.get_data(as_text=True)
+
         assert has_validation_errors(data, 'government_emp_checkbox')
 
     @mock.patch('app.main.views.login.data_api_client')
@@ -637,24 +638,6 @@ class TestBuyersCreation(BaseApplicationTest):
         assert res.status_code == 200
         assert 'Activate your account' in res.get_data(as_text=True)
 
-    @mock.patch('app.main.views.login.send_email')
-    @mock.patch('app.main.views.login.data_api_client')
-    def test_require_acknowledgement_of_requirements(self, data_api_client, send_email):
-        res = self.client.post(
-            self.expand_path('/buyers/create'),
-            data={
-                'email_address': 'valid@test.gov.au',
-                # government_emp_checkbox unchecked
-                'csrf_token': FakeCsrf.valid_token,
-            },
-            follow_redirects=True
-        )
-
-        assert res.status_code == 400
-        data = res.get_data(as_text=True)
-        print data
-        assert has_validation_errors(data, 'government_emp_checkbox')
-
     def test_should_raise_validation_error_for_invalid_email_address(self):
         res = self.client.post(
             self.expand_path('/buyers/create'),
@@ -688,7 +671,7 @@ class TestBuyersCreation(BaseApplicationTest):
         res = self.client.post(
             self.expand_path('/buyers/create'),
             data={
-                'email_address': 'valid@test.gov.uk',
+                'email_address': 'valid@example.com',
                 'government_emp_checkbox': 'checked',
                 'csrf_token': FakeCsrf.valid_token,
             },
@@ -706,7 +689,7 @@ class TestBuyersCreation(BaseApplicationTest):
         res = self.client.post(
             self.expand_path('/buyers/create'),
             data={
-                'email_address': 'valid@test.gov.uk',
+                'email_address': 'valid@test.gov.au',
                 'government_emp_checkbox': 'checked',
                 'csrf_token': FakeCsrf.valid_token,
             },
@@ -721,7 +704,7 @@ class TestBuyersCreation(BaseApplicationTest):
         res = self.client.post(
             self.expand_path('/buyers/create'),
             data={
-                'email_address': 'valid@test.gov.uk',
+                'email_address': 'valid@test.gov.au',
                 'government_emp_checkbox': 'checked',
                 'csrf_token': FakeCsrf.valid_token,
             },
@@ -729,7 +712,7 @@ class TestBuyersCreation(BaseApplicationTest):
         )
         assert res.status_code == 200
         data_api_client.create_audit_event.assert_called_with(audit_type=AuditTypes.invite_user,
-                                                              data={'invitedEmail': 'valid@test.gov.uk'})
+                                                              data={'invitedEmail': 'valid@test.gov.au'})
 
 
 class TestCreateUser(BaseApplicationTest):

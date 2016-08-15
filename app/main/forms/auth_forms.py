@@ -1,7 +1,7 @@
 from wtforms import PasswordField
 from wtforms.fields.core import BooleanField
 from wtforms.validators import DataRequired, EqualTo, Length, Regexp
-from dmutils.forms import StripWhitespaceStringField, StringField, DmForm, email_regex is_government_email
+from dmutils.forms import StripWhitespaceStringField, StringField, DmForm, email_regex, is_government_email
 
 from app import data_api_client
 
@@ -71,9 +71,14 @@ class BuyerInviteRequestForm(DmForm):
     )
 
 
-class BuyerSignupEmailForm(EmailAddressForm):
-    government_emp_checkbox = BooleanField(label='I am a public service employee or have authorisation, \
-        as described above.', validators=[DataRequired(message="You must check the checkbox")])
+class BuyerSignupEmailForm(DmForm):
+    email_address = StripWhitespaceStringField(
+        'Email', id="input_email_address",
+        validators=[
+            DataRequired(message="You must provide an email address"),
+            is_government_email(data_api_client)
+        ]
+    )
 
 
 class ChangePasswordForm(DmForm):

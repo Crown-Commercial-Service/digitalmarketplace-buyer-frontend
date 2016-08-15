@@ -20,6 +20,18 @@
     </ul>
   </div>
 {% endif %}
+{% if form.email_address.flags.non_gov or form.manager_email.flags.non_gov %}
+<div>
+  <h2>You and your manager need a government email address</h2>
+  <p>
+    Email addresses must end with <strong>.gov.au</strong>.
+  </p>
+  <p>
+    If you believe your email address should be recognised email
+    <a href="mailto:marketplace@digital.gov.au">marketplace@digital.gov.au</a>.
+  </p>
+<div>
+{% endif %}
 
 {%
   with

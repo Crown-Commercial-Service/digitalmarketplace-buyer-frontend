@@ -5,21 +5,6 @@
 
 {% block phase_banner %}{% endblock %}
 
-{#
-{% block breadcrumb %}
-{%
-  with items = [
-    {
-    "link": "/",
-    "label": "Digital Marketplace"
-    }
-  ]
-%}
-{% include "toolkit/breadcrumb.html" %}
-{% endwith %}
-{% endblock %}
-#}
-
 {% block body_classes %} registration-pages form-page{% endblock %}
 {% block main_content %}
 
@@ -44,24 +29,8 @@
 {% include "toolkit/page-heading.html" %}
 {% endwith %}
 
-<p>
-  Please confirm you are:
-</p>
-<ul>
-  <li>an employee under the Public Service Act 1999 (Cth) or</li>
-  <li>an employee under the equivalent State or Territory legislation or</li>
-  <li>
-    have written authorisation from an employee under the Public Service Act 1999 (Cth) or an employee under the equivalent State or Territory legislation to act on behalf of a Commonwealth, State or Territory agency.
-  </li>
-</ul>
-
 <form method="POST" action="{{ url_for('.submit_create_buyer_account') }}">
   {{ form.csrf_token }}
-
-  <fieldset class="{% if form.government_emp_checkbox.errors[0] %}invalid{% endif %}">
-      {{ form.government_emp_checkbox }}
-      {{ form.government_emp_checkbox.label }}
-  </fieldset>
 
   {%
     with
