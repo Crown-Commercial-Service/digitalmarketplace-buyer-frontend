@@ -10,9 +10,10 @@
   {% with
   local_nav_toggle='Menu'
   %}
-  <h1>ICT supplier catalogue</h1>
-  <p><a href="{{ url_for('main.roles_and_services') }}">Learn more about these roles</a></p>
-  <hr>
+  <div class="intro">
+    <h1>ICT supplier catalogue</h1>
+    <p><a href="{{ url_for('main.roles_and_services') }}">Learn more about these roles</a></p>
+  </div>
   <aside class="sidebar" id="nav">
     {% include "sidebar/_filter_capabilities.html" %}
     {% include "sidebar/_search.html" %}

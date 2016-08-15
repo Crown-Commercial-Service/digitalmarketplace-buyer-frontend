@@ -117,6 +117,11 @@ def buyers_guide():
     return render_template('content/buyers-guide.html')
 
 
+@main.route('/copyright')
+def copyright():
+    return render_template('content/copyright.html')
+
+
 @main.route('/<framework_slug>/opportunities/<brief_id>')
 def get_brief_by_id(framework_slug, brief_id):
     briefs = data_api_client.get_brief(brief_id)

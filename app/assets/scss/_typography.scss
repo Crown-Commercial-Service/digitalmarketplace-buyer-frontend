@@ -59,6 +59,16 @@ h1 {
   }
 }
 
+.has-intro {
+  .content-main {
+    p:first-of-type {
+      @extend h3;
+      font-weight: $base-font-weight;
+      margin-bottom: $base-spacing;
+    }
+  }
+}
+
 .content-details {
 
   article {
