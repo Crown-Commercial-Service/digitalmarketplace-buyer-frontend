@@ -47,7 +47,8 @@ def index():
     return render_template(
         'index.html',
         frameworks={framework['slug']: framework for framework in frameworks},
-        temporary_message=temporary_message
+        temporary_message=temporary_message,
+        brief_builder=current_app.config.get('FEATURE_FLAGS_BRIEF_BUILDER', False)
     )
 
 
