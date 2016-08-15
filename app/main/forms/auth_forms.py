@@ -1,7 +1,7 @@
 from wtforms import PasswordField
 from wtforms.fields.core import BooleanField
 from wtforms.validators import DataRequired, EqualTo, Length, Regexp
-from dmutils.forms import StripWhitespaceStringField, StringField, DmForm, email_regex, is_government_email
+from dmutils.forms import StripWhitespaceStringField, StringField, DmForm, email_validator, government_email_validator
 
 from app import data_api_client
 
@@ -11,7 +11,7 @@ class LoginForm(DmForm):
         'Email', id="input_email_address",
         validators=[
             DataRequired(message="You must provide an email address"),
-            email_regex,
+            email_validator,
         ]
     )
     password = PasswordField(
@@ -27,7 +27,7 @@ class EmailAddressForm(DmForm):
         'Email', id="input_email_address",
         validators=[
             DataRequired(message="You must provide an email address"),
-            email_regex,
+            email_validator,
         ]
     )
 
@@ -37,7 +37,7 @@ class BuyerInviteRequestForm(DmForm):
         'Email', id="input_email_address",
         validators=[
             DataRequired(message="You must provide an email address"),
-            is_government_email(data_api_client)
+            government_email_validator,
         ]
     )
 
@@ -62,7 +62,7 @@ class BuyerInviteRequestForm(DmForm):
         'Manager email address', id='manager_email',
         validators=[
             DataRequired(message='You must provide your manager\'s email address'),
-            is_government_email(data_api_client)
+            government_email_validator,
         ]
     )
 
@@ -76,7 +76,7 @@ class BuyerSignupEmailForm(DmForm):
         'Email', id="input_email_address",
         validators=[
             DataRequired(message="You must provide an email address"),
-            is_government_email(data_api_client)
+            government_email_validator,
         ]
     )
 

@@ -610,7 +610,6 @@ class TestBuyerInviteRequest(BaseApplicationTest):
     @mock.patch('app.main.views.login.data_api_client')
     @mock.patch('app.main.views.login.send_email')
     def test_should_503_if_email_fails_to_send(self, send_email, data_api_client):
-        data_api_client.is_email_address_with_valid_buyer_domain.return_value = True
         send_email.side_effect = EmailError("Arrrgh")
         res = self.post_form()
         assert res.status_code == 503
@@ -667,7 +666,6 @@ class TestBuyersCreation(BaseApplicationTest):
 
     @mock.patch('app.main.views.login.data_api_client')
     def test_should_show_error_page_for_unrecognised_email_domain(self, data_api_client):
-        data_api_client.is_email_address_with_valid_buyer_domain.return_value = False
         res = self.client.post(
             self.expand_path('/buyers/create'),
             data={
@@ -684,7 +682,6 @@ class TestBuyersCreation(BaseApplicationTest):
     @mock.patch('app.main.views.login.data_api_client')
     @mock.patch('app.main.views.login.send_email')
     def test_should_503_if_email_fails_to_send(self, send_email, data_api_client):
-        data_api_client.is_email_address_with_valid_buyer_domain.return_value = True
         send_email.side_effect = EmailError("Arrrgh")
         res = self.client.post(
             self.expand_path('/buyers/create'),
