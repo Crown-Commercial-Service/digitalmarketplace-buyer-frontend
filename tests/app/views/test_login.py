@@ -616,7 +616,18 @@ class TestBuyerInviteRequest(BaseApplicationTest):
 
 
 class TestBuyersCreation(BaseApplicationTest):
+    def test_require_admin_to_view_form(self):
+        # not logged in as admin
+        res = self.client.get(self.expand_path('/buyers/create'))
+        assert res.status_code == 302
+
+    def test_require_admin_to_submit_form(self):
+        # not logged in as admin
+        res = self.client.post(self.expand_path('/buyers/create'))
+        assert res.status_code == 302
+
     def test_should_get_create_buyer_form_ok(self):
+        self.login_as_admin()
         res = self.client.get(self.expand_path('/buyers/create'))
         assert res.status_code == 200
         assert 'Create a buyer account' in res.get_data(as_text=True)
@@ -625,6 +636,7 @@ class TestBuyersCreation(BaseApplicationTest):
     @mock.patch('app.main.views.login.send_email')
     @mock.patch('app.main.views.login.data_api_client')
     def test_should_be_able_to_submit_valid_email_address(self, data_api_client, send_email):
+        self.login_as_admin()
         res = self.client.post(
             self.expand_path('/buyers/create'),
             data={
@@ -638,6 +650,7 @@ class TestBuyersCreation(BaseApplicationTest):
         assert 'Activate your account' in res.get_data(as_text=True)
 
     def test_should_raise_validation_error_for_invalid_email_address(self):
+        self.login_as_admin()
         res = self.client.post(
             self.expand_path('/buyers/create'),
             data={
@@ -654,6 +667,7 @@ class TestBuyersCreation(BaseApplicationTest):
         assert has_validation_errors(data, 'email_address')
 
     def test_should_raise_validation_error_for_empty_email_address(self):
+        self.login_as_admin()
         res = self.client.post(
             self.expand_path('/buyers/create'),
             data={'csrf_token': FakeCsrf.valid_token},
@@ -666,6 +680,7 @@ class TestBuyersCreation(BaseApplicationTest):
 
     @mock.patch('app.main.views.login.data_api_client')
     def test_should_show_error_page_for_unrecognised_email_domain(self, data_api_client):
+        self.login_as_admin()
         res = self.client.post(
             self.expand_path('/buyers/create'),
             data={
@@ -682,6 +697,7 @@ class TestBuyersCreation(BaseApplicationTest):
     @mock.patch('app.main.views.login.data_api_client')
     @mock.patch('app.main.views.login.send_email')
     def test_should_503_if_email_fails_to_send(self, send_email, data_api_client):
+        self.login_as_admin()
         send_email.side_effect = EmailError("Arrrgh")
         res = self.client.post(
             self.expand_path('/buyers/create'),
@@ -698,6 +714,7 @@ class TestBuyersCreation(BaseApplicationTest):
     @mock.patch('app.main.views.login.send_email')
     @mock.patch('app.main.views.login.data_api_client')
     def test_should_create_audit_event_when_email_sent(self, data_api_client, send_email):
+        self.login_as_admin()
         res = self.client.post(
             self.expand_path('/buyers/create'),
             data={
