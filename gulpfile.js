@@ -11,6 +11,7 @@ var bless = require('gulp-bless');
 var autoprefixer = require('gulp-autoprefixer');
 var rename = require('gulp-rename');
 var runSequence = require('run-sequence');
+var plugins = require('gulp-load-plugins')();
 
 // Paths
 var environment;
@@ -129,6 +130,27 @@ gulp.task('sass', function () {
   return stream;
 });
 
+gulp.task('sass:livereload', function () {
+  var stream = gulp.src(cssSourceGlob)
+    .pipe(filelog('Compressing SCSS files'))
+    .pipe(
+      sass(sassOptions[environment]))
+        .on('error', logErrorAndExit)
+    .pipe(autoprefixer({
+        autoprefixer: {
+          browsers: ['last 2 versions', 'ie 8-10']
+        }
+    }))
+    .pipe(gulp.dest(cssDistributionFolder))
+    .pipe(plugins.livereload());
+
+  stream.on('end', function () {
+    console.log('💾  Compressed CSS saved as .css files in ' + cssDistributionFolder);
+  });
+
+  return stream;
+});
+
 gulp.task('split', ['sass'], function(cb) {
   var stream = gulp.src(cssDistributionFolder + '/application-ie8.css')
       .pipe(filelog('Splitting CSS files'))
@@ -218,6 +240,25 @@ gulp.task('js', function () {
     ))
     .pipe(sourcemaps.write('./maps'))
     .pipe(gulp.dest(jsDistributionFolder));
+
+  stream.on('end', function () {
+    console.log('💾 Compressed JavaScript saved as ' + jsDistributionFolder + '/' + jsDistributionFile);
+  });
+
+  return stream;
+});
+
+gulp.task('js:livereload', function () {
+  var stream = gulp.src(jsSourceFile)
+    .pipe(filelog('Compressing JavaScript files'))
+    .pipe(include())
+    .pipe(sourcemaps.init())
+    .pipe(uglify(
+      uglifyOptions[environment]
+    ))
+    .pipe(sourcemaps.write('./maps'))
+    .pipe(gulp.dest(jsDistributionFolder))
+    .pipe(plugins.livereload());
 
   stream.on('end', function () {
     console.log('💾 Compressed JavaScript saved as ' + jsDistributionFolder + '/' + jsDistributionFile);
@@ -423,10 +464,41 @@ gulp.task(
   }
 );
 
+gulp.task(
+  'compile:livereload',
+  [
+    'copy'
+  ],
+  function(cb) {
+    runSequence('sass:livereload',
+      'split',
+      'js:livereload',
+      'rename-1',
+      'rename-2',
+      cb);
+  }
+);
+
 gulp.task('build:development', ['set_environment_to_development', 'clean'], function () {
   gulp.start('compile');
 });
 
 gulp.task('build:production', ['set_environment_to_production', 'clean'], function () {
   gulp.start('compile');
+});
+
+gulp.task('build:livereload', ['set_environment_to_development', 'clean'], function () {
+  gulp.start('compile:livereload');
+});
+
+gulp.task('livereload', ['build:livereload'], function () {
+  plugins.livereload.listen();
+  var jsWatcher = gulp.watch([ assetsFolder + '/**/*.js' ], ['js:livereload']);
+  var cssWatcher = gulp.watch([ assetsFolder + '/**/*.scss' ], ['sass:livereload']);
+  var notice = function (event) {
+    console.log('File ' + event.path + ' was ' + event.type + ' running tasks...');
+  };
+
+  cssWatcher.on('change', notice);
+  jsWatcher.on('change', notice);
 });

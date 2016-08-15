@@ -19,7 +19,10 @@ npm_install:
 	npm install
 
 frontend_build:
-	npm run frontend-build:watch
+	npm run frontend-build:development
+
+frontend_livereload:
+	npm run frontend-build:livereload
 
 test: show_environment frontend_build test_pep8 test_python test_javascript
 
