@@ -14,3 +14,11 @@ def shortlisting_suppliers():
 @main.route('/guidance/how-to-evaluate-suppliers')
 def evaluating_suppliers():
     return render_template('guidance/evaluating_suppliers.html')
+
+@main.route('/guidance/how-marketplace-evaluated')
+def evaluated():
+    return render_template('guidance/evaluated.html')
+
+@main.route('/guidance/how-to-award-contract')
+def awarding_contract():
+    return render_template('guidance/awarding_contract.html')
