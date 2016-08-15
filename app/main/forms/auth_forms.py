@@ -1,7 +1,9 @@
 from wtforms import PasswordField
 from wtforms.fields.core import BooleanField
 from wtforms.validators import DataRequired, EqualTo, Length, Regexp
-from dmutils.forms import StripWhitespaceStringField, StringField, DmForm, email_regex
+from dmutils.forms import StripWhitespaceStringField, StringField, DmForm, email_validator, government_email_validator
+
+from app import data_api_client
 
 
 class LoginForm(DmForm):
@@ -9,7 +11,7 @@ class LoginForm(DmForm):
         'Email', id="input_email_address",
         validators=[
             DataRequired(message="You must provide an email address"),
-            email_regex,
+            email_validator,
         ]
     )
     password = PasswordField(
@@ -25,12 +27,20 @@ class EmailAddressForm(DmForm):
         'Email', id="input_email_address",
         validators=[
             DataRequired(message="You must provide an email address"),
-            email_regex,
+            email_validator,
         ]
     )
 
 
-class BuyerInviteRequestForm(EmailAddressForm):
+class BuyerInviteRequestForm(DmForm):
+    email_address = StripWhitespaceStringField(
+        'Email', id="input_email_address",
+        validators=[
+            DataRequired(message="You must provide an email address"),
+            government_email_validator,
+        ]
+    )
+
     government_emp_checkbox = BooleanField(label='I am a public service employee or have authorisation, \
         as described above.', validators=[DataRequired(message="You must check the checkbox")])
 
@@ -52,7 +62,7 @@ class BuyerInviteRequestForm(EmailAddressForm):
         'Manager email address', id='manager_email',
         validators=[
             DataRequired(message='You must provide your manager\'s email address'),
-            email_regex,
+            government_email_validator,
         ]
     )
 
@@ -61,9 +71,14 @@ class BuyerInviteRequestForm(EmailAddressForm):
     )
 
 
-class BuyerSignupEmailForm(EmailAddressForm):
-    government_emp_checkbox = BooleanField(label='I am a public service employee or have authorisation, \
-        as described above.', validators=[DataRequired(message="You must check the checkbox")])
+class BuyerSignupEmailForm(DmForm):
+    email_address = StripWhitespaceStringField(
+        'Email', id="input_email_address",
+        validators=[
+            DataRequired(message="You must provide an email address"),
+            government_email_validator,
+        ]
+    )
 
 
 class ChangePasswordForm(DmForm):

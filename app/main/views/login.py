@@ -192,7 +192,6 @@ def buyer_invite_request():
 def submit_buyer_invite_request():
     form = BuyerInviteRequestForm(request.form)
 
-    # TODO: add buyer domain whitelisting to form validation
     if not form.validate():
         return render_template_with_csrf(
             'auth/buyer-invite-request.html',
@@ -236,45 +235,38 @@ def submit_create_buyer_account():
 
     if form.validate():
         email_address = form.email_address.data
-        # TODO: add buyer domain whitelisting to form validation
-        if not data_api_client.is_email_address_with_valid_buyer_domain(email_address):
-            return render_template_with_csrf(
-                "auth/create-buyer-user-error.html",
-                status_code=400,
-                error='invalid_buyer_domain')
-        else:
-            token = generate_token(
-                {
-                    "email_address":  email_address
-                },
-                current_app.config['SHARED_EMAIL_KEY'],
-                current_app.config['INVITE_EMAIL_SALT']
+        token = generate_token(
+            {
+                "email_address":  email_address
+            },
+            current_app.config['SHARED_EMAIL_KEY'],
+            current_app.config['INVITE_EMAIL_SALT']
+        )
+        url = url_for('main.create_user', encoded_token=token, _external=True)
+        email_body = render_template("emails/create_buyer_user_email.html", url=url)
+        try:
+            send_email(
+                email_address,
+                email_body,
+                current_app.config['CREATE_USER_SUBJECT'],
+                current_app.config['RESET_PASSWORD_EMAIL_FROM'],
+                current_app.config['RESET_PASSWORD_EMAIL_NAME'],
             )
-            url = url_for('main.create_user', encoded_token=token, _external=True)
-            email_body = render_template("emails/create_buyer_user_email.html", url=url)
-            try:
-                send_email(
-                    email_address,
-                    email_body,
-                    current_app.config['CREATE_USER_SUBJECT'],
-                    current_app.config['RESET_PASSWORD_EMAIL_FROM'],
-                    current_app.config['RESET_PASSWORD_EMAIL_NAME'],
-                )
-                session['email_sent_to'] = email_address
-            except EmailError as e:
-                current_app.logger.error(
-                    "buyercreate.fail: Create user email failed to send. "
-                    "error {error} email_hash {email_hash}",
-                    extra={
-                        'error': six.text_type(e),
-                        'email_hash': hash_email(email_address)})
-                abort(503, response="Failed to send user creation email.")
+            session['email_sent_to'] = email_address
+        except EmailError as e:
+            current_app.logger.error(
+                "buyercreate.fail: Create user email failed to send. "
+                "error {error} email_hash {email_hash}",
+                extra={
+                    'error': six.text_type(e),
+                    'email_hash': hash_email(email_address)})
+            abort(503, response="Failed to send user creation email.")
 
-            data_api_client.create_audit_event(
-                audit_type=AuditTypes.invite_user,
-                data={'invitedEmail': email_address})
+        data_api_client.create_audit_event(
+            audit_type=AuditTypes.invite_user,
+            data={'invitedEmail': email_address})
 
-            return redirect(url_for('.create_your_account_complete'), 302)
+        return redirect(url_for('.create_your_account_complete'), 302)
     else:
         return render_template_with_csrf(
             "auth/create-buyer-account.html",
@@ -352,7 +344,7 @@ def submit_create_user(encoded_token):
             login_user(user)
 
         except HTTPError as e:
-            if e.message != 'invalid_buyer_domain' and e.status_code != 409:
+            if e.status_code != 409:
                 raise
 
             return render_template_with_csrf(

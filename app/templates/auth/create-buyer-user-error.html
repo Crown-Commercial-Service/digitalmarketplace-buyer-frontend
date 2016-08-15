@@ -7,25 +7,7 @@
 {% block body_classes %} registration-pages form-page {% endblock %}
 {% block main_content %}
 
-{% if error == 'invalid_buyer_domain' %}
-
-  <header>
-    <h1>You need a government email address</h1>
-  </header>
-  <p>
-    To create an account you must have an email address ending in <strong>.gov.au</strong>.
-  </p>
-  <div>
-    <p>
-      <a href="{{ url_for('.create_buyer_account') }}">Try again with a different email address</a>.
-    </p>
-    <p>
-      Or if you believe your email address should be recognised email
-      <a href="mailto:marketplace@digital.gov.au">marketplace@digital.gov.au</a>.
-    </p>
-  </div>
-
-{% elif not token %}
+{% if not token %}
 
   <header>
     <h1>Expired link</h1>

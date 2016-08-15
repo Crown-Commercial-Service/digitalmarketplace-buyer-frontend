@@ -557,6 +557,7 @@ class TestBuyerInviteRequest(BaseApplicationTest):
 
         assert res.status_code == 400
         data = res.get_data(as_text=True)
+
         assert has_validation_errors(data, 'government_emp_checkbox')
 
     @mock.patch('app.main.views.login.data_api_client')
@@ -609,7 +610,6 @@ class TestBuyerInviteRequest(BaseApplicationTest):
     @mock.patch('app.main.views.login.data_api_client')
     @mock.patch('app.main.views.login.send_email')
     def test_should_503_if_email_fails_to_send(self, send_email, data_api_client):
-        data_api_client.is_email_address_with_valid_buyer_domain.return_value = True
         send_email.side_effect = EmailError("Arrrgh")
         res = self.post_form()
         assert res.status_code == 503
@@ -636,24 +636,6 @@ class TestBuyersCreation(BaseApplicationTest):
         )
         assert res.status_code == 200
         assert 'Activate your account' in res.get_data(as_text=True)
-
-    @mock.patch('app.main.views.login.send_email')
-    @mock.patch('app.main.views.login.data_api_client')
-    def test_require_acknowledgement_of_requirements(self, data_api_client, send_email):
-        res = self.client.post(
-            self.expand_path('/buyers/create'),
-            data={
-                'email_address': 'valid@test.gov.au',
-                # government_emp_checkbox unchecked
-                'csrf_token': FakeCsrf.valid_token,
-            },
-            follow_redirects=True
-        )
-
-        assert res.status_code == 400
-        data = res.get_data(as_text=True)
-        print data
-        assert has_validation_errors(data, 'government_emp_checkbox')
 
     def test_should_raise_validation_error_for_invalid_email_address(self):
         res = self.client.post(
@@ -684,11 +666,10 @@ class TestBuyersCreation(BaseApplicationTest):
 
     @mock.patch('app.main.views.login.data_api_client')
     def test_should_show_error_page_for_unrecognised_email_domain(self, data_api_client):
-        data_api_client.is_email_address_with_valid_buyer_domain.return_value = False
         res = self.client.post(
             self.expand_path('/buyers/create'),
             data={
-                'email_address': 'valid@test.gov.uk',
+                'email_address': 'valid@example.com',
                 'government_emp_checkbox': 'checked',
                 'csrf_token': FakeCsrf.valid_token,
             },
@@ -701,12 +682,11 @@ class TestBuyersCreation(BaseApplicationTest):
     @mock.patch('app.main.views.login.data_api_client')
     @mock.patch('app.main.views.login.send_email')
     def test_should_503_if_email_fails_to_send(self, send_email, data_api_client):
-        data_api_client.is_email_address_with_valid_buyer_domain.return_value = True
         send_email.side_effect = EmailError("Arrrgh")
         res = self.client.post(
             self.expand_path('/buyers/create'),
             data={
-                'email_address': 'valid@test.gov.uk',
+                'email_address': 'valid@test.gov.au',
                 'government_emp_checkbox': 'checked',
                 'csrf_token': FakeCsrf.valid_token,
             },
@@ -721,7 +701,7 @@ class TestBuyersCreation(BaseApplicationTest):
         res = self.client.post(
             self.expand_path('/buyers/create'),
             data={
-                'email_address': 'valid@test.gov.uk',
+                'email_address': 'valid@test.gov.au',
                 'government_emp_checkbox': 'checked',
                 'csrf_token': FakeCsrf.valid_token,
             },
@@ -729,7 +709,7 @@ class TestBuyersCreation(BaseApplicationTest):
         )
         assert res.status_code == 200
         data_api_client.create_audit_event.assert_called_with(audit_type=AuditTypes.invite_user,
-                                                              data={'invitedEmail': 'valid@test.gov.uk'})
+                                                              data={'invitedEmail': 'valid@test.gov.au'})
 
 
 class TestCreateUser(BaseApplicationTest):
