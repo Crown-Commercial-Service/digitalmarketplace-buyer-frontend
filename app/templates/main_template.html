@@ -66,7 +66,7 @@
         <div class="feedback">
           <ul class="inline-links--inverted">
             {% if not current_user.is_authenticated %}
-            <li><a href="{{ url_for('main.create_buyer_account') }}">Sign up</a></li>
+            <li><a href="{{ url_for('main.buyer_invite_request') }}">Sign up</a></li>
             <li><a href="{{ url_for('main.render_login') }}">Log in</a></li>
             {% else %}
             <li><a href="{{ url_for('main.logout') }}">Log out</a></li>
