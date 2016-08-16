@@ -1,7 +1,7 @@
 {% extends "_base_page.html" %}
 {% import "toolkit/summary-table.html" as summary %}
 
-{% block page_title %}Create buyer account – Digital Marketplace{% endblock %}
+{% block page_title %}Request authorisation for a buyer account – Digital Marketplace{% endblock %}
 
 {% block phase_banner %}{% endblock %}
 
@@ -36,10 +36,13 @@
 {%
   with
     smaller = true,
-    heading = "Request a buyer account invitation"
+    heading = "Request authorisation for a buyer account"
 %}
 {% include "toolkit/page-heading.html" %}
 {% endwith %}
+<div>
+
+<div>
 
 <p>
   Please confirm you are:
@@ -99,17 +102,6 @@
       name = "manager_email",
       value = form.manager_email.data,
       error = form.manager_email.errors[0]
-  %}
-    {% include "au-ui-toolkit/forms/textbox.html" %}
-  {% endwith %}
-
-  {%
-    with
-      question = "Optional: Any other information you believe is relevant to your request",
-      hint = '.'|safe,
-      name = "justification",
-      value = form.justification.data,
-      error = form.justification.errors[0]
   %}
     {% include "au-ui-toolkit/forms/textbox.html" %}
   {% endwith %}

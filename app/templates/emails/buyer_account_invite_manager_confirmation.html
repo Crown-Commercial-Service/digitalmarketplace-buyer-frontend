@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+	<title>{{ config['BUYER_INVITE_MANAGER_CONFIRMATION_SUBJECT'] }}</title>
+</head>
+<body>
+	<p>
+		Dear {{ form.manager_name.data }},
+	</p>
+
+	<p>
+		{{ form.name.data }} is requesting your authorisation to create a buyer account on the Digital Marketplace &mdash; the place for government buyers to do business with digital service professionals.
+	</p>
+
+	<p>
+		Your authorisation is needed because confidential pricing information is listed on each supplier's profile. Access to this information access is restricted to those who require it to perform their duties.
+	</p>
+
+	<p>
+		To authorise {{ form.name.data }} to use the Digital Marketplace simply reply to this email with the comment 'approved'. 
+	</p>
+
+	<p>
+		If you have any questions you can also reply to request more information.
+	</p>
+
+	<p>
+		Sincerely,<br>
+		<strong>The Marketplace team</strong>
+	</p>
+</body>
+</html>

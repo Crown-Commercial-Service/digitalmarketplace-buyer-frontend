@@ -17,8 +17,6 @@ We've received a request for a buyer account.
 	<dd>{{ form.manager_name.data }}</dd>
 	<dt>Manager's email address:</dt>
 	<dd>{{ form.manager_email.data }}</dd>
-	<dt>Optional additional justification:</dt>
-	<dd>{{ form.justification.data }}</dd>
 </dl>
 
 Please review this request and, if accepted, <a href="{{ url_for('main.buyer_invite_request', _external=True) }}">create the account</a>.

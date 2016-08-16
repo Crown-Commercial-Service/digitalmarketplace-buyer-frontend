@@ -66,10 +66,6 @@ class BuyerInviteRequestForm(DmForm):
         ]
     )
 
-    justification = StringField(
-        '', id='justification',
-    )
-
 
 class BuyerSignupEmailForm(DmForm):
     email_address = StripWhitespaceStringField(
