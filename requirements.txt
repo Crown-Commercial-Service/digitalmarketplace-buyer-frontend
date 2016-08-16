@@ -4,7 +4,7 @@ inflection==0.2.1
 unicodecsv==0.14.1
 Werkzeug==0.11.10
 
-git+https://github.com/AusDTO/dto-digitalmarketplace-utils.git@25.1.0#egg=dto-digitalmarketplace-utils==25.1.0
+git+https://github.com/AusDTO/dto-digitalmarketplace-utils.git@25.2.0#egg=dto-digitalmarketplace-utils==25.2.0
 git+https://github.com/alphagov/digitalmarketplace-content-loader.git@1.1.0#egg=digitalmarketplace-content-loader==1.1.0
 git+https://github.com/alphagov/digitalmarketplace-apiclient.git@3.7.0#egg=digitalmarketplace-apiclient==3.7.0
 

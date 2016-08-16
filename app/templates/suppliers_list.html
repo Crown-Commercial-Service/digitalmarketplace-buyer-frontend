@@ -74,7 +74,7 @@
       {% for supplier in suppliers %}
         <div class="search-result">
           <h2 class="search-result-title">
-            <a href="{{ url_for('main.suppliers_details', supplier_id=supplier.id)}}">{{ supplier.name}}</a>
+            <a href="{{ url_for('main.suppliers_details', supplier_code=supplier.code)}}">{{ supplier.name}}</a>
           </h2>
           <p class="search-result-excerpt">
             {{ supplier.description }}

@@ -26,7 +26,7 @@ class BaseApplicationTest(object):
         self.teardown_login()
 
     @staticmethod
-    def user(id, email_address, supplier_id, supplier_name, name,
+    def user(id, email_address, supplier_code, supplier_name, name,
              is_token_valid=True, locked=False, active=True, role='buyer'):
 
         hours_offset = -1 if is_token_valid else 1
@@ -43,9 +43,9 @@ class BaseApplicationTest(object):
             'passwordChangedAt': password_changed_at
         }
 
-        if supplier_id:
+        if supplier_code:
             supplier = {
-                "supplierId": supplier_id,
+                "supplierCode": supplier_code,
                 "name": supplier_name,
             }
             user['role'] = 'supplier'

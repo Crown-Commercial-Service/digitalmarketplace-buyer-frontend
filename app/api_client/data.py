@@ -10,9 +10,9 @@ class DataAPIClient(BaseAPIClient):
             data=data, params=params
         )
 
-    def get_supplier(self, supplier_id):
+    def get_supplier(self, supplier_code):
         return self._get(
-            "/suppliers/{}".format(supplier_id)
+            "/suppliers/{}".format(supplier_code)
         )
 
     def get_roles(self, data=None, params=None):

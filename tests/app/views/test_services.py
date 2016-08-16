@@ -170,7 +170,7 @@ class TestServicePage(BaseApplicationTest):
 
         if update_type is 'update_service_status':
             audit_event["data"] = {
-                "supplierId": service["supplierId"],
+                "supplierCode": service["supplierCode"],
                 "newArchivedServiceId": 2,
                 "new_status": new_status,
                 "supplierName": service["supplierName"],

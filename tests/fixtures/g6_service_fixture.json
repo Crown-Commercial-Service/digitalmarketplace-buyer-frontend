@@ -248,7 +248,7 @@
     },
     "sfiaRateDocument": "Blogging platform SFIA.pdf",
     "sfiaRateDocumentURL": "https://assets.digitalmarketplace.service.gov.uk/documents/123456/1234567890123456-sfia-rate-card.pdf",
-    "supplierId": 123456,
+    "supplierCode": 123456,
     "supplierName": "Example Company Limited",
     "frameworkName": "G-Cloud 6",
     "frameworkSlug": "g-cloud-6",
