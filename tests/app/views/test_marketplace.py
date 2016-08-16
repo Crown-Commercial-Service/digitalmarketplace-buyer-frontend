@@ -153,9 +153,9 @@ class TestBriefPage(BaseApplicationTest):
 
         assert_equal(section_heading.get('id'), 'opportunity-attributes-1')
         assert_equal(section_heading.text.strip(), 'Overview')
-        assert_equal(start_date_key[0], 'Latest start date')
+        assert_equal(start_date_key[0], 'When do you want the specialist to start?')
         assert_equal(start_date_value[0], '01/03/2016')
-        assert_equal(contract_length_key[0], 'Expected contract length')
+        assert_equal(contract_length_key[0], 'How long is your initial contract?')
         assert_equal(contract_length_value[0], '4 weeks')
 
     def test_dos_brief_has_question_and_answer_session_details_link(self):
@@ -245,8 +245,8 @@ class TestBriefPage(BaseApplicationTest):
         brief_id = self.brief['briefs']['id']
         res = self.client.get(self.expand_path('/digital-service-professionals/opportunities/{}'.format(brief_id)))
 
-        assert 'qualityAssurance' not in res.get_data(as_text=True)
-        assert 'Quality assurance analyst' in res.get_data(as_text=True)
+        assert 'agileCoach' not in res.get_data(as_text=True)
+        assert 'Agile Coach' in res.get_data(as_text=True)
 
     @staticmethod
     def _assert_start_application(document, brief_id):

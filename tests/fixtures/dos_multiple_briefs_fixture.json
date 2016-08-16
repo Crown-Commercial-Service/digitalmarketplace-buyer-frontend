@@ -5,7 +5,7 @@
       "status":"live",
       "frameworkFramework":"dos",
       "links":{
-        "framework":"http://localhost:5000/frameworks/digital-outcomes-and-specialists",
+        "framework":"http://localhost:5000/frameworks/digital-service-professionals",
         "self":"http://localhost:5000/briefs/17"
       },
       "clarificationQuestionsClosedAt":"2016-03-17T00:00:00.000000Z",
@@ -13,14 +13,14 @@
       "title":"I need Research Participants",
       "organisation":"GDS",
       "lotSlug":"user-research-participants",
-      "frameworkSlug":"digital-outcomes-and-specialists",
+      "frameworkSlug":"digital-service-professionals",
       "applicationsClosedAt":"2016-03-24T00:00:00.000000Z",
       "lotName":"User research participants",
       "clarificationQuestions":[
 
       ],
       "backgroundInformation":"Here is the first requirements summary.",
-      "frameworkName":"Digital Outcomes and Specialists",
+      "frameworkName":"digital service professionals",
       "location":"International (outside the UK)",
       "lot":"user-research-participants",
       "updatedAt":"2016-03-09T15:56:32.487141Z",
@@ -31,7 +31,7 @@
     {
       "startDate":"29th March",
       "links":{
-        "framework":"http://localhost:5000/frameworks/digital-outcomes-and-specialists",
+        "framework":"http://localhost:5000/frameworks/digital-service-professionals",
         "self":"http://localhost:5000/briefs/4"
       },
       "evaluationType":[
@@ -53,13 +53,13 @@
       "clarificationQuestionsAreClosed":true,
       "frameworkFramework":"dos",
       "clarificationQuestionsClosedAt":"2016-03-15T00:00:00.000000Z",
-      "lotSlug":"digital-specialists",
+      "lotSlug":"digital-professionals",
       "workingArrangements":"Work",
       "organisation":"GDS",
       "frameworkStatus":"live",
       "lotName":"Digital specialists",
       "location":"East of England",
-      "lot":"digital-specialists",
+      "lot":"digital-professionals",
       "status":"live",
       "specialistRole":"businessAnalyst",
       "importantDates":"29th March",
@@ -73,17 +73,17 @@
         }
       ],
       "title":"Another requirement",
-      "frameworkSlug":"digital-outcomes-and-specialists",
+      "frameworkSlug":"digital-service-professionals",
       "additionalTerms":"You'll never work in this town again.",
-      "frameworkName":"Digital Outcomes and Specialists",
+      "frameworkName":"digital service professionals",
       "publishedAt":"2016-03-07T16:02:51.591567Z"
     }
   ],
   "links":{
-    "prev":"http://localhost:5000/briefs?status=live%2Cclosed&framework=digital-outcomes-and-specialists&page=1",
-    "self":"http://localhost:5000/briefs?status=live%2Cclosed&framework=digital-outcomes-and-specialists&page=2",
-    "last":"http://localhost:5000/briefs?status=live%2Cclosed&framework=digital-outcomes-and-specialists&page=4",
-    "next":"http://localhost:5000/briefs?status=live%2Cclosed&framework=digital-outcomes-and-specialists&page=3"
+    "prev":"http://localhost:5000/briefs?status=live%2Cclosed&framework=digital-service-professionals&page=1",
+    "self":"http://localhost:5000/briefs?status=live%2Cclosed&framework=digital-service-professionals&page=2",
+    "last":"http://localhost:5000/briefs?status=live%2Cclosed&framework=digital-service-professionals&page=4",
+    "next":"http://localhost:5000/briefs?status=live%2Cclosed&framework=digital-service-professionals&page=3"
   },
   "meta":{
     "total":2
