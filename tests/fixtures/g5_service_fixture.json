@@ -7,7 +7,7 @@
     "priceMin": 85,
     "priceUnit": "Single website",
     "priceString": "",
-    "supplierId": 123456,
+    "supplierCode": 123456,
     "supplierName": "Example Company Limited",
     "frameworkName": "G-Cloud 5",
     "frameworkSlug": "g-cloud-5",

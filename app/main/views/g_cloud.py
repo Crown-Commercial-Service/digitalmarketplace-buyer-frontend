@@ -71,7 +71,7 @@ def get_service_by_id(service_id):
         try:
             # get supplier data and add contact info to service object
             supplier = data_api_client.get_supplier(
-                service_data['supplierId']
+                service_data['supplierCode']
             )
             supplier_data = supplier['suppliers']
             service_view_data.meta.set_contact_attribute(

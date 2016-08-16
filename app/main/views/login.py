@@ -122,8 +122,8 @@ def send_reset_password_email():
 
             current_app.logger.info(
                 "login.reset-email.sent: Sending password reset email for "
-                "supplier_id {supplier_id} email_hash {email_hash}",
-                extra={'supplier_id': user.supplier_id,
+                "supplier_code {supplier_code} email_hash {email_hash}",
+                extra={'supplier_code': user.supplier_code,
                        'email_hash': hash_email(user.email_address)})
         else:
             current_app.logger.info(
