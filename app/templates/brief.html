@@ -62,7 +62,7 @@
   <div class="column-one-third">
     {% if brief_responses %}
       {% with
-         url = "/suppliers/opportunities/{}/responses/result".format(brief.id),
+          url = "{}/suppliers/opportunities/{}/responses/result".format(config['URL_PREFIX'], brief.id),
          text = "View your application",
          bigger = True
       %}
@@ -70,7 +70,7 @@
       {% endwith %}
     {% else %}
       {% with
-         url = "/suppliers/opportunities/{}/responses/create".format(brief.id),
+          url = "{}/suppliers/opportunities/{}/responses/create".format(config['URL_PREFIX'], brief.id),
          label = "Start application"
       %}
         {% include "toolkit/link-button.html" %}

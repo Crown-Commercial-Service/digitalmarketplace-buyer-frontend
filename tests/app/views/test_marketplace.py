@@ -163,9 +163,8 @@ class TestBriefPage(BaseApplicationTest):
         res = self.client.get(self.expand_path('/digital-service-professionals/opportunities/{}').format(brief_id))
 
         document = html.fromstring(res.get_data(as_text=True))
-        qa_session_link_text = document.xpath(
-            '//a[@href="/suppliers/opportunities/{}/question-and-answer-session"]/text()'.format(brief_id)
-        )[0].strip()
+        qa_session_url = self.expand_path('/suppliers/opportunities/{}/question-and-answer-session'.format(brief_id))
+        qa_session_link_text = document.xpath('//a[@href="{}"]/text()'.format(qa_session_url))[0].strip()
 
         assert qa_session_link_text == "Log in to view question and answer session details"
 
@@ -196,8 +195,8 @@ class TestBriefPage(BaseApplicationTest):
         number = clarification_questions[0].xpath('td[1]/span/span/text()')[0].strip()
         question = clarification_questions[0].xpath('td[1]/span/text()')[0].strip()
         answer = clarification_questions[0].xpath('td[2]/span/text()')[0].strip()
-        qa_link_text = document.xpath('//a[@href="/suppliers/opportunities/{}/ask-a-question"]/text()'
-                                      .format(brief_id))[0].strip()
+        qa_url = self.expand_path('/suppliers/opportunities/{}/ask-a-question'.format(brief_id))
+        qa_link_text = document.xpath('//a[@href="{}"]/text()'.format(qa_url))[0].strip()
 
         assert_equal(number, "1.")
         assert_equal(question, "Why?")
@@ -212,8 +211,8 @@ class TestBriefPage(BaseApplicationTest):
 
         document = html.fromstring(res.get_data(as_text=True))
 
-        qa_link_text = document.xpath('//a[@href="/suppliers/opportunities/{}/ask-a-question"]/text()'
-                                      .format(brief_id))[0]
+        qa_url = self.expand_path('/suppliers/opportunities/{}/ask-a-question'.format(brief_id))
+        qa_link_text = document.xpath('//a[@href="{}"]/text()'.format(qa_url))[0]
 
         assert_equal(qa_link_text.strip(), "Ask a question")
 
@@ -223,7 +222,8 @@ class TestBriefPage(BaseApplicationTest):
         assert_equal(200, res.status_code)
         document = html.fromstring(res.get_data(as_text=True))
 
-        apply_links = document.xpath('//a[@href="/suppliers/opportunities/{}/responses/create"]'.format(brief_id))
+        brief_response_url = self.expand_path('/suppliers/opportunities/{}/responses/create'.format(brief_id))
+        apply_links = document.xpath('//a[@href="{}"]'.format(brief_response_url))
         assert len(apply_links) == 1
 
     def test_cannot_apply_to_closed_brief(self):
@@ -237,7 +237,8 @@ class TestBriefPage(BaseApplicationTest):
         assert_equal(200, res.status_code)
         document = html.fromstring(res.get_data(as_text=True))
 
-        apply_links = document.xpath('//a[@href="/suppliers/opportunities/{}/responses/create"]'.format(brief_id))
+        brief_response_url = self.expand_path('/suppliers/opportunities/{}/responses/create'.format(brief_id))
+        apply_links = document.xpath('//a[@href="{}"]'.format(brief_response_url))
         assert len(apply_links) == 0
         assert '25 February 2000' in document.xpath('//p[@class="banner-message"]')[0].text_content()
 
@@ -248,20 +249,19 @@ class TestBriefPage(BaseApplicationTest):
         assert 'qualityAssurance' not in res.get_data(as_text=True)
         assert 'Quality assurance analyst' in res.get_data(as_text=True)
 
-    @staticmethod
-    def _assert_start_application(document, brief_id):
+    def _assert_start_application(self, document, brief_id):
+        brief_response_url = self.expand_path('/suppliers/opportunities/{}/responses/create'.format(brief_id))
         assert len(document.xpath(
             '//a[@href="{0}"][contains(normalize-space(text()), normalize-space("{1}"))]'.format(
-                "/suppliers/opportunities/{}/responses/create".format(brief_id),
+                brief_response_url,
                 "Start application",
             )
         )) == 1
 
-    @staticmethod
-    def _assert_view_application(document, brief_id):
+    def _assert_view_application(self, document, brief_id):
         assert len(document.xpath(
             '//a[@href="{0}"][contains(normalize-space(text()), normalize-space("{1}"))]'.format(
-                "/suppliers/opportunities/{}/responses/result".format(brief_id),
+                self.expand_path('/suppliers/opportunities/{}/responses/result'.format(brief_id)),
                 "View your application",
             )
         )) == 1
