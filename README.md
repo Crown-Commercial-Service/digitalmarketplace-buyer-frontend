@@ -86,6 +86,16 @@ python application.py runserver
 
 The buyer app runs on port 5002 by default. Use the app at [http://127.0.0.1:5002/](http://127.0.0.1:5002/)
 
+If you want to run the other frontends in a local environment, there's a reverse proxy config that unifies them behind one domain.
+To use it you need to install lighttpd on your system, then you can run
+
+```
+./scripts/reverse_proxy.sh
+```
+
+Run the other frontends using the normal `python application.py runserver` commands in other terminals.
+The Marketplace should now be available at `http://localhost:8000/marketplace/`
+
 ### Using FeatureFlags
 
 To use feature flags, check out the documentation in (the README of)
