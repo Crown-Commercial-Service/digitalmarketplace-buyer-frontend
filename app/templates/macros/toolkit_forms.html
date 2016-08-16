@@ -1,7 +1,7 @@
 {% macro text(question_content, data, errors) -%}
   {%
     with
-    question=question_content.question|markdown,
+    question=question_content.question|markdown if question_content.question,
     question_advice=question_content.question_advice,
     hint=question_content.hint,
     optional=question_content.optional,
@@ -16,7 +16,7 @@
 {% macro textbox_large(question_content, data, errors) -%}
   {%
     with
-    question=question_content.question|markdown,
+    question=question_content.question|markdown if question_content.question,
     question_advice=question_content.question_advice,
     hint=question_content.hint,
     optional=question_content.optional,
@@ -35,7 +35,7 @@
     with
     name=question_content.id,
     number_of_items=question_content.get('number_of_items', 10),
-    question=question_content.question|markdown,
+    question=question_content.question|markdown if question_content.question,
     question_advice=question_content.question_advice,
     hint=question_content.hint,
     optional=question_content.optional,
@@ -51,7 +51,7 @@
   {%
     with
     name=question_content.id,
-    question=question_content.question|markdown,
+    question=question_content.question|markdown if question_content.question,
     question_advice=question_content.question_advice,
     hint=question_content.hint,
     optional=question_content.optional,
@@ -70,7 +70,7 @@
   {%
     with
     name=question_content.id,
-    question=question_content.question|markdown,
+    question=question_content.question|markdown if question_content.question,
     question_advice=question_content.question_advice,
     hint=question_content.hint,
     optional=question_content.optional,
@@ -90,7 +90,7 @@
   {%
     with
     name=question_content.id,
-    question=question_content.question|markdown,
+    question=question_content.question|markdown if question_content.question,
     question_advice=question_content.question_advice,
     hint=question_content.hint,
     optional=question_content.optional,
@@ -108,7 +108,7 @@
   {%
     with
     name=question_content.id,
-    question=question_content.question,
+    question=question_content.question if question_content.question,
     fields=question_content.fields,
     optional_fields=question_content.optional_fields,
     minimum_price=data.get(question_content.fields.minimum_price),
@@ -134,7 +134,7 @@
     unit_position=question_content.unit_position,
     unit=question_content.unit,
     smaller=True,
-    question=question_content.question|markdown,
+    question=question_content.question|markdown if question_content.question,
     question_advice=question_content.question_advice,
     hint=question_content.hint,
     optional=question_content.optional,
