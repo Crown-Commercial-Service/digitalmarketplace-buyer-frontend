@@ -526,7 +526,6 @@ class TestBuyerInviteRequest(BaseApplicationTest):
         'email_address': 'me@test.gov.au',
         'manager_name': 'My Manager',
         'manager_email': 'manager@test.gov.au',
-        'justification': 'I want one',
     }
 
     @mock.patch('app.main.views.login.data_api_client')
@@ -599,13 +598,6 @@ class TestBuyerInviteRequest(BaseApplicationTest):
         data = res.get_data(as_text=True)
 
         assert has_validation_errors(data, 'manager_email')
-
-    @mock.patch('app.main.views.login.data_api_client')
-    @mock.patch('app.main.views.login.send_email')
-    def test_do_not_require_justification(self, send_email, data_api_client):
-        res = self.post_form(justification=None)
-
-        assert res.status_code == 200
 
     @mock.patch('app.main.views.login.data_api_client')
     @mock.patch('app.main.views.login.send_email')

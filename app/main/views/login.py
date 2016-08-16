@@ -217,6 +217,25 @@ def submit_buyer_invite_request():
                 'email_hash': hash_email(form.email_address.data)})
         abort(503, response="Failed to send buyer account invite request email.")
 
+    email_body = render_template("emails/buyer_account_invite_manager_confirmation.html", form=form)
+    try:
+        send_email(
+            form.manager_email.data,
+            email_body,
+            current_app.config['BUYER_INVITE_MANAGER_CONFIRMATION_SUBJECT'],
+            current_app.config['BUYER_INVITE_REQUEST_ADMIN_EMAIL'],
+            current_app.config['BUYER_INVITE_MANAGER_CONFIRMATION_NAME'],
+        )
+    except EmailError as e:
+        current_app.logger.error(
+            "buyerinvite.fail: Buyer account invite request mananger email failed to send. "
+            "error {error} invite email_hash {email_hash} manager email_hash {manager_email_hash}",
+            extra={
+                'error': six.text_type(e),
+                'email_hash': hash_email(form.email_address.data),
+                'manager_email_hash': hash_email(form.manager_email.data)})
+        abort(503, response="Failed to send buyer account invite request manager email.")
+
     return render_template('auth/buyer-invite-request-complete.html')
 
 
