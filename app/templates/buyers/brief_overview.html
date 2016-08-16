@@ -4,6 +4,8 @@
 
 {% block page_title %}{{ brief.title or brief.lotName }} – Digital Marketplace{% endblock %}
 
+{% block body_classes %}brief-builder{% endblock %}
+
 {% block breadcrumb %}
   {%
     with items = [
@@ -109,7 +111,7 @@
                   'allowed_statuses': ['live']
                 },
                 {
-                  'href': 'https://www.gov.uk/guidance/how-to-answer-supplier-questions-about-your-digital-outcomes-and-specialists-requirements',
+                  'href': url_for('main.answering_questions'),
                   'text': 'How to answer supplier questions',
                   'allowed_statuses': ['draft', 'live']
                 }
@@ -129,7 +131,7 @@
                   'allowed_statuses': ['closed']
                 },
                 {
-                  'href': 'https://www.gov.uk/guidance/how-to-shortlist-digital-outcomes-and-specialists-suppliers',
+                  'href': url_for('main.shortlisting_suppliers'),
                   'text': 'How to shortlist suppliers',
                 }
               ]
@@ -143,7 +145,7 @@
               },
               'links': [
                 {
-                  'href': 'https://www.gov.uk/guidance/how-to-evaluate-digital-outcomes-and-specialists-suppliers',
+                  'href': url_for('main.evaluating_suppliers'),
                   'text': 'How to evaluate suppliers',
                 }
               ]
@@ -157,12 +159,12 @@
               },
               'links': [
                 {
-                  'href': 'https://www.gov.uk/guidance/how-to-award-a-contract-when-you-buy-services',
+                  'href': url_for('main.awarding_contract'),
                   'text': 'How to award a contract',
                 },
                 {
-                  'href': 'https://www.gov.uk/government/publications/digital-outcomes-and-specialists-call-off-contract',
-                  'text': 'View the Digital Outcomes and Specialists contract',
+                  'href': url_for('main.buyers_guide'),
+                  'text': 'View the Digital Service and Professionals contract',
                 },
               ]
             }

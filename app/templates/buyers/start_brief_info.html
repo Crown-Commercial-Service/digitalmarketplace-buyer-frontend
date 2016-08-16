@@ -12,6 +12,8 @@
   {{ title_text }} - Digital Marketplace
   {% endblock %}
 
+{% block body_classes %}brief-builder{% endblock %}
+
   {% block breadcrumb %}
   {%
     with items = [
@@ -47,8 +49,8 @@
       <h2>Before you start</h2>
       <ol>
         <li>You can talk to suppliers to prepare your requirements.<br>
-          <a href="https://assets.digitalmarketplace.service.gov.uk/digital-outcomes-and-specialists/communications/catalogues/{{ lot.slug }}-suppliers.csv">
-            Download list of suppliers.
+          <a href="{{ url_for('.supplier_search') }}">
+            View list of suppliers.
           </a>
         </li>
         <li>Get budget approval.</li>
@@ -75,8 +77,8 @@
       <p>Read more about:</p>
 
       <ul>
-        <li><a href="https://www.gov.uk/guidance/digital-outcomes-and-specialists-buyers-guide">how to buy</a></li>
-        <li><a href="https://www.gov.uk/guidance/how-digital-marketplace-suppliers-have-been-evaluated">how suppliers have been evaluated</a></li>
+        <li><a href="{{ url_for('.buyers_guide') }}">how to buy</a></li>
+        <li><a href="{{ url_for('.evaluated') }}">how suppliers have been evaluated</a></li>
       </ul>
 
 

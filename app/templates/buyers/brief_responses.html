@@ -2,6 +2,8 @@
 
 {% block page_title %}Responses to {{ brief.title or brief.lotName }} – Digital Marketplace{% endblock %}
 
+{% block body_classes %}brief-builder{% endblock %}
+
 {% block breadcrumb %}
   {%
       with items = [
