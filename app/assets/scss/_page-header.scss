@@ -9,6 +9,7 @@
 }
 
 .marketplace--header {
+  // @include linear-gradient(to left, $dark-navy, $aqua, $fallback: $aqua);
   @include link-colours($link-inverted-colour, $link-inverted-colour, $link-colour);
 
   position: relative;
@@ -52,6 +53,21 @@
   }
 }
 
+.phase-banner {
+  background: $navy;
+  color: $non-white;
+  padding: $tiny-spacing 0;
+
+  p {
+    font-size: rem(14);
+    margin: 0;
+  }
+
+  a {
+    @include link-colours($non-white, $white, $navy);
+  }
+}
+
 .hero {
   padding: ($base-spacing * 2) 0;
   margin-bottom: 0;
@@ -77,8 +93,10 @@
 }
 
 .hero-main {
+  // @include linear-gradient(to left, $dark-navy, $aqua, $fallback: $hero-bg-colour);
   @include position(relative, null);
-  padding: 0 0 ($base-spacing * 3.25);
+  
+  padding: 0 0 ($base-spacing * 2);
   margin-bottom: 0;
   background-color: $hero-bg-colour;
   color: $body-inverted-text-colour;
@@ -88,7 +106,7 @@
     color: $body-inverted-text-colour;
 
       @include media($tablet) {
-        font-size: 3.75rem;
+        font-size: 3rem;
       }
   }
 
@@ -97,7 +115,7 @@
     font-weight: $base-font-weight;
 
     @include media($tablet) {
-      font-size: 1.5rem;
+      font-size: rem(20);
       margin-top: 0;
     }
   }
@@ -116,5 +134,6 @@
 .content--hero {
   @include media($desktop) {
     @include span-columns(9 of 16);
+    margin-top: -2rem;
   }
 }

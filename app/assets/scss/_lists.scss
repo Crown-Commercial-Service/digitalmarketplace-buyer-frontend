@@ -14,13 +14,10 @@
 
 .home {
   h2 {
-    &:first-of-type {
-      @include media($tablet) {
-        margin-top: 0;
-      }
-    }
+    font-size: rem(24);
+    margin-bottom: $small-spacing;
   }
-  .list-vertical {
+  .list-vertical--thirds {
 
     &:last-of-type {
       margin-bottom: 0;
@@ -28,16 +25,19 @@
 
     > li {
       border-width: 0;
-      border-left: solid 1px $border-colour;
-      padding: 0 $base-spacing;
-
-      @include media($tablet) {
-        flex-basis: 40%;
-      }
+      padding: 0;
 
       p {
         min-height: auto;
       }
+    }
+
+    .list-small {
+      width: 100%;
+
+        li {
+          margin-left: 0;
+        }
     }
   }
 }

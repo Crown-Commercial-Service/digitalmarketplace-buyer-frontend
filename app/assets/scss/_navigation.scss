@@ -73,20 +73,21 @@
     }
   }
 
-  &.border-bottom-white {
-    border-bottom: 1px solid $white;
-    padding-top: 0.45em;
-    padding-bottom: 0;
-
-    p {
-      margin-bottom: 0.45em;
-    }
-  }
-
   small {
     font-size: rem(14);
   }
 
+}
+
+.global-breadcrumb {
+  // @include linear-gradient(to left, $dark-navy, $aqua, $fallback: $hero-bg-colour);
+  background: $hero-bg-colour;
+
+  [class^='breadcrumbs'] {
+    ul {
+      font-size: rem(14);
+    }
+  }
 }
 
 .scroll-to-top {
