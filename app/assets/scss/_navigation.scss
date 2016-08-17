@@ -86,6 +86,14 @@
   [class^='breadcrumbs'] {
     ul {
       font-size: rem(14);
+      padding-bottom: $medium-spacing;
+
+      li {
+        &:not(:last-child) {
+          background-size: auto rem(11);
+          padding-right: 1.7em;
+        }
+      }
     }
   }
 }
