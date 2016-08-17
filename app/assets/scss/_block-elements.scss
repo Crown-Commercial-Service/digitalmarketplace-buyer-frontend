@@ -28,19 +28,23 @@ main {
         @include span-columns(11 of 16);
         @include shift(0);
       }
-    }
-  }
-}
 
-.form-page {
-  main {
-    .content-main {
-      &:first-child {
+      .home & {
+        @include media($tablet) {
+          @include span-columns(12 of 12);
+        }
+        @include media($desktop) {
+          @include span-columns(16 of 16);
+        }
+      }
+
+      .form-page & {
         @include media($desktop) {
           @include span-columns(10 of 16);
           @include shift(3);
         }
       }
+
     }
   }
 }

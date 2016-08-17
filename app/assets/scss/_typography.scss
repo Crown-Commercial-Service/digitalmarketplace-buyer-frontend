@@ -11,6 +11,29 @@ h1 {
   color: $aqua;
 }
 
+$badges: (
+  'new':      $badge-colour--new,
+);
+
+@each $badge-type, $colour in $badges {
+  .badge--#{$badge-type} {
+    display: inline-block;
+    background-color: $colour;
+    border-radius: $large-border-radius;
+    padding: $tiny-spacing $small-spacing;
+    line-height: 1;
+    letter-spacing: 1px;
+    color: lighten($colour, 75%);
+    font-size: rem(14);
+  }
+}
+
+.badge--new {
+  color: $white !important;
+  border: 0 none !important;
+  margin-left: $tiny-spacing;
+}
+
 .content-main {
 
   .number-results {
@@ -22,22 +45,23 @@ h1 {
 }
 
 .callout--hero {
-  @extend %base-callout;
-  @include position(relative, null);
-  background: $darker-aqua;
-  box-shadow: 0 0 0 transparent;
+  display: none;
+  // @extend %base-callout;
+  // @include position(relative, null);
+  // background: $darker-aqua;
+  // box-shadow: 0 0 0 transparent;
 
-  @include media($desktop) {
-    @include position(absolute, null 0 (-$base-spacing*5) null);
-    @include span-columns(5 of 16);
-    @include shift(2);
-    margin: 0;
-  }
+  // @include media($desktop) {
+  //   @include position(absolute, null 0 (-$base-spacing*5) null);
+  //   @include span-columns(5 of 16);
+  //   @include shift(2);
+  //   margin: 0;
+  // }
 
-  h2 {
-    @extend h3;
-    font-weight: $base-font-weight;
-  }
+  // h2 {
+  //   @extend h3;
+  //   font-weight: $base-font-weight;
+  // }
 }
 
 .secondary-page {
