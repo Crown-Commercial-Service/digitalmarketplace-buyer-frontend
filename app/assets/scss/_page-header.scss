@@ -51,6 +51,12 @@
     vertical-align: super;
     margin-left: $tiny-spacing;
   }
+
+  .user-nav {
+    display: block;
+    float: right;
+    margin-left: $base-spacing;
+  }
 }
 
 .phase-banner {
@@ -105,9 +111,9 @@
     margin: 0 0 $tiny-spacing/2;
     color: $body-inverted-text-colour;
 
-      @include media($tablet) {
-        font-size: 3rem;
-      }
+    @include media($tablet) {
+      font-size: 3rem;
+    }
   }
 
   .tagline {
