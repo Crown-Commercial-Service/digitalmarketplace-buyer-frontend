@@ -267,6 +267,12 @@ gulp.task('js:livereload', function () {
   return stream;
 });
 
+gulp.task('html:livereload', function () {
+  return gulp.src(repoRoot + 'app/templates/**/*.html')
+    .pipe(plugins.livereload());
+
+});
+
 function copyFactory(resourceName, sourceFolder, targetFolder) {
 
   return function() {
@@ -473,6 +479,7 @@ gulp.task(
     runSequence('sass:livereload',
       'split',
       'js:livereload',
+      'html:livereload',
       'rename-1',
       'rename-2',
       cb);
@@ -495,10 +502,12 @@ gulp.task('livereload', ['build:livereload'], function () {
   plugins.livereload.listen();
   var jsWatcher = gulp.watch([ assetsFolder + '/**/*.js' ], ['js:livereload']);
   var cssWatcher = gulp.watch([ assetsFolder + '/**/*.scss' ], ['sass:livereload']);
+  var htmlWatcher = gulp.watch([ repoRoot + 'app/templates/**/*.html'], ['html:livereload']);
   var notice = function (event) {
     console.log('File ' + event.path + ' was ' + event.type + ' running tasks...');
   };
 
   cssWatcher.on('change', notice);
   jsWatcher.on('change', notice);
+  htmlWatcher.on('change', notice);
 });
