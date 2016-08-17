@@ -2,6 +2,11 @@ h1 {
   font-weight: $bold-font-weight;
 }
 
+h2 {
+  font-size: rem(24);
+  font-weight: $bold-font-weight;
+}
+
 .bigger {
   font-size: rem(24);
 }
@@ -72,12 +77,7 @@ $badges: (
       font-size: rem(32);
     }
   }
-  h2 {
-    font-size: rem(22);
-    font-weight: $bold-font-weight;
-    margin-top: 2em;
-    min-height: 2em;
-  }
+
   blockquote {
     margin-bottom: 2em;
   }
