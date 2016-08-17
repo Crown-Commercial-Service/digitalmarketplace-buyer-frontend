@@ -1,5 +1,6 @@
 .wrapper {
   @include position(relative, null);
+  box-sizing: border-box;
 }
 
 .catalogue {
@@ -17,6 +18,10 @@
 }
 
 main {
+  
+  box-sizing: border-box;
+  width: 100%;
+
   .content-main {
     @include media($desktop) {
       @include span-columns(11 of 16);
