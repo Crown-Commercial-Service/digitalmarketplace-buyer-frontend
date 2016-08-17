@@ -157,10 +157,11 @@ def list_opportunities(framework_slug):
     if not framework:
         abort(404, "No framework {}".format(framework_slug))
 
+    form = BriefSearchForm(request.args, framework=framework, data_api_client=data_api_client)
     # disabling csrf protection as this should only ever be a GET request
-    form = BriefSearchForm(request.args, framework=framework, data_api_client=data_api_client, csrf_enabled=False)
+    del form.csrf_token
     if not form.validate():
-        abort(404, "Invalid form data")
+        abort(400, "Invalid form data")
 
     api_result = form.get_briefs()
 
