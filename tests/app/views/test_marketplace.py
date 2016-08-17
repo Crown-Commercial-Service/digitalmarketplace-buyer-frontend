@@ -45,7 +45,7 @@ class TestHomepageBrowseList(BaseApplicationTest):
         assert headers == [
             'Government buyers',
             'ICT suppliers',
-            'Learn more',
+            'Getting started',
         ]
 
 
