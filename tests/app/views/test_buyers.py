@@ -983,7 +983,7 @@ class TestPublishBrief(BaseApplicationTest):
         )
         res = self.client.post(url, data={'csrf_token': FakeCsrf.valid_token})
         assert res.status_code == 302
-        assert data_api_client.update_brief_status.called
+        assert data_api_client.publish_brief.called
         assert res.location.endswith(
             '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234?published=true')  # noqa
 
@@ -1028,7 +1028,7 @@ class TestPublishBrief(BaseApplicationTest):
         )
         res = self.client.post(url, data={'csrf_token': 'bad_token'})
         assert res.status_code == 400
-        assert not data_api_client.update_brief_status.called
+        assert not data_api_client.publish_brief.called
 
     def test_publish_brief_with_unanswered_required_questions(self, data_api_client):
         self.login_as_buyer()
@@ -1048,7 +1048,7 @@ class TestPublishBrief(BaseApplicationTest):
         )
         res = self.client.post(url, data={'csrf_token': FakeCsrf.valid_token})
         assert res.status_code == 400
-        assert not data_api_client.update_brief_status.called
+        assert not data_api_client.publish_brief.called
 
     def test_404_if_brief_does_not_belong_to_user(self, data_api_client):
         self.login_as_buyer()
