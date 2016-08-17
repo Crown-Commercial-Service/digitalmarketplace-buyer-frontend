@@ -389,7 +389,7 @@ class TestEveryDamnPage(BaseApplicationTest):
 class TestEditBriefSubmission(BaseApplicationTest):
     def _test_breadcrumbs_on_question_page(self, response, has_summary_page=False, section_name=None):
         breadcrumbs = html.fromstring(response.get_data(as_text=True)).xpath(
-            '//*[@id="global-breadcrumb"]/nav/ol/li'
+            '//*[@class="global-breadcrumb"]/nav/div/ul/li'
         )
 
         breadcrumbs_we_expect = [
