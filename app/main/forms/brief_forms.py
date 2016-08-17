@@ -1,9 +1,9 @@
-from flask_wtf import Form
 from wtforms import IntegerField, SelectMultipleField
 from wtforms.validators import NumberRange
+from dmutils.forms import DmForm
 
 
-class BriefSearchForm(Form):
+class BriefSearchForm(DmForm):
     page = IntegerField(default=1, validators=(NumberRange(min=1),))
     status = SelectMultipleField("Status", choices=(
         ("live", "Open",),
