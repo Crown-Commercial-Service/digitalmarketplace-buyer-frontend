@@ -61,7 +61,7 @@
           <a href="{{ url_for('main.index') }}" title="{{ logo_link_title|default('Go to the Marketplace homepage') }}" class="logo">/marketplace</a> <span class="badge--beta">private beta</span>
         </div>
         {% endif %}
-        <div class="feedback">
+        <div class="user-nav">
           <ul class="inline-links--inverted">
             {% if not current_user.is_authenticated %}
             <li><a href="{{ url_for('main.create_buyer_account') }}">Sign up</a></li>

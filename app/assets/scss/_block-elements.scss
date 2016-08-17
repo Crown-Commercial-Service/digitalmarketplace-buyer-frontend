@@ -20,6 +20,7 @@
 main {
   
   box-sizing: border-box;
+  padding-top: $base-spacing * 2;
   width: 100%;
 
   .content-main {
