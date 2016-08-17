@@ -12,6 +12,7 @@ button,
       border-color: $button-inverted-colour;
       background-color: $button-inverted-colour;
       color: $button-inverted-text-colour;
+      font-size: rem(17);
 
       &:hover,
       &:active,
