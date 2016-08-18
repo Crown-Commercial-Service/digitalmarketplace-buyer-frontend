@@ -128,7 +128,8 @@ def get_brief_by_id(framework_slug, brief_id):
     briefs = data_api_client.get_brief(brief_id)
     brief = briefs.get('briefs')
     if brief['status'] not in ['live', 'closed']:
-        abort(404, "Opportunity '{}' can not be found".format(brief_id))
+        if not current_user.is_authenticated or brief['users'][0]['id'] != current_user.id:
+            abort(404, "Opportunity '{}' can not be found".format(brief_id))
 
     if current_user.is_authenticated and current_user.role == 'supplier':
         brief_responses = data_api_client.find_brief_responses(brief_id, current_user.supplier_code)["briefResponses"]

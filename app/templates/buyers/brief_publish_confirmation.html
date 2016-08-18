@@ -127,13 +127,19 @@
         {% endcall %}
       {% endcall %}
       {% if not published %}
+        <div>
+            <p>
+                <a href="{{ url_for('main.get_brief_by_id', framework_slug=brief.frameworkSlug, brief_id=brief.id) }}"
+                   target="_blank">Preview this brief</a> <span>(opens in new tab)</span>
+            </p>
+        </div>
         <form action="{{ url_for('.publish_brief', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id) }}" method="POST">
           {{ form.csrf_token }}
           {%
           with
           type = "save",
           role = "button",
-          label = "Publish requirements"
+          label = "Publish brief"
           %}
           {% include "toolkit/button.html" %}
           {% endwith %}

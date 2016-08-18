@@ -38,6 +38,21 @@
 </div>
 {% endif %}
 
+{% if brief.status == 'draft' %}
+    <div class="grid-row">
+      <div class="column-one-whole">
+        {%
+          with
+          type = "warning",
+          heading = "This is a preview only.",
+          message = "The brief is not published yet."
+        %}
+          {% include "toolkit/notification-banner.html" %}
+        {% endwith %}
+      </div>
+    </div>
+{% endif %}
+
 <div class="grid-row">
   <div class="column-two-thirds">
     <header class="page-heading-smaller">
@@ -46,16 +61,19 @@
     </header>
   </div>
 </div>
+
 <div class="grid-row">
   <div class="column-one-whole">
     {% include '_brief_attributes.html' %}
   </div>
 </div>
-<div class="grid-row">
-  <div class="column-one-whole">
-    {% include '_brief_q_and_a.html' %}
-  </div>
-</div>
+{% if brief.status != 'draft' %}
+    <div class="grid-row">
+      <div class="column-one-whole">
+        {% include '_brief_q_and_a.html' %}
+      </div>
+    </div>
+{% endif %}
 
 {% if brief.status == 'live' %}
 <div class="grid-row">

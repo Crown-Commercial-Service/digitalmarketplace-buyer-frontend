@@ -1140,7 +1140,7 @@ class TestPublishBrief(BaseApplicationTest):
 
         assert FakeCsrf.valid_token in page_html
         assert res.status_code == 200
-        assert 'Publish requirements' in page_html, page_html
+        assert 'Publish brief' in page_html, page_html
 
     def test_publish_button_unavailable_if_questions_not_answered(self, data_api_client):
         self.login_as_buyer()
