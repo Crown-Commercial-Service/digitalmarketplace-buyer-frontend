@@ -704,7 +704,7 @@ class TestUpdateBriefSubmission(BaseApplicationTest):
         )
 
     @mock.patch("app.buyers.views.buyers.content_loader")
-    def test_post_update_if_multiple_questions_redirects_to_section_summary(self, content_loader, data_api_client):
+    def test_post_update_if_multiple_questions_redirects_to_next_question(self, content_loader, data_api_client):
         self.login_as_buyer()
         data_api_client.get_framework.return_value = api_stubs.framework(
             slug='digital-outcomes-and-specialists',
@@ -730,6 +730,40 @@ class TestUpdateBriefSubmission(BaseApplicationTest):
             '1234',
             {"required1": True},
             page_questions=['required1'],
+            updated_by='buyer@email.com'
+        )
+        assert res.headers['Location'].endswith(
+            '/buyers/frameworks/digital-outcomes-and-specialists/requirements/'
+            'digital-specialists/1234/edit/section-1/optional1'
+        ) is True
+
+    @mock.patch("app.buyers.views.buyers.content_loader")
+    def test_post_update_if_last_question_redirects_to_section_summary(self, content_loader, data_api_client):
+        self.login_as_buyer()
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='live',
+            lots=[
+                api_stubs.lot(slug='digital-specialists', allows_brief=True),
+            ]
+        )
+        data_api_client.get_brief.return_value = api_stubs.brief()
+
+        content_fixture = ContentLoader('tests/fixtures/content')
+        content_fixture.load_manifest('dos', 'data', 'edit_brief')
+        content_loader.get_manifest.return_value = content_fixture.get_manifest('dos', 'edit_brief')
+
+        url = self.expand_path(
+            '/buyers/frameworks/digital-outcomes-and-specialists/requirements/'
+            'digital-specialists/1234/edit/section-1/optional1'
+        )
+        res = self.client.post(url, data={'optional1': True, 'csrf_token': FakeCsrf.valid_token})
+
+        assert res.status_code == 302
+        data_api_client.update_brief.assert_called_with(
+            '1234',
+            {"optional1": True},
+            page_questions=['optional1'],
             updated_by='buyer@email.com'
         )
         assert res.headers['Location'].endswith(

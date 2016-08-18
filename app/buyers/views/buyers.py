@@ -214,6 +214,11 @@ def update_brief_submission(framework_slug, lot_slug, brief_id, section_id, ques
         abort(404)
 
     update_data = question.get_data(request.form)
+    question_ids = section.get_question_ids()
+
+    question_id_index = None
+    if question_id in question_ids:
+        question_id_index = question_ids.index(question_id)
 
     try:
         data_api_client.update_brief(
@@ -238,6 +243,19 @@ def update_brief_submission(framework_slug, lot_slug, brief_id, section_id, ques
         )
 
     if section.has_summary_page:
+        # If there are more than 1 questions and it is not the last one.
+        if question_id_index is not None and len(question_ids) > 1 and question_id_index != len(question_ids) - 1:
+            return redirect(
+                url_for('.edit_brief_question',
+                        framework_slug=brief['frameworkSlug'],
+                        lot_slug=brief['lotSlug'],
+                        brief_id=brief['id'],
+                        section_slug=section.slug,
+                        # must be inside the current if statement to make sure it exists.
+                        question_id=question_ids[question_id_index + 1]
+                        )
+            )
+
         return redirect(
             url_for(
                 ".view_brief_section_summary",
