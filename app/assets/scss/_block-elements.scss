@@ -43,13 +43,28 @@ main {
         }
       }
 
+      .brief-builder &,
       .form-page & {
+        @include media($tablet) {
+          @include span-columns(10 of 12);
+          @include shift(1);
+        }
         @include media($desktop) {
           @include span-columns(10 of 16);
           @include shift(3);
         }
       }
 
+      .brief-builder.brief-section & {
+        @include media($tablet) {
+          @include span-columns(10 of 12);
+          @include shift(1);
+        }
+        @include media($desktop) {
+          @include span-columns(12 of 16);
+          @include shift(2);
+        }
+      }
     }
   }
 }

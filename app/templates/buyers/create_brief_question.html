@@ -14,8 +14,8 @@
   {%
     with items = [
       {
-        "link": "/",
-        "label": "Digital Marketplace"
+        "link": url_for("main.index"),
+        "label": "Home"
       },
       {
         "link": url_for("main.info_page_for_starting_a_brief", framework_slug=framework.slug, lot_slug=lot.slug),

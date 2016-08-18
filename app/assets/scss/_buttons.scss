@@ -23,6 +23,10 @@ button,
       }
     }
   }
+
+  .callout--info & {
+    margin-bottom: $tiny-spacing;
+  }
 }
 
 .sidebar {
