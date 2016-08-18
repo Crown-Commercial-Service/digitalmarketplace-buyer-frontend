@@ -8,15 +8,18 @@
   {%
       with items = [
         {
-          "link": "/",
-          "label": "Digital Marketplace"
+          "link": url_for("main.index"),
+          "label": "Home"
         },
         {
           "link": url_for(".buyer_dashboard"),
-          "label": "Your account"
+          "label": "Dashboard"
         },
         {
         "link": url_for("buyers.view_brief_overview", framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id),
+        "label": "Brief Overview"
+        },
+        {
         "label": brief.title
         }
       ]

@@ -103,15 +103,6 @@ ol.instruction-list {
   main {
     .content-main {
       &:first-child {
-
-        @include media($tablet) {
-          @include span-columns(12 of 12);
-        }
-
-        @include media($desktop) {
-          @include span-columns(16 of 16);
-        }
-
         .column-two-thirds {
           width: 100%;
           @include media($desktop) {
@@ -122,6 +113,7 @@ ol.instruction-list {
     }
   }
 
+  input[type='checkbox'] + label,
   input[type='radio'] + label {
     font-weight: $bold-font-weight;
     margin: 0 0 8px;
@@ -142,6 +134,7 @@ ol.instruction-list {
     }
   }
 
+  input[type='checkbox']:checked + label,
   input[type='radio']:checked + label {
     font-weight: 700;
     outline: 1px solid $light-grey;
@@ -162,6 +155,15 @@ ol.instruction-list {
 
     thead {
       display: none;
+    }
+
+    td {
+
+      padding: $tiny-spacing;
+
+      @include media($tablet) {
+        padding: 1.2em;
+      }
     }
 
     tr {
@@ -236,39 +238,7 @@ ol.instruction-list {
   }
 }
 
-
-// Checkbox list
-#evaluationType {
-
-  input[type='checkbox'] + label {
-    padding-top: 5px 80px 12px 60px;
-    font-weight: 400;
-    font-size: 1.412em;
-
-    >p {
-      font-weight: 400;
-      font-size: 0.812em;
-      margin-bottom: 0.5em;
-      padding-right: 20px;
-    }
-
-    &:before {
-      top: 15px;
-    }
-
-    &:after {
-      top:20px;
-    }
-  }
-
-  input[type='checkbox']:checked + label {
-    font-weight: 700;
-    font-size: 1.412em;
-    outline: 1px solid $light-grey;
-  }
-}
-
-//Shortlist and evaluation process - Criteria
+// Shortlist and evaluation process - Criteria
 
 #essentialRequirements, #niceToHaveRequirements, #culturalFitCriteria {
 

@@ -393,22 +393,15 @@ class TestEditBriefSubmission(BaseApplicationTest):
         )
 
         breadcrumbs_we_expect = [
-            ('Digital Marketplace', '/'),
-            ('Your account', self.expand_path('/buyers')),
-            ('I need a thing to do a thing',
+            ('Home', '/marketplace/'),
+            ('Dashboard', self.expand_path('/buyers')),
+            ('Brief Overview',
              self.expand_path(
-                 '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234'))  # noqa
+                 '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234')),  # noqa
         ]
-        if has_summary_page and section_name:
-            path = self.expand_path(
-                '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/{}'.format(
-                    section_name.lower().replace(' ', '-')))
-            breadcrumbs_we_expect.append((
-                section_name,
-                path,
-            ))
 
-        assert len(breadcrumbs) == len(breadcrumbs_we_expect)
+        # +1 is for the static current page
+        assert len(breadcrumbs) == len(breadcrumbs_we_expect) + 1
 
         for index, link in enumerate(breadcrumbs_we_expect):
             assert breadcrumbs[index].find('a').text_content().strip() == link[0]

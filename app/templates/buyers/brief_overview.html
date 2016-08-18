@@ -10,12 +10,15 @@
   {%
     with items = [
       {
-        "link": "/",
-        "label": "Digital Marketplace"
+        "link": url_for("main.index"),
+        "label": "Home"
       },
       {
         "link": url_for(".buyer_dashboard"),
-        "label": "Your account"
+        "label": "Dashboard"
+      },
+      {
+        "label": "Overview"
       }
     ]
   %}
@@ -24,7 +27,7 @@
 {% endblock %}
 
 {% block main_content %}
-  <div class="grid-row">
+  <div class="grid-row content-details">
 
     {% block before_heading %}
       {% if delete_requested %}
@@ -32,7 +35,7 @@
           <form action="{{ url_for('buyers.delete_a_brief', framework_slug=framework.slug, lot_slug=brief.lotSlug, brief_id=brief.id) }}" method="POST">
             {{ form.csrf_token }}
             <input type="hidden" name="delete_confirmed" value="true" />
-            <div class="banner-destructive-with-action">
+            <div class="banner-destructive-with-action callout--info">
               <p class="banner-message">
                Are you sure you want to delete these requirements?
               </p>
@@ -219,7 +222,7 @@
      <div class="grid-row">
        <div class="column-two-thirds">
          {% if framework.status == 'live' and brief.status == 'draft' %}
-         <a href="{{ url_for('buyers.view_brief_overview', framework_slug=framework.slug, lot_slug=brief.lotSlug, brief_id=brief.id, delete_requested=True) }}">Delete</a>
+         <a href="{{ url_for('buyers.view_brief_overview', framework_slug=framework.slug, lot_slug=brief.lotSlug, brief_id=brief.id, delete_requested=True) }}" role="button">Delete</a>
          {% endif %}
        </div>
      </div>
