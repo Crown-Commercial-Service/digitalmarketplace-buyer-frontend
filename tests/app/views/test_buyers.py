@@ -1964,15 +1964,13 @@ class TestDownloadBriefResponsesCsv(BaseApplicationTest):
         self.login_as_buyer()
         res = self.client.get(self.url)
         page = res.get_data(as_text=True)
-        lines = page.split('\n')
-
+        lines = page.splitlines()
         # There are only the two eligible responses included
-        assert len(lines) == 4
+        assert len(lines) == 3
         assert lines[0] == "Supplier,Date the specialist can start work,Day rate,Nice1,Nice2,Nice3,Email address"
         # The response with two nice-to-haves is sorted to above the one with only one
         assert lines[1] == "Kev's Pies,A week Friday,£3.50,False,True,True,test2@email.com"
         assert lines[2] == "Kev's Butties,Next Tuesday,£1.49,True,False,False,test1@email.com"
-        assert lines[-1] == ""
 
     def test_download_brief_responses_for_brief_without_nice_to_haves(self, data_api_client):
         data_api_client.get_framework.return_value = api_stubs.framework(
@@ -2013,14 +2011,13 @@ class TestDownloadBriefResponsesCsv(BaseApplicationTest):
         self.login_as_buyer()
         res = self.client.get(self.url)
         page = res.get_data(as_text=True)
-        lines = page.split('\n')
+        lines = page.splitlines()
 
-        assert len(lines) == 4
+        assert len(lines) == 3
         assert lines[0] == "Supplier,Date the specialist can start work,Day rate,Nice1,Nice2,Nice3,Email address"
         # The values with internal commas are surrounded by quotes, and all other characters appear as in the data
         assert lines[1] == 'Kev\'s \'Pies,&quot;A week Friday&rdquot;,&euro;3.50,False,True,True,"te,st2@email.com"'
         assert lines[2] == '"K,ev’s ""Bu,tties",❝Next — Tuesday❞,"¥1.49,",True,False,False,test1@email.com'
-        assert lines[-1] == ""
 
     def test_404_if_brief_does_not_belong_to_buyer(self, data_api_client):
         data_api_client.get_framework.return_value = api_stubs.framework(

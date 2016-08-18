@@ -16,6 +16,7 @@ from ...helpers.buyers_helpers import (
 
 from dmapiclient import HTTPError
 from dmutils.dates import get_publishing_dates
+from dmutils import csv_generator
 
 
 @buyers.route('/buyers')
@@ -314,25 +315,8 @@ def download_brief_responses(framework_slug, lot_slug, brief_id):
                     row.append(brief_response.get(key))
             csv_rows.append(row)
 
-    def iter_csv(rows):
-        class Line(object):
-            def __init__(self):
-                self._line = None
-
-            def write(self, line):
-                self._line = line
-
-            def read(self):
-                return self._line
-
-        line = Line()
-        writer = unicodecsv.writer(line, lineterminator='\n')
-        for row in rows:
-            writer.writerow(row)
-            yield line.read()
-
     return Response(
-        iter_csv(csv_rows),
+        csv_generator.iter_csv(csv_rows),
         mimetype='text/csv',
         headers={
             "Content-Disposition": "attachment;filename=responses-to-requirements-{}.csv".format(brief['id']),
