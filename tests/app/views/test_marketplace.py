@@ -456,13 +456,29 @@ class TestBriefPage(BaseApplicationTest):
 
         self._assert_start_application(document, brief_id)
 
-    def test_supplier_applied_view_application(self):
+    def test_supplier_applied_view_application_for_live_opportunity(self):
         self.login_as_supplier()
         # mocking that we have applied
         self._data_api_client.find_brief_responses.return_value = {
             "briefResponses": [{"lazy": "mock"}],
         }
         brief_id = self.brief['briefs']['id']
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
+        assert_equal(200, res.status_code)
+        document = html.fromstring(res.get_data(as_text=True))
+
+        self._assert_view_application(document, brief_id)
+
+    def test_supplier_applied_view_application_for_closed_opportunity(self):
+        self.login_as_supplier()
+        # mocking that we have applied
+        self._data_api_client.find_brief_responses.return_value = {
+            "briefResponses": [{"lazy": "mock"}],
+        }
+        brief = self.brief.copy()
+        brief['briefs']['status'] = "closed"
+        self._data_api_client.get_brief.return_value = brief
+        brief_id = brief['briefs']['id']
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
         assert_equal(200, res.status_code)
         document = html.fromstring(res.get_data(as_text=True))
