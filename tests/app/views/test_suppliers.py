@@ -25,7 +25,7 @@ class TestSuppliersPage(BaseApplicationTest):
     def test_supplier_details_page_requires_login(self, api_client):
         api_client.return_value.get_supplier.return_value = self.supplier
 
-        res = self.client.get(self.expand_path('/suppliers/1'))
+        res = self.client.get(self.url_for('main.get_supplier', code=1))
 
         assert res.status_code == 302
 
@@ -33,7 +33,7 @@ class TestSuppliersPage(BaseApplicationTest):
         self.login_as_buyer()
         api_client.return_value.get_supplier.return_value = self.supplier
 
-        res = self.client.get(self.expand_path('/suppliers/1'))
+        res = self.client.get(self.url_for('main.get_supplier', code=1))
         document = html.fromstring(res.get_data(as_text=True))
 
         assert res.status_code == 200
@@ -43,7 +43,7 @@ class TestSuppliersPage(BaseApplicationTest):
         self.login_as_buyer()
         api_client.return_value.get_supplier.return_value = self.supplier_with_minimum_data
 
-        res = self.client.get(self.expand_path('/suppliers/1'))
+        res = self.client.get(self.url_for('main.get_supplier', code=1))
         document = html.fromstring(res.get_data(as_text=True))
 
         assert res.status_code == 200
@@ -54,11 +54,11 @@ class TestSuppliersPage(BaseApplicationTest):
         self.login_as_buyer()
         api_client.return_value.get_supplier.side_effect = APIError(mock.Mock(status_code=404))
 
-        res = self.client.get(self.expand_path('/suppliers/1'))
+        res = self.client.get(self.url_for('main.get_supplier', code=1))
         assert res.status_code == 404
 
         # Check that the test is not silently passing because the URL changed
         api_client.return_value.get_supplier.side_effect = APIError(mock.Mock(status_code=500))
 
-        res = self.client.get(self.expand_path('/suppliers/1'))
+        res = self.client.get(self.url_for('main.get_supplier', code=1))
         assert res.status_code == 500

@@ -5,8 +5,10 @@ import json
 import re
 
 from app import create_app, data_api_client
+
 from dmutils.forms import FakeCsrf
 from datetime import datetime, timedelta
+from flask import url_for
 from mock import patch
 from werkzeug.http import parse_cookie
 
@@ -21,6 +23,10 @@ class BaseApplicationTest(object):
 
     def expand_path(self, path):
         return self.app.config['URL_PREFIX'] + path
+
+    def url_for(self, handler_name, _external=False, **kwargs):
+        with self.app.app_context():
+            return url_for(handler_name, _external=_external, **kwargs)
 
     def teardown(self):
         self.teardown_login()
