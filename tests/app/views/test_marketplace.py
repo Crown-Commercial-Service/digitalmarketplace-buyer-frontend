@@ -155,7 +155,7 @@ class TestBriefPage(BaseApplicationTest):
         assert_equal(section_heading.text.strip(), 'Overview')
         assert_equal(start_date_key[0], 'When do you want the specialist to start?')
         assert_equal(start_date_value[0], '01/03/2016')
-        assert_equal(contract_length_key[0], 'How long is your initial contract?')
+        assert_equal(contract_length_key[0], 'How long is the contract?')
         assert_equal(contract_length_value[0], '4 weeks')
 
     def test_dos_brief_has_question_and_answer_session_details_link(self):
