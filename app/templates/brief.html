@@ -57,26 +57,29 @@
   </div>
 </div>
 
-{% if brief.status == 'live' %}
-<div class="grid-row">
-  <div class="column-one-third">
-    {% if brief_responses %}
-      {% with
-         url = "/suppliers/opportunities/{}/responses/result".format(brief.id),
-         text = "View your application",
-         bigger = True
-      %}
-        {% include "toolkit/secondary-action-link.html" %}
-      {% endwith %}
-    {% else %}
+{% if brief_responses %}
+  <div class="grid-row">
+    <div class="column-one-third">
+        {% with
+           url = "/suppliers/opportunities/{}/responses/result".format(brief.id),
+           text = "View your application",
+           bigger = True
+        %}
+          {% include "toolkit/secondary-action-link.html" %}
+        {% endwith %}
+    </div>
+  </div>
+{% elif brief.status == 'live' %}
+  <div class="grid-row">
+    <div class="column-one-third">
       {% with
          url = "/suppliers/opportunities/{}/responses/create".format(brief.id),
          label = "Start application"
       %}
         {% include "toolkit/link-button.html" %}
       {% endwith %}
-    {% endif %}
+    </div>
   </div>
-</div>
 {% endif %}
+
 {% endblock %}
