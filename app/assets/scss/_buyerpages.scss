@@ -112,11 +112,18 @@ ol.instruction-list {
         float: left;
       }
 
-      p + span.question-optional {
+      p + span.question-optional,
+      p + span.text-box-unit-qualifier {
         float: left;
         line-height: 1.6em;
         padding-left: 0.5em;
       }
+    }
+
+    &::after {
+      content: '';
+      display: table;
+      clear: both;
     }
   }
 
@@ -156,6 +163,23 @@ ol.instruction-list {
       p {
         margin-top: $tiny-spacing;
       }
+    }
+  }
+
+  form {
+
+    .validation-message {
+      clear: both;
+      display: block;
+    }
+
+    .word-count-counter {
+      color: $input-count-colour;
+      float: right;
+    }
+
+    .text-box-unit + .hint {
+      float: none;
     }
   }
 
