@@ -106,6 +106,20 @@ ol.instruction-list {
     }
   }
 
+  label {
+    .question-heading-with-hint {
+      p {
+        float: left;
+      }
+
+      p + span.question-optional {
+        float: left;
+        line-height: 1.6em;
+        padding-left: 0.5em;
+      }
+    }
+  }
+
   input[type='checkbox'] + label,
   input[type='radio'] + label {
     font-weight: $bold-font-weight;
@@ -134,6 +148,14 @@ ol.instruction-list {
 
     &::after {
       top: 17px;
+    }
+  }
+
+  .question {
+    span.hint.word-count-counter {
+      p {
+        margin-top: $tiny-spacing;
+      }
     }
   }
 
