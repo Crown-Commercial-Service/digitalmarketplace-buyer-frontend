@@ -14,7 +14,7 @@
   </header>
   <p>
     The link you used to create an account may have expired.<br/>
-    Check you’ve entered the correct link or <a href="{{ url_for('.buyer_invite_request') }}">request a new link</a>.<br/>
+    Check you’ve entered the correct link or <a href="{{ url_for('.create_buyer_account') }}">request a new link</a>.<br/>
     If you still can’t create an account, email <a href="mailto:marketplace@digital.gov.au">marketplace@digital.gov.au</a>
   </p>
 
@@ -44,7 +44,7 @@
       <h1>The details you provided are registered with a supplier.</h1>
     </header>
     <p>Your email address is already registered as an account with ‘{{ user.supplier_name }}’.</p>
-    <p>You can <a href="{{ url_for('.buyer_invite_request') }}">create a buyer account using a different email address</a>, or email
+    <p>You can <a href="{{ url_for('.create_buyer_account') }}">create a buyer account using a different email address</a>, or email
       <a href="mailto:marketplace@digital.gov.au">marketplace@digital.gov.au</a> to have your account
       converted to a buyer account.</p>
     <p>

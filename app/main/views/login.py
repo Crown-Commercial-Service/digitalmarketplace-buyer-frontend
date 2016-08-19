@@ -239,13 +239,8 @@ def submit_buyer_invite_request():
     return render_template('auth/buyer-invite-request-complete.html')
 
 
-# FIXME: buyer creation should be in the admin site so that it's not even accessible from the frontend
-
-
 @main.route('/buyers/create', methods=["GET"])
 def create_buyer_account():
-    if not current_user.is_authenticated or current_user.role != 'admin':
-        return current_app.login_manager.unauthorized()
     form = BuyerSignupEmailForm()
 
     return render_template_with_csrf("auth/create-buyer-account.html", form=form)
@@ -253,8 +248,6 @@ def create_buyer_account():
 
 @main.route('/buyers/create', methods=['POST'])
 def submit_create_buyer_account():
-    if not current_user.is_authenticated or current_user.role != 'admin':
-        return current_app.login_manager.unauthorized()
     current_app.logger.info(
         "buyercreate: post create-buyer-account")
     form = BuyerSignupEmailForm(request.form)
