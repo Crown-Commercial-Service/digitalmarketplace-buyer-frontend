@@ -46,8 +46,8 @@ main {
       .brief-builder &,
       .form-page & {
         @include media($tablet) {
-          @include span-columns(10 of 12);
-          @include shift(1);
+          @include span-columns(8 of 12);
+          @include shift(2);
         }
         @include media($desktop) {
           @include span-columns(10 of 16);

@@ -64,16 +64,6 @@ ol.instruction-list {
       position: absolute;
       margin-left: -1.35em;
       margin-top: 0.25em;
-
-      & + a {
-        border-color: $green;
-        color: $green;
-
-        &:hover {
-          border-color: $light-aqua;
-          color: $non-black;
-        }
-      }
     }  
 
     p {
@@ -98,15 +88,18 @@ ol.instruction-list {
 
 // Buyer Brief forms
 
+
 .brief-builder {
 
-  main {
-    .content-main {
-      &:first-child {
-        .column-two-thirds {
-          width: 100%;
-          @include media($desktop) {
-            width: 66.6666666667%;
+  &.brief-section {
+    main {
+      .content-main {
+        &:first-child {
+          .column-two-thirds {
+            width: 100%;
+            @include media($desktop) {
+              width: 66.6666666667%;
+            }
           }
         }
       }
