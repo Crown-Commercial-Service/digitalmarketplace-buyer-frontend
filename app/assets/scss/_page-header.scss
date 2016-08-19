@@ -1,5 +1,5 @@
 .govau--header {
-  background-color: $non-black;
+  @include linear-gradient(to left, $aqua, $dark-navy, $fallback: $dark-navy);
   padding: $small-spacing 0;
 
   .logo {
@@ -9,14 +9,13 @@
 }
 
 .marketplace--header {
-  // @include linear-gradient(to left, $dark-navy, $aqua, $fallback: $aqua);
   @include link-colours($link-inverted-colour, $link-inverted-colour, $link-colour);
 
   position: relative;
   padding: $medium-spacing 0 ($base-spacing * 3);
   padding-bottom: $medium-spacing;
   margin-bottom: 0;
-  background-color: $aqua;
+  background-color: #0098b0;
   color: $body-inverted-text-colour;
 
   @include media($tablet) {
@@ -99,12 +98,11 @@
 }
 
 .hero-main {
-  // @include linear-gradient(to left, $dark-navy, $aqua, $fallback: $hero-bg-colour);
   @include position(relative, null);
   
   padding: 0 0 ($base-spacing * 2);
   margin-bottom: 0;
-  background-color: $hero-bg-colour;
+  background-color: #0098b0;
   color: $body-inverted-text-colour;
 
   h1 {
