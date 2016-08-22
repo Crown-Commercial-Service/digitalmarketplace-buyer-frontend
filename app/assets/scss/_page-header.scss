@@ -37,8 +37,7 @@
     border-bottom: none;
     color: $body-inverted-text-colour;
     font-family: $base-sans-serif;
-    font-weight: 400;
-    letter-spacing: 2px;
+    letter-spacing: 1px;
 
     &:hover,
     &:focus {
@@ -47,6 +46,7 @@
   }
 
   [class^='badge'] {
+    font-weight: $bold-font-weight;
     vertical-align: super;
     margin-left: $tiny-spacing;
   }
@@ -132,16 +132,5 @@
     @include media($tablet) {
       vertical-align: text-top;
     }
-  }
-}
-
-.content--hero {
-  @include media($tablet) {
-    @include span-columns(9 of 16);
-    margin-top: -2rem;
-  }
-  @include media($desktop) {
-    @include span-columns(7 of 16);
-    margin-top: -2rem;
   }
 }
