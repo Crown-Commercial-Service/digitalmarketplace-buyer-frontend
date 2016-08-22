@@ -65,6 +65,18 @@ main {
           @include shift(2);
         }
       }
+
+      .brief-builder.brief-content & {
+
+        @include shift(0);
+
+        @include media($tablet) {
+          @include span-columns(10 of 12);
+        }
+        @include media($desktop) {
+          @include span-columns(12 of 16);
+        }
+      }
     }
   }
 }

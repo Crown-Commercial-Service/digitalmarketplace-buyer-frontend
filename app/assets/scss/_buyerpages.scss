@@ -20,19 +20,10 @@
   }
 }
 
-// Buyer brief overview page
-header.page-heading-smaller {
-  h1 {
-    &:first-of-type {
-      margin-top: 0.4em;
-    }
-  }
-}
-
 p.context {
-  color: lighten($grey, 5%);
-  font-size: 1.412em;
-  margin-bottom: 0.25em;
+  color: $grey;
+  font-size: rem(24);
+  margin-bottom: 0;
   margin-top: 1em;
 }
 
@@ -60,6 +51,11 @@ ol.instruction-list {
     list-style: none;
     font-size: 1.059rem;
 
+    &.divider {
+      border-bottom: 1px solid $light-grey;
+      padding-bottom: 1.5em;
+    }
+
     span.tick {
       position: absolute;
       margin-left: -1.35em;
@@ -68,6 +64,7 @@ ol.instruction-list {
 
     p {
       &.instruction-list-item-top {
+        margin-bottom: 0;
         padding-left: 2.3em;
       }
     }
@@ -79,6 +76,7 @@ ol.instruction-list {
     ul {
       li {
         list-style: none;
+        margin-bottom: 0.2em;
         padding-left: 0.1em;
       }
     }
@@ -106,10 +104,16 @@ ol.instruction-list {
     }
   }
 
+  .question {
+    margin-bottom: 1.5em;
+  }
+
   label {
     .question-heading-with-hint {
       p {
+        font-size: rem(18);
         float: left;
+        margin-bottom: 0.5em;
       }
 
       p + span.question-optional,
@@ -130,12 +134,12 @@ ol.instruction-list {
   input[type='checkbox'] + label,
   input[type='radio'] + label {
     font-weight: $bold-font-weight;
+    outline: 1px solid $grey;
     margin: 0 0 8px;
-    padding-bottom: 6px;
 
     >p {
       font-weight: 400;
-      margin-bottom: 0.5em;
+      margin-bottom: 0.1em;
       padding-right: 20px;
     }
 
@@ -151,7 +155,7 @@ ol.instruction-list {
   input[type='checkbox']:checked + label,
   input[type='radio']:checked + label {
     font-weight: 700;
-    outline: 1px solid $light-grey;
+    outline: 2px solid $grey;
 
     &::after {
       top: 17px;
@@ -180,65 +184,6 @@ ol.instruction-list {
 
     .text-box-unit + .hint {
       float: none;
-    }
-  }
-
-  table.content-table {
-    margin: 2em 0;
-
-    caption {
-      font-size: 1.0625rem;
-      padding-bottom: 1em;
-      text-align: left;
-    }
-
-    thead {
-      display: none;
-    }
-
-    td {
-
-      padding: $tiny-spacing;
-
-      @include media($tablet) {
-        padding: 1.2em;
-      }
-    }
-
-    tr {
-      border-bottom: 1px solid $light-grey;
-
-      &:first-child {
-        border-top: 1px solid $light-grey;
-      }
-
-      td, th {
-        vertical-align: top;
-        padding-left: 0;
-
-        &:nth-child(1) {
-          font-weight: 700;
-          width: 40%;
-        }
-
-        &:nth-child(3) {
-          color: lighten($grey, 5%);
-          text-align: right;
-
-          a {
-            color: lighten($grey, 5%);
-            border-bottom: 1px solid $light-grey;
-
-            &:hover {
-              color: $black;
-            }
-          }
-        }
-      }
-
-      &:nth-child(even) {
-        background-color: white;
-      }
     }
   }
 

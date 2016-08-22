@@ -106,7 +106,6 @@ $badges: (
   }
 
   h2 {
-    font-size: rem(22);
     font-weight: $heading-font-weight;
 
     @include media($tablet) {
