@@ -138,7 +138,7 @@ def send_reset_password_email():
 
 @main.route('/reset-password/<token>', methods=["GET"])
 def reset_password(token):
-    decoded = decode_password_reset_token(token, data_api_client)
+    decoded = decode_password_reset_token(token.encode(), data_api_client)
     if decoded.get('error', None):
         flash(decoded['error'], 'error')
         return redirect(url_for('.request_password_reset'))
@@ -154,7 +154,7 @@ def reset_password(token):
 @main.route('/reset-password/<token>', methods=["POST"])
 def update_password(token):
     form = ChangePasswordForm(request.form)
-    decoded = decode_password_reset_token(token, data_api_client)
+    decoded = decode_password_reset_token(token.encode(), data_api_client)
     if decoded.get('error', None):
         flash(decoded['error'], 'error')
         return redirect(url_for('.request_password_reset'))
@@ -297,7 +297,7 @@ def submit_create_buyer_account():
 def create_user(encoded_token):
     form = CreateUserForm()
 
-    token = decode_invitation_token(encoded_token, role='buyer')
+    token = decode_invitation_token(encoded_token.encode(), role='buyer')
     if token is None:
         current_app.logger.warning(
             "createuser.token_invalid: {encoded_token}",
@@ -328,7 +328,7 @@ def create_user(encoded_token):
 def submit_create_user(encoded_token):
     form = CreateUserForm(request.form)
 
-    token = decode_invitation_token(encoded_token, role='buyer')
+    token = decode_invitation_token(encoded_token.encode(), role='buyer')
     if token is None:
         current_app.logger.warning("createuser.token_invalid: {encoded_token}",
                                    extra={'encoded_token': encoded_token})
