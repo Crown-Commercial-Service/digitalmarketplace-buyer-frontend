@@ -13,12 +13,14 @@ h2 {
 
 .badge--beta {
   background-color: $white;
-  color: $aqua;
+  color: #0098b0;
+  margin-top: $small-spacing;
+  padding: .3em .6em;
 }
 
 $badges: (
   'new':      $badge-colour--new,
-);
+  );
 
 @each $badge-type, $colour in $badges {
   .badge--#{$badge-type} {
@@ -39,13 +41,12 @@ $badges: (
   margin-left: $tiny-spacing;
 }
 
-.content-main {
 
-  .number-results {
-    span {
-      font-size: rem(32);
-      font-weight: $bold-font-weight;
-    }
+span {
+  .number-results &,
+  &.search-summary-count {
+    font-size: rem(32);
+    font-weight: $bold-font-weight;
   }
 }
 
