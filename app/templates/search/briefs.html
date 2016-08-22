@@ -1,39 +1,114 @@
 {% extends "_base_page.html" %}
 
 {% block page_title %}
-    Supplier opportunities – {{ framework.name }} – Digital Marketplace
+Supplier opportunities – {{ framework.name }} – Digital Marketplace
 {% endblock %}
 
+{% block body_classes %}catalogue{% endblock %}
+
 {% block breadcrumb %}
-    {% with items = [
-        {
-        "link": url_for('.index'),
-        "label": "Digital Marketplace"
-        }
-    ]
-    %}
-    {% include "toolkit/breadcrumb.html" %}
-    {% endwith %}
+{% with items = [
+  {
+  "link": url_for('main.index'),
+  "label": "Home"
+},
+{
+  "label": "Opportunities"
+}
+]
+%}
+{% include "toolkit/breadcrumb.html" %}
+{% endwith %}
+{% endblock %}
+
+{% block content_summary %}
+<div class="intro">
+  {% with heading="{} opportunities".format(framework.name) %}
+  <h1>{{ heading }}</h1>
+  {% endwith %}
+  <p>View buyer requirements for {{ lot_names | map('lower') | smartjoin }}.</p>
+</div>
 {% endblock %}
 
 {% block main_content %}
-    <div class="grid-row">
-      <div class="column-two-thirds">
-        {% with heading="{} opportunities".format(framework.name) %}
-            {% include "toolkit/page-heading.html" %}
-        {% endwith %}
-        <div class="marketplace-paragraph">
-          <p>View buyer requirements for {{ lot_names | map('lower') | smartjoin }}.</p>
-        </div>
-      </div>
-    </div>
 
-    <div class="grid-row">
-        <section class="column-two-thirds" aria-label="Opportunities found">
-            {% include 'search/_briefs_summary.html' %}
-            {% include 'search/_briefs_results.html' %}
-            {% include 'search/_briefs_pagination.html' %}
-        </section>
-    </div>
+{% include 'search/_briefs_summary.html' %}
+
+
+<ul class="list-horizontal">
+
+  {% for brief in briefs %}
+  <li class="brief-result">
+    <article>
+
+      <h2>
+        <a href="{{ url_for('.get_brief_by_id', framework_slug=framework.slug, brief_id=brief.id) }}">{{ brief.title }}</a>
+      </h2>
+
+      <ul class="organisation">
+        <li>
+          {{ brief.organisation }}
+        </li>
+        <li>
+          {{ brief.location }}
+        </li>
+      </ul>
+
+      <ul class="category">
+        <li>
+          {{ brief.lotName }}
+        </li>
+      </ul>
+
+      <ul class="status">
+        {% if brief.status == 'closed' %}
+        <li class="status-closed">
+          Closed
+        </li>
+        {% else %}
+        <li>
+          <strong>Published:</strong> {{ brief.publishedAt|dateformat }}
+        </li>
+        <li>
+          <strong>Closing:</strong> {{ brief.applicationsClosedAt|dateformat }}
+        </li>
+        {% endif %}
+      </ul>
+
+      {% if brief.summary %}
+      <p>{{ brief.summary }}</p>
+      {% endif %}
+
+    </article>
+  </li>
+
+  {% endfor %}
+</ul>
+
+<hr>
+<div class="pagination">
+  <div>
+    Page <strong>{{ page }}</strong> of <strong>{{ num_pages }}</strong>
+  </div>
+  <div>
+    <ul class="pagination-controls">
+    {% if prev_link_args %}
+      <li class="previous">
+          <a href="{{ url_for('.list_opportunities', framework_slug=framework.slug, **prev_link_args) }}">
+              Previous <span class="visuallyhidden">page</span>
+          </a>
+      </li>
+    {% endif %}
+
+    {% if next_link_args %}
+      <li class="next">
+          <a href="{{ url_for('.list_opportunities', framework_slug=framework.slug, **next_link_args) }}">
+              Next <span class="visuallyhidden">page</span>
+          </a>
+      </li>
+    {% endif %}
+    </ul>
+  </div>
+</div>
 
 {% endblock %}
