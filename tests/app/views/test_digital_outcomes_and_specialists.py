@@ -13,16 +13,16 @@ class TestStartBriefInfoPage(BaseApplicationTest):
     def test_show_start_brief_info_page(self, data_api_client):
         with self.app.app_context():
             data_api_client.get_framework.return_value = api_stubs.framework(
-                slug='digital-outcomes-and-specialists',
+                slug='digital-service-professionals',
                 status='live',
                 lots=[
-                    api_stubs.lot(slug='digital-specialists', allows_brief=True),
+                    api_stubs.lot(slug='digital-professionals', allows_brief=True),
                 ]
             )
 
             res = self.client.get(
                 self.expand_path(
-                    "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists"
+                    "/buyers/frameworks/digital-service-professionals/requirements/digital-professionals"
                 ))
             assert res.status_code == 200
             document = html.fromstring(res.get_data(as_text=True))
