@@ -7,10 +7,9 @@ from flask import abort, current_app, flash, redirect, render_template, request,
 from flask_login import logout_user, login_user
 
 from dmapiclient.audit import AuditTypes
-from dmutils.user import User, hash_email, user_logging_string
+from dmutils.user import User, user_logging_string
 from dmutils.email import (
-    decode_invitation_token, decode_password_reset_token, generate_token, send_email,
-    EmailError
+    decode_invitation_token, decode_password_reset_token, generate_token, hash_email, send_email, EmailError
 )
 from dmutils.forms import render_template_with_csrf
 from .. import main
