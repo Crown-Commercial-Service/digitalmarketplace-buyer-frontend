@@ -104,8 +104,8 @@ class Test(Config):
     DM_DATA_API_URL = "http://localhost:5000"
     DM_DATA_API_AUTH_TOKEN = "myToken"
 
-    SHARED_EMAIL_KEY = "KEY"
-    SECRET_KEY = "KEY"
+    SECRET_KEY = 'TestKeyTestKeyTestKeyTestKeyTestKeyTestKeyX='
+    SHARED_EMAIL_KEY = SECRET_KEY
     SERVER_NAME = 'localhost'
 
 
@@ -118,8 +118,8 @@ class Development(Config):
     DM_DATA_API_AUTH_TOKEN = "myToken"
     DM_DEFAULT_CACHE_MAX_AGE = 60
 
-    SECRET_KEY = "verySecretKey"
-    SHARED_EMAIL_KEY = "very_secret"
+    SECRET_KEY = 'DevKeyDevKeyDevKeyDevKeyDevKeyDevKeyDevKeyX='
+    SHARED_EMAIL_KEY = SECRET_KEY
 
 
 class Live(Config):
