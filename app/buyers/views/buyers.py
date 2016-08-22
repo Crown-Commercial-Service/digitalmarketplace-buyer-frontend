@@ -214,7 +214,8 @@ def update_brief_submission(framework_slug, lot_slug, brief_id, section_id, ques
         abort(404)
 
     update_data = question.get_data(request.form)
-    question_ids = section.get_question_ids()
+
+    question_ids = section.get_section_question_ids()
 
     question_id_index = None
     if question_id in question_ids:
