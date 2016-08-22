@@ -68,6 +68,46 @@
   }
 }
 
+.brief-result {
+
+  ul {
+    margin: 0;
+    padding: 0;
+  }
+  
+  li {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+  }
+
+  .organisation {
+    @extend h3;
+    margin: 0;
+    padding: $small-spacing*1.5 0 $small-spacing;
+    
+    li:not(:last-child) {
+      margin-right: $medium-spacing;
+    }
+  }
+
+  .category {
+    color: $grey;
+    font-size: $small-font-size;
+  }
+
+  .status {
+    color: $grey;
+    font-size: $small-font-size;
+    margin: $tiny-spacing 0 $small-spacing*1.5;
+     
+    li:not(:last-child) {
+      margin-right: $medium-spacing;
+    }
+  }
+
+}
+
 .go-back {
   color: $black;
   display: inline-block;

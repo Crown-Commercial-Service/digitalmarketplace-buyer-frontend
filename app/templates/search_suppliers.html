@@ -1,19 +1,40 @@
 {% extends "_base_page.html" %}
 
-{% block page_title %}Suppliers Search – Marketplace{% endblock %}
+{% block page_title %}
+Suppliers search – Digital Marketplace
+{% endblock %}
 
 {% block body_classes %}catalogue{% endblock %}
 {% block main_class %}sidebar-has-controls{% endblock %}
 
+{% block breadcrumb %}
+{% with items = [
+  {
+  "link": url_for('main.index'),
+  "label": "Home"
+},
+{
+  "label": "Suppliers catalogue"
+}
+]
+%}
+{% include "toolkit/breadcrumb.html" %}
+{% endwith %}
+{% endblock %}
 
-  {% block sidebar %}
-  {% with
+
+{% block content_summary %}
+<div class="intro">
+  <h1>ICT suppliers catalogue</h1>
+  <p><a href="{{ url_for('main.roles_and_services') }}">Learn more about these roles</a></p>
+</div>
+{% endblock %}
+
+{% block sidebar %}
+{% with
   local_nav_toggle='Menu'
   %}
-  <div class="intro">
-    <h1>ICT supplier catalogue</h1>
-    <p><a href="{{ url_for('main.roles_and_services') }}">Learn more about these roles</a></p>
-  </div>
+
   <aside class="sidebar" id="nav">
     {% include "sidebar/_filter_capabilities.html" %}
     {% include "sidebar/_search.html" %}
@@ -22,28 +43,29 @@
   {% endblock %}
 
   {% block main_content %}
+  
   {% if results %}
-      <p class="number-results"><span>{{ num_results }}</span> supplier{% if num_results > 1 %}s{% endif %}</p>
+  <p class="number-results"><span>{{ num_results }}</span> supplier{% if num_results > 1 %}s{% endif %}</p>
 
-        <div class="sort-order-{{ sort_order }}">
-            <span>Sort By:</span>
-            {% with page_number=page, sort_alternate=True, link_label=sort_term_name_label, sort_terms=['name']  %}
-                {% include '_supplier_pagination_link.html' %}
-            {% endwith %}
-        </div>
+  <div class="sort-order-{{ sort_order }}">
+    <span>Sort By:</span>
+    {% with page_number=page, sort_alternate=True, link_label=sort_term_name_label, sort_terms=['name']  %}
+    {% include '_supplier_pagination_link.html' %}
+    {% endwith %}
+  </div>
   {% endif %}
 
-    {% if results %}
-      <p>Showing {{ results_from }}{% if num_results > 1 %}-{{ results_to }}{% endif %}
-          supplier{% if num_results > 1 %}s{% endif %} of {{ num_results }}
-      {% else %}No results found.</p>
+  {% if results %}
+  <p>Showing {{ results_from }}{% if num_results > 1 %}-{{ results_to }}{% endif %}
+    supplier{% if num_results > 1 %}s{% endif %} of {{ num_results }}
+    {% else %}No results found.</p>
     {% endif %}
 
     <ul class="list-horizontal">
       {% for result in results %}
       <li class="supplier-result">
         <article>
-          <h1><a href="{{ result.url }}">{{ result.title }}</a></h1>
+          <h2><a href="{{ result.url }}">{{ result.title }}</a></h2>
 
           {% if result.description %}
           <p>{{ result.description }}</p>
@@ -55,7 +77,7 @@
              <dt>Service capabilities:</dt>
              {% for role in result.roles|sort() %}
              <dd class="{% if role.label in role_list_from_request %}selected{% endif %}">
-                 <a href="?role={{ role.label|replace(' ', '+') }}">{{ role.label }}</a>
+               <a href="?role={{ role.label|replace(' ', '+') }}">{{ role.label }}</a>
              </dd>
              {% endfor %}
            </dl>
@@ -66,36 +88,36 @@
      {% endfor %}
    </ul>
    {% if results %}
-    <hr>
-    <div class="pagination">
-      <div>
-        Page <strong>{{ page }}</strong> of <strong>{{ num_pages }}</strong>
-      </div>
-      <div>
-        <ul class="pagination-controls">
-          {% if page - 1 > 0 %}
-            {% with page_number=page-1, sort_alternate=False, link_label="< Back", sort_terms=sort_terms %}
-              {% include '_supplier_pagination_link.html' %}
-            {% endwith %}
-          {% endif %}
-          {% for pg in pages %}
-          <li class="{% if pg == page %}current{% endif %}">
-            {% if pg != '...' %}
-            {% with page_number=pg, sort_alternate=False, link_label=pg, sort_terms=sort_terms  %}
-              {% include '_supplier_pagination_link.html' %}
-            {% endwith %}
-            {% else %}
-            <span>{{ pg }}</span>
-            {% endif %}
-          </li>
-          {% endfor %}
-          {% if page + 1 <= num_pages %}
-            {% with page_number=page+1, sort_alternate=False, link_label="Next >", sort_terms=sort_terms  %}
-              {% include '_supplier_pagination_link.html' %}
-            {% endwith %}
-          {% endif %}
-        </ul>
-      </div>
+   <hr>
+   <div class="pagination">
+    <div>
+      Page <strong>{{ page }}</strong> of <strong>{{ num_pages }}</strong>
     </div>
+    <div>
+      <ul class="pagination-controls">
+        {% if page - 1 > 0 %}
+        {% with page_number=page-1, sort_alternate=False, link_label="< Back", sort_terms=sort_terms %}
+        {% include '_supplier_pagination_link.html' %}
+        {% endwith %}
+        {% endif %}
+        {% for pg in pages %}
+        <li class="{% if pg == page %}current{% endif %}">
+          {% if pg != '...' %}
+          {% with page_number=pg, sort_alternate=False, link_label=pg, sort_terms=sort_terms  %}
+          {% include '_supplier_pagination_link.html' %}
+          {% endwith %}
+          {% else %}
+          <span>{{ pg }}</span>
+          {% endif %}
+        </li>
+        {% endfor %}
+        {% if page + 1 <= num_pages %}
+        {% with page_number=page+1, sort_alternate=False, link_label="Next >", sort_terms=sort_terms  %}
+        {% include '_supplier_pagination_link.html' %}
+        {% endwith %}
+        {% endif %}
+      </ul>
+    </div>
+  </div>
   {% endif %}
   {% endblock %}
