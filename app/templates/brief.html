@@ -3,41 +3,42 @@
 
 {% block page_title %}{{ brief.title }} - Digital Marketplace{% endblock %}
 
-{% block body_classes %}brief-builder brief-content{% endblock %}
+{% block body_classes %}content-details brief-builder brief-content{% endblock %}
+
 
 {% block breadcrumb %}
-  {%
-    with
-    items = [
-      {
-          "link": url_for('.index'),
-          "label": "Digital Marketplace"
-      },
-      {
-          "link": url_for('.list_opportunities', framework_slug=brief.frameworkSlug),
-          "label": "Supplier opportunities"
-      }
-    ]
-  %}
-    {% include "toolkit/breadcrumb.html" %}
-  {% endwith %}
+{%
+  with
+  items = [
+  {
+  "link": url_for('.index'),
+  "label": "Home"
+},
+{
+  "link": url_for('.list_opportunities', framework_slug=brief.frameworkSlug),
+  "label": "Opportunities"
+},
+{
+  "label": "Opportunity details"
+}
+]
+%}
+{% include "toolkit/breadcrumb.html" %}
+{% endwith %}
 {% endblock %}
 
 {% block main_content %}
 
+<a class="go-back" href="{{ url_for('.list_opportunities', framework_slug=brief.frameworkSlug) }}">Back</a>
+
 {% if brief.status == 'closed' %}
-<div class="grid-row">
-  <div class="column-one-whole">
-    {%
-      with
-      type = "temporary-message",
-      heading = "This opportunity is closed for applications.",
-      message = "The deadline was {}.".format(brief.applicationsClosedAt|dateformat)
-    %}
-      {% include "toolkit/notification-banner.html" %}
-    {% endwith %}
-  </div>
+
+<div class="callout--info">
+  <h2>This opportunity is closed for applications.</h2>
+  <p>The deadline was {{brief.applicationsClosedAt|dateformat}}</p>
+  {{ action }}
 </div>
+
 {% endif %}
 
 {% if brief.status == 'draft' %}
@@ -77,26 +78,39 @@
     </div>
 {% endif %}
 
+<header class="page-heading-smaller">
+  <p class="context">{{ brief.organisation }}</p>
+  <h1>{{ brief.title }}</h1>
+</header>
+
+
+{% include '_brief_attributes.html' %}
+
+{% include '_brief_q_and_a.html' %}
+
 {% if brief.status == 'live' %}
-<div class="grid-row">
-  <div class="column-one-third">
-    {% if brief_responses %}
-      {% with
-          url = "{}/suppliers/opportunities/{}/responses/result".format(config['URL_PREFIX'], brief.id),
-         text = "View your application",
-         bigger = True
-      %}
-        {% include "toolkit/secondary-action-link.html" %}
-      {% endwith %}
-    {% else %}
-      {% with
-          url = "{}/suppliers/opportunities/{}/responses/create".format(config['URL_PREFIX'], brief.id),
-         label = "Start application"
-      %}
-        {% include "toolkit/link-button.html" %}
-      {% endwith %}
-    {% endif %}
-  </div>
-</div>
-{% endif %}
-{% endblock %}
+{% if brief_responses %}
+{% with
+  url = "{}/suppliers/opportunities/{}/responses/result".format(config['URL_PREFIX'], brief.id),
+  text = "View your application",
+  bigger = True
+  %}
+  {% include "toolkit/secondary-action-link.html" %}
+  {% endwith %}
+  {% else %}
+  {% with
+  url = "{}/suppliers/opportunities/{}/responses/create".format(config['URL_PREFIX'], brief.id),
+  label = "Start application"
+  %}
+  {% include "toolkit/link-button.html" %}
+  {% endwith %}
+  {% endif %}
+  {% endif %}
+
+  <hr>
+
+  <p>
+    <a class="go-back" href="{{ url_for('.list_opportunities', framework_slug=brief.frameworkSlug) }}">Back</a>
+  </p>
+
+  {% endblock %}
