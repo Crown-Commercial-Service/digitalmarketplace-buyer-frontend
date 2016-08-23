@@ -134,3 +134,14 @@
     }
   }
 }
+
+.content--hero {
+  @include media($tablet) {
+    @include span-columns(9 of 16);
+    margin-top: -2rem;
+  }
+  @include media($desktop) {
+    @include span-columns(7 of 16);
+    margin-top: -2rem;
+  }
+}
