@@ -58,7 +58,7 @@ class Config(object):
     BUYER_INVITE_REQUEST_ADMIN_EMAIL = 'marketplace+buyer-request@digital.gov.au'
     BUYER_INVITE_REQUEST_EMAIL_FROM = DM_GENERIC_NOREPLY_EMAIL
     BUYER_INVITE_REQUEST_EMAIL_NAME = DM_GENERIC_ADMIN_NAME
-    BUYER_INVITE_MANAGER_CONFIRMATION_SUBJECT = 'Digital Marketplace access request'
+    BUYER_INVITE_MANAGER_CONFIRMATION_SUBJECT = 'Digital Marketplace buyer account request'
     BUYER_INVITE_MANAGER_CONFIRMATION_NAME = DM_GENERIC_ADMIN_NAME
 
     CREATE_USER_SUBJECT = 'Create your Digital Marketplace account'
@@ -66,6 +66,7 @@ class Config(object):
     SHARED_EMAIL_KEY = None
     RESET_PASSWORD_SALT = 'ResetPasswordSalt'
     INVITE_EMAIL_SALT = 'InviteEmailSalt'
+    BUYER_CREATION_TOKEN_SALT = 'BuyerCreation'
 
     ASSET_PATH = URL_PREFIX + '/static'
     BASE_TEMPLATE_DATA = {

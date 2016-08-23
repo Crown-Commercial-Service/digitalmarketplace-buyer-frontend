@@ -1,7 +1,7 @@
 {% extends "_base_page.html" %}
 {% import "toolkit/summary-table.html" as summary %}
 
-{% block page_title %}Request authorisation for a buyer account – Digital Marketplace{% endblock %}
+{% block page_title %}Request Authorisation for a Buyer Account – Digital Marketplace{% endblock %}
 
 {% block phase_banner %}{% endblock %}
 
@@ -36,58 +36,29 @@
 {%
   with
     smaller = true,
-    heading = "Request authorisation for a buyer account"
+    heading = "Account Authorisation"
 %}
 {% include "toolkit/page-heading.html" %}
 {% endwith %}
-<div>
 
 <div>
-
-<p>
-  Please confirm you are:
-</p>
+To create your account we will also need approval from a line manager who:
 <ul>
-  <li>an employee under the Public Service Act 1999 (Cth) or</li>
-  <li>an employee under the equivalent State or Territory legislation or</li>
-  <li>
-    have written authorisation from an employee under the Public Service Act 1999 (Cth) or an employee under the equivalent State or Territory legislation to act on behalf of a Commonwealth, State or Territory agency.
-  </li>
+    <li>Is an employee under the Commonwealth Public Service Act (1999) or under equivalent State or Territory legislation, and</li>
+    <li>is satisfied you need to access the Digital Marketplace.</li>
 </ul>
+</div>
 
 <form method="POST" action="{{ url_for('.submit_buyer_invite_request') }}">
   {{ form.csrf_token }}
-
-  <fieldset class="{% if form.government_emp_checkbox.errors[0] %}invalid{% endif %}">
-      {{ form.government_emp_checkbox }}
-      {{ form.government_emp_checkbox.label }}
-  </fieldset>
+  <input type="hidden" id="{{ form.employment_status.id }}" name="{{ form.employment_status.name }}" value="{{ form.employment_status.data }}">
+  <input type="hidden" id="{{ form.name.id }}" name="{{ form.name.name }}" value="{{ form.name.data }}">
+  <input type="hidden" id="{{ form.email_address.id }}" name="{{ form.email_address.name }}" value="{{ form.email_address.data }}">
 
   {%
     with
-      question = "Your name",
-      name = "name",
-      value = form.name.data,
-      error = form.name.errors[0]
-  %}
-    {% include "au-ui-toolkit/forms/textbox.html" %}
-  {% endwith %}
-
-  {%
-    with
-      question = "Your email address",
-      hint = 'You must have an email address ending in <strong>.gov.au</strong>.'|safe,
-      name = "email_address",
-      value = form.email_address.data,
-      error = form.email_address.errors[0]
-  %}
-    {% include "au-ui-toolkit/forms/textbox.html" %}
-  {% endwith %}
-
-  {%
-    with
-      question = "Your manager's name",
-      hint = 'We may contact your manager for verification purposes.'|safe,
+      question = "Line manager's name",
+      hint = 'We may contact your line manager for verification purposes.'|safe,
       name = "manager_name",
       value = form.manager_name.data,
       error = form.manager_name.errors[0]
@@ -97,14 +68,16 @@
 
   {%
     with
-      question = "Your manager's email address",
-      hint = 'Your manager must have an email address ending in <strong>.gov.au</strong>.'|safe,
+      question = "Line manager's email address",
+      hint = 'Your line manager\'s email address must end in <strong>.gov.au</strong>.'|safe,
       name = "manager_email",
       value = form.manager_email.data,
       error = form.manager_email.errors[0]
   %}
     {% include "au-ui-toolkit/forms/textbox.html" %}
   {% endwith %}
+
+  <p>Remember to let this person know we’ll be sending them an email requesting their authorisation.</p>
 
   {%
     with

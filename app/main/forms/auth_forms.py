@@ -1,5 +1,5 @@
 from wtforms import PasswordField
-from wtforms.fields.core import BooleanField
+from wtforms.fields.core import RadioField
 from wtforms.validators import DataRequired, EqualTo, Length, Regexp
 from dmutils.forms import StripWhitespaceStringField, StringField, DmForm, email_validator, government_email_validator
 
@@ -32,17 +32,17 @@ class EmailAddressForm(DmForm):
     )
 
 
-class BuyerInviteRequestForm(DmForm):
-    email_address = StripWhitespaceStringField(
-        'Email', id="input_email_address",
+class BuyerSignupForm(DmForm):
+    employment_status = RadioField(
+        label='I am a public service employee or have authorisation, as described above.',
+        choices=[
+            ('employee', 'I am an employee under the Commonwealth Public Service Act (1999) or under equivalent State or Territory legislation.'),  # noqa
+            ('contractor', 'I am a contractor working in local, state or federal government.'),
+        ],
         validators=[
-            DataRequired(message="You must provide an email address"),
-            government_email_validator,
+            DataRequired(message='You must specify your employment status')
         ]
     )
-
-    government_emp_checkbox = BooleanField(label='I am a public service employee or have authorisation, \
-        as described above.', validators=[DataRequired(message="You must check the checkbox")])
 
     name = StripWhitespaceStringField(
         'Your full name', id='name',
@@ -50,6 +50,17 @@ class BuyerInviteRequestForm(DmForm):
             DataRequired(message='You must provide your full name'),
         ]
     )
+
+    email_address = StripWhitespaceStringField(
+        'Email', id="input_email_address",
+        validators=[
+            DataRequired(message='You must provide an email address'),
+            government_email_validator,
+        ]
+    )
+
+
+class BuyerInviteRequestForm(BuyerSignupForm):
 
     manager_name = StripWhitespaceStringField(
         'Manager name', id='manager_name',
@@ -62,16 +73,6 @@ class BuyerInviteRequestForm(DmForm):
         'Manager email address', id='manager_email',
         validators=[
             DataRequired(message='You must provide your manager\'s email address'),
-            government_email_validator,
-        ]
-    )
-
-
-class BuyerSignupEmailForm(DmForm):
-    email_address = StripWhitespaceStringField(
-        'Email', id="input_email_address",
-        validators=[
-            DataRequired(message="You must provide an email address"),
             government_email_validator,
         ]
     )
@@ -105,16 +106,6 @@ class CreateUserForm(DmForm):
             Length(min=1,
                    max=255,
                    message="Names must be between 1 and 255 characters"
-                   )
-        ]
-    )
-
-    phone_number = StringField(
-        'Phone number', id="input_phone_number",
-        validators=[
-            Regexp("^$|^\\+?([\\d\\s()-]){9,20}$",
-                   message=("Phone numbers must be at least 9 characters long. "
-                            "They can only include digits, spaces, plus and minus signs, and brackets.")
                    )
         ]
     )

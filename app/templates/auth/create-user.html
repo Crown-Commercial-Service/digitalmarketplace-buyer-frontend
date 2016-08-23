@@ -33,7 +33,7 @@
   To finish creating your account please provide the following details.
 </p>
 
-<form autocomplete="off" action="{{ url_for('.submit_create_user', encoded_token=token) }}" method="POST" id="createUserForm">
+<form autocomplete="off" action="{{ url_for('.submit_create_buyer_account', token=token) }}" method="POST" id="createUserForm">
   {{ form.csrf_token }}
 
   <p id="{{ form.name.name }}">

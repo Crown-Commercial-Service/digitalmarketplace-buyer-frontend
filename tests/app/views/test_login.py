@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from app.api_client.error import HTTPError
+from app.helpers.login_helpers import generate_buyer_creation_token
 from dmapiclient.audit import AuditTypes
 from dmutils.email import generate_token, EmailError
 from dmutils.forms import FakeCsrf
@@ -518,29 +519,121 @@ class TestLoginFormsNotAutofillable(BaseApplicationTest):
         )
 
 
+class TestBuyerSignupForm(BaseApplicationTest):
+    complete_signup_request = {
+        'csrf_token': FakeCsrf.valid_token,
+        'employment_status': 'employee',
+        'name': 'Me',
+        'email_address': 'me@test.gov.au',
+    }
+
+    def test_form_loads(self):
+        res = self.client.get(self.url_for('main.buyer_signup'))
+
+        assert res.status_code == 200
+
+        data = res.get_data(as_text=True)
+        assert '<form' in data
+
+    def post_form(self, **kwargs):
+        data = dict(self.complete_signup_request)
+        data.update(**kwargs)
+        return self.client.post(self.url_for('main.submit_buyer_signup'), data=data)
+
+    @mock.patch('app.main.views.login.data_api_client')
+    @mock.patch('app.helpers.login_helpers.send_email')
+    def test_should_be_able_to_submit_valid_employee_request(self, send_email, data_api_client):
+        res = self.post_form(employment_status='employee')
+
+        assert res.status_code == 200
+
+        data = res.get_data(as_text=True)
+        assert 'Email Sent' in data
+        assert send_email.call_count == 1
+
+    @mock.patch('app.main.views.login.data_api_client')
+    def test_should_be_able_to_submit_valid_contractor_request(self, data_api_client):
+        res = self.post_form(employment_status='contractor')
+
+        assert res.status_code == 200
+
+        data = res.get_data(as_text=True)
+        assert 'Authorisation' in data
+        assert '<form' in data
+
+    @mock.patch('app.main.views.login.data_api_client')
+    def test_invalid_employment_status(self, data_api_client):
+        res = self.post_form(employment_status='nope')
+
+        assert res.status_code == 400
+
+    @mock.patch('app.main.views.login.data_api_client')
+    def test_missing_csrf_token(self, data_api_client):
+        res = self.post_form(csrf_token=None)
+
+        assert res.status_code == 400
+
+        data = res.get_data(as_text=True)
+        assert 'token' in data
+
+    @mock.patch('app.main.views.login.data_api_client')
+    def test_missing_email_address(self, data_api_client):
+        res = self.post_form(email_address=None)
+
+        assert res.status_code == 400
+
+        data = res.get_data(as_text=True)
+        assert has_validation_errors(data, 'email_address')
+
+    @mock.patch('app.main.views.login.data_api_client')
+    def test_missing_name(self, data_api_client):
+        res = self.post_form(name=None)
+
+        assert res.status_code == 400
+
+        data = res.get_data(as_text=True)
+        assert has_validation_errors(data, 'name')
+
+
+class TestSendBuyerInvite(BaseApplicationTest):
+
+    def generate_token(self):
+        with self.app.app_context():
+            return generate_buyer_creation_token('test', 'test@example.gov.au')
+
+    @mock.patch('app.main.views.login.data_api_client')
+    @mock.patch('app.helpers.login_helpers.send_email')
+    def test_send_buyer_invite(self, send_email, data_api_client):
+        token = self.generate_token()
+        res = self.client.get(self.url_for('main.send_buyer_invite', token=token))
+
+        assert res.status_code == 200
+        assert send_email.call_count == 1
+        assert 'sent' in res.get_data(as_text=True)
+
+    @mock.patch('app.main.views.login.data_api_client')
+    @mock.patch('app.helpers.login_helpers.send_email')
+    def test_send_buyer_invite(self, send_email, data_api_client):
+        res = self.client.get(self.url_for('main.send_buyer_invite', token='invalid'))
+
+        assert res.status_code == 404
+        assert send_email.call_count == 0
+
+
 class TestBuyerInviteRequest(BaseApplicationTest):
     complete_invite_request = {
         'csrf_token': FakeCsrf.valid_token,
-        'government_emp_checkbox': 'checked',
+        'employment_status': 'contractor',
         'name': 'Me',
         'email_address': 'me@test.gov.au',
         'manager_name': 'My Manager',
         'manager_email': 'manager@test.gov.au',
     }
 
-    @mock.patch('app.main.views.login.data_api_client')
-    @mock.patch('app.main.views.login.send_email')
-    def test_should_get_request_form_ok(self, send_email, data_api_client):
-        res = self.client.get(self.expand_path('/buyers/request-invite'))
-        assert res.status_code == 200
-        assert 'private' in res.headers['Cache-Control']
-        data = res.get_data(as_text=True)
-        assert FakeCsrf.valid_token in data
-
     def post_form(self, **kwargs):
         data = dict(self.complete_invite_request)
         data.update(**kwargs)
-        return self.client.post(self.expand_path('/buyers/request-invite'), data=data)
+        return self.client.post(self.url_for('main.submit_buyer_invite_request'), data=data)
 
     @mock.patch('app.main.views.login.data_api_client')
     @mock.patch('app.main.views.login.send_email')
@@ -551,23 +644,19 @@ class TestBuyerInviteRequest(BaseApplicationTest):
 
     @mock.patch('app.main.views.login.data_api_client')
     @mock.patch('app.main.views.login.send_email')
-    def test_require_acknowledgement_of_requirements(self, send_email, data_api_client):
-        res = self.post_form(government_emp_checkbox=None)
-
-        assert res.status_code == 400
-        data = res.get_data(as_text=True)
-
-        assert has_validation_errors(data, 'government_emp_checkbox')
-
-    @mock.patch('app.main.views.login.data_api_client')
-    @mock.patch('app.main.views.login.send_email')
     def test_require_name(self, send_email, data_api_client):
         res = self.post_form(name='')
 
         assert res.status_code == 400
         data = res.get_data(as_text=True)
 
-        assert has_validation_errors(data, 'name')
+    @mock.patch('app.main.views.login.data_api_client')
+    @mock.patch('app.main.views.login.send_email')
+    def test_require_valid_employment_status(self, send_email, data_api_client):
+        res = self.post_form(employment_status='nope')
+
+        assert res.status_code == 400
+        data = res.get_data(as_text=True)
 
     @mock.patch('app.main.views.login.data_api_client')
     @mock.patch('app.main.views.login.send_email')
@@ -576,8 +665,6 @@ class TestBuyerInviteRequest(BaseApplicationTest):
 
         assert res.status_code == 400
         data = res.get_data(as_text=True)
-
-        assert has_validation_errors(data, 'email_address')
 
     @mock.patch('app.main.views.login.data_api_client')
     @mock.patch('app.main.views.login.send_email')
@@ -607,129 +694,17 @@ class TestBuyerInviteRequest(BaseApplicationTest):
         assert res.status_code == 503
 
 
-class TestBuyersCreation(BaseApplicationTest):
-
-    def test_should_get_create_buyer_form_ok(self):
-        res = self.client.get(self.expand_path('/buyers/create'))
-        assert res.status_code == 200
-        assert 'Create a buyer account' in res.get_data(as_text=True)
-        assert 'private' in res.headers['Cache-Control']
-
-    @mock.patch('app.main.views.login.send_email')
-    @mock.patch('app.main.views.login.data_api_client')
-    def test_should_be_able_to_submit_valid_email_address(self, data_api_client, send_email):
-        res = self.client.post(
-            self.expand_path('/buyers/create'),
-            data={
-                'email_address': 'valid@test.gov.au',
-                'government_emp_checkbox': 'checked',
-                'csrf_token': FakeCsrf.valid_token,
-            },
-            follow_redirects=True
-        )
-        assert res.status_code == 200
-        assert 'Activate your account' in res.get_data(as_text=True)
-
-    def test_should_raise_validation_error_for_invalid_email_address(self):
-        res = self.client.post(
-            self.expand_path('/buyers/create'),
-            data={
-                'email_address': 'not-an-email-address',
-                'government_emp_checkbox': 'checked',
-                'csrf_token': FakeCsrf.valid_token,
-            },
-            follow_redirects=True
-        )
-        assert res.status_code == 400
-        data = res.get_data(as_text=True)
-
-        assert 'Create a buyer account' in data
-        assert has_validation_errors(data, 'email_address')
-
-    def test_should_raise_validation_error_for_empty_email_address(self):
-        res = self.client.post(
-            self.expand_path('/buyers/create'),
-            data={'csrf_token': FakeCsrf.valid_token},
-            follow_redirects=True
-        )
-        assert res.status_code == 400
-        data = res.get_data(as_text=True)
-        assert 'Create a buyer account' in data
-        assert has_validation_errors(data, 'email_address')
-
-    @mock.patch('app.main.views.login.data_api_client')
-    def test_should_show_error_page_for_unrecognised_email_domain(self, data_api_client):
-        res = self.client.post(
-            self.expand_path('/buyers/create'),
-            data={
-                'email_address': 'valid@example.com',
-                'government_emp_checkbox': 'checked',
-                'csrf_token': FakeCsrf.valid_token,
-            },
-            follow_redirects=True
-        )
-        assert res.status_code == 400
-        data = res.get_data(as_text=True)
-        assert "government email address" in data
-
-    @mock.patch('app.main.views.login.data_api_client')
-    @mock.patch('app.main.views.login.send_email')
-    def test_should_503_if_email_fails_to_send(self, send_email, data_api_client):
-        send_email.side_effect = EmailError("Arrrgh")
-        res = self.client.post(
-            self.expand_path('/buyers/create'),
-            data={
-                'email_address': 'valid@test.gov.au',
-                'government_emp_checkbox': 'checked',
-                'csrf_token': FakeCsrf.valid_token,
-            },
-            follow_redirects=True
-        )
-        assert res.status_code == 503
-        assert USER_CREATION_EMAIL_ERROR in res.get_data(as_text=True)
-
-    @mock.patch('app.main.views.login.send_email')
-    @mock.patch('app.main.views.login.data_api_client')
-    def test_should_create_audit_event_when_email_sent(self, data_api_client, send_email):
-        res = self.client.post(
-            self.expand_path('/buyers/create'),
-            data={
-                'email_address': 'valid@test.gov.au',
-                'government_emp_checkbox': 'checked',
-                'csrf_token': FakeCsrf.valid_token,
-            },
-            follow_redirects=True
-        )
-        assert res.status_code == 200
-        data_api_client.create_audit_event.assert_called_with(audit_type=AuditTypes.invite_user,
-                                                              data={'invitedEmail': 'valid@test.gov.au'})
-
-
-class TestCreateUser(BaseApplicationTest):
-    def _generate_token(self, email_address='test@email.com'):
-        return generate_token(
-            {
-                'email_address': email_address
-            },
-            self.app.config['SHARED_EMAIL_KEY'],
-            self.app.config['INVITE_EMAIL_SALT']
-        )
+class TestCreateBuyer(BaseApplicationTest):
+    def _generate_token(self, email_address='test@example.gov.au', name='Test Name'):
+        with self.app.app_context():
+            return generate_buyer_creation_token(name, email_address)
 
     def test_should_be_an_error_for_invalid_token(self):
         token = "1234"
         res = self.client.get(
-            self.expand_path('/create-user/{}').format(token)
+            self.url_for('main.create_buyer_account', token=token)
         )
-        assert res.status_code == 400
-
-    def test_should_be_an_error_for_missing_token(self):
-        res = self.client.get(self.expand_path('/create-user'))
         assert res.status_code == 404
-
-    def test_should_be_an_error_for_missing_token_trailing_slash(self):
-        res = self.client.get(self.expand_path('/create-user/'))
-        assert res.status_code == 301
-        assert res.location == 'http://localhost' + self.expand_path('/create-user')
 
     @mock.patch('app.main.views.login.data_api_client')
     def test_should_be_an_error_for_invalid_token_contents(self, data_api_client):
@@ -742,38 +717,29 @@ class TestCreateUser(BaseApplicationTest):
         )
 
         res = self.client.get(
-            self.expand_path('/create-user/{}').format(token)
+            self.url_for('main.create_buyer_account', token=token)
         )
-        assert res.status_code == 400
+        assert res.status_code == 404
         assert data_api_client.get_user.called is False
-
-    def test_should_be_a_bad_request_if_token_expired(self):
-        res = self.client.get(
-            self.expand_path('create-user/12345')
-        )
-
-        assert res.status_code >= 400
 
     def test_should_be_an_error_if_invalid_token_on_submit(self):
         res = self.client.post(
-            self.expand_path('/create-user/invalidtoken'),
+            self.url_for('main.submit_create_buyer_account', token='invalidtoken'),
             data={
                 'password': '123456789',
                 'name': 'name',
-                'email_address': 'valid@test.com'}
+                'email_address': 'valid@example.gov.au'
+            }
         )
 
         assert res.status_code == 400
         assert USER_LINK_EXPIRED_ERROR in res.get_data(as_text=True)
-        assert (
-            '<input type="submit" class="button-save"  value="Create contributor account" />'
-            not in res.get_data(as_text=True)
-        )
+        assert '<input type="submit"' not in res.get_data(as_text=True)
 
     def test_should_be_an_error_if_missing_name_and_password(self):
         token = self._generate_token()
         res = self.client.post(
-            self.expand_path('/create-user/{}').format(token),
+            self.url_for('main.submit_create_buyer_account', token=token),
             data={}
         )
 
@@ -784,7 +750,7 @@ class TestCreateUser(BaseApplicationTest):
     def test_should_be_an_error_if_too_short_name_and_password(self):
         token = self._generate_token()
         res = self.client.post(
-            self.expand_path('/create-user/{}').format(token),
+            self.url_for('main.submit_create_buyer_account', token=token),
             data={
                 'password': "123456789",
                 'name': ""
@@ -803,7 +769,7 @@ class TestCreateUser(BaseApplicationTest):
             fiftyone = "a" * 51
 
             res = self.client.post(
-                self.expand_path('/create-user/{}').format(token),
+                self.url_for('main.submit_create_buyer_account', token=token),
                 data={
                     'password': fiftyone,
                     'name': twofiftysix
@@ -811,7 +777,7 @@ class TestCreateUser(BaseApplicationTest):
             )
 
             assert res.status_code == 400
-            for message in ["Create account", "test@email.com"]:
+            for message in ['Create account', 'test@example.gov.au']:
                 assert message in res.get_data(as_text=True)
 
             assert has_validation_errors(res.get_data(as_text=True), 'name')
@@ -823,7 +789,7 @@ class TestCreateUser(BaseApplicationTest):
 
         token = self._generate_token()
         res = self.client.get(
-            self.expand_path('/create-user/{}').format(token)
+            self.url_for('main.create_buyer_account', token=token),
         )
 
         assert res.status_code == 400
@@ -835,7 +801,7 @@ class TestCreateUser(BaseApplicationTest):
 
         token = self._generate_token()
         res = self.client.get(
-            self.expand_path('/create-user/{}').format(token)
+            self.url_for('main.create_buyer_account', token=token),
         )
 
         assert res.status_code == 400
@@ -854,7 +820,7 @@ class TestCreateUser(BaseApplicationTest):
 
         token = self._generate_token()
         res = self.client.get(
-            self.expand_path('/create-user/{}').format(token)
+            self.url_for('main.create_buyer_account', token=token),
         )
 
         assert res.status_code == 400
@@ -873,7 +839,7 @@ class TestCreateUser(BaseApplicationTest):
 
         token = self._generate_token()
         res = self.client.get(
-            self.expand_path('/create-user/{}').format(token)
+            self.url_for('main.create_buyer_account', token=token),
         )
 
         assert res.status_code == 400
@@ -891,7 +857,7 @@ class TestCreateUser(BaseApplicationTest):
 
         token = self._generate_token()
         res = self.client.get(
-            self.expand_path('/create-user/{}').format(token),
+            self.url_for('main.create_buyer_account', token=token),
             follow_redirects=True
         )
 
@@ -911,7 +877,7 @@ class TestCreateUser(BaseApplicationTest):
 
         token = self._generate_token()
         res = self.client.get(
-            self.expand_path('/create-user/{}').format(token)
+            self.url_for('main.create_buyer_account', token=token),
         )
 
         assert res.status_code == 400
@@ -930,7 +896,7 @@ class TestCreateUser(BaseApplicationTest):
 
         token = self._generate_token()
         res = self.client.get(
-            self.expand_path('/create-user/{}').format(token)
+            self.url_for('main.create_buyer_account', token=token),
         )
 
         assert res.status_code == 400
@@ -943,11 +909,10 @@ class TestCreateUser(BaseApplicationTest):
 
         token = self._generate_token()
         res = self.client.post(
-            self.expand_path('/create-user/{}').format(token),
+            self.url_for('main.submit_create_buyer_account', token=token),
             data={
                 'password': 'validpassword',
                 'name': 'valid name',
-                'phone_number': '020-7930-4832',
                 'csrf_token': FakeCsrf.valid_token,
             }
         )
@@ -958,8 +923,7 @@ class TestCreateUser(BaseApplicationTest):
         data_api_client.create_user.assert_called_once_with({
             'role': 'buyer',
             'password': 'validpassword',
-            'emailAddress': 'test@email.com',
-            'phoneNumber': '020-7930-4832',
+            'emailAddress': 'test@example.gov.au',
             'name': 'valid name'
         })
 
@@ -969,10 +933,9 @@ class TestCreateUser(BaseApplicationTest):
 
         token = self._generate_token()
         res = self.client.post(
-            self.expand_path('/create-user/{}').format(token),
+            self.url_for('main.submit_create_buyer_account', token=token),
             data={
                 'password': 'validpassword',
-                'phone_number': '020-7930-4832',
                 'name': 'valid name',
                 'csrf_token': FakeCsrf.valid_token,
             }
@@ -983,70 +946,27 @@ class TestCreateUser(BaseApplicationTest):
         data_api_client.create_user.assert_called_once_with({
             'role': 'buyer',
             'password': 'validpassword',
-            'emailAddress': 'test@email.com',
-            'phoneNumber': '020-7930-4832',
+            'emailAddress': 'test@example.gov.au',
             'name': 'valid name'
         })
-
-    @mock.patch('app.main.views.login.data_api_client')
-    def test_should_create_user_if_no_phone_number(self, data_api_client):
-
-        token = self._generate_token()
-        res = self.client.post(
-            self.expand_path('/create-user/{}').format(token),
-            data={
-                'password': 'validpassword',
-                'name': 'valid name',
-                'phone_number': None,
-                'csrf_token': FakeCsrf.valid_token,
-            }
-        )
-
-        assert res.status_code == 302
-        assert res.location == 'http://localhost' + self.expand_path('/')
-
-        data_api_client.create_user.assert_called_once_with({
-            'role': 'buyer',
-            'password': 'validpassword',
-            'emailAddress': 'test@email.com',
-            'phoneNumber': '',
-            'name': 'valid name'
-        })
-
-    @mock.patch('app.main.views.login.data_api_client')
-    def test_should_return_an_error_if_bad_phone_number(self, data_api_client):
-
-        token = self._generate_token()
-        res = self.client.post(
-            self.expand_path('/create-user/{}').format(token),
-            data={
-                'password': 'validpassword',
-                'name': 'valid name',
-                'phone_number': 'Not a number'
-            }
-        )
-
-        assert res.status_code == 400
 
     @mock.patch('app.main.views.login.data_api_client')
     def test_should_strip_whitespace_surrounding_create_user_name_field(self, data_api_client):
         data_api_client.get_user.return_value = None
         token = self._generate_token()
         res = self.client.post(
-            self.expand_path('/create-user/{}').format(token),
+            self.url_for('main.submit_create_buyer_account', token=token),
             data={
                 'password': 'validpassword',
                 'name': '  valid name  ',
-                'phone_number': '020-7930-4832',
                 'csrf_token': FakeCsrf.valid_token,
             }
         )
         assert res.status_code == 302
         data_api_client.create_user.assert_called_once_with({
-            'role': mock.ANY,
+            'role': 'buyer',
             'password': 'validpassword',
-            'emailAddress': mock.ANY,
-            'phoneNumber': '020-7930-4832',
+            'emailAddress': 'test@example.gov.au',
             'name': 'valid name'
         })
 
@@ -1055,21 +975,19 @@ class TestCreateUser(BaseApplicationTest):
         data_api_client.get_user.return_value = None
         token = self._generate_token()
         res = self.client.post(
-            self.expand_path('/create-user/{}').format(token),
+            self.url_for('main.submit_create_buyer_account', token=token),
             data={
                 'password': '  validpassword  ',
                 'name': 'valid name  ',
-                'phone_number': '020-7930-4832',
                 'csrf_token': FakeCsrf.valid_token,
             }
         )
         assert res.status_code == 302
         data_api_client.create_user.assert_called_once_with({
-            'role': mock.ANY,
+            'role': 'buyer',
             'password': '  validpassword  ',
-            'emailAddress': mock.ANY,
+            'emailAddress': 'test@example.gov.au',
             'name': 'valid name',
-            'phoneNumber': '020-7930-4832',
         })
 
     @mock.patch('app.main.views.login.data_api_client')
@@ -1080,7 +998,7 @@ class TestCreateUser(BaseApplicationTest):
 
             token = self._generate_token()
             res = self.client.post(
-                self.expand_path('/create-user/{}').format(token),
+                self.url_for('main.submit_create_buyer_account', token=token),
                 data={
                     'password': 'validpassword',
                     'name': 'valid name',

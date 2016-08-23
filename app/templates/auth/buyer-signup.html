@@ -1,0 +1,85 @@
+{% extends "_base_page.html" %}
+{% import "toolkit/summary-table.html" as summary %}
+
+{% block page_title %}Request authorisation for a buyer account – Digital Marketplace{% endblock %}
+
+{% block phase_banner %}{% endblock %}
+
+{% block body_classes %} registration-pages form-page{% endblock %}
+{% block main_content %}
+
+{% if form.errors %}
+  <div class="callout--warning">
+    <p>There was a problem with the details you gave:</p>
+    <ul>
+    {% for field_name, field_errors in form.errors|dictsort|reverse if field_errors %}
+      {% for error in field_errors %}
+      <li><a href="#{{ form[field_name].name }}" class="validation-masthead-link">{{ error }}</a></li>
+      {% endfor %}
+    {% endfor %}
+    </ul>
+  </div>
+{% endif %}
+{% if form.email_address.flags.non_gov %}
+<div>
+  <h2>You need a government email address</h2>
+  <p>
+    Email addresses must end with <strong>.gov.au</strong>.
+  </p>
+  <p>
+    If you believe your email address should be recognised email
+    <a href="mailto:marketplace@digital.gov.au">marketplace@digital.gov.au</a>.
+  </p>
+<div>
+{% endif %}
+
+{%
+  with
+    smaller = true,
+    heading = "Create a Buyer Account"
+%}
+{% include "toolkit/page-heading.html" %}
+{% endwith %}
+
+<p>Digital Marketplace buyer account holders can view supplier pricing, supplier contact details and, in future, place orders.</p>
+
+<form method="POST" action="{{ url_for('.submit_buyer_signup') }}">
+  {{ form.csrf_token }}
+
+  <div>
+      <p>To create a buyer account you need to be a government employee or be authorised by a government employee. Choose the option below that matches your situation.</p>
+      {{ form.employment_status }}
+  </div>
+
+  {%
+    with
+      question = "Your name",
+      name = "name",
+      value = form.name.data,
+      error = form.name.errors[0]
+  %}
+    {% include "au-ui-toolkit/forms/textbox.html" %}
+  {% endwith %}
+
+  {%
+    with
+      question = "Your email address",
+      hint = 'You must have an email address ending in <strong>.gov.au</strong>.'|safe,
+      name = "email_address",
+      value = form.email_address.data,
+      error = form.email_address.errors[0]
+  %}
+    {% include "au-ui-toolkit/forms/textbox.html" %}
+  {% endwith %}
+
+  {%
+    with
+      type = "save",
+      role = "button",
+      label = "Continue"
+  %}
+  {% include "au-ui-toolkit/button.html" %}
+  {% endwith %}
+  <p><small>By requesting an account invitation, you agree to the <a href="{{ url_for('main.terms_of_use') }}">Terms of Use</a> and <a href="{{ url_for('main.privacy_policy') }}">Privacy Policy</a>.</small></p>
+</form>
+{% endblock %}

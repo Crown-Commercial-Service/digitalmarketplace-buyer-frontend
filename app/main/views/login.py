@@ -9,13 +9,16 @@ from flask_login import logout_user, login_user
 from dmapiclient.audit import AuditTypes
 from dmutils.user import User, user_logging_string
 from dmutils.email import (
-    decode_invitation_token, decode_password_reset_token, generate_token, hash_email, send_email, EmailError
+    decode_invitation_token, decode_password_reset_token, EmailError, generate_token, hash_email, InvalidToken,
+    send_email
 )
 from dmutils.forms import render_template_with_csrf
-from .. import main
-from app.main.forms.auth_forms import BuyerSignupEmailForm
-from ..forms.auth_forms import LoginForm, BuyerInviteRequestForm, EmailAddressForm, ChangePasswordForm, CreateUserForm
-from ...helpers.login_helpers import redirect_logged_in_user
+from app.main import main
+from app.helpers.login_helpers import (
+    decode_buyer_creation_token, generate_buyer_creation_token, redirect_logged_in_user,
+    send_buyer_account_activation_email
+)
+from app.main.forms import auth_forms
 from ... import data_api_client
 from ...api_client.error import HTTPError
 
@@ -27,13 +30,13 @@ def render_login():
         return redirect_logged_in_user(next_url)
     return render_template_with_csrf(
         "auth/login.html",
-        form=LoginForm(),
+        form=auth_forms.LoginForm(),
         next=next_url)
 
 
 @main.route('/login', methods=["POST"])
 def process_login():
-    form = LoginForm(request.form)
+    form = auth_forms.LoginForm(request.form)
     next_url = request.args.get('next')
     if form.validate():
         user_json = data_api_client.authenticate_user(
@@ -73,12 +76,12 @@ def logout():
 
 @main.route('/reset-password', methods=["GET"])
 def request_password_reset():
-    return render_template_with_csrf("auth/request-password-reset.html", form=EmailAddressForm())
+    return render_template_with_csrf("auth/request-password-reset.html", form=auth_forms.EmailAddressForm())
 
 
 @main.route('/reset-password', methods=["POST"])
 def send_reset_password_email():
-    form = EmailAddressForm(request.form)
+    form = auth_forms.EmailAddressForm(request.form)
     if form.validate():
         email_address = form.email_address.data
         user_json = data_api_client.get_user(email_address=email_address)
@@ -147,13 +150,13 @@ def reset_password(token):
 
     return render_template_with_csrf("auth/reset-password.html",
                                      email_address=email_address,
-                                     form=ChangePasswordForm(),
+                                     form=auth_forms.ChangePasswordForm(),
                                      token=token)
 
 
 @main.route('/reset-password/<token>', methods=["POST"])
 def update_password(token):
-    form = ChangePasswordForm(request.form)
+    form = auth_forms.ChangePasswordForm(request.form)
     decoded = decode_password_reset_token(token.encode(), data_api_client)
     if decoded.get('error', None):
         flash(decoded['error'], 'error')
@@ -180,16 +183,42 @@ def update_password(token):
                                          token=token)
 
 
-@main.route('/buyers/request-invite', methods=["GET"])
-def buyer_invite_request():
-    form = BuyerInviteRequestForm()
+@main.route('/buyers/signup', methods=['GET'])
+def buyer_signup():
+    form = auth_forms.BuyerSignupForm()
 
+    return render_template_with_csrf('auth/buyer-signup.html', form=form)
+
+
+@main.route('/buyers/signup', methods=['POST'])
+def submit_buyer_signup():
+    form = auth_forms.BuyerSignupForm(request.form)
+
+    if not form.validate():
+        return render_template_with_csrf(
+            'auth/buyer-signup.html',
+            status_code=400,
+            form=form
+        )
+
+    if form.employment_status.data == 'employee':
+        token = generate_buyer_creation_token(**form.data)
+        send_buyer_account_activation_email(
+            name=form.name.data,
+            email_address=form.email_address.data,
+            token=token
+        )
+        return render_template('auth/buyer-signup-email-sent.html', email_address=form.email_address.data)
+
+    assert form.employment_status.data == 'contractor'
+
+    form = auth_forms.BuyerInviteRequestForm(request.form)
     return render_template_with_csrf('auth/buyer-invite-request.html', form=form)
 
 
-@main.route('/buyers/request-invite', methods=["POST"])
+@main.route('/buyers/request-invite', methods=['POST'])
 def submit_buyer_invite_request():
-    form = BuyerInviteRequestForm(request.form)
+    form = auth_forms.BuyerInviteRequestForm(request.form)
 
     if not form.validate():
         return render_template_with_csrf(
@@ -198,7 +227,13 @@ def submit_buyer_invite_request():
             form=form
         )
 
-    email_body = render_template("emails/buyer_account_invite_request_email.html", form=form)
+    token = generate_buyer_creation_token(**form.data)
+    invite_url = url_for('.send_buyer_invite', token=token, _external=True)
+    email_body = render_template(
+        'emails/buyer_account_invite_request_email.html',
+        form=form,
+        invite_url=invite_url
+    )
     try:
         send_email(
             current_app.config['BUYER_INVITE_REQUEST_ADMIN_EMAIL'],
@@ -209,14 +244,14 @@ def submit_buyer_invite_request():
         )
     except EmailError as e:
         current_app.logger.error(
-            "buyerinvite.fail: Buyer account invite request email failed to send. "
-            "error {error} invite email_hash {email_hash}",
+            'buyerinvite.fail: Buyer account invite request email failed to send. '
+            'error {error} invite email_hash {email_hash}',
             extra={
                 'error': six.text_type(e),
                 'email_hash': hash_email(form.email_address.data)})
-        abort(503, response="Failed to send buyer account invite request email.")
+        abort(503, response='Failed to send buyer account invite request email.')
 
-    email_body = render_template("emails/buyer_account_invite_manager_confirmation.html", form=form)
+    email_body = render_template('emails/buyer_account_invite_manager_confirmation.html', form=form)
     try:
         send_email(
             form.manager_email.data,
@@ -227,162 +262,97 @@ def submit_buyer_invite_request():
         )
     except EmailError as e:
         current_app.logger.error(
-            "buyerinvite.fail: Buyer account invite request mananger email failed to send. "
-            "error {error} invite email_hash {email_hash} manager email_hash {manager_email_hash}",
+            'buyerinvite.fail: Buyer account invite request mananger email failed to send. '
+            'error {error} invite email_hash {email_hash} manager email_hash {manager_email_hash}',
             extra={
                 'error': six.text_type(e),
                 'email_hash': hash_email(form.email_address.data),
                 'manager_email_hash': hash_email(form.manager_email.data)})
-        abort(503, response="Failed to send buyer account invite request manager email.")
+        abort(503, response='Failed to send buyer account invite request manager email.')
 
     return render_template('auth/buyer-invite-request-complete.html')
 
 
-@main.route('/buyers/create', methods=["GET"])
-def create_buyer_account():
-    form = BuyerSignupEmailForm()
-
-    return render_template_with_csrf("auth/create-buyer-account.html", form=form)
-
-
-@main.route('/buyers/create', methods=['POST'])
-def submit_create_buyer_account():
-    current_app.logger.info(
-        "buyercreate: post create-buyer-account")
-    form = BuyerSignupEmailForm(request.form)
-
-    if form.validate():
-        email_address = form.email_address.data
-        token = generate_token(
-            {
-                "email_address":  email_address
-            },
-            current_app.config['SHARED_EMAIL_KEY'],
-            current_app.config['INVITE_EMAIL_SALT']
-        )
-        url = url_for('main.create_user', encoded_token=token, _external=True)
-        email_body = render_template("emails/create_buyer_user_email.html", url=url)
-        try:
-            send_email(
-                email_address,
-                email_body,
-                current_app.config['CREATE_USER_SUBJECT'],
-                current_app.config['RESET_PASSWORD_EMAIL_FROM'],
-                current_app.config['RESET_PASSWORD_EMAIL_NAME'],
-            )
-            session['email_sent_to'] = email_address
-        except EmailError as e:
-            current_app.logger.error(
-                "buyercreate.fail: Create user email failed to send. "
-                "error {error} email_hash {email_hash}",
-                extra={
-                    'error': six.text_type(e),
-                    'email_hash': hash_email(email_address)})
-            abort(503, response="Failed to send user creation email.")
-
-        data_api_client.create_audit_event(
-            audit_type=AuditTypes.invite_user,
-            data={'invitedEmail': email_address})
-
-        return redirect(url_for('.create_your_account_complete'), 302)
-    else:
-        return render_template_with_csrf(
-            "auth/create-buyer-account.html",
-            status_code=400,
-            form=form,
-            email_address=form.email_address.data)
+@main.route('/buyers/signup/send-invite/<string:token>', methods=['GET'])
+def send_buyer_invite(token):
+    try:
+        data = decode_buyer_creation_token(token.encode())
+        send_buyer_account_activation_email(name=data['name'], email_address=data['emailAddress'], token=token)
+        return render_template('auth/buyer-invite-sent.html', email_address=data['emailAddress'])
+    except InvalidToken:
+        abort(404)
 
 
-@main.route('/create-user/<string:encoded_token>', methods=["GET"])
-def create_user(encoded_token):
-    form = CreateUserForm()
+@main.route('/buyers/signup/create/<string:token>', methods=['GET'])
+def create_buyer_account(token):
+    try:
+        data = decode_buyer_creation_token(token.encode())
+    except InvalidToken:
+        abort(404)
 
-    token = decode_invitation_token(encoded_token.encode(), role='buyer')
-    if token is None:
-        current_app.logger.warning(
-            "createuser.token_invalid: {encoded_token}",
-            extra={'encoded_token': encoded_token})
-        return render_template_with_csrf(
-            "auth/create-buyer-user-error.html",
-            status_code=400,
-            token=None)
+    form = auth_forms.CreateUserForm(name=data['name'])
 
-    user_json = data_api_client.get_user(email_address=token.get("email_address"))
+    user_json = data_api_client.get_user(email_address=data['emailAddress'])
 
     if not user_json:
         return render_template_with_csrf(
-            "auth/create-user.html",
+            'auth/create-user.html',
             form=form,
-            email_address=token['email_address'],
-            token=encoded_token)
+            email_address=data['emailAddress'],
+            token=token)
 
     user = User.from_json(user_json)
     return render_template_with_csrf(
-        "auth/create-buyer-user-error.html",
+        'auth/create-buyer-user-error.html',
         status_code=400,
         token=token,
         user=user)
 
 
-@main.route('/create-user/<string:encoded_token>', methods=["POST"])
-def submit_create_user(encoded_token):
-    form = CreateUserForm(request.form)
-
-    token = decode_invitation_token(encoded_token.encode(), role='buyer')
-    if token is None:
-        current_app.logger.warning("createuser.token_invalid: {encoded_token}",
-                                   extra={'encoded_token': encoded_token})
+@main.route('/create-user/<string:token>', methods=['POST'])
+def submit_create_buyer_account(token):
+    try:
+        data = decode_buyer_creation_token(token.encode())
+    except InvalidToken:
         return render_template_with_csrf(
-            "auth/create-buyer-user-error.html",
+            'auth/create-buyer-user-error.html',
             status_code=400,
+            token=None
+        )
+
+    form = auth_forms.CreateUserForm(request.form)
+
+    if not form.validate():
+        current_app.logger.warning(
+            'createbuyeruser.invalid: {form_errors}',
+            extra={'form_errors': ', '.join(form.errors)})
+        return render_template_with_csrf(
+            'auth/create-user.html',
+            status_code=400,
+            form=form,
+            email_address=data['emailAddress'],
+            token=token)
+
+    try:
+        user = data_api_client.create_user({
+            'name': form.name.data,
+            'password': form.password.data,
+            'emailAddress': data['emailAddress'],
+            'role': 'buyer'
+        })
+
+        user = User.from_json(user)
+        login_user(user)
+
+    except HTTPError as e:
+        if e.status_code != 409:
+            raise
+
+        return render_template_with_csrf(
+            'auth/create-buyer-user-error.html',
+            status_code=400,
+            error=e.message,
             token=None)
 
-    else:
-        if not form.validate():
-            current_app.logger.warning(
-                "createuser.invalid: {form_errors}",
-                extra={'form_errors': ", ".join(form.errors)})
-            return render_template_with_csrf(
-                "auth/create-user.html",
-                status_code=400,
-                form=form,
-                token=encoded_token,
-                email_address=token.get('email_address'))
-
-        try:
-            user = data_api_client.create_user({
-                'name': form.name.data,
-                'password': form.password.data,
-                'phoneNumber': form.phone_number.data,
-                'emailAddress': token.get('email_address'),
-                'role': 'buyer'
-            })
-
-            user = User.from_json(user)
-            login_user(user)
-
-        except HTTPError as e:
-            if e.status_code != 409:
-                raise
-
-            return render_template_with_csrf(
-                "auth/create-buyer-user-error.html",
-                status_code=400,
-                error=e.message,
-                token=None)
-
-        flash('account-created', 'flag')
-        return redirect_logged_in_user()
-
-
-@main.route('/create-your-account-complete', methods=['GET'])
-def create_your_account_complete():
-    if 'email_sent_to' in session:
-        email_address = session['email_sent_to']
-    else:
-        email_address = "the email address you supplied"
-    session.clear()
-    session['email_sent_to'] = email_address
-    return render_template_with_csrf(
-        "auth/create-your-account-complete.html",
-        email_address=email_address)
+    flash('account-created', 'flag')
+    return redirect_logged_in_user()
