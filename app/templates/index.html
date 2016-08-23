@@ -4,9 +4,8 @@
 
 {% block hero %}
 {% with
-  site_title='/marketplace <span class="badge--beta">private beta</span>',
-  tagline='Where government buyers and digital service<br>professionals do business.',
-  extra=('<a href="' + url_for('.supplier_search') + '" role="button" class="inverted">Browse suppliers</a> <a href="' + url_for('.list_opportunities', framework_slug='digital-service-professionals') + '" role="button" class="inverted">View opportunities</a>'),
+  site_title='Digital Marketplace <span class="badge--beta">BETA</span>',
+  tagline='Where government buyers and digital service professionals do business.',
   callout_title=('<a href="' + url_for('main.about_us') + '">New to the Marketplace?</a>'),
   callout_text='Discover why the Marketplace was created and how it works.'
   %}
@@ -16,40 +15,73 @@
 
   {% block main_content %}
 
-  <ul class="list-vertical--thirds">
+  <ul class="list-vertical">
     <li>
-      <article>
-        <h2>Government buyers</h2>
-        <ul class="list-small">
-          <li><a href="{{ url_for('.supplier_search') }}">Find an ICT supplier</a></li>
+      <h2>Government buyers</h2>
+      <ul class="list-horizontal">
+        <li>
+          <article>
+            <h3><a href="{{ url_for('.supplier_search') }}">Browse sellers</a></h3>
+            <p>Browse the Marketplace for approved digital service professionals.</p>
+            <p>
+             {% if brief_builder %}
+             <a href="{{ url_for('.info_page_for_starting_a_brief', framework_slug='digital-service-professionals', lot_slug='digital-professionals') }}" class="see-more">Create a brief</a>
+             {% endif %}
+           </p>
+         </article>
+       </li>
+       <li>
+        <article>
+          <h3><a href="{{ url_for('.ideation') }}">Seek new ideas</a></h3>
+          <p>Get help on your project by sourcing innovation in the Marketplace.</p>
+        </article>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <h2>ICT sellers</h2>
+    <ul class="list-horizontal">
+      <li>
+        <article>
+          <h3><a href="{{ url_for('.new_seller') }}">Join the Marketplace</a></h3>
+          <p>Start the process of listing your business within the Marketplace.</p>
           {% if brief_builder %}
-          <li><a href="{{ url_for('.info_page_for_starting_a_brief', framework_slug='digital-service-professionals', lot_slug='digital-professionals') }}">Create a brief for an individual<span class="badge--new">new</span></a></li>
+          <p><a href="{{ url_for('.list_opportunities', framework_slug='digital-service-professionals') }}" class="see-more">View opportunities</a></p>
           {% endif %}
-          <li><a href="#">Create a brief for an outcome<span class="badge--new">new</span></a></li>
-        </ul>
-      </article>
-    </li>
-    <li>
-      <article>
-        <h2>ICT suppliers</h2>
-        <ul class="list-small">
-          {% if brief_builder %}
-          <li><a href="{{ url_for('.list_opportunities', framework_slug='digital-service-professionals') }}">View open opportunities</a></li>
-          {% endif %}
-          <li><a href="{{ url_for('main.render_login') }}">Update your profile</a></li>
-          <li><a href="{{ url_for('.pitch') }}">Pitch an idea</a></li>
-        </ul>
-      </article>
-    </li>
-    <li>
-      <article>
-        <h2>Getting started</h2>
-        <ul class="list-small">
-          <li><a href="{{ url_for('.create_buyer_account') }}">Register as a buyer</a></li>
-          <li><a href="{{ url_for('.new_seller') }}">Become an ICT supplier</a></li>
-          <li><a href="{{ url_for('.buyers_guide') }}">Buyer's guide</a></li>
-        </ul>
-      </article>
-    </li>
-  </ul>
+        </article>
+      </li>
+      <li>
+        <article>
+          <h3><a href="{{ url_for('.pitch') }}">Pitch an idea</a></h3>
+          <p>Get in touch to discuss your idea for transforming a government service.</p>
+        </article>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+{% endblock %}
+
+{% block content_sub %}
+<div class="content-main sub">
+  <div class="wrapper">
+    <div>
+      <h2>Learn more</h2>
+      <ul class="list-vertical">
+       <li>
+        <article>
+          <h3><a href="{{ url_for('.roles_and_services') }}">Services available to buyers</a></h3>
+          <p>Take a closer look at the range of expertise available in the Marketplace.</p>
+        </article>
+      </li>
+      <li>
+        <article>
+          <h3><a href="{{ url_for('.buyers_guide') }}">How to engage a supplier</a></h3>
+          <p>Learn how to complete the procurement process with our buyer's guide.</p>
+        </article>
+      </li>
+    </ul>
+  </div>
+</div>
+</div>
 {% endblock %}

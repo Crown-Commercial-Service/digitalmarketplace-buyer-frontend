@@ -2,33 +2,26 @@
 
 {% block page_title %}{{ supplier.name }} – Digital Marketplace{% endblock %}
 
-{#
 {% block breadcrumb %}
   {%
     with
     items = [
       {
-          "link": url_for('.index'),
-          "label": "Digital Marketplace"
+          "link": url_for('main.index'),
+          "label": "Home"
       },
       {
-          "link": url_for('.index_g_cloud'),
-          "label": "Cloud technology and support"
+          "link": url_for('main.supplier_search'),
+          "label": "Suppliers catalogue"
       },
       {
-          "link": url_for('.suppliers_list_by_prefix'),
-          "label": "Suppliers"
-      },
-      {
-          "link": url_for('.suppliers_list_by_prefix', prefix=prefix),
-          "label": prefix
+          "label": "Supplier details"
       }
     ]
   %}
     {% include "toolkit/breadcrumb.html" %}
   {% endwith %}
 {% endblock %}
-#}
 
 {% block body_classes %} content-details {% endblock %}
 {% block main_content %}
