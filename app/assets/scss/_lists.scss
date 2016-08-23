@@ -111,10 +111,14 @@
     padding: 0;
   }
 
+  p {
+    margin-bottom: 0;
+  }
+
   .organisation {
     @extend h3;
     margin: 0;
-    padding: $small-spacing*1.5 0 $small-spacing;
+    padding: $tiny-spacing 0;
     
     li:not(:last-child) {
       margin-right: $medium-spacing;
@@ -129,7 +133,7 @@
   .status {
     color: $grey;
     font-size: $small-font-size;
-    margin: $tiny-spacing 0 $small-spacing*1.5;
+    margin: $tiny-spacing 0;
 
     li:not(:last-child) {
       margin-right: $medium-spacing;
