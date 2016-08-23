@@ -1296,52 +1296,6 @@ class TestPublishBrief(BaseApplicationTest):
         assert 'Your requirements will be open for 1 week' not in page_html
         assert not document.xpath('//a[contains(text(), "Set how long your requirements will be live for")]')
 
-    def test_heading_for_unanswered_questions_not_displayed_if_only_requirements_length_unset(self, data_api_client):
-        self.login_as_buyer()
-        data_api_client.get_framework.return_value = api_stubs.framework(
-            slug='digital-outcomes-and-specialists',
-            status='live',
-            lots=[
-                api_stubs.lot(slug='digital-specialists', allows_brief=True)
-            ]
-        )
-
-        brief_json = api_stubs.brief(status="draft")
-        brief_questions = brief_json['briefs']
-        brief_questions.update({
-            'backgroundInformation': 'test background info',
-            'contractLength': 'A very long time',
-            'culturalFitCriteria': ['CULTURAL', 'FIT'],
-            'culturalWeighting': 10,
-            'essentialRequirements': 'Everything',
-            'evaluationType': ['test evaluation type'],
-            'existingTeam': 'team team team',
-            'importantDates': 'Near future',
-            'location': 'somewhere',
-            'numberOfSuppliers': 3,
-            'organisation': 'test organisation',
-            'priceWeighting': 80,
-            'specialistRole': 'communicationsManager',
-            'specialistWork': 'work work work',
-            'startDate': 'startDate',
-            'summary': 'blah',
-            'technicalWeighting': 10,
-            'workingArrangements': 'arrangements',
-            'workplaceAddress': 'address'
-        })
-        data_api_client.get_brief.return_value = brief_json
-
-        res = self.client.get(self.expand_path(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
-            "digital-specialists/1234/publish"
-        ))
-        page_html = res.get_data(as_text=True)
-        document = html.fromstring(page_html)
-
-        assert res.status_code == 200
-        assert "You still need to complete the following questions before your requirements " \
-               "can be published:" not in page_html
-
 
 @mock.patch('app.buyers.views.buyers.data_api_client')
 class TestDeleteBriefSubmission(BaseApplicationTest):
