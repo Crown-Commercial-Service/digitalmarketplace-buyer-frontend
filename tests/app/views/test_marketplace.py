@@ -240,7 +240,7 @@ class TestBriefPage(BaseApplicationTest):
         brief_response_url = self.expand_path('/suppliers/opportunities/{}/responses/create'.format(brief_id))
         apply_links = document.xpath('//a[@href="{}"]'.format(brief_response_url))
         assert len(apply_links) == 0
-        assert '25 February 2000' in document.xpath('//p[@class="banner-message"]')[0].text_content()
+        assert '25 February 2000' in document.xpath('//div[@class="callout--info"]')[0][1].text_content()
 
     def test_dos_brief_specialist_role_displays_label(self):
         brief_id = self.brief['briefs']['id']
@@ -358,7 +358,7 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         heading = document.xpath('normalize-space(//h1/text())')
         assert heading == "Digital Service Professionals opportunities"
         assert 'lot 1, lot 3 and lot 4' in document.xpath(
-            "normalize-space(//div[@class='marketplace-paragraph']/p/text())"
+            "normalize-space(//div[@class='intro']/p/text())"
         )
 
         ss_elem = document.xpath("//p[@class='search-summary']")[0]
