@@ -4,7 +4,7 @@
 
 {% block page_title %}{{ brief.title or brief.lotName }} – Digital Marketplace{% endblock %}
 
-{% block body_classes %}brief-builder{% endblock %}
+{% block body_classes %}brief-builder brief-section{% endblock %}
 
 {% block breadcrumb %}
   {%
@@ -45,7 +45,7 @@
         </div>
       {% endif %}
    {% endblock %}
-    <div class="column-two-thirds">
+    <div>
       {% with
         heading = brief.get('title', brief['lotName']),
         context = 'Overview'

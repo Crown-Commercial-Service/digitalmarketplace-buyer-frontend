@@ -24,7 +24,7 @@ table.content-table {
     padding: $tiny-spacing;
 
     @include media($tablet) {
-      padding: 1.2em;
+      padding: 1em 1.2em;
     }
   }
 
@@ -36,7 +36,7 @@ table.content-table {
     }
 
     td, th {
-      font-size: rem(17);
+      font-size: rem(14);
       font-weight: 400;
       vertical-align: top;
       padding-left: 0;
@@ -48,15 +48,6 @@ table.content-table {
       &:nth-child(3) {
         color: $grey;
         text-align: right;
-
-        a {
-          color: $grey;
-          border-bottom: 1px solid $light-grey;
-
-          &:hover {
-            color: $black;
-          }
-        }
       }
     }
 
@@ -65,7 +56,23 @@ table.content-table {
     }
   }
 
+  p {
+    font-size: rem(14);
+  }
+
+  ul,
+  ol {
+    font-size: rem(14);
+    padding-left: 1.5em;
+  }
+
   &.summary-item-body {
+    tr:first-child {
+      border-top: 0;
+    }
+  }
+
+  &.summary-item-body-no-bottom-border-row-bold-borders-text-large {
     tr:first-child {
       border-top: 0;
     }
