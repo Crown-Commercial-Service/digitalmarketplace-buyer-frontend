@@ -16,8 +16,15 @@
   h2 {
     font-size: rem(24);
     margin-bottom: $small-spacing;
-  }
-  .list-vertical--thirds {
+
+    &:first-of-type {
+     @include media($tablet) {
+       margin-top: 0;    
+     }
+   }
+ }
+
+  .list-vertical {
 
     &:last-of-type {
       margin-bottom: 0;
@@ -25,25 +32,48 @@
 
     > li {
       border-width: 0;
-      padding: 0;
+
+      @include media($tablet) {   
+        flex-basis: 40%;    
+      }
 
       p {
         min-height: auto;
       }
+
     }
 
-    .list-small {
-      width: 100%;
+    .list-horizontal {
 
-        li {
-          margin-left: 0;
+      li {
+        border-width: 0;
+        border-left: solid 1px $border-colour;
+        margin-left: 0;
+        padding-left: $base-spacing;
 
-          a {
-            padding-right: 0;
-          }
+        h3 {
+          min-height: auto;
         }
+
+        a {
+          padding-right: 0;
+        }
+      }
+
     }
   }
+
+  .sub {
+    li {
+      border-left: solid 1px $border-colour;
+      margin-left: 0;
+      padding-left: $base-spacing;
+    }
+    h3 {
+      min-height: auto;
+    }
+  }
+
 }
 
 .content-details {
@@ -100,7 +130,7 @@
     color: $grey;
     font-size: $small-font-size;
     margin: $tiny-spacing 0 $small-spacing*1.5;
-     
+
     li:not(:last-child) {
       margin-right: $medium-spacing;
     }

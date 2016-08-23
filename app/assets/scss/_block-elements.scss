@@ -3,6 +3,17 @@
   box-sizing: border-box;
 }
 
+
+footer {
+  &[role='contentinfo'] {
+    
+    .sub + & {
+      margin-top: 0;
+    }
+
+  }
+}
+
 .catalogue {
   .intro {
 
@@ -40,7 +51,7 @@ main {
           @include span-columns(12 of 12);
         }
         @include media($desktop) {
-          @include span-columns(16 of 16);
+          @include span-columns(12 of 16);
         }
       }
 
@@ -78,6 +89,21 @@ main {
           @include span-columns(12 of 16);
         }
       }
+    }
+  }
+}
+
+.sub {
+  background: $non-white;
+  margin-top: $base-spacing;
+  padding: $base-spacing*2 0;
+
+  .wrapper > div {
+    @include media($tablet) {
+      @include span-columns(12 of 12);
+    }
+    @include media($desktop) {
+      @include span-columns(12 of 16);
     }
   }
 }
