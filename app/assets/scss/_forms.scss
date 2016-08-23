@@ -1,10 +1,26 @@
 .content-main {
 
+  .list-entry {
+    position: relative;
+  }
+
   label {
     @extend h4;
     margin-bottom: 0;
-  }
 
+    &.text-box-number-label {
+      color: $grey;
+      left: $tiny-spacing;
+      margin: 0;
+      position: absolute;
+      top: $tiny-spacing;
+
+      & + input {
+        margin-bottom: 1em;
+        padding-left: 2.2em;
+      }
+    }
+  }
 }
 
 .registration-pages {

@@ -69,10 +69,6 @@ ol.instruction-list {
       }
     }
 
-    a {
-      font-weight: 700;
-    }
-
     ul {
       li {
         list-style: none;
@@ -105,7 +101,7 @@ ol.instruction-list {
   }
 
   .question {
-    margin-bottom: 1.5em;
+    margin-bottom: 3em;
   }
 
   label {
@@ -133,21 +129,22 @@ ol.instruction-list {
 
   input[type='checkbox'] + label,
   input[type='radio'] + label {
-    font-weight: $bold-font-weight;
-    outline: 1px solid $grey;
+    outline: 1px solid $light-grey;
     margin: 0 0 8px;
 
     >p {
+      font-size: rem(14);
       font-weight: 400;
       margin-bottom: 0.1em;
       padding-right: 20px;
     }
 
-    &:before {
+    &::before {
       top: 12px;
     }
 
-    &:after {
+    &::after {
+      display: inline-block;
       top: 17px;
     }
   }
@@ -177,6 +174,10 @@ ol.instruction-list {
       display: block;
     }
 
+    textarea {
+      height: 14.375em;
+    }
+
     .word-count-counter {
       color: $input-count-colour;
       float: right;
@@ -185,9 +186,21 @@ ol.instruction-list {
     .text-box-unit + .hint {
       float: none;
     }
+
+    .large-text {
+      line-height: $small-leading;
+      margin-bottom: $tiny-spacing;
+      margin-top: $base-spacing;
+      p {
+        font-size: rem(24);
+        font-weight: $bold-font-weight;
+        margin: 0;
+      }
+    }
   }
 
   .question-optional {
+    color: $grey;
     font-size: rem(17);
   }
 
@@ -210,6 +223,10 @@ ol.instruction-list {
       color: $non-black;
     }
   }
+
+  .list-entry-remove {
+    margin-left: 1em;
+  }
 }
 
 .validation-wrapper, #technicalWeighting, #culturalWeighting, #priceWeighting {
@@ -225,19 +242,10 @@ ol.instruction-list {
 // Shortlist and evaluation process - Criteria
 
 #essentialRequirements, #niceToHaveRequirements, #culturalFitCriteria {
-
-  .question-heading-with-hint {
-    p {
-      font-size: 2.750em;
-      padding: 0.5em 0 0.25em 0;
-    }
-  }
-
   .text-box {
     width: 60%;
-  }
-
-  .list-entry-remove {
-    margin-left: 1em;
+    @include media($tablet) {
+      width: 80%;
+    }
   }
 }
