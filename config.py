@@ -55,7 +55,7 @@ class Config(object):
     RESET_PASSWORD_EMAIL_SUBJECT = 'Reset your Digital Marketplace password'
 
     BUYER_INVITE_REQUEST_SUBJECT = 'Buyer Account Invite Request'
-    BUYER_INVITE_REQUEST_ADMIN_EMAIL = 'marketplace+buyer-request@digital.gov.au'
+    BUYER_INVITE_REQUEST_ADMIN_EMAIL = 'no-reply@marketplace.digital.gov.au'
     BUYER_INVITE_REQUEST_EMAIL_FROM = DM_GENERIC_NOREPLY_EMAIL
     BUYER_INVITE_REQUEST_EMAIL_NAME = DM_GENERIC_ADMIN_NAME
     BUYER_INVITE_MANAGER_CONFIRMATION_SUBJECT = 'Digital Marketplace buyer account request'
