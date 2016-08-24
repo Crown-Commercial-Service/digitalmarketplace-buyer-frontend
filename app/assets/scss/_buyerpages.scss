@@ -22,9 +22,12 @@
 
 p.context {
   color: $grey;
-  font-size: rem(24);
   margin-bottom: 0;
   margin-top: 1em;
+
+  @include media($tablet) {
+    font-size: rem(24);
+  }
 }
 
 h2.instruction-list-item-body {
@@ -106,24 +109,7 @@ ol.instruction-list {
 
   label {
     .question-heading-with-hint {
-      p {
-        font-size: rem(18);
-        float: left;
-        margin-bottom: 0.5em;
-      }
-
-      p + span.question-optional,
-      p + span.text-box-unit-qualifier {
-        float: left;
-        line-height: 1.6em;
-        padding-left: 0.5em;
-      }
-    }
-
-    &::after {
-      content: '';
-      display: table;
-      clear: both;
+      font-size: rem(18);
     }
   }
 
@@ -144,7 +130,6 @@ ol.instruction-list {
     }
 
     &::after {
-      display: inline-block;
       top: 17px;
     }
   }
@@ -191,10 +176,12 @@ ol.instruction-list {
       line-height: $small-leading;
       margin-bottom: $tiny-spacing;
       margin-top: $base-spacing;
-      p {
-        font-size: rem(24);
+      span {
         font-weight: $bold-font-weight;
         margin: 0;
+        @include media($tablet) {
+          font-size: rem(24);
+        }
       }
     }
   }
@@ -236,6 +223,7 @@ ol.instruction-list {
   .text-box-unit {
     display: inline-block;
     margin-left: 0.5em;
+    margin-top: 0.4em;
   }
 }
 
