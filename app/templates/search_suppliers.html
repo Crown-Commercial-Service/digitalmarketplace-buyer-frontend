@@ -47,19 +47,21 @@ Suppliers search – Digital Marketplace
   {% if results %}
   <p class="number-results"><span>{{ num_results }}</span> supplier{% if num_results > 1 %}s{% endif %}</p>
 
-  <div class="sort-order-{{ sort_order }}">
-    <span>Sort By:</span>
-    {% with page_number=page, sort_alternate=True, link_label=sort_term_name_label, sort_terms=['name']  %}
-    {% include '_supplier_pagination_link.html' %}
-    {% endwith %}
+  {% if results %}
+  <div class="search-controls">
+    <div class="results-shown">Showing {{ results_from }}{% if num_results > 1 %}-{{ results_to }}{% endif %}
+      supplier{% if num_results > 1 %}s{% endif %} of {{ num_results }}
+      {% else %}No results found.
+      {% endif %}
+    </div>
+    <div class="sort-order-{{ sort_order }}">
+      <span>Sort By:</span>
+      {% with page_number=page, sort_alternate=True, link_label=sort_term_name_label, sort_terms=['name']  %}
+      {% include '_supplier_pagination_link.html' %}
+      {% endwith %}
+    </div>
   </div>
   {% endif %}
-
-  {% if results %}
-  <p>Showing {{ results_from }}{% if num_results > 1 %}-{{ results_to }}{% endif %}
-    supplier{% if num_results > 1 %}s{% endif %} of {{ num_results }}
-    {% else %}No results found.</p>
-    {% endif %}
 
     <ul class="list-horizontal">
       {% for result in results %}
