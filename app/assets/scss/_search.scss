@@ -22,3 +22,30 @@
 .marketplace-sidebar-filter-btn-box{
   padding: 0 1em;
 }
+
+.search-controls {
+
+  border-bottom: 1px solid $light-grey;
+  padding-bottom: 1.5em;
+  @include media ($mobile) {
+    padding-bottom: 2em;
+  }
+
+  div[class^="sort-order"] {
+    float: none;
+    @include media ($mobile) {
+      float: left;
+    }
+  }
+
+  .results-shown {
+    float: none;
+    @include media($mobile) {
+      float: right;
+    }
+  }
+
+  & + .list-horizontal {
+    clear: both;
+  }
+}
