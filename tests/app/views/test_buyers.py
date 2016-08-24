@@ -541,10 +541,10 @@ class TestEditBriefSubmission(BaseApplicationTest):
         document = html.fromstring(res.get_data(as_text=True))
         assert document.xpath('//h1')[0].text_content().strip() == "Required 3"
         assert document.xpath(
-            '//*[@id="required3_1"]//span[contains(@class, "question-heading")]/p'
+            '//*[@id="required3_1"]//span[contains(@class, "question-heading")]'
         )[0].text_content().strip() == "Required 3_1"
         assert document.xpath(
-            '//*[@id="required3_2"]//span[contains(@class, "question-heading")]/p'
+            '//*[@id="required3_2"]//span[contains(@class, "question-heading")]'
         )[0].text_content().strip() == "Required 3_2"
 
     def test_404_if_brief_does_not_belong_to_user(self, data_api_client):
