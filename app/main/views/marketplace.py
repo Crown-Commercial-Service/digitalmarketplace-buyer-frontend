@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from flask_login import current_user
-from flask import abort, current_app, render_template, request
+from flask import abort, current_app, make_response, render_template, request
 
 from dmapiclient import APIError
 from dmcontent.content_loader import ContentNotFoundError
@@ -181,7 +181,7 @@ def list_opportunities(framework_slug):
         next_link_args = request.args.copy()
         next_link_args.setlist("page", api_next_link_args.get("page") or ())
 
-    return render_template('search/briefs.html',
+    html = render_template('search/briefs.html',
                            framework=framework,
                            form=form,
                            filters=form.get_filters(),
@@ -192,3 +192,8 @@ def list_opportunities(framework_slug):
                            next_link_args=next_link_args,
                            briefs_count=api_result.get("meta", {}).get("total", None),
                            )
+    response = make_response(html)
+    if current_user.is_authenticated and current_user.has_role('buyer'):
+        # Buyers can create new briefs and want to see their updates more quickly.
+        response.cache_control.max_age = min(300, current_app.config['DM_DEFAULT_CACHE_MAX_AGE'])
+    return response
