@@ -78,16 +78,6 @@
     </div>
 {% endif %}
 
-<header class="page-heading-smaller">
-  <p class="context">{{ brief.organisation }}</p>
-  <h1>{{ brief.title }}</h1>
-</header>
-
-
-{% include '_brief_attributes.html' %}
-
-{% include '_brief_q_and_a.html' %}
-
 {% if brief.status == 'live' %}
 {% if brief_responses %}
 {% with
