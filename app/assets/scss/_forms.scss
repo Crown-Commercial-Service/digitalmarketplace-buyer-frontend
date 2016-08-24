@@ -8,6 +8,10 @@
     @extend h4;
     margin-bottom: 0;
 
+    & + input {
+      margin-top: $tiny-spacing;
+    }
+
     &.text-box-number-label {
       color: $grey;
       left: $tiny-spacing;
@@ -32,12 +36,23 @@
   }
 
   form {
+
     .hint {
       color: $grey;
+      margin-bottom: 0;
     }
+
     .hint-with-error {
       color: $error-colour;
     }
+
+    .validation-message {
+      color: $error-colour;
+      display: block;
+      font-size: rem(14);
+      font-weight: $base-font-weight;
+    }
+
     fieldset {
       label {
         margin-top: 0;
@@ -54,6 +69,38 @@
         input[type='checkbox'] + label::before {
           outline: 3px solid $red;
         }
+      }
+    }
+  }
+
+  #employment_status {
+    list-style: none;
+    margin: $base-spacing 0;
+    padding: 0;
+
+
+    input[type='checkbox'] + label,
+    input[type='radio'] + label {
+      outline: 1px solid $light-grey;
+      margin: 0 0 8px;
+
+      &::before {
+        top: 12px;
+      }
+
+      &::after {
+        display: inline-block;
+        top: 17px;
+      }
+    }
+
+    input[type='checkbox']:checked + label,
+    input[type='radio']:checked + label {
+      font-weight: 700;
+      outline: 2px solid $grey;
+
+      &::after {
+        top: 17px;
       }
     }
   }

@@ -43,13 +43,12 @@
 
 <p>Digital Marketplace buyer account holders can view supplier pricing, supplier contact details and, in future, place orders.</p>
 
+<p>To create a buyer account you need to be a government employee or be authorised by a government employee. Choose the option below that matches your situation.</p>
+
 <form method="POST" action="{{ url_for('.submit_buyer_signup') }}">
   {{ form.csrf_token }}
 
-  <div>
-      <p>To create a buyer account you need to be a government employee or be authorised by a government employee. Choose the option below that matches your situation.</p>
-      {{ form.employment_status }}
-  </div>
+  {{ form.employment_status }}
 
   {%
     with
