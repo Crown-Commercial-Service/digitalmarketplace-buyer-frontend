@@ -257,7 +257,7 @@ def submit_buyer_invite_request():
             form.manager_email.data,
             email_body,
             current_app.config['BUYER_INVITE_MANAGER_CONFIRMATION_SUBJECT'],
-            current_app.config['BUYER_INVITE_REQUEST_ADMIN_EMAIL'],
+            current_app.config['DM_GENERIC_NOREPLY_EMAIL'],
             current_app.config['BUYER_INVITE_MANAGER_CONFIRMATION_NAME'],
         )
     except EmailError as e:
