@@ -1,4 +1,5 @@
 {% import "toolkit/summary-table.html" as summary %}
+{% if brief.status != 'draft' %}
 {% call(item) summary.list_table(
   [
     {"label": "Published", "value": brief.publishedAt|dateformat},
@@ -12,11 +13,13 @@
   ],
   field_headings_visible=False
 ) %}
+
   {% call summary.row() %}
     {{ summary.field_name(item.label) }}
     {{ summary.text(item.value) }}
   {% endcall %}
 {% endcall %}
+{% endif %}
 {% for section in content.summary(brief) %}
     {{ summary.heading(section.name, id="opportunity-attributes-{}".format(loop.index)) }}
      {% if section.summary_page_description %}
