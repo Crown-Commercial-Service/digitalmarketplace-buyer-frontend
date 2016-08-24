@@ -1,5 +1,5 @@
 <h2>Filter by <span><a href="{{ url_for('main.supplier_search') }}" class="clear-all">Clear all</a></span></h2>
-{% for filter in filters %}
+{% for filter in sidepanel_filters %}
 <form action="{{ search_url }}" method="get">
   <details open data-label="accordion-example" aria-expanded="true">
     <summary>{{ filter.name }}</summary>
