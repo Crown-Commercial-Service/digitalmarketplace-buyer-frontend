@@ -6,7 +6,6 @@
 
   label {
     @extend h4;
-    margin-bottom: 0;
 
     & + input {
       margin-top: $tiny-spacing;
