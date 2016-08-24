@@ -141,7 +141,28 @@ span {
       }
     }
   }
+}
 
+// Validation
+.validation-masthead {
+  background: rgba(red,0.1);
+  padding: 1.353em;
+  margin: 2em 0;
+
+  .validation-masthead-heading {
+    font-weight: $bold-font-weight;
+  }
+
+  a {
+    width: 99%;
+    border-bottom: 1px solid black;
+    line-height: 2em;
+
+    &::after {
+      content: "\A";
+      white-space: pre;
+    }
+  }
 }
 
 .banner-warning-without-action {

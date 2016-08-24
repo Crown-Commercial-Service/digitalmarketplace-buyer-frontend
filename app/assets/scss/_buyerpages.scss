@@ -1,25 +1,3 @@
-// Validation
-.validation-masthead {
-  background: rgba(red,0.1);
-  padding: 1.353em;
-  margin: 2em 0;
-
-  h1 {
-    font-size: 1.059em;
-  }
-
-  a {
-    width: 99%;
-    border-bottom: 1px solid black;
-    line-height: 2em;
-
-    &::after {
-      content: "\A";
-      white-space: pre;
-    }
-  }
-}
-
 p.context {
   color: $grey;
   margin-bottom: 0;
