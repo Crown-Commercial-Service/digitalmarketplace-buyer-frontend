@@ -2,17 +2,8 @@ import os
 import hashlib
 import jinja2
 from dmutils.status import enabled_since, get_version_label
-from dmutils.asset_fingerprint import AssetFingerprinter
 
 basedir = os.path.abspath(os.path.dirname(__file__))
-
-
-def get_asset_fingerprint(asset_file_path):
-    hasher = hashlib.md5()
-    with open(asset_file_path, 'rb') as asset_file:
-        buf = asset_file.read()
-        hasher.update(buf)
-    return hasher.hexdigest()
 
 
 class Config(object):
@@ -69,11 +60,6 @@ class Config(object):
     BUYER_CREATION_TOKEN_SALT = 'BuyerCreation'
 
     ASSET_PATH = URL_PREFIX + '/static'
-    BASE_TEMPLATE_DATA = {
-        'header_class': 'with-proposition',
-        'asset_path': ASSET_PATH + '/',
-        'asset_fingerprinter': AssetFingerprinter(asset_root=ASSET_PATH + '/')
-    }
 
     # Feature Flags
     RAISE_ERROR_ON_MISSING_FEATURES = True
