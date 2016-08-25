@@ -281,7 +281,7 @@ class TestCreateNewBrief(BaseApplicationTest):
         anchor = document.cssselect('div.validation-masthead a[href="#title"]')
 
         assert len(anchor) == 1
-        assert "Title" in anchor[0].text_content().strip()
+        assert "What you want to call your requirements" in anchor[0].text_content().strip()
         data_api_client.create_brief.assert_called_with(
             'digital-outcomes-and-specialists',
             'digital-specialists',
