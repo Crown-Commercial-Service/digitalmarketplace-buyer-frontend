@@ -2,10 +2,6 @@ p.context {
   color: $grey;
   margin-bottom: 0;
   margin-top: 1em;
-
-  @include media($tablet) {
-    font-size: rem(24);
-  }
 }
 
 h2.instruction-list-item-body {
@@ -88,37 +84,6 @@ ol.instruction-list {
   label {
     .question-heading-with-hint {
       font-size: rem(18);
-    }
-  }
-
-  input[type='checkbox'] + label,
-  input[type='radio'] + label {
-    outline: 1px solid $light-grey;
-    margin: 0 0 8px;
-
-    >p {
-      font-size: rem(14);
-      font-weight: 400;
-      margin-bottom: 0.1em;
-      padding-right: 20px;
-    }
-
-    &::before {
-      top: 12px;
-    }
-
-    &::after {
-      top: 17px;
-    }
-  }
-
-  input[type='checkbox']:checked + label,
-  input[type='radio']:checked + label {
-    font-weight: 700;
-    outline: 2px solid $grey;
-
-    &::after {
-      top: 17px;
     }
   }
 

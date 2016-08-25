@@ -120,17 +120,6 @@ span {
     }
   }
 
-  .callout--info {
-    @extend .callout;
-    margin: 1.6em 0;
-    box-shadow: none;
-    background-color: $light-blue;
-
-    h2 {
-      margin: 1.2rem 0 .4rem;
-    }
-  }
-
   .content-table {
 
     td, th {
@@ -140,6 +129,17 @@ span {
         width: 40%;
       }
     }
+  }
+}
+
+.callout--info {
+  @extend .callout;
+  margin: 1.6em 0;
+  box-shadow: none;
+  background-color: $light-blue;
+
+  h2 {
+    margin: 1.2rem 0 .4rem;
   }
 }
 
@@ -163,6 +163,12 @@ span {
       white-space: pre;
     }
   }
+}
+
+.validation-message {
+  display: block;
+  font-size: rem(17);
+  font-weight: $base-font-weight;
 }
 
 .banner-warning-without-action {
