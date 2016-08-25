@@ -117,13 +117,13 @@ ol.instruction-list {
 
     .large-text {
       line-height: $small-leading;
-      margin-bottom: $tiny-spacing;
+      margin-bottom: $small-spacing;
       margin-top: $base-spacing;
       span {
         font-weight: $bold-font-weight;
         margin: 0;
         @include media($tablet) {
-          font-size: rem(24);
+          font-size: rem(26);
         }
       }
     }

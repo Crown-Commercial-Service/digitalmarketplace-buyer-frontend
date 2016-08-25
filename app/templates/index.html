@@ -5,7 +5,7 @@
 {% block hero %}
 {% with
   site_title='Digital Marketplace <span class="badge--beta">PRIVATE BETA</span>',
-  tagline='Where government buyers and digital service professionals do business.',
+  tagline='Where government buyers and digital specialists do business.',
   callout_title=('<a href="' + url_for('main.about_us') + '">New to the Marketplace?</a>'),
   callout_text='Discover why the Marketplace was created and how it works.'
   %}
@@ -23,7 +23,7 @@
         <li>
           <article>
             <h3><a href="{{ url_for('.info_page_for_starting_a_brief', framework_slug='digital-service-professionals', lot_slug='digital-professionals') }}">Find an individual specialist</a></h3>
-            <p>Add an approved resource to your project in as little as two weeks.</p>
+            <p>Add people to your project in as little as two weeks.</p>
           </article>
         </li>
         <li>
@@ -54,7 +54,7 @@
         <li>
           <article>
             <h3><a href="{{ url_for('.list_opportunities', framework_slug='digital-service-professionals') }}">View the latest opportunities</a></h3>
-            <p>Browse the briefs buyers have created for individuals and outcomes.</p>
+            <p>Browse briefs that buyers have created for individuals and outcomes.</p>
           </article>
         </li>
         {% endif %}
@@ -73,7 +73,7 @@
         {% if brief_builder %}
         <li>
           <article>
-            <h3><a href="{{ url_for('.supplier_search') }}">Check the competition</a></h3>
+            <h3><a href="{{ url_for('.supplier_search') }}">Explore the Digital Marketplace</a></h3>
             <p>See who else is in the Marketplace and the services they offer.</p>
           </article>
         </li>
