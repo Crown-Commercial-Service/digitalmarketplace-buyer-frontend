@@ -70,12 +70,14 @@
             <p>Get in touch to discuss your idea for transforming a government service.</p>
           </article>
         </li>
+        {% if brief_builder %}
         <li>
           <article>
             <h3><a href="{{ url_for('.supplier_search') }}">Check the competition</a></h3>
             <p>See who else is in the Marketplace and the services they offer.</p>
           </article>
         </li>
+        {% endif %}
       </ul>
     </li>
   </ul>
@@ -88,12 +90,14 @@
       <div>
         <h2>Learn more</h2>
         <ul class="list-vertical">
+          {% if brief_builder %}
           <li>
             <article>
               <h3><a href="{{ url_for('.about_us') }}">About the Digital Marketplace</a></h3>
               <p>Learn about our purpose and agile progress.</p>
             </article>
           </li>
+          {% endif %}
           <li>
             <article>
               <h3><a href="{{ url_for('.roles_and_services') }}">Roles and capabilities</a></h3>
@@ -106,12 +110,14 @@
               <p>Learn how to engage an specialist or team using our buyer’s guide.</p>
             </article>
           </li>
+          {% if brief_builder %}
           <li>
             <article>
               <h3><a href="{{ url_for('.buyers_guide') }}">How to sell services</a></h3>
               <p>Learn how to get listed and get new business in the Marketplace.</p>
             </article>
           </li>
+          {% endif %}
         </ul>
       </div>
     </div>

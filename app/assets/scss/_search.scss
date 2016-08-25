@@ -1,10 +1,10 @@
-.sidebar-searchbox{
+.sidebar-searchbox {
   margin: 0;
 
-  >div{
+  >div {
     padding:0 1em 1em 1em;
 
-    .sidebar-searchbox{
+    .sidebar-searchbox {
       width: 100%;
       outline-offset: 0;
       border: 2px solid #bbbbbb;
@@ -14,12 +14,12 @@
     }
   }
 
-  .sidebar-searchbutton{
+  .sidebar-searchbutton {
     margin: 1em 0 0 0;
   }
 }
 
-.marketplace-sidebar-filter-btn-box{
+.marketplace-sidebar-filter-btn-box {
   padding: 0 1em;
 }
 
@@ -48,4 +48,7 @@
   & + .list-horizontal {
     clear: both;
   }
+}
+
+.sidebar {
 }
