@@ -19,26 +19,26 @@
     <li>
       <h2>Government buyers</h2>
       <ul class="list-horizontal">
-        <li>
-          <article>
-            <h3><a href="{{ url_for('.supplier_search') }}">View approved sellers</a></h3>
-            <p>Explore the Digital Marketplace to see all the expertise on offer.</p>
-          </article>
-        </li>
         {% if brief_builder %}
         <li>
           <article>
             <h3><a href="{{ url_for('.info_page_for_starting_a_brief', framework_slug='digital-service-professionals', lot_slug='digital-professionals') }}">Find an individual specialist</a></h3>
-            <p>Add an approved professional to your project in as little as two weeks.</p>
+            <p>Add an approved resource to your project in as little as two weeks.</p>
           </article>
         </li>
         <li>
           <article>
             <h3><a href="{{ url_for('.info_page_for_starting_a_brief', framework_slug='digital-service-professionals', lot_slug='digital-outcome') }}">Find a team to create an outcome</a></h3>
-            <p>Make use of Digital Marketplace expertise to realise your project or policy goal.</p>
+            <p>Make use of Marketplace expertise to realise your project or policy goal.</p>
           </article>
         </li>
         {% endif %}
+        <li>
+          <article>
+            <h3><a href="{{ url_for('.supplier_search') }}">View approved sellers</a></h3>
+            <p>Explore the Marketplace to see all the expertise on offer.</p>
+          </article>
+        </li>
         <li>
           <article>
             <h3><a href="{{ url_for('.ideation') }}">Seek innovation</a></h3>
@@ -54,20 +54,26 @@
         <li>
           <article>
             <h3><a href="{{ url_for('.list_opportunities', framework_slug='digital-service-professionals') }}">View the latest opportunities</a></h3>
-            <p>Browse the briefs government buyers have created for individuals and outcomes.</p>
+            <p>Browse the briefs buyers have created for individuals and outcomes.</p>
           </article>
         </li>
         {% endif %}
         <li>
           <article>
-            <h3><a href="{{ url_for('.new_seller') }}">Join the Marketplace</a></h3>
-            <p>Register your interest in listing your business in the Digital Marketplace.</p>
+            <h3><a href="{{ url_for('.new_seller') }}">Join the Digital Marketplace</a></h3>
+            <p>Register your interest in listing your business in the Marketplace.</p>
           </article>
         </li>
         <li>
           <article>
             <h3><a href="{{ url_for('.pitch') }}">Pitch an idea</a></h3>
             <p>Get in touch to discuss your idea for transforming a government service.</p>
+          </article>
+        </li>
+        <li>
+          <article>
+            <h3><a href="{{ url_for('.supplier_search') }}">Check the competition</a></h3>
+            <p>See who else is in the Marketplace and the services they offer.</p>
           </article>
         </li>
       </ul>
@@ -84,14 +90,26 @@
         <ul class="list-vertical">
           <li>
             <article>
+              <h3><a href="{{ url_for('.about_us') }}">About the Digital Marketplace</a></h3>
+              <p>Learn about our purpose and agile progress.</p>
+            </article>
+          </li>
+          <li>
+            <article>
               <h3><a href="{{ url_for('.roles_and_services') }}">Roles and capabilities</a></h3>
-              <p>Research the types of services available in the Digital Marketplace and guide prices.</p>
+              <p>Research the types of services available in the Marketplace and guide prices.</p>
             </article>
           </li>
           <li>
             <article>
               <h3><a href="{{ url_for('.buyers_guide') }}">How to buy services</a></h3>
-              <p>Learn how to engage an individual specialist or team using our buyer’s guide.</p>
+              <p>Learn how to engage an specialist or team using our buyer’s guide.</p>
+            </article>
+          </li>
+          <li>
+            <article>
+              <h3><a href="{{ url_for('.buyers_guide') }}">How to sell services</a></h3>
+              <p>Learn how to get listed and get new business in the Marketplace.</p>
             </article>
           </li>
         </ul>
