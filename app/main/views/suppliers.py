@@ -1,8 +1,8 @@
 # coding=utf-8
 import re
 
-from flask import render_template
-from flask_login import login_required
+from flask import render_template, current_app, flash
+from flask_login import current_user, login_required
 
 from app.main import main
 from app.api_client.data import DataAPIClient
@@ -11,6 +11,10 @@ from app.api_client.data import DataAPIClient
 @main.route('/supplier/<int:code>')
 @login_required
 def get_supplier(code):
+    if current_user.is_authenticated and current_user.role != 'buyer':
+        flash('buyer-role-required', 'error')
+        return current_app.login_manager.unauthorized()
+
     supplier = DataAPIClient().get_supplier(code)['supplier']
 
     supplier_categories = set(
