@@ -393,7 +393,7 @@ class TestEditBriefSubmission(BaseApplicationTest):
         )
 
         breadcrumbs_we_expect = [
-            ('Home', '/marketplace/'),
+            ('Home', self.expand_path('/')),
             ('Dashboard', self.expand_path('/buyers')),
             ('Brief Overview',
              self.expand_path(

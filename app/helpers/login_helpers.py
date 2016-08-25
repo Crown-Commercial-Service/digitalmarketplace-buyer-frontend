@@ -10,6 +10,8 @@ from dmutils.email import (
 
 def redirect_logged_in_user(next_url=None):
     site_url_prefix = current_app.config['URL_PREFIX']
+    if not site_url_prefix:
+        site_url_prefix = '/'
     if current_user.is_authenticated:
         if next_url and next_url.startswith(site_url_prefix):
             return redirect(next_url)
