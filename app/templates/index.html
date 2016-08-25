@@ -4,7 +4,7 @@
 
 {% block hero %}
 {% with
-  site_title='Digital Marketplace <span class="badge--beta">BETA</span>',
+  site_title='Digital Marketplace <span class="badge--beta">PRIVATE BETA</span>',
   tagline='Where government buyers and digital service professionals do business.',
   callout_title=('<a href="' + url_for('main.about_us') + '">New to the Marketplace?</a>'),
   callout_text='Discover why the Marketplace was created and how it works.'
@@ -19,69 +19,89 @@
     <li>
       <h2>Government buyers</h2>
       <ul class="list-horizontal">
+        {% if brief_builder %}
         <li>
           <article>
-            <h3><a href="{{ url_for('.supplier_search') }}">Browse sellers</a></h3>
-            <p>Browse the Marketplace for approved digital service professionals.</p>
-            <p>
-             {% if brief_builder %}
-             <a href="{{ url_for('.info_page_for_starting_a_brief', framework_slug='digital-service-professionals', lot_slug='digital-professionals') }}" class="see-more">Create a brief</a>
-             {% endif %}
-           </p>
-         </article>
-       </li>
-       <li>
-        <article>
-          <h3><a href="{{ url_for('.ideation') }}">Seek new ideas</a></h3>
-          <p>Get help on your project by sourcing innovation in the Marketplace.</p>
-        </article>
-      </li>
-    </ul>
-  </li>
-  <li>
-    <h2>ICT sellers</h2>
-    <ul class="list-horizontal">
-      <li>
-        <article>
-          <h3><a href="{{ url_for('.new_seller') }}">Join the Marketplace</a></h3>
-          <p>Start the process of listing your business within the Marketplace.</p>
-          {% if brief_builder %}
-          <p><a href="{{ url_for('.list_opportunities', framework_slug='digital-service-professionals') }}" class="see-more">View opportunities</a></p>
-          {% endif %}
-        </article>
-      </li>
-      <li>
-        <article>
-          <h3><a href="{{ url_for('.pitch') }}">Pitch an idea</a></h3>
-          <p>Get in touch to discuss your idea for transforming a government service.</p>
-        </article>
-      </li>
-    </ul>
-  </li>
-</ul>
+            <h3><a href="{{ url_for('.info_page_for_starting_a_brief', framework_slug='digital-service-professionals', lot_slug='digital-professionals') }}">Find an individual specialist</a></h3>
+            <p>Add an approved professional to your project in as little as two weeks.</p>
+          </article>
+        </li>
+        {% endif %}
+        <li>
+          <article>
+            <h3><a href="{{ url_for('.info_page_for_starting_a_brief', framework_slug='digital-service-professionals', lot_slug='digital-outcome') }}">Find a team to create an outcome</a></h3>
+            <p>Make use of Digital Marketplace expertise to realise your project or policy goal.</p>
+          </article>
+        </li>
+        <li>
+          <article>
+            <h3><a href="{{ url_for('.ideation') }}">Seek innovation</a></h3>
+            <p>Challenge sellers for new approaches and solutions at a workshop, hackathon or event.</p>
+          </article>
+        </li>
+        <li>
+          <article>
+            <h3><a href="{{ url_for('.supplier_search') }}">View approved sellers</a></h3>
+            <p>Explore the Digital Marketplace to see all the businesses and expertise on offer.</p>
+          </article>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h2>ICT sellers</h2>
+      <ul class="list-horizontal">
+        {% if brief_builder %}
+        <li>
+          <article>
+            <h3><a href="{{ url_for('.list_opportunities', framework_slug='digital-service-professionals') }}">Join the Marketplace</a></h3>
+            <p>Browse the briefs government buyers have created for individuals and outcomes.</p>
+          </article>
+        </li>
+        {% endif %}
+        <li>
+          <article>
+            <h3><a href="{{ url_for('.new_seller') }}">Join the Marketplace</a></h3>
+            <p>Register your interest in listing your business in the Digital Marketplace.</p>
+          </article>
+        </li>
+        <li>
+          <article>
+            <h3><a href="{{ url_for('.pitch') }}">Pitch an idea</a></h3>
+            <p>Get in touch to discuss your idea for transforming a government service.</p>
+          </article>
+        </li>
+        <li>
+          <article>
+            <h3><a href="{{ url_for('.supplier_search') }}">Research your competition</a></h3>
+            <p>See who else is listed in the Digital Marketplace and the services on offer.</p>
+          </article>
+        </li>
+      </ul>
+    </li>
+  </ul>
 
-{% endblock %}
+  {% endblock %}
 
-{% block content_sub %}
-<div class="content-main sub">
-  <div class="wrapper">
-    <div>
-      <h2>Learn more</h2>
-      <ul class="list-vertical">
-       <li>
-        <article>
-          <h3><a href="{{ url_for('.roles_and_services') }}">Services available to buyers</a></h3>
-          <p>Take a closer look at the range of expertise available in the Marketplace.</p>
-        </article>
-      </li>
-      <li>
-        <article>
-          <h3><a href="{{ url_for('.buyers_guide') }}">How to engage a supplier</a></h3>
-          <p>Learn how to complete the procurement process with our buyer's guide.</p>
-        </article>
-      </li>
-    </ul>
+  {% block content_sub %}
+  <div class="content-main sub">
+    <div class="wrapper">
+      <div>
+        <h2>Learn more</h2>
+        <ul class="list-vertical">
+          <li>
+            <article>
+              <h3><a href="{{ url_for('.roles_and_services') }}">Roles and capabilities</a></h3>
+              <p>Research the types of services available in the Digital Marketplace and guide prices.</p>
+            </article>
+          </li>
+          <li>
+            <article>
+              <h3><a href="{{ url_for('.buyers_guide') }}">How to buy services</a></h3>
+              <p>Learn how to engage an individual specialist or team using our buyer’s guide.</p>
+            </article>
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
-</div>
-</div>
-{% endblock %}
+  {% endblock %}
