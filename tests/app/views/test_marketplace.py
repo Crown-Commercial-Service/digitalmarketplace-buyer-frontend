@@ -363,6 +363,11 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         ss_elem = document.xpath("//p[@class='search-summary']")[0]
         assert self._normalize_whitespace(self._squashed_element_text(ss_elem)) == "2 opportunities"
 
+    def test_catalogue_of_briefs_page_loads_as_buyer(self):
+        self.login_as_buyer()
+        res = self.client.get(self.expand_path('/digital-service-professionals/opportunities'))
+        assert_equal(200, res.status_code)
+
     def test_catalogue_of_briefs_400_if_invalid_status(self):
         res = self.client.get(self.expand_path('/digital-service-professionals/opportunities'
                                                '?status=pining-for-fjords'))
