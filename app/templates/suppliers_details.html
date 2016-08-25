@@ -23,10 +23,8 @@
   {% endwith %}
 {% endblock %}
 
-{% block body_classes %} content-details {% endblock %}
+{% block body_classes %}content-details{% endblock %}
 {% block main_content %}
-
-<a class="go-back" href="{{ url_for('.supplier_search') }}">Back</a>
 
 {%
   with
@@ -46,7 +44,7 @@
 
 <ul class="list-horizontal">
   <li>
-    <h2>Supplier capabilities</h2>
+    <p>Supplier capabilities</p>
     <article>
       <footer class="tags">
         <dl class="visually-hidden">
@@ -61,7 +59,7 @@
     </article>
   </li>
   <li>
-    <h2>Contact</h2>
+    <p>Contact</p>
     <article>
       {% for contact in supplier.contacts %}
       <p>
@@ -83,7 +81,7 @@
     </article>
   </li>
   <li>
-    <h2>Company Details</h2>
+    <p>Company Details</p>
     <article>
       <p>
         <strong>ABN</strong><br>
@@ -104,7 +102,7 @@
     </article>
   </li>
   <li>
-    <h2>Address</h2>
+    <p>Address</p>
     <article>
       <p>
         {{ supplier.address.addressLine }}<br>
@@ -115,7 +113,7 @@
   </li>
   {% if supplier.references %}
   <li>
-    <h2>References</h2>
+    <p>References</p>
     {% for reference in supplier.references %}
     <article>
       To be added
@@ -124,20 +122,20 @@
   </li>
   {% endif %}
   <li>
-    <h2>Endorsements</h2>
+    <p>Endorsements</p>
     <article>
       To be added
     </article>
   </li>
   <li>
-    <h2>Case studies</h2>
+    <p>Case studies</p>
     <article>
       To be added
     </article>
   </li>
 
   <li>
-    <h2>Rate card</h2>
+    <p>Rate card</p>
   {% if supplier.prices %}
     <article>
       <table class="content-table">
@@ -161,10 +159,4 @@
   </li>
 
 </ul>
-
-<hr>
-
-<p>
-  <a class="go-back" href="{{ url_for('.supplier_search') }}">Back</a>
-</p>
 {% endblock %}
