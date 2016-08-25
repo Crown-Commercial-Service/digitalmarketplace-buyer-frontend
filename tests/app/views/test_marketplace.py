@@ -152,7 +152,7 @@ class TestBriefPage(BaseApplicationTest):
 
         assert_equal(section_heading.get('id'), 'opportunity-attributes-1')
         assert_equal(section_heading.text.strip(), 'Overview')
-        assert_equal(start_date_key[0], 'When do you want the specialist to start?')
+        assert_equal(start_date_key[0], 'What is the latest start date?')
         assert_equal(start_date_value[0], '01/03/2016')
         assert_equal(contract_length_key[0], 'How long is the contract?')
         assert_equal(contract_length_value[0], '4 weeks')
