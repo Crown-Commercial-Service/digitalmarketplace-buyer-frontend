@@ -1431,9 +1431,9 @@ class TestBriefSummaryPage(BaseApplicationTest):
                 'Set how long your requirements will be open for',
                 'Describe question and answer session',
                 'Review and publish your requirements',
-                'How to answer supplier questions',
-                'How to shortlist suppliers',
-                'How to evaluate suppliers',
+                'How to answer seller questions',
+                'How to shortlist sellers',
+                'How to evaluate sellers',
                 'How to award a contract',
                 'View the Digital Service and Professionals contract',
             ]
@@ -1469,9 +1469,9 @@ class TestBriefSummaryPage(BaseApplicationTest):
                 'View question and answer dates',
                 'View your published requirements',
                 'Publish questions and answers',
-                'How to answer supplier questions',
-                'How to shortlist suppliers',
-                'How to evaluate suppliers',
+                'How to answer seller questions',
+                'How to shortlist sellers',
+                'How to evaluate sellers',
                 'How to award a contract',
                 'View the Digital Service and Professionals contract',
             ]
@@ -1505,9 +1505,9 @@ class TestBriefSummaryPage(BaseApplicationTest):
             assert (document.xpath('//h1')[0]).text_content().strip() == "I need a thing to do a thing"
             assert [e.text_content() for e in document.xpath('//*[@id="content"]//ul/li/a')] == [
                 'View your published requirements',
-                'View and shortlist suppliers',
-                'How to shortlist suppliers',
-                'How to evaluate suppliers',
+                'View and shortlist sellers',
+                'How to shortlist sellers',
+                'How to evaluate sellers',
                 'How to award a contract',
                 'View the Digital Service and Professionals contract',
             ]

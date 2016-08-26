@@ -23,7 +23,7 @@ Result = namedtuple('Result', 'title description badges roles url')
 SUPPLIER_RESULTS_PER_PAGE = 10
 
 
-@main.route('/search/suppliers')
+@main.route('/search/sellers')
 def supplier_search():
     sort_order = request.args.get('sort_order', 'asc')  # asc or desc
     sort_terms = request.args.getlist('sort_term')
@@ -169,7 +169,7 @@ def supplier_search():
     pages = get_page_list(SUPPLIER_RESULTS_PER_PAGE, num_results, page)
 
     return render_template(
-        'search_suppliers.html',
+        'search_sellers.html',
         title='Supplier Catalogue',
         search_url=url_for('.supplier_search'),
         search_keywords='',

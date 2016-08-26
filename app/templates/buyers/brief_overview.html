@@ -68,7 +68,7 @@
               },
             },
             {
-              'title': 'Set how you’ll evaluate suppliers',
+              'title': 'Set how you’ll evaluate sellers',
               'description': {
                 'draft': 'Before you can publish your requirements, you must complete:',
                 'live': 'Done',
@@ -101,9 +101,9 @@
               ]
             },
             {
-              'title': 'Answer supplier questions',
+              'title': 'Answer seller questions',
               'description': {
-                'draft': 'When you’ve published your requirements, you must answer all supplier questions.',
+                'draft': 'When you’ve published your requirements, you must answer all seller questions.',
                 'live': 'You must answer all questions by {}. Suppliers will send you questions by email.'.format(brief.clarificationQuestionsPublishedBy | dateformat),
                 'closed': 'Done',
               },
@@ -115,7 +115,7 @@
                 },
                 {
                   'href': url_for('main.how_to_answer_supplier_questions'),
-                  'text': 'How to answer supplier questions',
+                  'text': 'How to answer seller questions',
                   'allowed_statuses': ['draft', 'live']
                 }
               ]
@@ -123,19 +123,19 @@
             {
               'title': 'Shortlist',
               'description': {
-                'draft': 'After the application deadline, shortlist the suppliers who applied.',
-                'live': 'After the application deadline, shortlist the suppliers who applied.',
-                'closed': 'You can view and shortlist suppliers who best meet your needs.',
+                'draft': 'After the application deadline, shortlist the sellers who applied.',
+                'live': 'After the application deadline, shortlist the sellers who applied.',
+                'closed': 'You can view and shortlist sellers who best meet your needs.',
               },
               'links': [
                 {
                   'href': url_for(".view_brief_responses", framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id),
-                  'text': 'View and shortlist suppliers',
+                  'text': 'View and shortlist sellers',
                   'allowed_statuses': ['closed']
                 },
                 {
                   'href': url_for('main.how_to_shortlist_suppliers'),
-                  'text': 'How to shortlist suppliers',
+                  'text': 'How to shortlist sellers',
                 }
               ]
             },
@@ -149,16 +149,16 @@
               'links': [
                 {
                   'href': url_for('main.how_to_evaluate_suppliers'),
-                  'text': 'How to evaluate suppliers',
+                  'text': 'How to evaluate sellers',
                 }
               ]
             },
             {
               'title': 'Award a contract',
               'description': {
-                'draft': 'You must give your chosen supplier a contract before they start work.',
-                'live': 'You must give your chosen supplier a contract before they start work.',
-                'closed': 'You must give your chosen supplier a contract before they start work.',
+                'draft': 'You must give your chosen seller a contract before they start work.',
+                'live': 'You must give your chosen seller a contract before they start work.',
+                'closed': 'You must give your chosen seller a contract before they start work.',
               },
               'links': [
                 {
