@@ -399,10 +399,10 @@ def publish_brief(framework_slug, lot_slug, brief_id):
 
         # the 'published' parameter is for tracking this request by analytics
         brief_url = url_for('.view_brief_overview', framework_slug=brief['frameworkSlug'], lot_slug=brief['lotSlug'],
-                    brief_id=brief['id'], published='true')
+                            brief_id=brief['id'], published='true')
 
-        brief_url_external = url_for('.view_brief_overview', framework_slug=brief['frameworkSlug'], lot_slug=brief['lotSlug'],
-                    brief_id=brief['id'], published='true', _external=True)
+        brief_url_external = url_for('.view_brief_overview', framework_slug=brief['frameworkSlug'],
+                                     lot_slug=brief['lotSlug'], brief_id=brief['id'], published='true', _external=True)
 
         send_new_opportunity_email_to_sellers(brief, brief_url_external)
 
@@ -527,19 +527,20 @@ def add_supplier_question(framework_slug, lot_slug, brief_id):
         errors=errors
     )
 
+
 def send_new_opportunity_email_to_sellers(brief_json, brief_url):
     to_email_addresses = []
     if brief_json['sellerEmail']:
         to_email_addresses.append(brief_json['sellerEmail'])
     if brief_json['sellerEmailList']:
         to_email_addresses += brief_json['sellerEmailList']
-        
+
     if to_email_addresses:
 
         email_body = render_template(
             'emails/seller_new_opportunity.html',
-            dates = get_publishing_dates(brief_json),
-            brief_url = brief_url
+            dates=get_publishing_dates(brief_json),
+            brief_url=brief_url
         )
 
         try:
@@ -555,5 +556,5 @@ def send_new_opportunity_email_to_sellers(brief_json, brief_url):
                 'seller new opportunity email failed to send. '
                 'error {error}',
                 extra={
-                    'error': six.text_type(e),})
+                    'error': six.text_type(e), })
             abort(503, response='Failed to send seller new opportunity email.')
