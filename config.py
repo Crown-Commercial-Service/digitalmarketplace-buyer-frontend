@@ -27,6 +27,7 @@ class Config(object):
     DM_HTTP_PROTO = 'http'
     DM_DEFAULT_CACHE_MAX_AGE = 24*3600
     DM_SEND_EMAIL_TO_STDERR = False
+    DM_CACHE_TYPE = 'dev'
 
     # matches api(s)
     DM_SEARCH_PAGE_SIZE = 100
@@ -114,6 +115,7 @@ class Live(Config):
     DEBUG = False
     DM_HTTP_PROTO = 'https'
     DM_GA_CODE = 'UA-72722909-5'
+    DM_CACHE_TYPE = 'prod'
 
 
 class Preview(Live):

@@ -1,6 +1,7 @@
 import os
 
 from flask import Flask
+from flask_cache import Cache
 from flask_login import LoginManager
 
 import dmapiclient
@@ -9,6 +10,7 @@ from dmcontent.content_loader import ContentLoader
 
 from config import configs
 
+cache = Cache()
 login_manager = LoginManager()
 data_api_client = dmapiclient.DataAPIClient()
 feature_flags = flask_featureflags.FeatureFlag()
@@ -30,6 +32,7 @@ def create_app(config_name):
         data_api_client=data_api_client,
         feature_flags=feature_flags,
         login_manager=login_manager,
+        cache=cache,
     )
 
     from .main import main as main_blueprint
