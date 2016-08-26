@@ -42,5 +42,5 @@ deployment:
       - APP=dm-buyer-frontend-green DOMAIN=apps.platform.digital.gov.au HOSTNAME=dm-buyer-frontend MANIFEST=manifest.production.yml ./scripts/cf_ha_deploy.sh
       - APP=dm-buyer-frontend-blue DOMAIN=apps.platform.digital.gov.au HOSTNAME=dm-buyer-frontend MANIFEST=manifest.production.yml ./scripts/cf_ha_deploy.sh
       - APP=dm-buyer-green DOMAIN=service.gov.au HOSTNAME=marketplace MANIFEST=service.gov.au-manifest.production.yml ./scripts/cf_ha_deploy.sh
-      - APP=dm-buyer-blue DOMAIN=service.gov.au HOSTNAME=dm-buyer-frontend MANIFEST=service.gov.au-manifest.production.yml ./scripts/cf_ha_deploy.sh
+      - APP=dm-buyer-blue DOMAIN=service.gov.au HOSTNAME=marketplace MANIFEST=service.gov.au-manifest.production.yml ./scripts/cf_ha_deploy.sh
       - DOCKER_COMPOSE_FILE_PATH=./monitoring/docker-compose-ecs.yml DOCKER_IMAGE_NAME=gov-au-marketplace DOCKER_CONTAINER_NAME=gov-au-marketplace ./scripts/ci-monitor-deploy.sh
