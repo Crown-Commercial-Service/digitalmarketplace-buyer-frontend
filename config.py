@@ -114,7 +114,6 @@ class Live(Config):
     DEBUG = False
     DM_HTTP_PROTO = 'https'
     DM_GA_CODE = 'UA-72722909-5'
-    FEATURE_FLAGS_BRIEF_BUILDER = False
 
 
 class Preview(Live):
