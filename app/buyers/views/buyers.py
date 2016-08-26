@@ -530,9 +530,9 @@ def add_supplier_question(framework_slug, lot_slug, brief_id):
 
 def send_new_opportunity_email_to_sellers(brief_json, brief_url):
     to_email_addresses = []
-    if brief_json['sellerEmail']:
+    if brief_json.get('sellerEmail'):
         to_email_addresses.append(brief_json['sellerEmail'])
-    if brief_json['sellerEmailList']:
+    if brief_json.get('sellerEmailList'):
         to_email_addresses += brief_json['sellerEmailList']
 
     if to_email_addresses:
