@@ -41,7 +41,7 @@
   {% elif user.role == 'supplier' %}
   
     <header>
-      <h1>The details you provided are registered with a supplier.</h1>
+      <h1>The details you provided are registered with a seller.</h1>
     </header>
     <p>Your email address is already registered as an account with ‘{{ user.supplier_name }}’.</p>
     <p>You can <a href="{{ url_for('.buyer_signup') }}">create a buyer account using a different email address</a>, or email

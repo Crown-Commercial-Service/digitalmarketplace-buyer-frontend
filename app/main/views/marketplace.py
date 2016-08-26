@@ -88,9 +88,9 @@ def about_us():
     return render_template('content/about-us.html')
 
 
-@main.route('/roles-and-services')
+@main.route('/capabilities-and-rates')
 def roles_and_services():
-    return render_template('content/roles-and-services.html')
+    return render_template('content/capabilities-and-rates.html')
 
 
 @main.route('/contact-us')

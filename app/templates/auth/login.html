@@ -30,7 +30,7 @@
       </p>
     {% elif message == 'supplier-role-required' %}
       <p class="callout">
-        You must log in with a supplier account to see this page.
+        You must log in with a seller account to see this page.
       </p>
     {% elif message == 'buyer-role-required' %}
       <p class="callout">
@@ -60,14 +60,14 @@
 {% endif %}
 
 {% with
-  heading = "Log in with your buyer account<br>to see more of the Marketplace"
+  heading = "Log in to the Marketplace"
 %}
   {% include "au-ui-toolkit/page-heading.html" %}
 {% endwith %}
 
 <p>
-    Don't have a buyer account? <a href="{{ url_for('.buyer_signup') }}">Create one now</a>.
-  </p>
+  Don't have a buyer account? <a href="{{ url_for('.buyer_signup') }}">Create one now</a>.
+</p>
 
 <form action="{{ url_for('.process_login', next=next) }}" method="POST">
 
