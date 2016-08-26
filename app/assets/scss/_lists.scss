@@ -140,9 +140,10 @@
   }
 
   .organisation {
-    @extend h3;
+    font-size: $small-font-size;
+    font-weight: $bold-font-weight;
     margin: 0;
-    padding: $tiny-spacing 0;
+    padding: $small-spacing 0 $tiny-spacing*.5;
     
     li:not(:last-child) {
       margin-right: $medium-spacing;
@@ -157,7 +158,7 @@
   .status {
     color: $grey;
     font-size: $small-font-size;
-    margin: $tiny-spacing 0;
+    margin: $tiny-spacing*.5 0 $small-spacing;
 
     li:not(:last-child) {
       margin-right: $medium-spacing;
