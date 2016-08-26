@@ -78,7 +78,7 @@ Sellers search – Digital Marketplace
            <dl>
              <dt>Service capabilities:</dt>
              {% for role in result.roles|sort() %}
-             <dd class="{% if role.label in role_list_from_request %}selected{% endif %}">
+             <dd class="{% if role.label in selected_roles %}selected{% endif %}">
                <a href="?role={{ role.label|replace(' ', '+') }}">{{ role.label }}</a>
              </dd>
              {% endfor %}
