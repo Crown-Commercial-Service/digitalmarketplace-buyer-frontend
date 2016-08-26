@@ -1,28 +1,5 @@
-// Validation
-.validation-masthead {
-  background: rgba(red,0.1);
-  padding: 1.353em;
-  margin: 2em 0;
-
-  h1 {
-    font-size: 1.059em;
-  }
-
-  a {
-    width: 99%;
-    border-bottom: 1px solid black;
-    line-height: 2em;
-
-    &::after {
-      content: "\A";
-      white-space: pre;
-    }
-  }
-}
-
 p.context {
   color: $grey;
-  font-size: rem(24);
   margin-bottom: 0;
   margin-top: 1em;
 }
@@ -106,56 +83,7 @@ ol.instruction-list {
 
   label {
     .question-heading-with-hint {
-      p {
-        font-size: rem(18);
-        float: left;
-        margin-bottom: 0.5em;
-      }
-
-      p + span.question-optional,
-      p + span.text-box-unit-qualifier {
-        float: left;
-        line-height: 1.6em;
-        padding-left: 0.5em;
-      }
-    }
-
-    &::after {
-      content: '';
-      display: table;
-      clear: both;
-    }
-  }
-
-  input[type='checkbox'] + label,
-  input[type='radio'] + label {
-    outline: 1px solid $light-grey;
-    margin: 0 0 8px;
-
-    >p {
-      font-size: rem(14);
-      font-weight: 400;
-      margin-bottom: 0.1em;
-      padding-right: 20px;
-    }
-
-    &::before {
-      top: 12px;
-    }
-
-    &::after {
-      display: inline-block;
-      top: 17px;
-    }
-  }
-
-  input[type='checkbox']:checked + label,
-  input[type='radio']:checked + label {
-    font-weight: 700;
-    outline: 2px solid $grey;
-
-    &::after {
-      top: 17px;
+      font-size: rem(18);
     }
   }
 
@@ -189,12 +117,14 @@ ol.instruction-list {
 
     .large-text {
       line-height: $small-leading;
-      margin-bottom: $tiny-spacing;
+      margin-bottom: $small-spacing;
       margin-top: $base-spacing;
-      p {
-        font-size: rem(24);
+      span {
         font-weight: $bold-font-weight;
         margin: 0;
+        @include media($tablet) {
+          font-size: rem(26);
+        }
       }
     }
   }
@@ -236,6 +166,7 @@ ol.instruction-list {
   .text-box-unit {
     display: inline-block;
     margin-left: 0.5em;
+    margin-top: 0.4em;
   }
 }
 

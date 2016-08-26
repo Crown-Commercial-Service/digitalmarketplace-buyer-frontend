@@ -281,7 +281,7 @@ class TestCreateNewBrief(BaseApplicationTest):
         anchor = document.cssselect('div.validation-masthead a[href="#title"]')
 
         assert len(anchor) == 1
-        assert "Title" in anchor[0].text_content().strip()
+        assert "What you want to call your requirements" in anchor[0].text_content().strip()
         data_api_client.create_brief.assert_called_with(
             'digital-outcomes-and-specialists',
             'digital-specialists',
@@ -393,7 +393,7 @@ class TestEditBriefSubmission(BaseApplicationTest):
         )
 
         breadcrumbs_we_expect = [
-            ('Home', '/marketplace/'),
+            ('Home', self.expand_path('/')),
             ('Dashboard', self.expand_path('/buyers')),
             ('Brief Overview',
              self.expand_path(
@@ -541,10 +541,10 @@ class TestEditBriefSubmission(BaseApplicationTest):
         document = html.fromstring(res.get_data(as_text=True))
         assert document.xpath('//h1')[0].text_content().strip() == "Required 3"
         assert document.xpath(
-            '//*[@id="required3_1"]//span[contains(@class, "question-heading")]/p'
+            '//*[@id="required3_1"]//span[contains(@class, "question-heading")]'
         )[0].text_content().strip() == "Required 3_1"
         assert document.xpath(
-            '//*[@id="required3_2"]//span[contains(@class, "question-heading")]/p'
+            '//*[@id="required3_2"]//span[contains(@class, "question-heading")]'
         )[0].text_content().strip() == "Required 3_2"
 
     def test_404_if_brief_does_not_belong_to_user(self, data_api_client):
@@ -1431,9 +1431,9 @@ class TestBriefSummaryPage(BaseApplicationTest):
                 'Set how long your requirements will be open for',
                 'Describe question and answer session',
                 'Review and publish your requirements',
-                'How to answer supplier questions',
-                'How to shortlist suppliers',
-                'How to evaluate suppliers',
+                'How to answer seller questions',
+                'How to shortlist sellers',
+                'How to evaluate sellers',
                 'How to award a contract',
                 'View the Digital Service and Professionals contract',
             ]
@@ -1469,9 +1469,9 @@ class TestBriefSummaryPage(BaseApplicationTest):
                 'View question and answer dates',
                 'View your published requirements',
                 'Publish questions and answers',
-                'How to answer supplier questions',
-                'How to shortlist suppliers',
-                'How to evaluate suppliers',
+                'How to answer seller questions',
+                'How to shortlist sellers',
+                'How to evaluate sellers',
                 'How to award a contract',
                 'View the Digital Service and Professionals contract',
             ]
@@ -1505,9 +1505,9 @@ class TestBriefSummaryPage(BaseApplicationTest):
             assert (document.xpath('//h1')[0]).text_content().strip() == "I need a thing to do a thing"
             assert [e.text_content() for e in document.xpath('//*[@id="content"]//ul/li/a')] == [
                 'View your published requirements',
-                'View and shortlist suppliers',
-                'How to shortlist suppliers',
-                'How to evaluate suppliers',
+                'View and shortlist sellers',
+                'How to shortlist sellers',
+                'How to evaluate sellers',
                 'How to award a contract',
                 'View the Digital Service and Professionals contract',
             ]

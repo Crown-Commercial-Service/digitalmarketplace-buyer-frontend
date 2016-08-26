@@ -3,7 +3,7 @@
 
 {% block page_title %}{{ brief.title }} - Digital Marketplace{% endblock %}
 
-{% block body_classes %}content-details brief-builder brief-content{% endblock %}
+{% block body_classes %}brief-builder brief-content{% endblock %}
 
 
 {% block breadcrumb %}
@@ -28,8 +28,6 @@
 {% endblock %}
 
 {% block main_content %}
-
-<a class="go-back" href="{{ url_for('.list_opportunities', framework_slug=brief.frameworkSlug) }}">Back</a>
 
 {% if brief.status == 'closed' %}
 
@@ -72,21 +70,11 @@
 </div>
 {% if brief.status != 'draft' %}
     <div class="grid-row">
-      <div class="column-one-whole">
+      <div class="q-and-a-section">
         {% include '_brief_q_and_a.html' %}
       </div>
     </div>
 {% endif %}
-
-<header class="page-heading-smaller">
-  <p class="context">{{ brief.organisation }}</p>
-  <h1>{{ brief.title }}</h1>
-</header>
-
-
-{% include '_brief_attributes.html' %}
-
-{% include '_brief_q_and_a.html' %}
 
 {% if brief.status == 'live' %}
 {% if brief_responses %}
@@ -100,6 +88,7 @@
   {% else %}
   {% with
   url = "{}/suppliers/opportunities/{}/responses/create".format(config['URL_PREFIX'], brief.id),
+  role = "button",
   label = "Start application"
   %}
   {% include "toolkit/link-button.html" %}
@@ -107,10 +96,4 @@
   {% endif %}
   {% endif %}
 
-  <hr>
-
-  <p>
-    <a class="go-back" href="{{ url_for('.list_opportunities', framework_slug=brief.frameworkSlug) }}">Back</a>
-  </p>
-
-  {% endblock %}
+{% endblock %}

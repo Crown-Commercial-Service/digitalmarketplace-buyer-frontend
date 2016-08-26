@@ -9,8 +9,8 @@
 {% block main_content %}
 
 {% if form.errors %}
-  <div class="callout--warning">
-    <p>There was a problem with the details you gave:</p>
+  <div class="validation-masthead" aria-labelledby="validation-masthead-heading" aria-role="group" tabindex="-1" role="alert">
+    <p class="validation-masthead-heading">There was a problem with the details you gave:</p>
     <ul>
     {% for field_name, field_errors in form.errors|dictsort|reverse if field_errors %}
       {% for error in field_errors %}
@@ -42,7 +42,7 @@
 {% endwith %}
 
 <div>
-To create your account we will also need approval from a line manager who:
+<p>To create your account we will also need approval from a line manager who:</p>
 <ul>
     <li>Is an employee under the Commonwealth Public Service Act (1999) or under equivalent State or Territory legislation, and</li>
     <li>is satisfied you need to access the Digital Marketplace.</li>

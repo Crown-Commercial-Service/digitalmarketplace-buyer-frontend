@@ -9,8 +9,8 @@
 {% block main_content %}
 
 {% if form.errors %}
-  <div class="callout--warning">
-    <p>There was a problem with the details you gave:</p>
+  <div class="validation-masthead" aria-labelledby="validation-masthead-heading" aria-role="group" tabindex="-1" role="alert">
+    <p class="validation-masthead-heading">There was a problem with the details you gave:</p>
     <ul>
     {% for field_name, field_errors in form.errors|dictsort|reverse if field_errors %}
       {% for error in field_errors %}
@@ -41,15 +41,14 @@
 {% include "toolkit/page-heading.html" %}
 {% endwith %}
 
-<p>Digital Marketplace buyer account holders can view supplier pricing, supplier contact details and, in future, place orders.</p>
+<p>Digital Marketplace buyer account holders can view seller pricing, seller contact details and, in future, place orders.</p>
+
+<p>To create a buyer account you need to be a government employee or be authorised by a government employee. Choose the option below that matches your situation.</p>
 
 <form method="POST" action="{{ url_for('.submit_buyer_signup') }}">
   {{ form.csrf_token }}
 
-  <div>
-      <p>To create a buyer account you need to be a government employee or be authorised by a government employee. Choose the option below that matches your situation.</p>
-      {{ form.employment_status }}
-  </div>
+  {{ form.employment_status }}
 
   {%
     with

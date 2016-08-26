@@ -3,8 +3,9 @@ h1 {
 }
 
 h2 {
-  font-size: rem(24);
+  font-size: rem(26);
   font-weight: $bold-font-weight;
+  margin-bottom: $small-spacing;
 }
 
 .bigger {
@@ -120,17 +121,6 @@ span {
     }
   }
 
-  .callout--info {
-    @extend .callout;
-    margin: 1.6em 0;
-    box-shadow: none;
-    background-color: $light-blue;
-
-    h2 {
-      margin: 1.2rem 0 .4rem;
-    }
-  }
-
   .content-table {
 
     td, th {
@@ -141,7 +131,45 @@ span {
       }
     }
   }
+}
 
+.callout--info {
+  @extend .callout;
+  margin: 1.6em 0;
+  box-shadow: none;
+  background-color: $light-blue;
+
+  h2 {
+    margin: 1.2rem 0 .4rem;
+  }
+}
+
+// Validation
+.validation-masthead {
+  background: rgba(red,0.1);
+  padding: 1.353em;
+  margin: 2em 0;
+
+  .validation-masthead-heading {
+    font-weight: $bold-font-weight;
+  }
+
+  a {
+    width: 99%;
+    border-bottom: 1px solid black;
+    line-height: 2em;
+
+    &::after {
+      content: "\A";
+      white-space: pre;
+    }
+  }
+}
+
+.validation-message {
+  display: block;
+  font-size: rem(17);
+  font-weight: $base-font-weight;
 }
 
 .banner-warning-without-action {

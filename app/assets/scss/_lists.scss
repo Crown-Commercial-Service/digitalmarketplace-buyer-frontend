@@ -12,6 +12,17 @@
   }
 }
 
+.list-horizontal,
+.list-vertical,
+.list-vertical--thirds,
+.list-vertical--fourths,
+.list-small,
+.list-highlighted {
+  > li {
+    padding-left: 0.2em;
+  }
+}
+
 .home {
   h2 {
     font-size: rem(24);
@@ -22,7 +33,7 @@
        margin-top: 0;    
      }
    }
- }
+  }
 
   .list-vertical {
 
@@ -91,6 +102,19 @@
     }
 
     li {
+      >p {
+        font-weight: $heading-font-weight;
+
+        @include media($tablet) {
+          flex: 0 0 21.5%;
+          margin-right: $base-spacing;
+
+          small {
+            font-size: 65%;
+            font-weight: normal;
+          }
+        }
+      }
       article {
         width: 100%;
       }

@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask
 from flask_login import LoginManager
 
@@ -19,7 +21,8 @@ content_loader.load_manifest('digital-service-professionals', 'briefs', 'display
 
 
 def create_app(config_name):
-    application = Flask(__name__, static_url_path=configs[config_name].ASSET_PATH)
+    asset_path = os.environ.get('ASSET_PATH', configs[config_name].ASSET_PATH)
+    application = Flask(__name__, static_url_path=asset_path)
 
     init_app(
         application,

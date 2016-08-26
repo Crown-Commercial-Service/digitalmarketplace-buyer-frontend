@@ -1,7 +1,7 @@
 {% extends "_base_page.html" %}
 
 {% block page_title %}
-Suppliers search – Digital Marketplace
+Sellers search – Digital Marketplace
 {% endblock %}
 
 {% block body_classes %}catalogue{% endblock %}
@@ -14,7 +14,7 @@ Suppliers search – Digital Marketplace
   "label": "Home"
 },
 {
-  "label": "Suppliers catalogue"
+  "label": "Sellers catalogue"
 }
 ]
 %}
@@ -25,8 +25,8 @@ Suppliers search – Digital Marketplace
 
 {% block content_summary %}
 <div class="intro">
-  <h1>ICT suppliers catalogue</h1>
-  <p><a href="{{ url_for('main.roles_and_services') }}">Learn more about these roles</a></p>
+  <h1>ICT sellers catalogue</h1>
+  <p><a href="{{ url_for('main.roles_and_services') }}">Learn more about these capabilities</a></p>
 </div>
 {% endblock %}
 
@@ -45,21 +45,23 @@ Suppliers search – Digital Marketplace
   {% block main_content %}
   
   {% if results %}
-  <p class="number-results"><span>{{ num_results }}</span> supplier{% if num_results > 1 %}s{% endif %}</p>
-
-  <div class="sort-order-{{ sort_order }}">
-    <span>Sort By:</span>
-    {% with page_number=page, sort_alternate=True, link_label=sort_term_name_label, sort_terms=['name']  %}
-    {% include '_supplier_pagination_link.html' %}
-    {% endwith %}
-  </div>
-  {% endif %}
+  <p class="number-results"><span>{{ num_results }}</span> seller{% if num_results > 1 %}s{% endif %}</p>
 
   {% if results %}
-  <p>Showing {{ results_from }}{% if num_results > 1 %}-{{ results_to }}{% endif %}
-    supplier{% if num_results > 1 %}s{% endif %} of {{ num_results }}
-    {% else %}No results found.</p>
-    {% endif %}
+  <div class="search-controls">
+    <div class="results-shown">Showing {{ results_from }}{% if num_results > 1 %}-{{ results_to }}{% endif %}
+      seller{% if num_results > 1 %}s{% endif %} of {{ num_results }}
+      {% else %}No results found.
+      {% endif %}
+    </div>
+    <div class="sort-order-{{ sort_order }}">
+      <span>Sort By:</span>
+      {% with page_number=page, sort_alternate=True, link_label=sort_term_name_label, sort_terms=['name']  %}
+      {% include '_supplier_pagination_link.html' %}
+      {% endwith %}
+    </div>
+  </div>
+  {% endif %}
 
     <ul class="list-horizontal">
       {% for result in results %}

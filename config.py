@@ -2,17 +2,8 @@ import os
 import hashlib
 import jinja2
 from dmutils.status import enabled_since, get_version_label
-from dmutils.asset_fingerprint import AssetFingerprinter
 
 basedir = os.path.abspath(os.path.dirname(__file__))
-
-
-def get_asset_fingerprint(asset_file_path):
-    hasher = hashlib.md5()
-    with open(asset_file_path, 'rb') as asset_file:
-        buf = asset_file.read()
-        hasher.update(buf)
-    return hasher.hexdigest()
 
 
 class Config(object):
@@ -34,7 +25,7 @@ class Config(object):
     DM_DATA_API_URL = None
     DM_DATA_API_AUTH_TOKEN = None
     DM_HTTP_PROTO = 'http'
-    DM_DEFAULT_CACHE_MAX_AGE = 30
+    DM_DEFAULT_CACHE_MAX_AGE = 24*3600
     DM_SEND_EMAIL_TO_STDERR = False
 
     # matches api(s)
@@ -55,7 +46,7 @@ class Config(object):
     RESET_PASSWORD_EMAIL_SUBJECT = 'Reset your Digital Marketplace password'
 
     BUYER_INVITE_REQUEST_SUBJECT = 'Buyer Account Invite Request'
-    BUYER_INVITE_REQUEST_ADMIN_EMAIL = 'no-reply@marketplace.digital.gov.au'
+    BUYER_INVITE_REQUEST_ADMIN_EMAIL = 'marketplace+buyer-request@digital.gov.au'
     BUYER_INVITE_REQUEST_EMAIL_FROM = DM_GENERIC_NOREPLY_EMAIL
     BUYER_INVITE_REQUEST_EMAIL_NAME = DM_GENERIC_ADMIN_NAME
     BUYER_INVITE_MANAGER_CONFIRMATION_SUBJECT = 'Digital Marketplace buyer account request'
@@ -69,11 +60,6 @@ class Config(object):
     BUYER_CREATION_TOKEN_SALT = 'BuyerCreation'
 
     ASSET_PATH = URL_PREFIX + '/static'
-    BASE_TEMPLATE_DATA = {
-        'header_class': 'with-proposition',
-        'asset_path': ASSET_PATH + '/',
-        'asset_fingerprinter': AssetFingerprinter(asset_root=ASSET_PATH + '/')
-    }
 
     # Feature Flags
     RAISE_ERROR_ON_MISSING_FEATURES = True

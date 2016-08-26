@@ -152,7 +152,7 @@ class TestBriefPage(BaseApplicationTest):
 
         assert_equal(section_heading.get('id'), 'opportunity-attributes-1')
         assert_equal(section_heading.text.strip(), 'Overview')
-        assert_equal(start_date_key[0], 'When do you want the specialist to start?')
+        assert_equal(start_date_key[0], 'What is the latest start date?')
         assert_equal(start_date_value[0], '01/03/2016')
         assert_equal(contract_length_key[0], 'How long is the contract?')
         assert_equal(contract_length_value[0], '4 weeks')
@@ -362,6 +362,11 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
 
         ss_elem = document.xpath("//p[@class='search-summary']")[0]
         assert self._normalize_whitespace(self._squashed_element_text(ss_elem)) == "2 opportunities"
+
+    def test_catalogue_of_briefs_page_loads_as_buyer(self):
+        self.login_as_buyer()
+        res = self.client.get(self.expand_path('/digital-service-professionals/opportunities'))
+        assert_equal(200, res.status_code)
 
     def test_catalogue_of_briefs_400_if_invalid_status(self):
         res = self.client.get(self.expand_path('/digital-service-professionals/opportunities'

@@ -16,7 +16,7 @@
   brief.clarificationQuestions,
   caption="Questions asked by suppliers",
   field_headings=[
-    "Supplier question",
+    "Seller question",
     "Buyer answer"
     ],
     field_headings_visible=False,
@@ -32,13 +32,15 @@
 {% endcall %}
 
 {% if brief.status == 'live' and not brief.clarificationQuestionsAreClosed %}
-<a href="{{ config['URL_PREFIX'] }}/suppliers/opportunities/{{ brief.id }}/ask-a-question">
+<p>
+  <a href="{{ config['URL_PREFIX'] }}/suppliers/opportunities/{{ brief.id }}/ask-a-question">
     {% if current_user.is_authenticated and current_user.role == 'supplier' %}
       Ask a question
     {% else %}
       Log in to ask a question
     {% endif %}
   </a>
+</p>
 {% elif brief.status == 'live' %}
   The deadline for asking questions about this opportunity was {{ brief.clarificationQuestionsClosedAt|dateformat }}.
 {% endif %}
