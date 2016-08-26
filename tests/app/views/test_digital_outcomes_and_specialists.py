@@ -26,7 +26,7 @@ class TestStartBriefInfoPage(BaseApplicationTest):
                 ))
             assert res.status_code == 200
             document = html.fromstring(res.get_data(as_text=True))
-            assert document.xpath('//h1')[0].text_content().strip() == "Find an individual specialist"
+            assert document.xpath('//h1')[0].text_content().strip() == "Finding an individual specialist"
 
     def test_404_if_lot_does_not_allow_brief(self, data_api_client):
         with self.app.app_context():
