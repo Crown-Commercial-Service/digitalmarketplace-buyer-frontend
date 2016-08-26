@@ -6,6 +6,11 @@ h2 {
   font-size: rem(26);
   font-weight: $bold-font-weight;
   margin-bottom: $small-spacing;
+
+  .contrast-headings & {
+    font-weight: $base-font-weight;
+    margin-bottom: $tiny-spacing;
+  }
 }
 
 .bigger {
