@@ -36,7 +36,7 @@ class BuyerSignupForm(DmForm):
     employment_status = RadioField(
         label='I am a public service employee or have authorisation, as described above.',
         choices=[
-            ('employee', 'I am an employee under the Commonwealth Public Service Act (1999) or under equivalent State or Territory legislation.'),  # noqa
+            ('employee', 'I am an employee under the Commonwealth Public Service Act (1999) or under equivalent state or territory legislation and need access to the Digital Marketplace to perform my role.'),  # noqa
             ('contractor', 'I am a contractor working in local, state or federal government.'),
         ],
         validators=[

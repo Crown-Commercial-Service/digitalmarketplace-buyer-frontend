@@ -57,23 +57,26 @@ span {
 }
 
 .callout--hero {
-  display: none;
-  // @extend %base-callout;
-  // @include position(relative, null);
-  // background: $darker-aqua;
-  // box-shadow: 0 0 0 transparent;
+  @extend %base-callout;
+  @include position(relative, null);
+  background: $darker-aqua;
+  box-shadow: 0 0 0 transparent;
 
-  // @include media($desktop) {
-  //   @include position(absolute, null 0 (-$base-spacing*5) null);
-  //   @include span-columns(5 of 16);
-  //   @include shift(2);
-  //   margin: 0;
-  // }
+  @include media($desktop) {
+    @include position(absolute, null $tiny-spacing*3 (-$base-spacing*4.375) null);
+    @include span-columns(5 of 16);
+    @include shift(2);
+    margin: 0;
+  }
 
-  // h2 {
-  //   @extend h3;
-  //   font-weight: $base-font-weight;
-  // }
+  h2 {
+    @extend h3;
+    font-weight: $base-font-weight;
+  }
+
+  p {
+    margin-bottom: 0;
+  }
 }
 
 .secondary-page {
