@@ -118,6 +118,11 @@ def buyers_guide():
     return render_template('content/buyers-guide.html')
 
 
+@main.route('/sellers-guide')
+def sellers_guide():
+    return render_template('content/sellers-guide.html')
+
+
 @main.route('/copyright')
 def copyright():
     return render_template('content/copyright.html')
