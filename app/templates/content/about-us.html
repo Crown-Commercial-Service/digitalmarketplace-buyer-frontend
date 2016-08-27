@@ -1,21 +1,40 @@
 {% extends "_base_page.html" %}
-
-{% block page_title %}About the Marketplace{% endblock %}
-
+​
+{% block page_title %}About the Digital Marketplace{% endblock %}
+​
 {% block body_classes %}about-us secondary-page{% endblock %}
-
+​
 {% block main_content %}
-
+​
   <h1>About the Digital Marketplace</h1>
-  <p>We're transforming how government buys digital and technology services.</p>
-
+  <p><strong>We're transforming how government buys digital and technology services.</strong></p>
+​
   <a id="how-the-marketplace-started"></a><h2>Our purpose</h2>
-
+​
   <p>
     The Digital Marketplace is an initiative under the National Innovation and Science Agenda. Our purpose make it easier for smaller businesses to compete for the government’s $5 billion a year spend on information and communications technology (ICT) products and services.
   </p>
   <p>
-    As well as an online directory of approved ICT suppliers, the Digital Marketplace is also a place for government buyers to discover new ideas and challenge ICT suppliers to develop more innovative government services.
+	We’re building an ecosystem where government buyers and sellers can connect and have the procurement interactions they need — at the level of simplicity or complexity appropriate to their circumstances — and to make the outcomes of those interactions more transparent.
   </p>
-
+​
+  <h2>Our progress</h2>
+​
+  <p>
+  </p>
+​
+  <h2>How we comply with the procurement rules</h2>
+  <p>
+	  All sellers listed in the Digital Marketplace are on the Digital Service Professionals Panel (SON3364729).  This panel was established through an open approach to market by the Digital Transformation Office and is compliant with the Commonwealth Procurement Rules. Local and state government buyers are welcome to use the Digital Marketplace but should be aware of the procurement rules that apply in their state or territory.
+  </p>
+​
+  <h2>Links</h2>
+ 
+  <h3>Government buyers</h3>
+  <p>Find out how to <a href="{{ url_for('.buyers_guide') }}">buy from the Digital Marketplace</a></p>
+​
+  <h3>Digital service professionals</h3>
+  <p>Find out how to <a href="{{ url_for('.suppliers_guide') }}">sell through the Digital Marketplace</a></p>
+  <p>Or how to <a href="{{ url_for('.new_seller') }}">join the Digital Marketplace</a></p>
+​
 {% endblock %}

@@ -1,0 +1,104 @@
+{% extends "_base_page.html" %}
+
+{% block page_title %}Seller's guide{% endblock %}
+
+{% block body_classes %}buyers-guide secondary-page{% endblock %}
+
+{% block main_content %}
+  <h1>Selling through the Digital Marketplace</h1>
+  <p>
+  <strong>
+    New sellers - if you'd like to be part of the Digital Marketplace, register your interest by emailing <a href="mailto:marketplace@digital.gov.au">marketplace@digital.gov.au</a>.
+  </strong>
+  </p>
+
+  <p>
+  <strong>
+    Current sellers - we’ll be in touch in the coming days with information about how to setup your seller accounts and start applying for opportunities.
+  </strong>
+  </p>
+
+  <h2>
+    Who can sell
+  </h2>
+
+  <p>
+    Currently, all sellers in the Marketplace are part of the Digital Service Professionals Panel. The panel was created through an open approach to market by the Digital Transformation Office. If you're interested in joining the Marketplace, or want to expand the services you already offer through the Marketplace, contact <a href="mailto:marketplace@digital.gov.au">marketplace@digital.gov.au</a> and we’ll let you know when you can apply to join.
+  </p>
+
+  <h2>
+    How to sell
+  </h2>
+
+  <p>
+    Government buyers publish <a href="{{ url_for('.list_opportunities', framework_slug='digital-service-professionals') }}">opportunities</a> to the Marketplace by creating a brief for an individual specialist or a brief for a team to provide an outcome. As a seller you are encouraged to apply for any of these briefs if you have the skills, experience and availability required.
+  </p>
+
+  <p>
+    Check the <a href="{{ url_for('.list_opportunities', framework_slug='digital-service-professionals') }}">opportunities</a> regularly as they’re only open for 1 or 2 weeks.
+  </p>
+
+  <p>
+    Some briefs are marked as ‘limited’. Limited briefs are only open to sellers who have been invited to apply. The Marketplace will send you an email if you’ve been invited to apply for a limited brief.
+  </p>
+
+  <h2>
+    How to apply for a brief
+  </h2>
+
+  <p>
+    When viewing the latest <a href="{{ url_for('.list_opportunities', framework_slug='digital-service-professionals') }}">opportunities</a> if there are any that interest you, and you have the necessary skills and availability, select ‘Start application’ and follow the prompts to complete your application. When applying for an individual specialist brief, the quote for your day rate can’t exceed the price you have agreed to for the Digital Service Professionals Panel.  
+  </p>  
+
+  <p>
+    When applying, you’ll be asked whether you have the essential and nice-to-have skills and experience specified on that brief. You must have all essential skills and experience to apply for the brief.  
+  </p>
+
+  <p>
+    If the brief is for an individual specialist, you also need to be approved to offer the capability that’s required in the brief, you can check the your approved capabilities by viewing your business in the <a href="{{ url_for('main.supplier_search') }}">seller catalogue</a>.
+  </p>
+  
+  <h2>
+    Asking questions
+  </h2>
+  
+  <p>
+    If you have any questions about a brief, you can ask them by selecting ‘log in to ask a question’ and posting your question as directed. Your question will then be emailed by the Marketplace to the buyer to answer. Your question and the buyer’s answer will then be posted on the brief by the buyer.
+  </p>
+
+  <h2>
+    Question and answer sessions
+  </h2>
+  
+  <p>
+    Buyers may also offer a question and answer session for potential sellers. You’ll need to log in to view the details of how to join a question and answer session.
+  </p>
+
+  <h2>
+    What's next
+  </h2>
+  
+  <p>
+    After the brief closes you will be informed by the buyer whether or not you have been shortlisted.
+  </p>
+  <p>
+    Shortlisted sellers are then invited into the evaluation stage to select the successful seller. The buyer will provide details of the evaluation if you’re successfully shortlisted.   
+  </p>
+
+  <h2>
+    Accessing the Marketplace
+  </h2>
+  <p>
+    All sellers in the Marketplace will be provided with the details to login to the Marketplace. You can also add additional contributors so that other people in your company can access your account.
+  </p>
+  <p>
+    If you have any difficulties logging into the Marketplace contact the support desk by emailing <a href="mailto:marketplace@digital.gov.au">marketplace@digital.gov.au</a>.
+  </p>
+  <h2>   
+    Contact us
+  </h2>
+  <p>
+    The Digital Marketplace is an agile development in its beta stage. This means the site will evolve over time in response to user needs. If you have any questions, feedback or would like to be involved in user research, email us at <a href="mailto:marketplace@digital.gov.au">marketplace@digital.gov.au</a>.
+  </p>
+  
+{% endblock %}
