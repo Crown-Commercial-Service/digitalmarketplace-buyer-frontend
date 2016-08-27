@@ -41,6 +41,9 @@ class Config(object):
     DM_GENERIC_NOREPLY_EMAIL = 'no-reply@marketplace.digital.gov.au'
     DM_GENERIC_ADMIN_NAME = 'Digital Marketplace Admin'
 
+    DM_GENERIC_SUPPORT_EMAIL = 'marketplace@digital.gov.au'
+    DM_GENERIC_SUPPORT_NAME = 'Digital Marketplace'
+
     RESET_PASSWORD_EMAIL_NAME = DM_GENERIC_ADMIN_NAME
     RESET_PASSWORD_EMAIL_FROM = DM_GENERIC_NOREPLY_EMAIL
     RESET_PASSWORD_EMAIL_SUBJECT = 'Reset your Digital Marketplace password'
@@ -51,6 +54,9 @@ class Config(object):
     BUYER_INVITE_REQUEST_EMAIL_NAME = DM_GENERIC_ADMIN_NAME
     BUYER_INVITE_MANAGER_CONFIRMATION_SUBJECT = 'Digital Marketplace buyer account request'
     BUYER_INVITE_MANAGER_CONFIRMATION_NAME = DM_GENERIC_ADMIN_NAME
+
+    SELLER_NEW_OPPORTUNITY_EMAIL_SUBJECT = 'Digital Marketplace - new business opportunity'
+    SELLER_NEW_OPPORTUNITY_EMAIL_FROM = DM_GENERIC_NOREPLY_EMAIL
 
     CREATE_USER_SUBJECT = 'Create your Digital Marketplace account'
     SECRET_KEY = None
