@@ -913,6 +913,7 @@ class TestCreateBuyer(BaseApplicationTest):
             data={
                 'password': 'validpassword',
                 'name': 'valid name',
+                'accept': 'on',
                 'csrf_token': FakeCsrf.valid_token,
             }
         )
@@ -937,6 +938,7 @@ class TestCreateBuyer(BaseApplicationTest):
             data={
                 'password': 'validpassword',
                 'name': 'valid name',
+                'accept': 'on',
                 'csrf_token': FakeCsrf.valid_token,
             }
         )
@@ -959,6 +961,7 @@ class TestCreateBuyer(BaseApplicationTest):
             data={
                 'password': 'validpassword',
                 'name': '  valid name  ',
+                'accept': 'on',
                 'csrf_token': FakeCsrf.valid_token,
             }
         )
@@ -979,6 +982,7 @@ class TestCreateBuyer(BaseApplicationTest):
             data={
                 'password': '  validpassword  ',
                 'name': 'valid name  ',
+                'accept': 'on',
                 'csrf_token': FakeCsrf.valid_token,
             }
         )
@@ -1002,6 +1006,7 @@ class TestCreateBuyer(BaseApplicationTest):
                 data={
                     'password': 'validpassword',
                     'name': 'valid name',
+                    'accept': 'on',
                     'csrf_token': FakeCsrf.valid_token,
                 }
             )
