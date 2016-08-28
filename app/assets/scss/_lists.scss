@@ -27,12 +27,7 @@
   h2 {
     font-size: rem(24);
     margin-bottom: $small-spacing;
-
-    &:first-of-type {
-     @include media($tablet) {
-       margin-top: 0;    
-     }
-   }
+    margin-top: 0;    
   }
 
   .list-vertical {

@@ -13,6 +13,10 @@ h2 {
   }
 }
 
+h3 {
+  font-size: rem(20);
+}
+
 .bigger {
   font-size: rem(24);
 }
@@ -62,7 +66,7 @@ span {
   background: $darker-aqua;
   box-shadow: 0 0 0 transparent;
 
-  @include media($desktop) {
+  @include media($sm-desktop) {
     @include position(absolute, null $tiny-spacing*3 (-$base-spacing*4.375) null);
     @include span-columns(5 of 16);
     @include shift(2);
