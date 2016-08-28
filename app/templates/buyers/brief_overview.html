@@ -44,7 +44,7 @@
           </form>
         </div>
       {% endif %}
-   {% endblock %}
+    {% endblock %}
     <div>
       {% with
         heading = brief.get('title', brief['lotName']),
@@ -53,30 +53,30 @@
         {% include "toolkit/page-heading.html" %}
       {% endwith %}
 
-    {% block before_sections %}{% endblock %}
+      {% block before_sections %}{% endblock %}
 
       <ol class="instruction-list steps">
 
         {% with
           steps = [
             {
-              'title': 'Write requirements',
+              'title': 'Write your brief',
               'description': {
-                'draft': 'Before you can publish your requirements, you must complete:',
+                'draft': 'It’s quick and easy to publish a brief. You just need to add the following:',
                 'live': 'Done',
                 'closed': 'Done',
               },
             },
             {
-              'title': 'Set how you’ll evaluate sellers',
+              'title': 'Set how you’ll evaluate specialists',
               'description': {
-                'draft': 'Before you can publish your requirements, you must complete:',
+                'draft': '',
                 'live': 'Done',
                 'closed': 'Done',
               },
             },
             {
-              'title': 'Publish requirements',
+              'title': 'Publish your brief',
               'description': {
                 'draft': '',
                 'live': 'Your requirements are open for applications until {}.'.format(brief.applicationsClosedAt | dateformat),
@@ -99,7 +99,10 @@
                   'allowed_statuses': ['live', 'closed']
                 }
               ]
-            },
+            }
+          ]
+        %}
+        {#
             {
               'title': 'Answer seller questions',
               'description': {
@@ -172,7 +175,7 @@
               ]
             }
           ]
-        %}
+        #}
 
         {% for step in steps %}
           {% set step_number = loop.index %}
@@ -215,16 +218,24 @@
         {% endfor %}
         {% endwith %}
       </ol>
+      <h2>After publishing</h2>
+      <p>
+        While your brief is live you must answer seller questions. After the brief closes, shortlist the sellers who applied. Then evaluate your shortlist using the methods you set when writing the brief and award a contract to the chosen seller.
+      </p>
+      <h2>Useful links</h2>
+      <p>
+        <a href="{{ url_for('main.how_to_answer_supplier_questions') }}">How to answer seller questions</a><br>
+        <a href="{{ url_for('main.how_to_shortlist_suppliers') }}">How to shortlist sellers</a><br>
+        <a href="{{ url_for('main.how_to_evaluate_suppliers') }}">How to evaluate sellers</a><br>
+        <a href="{{ url_for('main.buyers_guide') }}">How to award a contract</a><br>
+      </p>
     </div>
-
   </div>
   {% if not delete_requested %}
-     <div class="grid-row">
-       <div class="column-two-thirds">
-         {% if framework.status == 'live' and brief.status == 'draft' %}
-         <a href="{{ url_for('buyers.view_brief_overview', framework_slug=framework.slug, lot_slug=brief.lotSlug, brief_id=brief.id, delete_requested=True) }}" role="button">Delete</a>
-         {% endif %}
-       </div>
-     </div>
-   {% endif %}
+    <div class="m-t-4">
+      {% if framework.status == 'live' and brief.status == 'draft' %}
+      <a href="{{ url_for('buyers.view_brief_overview', framework_slug=framework.slug, lot_slug=brief.lotSlug, brief_id=brief.id, delete_requested=True) }}" role="button">Delete</a>
+      {% endif %}
+    </div>
+  {% endif %}
 {% endblock %}
