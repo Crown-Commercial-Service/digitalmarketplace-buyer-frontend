@@ -1428,8 +1428,8 @@ class TestBriefSummaryPage(BaseApplicationTest):
                 'Location',
                 'Description of work',
                 'Shortlist and evaluation process',
-                'Set how long your requirements will be open for',
-                'Describe question and answer session',
+                'How long your brief will be open',
+                'Question and answer session details',
                 'Review and publish your requirements'
             ]
 
