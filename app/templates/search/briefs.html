@@ -1,7 +1,7 @@
 {% extends "_base_page.html" %}
 
 {% block page_title %}
-Supplier opportunities – {{ framework.name }} – Digital Marketplace
+Seller opportunities – {{ framework.name }} – Digital Marketplace
 {% endblock %}
 
 {% block body_classes %}catalogue{% endblock %}
@@ -26,7 +26,7 @@ Supplier opportunities – {{ framework.name }} – Digital Marketplace
   {% with heading="{} opportunities".format(framework.name) %}
   <h1>{{ heading }}</h1>
   {% endwith %}
-  <p>View buyer requirements for {{ lot_names | map('lower') | smartjoin }}.</p>
+  <p>View and apply for live digital specialists and outcomes briefs.</p>
 </div>
 {% endblock %}
 
@@ -41,6 +41,12 @@ Supplier opportunities – {{ framework.name }} – Digital Marketplace
   <li class="brief-result">
     <article>
 
+      {% if brief.sellerSelector == 'allSellers' %}
+      <span class="badge--open">
+         Open to all qualified sellers
+      </span>
+      {% endif %}
+      
       <h2>
         <a href="{{ url_for('.get_brief_by_id', framework_slug=framework.slug, brief_id=brief.id) }}">{{ brief.title }}</a>
       </h2>
