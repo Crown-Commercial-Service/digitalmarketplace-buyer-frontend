@@ -23,6 +23,16 @@
   }
 }
 
+.list-vertical,
+.list-vertical--thirds,
+.list-vertical--fourths, {
+  > li {
+    article {
+      width: 100%;
+    }
+  }
+}
+
 .home {
   h2 {
     font-size: rem(24);
