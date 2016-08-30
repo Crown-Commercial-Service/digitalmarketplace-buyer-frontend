@@ -30,6 +30,11 @@
 
 {% block main_content %}
 
+<div class="callout--info">
+  <h2>Publishing a brief is not yet available</h2>
+  <p>The Digital Marketplace team will notify you when it's activated.</p>
+</div>
+
 <div class='grid-row'>
   <div class='column-two-thirds large-paragraph'>
     {% with
@@ -130,19 +135,20 @@
         <div>
             <p>
                 <a href="{{ url_for('main.get_brief_by_id', framework_slug=brief.frameworkSlug, brief_id=brief.id) }}"
-                   target="_blank">Preview this brief</a> <span>(opens in new tab)</span>
+                   target="_blank" rel="external">Preview this brief</a>
             </p>
         </div>
         <form action="{{ url_for('.publish_brief', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id) }}" method="POST">
           {{ form.csrf_token }}
-          {%
+          {#
           with
           type = "save",
           role = "button",
           label = "Publish brief"
-          %}
-          {% include "toolkit/button.html" %}
-          {% endwith %}
+          #}
+          {# include "toolkit/button.html" #}
+          {# endwith #}
+          <input type="submit" value="Publish brief" class="button-save" role="button" disabled="">
         </form>
       {% endif %}
     {% endif %}
