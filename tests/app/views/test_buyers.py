@@ -916,7 +916,7 @@ class TestPublishBrief(BaseApplicationTest):
         res = self.client.post("/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
                                "digital-specialists/1234/publish")
         assert res.status_code == 302
-        assert data_api_client.update_brief_status.called
+        assert data_api_client.publish_brief.called
         assert res.location == "http://localhost/buyers/frameworks/digital-outcomes-and-specialists/" \
                                "requirements/digital-specialists/1234?published=true"
 
@@ -935,7 +935,7 @@ class TestPublishBrief(BaseApplicationTest):
         res = self.client.post("/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
                                "digital-specialists/1234/publish")
         assert res.status_code == 400
-        assert not data_api_client.update_brief_status.called
+        assert not data_api_client.publish_brief.called
 
     def test_404_if_brief_does_not_belong_to_user(self, data_api_client):
         self.login_as_buyer()
