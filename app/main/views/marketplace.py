@@ -6,6 +6,7 @@ from flask import abort, current_app, make_response, render_template, request
 
 from dmapiclient import APIError
 from dmcontent.content_loader import ContentNotFoundError
+from app.main.utils import get_page_list
 
 from ...main import main
 from ...helpers.shared_helpers import get_one_framework_by_status_in_order_of_preference, parse_link
@@ -172,19 +173,13 @@ def list_opportunities(framework_slug):
     api_result = form.get_briefs()
 
     briefs = api_result["briefs"]
-    links = api_result["links"]
+    meta = api_result['meta']
 
-    api_prev_link_args = parse_link(links, "prev")
-    prev_link_args = None
-    if api_prev_link_args:
-        prev_link_args = request.args.copy()
-        prev_link_args.setlist("page", api_prev_link_args.get("page") or ())
+    results_per_page = meta['per_page']
+    total_results = meta['total']
+    current_page = int(request.args.get('page', 1))
 
-    api_next_link_args = parse_link(links, "next")
-    next_link_args = None
-    if api_next_link_args:
-        next_link_args = request.args.copy()
-        next_link_args.setlist("page", api_next_link_args.get("page") or ())
+    pages = get_page_list(results_per_page, total_results, current_page)
 
     html = render_template('search/briefs.html',
                            framework=framework,
@@ -193,9 +188,11 @@ def list_opportunities(framework_slug):
                            filters_applied=form.filters_applied(),
                            briefs=briefs,
                            lot_names=tuple(label for id_, label in form.lot.choices),
-                           prev_link_args=prev_link_args,
-                           next_link_args=next_link_args,
-                           briefs_count=api_result.get("meta", {}).get("total", None),
+                           briefs_count=total_results,
+                           pages=pages,
+                           num_pages=pages[-1],
+                           current_page=current_page,
+                           link_args=request.args
                            )
     response = make_response(html)
     if current_user.is_authenticated and current_user.has_role('buyer'):

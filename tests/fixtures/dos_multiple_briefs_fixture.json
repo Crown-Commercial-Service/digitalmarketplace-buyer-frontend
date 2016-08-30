@@ -77,6 +77,56 @@
       "additionalTerms":"You'll never work in this town again.",
       "frameworkName":"digital service professionals",
       "publishedAt":"2016-03-07T16:02:51.591567Z"
+    },
+    {
+      "startDate":"29th March",
+      "links":{
+        "framework":"http://localhost:5000/frameworks/digital-service-professionals",
+        "self":"http://localhost:5000/briefs/4"
+      },
+      "evaluationType":[
+        "provide a case study or evidence of previous work",
+        "presentation"
+      ],
+      "niceToHaveRequirements":[
+        "Nice people"
+      ],
+      "applicationsClosedAt":"2016-03-22T00:00:00.000000Z",
+      "essentialRequirements":[
+        "Can provide an outcome",
+        "Available from 29h March"
+      ],
+      "backgroundInformation":"We'd like to build a thing to do athing.",
+      "updatedAt":"2016-02-16T14:04:22.617017Z",
+      "id":4,
+      "createdAt":"2016-02-12T16:30:55.808730Z",
+      "clarificationQuestionsAreClosed":true,
+      "frameworkFramework":"dos",
+      "clarificationQuestionsClosedAt":"2016-03-15T00:00:00.000000Z",
+      "lotSlug":"digital-professionals",
+      "workingArrangements":"Work",
+      "organisation":"GDS",
+      "frameworkStatus":"live",
+      "lotName":"Digital specialists",
+      "location":"East of England",
+      "lot":"digital-professionals",
+      "status":"live",
+      "specialistRole":"businessAnalyst",
+      "importantDates":"29th March",
+      "contractLength":"3 Months",
+      "currentTechnologies":"Business Focus Plus",
+      "clarificationQuestions":[
+        {
+          "answer":"Because",
+          "question":"Why?",
+          "publishedAt":"2016-03-04T09:19:42.138442Z"
+        }
+      ],
+      "title":"Another requirement",
+      "frameworkSlug":"digital-service-professionals",
+      "additionalTerms":"You'll never work in this town again.",
+      "frameworkName":"digital service professionals",
+      "publishedAt":"2016-03-07T16:02:51.591567Z"
     }
   ],
   "links":{
@@ -86,6 +136,7 @@
     "next":"http://localhost:5000/briefs?status=live%2Cclosed&framework=digital-service-professionals&page=3"
   },
   "meta":{
-    "total":2
+    "total":3,
+    "per_page":1
   }
 }

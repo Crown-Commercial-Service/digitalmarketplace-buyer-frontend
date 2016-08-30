@@ -1,0 +1,1 @@
+<a href="?page={{ page_number }}{% for key, val_list in link_args.lists() %}{% if key != 'page' %}{% for val in val_list %}&{{ key }}={{ val }}{% endfor %}{% endif %}{% endfor %}">{{ link_label }}</a>
