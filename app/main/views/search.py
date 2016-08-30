@@ -8,7 +8,7 @@ from app.api_client.data import DataAPIClient
 from app.main.utils import get_page_list
 
 from ...main import main
-from app import content_loader
+from app import cache
 
 
 # For prototyping
@@ -28,6 +28,7 @@ def normalise_role(role_name):
     return role_name.replace('Senior ', '').replace('Junior ', '')  # Mind the white space after Junior
 
 
+@cache.cached(timeout=300, key_prefix='get_all_roles')
 def get_all_roles(data_api_client):
     """
     Returns a two-valued tuple:
@@ -36,8 +37,6 @@ def get_all_roles(data_api_client):
 
     The original role data is actually a list of dicts because of folding Senior/Junior roles into one role.
     """
-    # TODO: cache this function
-
     response = data_api_client.get_roles()
 
     roles = set()
@@ -45,8 +44,7 @@ def get_all_roles(data_api_client):
     for role_data in response['roles']:
         role = normalise_role(role_data['role'])
         raw_role_data[role].append(role_data)
-        if role not in roles:
-            roles.add(role)
+        roles.add(role)
     return roles, raw_role_data
 
 
