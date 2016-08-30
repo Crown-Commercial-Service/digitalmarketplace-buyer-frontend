@@ -73,7 +73,12 @@
   </p>
 
   <p>
-    {{ form.accept }} {{ form.accept.label }}
+    {% if form.accept.errors %}
+      {{ form.accept(class="invalid") }}
+    {% else %}
+      {{ form.accept }}
+    {% endif %}
+    {{ form.accept.label }}
   </p>
 
   {%
