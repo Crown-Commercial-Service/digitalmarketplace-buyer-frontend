@@ -362,7 +362,8 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         # )
 
         ss_elem = document.xpath("//p[@class='search-summary']")[0]
-        assert self._normalize_whitespace(self._squashed_element_text(ss_elem)) == "2 opportunities"
+        assert self._normalize_whitespace(self._squashed_element_text(ss_elem)) == "%s opportunities" % \
+                                                                                   self.briefs['meta']['total']
 
     def test_catalogue_of_briefs_page_loads_as_buyer(self):
         self.login_as_buyer()
@@ -375,7 +376,7 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         assert res.status_code == 400
 
     def test_catalogue_of_briefs_page_shows_pagination_if_more_pages(self):
-        res = self.client.get(self.expand_path('/digital-service-professionals/opportunities'))
+        res = self.client.get(self.expand_path('/digital-service-professionals/opportunities?page=2'))
         assert_equal(200, res.status_code)
         page = res.get_data(as_text=True)
         document = html.fromstring(page)
@@ -384,12 +385,12 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         assert '<li class="next">' in page
         prev_url = str(document.xpath('string(//li[@class="previous"]/a/@href)'))
         next_url = str(document.xpath('string(//li[@class="next"]/a/@href)'))
-        assert prev_url.endswith('/opportunities?page=1')
-        assert next_url.endswith('/opportunities?page=3')
+        assert prev_url.endswith('?page=1')
+        assert next_url.endswith('?page=3')
 
     def test_no_pagination_if_no_more_pages(self):
-        del self.briefs['links']['prev']
-        del self.briefs['links']['next']
+        self.briefs['meta']['per_page'] = self.briefs['meta']['total']
+
         res = self.client.get(self.expand_path('/digital-service-professionals/opportunities'))
         assert_equal(200, res.status_code)
         page = res.get_data(as_text=True)

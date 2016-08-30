@@ -122,9 +122,11 @@ Seller opportunities – {{ framework.name }} – Digital Marketplace
       <ul class="pagination-controls">
 
         {% if current_page - 1 > 0 %}
-            {% with page_number=current_page-1, link_label="< Back" %}
-                {% include 'search/_briefs_pagination_link.html' %}
-            {% endwith %}
+            <li class="previous">
+                {% with page_number=current_page-1, link_label="< Back" %}
+                    {% include 'search/_briefs_pagination_link.html' %}
+                {% endwith %}
+            </li>
         {% endif %}
 
         {% for pg in pages %}
@@ -140,9 +142,11 @@ Seller opportunities – {{ framework.name }} – Digital Marketplace
         {% endfor %}
 
         {% if current_page + 1 <= num_pages %}
-            {% with page_number=current_page+1, link_label="Next >" %}
-                {% include 'search/_briefs_pagination_link.html' %}
-            {% endwith %}
+            <li class="next">
+                {% with page_number=current_page+1, link_label="Next >" %}
+                    {% include 'search/_briefs_pagination_link.html' %}
+                {% endwith %}
+            </li>
         {% endif %}
 
       </ul>
