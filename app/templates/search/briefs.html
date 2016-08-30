@@ -114,29 +114,39 @@ Seller opportunities – {{ framework.name }} – Digital Marketplace
     </div>
 
 <hr>
-<div class="pagination visually-hidden">
+<div class="pagination">
   <div>
-    Page <strong>{{ page }}</strong> of <strong>{{ num_pages }}</strong>
+    Page <strong>{{ current_page }}</strong> of <strong>{{ num_pages }}</strong>
   </div>
   <div>
-    <ul class="pagination-controls">
-    {% if prev_link_args %}
-      <li class="previous">
-          <a href="{{ url_for('.list_opportunities', framework_slug=framework.slug, **prev_link_args) }}">
-              Previous <span class="visuallyhidden">page</span>
-          </a>
-      </li>
-    {% endif %}
+      <ul class="pagination-controls">
 
-    {% if next_link_args %}
-      <li class="next">
-          <a href="{{ url_for('.list_opportunities', framework_slug=framework.slug, **next_link_args) }}">
-              Next <span class="visuallyhidden">page</span>
-          </a>
-      </li>
-    {% endif %}
-    </ul>
-  </div>
+        {% if current_page - 1 > 0 %}
+            {% with page_number=current_page-1, link_label="< Back" %}
+                {% include 'search/_briefs_pagination_link.html' %}
+            {% endwith %}
+        {% endif %}
+
+        {% for pg in pages %}
+            <li class="{% if pg == current_page %}current{% endif %}">
+              {% if pg != '...' %}
+                  {% with page_number=pg, link_label=pg  %}
+                    {% include 'search/_briefs_pagination_link.html' %}
+                  {% endwith %}
+              {% else %}
+                <span>{{ pg }}</span>
+              {% endif %}
+            </li>
+        {% endfor %}
+
+        {% if current_page + 1 <= num_pages %}
+            {% with page_number=current_page+1, link_label="Next >" %}
+                {% include 'search/_briefs_pagination_link.html' %}
+            {% endwith %}
+        {% endif %}
+
+      </ul>
+    </div>
 </div>
 
 {% endblock %}
