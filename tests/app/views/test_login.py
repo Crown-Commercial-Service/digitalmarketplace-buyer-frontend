@@ -746,6 +746,7 @@ class TestCreateBuyer(BaseApplicationTest):
         assert res.status_code == 400
         assert has_validation_errors(res.get_data(as_text=True), 'name')
         assert has_validation_errors(res.get_data(as_text=True), 'password')
+        assert has_validation_errors(res.get_data(as_text=True), 'accept')
 
     def test_should_be_an_error_if_too_short_name_and_password(self):
         token = self._generate_token()
@@ -760,6 +761,7 @@ class TestCreateBuyer(BaseApplicationTest):
         assert res.status_code == 400
         assert has_validation_errors(res.get_data(as_text=True), 'name')
         assert has_validation_errors(res.get_data(as_text=True), 'password')
+        assert has_validation_errors(res.get_data(as_text=True), 'accept')
 
     def test_should_be_an_error_if_too_long_name_and_password(self):
         with self.app.app_context():
@@ -782,6 +784,7 @@ class TestCreateBuyer(BaseApplicationTest):
 
             assert has_validation_errors(res.get_data(as_text=True), 'name')
             assert has_validation_errors(res.get_data(as_text=True), 'password')
+            assert has_validation_errors(res.get_data(as_text=True), 'accept')
 
     @mock.patch('app.main.views.login.data_api_client')
     def test_should_return_an_error_if_user_exists_and_is_a_buyer(self, data_api_client):
