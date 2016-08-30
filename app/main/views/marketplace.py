@@ -175,13 +175,11 @@ def list_opportunities(framework_slug):
     briefs = api_result["briefs"]
     meta = api_result['meta']
 
-    results_per_page = meta.get('per_page')
-    total_results = meta.get('total')
+    results_per_page = meta['per_page']
+    total_results = meta['total']
     current_page = int(request.args.get('page', 1))
 
-    pages = [1]
-    if results_per_page and total_results:
-        pages = get_page_list(results_per_page, total_results, current_page)
+    pages = get_page_list(results_per_page, total_results, current_page)
 
     html = render_template('search/briefs.html',
                            framework=framework,
@@ -190,7 +188,7 @@ def list_opportunities(framework_slug):
                            filters_applied=form.filters_applied(),
                            briefs=briefs,
                            lot_names=tuple(label for id_, label in form.lot.choices),
-                           briefs_count=api_result.get("meta", {}).get("total", None),
+                           briefs_count=total_results,
                            pages=pages,
                            num_pages=pages[-1],
                            current_page=current_page,
