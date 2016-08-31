@@ -33,6 +33,7 @@ Seller opportunities – {{ framework.name }} – Digital Marketplace
 {% endblock %}
 
 {% block sidebar %}
+    {% if show_filters %}
     <aside class="sidebar" id="nav">
         <div class="block-2">
             <div class="inner-block">
@@ -44,6 +45,7 @@ Seller opportunities – {{ framework.name }} – Digital Marketplace
             </div>
         </div>
     </aside>
+    {% endif %}
 {% endblock %}
 
 {% block main_content %}

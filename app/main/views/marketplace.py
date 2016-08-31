@@ -192,7 +192,8 @@ def list_opportunities(framework_slug):
                            pages=pages,
                            num_pages=pages[-1],
                            current_page=current_page,
-                           link_args=request.args
+                           link_args=request.args,
+                           show_filters=current_app.config.get('FEATURE_FLAGS_BRIEF_FILTER', False)
                            )
     response = make_response(html)
     if current_user.is_authenticated and current_user.has_role('buyer'):
