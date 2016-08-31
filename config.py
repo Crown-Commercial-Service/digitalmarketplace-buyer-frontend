@@ -11,7 +11,7 @@ class Config(object):
     VERSION = get_version_label(
         os.path.abspath(os.path.dirname(__file__))
     )
-    URL_PREFIX = '/marketplace'
+    URL_PREFIX = ''
     SESSION_COOKIE_NAME = 'dm_session'
     SESSION_COOKIE_PATH = '/'
     SESSION_COOKIE_HTTPONLY = True
