@@ -67,6 +67,7 @@
             <li><a href="{{ url_for('main.buyer_signup') }}">Register</a></li>
             <li><a href="{{ url_for('main.render_login') }}">Log in</a></li>
             {% else %}
+            <li><a href="{% if current_user.role == 'buyer' %}{{ url_for('buyers.buyer_dashboard') }}{% else %}/suppliers{% endif %}">Dashboard</a></li>
             <li><a href="{{ url_for('main.logout') }}">Log out</a></li>
             {% endif %}
           </ul>
