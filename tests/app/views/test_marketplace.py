@@ -365,7 +365,8 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
                                                                                    self.briefs['meta']['total']
 
     def test_catalogue_of_briefs_page_filtered(self):
-        original_url = "/marketplace/digital-service-professionals/opportunities?page=2&status=live&lot=lot-one&lot=lot-three"
+        original_url = "/marketplace/digital-service-professionals/opportunities?" \
+            "page=2&status=live&lot=lot-one&lot=lot-three"
         res = self.client.get(original_url)
         assert_equal(200, res.status_code)
         document = html.fromstring(res.get_data(as_text=True))
@@ -410,7 +411,7 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         parsed_prev_url = urlparse(document.xpath("//li[@class='previous']/a/@href")[0])
         parsed_next_url = urlparse(document.xpath("//li[@class='next']/a/@href")[0])
         assert (parsed_original_url.path == parsed_prev_url.path == parsed_next_url.path) or \
-        '' == parsed_prev_url.path == parsed_next_url.path
+            '' == parsed_prev_url.path == parsed_next_url.path
 
         normalize_qs = lambda qs: {k: set(v) for k, v in iteritems(parse_qs(qs)) if k != "page"}
         assert normalize_qs(parsed_original_url.query) == \
@@ -473,7 +474,7 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
 
         normalize_qs = lambda qs: {k: set(v) for k, v in iteritems(parse_qs(qs)) if k != "page"}
         assert normalize_qs(parsed_original_url.query) == normalize_qs(parsed_prev_url.query) == \
-               normalize_qs(parsed_next_url.query)
+            normalize_qs(parsed_next_url.query)
 
         ss_elem = document.xpath("//p[@class='search-summary']")[0]
         assert self._normalize_whitespace(self._squashed_element_text(ss_elem)) == "3 results"
