@@ -427,8 +427,8 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
     def test_catalogue_of_briefs_page_filtered_all_options_selected(self):
         with self.app.app_context():
             original_url = url_for('main.list_opportunities', framework_slug='digital-service-professionals') + \
-            "?page=2&status=live&lot=lot-one&lot=lot-three&status=closed&lot=lot-four"
-        
+                "?page=2&status=live&lot=lot-one&lot=lot-three&status=closed&lot=lot-four"
+
         res = self.client.get(original_url)
         assert_equal(200, res.status_code)
         document = html.fromstring(res.get_data(as_text=True))
