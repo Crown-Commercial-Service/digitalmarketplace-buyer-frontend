@@ -99,9 +99,6 @@ class ChangePasswordForm(DmForm):
 
 
 class CreateUserForm(DmForm):
-    def __init__(self, *args, **kwargs):
-        super(CreateUserForm, self).__init__(*args, **kwargs)
-        self.accept.label.text = kwargs.get('accept_label', '')
 
     name = StripWhitespaceStringField(
         'Full name', id="input_name",

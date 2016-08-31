@@ -290,7 +290,7 @@ def create_buyer_account(token):
     except InvalidToken:
         abort(404)
 
-    form = auth_forms.CreateUserForm(name=data['name'], accept_label=get_accept_label())
+    form = auth_forms.CreateUserForm(name=data['name'])
 
     user_json = data_api_client.get_user(email_address=data['emailAddress'])
 
@@ -309,12 +309,6 @@ def create_buyer_account(token):
         user=user)
 
 
-def get_accept_label():
-    label = 'I accept the <a href="{}">Terms of Use</a> and <a href="{}">Privacy Policy</a>.' \
-        .format(url_for('.terms_of_use'), url_for('.privacy_policy'))
-    return label
-
-
 @main.route('/create-user/<string:token>', methods=['POST'])
 def submit_create_buyer_account(token):
     try:
@@ -326,7 +320,7 @@ def submit_create_buyer_account(token):
             token=None
         )
 
-    form = auth_forms.CreateUserForm(request.form, accept_label=get_accept_label())
+    form = auth_forms.CreateUserForm(request.form)
 
     if not form.validate():
         current_app.logger.warning(

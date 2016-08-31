@@ -73,12 +73,13 @@
   </p>
 
   <p>
+  {% set accept_label %}I accept the <a href="{{ url_for('.terms_of_use') }}">Terms of Use</a> and <a href="{{ url_for('.privacy_policy' )}}">Privacy Policy</a>.{% endset %}
     {% if form.accept.errors %}
       {{ form.accept(class="invalid") }}
     {% else %}
       {{ form.accept }}
     {% endif %}
-    {{ form.accept.label }}
+    {{ form.accept.label(text=accept_label) }}
   </p>
 
   {%
