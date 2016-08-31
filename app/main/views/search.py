@@ -21,7 +21,7 @@ Role = namedtuple('Role', 'label')
 ExtraDetail = namedtuple('ExtraDetail', 'key value')
 Result = namedtuple('Result', 'title description badges roles url')
 
-SUPPLIER_RESULTS_PER_PAGE = 10
+SUPPLIER_RESULTS_PER_PAGE = 50
 
 
 def normalise_role(role_name):
