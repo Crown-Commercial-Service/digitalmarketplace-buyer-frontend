@@ -356,7 +356,7 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         }
 
         heading = document.xpath('normalize-space(//h1/text())')
-        assert heading == "Digital Service Professionals opportunities"
+        assert heading == "Latest opportunities"
         assert 'lot 1, lot 3 and lot 4' in document.xpath(
             "normalize-space(//div[@class='marketplace-paragraph']/p/text())"
         )
@@ -386,7 +386,7 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         assert set(self._data_api_client.find_briefs.call_args[1]["lot"].split(",")) == {"lot-one", "lot-three"}
 
         heading = document.xpath('normalize-space(//h1/text())')
-        assert heading == "Digital Service Professionals opportunities"
+        assert heading == "Latest opportunities"
         assert 'lot 1, lot 3 and lot 4' in document.xpath(
             "normalize-space(//div[@class='marketplace-paragraph']/p/text())"
         )
@@ -449,7 +449,7 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         }
 
         heading = document.xpath('normalize-space(//h1/text())')
-        assert heading == "Digital Service Professionals opportunities"
+        assert heading == "Latest opportunities"
         assert 'lot 1, lot 3 and lot 4' in document.xpath(
             "normalize-space(//div[@class='marketplace-paragraph']/p/text())"
         )
