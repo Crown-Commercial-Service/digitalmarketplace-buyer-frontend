@@ -134,6 +134,16 @@ ol.instruction-list {
     font-size: rem(17);
   }
 
+  .text-box-number-label {
+    & + input[class='text-box'] {
+      width: 60%;
+
+      @include media($tablet) {
+        width: 80%;
+      }
+    }
+  }
+
   .list-entry-remove,
   .list-entry-add {
     background: $white;
@@ -167,16 +177,5 @@ ol.instruction-list {
     display: inline-block;
     margin-left: 0.5em;
     margin-top: 0.4em;
-  }
-}
-
-// Shortlist and evaluation process - Criteria
-
-#essentialRequirements, #niceToHaveRequirements, #culturalFitCriteria {
-  .text-box {
-    width: 60%;
-    @include media($tablet) {
-      width: 80%;
-    }
   }
 }
