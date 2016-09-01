@@ -21,7 +21,7 @@ def redirect_logged_in_user(next_url=None):
             return redirect(url_for('buyers.buyer_dashboard'))
 
         if current_user.role == 'supplier':
-            return redirect(urlparse.urljoin(site_url_prefix, 'sellers'))
+            return redirect(url_for('.list_opportunities', framework_slug='digital-service-professionals'))
 
     return redirect(url_for('.index'))
 
