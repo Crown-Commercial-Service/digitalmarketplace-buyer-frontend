@@ -52,23 +52,43 @@ class TestLogin(BaseApplicationTest):
         assert "Log in to the Marketplace" in res.get_data(as_text=True)
 
     @mock.patch('app.main.views.login.data_api_client')
-    def test_should_redirect_to_search_on_buyer_login(self, data_api_client):
+    def test_redirect_on_buyer_login(self, data_api_client):
         with self.app.app_context():
             data_api_client.authenticate_user.return_value = self.user(123, "email@email.com", None, None, 'Name')
-            res = self.client.post(self.expand_path('/login'), data={
+            res = self.client.post(self.url_for('main.process_login'), data={
                 'email_address': 'valid@email.com',
                 'password': '1234567890',
                 'csrf_token': FakeCsrf.valid_token,
             })
             assert res.status_code == 302
-            assert res.location == 'http://localhost' + self.expand_path('/search/sellers')
+            assert res.location == self.url_for('buyers.buyer_dashboard', _external=True)
             assert 'Secure;' in res.headers['Set-Cookie']
 
-    def test_should_redirect_logged_in_buyer_to_search(self):
+    @mock.patch('app.main.views.login.data_api_client')
+    def test_redirect_on_supplier_login(self, data_api_client):
+        with self.app.app_context():
+            data_api_client.authenticate_user.return_value = self.user(
+                123,
+                'email@email.com',
+                None,
+                None,
+                'Name',
+                role='supplier'
+            )
+            res = self.client.post(self.url_for('main.process_login'), data={
+                'email_address': 'valid@email.com',
+                'password': '1234567890',
+                'csrf_token': FakeCsrf.valid_token,
+            })
+            assert res.status_code == 302
+            assert res.location == 'http://localhost' + self.expand_path('/sellers')
+            assert 'Secure;' in res.headers['Set-Cookie']
+
+    def test_should_redirect_logged_in_buyer(self):
         self.login_as_buyer()
-        res = self.client.get(self.expand_path('/login'))
+        res = self.client.get(self.url_for('main.render_login'))
         assert res.status_code == 302
-        assert res.location == 'http://localhost' + self.expand_path('/search/sellers')
+        assert res.location == self.url_for('buyers.buyer_dashboard', _external=True)
 
     def test_should_strip_whitespace_surrounding_login_email_address_field(self):
         self.client.post(self.expand_path('/login'), data={
@@ -101,7 +121,7 @@ class TestLogin(BaseApplicationTest):
             assert res.location == 'http://localhost' + self.expand_path('/bar-foo')
 
     @mock.patch('app.main.views.login.data_api_client')
-    def test_bad_next_url_takes_buyer_user_to_search(self, data_api_client):
+    def test_bad_next_url_redirects_user(self, data_api_client):
         with self.app.app_context():
             data_api_client.authenticate_user.return_value = self.user(123, "email@email.com", None, None, 'Name')
             data = {
@@ -111,7 +131,7 @@ class TestLogin(BaseApplicationTest):
             }
             res = self.client.post(self.expand_path('/login?next=http://badness.com'), data=data)
         assert res.status_code == 302
-        assert res.location == 'http://localhost' + self.expand_path('/search/sellers')
+        assert res.location == self.url_for('buyers.buyer_dashboard', _external=True)
 
     def test_should_have_cookie_on_redirect(self):
         with self.app.app_context():
