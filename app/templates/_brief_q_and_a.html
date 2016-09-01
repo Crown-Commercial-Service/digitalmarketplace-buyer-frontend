@@ -11,16 +11,16 @@
   </a>
 {% endif %}
 
-{{ summary.heading("Questions asked by suppliers", id="clarification-questions") }}
+{{ summary.heading("Seller questions", id="clarification-questions") }}
 {% call(question) summary.list_table(
   brief.clarificationQuestions,
-  caption="Questions asked by suppliers",
+  caption="Seller questions",
   field_headings=[
     "Seller question",
     "Buyer answer"
     ],
     field_headings_visible=False,
-    empty_message="No questions have been answered yet"
+    empty_message="No questions have been answered yet."
 ) %}
   {% call summary.row() %}
     {% call summary.field(first=True, wide=False) -%}

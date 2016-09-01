@@ -1,5 +1,6 @@
 
 .list-horizontal {
+  width: 100%;
   .tags {
     a {
       display: inline-block;
@@ -20,9 +21,13 @@
 .list-highlighted {
   > li {
     padding-left: 0.2em;
+    h3 {
+      min-height: auto;
+    }
   }
 }
 
+.list-horizontal,
 .list-vertical,
 .list-vertical--thirds,
 .list-vertical--fourths, {
@@ -47,14 +52,20 @@
     }
 
     > li {
+
       border-width: 0;
 
       @include media($tablet) {   
-        flex-basis: 40%;    
+        flex-basis: 40%;
+        width: 40%;
       }
 
       p {
+        display: inline-block;
         min-height: auto;
+        @include media($tablet) {
+          width: 60%;
+        }
       }
 
     }
@@ -108,9 +119,11 @@
 
     li {
       >p {
+
         font-weight: $heading-font-weight;
 
         @include media($tablet) {
+          width: 21.5%;
           flex: 0 0 21.5%;
           margin-right: $base-spacing;
 
@@ -122,6 +135,9 @@
       }
       article {
         width: 100%;
+        @include media($tablet) {
+          width: 79.5%;
+        }
       }
     }
   }

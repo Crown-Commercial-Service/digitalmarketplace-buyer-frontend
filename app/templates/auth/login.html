@@ -66,7 +66,8 @@
 {% endwith %}
 
 <p>
-  Don't have a buyer account? <a href="{{ url_for('.buyer_signup') }}">Create one now</a>.
+  Don't have a buyer account? <a href="{{ url_for('.buyer_signup') }}">Create one now</a>.<br>
+  Seller account invites coming soon.
 </p>
 
 <form action="{{ url_for('.process_login', next=next) }}" method="POST">

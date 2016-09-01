@@ -71,11 +71,11 @@
       <h2>Step 3. Evaluate applicants and award a contract</h2>
       {% if lot.slug == "digital-professionals" %}
       <p>
-        After your brief closes, evaluate the applicants using the criteria you set when creating the brief and award the contract to the applicant who best meets your needs.
+        After your brief closes, evaluate the applicants using the criteria you set when creating the brief and <a href="{{ url_for('.buyers_guide') }}">award the contract</a> to the applicant who best meets your needs and represents value for money.
       </p>
       {% elif lot.slug == "digital-outcome" %}
       <p>
-        After your brief closes, evaluate the applicants using the criteria you set when creating the brief and <a href="{{ url_for('.buyers_guide') }}">award the contract</a> to the applicant who best meets your needs.
+        After your brief closes, evaluate the applicants using the criteria you set when creating the brief and <a href="{{ url_for('.buyers_guide') }}">award the contract</a> to the applicant who best meets your needs and represents value for money.
       </p>
       {% endif %}
 
