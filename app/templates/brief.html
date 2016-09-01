@@ -79,7 +79,7 @@
 {% if brief.status == 'live' %}
 {% if brief_responses %}
 {% with
-  url = "{}/suppliers/opportunities/{}/responses/result".format(config['URL_PREFIX'], brief.id),
+  url = "{}/sellers/opportunities/{}/responses/result".format(config['URL_PREFIX'], brief.id),
   text = "View your application",
   bigger = True
   %}
@@ -87,7 +87,7 @@
   {% endwith %}
   {% else %}
   {% with
-  url = "{}/suppliers/opportunities/{}/responses/create".format(config['URL_PREFIX'], brief.id),
+  url = "{}/sellers/opportunities/{}/responses/create".format(config['URL_PREFIX'], brief.id),
   role = "button",
   label = "Start application"
   %}
