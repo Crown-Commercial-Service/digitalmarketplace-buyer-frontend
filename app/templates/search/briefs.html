@@ -23,99 +23,97 @@ Seller opportunities – {{ framework.name }} – Digital Marketplace
 
 {% block content_summary %}
 <div class="intro">
-  {% with heading="{} opportunities".format(framework.name) %}
-  <h1>{{ heading }}</h1>
-  {% endwith %}
-  <div class="marketplace-paragraph">
-  <p>View and apply for live {{ lot_names | map('lower') | smartjoin }} briefs.</p>
-</div>
+  <h1>Latest opportunities</h1>
 </div>
 {% endblock %}
 
+
 {% block sidebar %}
-    {% if show_filters %}
-    <aside class="sidebar" id="nav">
-        <div class="block-2">
-            <div class="inner-block">
-                <section class="column-one-third search-page-filters" aria-label="Search filters">
-                    <form action="" method="get">
-                        {% include 'search/_filters.html' %}
-                    </form>
-                </section>
-            </div>
-        </div>
-    </aside>
-    {% endif %}
+{% if show_filters %}
+<aside class="sidebar" id="nav">
+  <div class="block-2">
+    <div class="inner-block">
+      <section class="column-one-third search-page-filters" aria-label="Search filters">
+        <form action="" method="get">
+          {% include 'search/_filters.html' %}
+        </form>
+      </section>
+    </div>
+  </div>
+</aside>
+{% endif %}
 {% endblock %}
 
 {% block main_content %}
-    <div class="block-3">
-        <div class="inner-block">
-            <article class="document">
-                <div class="body">
+<div class="block-3">
+  <div class="inner-block">
+    <article class="document">
+      <div class="body">
 
-                    {% include 'search/_briefs_summary.html' %}
+        {% include 'search/_briefs_summary.html' %}
 
 
-                    <ul class="list-horizontal">
+        <ul class="list-horizontal">
 
-                      {% for brief in briefs %}
-                      <li class="brief-result">
-                        <article>
+          {% for brief in briefs %}
+          <li class="brief-result">
+            <article>
 
-                          {% if brief.sellerSelector == 'allSellers' %}
-                          <span class="badge--open">
-                             Open to all qualified sellers
-                          </span>
-                          {% endif %}
+              {% if brief.sellerSelector %}
+              <span class="badge--open">
+                {% if brief.sellerSelector == 'allSellers' %}Open to all{% endif %}
+                {% if brief.sellerSelector == 'someSellers' %}Open to selected{% endif %}
+                {% if brief.sellerSelector == 'oneSeller' %}Open to one{% endif %}
+              </span>
+              {% endif %}
 
-                          <h2>
-                            <a href="{{ url_for('.get_brief_by_id', framework_slug=framework.slug, brief_id=brief.id) }}">{{ brief.title }}</a>
-                          </h2>
+             <h2>
+              <a href="{{ url_for('.get_brief_by_id', framework_slug=framework.slug, brief_id=brief.id) }}">{{ brief.title }}</a>
+            </h2>
 
-                          <ul class="organisation">
-                            <li>
-                              {{ brief.organisation }}
-                            </li>
-                            <li>
-                              {{ brief.location }}
-                            </li>
-                          </ul>
+            <ul class="organisation">
+              <li>
+                {{ brief.organisation }}
+              </li>
+              <li>
+                {{ brief.location }}
+              </li>
+            </ul>
 
-                          <ul class="category">
-                            <li>
-                              {{ brief.lotName }}
-                            </li>
-                          </ul>
+            <ul class="category">
+              <li>
+                {{ brief.lotName }}
+              </li>
+            </ul>
 
-                          <ul class="status">
-                            {% if brief.status == 'closed' %}
-                            <li class="status-closed">
-                              Closed
-                            </li>
-                            {% else %}
-                            <li>
-                              <strong>Published:</strong> {{ brief.publishedAt|dateformat }}
-                            </li>
-                            <li>
-                              <strong>Closing:</strong> {{ brief.applicationsClosedAt|dateformat }}
-                            </li>
-                            {% endif %}
-                          </ul>
+            <ul class="status">
+              {% if brief.status == 'closed' %}
+              <li class="status-closed">
+                Closed
+              </li>
+              {% else %}
+              <li>
+                <strong>Published:</strong> {{ brief.publishedAt|dateformat }}
+              </li>
+              <li>
+                <strong>Closing:</strong> {{ brief.applicationsClosedAt|dateformat }}
+              </li>
+              {% endif %}
+            </ul>
 
-                          {% if brief.summary %}
-                          <p>{{ brief.summary }}</p>
-                          {% endif %}
+            {% if brief.summary %}
+            <p>{{ brief.summary }}</p>
+            {% endif %}
 
-                        </article>
-                      </li>
+          </article>
+        </li>
 
-                      {% endfor %}
-                    </ul>
-                </div>
-            </article>
-        </div>
+        {% endfor %}
+      </ul>
     </div>
+  </article>
+</div>
+</div>
 
 <hr>
 <div class="pagination">
@@ -123,38 +121,38 @@ Seller opportunities – {{ framework.name }} – Digital Marketplace
     Page <strong>{{ current_page }}</strong> of <strong>{{ num_pages }}</strong>
   </div>
   <div>
-      <ul class="pagination-controls">
+    <ul class="pagination-controls">
 
-        {% if current_page - 1 > 0 %}
-            <li class="previous">
-                {% with page_number=current_page-1, link_label="< Back" %}
-                    {% include 'search/_briefs_pagination_link.html' %}
-                {% endwith %}
-            </li>
+      {% if current_page - 1 > 0 %}
+      <li class="previous">
+        {% with page_number=current_page-1, link_label="< Back" %}
+        {% include 'search/_briefs_pagination_link.html' %}
+        {% endwith %}
+      </li>
+      {% endif %}
+
+      {% for pg in pages %}
+      <li class="{% if pg == current_page %}current{% endif %}">
+        {% if pg != '...' %}
+        {% with page_number=pg, link_label=pg  %}
+        {% include 'search/_briefs_pagination_link.html' %}
+        {% endwith %}
+        {% else %}
+        <span>{{ pg }}</span>
         {% endif %}
+      </li>
+      {% endfor %}
 
-        {% for pg in pages %}
-            <li class="{% if pg == current_page %}current{% endif %}">
-              {% if pg != '...' %}
-                  {% with page_number=pg, link_label=pg  %}
-                    {% include 'search/_briefs_pagination_link.html' %}
-                  {% endwith %}
-              {% else %}
-                <span>{{ pg }}</span>
-              {% endif %}
-            </li>
-        {% endfor %}
+      {% if current_page + 1 <= num_pages %}
+      <li class="next">
+        {% with page_number=current_page+1, link_label="Next >" %}
+        {% include 'search/_briefs_pagination_link.html' %}
+        {% endwith %}
+      </li>
+      {% endif %}
 
-        {% if current_page + 1 <= num_pages %}
-            <li class="next">
-                {% with page_number=current_page+1, link_label="Next >" %}
-                    {% include 'search/_briefs_pagination_link.html' %}
-                {% endwith %}
-            </li>
-        {% endif %}
-
-      </ul>
-    </div>
+    </ul>
+  </div>
 </div>
 
 {% endblock %}
