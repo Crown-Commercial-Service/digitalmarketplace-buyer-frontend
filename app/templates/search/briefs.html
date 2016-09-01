@@ -27,8 +27,10 @@ Seller opportunities – {{ framework.name }} – Digital Marketplace
 </div>
 {% endblock %}
 
+
 {% block sidebar %}
-<aside class="sidebar" id="nav" style="display:none;">
+{% if show_filters %}
+<aside class="sidebar" id="nav">
   <div class="block-2">
     <div class="inner-block">
       <section class="column-one-third search-page-filters" aria-label="Search filters">
@@ -39,6 +41,7 @@ Seller opportunities – {{ framework.name }} – Digital Marketplace
     </div>
   </div>
 </aside>
+{% endif %}
 {% endblock %}
 
 {% block main_content %}
