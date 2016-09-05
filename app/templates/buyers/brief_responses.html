@@ -6,23 +6,23 @@
 
 {% block breadcrumb %}
   {%
-      with items = [
-        {
-          "link": url_for("main.index"),
-          "label": "Home"
-        },
-        {
-          "link": url_for(".buyer_dashboard"),
-          "label": "Dashboard"
-        },
-        {
-        "link": url_for("buyers.view_brief_overview", framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id),
-        "label": "Brief Overview"
-        },
-        {
-        "label": brief.title
-        }
-      ]
+    with items = [
+      {
+        "link": url_for("main.index"),
+        "label": "Home"
+      },
+      {
+        "link": url_for(".buyer_dashboard"),
+        "label": "Dashboard"
+      },
+      {
+      "link": url_for("buyers.view_brief_overview", framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id),
+      "label": "Brief Overview"
+      },
+      {
+      "label": brief.title
+      }
+    ]
   %}
     {% include "toolkit/breadcrumb.html" %}
   {% endwith %}
@@ -30,78 +30,77 @@
 
 {% block main_content %}
 <div class="grid-row">
-    <div class="column-two-thirds">
-        {% with
-        heading = "Shortlist suppliers",
-        smaller = true
-        %}
-        {% include "toolkit/page-heading.html" %}
-        {% endwith %}
-    </div>
+  <div class="column-two-thirds">
+    {% with
+      heading = "Shortlist sellers",
+      smaller = true
+    %}
+    {% include "toolkit/page-heading.html" %}
+    {% endwith %}
+  </div>
 </div>
 
 <div class="grid-row">
-    <div class="column-two-thirds">
-        <div class="dmspeak">
-          {% if response_counts['eligible'] > 0 %}
-            <p>
-                <span class='visual-emphasis'>{{ response_counts['eligible'] }} {{ pluralize(response_counts['eligible'], "supplier", "suppliers") }}</span>
-                responded to your requirements and {{ pluralize(response_counts['eligible'], "meets", "meet") }} all your essential skills and experience.
-            </p>
-            <p>
-                Suppliers that did not meet all your essential requirements have already been told they were unsuccessful.
-            </p>
+  <div class="column-two-thirds">
+    <div class="dmspeak">
+      {% if response_counts['eligible'] > 0 %}
+        <p>
+          <span class='visual-emphasis'>{{ response_counts['eligible'] }} {{ pluralize(response_counts['eligible'], "seller", "sellers") }}</span>
+          responded to your requirements and {{ pluralize(response_counts['eligible'], "meets", "meet") }} all your essential skills and experience.
+        </p>
+        <p>
+          Sellers that did not meet all your essential requirements have already been told they were unsuccessful.
+        </p>
 
-            <p>
-              Download the list of supplier responses and follow the guidance on <a href="https://www.gov.uk/guidance/how-to-shortlist-digital-outcomes-and-specialists-suppliers">how to shortlist</a>.
-            </p>
+        <p>
+          Download the list of seller responses and follow the guidance on <a href="{{ url_for('main.how_to_shortlist_suppliers') }}">how to shortlist</a>.
+        </p>
 
-            {% if brief.get("status") == "closed" %}
-                {%
-                with
-                items = [
-                    {
-                        "title": ("Download supplier responses to &lsquo;" + brief.get('title', brief['lotName']) + "&rsquo;")|safe,
-                        "link": url_for('buyers.download_brief_responses', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id),
-                        "file_type": "CSV",
-                        "download": "True"
-                    }
-                ]
-                %}
-                    {% include "toolkit/documents.html" %}
-                {% endwith %}
-            {% else %}
-            <p>
-                The file will be available here once applications have closed.
-            </p>
-            {% endif %}
-
-          {% else %}
-            <p>
-                No suppliers met your essential skills and experience requirements.
-            </p>
-            <p>
-                All the suppliers who applied have already been told they were unsuccessful.
-            </p>
-            <div class='explanation-list'>
-                <p class='lead'>
-                    If you still need this service, you should start the buying process again. Consider: 
-                </p>
-                <ul class='list-bullet'>
-                    <li>talking to suppliers before you start</li>
-                    <li>rewriting your requirements</li>
-                </ul>
-            </div>
-        </div>
-        {% endif %}
-        
-        {%
+        {% if brief.get("status") == "closed" %}
+          {%
             with
-            url = url_for('buyers.view_brief_overview', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id),
-            text = "Back to overview"
-        %}
-            {% include "toolkit/secondary-action-link.html" %}
-        {% endwith %}
+            items = [
+              {
+                "title": ("Download seller responses to &lsquo;" + brief.get('title', brief['lotName']) + "&rsquo;")|safe,
+                "link": url_for('buyers.download_brief_responses', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id),
+                "file_type": "CSV",
+                "download": "True"
+              }
+            ]
+          %}
+            {% include "toolkit/documents.html" %}
+          {% endwith %}
+        {% else %}
+        <p>
+          The file will be available here once applications have closed.
+        </p>
+        {% endif %}
+
+      {% else %}
+        <p>
+          No sellers met your essential skills and experience requirements.
+        </p>
+        <p>
+          All the sellers who applied have already been told they were unsuccessful.
+        </p>
+        <div class='explanation-list'>
+          <p class='lead'>
+            If you still need this service, you should start the buying process again. Consider: 
+          </p>
+          <ul class='list-bullet'>
+            <li>talking to sellers before you start</li>
+            <li>rewriting your requirements</li>
+          </ul>
+        </div>
+      {% endif %}
     </div>
+    {%
+      with
+      url = url_for('buyers.view_brief_overview', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id),
+      text = "Back to overview"
+    %}
+      {% include "toolkit/secondary-action-link.html" %}
+    {% endwith %}
+  </div>
 </div>
 {% endblock %}

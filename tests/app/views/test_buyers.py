@@ -1840,7 +1840,7 @@ class TestViewBriefResponsesPage(BaseApplicationTest):
         page = res.get_data(as_text=True)
 
         assert res.status_code == 200
-        assert "2 suppliers" in page
+        assert "2 sellers" in page
         assert "responded to your requirements and meet all your essential skills and experience." in page
 
     def test_page_does_not_pluralise_for_single_response(self, data_api_client):
@@ -1862,7 +1862,7 @@ class TestViewBriefResponsesPage(BaseApplicationTest):
         ))
         page = res.get_data(as_text=True)
         assert res.status_code == 200
-        assert "1 supplier" in page
+        assert "1 seller" in page
         assert "responded to your requirements and meets all your essential skills and experience." in page
 
     def test_page_shows_correct_message_if_no_eligible_suppliers(self, data_api_client):
@@ -1885,7 +1885,7 @@ class TestViewBriefResponsesPage(BaseApplicationTest):
         page = res.get_data(as_text=True)
 
         assert res.status_code == 200
-        assert "No suppliers met your essential skills and experience requirements." in page
+        assert "No sellers met your essential skills and experience requirements." in page
 
     def test_page_shows_csv_download_link_if_brief_closed(self, data_api_client):
         data_api_client.find_brief_responses.return_value = self.two_good_three_bad_responses
@@ -1911,7 +1911,7 @@ class TestViewBriefResponsesPage(BaseApplicationTest):
 
         assert res.status_code == 200
         assert self._strip_whitespace(csv_link.text_content()) == \
-            "CSVdocument:Downloadsupplierresponsesto‘Ineedathingtodoathing’"
+            "CSVdocument:Downloadsellerresponsesto‘Ineedathingtodoathing’"
 
     def test_page_does_not_show_csv_download_link_if_brief_open(self, data_api_client):
         data_api_client.find_brief_responses.return_value = self.two_good_three_bad_responses
