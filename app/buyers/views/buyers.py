@@ -401,8 +401,8 @@ def publish_brief(framework_slug, lot_slug, brief_id):
         brief_url = url_for('.view_brief_overview', framework_slug=brief['frameworkSlug'], lot_slug=brief['lotSlug'],
                             brief_id=brief['id'], published='true')
 
-        brief_url_external = url_for('.view_brief_overview', framework_slug=brief['frameworkSlug'],
-                                     lot_slug=brief['lotSlug'], brief_id=brief['id'], published='true', _external=True)
+        brief_url_external = url_for('main.get_brief_by_id', framework_slug=brief['frameworkSlug'],
+                                     brief_id=brief['id'], _external=True)
 
         send_new_opportunity_email_to_sellers(brief, brief_url_external)
 
