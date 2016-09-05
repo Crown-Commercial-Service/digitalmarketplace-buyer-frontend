@@ -543,18 +543,20 @@ def send_new_opportunity_email_to_sellers(brief_json, brief_url):
             brief_url=brief_url
         )
 
-        try:
-            send_email(
-                to_email_addresses,
-                email_body,
-                current_app.config['SELLER_NEW_OPPORTUNITY_EMAIL_SUBJECT'],
-                current_app.config['DM_GENERIC_NOREPLY_EMAIL'],
-                current_app.config['DM_GENERIC_SUPPORT_NAME'],
-            )
-        except EmailError as e:
-            current_app.logger.error(
-                'seller new opportunity email failed to send. '
-                'error {error}',
-                extra={
-                    'error': six.text_type(e), })
-            abort(503, response='Failed to send seller new opportunity email.')
+        for to_email_address in to_email_addresses:  # Send emails individually rather than sending to a list of emails
+
+            try:
+                send_email(
+                    to_email_address,
+                    email_body,
+                    current_app.config['SELLER_NEW_OPPORTUNITY_EMAIL_SUBJECT'],
+                    current_app.config['DM_GENERIC_NOREPLY_EMAIL'],
+                    current_app.config['DM_GENERIC_SUPPORT_NAME'],
+                )
+            except EmailError as e:
+                current_app.logger.error(
+                    'seller new opportunity email failed to send. '
+                    'error {error}',
+                    extra={
+                        'error': six.text_type(e), })
+                abort(503, response='Failed to send seller new opportunity email.')
