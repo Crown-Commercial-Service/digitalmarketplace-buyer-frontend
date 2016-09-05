@@ -1,9 +1,10 @@
-from ..helpers.shared_helpers import chunk_string
 import os
 import re
-from dmutils.service_attribute import Attribute
-from dmcontent.formats import format_service_price
 
+from app import content_loader
+from dmutils.service_attribute import Attribute
+from dmcontent.errors import ContentNotFoundError
+from dmcontent.formats import format_service_price
 try:
     from urllib.parse import urlparse
 except ImportError:
@@ -12,6 +13,7 @@ try:
     from urllib import unquote
 except ImportError:
     from urllib.parse import unquote
+from ..helpers.shared_helpers import chunk_string
 
 
 class Service(object):
@@ -93,14 +95,16 @@ class Meta(object):
             return list(chunk_string(str(id), 4))
 
     def get_external_framework_url(self, service_data):
-        external_url = 'http://ccs-agreements.cabinetoffice.gov.uk/contracts/'
-        if service_data['frameworkName'] == 'G-Cloud 7':
-            framework_url = external_url + 'rm1557vii'
-        elif service_data['frameworkName'] == 'G-Cloud 6':
-            framework_url = external_url + 'rm1557vi'
-        else:
-            framework_url = None
-        return framework_url
+        try:
+            content_loader.load_messages(service_data['frameworkSlug'], ['urls'])
+            return content_loader.get_message(
+                service_data['frameworkSlug'],
+                'urls',
+                'framework_url'
+            ) or None
+        except ContentNotFoundError as e:
+            # If no urls.yml exists then we don't have a URL for the framework
+            return None
 
     def get_documents(self, service_data):
         url_keys = [
