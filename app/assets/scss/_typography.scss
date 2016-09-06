@@ -164,6 +164,10 @@ span {
   box-shadow: none;
   background-color: $light-blue;
 
+  @media print {
+    border: 1px solid $non-black;
+  }
+
   h2 {
     margin: 1.2rem 0 .4rem;
   }
@@ -202,6 +206,10 @@ span {
   margin: 1.6em 0;
   box-shadow: none;
   background-color: $light-blue;
+
+  @media print {
+    border: 1px solid $non-black;
+  }
 
   h2 {
     margin-top: 0.8em;
