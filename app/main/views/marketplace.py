@@ -59,16 +59,6 @@ def my_template(template_slug):
     return render_template('%s.html' % template_slug)
 
 
-@main.route('/cookies')
-def cookies():
-    return render_template('content/cookies.html')
-
-
-@main.route('/terms-and-conditions')
-def terms_and_conditions():
-    return render_template('content/terms-and-conditions.html')
-
-
 @main.route('/ideation')
 def ideation():
     return render_template('content/ideation.html')

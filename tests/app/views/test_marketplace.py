@@ -53,19 +53,11 @@ class TestStaticMarketplacePages(BaseApplicationTest):
     def setup(self):
         super(TestStaticMarketplacePages, self).setup()
 
-    def test_cookie_page(self):
-        res = self.client.get(self.expand_path('/cookies'))
+    def test_toc_page(self):
+        res = self.client.get(self.expand_path('/terms-of-use'))
         assert_equal(200, res.status_code)
         assert_true(
-            '<h1>Cookies</h1>'
-            in self._strip_whitespace(res.get_data(as_text=True))
-        )
-
-    def test_cookie_page(self):
-        res = self.client.get(self.expand_path('/terms-and-conditions'))
-        assert_equal(200, res.status_code)
-        assert_true(
-            '<h1>Termsandconditions</h1>'
+            'TermsofUse'
             in self._strip_whitespace(res.get_data(as_text=True))
         )
 
