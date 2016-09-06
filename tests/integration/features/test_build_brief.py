@@ -78,12 +78,10 @@ def enter_title(title, browser):
     browser.fill('title', title)
 
 
-@when(parsers.parse('I enter {text} into {input}'))
-def enter_text(text, input, browser):
-    for t, i in zip(text.split(), input.split()):
-        if (t == 'text'):
-            t = random_string()
-        browser.fill(i, t)
+@when(parsers.parse('I enter {input_text} into {input_names}'))
+def enter_text(input_text, input_names, browser):
+    for text, input in zip(input_text.split(','), input_names.split(',')):
+        browser.fill(input, text)
     save_and_continue(browser)
 
 

@@ -45,17 +45,17 @@ Scenario: Enter the Description of work for your brief
     And I have created a brief
     When I click the Description of work link
     And I click the Add organisation link
-    And I enter text into organisation
-    And I enter text into specialistWork
-    And I enter text into existingTeam
-    And I enter text into workplaceAddress
-    And I enter text into workingArrangements
-    And I enter text into securityClearance
-    And I enter text into startDate
-    And I enter text into contractLength
-    And I enter text into additionalTerms
-    And I enter text into budgetRange
-    And I enter text into summary
+    And I enter My Org into organisation
+    And I enter Task to complete into specialistWork
+    And I enter People you will work with into existingTeam
+    And I enter Surry Hills NSW into workplaceAddress
+    And I enter These are the working arrangements into workingArrangements
+    And I enter I have security clearnace into securityClearance
+    And I enter 01/01/2016 into startDate
+    And I enter 6 months into contractLength
+    And I enter This is an additional term into additionalTerms
+    And I enter $100 per day into budgetRange
+    And I enter Summary of the brief into summary
     Then I should see the Description of work – Digital Marketplace page
 
 Scenario: Enter the Evaluation process for your brief
@@ -64,9 +64,9 @@ Scenario: Enter the Evaluation process for your brief
     When I click the Shortlist and evaluation process link
     And I click the Set maximum number of specialists you’ll evaluate link
     And I enter 3 into numberOfSuppliers
-    And I enter 30 20 50 into technicalWeighting culturalWeighting priceWeighting
-    And I enter text into essentialRequirements
-    And I enter text into culturalFitCriteria
+    And I enter 30,20,50 into technicalWeighting,culturalWeighting,priceWeighting
+    And I enter This is an essential requirement into essentialRequirements
+    And I enter A cultural fit requirement into culturalFitCriteria
     And I click the Save and continue button
     Then I should see the Shortlist and evaluation process – Digital Marketplace page
 
