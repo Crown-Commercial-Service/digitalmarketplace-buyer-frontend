@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from datetime import datetime
+
 from flask_login import current_user
 from flask import abort, current_app, make_response, render_template, request
 
@@ -89,11 +91,6 @@ def contact_us():
     return render_template('content/contact-us.html')
 
 
-@main.route('/terms-of-use')
-def terms_of_use():
-    return render_template('content/terms-of-use.html')
-
-
 @main.route('/privacy-policy')
 def privacy_policy():
     return render_template('content/privacy-policy.html')
@@ -117,6 +114,15 @@ def sellers_guide():
 @main.route('/copyright')
 def copyright():
     return render_template('content/copyright.html')
+
+
+@main.route('/terms-of-use')
+def terms_of_use():
+    current_terms_date = current_app.config['DM_CURRENT_TERMS_DATE']
+    template = 'content/terms-of-use/{}.html'.format(current_terms_date)
+    update_time = datetime.strptime(current_terms_date, '%Y-%m-%d %H:%M')
+
+    return render_template(template, update_time=update_time)
 
 
 @main.route('/<framework_slug>/opportunities/<brief_id>')
