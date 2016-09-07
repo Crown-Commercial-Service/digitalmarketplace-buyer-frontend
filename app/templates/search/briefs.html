@@ -60,10 +60,16 @@ Seller opportunities – {{ framework.name }} – Digital Marketplace
             <article>
 
               {% if brief.sellerSelector %}
-              <span class="badge--open">
-                {% if brief.sellerSelector == 'allSellers' %}Open to all{% endif %}
-                {% if brief.sellerSelector == 'someSellers' %}Open to selected{% endif %}
-                {% if brief.sellerSelector == 'oneSeller' %}Open to one{% endif %}
+                {% if brief.sellerSelector == 'allSellers' %}
+              <span class="badge--open-to-all">
+                Open to all
+                {% elif brief.sellerSelector == 'someSellers' %}
+              <span class="badge--open-to-selected">
+                Open to selected
+                {% elif brief.sellerSelector == 'oneSeller' %}
+              <span class="badge--open-to-selected">
+                Open to one
+                {% endif %}
               </span>
               {% endif %}
 
