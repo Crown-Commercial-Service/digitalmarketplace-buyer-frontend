@@ -28,19 +28,6 @@ h3 {
   padding: .3em .6em;
 }
 
-.badge--open {
-  display: inline-block;
-  background-color: #0098b0;
-  border-radius: $large-border-radius;
-  color: $white;
-  margin-top: $small-spacing;
-  margin-bottom: $small-spacing;
-  padding: .4em .8em;
-  line-height: 1;
-  letter-spacing: 1px;
-  font-size: rem(14);
-}
-
 $badges: (
   'new':      $badge-colour--new,
   );
@@ -64,6 +51,29 @@ $badges: (
   margin-left: $tiny-spacing;
 }
 
+%base-badge {
+  display: inline-block;
+  border-radius: $large-border-radius;
+  color: $non-black;
+  margin-top: $small-spacing;
+  margin-bottom: $small-spacing;
+  padding: .4em .8em;
+  line-height: 1;
+  letter-spacing: 1px;
+  font-size: rem(14);
+}
+
+.badge--open-to-all {
+  @extend %base-badge;
+
+  background-color: $light-green;
+}
+
+.badge--open-to-selected {
+  @extend %base-badge;
+
+  background-color: $light-blue;
+}
 
 span {
   .number-results &,
