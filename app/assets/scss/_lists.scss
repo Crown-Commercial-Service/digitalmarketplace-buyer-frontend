@@ -54,7 +54,6 @@
     > li {
 
       border-width: 0;
-      width: 100%;
 
       @include media($tablet) {   
         flex-basis: 40%;
@@ -64,7 +63,6 @@
       p {
         display: inline-block;
         min-height: auto;
-        width: 100%;
         @include media($tablet) {
           width: 60%;
         }
