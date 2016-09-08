@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from flask_login import current_user
-from flask import abort, current_app, make_response, render_template, request
+from flask import abort, current_app, make_response, render_template, request, url_for
 
 from dmapiclient import APIError
 from dmcontent.content_loader import ContentNotFoundError
@@ -14,6 +14,7 @@ from ...helpers.shared_helpers import get_one_framework_by_status_in_order_of_pr
 from ..forms.brief_forms import BriefSearchForm
 
 from app import data_api_client, content_loader
+from flask_weasyprint import HTML, render_pdf
 
 
 @main.route('/')
@@ -145,7 +146,13 @@ def get_brief_by_id(framework_slug, brief_id):
         brief=brief,
         brief_responses=brief_responses,
         content=brief_content,
+        show_pdf_link=current_app.config.get('FEATURE_FLAGS_BRIEF_PDF', False)
     )
+
+
+@main.route('/<framework_slug>/opportunities/brief_<brief_id>.pdf')
+def get_brief_pdf(framework_slug, brief_id):
+    return render_pdf(url_for('.get_brief_by_id', framework_slug=framework_slug, brief_id=brief_id))
 
 
 @main.route('/<framework_slug>/opportunities')
