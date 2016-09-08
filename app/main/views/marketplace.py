@@ -146,11 +146,11 @@ def get_brief_by_id(framework_slug, brief_id):
         brief=brief,
         brief_responses=brief_responses,
         content=brief_content,
-        show_pdf_link=current_app.config.get('FEATURE_FLAGS_BRIEF_PDF', False)
+        show_pdf_link=brief['status'] in ['live', 'closed'] and current_app.config.get('FEATURE_FLAGS_BRIEF_PDF', False)
     )
 
 
-@main.route('/<framework_slug>/opportunities/brief_<brief_id>.pdf')
+@main.route('/<framework_slug>/opportunities/opportunity_<brief_id>.pdf')
 def get_brief_pdf(framework_slug, brief_id):
     return render_pdf(url_for('.get_brief_by_id', framework_slug=framework_slug, brief_id=brief_id))
 

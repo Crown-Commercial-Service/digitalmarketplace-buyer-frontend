@@ -102,7 +102,7 @@ class TestBriefPage(BaseApplicationTest):
 
     def test_dos_brief_pdf(self):
         brief_id = self.brief['briefs']['id']
-        res = self.client.get(self.expand_path('/digital-service-professionals/opportunities/brief_{}.pdf')
+        res = self.client.get(self.expand_path('/digital-service-professionals/opportunities/opportunity_{}.pdf')
                               .format(brief_id))
         assert_equal(200, res.status_code)
         assert_equal(res.mimetype, 'application/pdf')
