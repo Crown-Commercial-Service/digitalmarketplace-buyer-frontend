@@ -15,6 +15,10 @@ $path: "/static/images/";
 @import 'forms';
 @import 'buyerpages';
 
+button,
+.button,
+[role='button'],
+[type='button'],
 header[role="banner"],
 .global-breadcrumb,
 .skip-to,
