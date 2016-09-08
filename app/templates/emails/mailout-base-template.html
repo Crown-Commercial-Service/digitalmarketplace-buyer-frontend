@@ -1,0 +1,134 @@
+<!-- ***************************************************
+********************************************************
+
+http://htmlemailboilerplate.com/ v0.4
+Edited for use by Accenture Interactive
+
+********************************************************  
+**************************************************** -->
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Digital Marketplace</title>
+    <style type="text/css">
+
+      /***********
+      The MailChimp Reset from Fabio Carneiro, MailChimp User Experience Design
+      More info and templates on Github: https://github.com/mailchimp/Email-Blueprints
+      http://www.mailchimp.com &amp; http://www.fabio-carneiro.com
+
+      INLINE: Yes.
+      ***********/  
+
+      /* Client-specific Styles */
+      #outlook a { padding: 0; } /* Force Outlook to provide a "view in browser" button. */
+      body { width: 100% !important; } .ReadMsgBody { width: 100%; } .ExternalClass { width: 100%; } /* Force Hotmail to display emails at full width */
+      body { -webkit-text-size-adjust: none; -ms-text-size-adjust: none; } /* Prevent Webkit and Windows Mobile platforms from changing default font sizes. */
+
+      /* Reset Styles */
+      body { margin: 0; padding: 0; }
+      img { height: auto; line-height: 100%; outline: none; text-decoration: none; }
+      #backgroundTable { height: 100% !important; margin: 0; padding: 0; width: 100% !important; }
+
+      /** End Mail Chimp Reset **/ 
+
+      /** Yahoo paragraph fix: removes the proper spacing or the paragraph (p) tag. To correct we set the top/bottom margin to 1em in the head of the document. Simple fix with little effect on other styling. You do not need to move this inline. NOTE: It is also common to use two breaks instead of the paragraph tag but I think this way is cleaner and more semantic. NOTE: This example recommends 1em or 1.12 em. More info on setting web defaults: http://www.w3.org/TR/CSS21/sample.html or http://meiert.com/en/blog/20070922/user-agent-style-sheets/
+
+      INLINE: No.
+      **/
+
+      p {
+          margin: 1em 0;
+      }
+
+      /** Hotmail header color reset: Hotmail replaces your header color styles with a green color on H2, H3, H4, H5, and H6 tags. In this example, the color is reset to black for a non-linked header, blue for a linked header, red for an active header (limited support), and purple for a visited header (limited support).  Replace with your choice of color. The !important is really what is overriding Hotmail's styling. Hotmail also sets the H1 and H2 tags to the same size. 
+
+      INLINE: Yes.
+      **/
+
+      /* h1, h2, h3, h4, h5, h6 {
+          color: black !important;
+          line-height: 100% !important;
+      } */
+
+      h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
+          color: blue !important;
+          line-height: 1.4;
+          margin: 0;
+      }
+
+      h1 a:active, h2 a:active,  h3 a:active, h4 a:active, h5 a:active, h6 a:active {
+          color: red !important; /* Preferably not the same color as the normal header link color.  There is limited support for psuedo classes in email clients, this was added just for good measure. */
+      }
+
+      h1 a:visited, h2 a:visited,  h3 a:visited, h4 a:visited, h5 a:visited, h6 a:visited {
+          color: purple !important; /* Preferably not the same color as the normal header link color. There is limited support for psuedo classes in email clients, this was added just for good measure. */
+      }
+
+      /** Outlook 07, 10 Padding issue: These "newer" versions of Outlook add some padding around table cells potentially throwing off your perfectly pixeled table.  The issue can cause added space and also throw off borders completely.  Use this fix in your header or inline to safely fix your table woes.
+
+      More info: http://www.ianhoar.com/2008/04/29/outlook-2007-borders-and-1px-padding-on-table-cells/ 
+      http://www.campaignmonitor.com/blog/post/3392/1px-borders-padding-on-table-cells-in-outlook-07/
+
+      H/T @edmelly 
+
+      INLINE: No
+      **/
+
+      table td {
+          border-collapse: collapse;
+      }
+
+      /** BONUS: Adaptation of Brian Thies (Campaign Monitor) link color fix to render the Yahoo Short Cuts invisible. Yahoo short cuts are links that Yahoo places over certain text in your email without your knowledge.  In order to use this fix you need to make the text color the same of the actual font color of your email and reset a few elements. IMPORTANT: You then need to use the Responsys/Smith Harmon link color fix if you want to style your links to the color you want them to be.  If you don't, this fix will change all links to black in Yahoo.  
+
+      If you are not worried about Yahoo's shorcuts, just remove this code.  This is not applicable for Yahoo Classic. 
+
+      INLINE: No.
+      **/
+
+      .yshortcuts, .yshortcuts a, .yshortcuts a:link,.yshortcuts a:visited, .yshortcuts a:hover, .yshortcuts a span { color: black; text-decoration: none !important; border-bottom: none !important; background: none !important; } /* Body text color for the New Yahoo.  This example sets the font of Yahoo's Shortcuts to black. */
+
+    </style>
+  </head>
+  <body style="background-color:#ffffff; width: 100% !important; margin: 0; padding: 0; font-family: Arial, sans-serif; font-size: 14px; line-height: 21px;">
+    <table cellpadding="0" cellspacing="0" border="0" id="backgroundTable" width="100%" align="center" bgcolor="#ffffff" style="width: 100% !important; height: 100% !important; margin: 0; padding: 0; table-layout:fixed;">
+      <tr>
+        <td align="center">
+          <br />
+          <br />
+          <table cellpadding="0" cellspacing="0" border="0" align="center" bgcolor="#ffffff" width="600">
+            <tr>
+              <td width="600">
+                Hi {{contact_name}},<br/><br/>
+                The first opportunities arrived in the Digital Marketplace this week!<br/><br/>
+                If you’re interested in applying you’d best be quick. One closes tomorrow, and another next Tuesday.<br/><br/>
+                For more information about each brief click on the headline, or simply <a href="https://marketplace.service.gov.au/digital-service-professionals/opportunities">visit the latest opportunities page</a> on the Marketplace.<br/><br/>
+                <h2><a href="https://marketplace.service.gov.au/digital-service-professionals/opportunities/54">User Researcher - Sydney</a></h2>
+                Digital Transformation Office<br/>
+                New South Wales<br/>
+                <strong>Published: </strong>Friday 2 September 2016<br/>
+                <strong>Closing: </strong>Friday 9 September 2016<br/><br/>
+                Seeking a User Researcher to be based in Sydney for 6 months with the possibility of extension to work on our Dashboard project.<br/><br/>
+                <h2><a href="https://marketplace.service.gov.au/digital-service-professionals/opportunities/65">Developer required - around one week (Wordpress with Gravity Forms plugin)</a></h2>
+                City of Casey<br/>
+                Victoria<br/>
+                <strong>Published: </strong>Tuesday 6 September 2016<br/>
+                <strong>Closing: </strong>Tuesday 13 September 2016<br/><br/>
+                We are looking for a Wordpress Developer who is familiar with Gravity Forms to develop a booking form for our hard waste collection service.<br/>
+                ---<br/><br/>
+                Good luck!<br/>
+                <strong>The Digital Marketplace team</strong><br/><br/>
+                The Digital Marketplace is an Agile development in <a href="https://www.dto.gov.au/standard/service-design-and-delivery-process/">Beta</a>. This means it will evolve over time in response to user needs. If you have any questions, feedback or would like to be involved in user research please email <a href="mailto:marketplace@digital.gov.au">marketplace@digital.gov.au</a>.
+              </td>
+            </tr>
+          </table>
+          <br />
+          <br />
+        </td>
+      </tr>
+    </table>  
+    <!-- End of wrapper table -->
+  </body>
+</html>
