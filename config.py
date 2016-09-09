@@ -72,10 +72,11 @@ class Config(object):
 
     # Throw an exception in dev when a feature flag is used in code but not defined.
     RAISE_ERROR_ON_MISSING_FEATURES = True
-    # List all you feature flags below
+    # List all your feature flags below
     FEATURE_FLAGS = {
         'BRIEF_FILTER': True,
         'BRIEF_PDF': True,
+        'SUPPLIERS_VIEW_OWN_PAGE': True,
     }
 
     # LOGGING
@@ -130,10 +131,11 @@ class Live(Config):
 
     # If a feature flag is used in code but not defined in prod, assume it is False.
     RAISE_ERROR_ON_MISSING_FEATURES = False
-    # List all you feature flags below
+    # List all your feature flags below
     FEATURE_FLAGS = {
         'BRIEF_FILTER': False,
         'BRIEF_PDF': False,
+        'SUPPLIERS_VIEW_OWN_PAGE': False,
     }
 
 

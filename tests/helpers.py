@@ -148,15 +148,15 @@ class BaseApplicationTest(object):
         if self.get_user_patch is not None:
             self.get_user_patch.stop()
 
-    def login_as_supplier(self):
+    def login_as_supplier(self, supplier_code=1234):
         with patch('app.main.views.login.data_api_client') as login_api_client:
             login_api_client.authenticate_user.return_value = self.user(
-                123, "email@email.com", 1234, 'Supplier Name', 'Name', role='supplier')
+                123, "email@email.com", supplier_code, 'Supplier Name', 'Name', role='supplier')
 
             self.get_user_patch = patch.object(
                 data_api_client,
                 'get_user',
-                return_value=self.user(123, "email@email.com", 1234, 'Supplier Name', 'Name', role='supplier')
+                return_value=self.user(123, "email@email.com", supplier_code, 'Supplier Name', 'Name', role='supplier')
             )
             self.get_user_patch.start()
 

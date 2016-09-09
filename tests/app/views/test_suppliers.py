@@ -29,6 +29,22 @@ class TestSuppliersPage(BaseApplicationTest):
 
         assert res.status_code == 302
 
+    def test_arbitrary_suppliers_not_allowed(self, api_client):
+        self.login_as_supplier(supplier_code=1234)
+        api_client.return_value.get_supplier.return_value = self.supplier
+
+        res = self.client.get(self.url_for('main.get_supplier', code=1))
+
+        assert res.status_code == 302
+
+    def test_suppliers_can_see_own_page(self, api_client):
+        self.login_as_supplier(supplier_code=1234)
+        api_client.return_value.get_supplier.return_value = self.supplier
+
+        res = self.client.get(self.url_for('main.get_supplier', code=1234))
+
+        assert res.status_code == 200
+
     def test_should_have_supplier_details_on_supplier_page(self, api_client):
         self.login_as_buyer()
         api_client.return_value.get_supplier.return_value = self.supplier
