@@ -41,3 +41,4 @@ deployment:
       - APP=dm-buyer-green ./scripts/cf_ha_deploy.sh
       - APP=dm-buyer-blue ./scripts/cf_ha_deploy.sh
       - DOCKER_COMPOSE_FILE_PATH=./monitoring/docker-compose-ecs.yml DOCKER_IMAGE_NAME=gov-au-marketplace DOCKER_CONTAINER_NAME=gov-au-marketplace ./scripts/ci-monitor-deploy.sh
+      - ./scripts/ci-notify.sh
