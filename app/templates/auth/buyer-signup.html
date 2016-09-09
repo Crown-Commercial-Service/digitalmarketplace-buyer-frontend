@@ -52,8 +52,9 @@
 
   {%
     with
-      question = "Your name",
+      question = "Your full name",
       name = "name",
+      hint = "",
       value = form.name.data,
       error = form.name.errors[0]
   %}
@@ -62,9 +63,9 @@
 
   {%
     with
-      question = "Your email address",
-      hint = 'You must have an email address ending in <strong>.gov.au</strong>.'|safe,
+      question = "Your government email address",
       name = "email_address",
+      hint = "",
       value = form.email_address.data,
       error = form.email_address.errors[0]
   %}

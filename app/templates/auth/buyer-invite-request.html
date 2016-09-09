@@ -24,9 +24,6 @@
 <div>
   <h2>You and your manager need a government email address</h2>
   <p>
-    Email addresses must end with <strong>.gov.au</strong>.
-  </p>
-  <p>
     If you believe your email address should be recognised email
     <a href="mailto:marketplace@digital.gov.au">marketplace@digital.gov.au</a>.
   </p>
@@ -69,7 +66,7 @@
   {%
     with
       question = "Line manager's email address",
-      hint = 'Your line manager\'s email address must end in <strong>.gov.au</strong>.'|safe,
+      hint = 'Your line manager\'s email address must be a government email address.'|safe,
       name = "manager_email",
       value = form.manager_email.data,
       error = form.manager_email.errors[0]
