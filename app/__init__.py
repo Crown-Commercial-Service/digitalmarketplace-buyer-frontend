@@ -5,7 +5,7 @@ from flask_cache import Cache
 from flask_login import LoginManager
 
 import dmapiclient
-from dmutils import init_app, init_frontend_app, flask_featureflags
+from dmutils import init_app, init_frontend_app
 from dmcontent.content_loader import ContentLoader
 
 from config import configs
@@ -13,7 +13,6 @@ from config import configs
 cache = Cache()
 login_manager = LoginManager()
 data_api_client = dmapiclient.DataAPIClient()
-feature_flags = flask_featureflags.FeatureFlag()
 
 content_loader = ContentLoader('app/content')
 content_loader.load_manifest('g-cloud-6', 'services', 'search_filters')
@@ -30,7 +29,6 @@ def create_app(config_name):
         application,
         configs[config_name],
         data_api_client=data_api_client,
-        feature_flags=feature_flags,
         login_manager=login_manager,
         cache=cache,
     )

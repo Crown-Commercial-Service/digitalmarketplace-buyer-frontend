@@ -5,6 +5,7 @@ import json
 import re
 
 from app import create_app, data_api_client
+from flask_featureflags import FeatureFlag
 
 from dmutils.forms import FakeCsrf
 from datetime import datetime, timedelta
@@ -19,6 +20,7 @@ class BaseApplicationTest(object):
     def setup(self):
         self.app = create_app('test')
         self.client = self.app.test_client()
+        feature_flags = FeatureFlag(self.app)
         self.get_user_patch = None
 
     def expand_path(self, path):
