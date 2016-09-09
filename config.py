@@ -29,6 +29,8 @@ class Config(object):
     DM_SEND_EMAIL_TO_STDERR = False
     DM_CACHE_TYPE = 'dev'
 
+    DM_CURRENT_TERMS_DATE = '2016-09-02 11:00'
+
     # matches api(s)
     DM_SEARCH_PAGE_SIZE = 100
 
