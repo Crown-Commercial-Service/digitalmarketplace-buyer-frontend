@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from datetime import datetime
+import flask_featureflags
 
 from flask_login import current_user
 from flask import abort, current_app, make_response, render_template, request, url_for
@@ -52,7 +53,6 @@ def index():
         'index.html',
         frameworks={framework['slug']: framework for framework in frameworks},
         temporary_message=temporary_message,
-        brief_builder=current_app.config.get('FEATURE_FLAGS_BRIEF_BUILDER', False)
     )
 
 
@@ -152,7 +152,7 @@ def get_brief_by_id(framework_slug, brief_id):
         brief=brief,
         brief_responses=brief_responses,
         content=brief_content,
-        show_pdf_link=brief['status'] in ['live', 'closed'] and current_app.config.get('FEATURE_FLAGS_BRIEF_PDF', False)
+        show_pdf_link=brief['status'] in ['live', 'closed'] and flask_featureflags.is_active('BRIEF_PDF')
     )
 
 
@@ -196,7 +196,6 @@ def list_opportunities(framework_slug):
                            num_pages=pages[-1],
                            current_page=current_page,
                            link_args=request.args,
-                           show_filters=current_app.config.get('FEATURE_FLAGS_BRIEF_FILTER', False)
                            )
     response = make_response(html)
     if current_user.is_authenticated and current_user.has_role('buyer'):

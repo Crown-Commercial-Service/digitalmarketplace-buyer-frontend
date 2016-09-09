@@ -5,9 +5,11 @@ import os
 import sys
 from app import create_app
 from dmutils import init_manager
+from flask_featureflags import FeatureFlag
 
 port = int(os.getenv('PORT', '5002'))
 application = create_app(os.getenv('DM_ENVIRONMENT') or 'development')
+feature_flags = FeatureFlag(application)
 manager = init_manager(application, port, ['./app/content/frameworks'])
 
 application.logger.info('Command line: {}'.format(sys.argv))

@@ -29,7 +29,7 @@ Seller opportunities – {{ framework.name }} – Digital Marketplace
 
 
 {% block sidebar %}
-{% if show_filters %}
+{% if 'BRIEF_FILTER' is active_feature %}
 <aside class="sidebar" id="nav">
   <div class="block-2">
     <div class="inner-block">
