@@ -75,6 +75,7 @@ class Config(object):
     FEATURE_FLAGS_HIDE_SUPPLIERS_NAME_SEARCH = enabled_since('2016-08-01')  # Change to False when it is ready
     FEATURE_FLAGS_BRIEF_BUILDER = True
     FEATURE_FLAGS_BRIEF_FILTER = True
+    FEATURE_FLAGS_BRIEF_PDF = True
 
     # LOGGING
     DM_LOG_LEVEL = 'DEBUG'
@@ -126,6 +127,7 @@ class Live(Config):
     DM_GA_CODE = 'UA-72722909-5'
     DM_CACHE_TYPE = 'prod'
     FEATURE_FLAGS_BRIEF_FILTER = False
+    FEATURE_FLAGS_BRIEF_PDF = False
 
 
 class Preview(Live):

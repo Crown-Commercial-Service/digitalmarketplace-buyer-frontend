@@ -9,3 +9,4 @@ git+https://github.com/AusDTO/digitalmarketplace-content-loader.git@1.1.1#egg=di
 git+https://github.com/AusDTO/digitalmarketplace-apiclient.git@6.0.0#egg=digitalmarketplace-apiclient==6.0.0
 
 newrelic==2.68.0.50
+Flask-WeasyPrint==0.5

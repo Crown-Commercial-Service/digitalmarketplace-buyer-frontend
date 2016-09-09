@@ -100,6 +100,13 @@ class TestBriefPage(BaseApplicationTest):
 
         self._assert_page_title(document)
 
+    def test_dos_brief_pdf(self):
+        brief_id = self.brief['briefs']['id']
+        res = self.client.get(self.expand_path('/digital-service-professionals/opportunities/opportunity_{}.pdf')
+                              .format(brief_id))
+        assert_equal(200, res.status_code)
+        assert_equal(res.mimetype, 'application/pdf')
+
     @pytest.mark.skipif(True, reason="test failing on AU CI server")
     def test_dos_brief_has_important_dates(self):
         brief_id = self.brief['briefs']['id']

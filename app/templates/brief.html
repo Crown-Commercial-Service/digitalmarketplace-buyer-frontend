@@ -96,4 +96,11 @@
   {% endif %}
   {% endif %}
 
+{% if show_pdf_link %}
+  <div class="grid-row">
+    <a href="{{ url_for('.get_brief_pdf', framework_slug=brief.frameworkSlug, brief_id=brief.id) }}">
+        Download as pdf
+    </a>
+  </div>
+{% endif %}
 {% endblock %}
