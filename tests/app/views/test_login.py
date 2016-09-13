@@ -1061,3 +1061,51 @@ class TestBuyerRoleRequired(BaseApplicationTest):
             assert 'private' in res.headers['Cache-Control']
             assert 'buyer@email.com' in page_text
             assert 'Some Buyer' in page_text
+
+
+class TestTermsUpdate(BaseApplicationTest):
+
+    payload = {
+        'csrf_token': FakeCsrf.valid_token,
+        'accept_terms': 'y',
+    }
+
+    def test_page_load(self):
+        with self.app.app_context():
+            self.login_as_buyer()
+            res = self.client.get(self.url_for('main.terms_updated'))
+            assert res.status_code == 200
+            assert 'terms' in res.get_data(as_text=True)
+
+    def test_login_required(self):
+        with self.app.app_context():
+            # Not logged in
+            res = self.client.get(self.url_for('main.terms_updated'))
+            assert res.status_code == 302
+
+    @mock.patch('app.main.views.login.data_api_client')
+    def test_submit(self, data_api_client):
+        with self.app.app_context():
+            self.login_as_buyer(user_id=42)
+            res = self.client.post(self.url_for('main.accept_updated_terms'), data=self.payload)
+            data_api_client.update_user.assert_called_once_with(42, fields=mock.ANY)
+            assert res.status_code == 302
+
+    @mock.patch('app.main.views.login.data_api_client')
+    def test_submit_requires_login(self, data_api_client):
+        with self.app.app_context():
+            # Not logged in
+            res = self.client.post(self.url_for('main.accept_updated_terms'), data=self.payload)
+            data_api_client.update_user.assert_not_called()
+            assert res.status_code == 302
+            assert res.location.startswith(self.url_for('main.render_login', _external=True))
+
+    @mock.patch('app.main.views.login.data_api_client')
+    def test_submit_without_accepting(self, data_api_client):
+        with self.app.app_context():
+            self.login_as_buyer()
+            data = dict(self.payload)
+            data.pop('accept_terms')
+            res = self.client.post(self.url_for('main.accept_updated_terms'), data=data)
+            data_api_client.update_user.assert_not_called()
+            assert res.status_code == 400

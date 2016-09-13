@@ -77,6 +77,7 @@ class Config(object):
         'BRIEF_FILTER': True,
         'BRIEF_PDF': True,
         'SUPPLIERS_VIEW_OWN_PAGE': True,
+        'TERMS_UPDATE_PAGE': True,
     }
 
     # LOGGING
@@ -136,6 +137,7 @@ class Live(Config):
         'BRIEF_FILTER': False,
         'BRIEF_PDF': False,
         'SUPPLIERS_VIEW_OWN_PAGE': False,
+        'TERMS_UPDATE_PAGE': False,
     }
 
 

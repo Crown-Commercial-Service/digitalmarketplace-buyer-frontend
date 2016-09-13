@@ -1,0 +1,48 @@
+{% extends "_base_page.html" %}
+
+{% block page_title %}Site Terms Updated – Digital Marketplace{% endblock %}
+
+{% block phase_banner %}{% endblock %}
+
+{% block body_classes %} registration-pages form-page {% endblock %}
+{% block main_content %}
+
+{%
+  with
+  smaller = true,
+  heading = "The Marketplace's Terms of Use have been Updated"
+%}
+  {% include "toolkit/page-heading.html" %}
+{% endwith %}
+
+<p>
+  To continue using the Marketplace, you must accept the latest <a href="{{ url_for('main.terms_of_use') }}">terms of use</a>.
+</p>
+
+{% include "_form_errors.html" %}
+
+<form action="{{ url_for('main.accept_updated_terms') }}" method="POST">
+  {{ form.csrf_token }}
+
+  <div>
+    {% if form.accept_terms.errors %}
+        {{ form.accept_terms(class="invalid") }}
+    {% else %}
+        {{ form.accept_terms }}
+    {% endif %}
+    {{ form.accept_terms.label }}
+  </div>
+
+  <div>
+  {%
+    with
+    type = "save",
+    role = "button",
+    label = "Accept"
+  %}
+    {% include "au-ui-toolkit/button.html" %}
+  {% endwith %}
+  </div>
+</form>
+
+{% endblock %}

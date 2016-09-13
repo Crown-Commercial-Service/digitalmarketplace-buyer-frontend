@@ -127,3 +127,13 @@ class CreateUserForm(DmForm):
             DataRequired(message="You must accept the terms and conditions")
         ]
     )
+
+
+class AcceptUpdatedTerms(DmForm):
+
+    accept_terms = BooleanField(
+        label='I accept the updated terms of use',
+        validators=[
+            DataRequired(message='You must accept the updated terms and conditions')
+        ]
+    )
