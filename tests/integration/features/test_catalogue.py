@@ -16,11 +16,6 @@ def test_buyers_supplier_details():
     pass
 
 
-@scenario('catalogue.feature', 'Suppliers cannot view supplier details')
-def test_suppliers_supplier_details():
-    pass
-
-
 @when(parsers.parse('I click the first supplier link'))
 def click_supplier_link(browser):
     links = browser.find_by_xpath('//li[@class="supplier-result"]/article/h2/a')

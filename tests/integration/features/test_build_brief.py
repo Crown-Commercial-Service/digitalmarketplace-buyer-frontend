@@ -1,17 +1,5 @@
 from pytest_bdd import scenario, given, when, then, parsers
-from conftest import visit_page, click_link, click_button, random_string, button_click
-
-
-def create_brief(title, browser):
-    visit_page('/', browser)
-    click_link('Find an individual specialist', browser)
-    click_button('Create brief', browser)
-    enter_title(title, browser)
-    click_button('Save and continue', browser)
-
-
-def save_and_continue(browser):
-    button_click('Save and continue', browser)
+from helpers import save_and_continue, create_brief, visit_page
 
 
 @scenario('build_brief.feature', 'Anonymous users cannot create brief')
@@ -71,11 +59,6 @@ def verify_brief(title, browser):
         browser.click_link_by_text(title)
     else:
         create_brief(title, browser)
-
-
-@when('I enter a title')
-def enter_title(title, browser):
-    browser.fill('title', title)
 
 
 @when(parsers.parse('I enter {input_text} into {input_names}'))
