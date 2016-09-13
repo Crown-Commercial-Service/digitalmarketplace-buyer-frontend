@@ -8,18 +8,8 @@
 {% block body_classes %} registration-pages form-page{% endblock %}
 {% block main_content %}
 
-{% if form.errors %}
-  <div class="validation-masthead" aria-labelledby="validation-masthead-heading" aria-role="group" tabindex="-1" role="alert">
-    <p class="validation-masthead-heading">There was a problem with the details you gave:</p>
-    <ul>
-    {% for field_name, field_errors in form.errors|dictsort|reverse if field_errors %}
-      {% for error in field_errors %}
-      <li><a href="#{{ form[field_name].name }}" class="validation-masthead-link">{{ error }}</a></li>
-      {% endfor %}
-    {% endfor %}
-    </ul>
-  </div>
-{% endif %}
+{% include "_form_errors.html" %}
+
 {% if form.email_address.flags.non_gov %}
 <div>
   <h2>You need a government email address</h2>
