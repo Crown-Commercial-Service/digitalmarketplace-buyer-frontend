@@ -169,15 +169,15 @@ class BaseApplicationTest(object):
             login_api_client.authenticate_user.assert_called_once_with(
                 "valid@email.com", "1234567890")
 
-    def login_as_buyer(self):
+    def login_as_buyer(self, user_id=123):
         with patch('app.main.views.login.data_api_client') as login_api_client:
             login_api_client.authenticate_user.return_value = self.user(
-                123, "buyer@email.com", None, None, 'Name')
+                user_id, "buyer@email.com", None, None, 'Name')
 
             self.get_user_patch = patch.object(
                 data_api_client,
                 'get_user',
-                return_value=self.user(123, "buyer@email.com", None, None, 'Some Buyer')
+                return_value=self.user(user_id, "buyer@email.com", None, None, 'Some Buyer')
             )
             self.get_user_patch.start()
 

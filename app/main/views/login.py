@@ -1,10 +1,12 @@
 from __future__ import absolute_import
 
 import six
+from datetime import datetime
 
 from flask_login import current_user
 from flask import abort, current_app, flash, redirect, render_template, request, session, url_for, get_flashed_messages
-from flask_login import logout_user, login_user
+import flask_featureflags
+from flask_login import logout_user, login_user, login_required
 
 from dmapiclient.audit import AuditTypes
 from dmutils.user import User, user_logging_string
@@ -13,6 +15,7 @@ from dmutils.email import (
     send_email
 )
 from dmutils.forms import render_template_with_csrf
+from dmutils.formats import DATETIME_FORMAT
 from app.main import main
 from app.helpers.login_helpers import (
     decode_buyer_creation_token, generate_buyer_creation_token, redirect_logged_in_user,
@@ -355,4 +358,31 @@ def submit_create_buyer_account(token):
             token=None)
 
     flash('account-created', 'flag')
+    return redirect_logged_in_user()
+
+
+@flask_featureflags.is_active_feature('TERMS_UPDATE_PAGE')
+@main.route('/terms-updated', methods=['GET'])
+@login_required
+def terms_updated():
+    form = auth_forms.AcceptUpdatedTerms()
+    return render_template_with_csrf(
+        'auth/accept-updated-terms.html',
+        form=form
+    )
+
+
+@flask_featureflags.is_active_feature('TERMS_UPDATE_PAGE')
+@main.route('/terms-updated', methods=['POST'])
+@login_required
+def accept_updated_terms():
+    form = auth_forms.AcceptUpdatedTerms(request.form)
+    if not form.validate():
+        return render_template_with_csrf(
+            'auth/accept-updated-terms.html',
+            status_code=400,
+            form=form
+        )
+    timestamp = datetime.utcnow().strftime(DATETIME_FORMAT)
+    data_api_client.update_user(current_user.id, fields={'termsAcceptedAt': timestamp})
     return redirect_logged_in_user()
