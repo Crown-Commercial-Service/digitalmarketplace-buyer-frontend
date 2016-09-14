@@ -54,8 +54,8 @@ def delete_brief(title):
     headers = {'Authorization': 'Bearer {}'.format(config['DM_DATA_API_AUTH_TOKEN']),
                'Content-type': 'application/json'}
     get_briefs = requests.get('{}/briefs?per_page=1000'.format(config['DM_DATA_API_URL']), headers=headers)
-    if (get_briefs.status_code == 200):
-        briefs = [b for b in get_briefs.json()['briefs'] if b['title'] == title]
-        if briefs:
-            requests.delete('{}/briefs/{}'.format(config['DM_DATA_API_URL'], briefs[0]['id']), headers=headers,
-                            data=json.dumps({'updated_by': ''}))
+    get_briefs.raise_for_status()
+    briefs = [b for b in get_briefs.json()['briefs'] if b['title'] == title]
+    if briefs:
+        requests.delete('{}/briefs/{}'.format(config['DM_DATA_API_URL'], briefs[0]['id']), headers=headers,
+                        data=json.dumps({'updated_by': ''}))

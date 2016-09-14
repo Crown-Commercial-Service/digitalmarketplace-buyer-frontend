@@ -10,7 +10,7 @@ def splinter_webdriver():
 
 
 @pytest.fixture(scope='session')
-def title(request):
+def brief_title(request):
     title = random_string()
 
     def fin():
@@ -51,8 +51,8 @@ def click_button_fixture(button_text, browser):
 
 
 @when('I enter a title')
-def enter_title_fixture(title, browser):
-    enter_title(title, browser)
+def enter_title_fixture(brief_title, browser):
+    enter_title(brief_title, browser)
 
 
 @then(parsers.parse('I should see the {title} page'))

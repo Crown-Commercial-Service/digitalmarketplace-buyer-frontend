@@ -53,12 +53,12 @@ def test_publish_brief():
 
 
 @given(parsers.parse('I have created a brief'))
-def verify_brief(title, browser):
+def verify_brief(brief_title, browser):
     visit_page('/buyers', browser)
-    if browser.is_text_present(title):
-        browser.click_link_by_text(title)
+    if browser.is_text_present(brief_title):
+        browser.click_link_by_text(brief_title)
     else:
-        create_brief(title, browser)
+        create_brief(brief_title, browser)
 
 
 @when(parsers.parse('I enter {input_text} into {input_names}'))
@@ -75,5 +75,5 @@ def select_digital_specialist(browser):
 
 
 @then('I should see the Overview')
-def verify_overview(title, browser):
-    assert browser.title.startswith(title)
+def verify_overview(brief_title, browser):
+    assert browser.title.startswith(brief_title)
