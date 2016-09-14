@@ -361,11 +361,10 @@ def submit_create_buyer_account(token):
     return redirect_logged_in_user()
 
 
+@flask_featureflags.is_active_feature('TERMS_UPDATE_PAGE')
 @main.route('/terms-updated', methods=['GET'])
 @login_required
 def terms_updated():
-    if not flask_featureflags.is_active('TERMS_UPDATE_PAGE'):
-        abort(404)
     form = auth_forms.AcceptUpdatedTerms()
     return render_template_with_csrf(
         'auth/accept-updated-terms.html',
@@ -373,11 +372,10 @@ def terms_updated():
     )
 
 
+@flask_featureflags.is_active_feature('TERMS_UPDATE_PAGE')
 @main.route('/terms-updated', methods=['POST'])
 @login_required
 def accept_updated_terms():
-    if not flask_featureflags.is_active('TERMS_UPDATE_PAGE'):
-        abort(404)
     form = auth_forms.AcceptUpdatedTerms(request.form)
     if not form.validate():
         return render_template_with_csrf(
