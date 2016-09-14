@@ -1,6 +1,6 @@
 {% extends "_base_page.html" %}
 
-{% block page_title %}Site Terms Updated – Digital Marketplace{% endblock %}
+{% block page_title %}Terms of Use Updated – Digital Marketplace{% endblock %}
 
 {% block phase_banner %}{% endblock %}
 
@@ -10,13 +10,13 @@
 {%
   with
   smaller = true,
-  heading = "The Marketplace's Terms of Use have been Updated"
+  heading = "Our Terms of Use have been Updated"
 %}
   {% include "toolkit/page-heading.html" %}
 {% endwith %}
 
 <p>
-  To continue using the Marketplace, you must accept the latest <a href="{{ url_for('main.terms_of_use') }}">terms of use</a>.
+  To continue using the Marketplace please accept the latest <a href="{{ url_for('main.terms_of_use') }}">version</a>.
 </p>
 
 {% include "_form_errors.html" %}
