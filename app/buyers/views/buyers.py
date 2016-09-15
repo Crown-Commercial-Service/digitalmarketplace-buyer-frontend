@@ -17,6 +17,7 @@ from app.helpers.buyers_helpers import (
     section_has_at_least_one_required_question
 )
 from dmutils.forms import render_template_with_csrf, check_csrf, valid_csrf_or_abort
+from dmutils.logging import notify_team
 
 from dmapiclient import HTTPError
 from dmutils.dates import get_publishing_dates
@@ -405,6 +406,14 @@ def publish_brief(framework_slug, lot_slug, brief_id):
                                      brief_id=brief['id'], _external=True)
 
         send_new_opportunity_email_to_sellers(brief, brief_url_external)
+
+        notification_message = '{}\n{}\nBy: {} ({})'.format(
+            brief['title'],
+            brief['organisation'],
+            current_user.name,
+            current_user.email_address
+        )
+        notify_team('A buyer has published a new opportunity', notification_message, brief_url_external)
 
         return redirect(brief_url)
     else:
