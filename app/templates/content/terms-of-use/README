@@ -2,6 +2,8 @@ We keep and track all versions of the site terms.  We need to do this because
 the version of the terms a user has agreed to might not be the latest, live
 version.
 
+## Making a New Revision
+
 To create a new revision, put the updated terms into a new .html file.  The file
 name should be the date and time when the revision becomes active.  For example,
 if a revision is meant to be active starting the 2nd of April, 2016, at 3pm, the
@@ -9,13 +11,26 @@ file name should be "2016-04-02 15:00.html".  This "YYYY-MM-DD HH:MM.html"
 format is important because it's used to automatically verify terms acceptance
 by users.
 
-The new revision needs to be made active by setting DM_CURRENT_TERMS_DATE in
-config.py in the root of the repository.  For example, the above revision would
-be made active by making the setting into
-
-	DM_CURRENT_TERMS_DATE = '2016-04-02 15:00'
-
 After making a revision, you should verify that everything's working correctly by
 
 1. Checking that the right version of the terms appears on the site
 2. Running the automated tests and seeing that they pass
+
+## Troubleshooting
+
+Here are some examples of good terms revisions:
+
+* 2016-01-14 20:00.html (revision effective 8pm on the 14th of January, 2016)
+* 2016-12-10 03:00.html (revision effective 3am on the 10th of December, 2016)
+* 2017-02-02 00:00.html (revision effective midnight when the 2nd of February starts)
+
+These filenames are also okay and will be ignored:
+
+* README (not an .html file)
+* _template.html (starts with _)
+
+These ones will cause problems:
+
+* draft.html (put _ at the beginning if you want something to be ignored)
+* 2016-01-01.html (has the date but is missing the time)
+* 2016-28-03 12:00.html (month and day are in the wrong order)

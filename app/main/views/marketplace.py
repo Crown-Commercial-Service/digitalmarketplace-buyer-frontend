@@ -16,7 +16,7 @@ from ...helpers.shared_helpers import get_one_framework_by_status_in_order_of_pr
 
 from ..forms.brief_forms import BriefSearchForm
 
-from app import data_api_client, content_loader
+from app import data_api_client, content_loader, terms_manager
 from flask_weasyprint import HTML, render_pdf
 
 
@@ -119,11 +119,8 @@ def copyright():
 
 @main.route('/terms-of-use')
 def terms_of_use():
-    current_terms_date = current_app.config['DM_CURRENT_TERMS_DATE']
-    template = 'content/terms-of-use/{}.html'.format(current_terms_date)
-    update_time = datetime.strptime(current_terms_date, '%Y-%m-%d %H:%M')
-
-    return render_template(template, update_time=update_time)
+    terms = terms_manager.current_version
+    return render_template(terms.template_file, update_time=terms.date)
 
 
 @main.route('/<framework_slug>/opportunities/<brief_id>')

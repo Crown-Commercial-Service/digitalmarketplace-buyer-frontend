@@ -9,10 +9,12 @@ from dmutils import init_app, init_frontend_app
 from dmcontent.content_loader import ContentLoader
 
 from config import configs
+from app.helpers.terms_helpers import TermsManager
 
 cache = Cache()
 login_manager = LoginManager()
 data_api_client = dmapiclient.DataAPIClient()
+terms_manager = TermsManager()
 
 content_loader = ContentLoader('app/content')
 content_loader.load_manifest('g-cloud-6', 'services', 'search_filters')
