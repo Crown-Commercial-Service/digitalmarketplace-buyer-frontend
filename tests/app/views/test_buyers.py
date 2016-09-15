@@ -968,7 +968,8 @@ class TestUpdateBriefSubmission(BaseApplicationTest):
 
 @mock.patch('app.buyers.views.buyers.data_api_client')
 class TestPublishBrief(BaseApplicationTest):
-    def test_publish_brief(self, data_api_client):
+    @mock.patch('app.buyers.views.buyers.notify_team')
+    def test_publish_brief(self, notify_team, data_api_client):
         self.login_as_buyer()
         data_api_client.get_framework.return_value = api_stubs.framework(
             slug='digital-outcomes-and-specialists',
@@ -1011,10 +1012,12 @@ class TestPublishBrief(BaseApplicationTest):
         res = self.client.post(url, data={'csrf_token': FakeCsrf.valid_token})
         assert res.status_code == 302
         assert data_api_client.publish_brief.called
+        assert notify_team.called
         assert res.location.endswith(
             '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234?published=true')  # noqa
 
-    def test_csrf_protection(self, data_api_client):
+    @mock.patch('app.buyers.views.buyers.notify_team')
+    def test_csrf_protection(self, notify_team, data_api_client):
         self.login_as_buyer()
         data_api_client.get_framework.return_value = api_stubs.framework(
             slug='digital-outcomes-and-specialists',
@@ -1056,8 +1059,10 @@ class TestPublishBrief(BaseApplicationTest):
         res = self.client.post(url, data={'csrf_token': 'bad_token'})
         assert res.status_code == 400
         assert not data_api_client.publish_brief.called
+        assert not notify_team.called
 
-    def test_publish_brief_with_unanswered_required_questions(self, data_api_client):
+    @mock.patch('app.buyers.views.buyers.notify_team')
+    def test_publish_brief_with_unanswered_required_questions(self, notify_team, data_api_client):
         self.login_as_buyer()
         data_api_client.get_framework.return_value = api_stubs.framework(
             slug='digital-outcomes-and-specialists',
@@ -1076,8 +1081,10 @@ class TestPublishBrief(BaseApplicationTest):
         res = self.client.post(url, data={'csrf_token': FakeCsrf.valid_token})
         assert res.status_code == 400
         assert not data_api_client.publish_brief.called
+        assert not notify_team.called
 
-    def test_404_if_brief_does_not_belong_to_user(self, data_api_client):
+    @mock.patch('app.buyers.views.buyers.notify_team')
+    def test_404_if_brief_does_not_belong_to_user(self, notify_team, data_api_client):
         self.login_as_buyer()
         data_api_client.get_framework.return_value = api_stubs.framework(
             slug='digital-outcomes-and-specialists',
@@ -1096,6 +1103,7 @@ class TestPublishBrief(BaseApplicationTest):
 
         assert res.status_code == 404
         assert not data_api_client.update_brief.called
+        assert not notify_team.called
 
     def test_publish_button_available_if_questions_answered(self, data_api_client):
         self.login_as_buyer()
