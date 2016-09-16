@@ -14,8 +14,7 @@ def can_view_supplier_page(code):
         return False
     if current_user.role in ('buyer', 'admin'):
         return True
-    if flask_featureflags.is_active('SUPPLIERS_VIEW_OWN_PAGE') and \
-       current_user.role == 'supplier' and current_user.supplier_code == code:
+    if current_user.role == 'supplier' and current_user.supplier_code == code:
         return True
     return False
 
