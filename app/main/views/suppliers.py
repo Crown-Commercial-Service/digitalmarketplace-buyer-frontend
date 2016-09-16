@@ -14,6 +14,10 @@ def can_view_supplier_page(code):
         return False
     if current_user.role in ('buyer', 'admin'):
         return True
+    return user_is_supplier(code)
+
+
+def user_is_supplier(code):
     if current_user.role == 'supplier' and current_user.supplier_code == code:
         return True
     return False
@@ -37,4 +41,5 @@ def get_supplier(code):
         'suppliers_details.html',
         supplier=supplier,
         supplier_categories=supplier_categories,
+        user_is_supplier=user_is_supplier(code) and flask_featureflags.is_active('SUPPLIER_EDIT'),
     )
