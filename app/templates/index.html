@@ -15,6 +15,39 @@
 
   {% block main_content %}
 
+      {% if 'HOMEPAGE_DASHBOARD' is active_feature %}
+          <ul class="homepage-dashboard">
+
+            {% if suppliers_count > 0 %}
+                <li>
+                    <article>
+                        <h3>{{ suppliers_count }}</h3>
+                        <p>Digital Service Providers</p>
+                    </article>
+                </li>
+            {% endif %}
+
+            {% if buyers_count > 0 %}
+                <li>
+                    <article>
+                        <h3>{{ buyers_count }}</h3>
+                        <p>Registered Government Buyers</p>
+                    </article>
+                </li>
+            {% endif %}
+
+            {% if briefs_count > 0 %}
+                <li>
+                    <article>
+                        <h3>{{ briefs_count }}</h3>
+                        <p>Opportunities</p>
+                    </article>
+                </li>
+            {% endif %}
+
+          </ul>
+      {% endif %}
+
   <ul class="list-vertical">
     <li>
       <h2>Government buyers</h2>
