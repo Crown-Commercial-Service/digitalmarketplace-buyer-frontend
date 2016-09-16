@@ -77,7 +77,6 @@ class Config(object):
     FEATURE_FLAGS = {
         'BRIEF_FILTER': True,
         'BRIEF_PDF': True,
-        'SUPPLIERS_VIEW_OWN_PAGE': True,
         'TERMS_UPDATE_PAGE': True,
     }
 
@@ -137,7 +136,6 @@ class Live(Config):
     FEATURE_FLAGS = {
         'BRIEF_FILTER': False,
         'BRIEF_PDF': False,
-        'SUPPLIERS_VIEW_OWN_PAGE': False,
         'TERMS_UPDATE_PAGE': False,
     }
 
