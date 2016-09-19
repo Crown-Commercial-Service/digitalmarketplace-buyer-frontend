@@ -122,6 +122,19 @@ main {
   margin-bottom: 4em;
 }
 
+.cta-link {
+  display: inline-block;
+  margin-bottom: 0;
+  position: static;
+  right: auto;
+  top: auto;
+  @include media($tablet) {
+    position: absolute;
+    right: 0;
+    top: rem(30);
+  }
+}
+
 .m-t-1 {
   margin-top: 1em;
 }

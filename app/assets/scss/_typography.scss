@@ -133,6 +133,9 @@ span {
 .content-details {
 
   article {
+    
+    position: relative;
+
     h1 {
       font-size: rem(28);
       margin: $base-spacing/2 0 0.4em;
