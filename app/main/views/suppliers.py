@@ -41,5 +41,5 @@ def get_supplier(code):
         'suppliers_details.html',
         supplier=supplier,
         supplier_categories=supplier_categories,
-        user_owns_page=user_owns_page(code) and flask_featureflags.is_active('SUPPLIER_EDIT'),
+        user_owns_page=user_owns_page(code),
     )
