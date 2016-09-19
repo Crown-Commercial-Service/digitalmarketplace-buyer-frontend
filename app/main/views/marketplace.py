@@ -167,7 +167,7 @@ def get_brief_by_id(framework_slug, brief_id):
         brief=brief,
         brief_responses=brief_responses,
         content=brief_content,
-        show_pdf_link=brief['status'] in ['live', 'closed'] and flask_featureflags.is_active('BRIEF_PDF')
+        show_pdf_link=brief['status'] in ['live', 'closed']
     )
 
 
