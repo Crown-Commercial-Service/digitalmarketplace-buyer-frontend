@@ -58,10 +58,11 @@ def index():
         briefs_count = briefs_count_json['briefs']['open_to_all'] + briefs_count_json['briefs']['open_to_one'] + \
             briefs_count_json['briefs']['open_to_selected']
 
-    except:  # if there is a problem with the API or data we should still show the home page
+    except Exception, e:
         buyers_count = 0
         suppliers_count = 0
         briefs_count = 0
+        current_app.logger.error(e)
 
     return render_template(
         'index.html',
