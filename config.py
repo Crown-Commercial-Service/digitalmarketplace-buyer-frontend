@@ -78,7 +78,6 @@ class Config(object):
         'BRIEF_FILTER': True,
         'TERMS_UPDATE_PAGE': True,
         'HOMEPAGE_DASHBOARD': True,
-        'SUPPLIER_EDIT': True,
     }
 
     # LOGGING
@@ -138,7 +137,6 @@ class Live(Config):
         'BRIEF_FILTER': False,
         'TERMS_UPDATE_PAGE': False,
         'HOMEPAGE_DASHBOARD': False,
-        'SUPPLIER_EDIT': False,
     }
 
 
