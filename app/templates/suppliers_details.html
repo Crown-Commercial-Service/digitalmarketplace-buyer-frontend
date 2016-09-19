@@ -37,7 +37,7 @@
 {% if supplier.summary %}
 <p>
   {{ supplier.summary }}
-  {% if user_is_supplier %}
+  {% if user_owns_page %}
     <a href="/sellers/edit">edit</a>
   {% endif %}
 </p>
@@ -81,7 +81,7 @@
       <hr>
       {% endif %}
       {% endfor %}
-      {% if user_is_supplier %}
+      {% if user_owns_page %}
         <a href="/sellers/edit">edit</a>
       {% endif %}
     </article>
