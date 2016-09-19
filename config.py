@@ -76,7 +76,6 @@ class Config(object):
     # List all your feature flags below
     FEATURE_FLAGS = {
         'BRIEF_FILTER': True,
-        'BRIEF_PDF': True,
         'TERMS_UPDATE_PAGE': True,
         'HOMEPAGE_DASHBOARD': True,
         'SUPPLIER_EDIT': True,
@@ -137,7 +136,6 @@ class Live(Config):
     # List all your feature flags below
     FEATURE_FLAGS = {
         'BRIEF_FILTER': False,
-        'BRIEF_PDF': False,
         'TERMS_UPDATE_PAGE': False,
         'HOMEPAGE_DASHBOARD': False,
         'SUPPLIER_EDIT': False,
