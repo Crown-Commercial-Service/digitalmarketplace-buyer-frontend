@@ -48,6 +48,39 @@ class TestHomepageBrowseList(BaseApplicationTest):
             'ICT sellers'
         ]
 
+    @mock.patch('app.main.views.marketplace.data_api_client')
+    def test_dashboard(self, data_api_client):
+        data_api_client.get_buyers_count.return_value = {
+            "buyers": {
+                "total": 1
+            }
+        }
+
+        data_api_client.get_suppliers_count.return_value = {
+            "suppliers": {
+                "total": 16
+            }
+        }
+
+        data_api_client.get_briefs_count.return_value = {
+            "briefs": {
+                "open_to_all": 7,
+                "open_to_one": 0,
+                "open_to_selected": 1,
+                "recent_brief_time_since": "26 minutes ago"
+            }
+        }
+
+        res = self.client.get(self.expand_path('/'))
+        assert_equal(200, res.status_code)
+        document = html.fromstring(res.get_data(as_text=True))
+        links = document.xpath('//ul[@class="homepage-dashboard"]/li')
+
+        assert len(links) == 3
+        data_api_client.get_buyers_count.asssert_called_once()
+        data_api_client.get_suppliers_count.asssert_called_once()
+        data_api_client.get_briefs_count.asssert_called_once()
+
 
 class TestStaticMarketplacePages(BaseApplicationTest):
     def setup(self):
