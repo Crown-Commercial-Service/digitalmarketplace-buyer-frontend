@@ -1,7 +1,7 @@
 applications:
     - command: scripts/cf_run_app.sh
       buildpack: https://github.com/cloudfoundry/buildpack-python.git
-      memory: 2G
+      memory: 1G
       disk_quota: 1G
       instances: 4
       env:
