@@ -31,15 +31,17 @@
   heading = supplier.name,
   smaller = True
 %}
+  {% if user_owns_page %}
+    <span class="cta-link">
+      <a href="/sellers/edit">Edit profile</a>
+    </span>
+  {% endif %}
   {% include "toolkit/page-heading.html" %}
 {% endwith %}
 
 {% if supplier.summary %}
 <p>
   {{ supplier.summary }}
-  {% if user_owns_page %}
-    <a href="/sellers/edit">edit</a>
-  {% endif %}
 </p>
 {% endif %}
 
@@ -81,9 +83,6 @@
       <hr>
       {% endif %}
       {% endfor %}
-      {% if user_owns_page %}
-        <a href="/sellers/edit">edit</a>
-      {% endif %}
     </article>
   </li>
   <li>
