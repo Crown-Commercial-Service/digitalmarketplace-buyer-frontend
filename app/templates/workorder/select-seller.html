@@ -1,0 +1,77 @@
+{% extends "buyers/_base_edit_question_page.html" %}
+
+{% import "macros/brief_links.html" as brief_links %}
+
+{% block page_title %}Select seller - Digital Marketplace{% endblock %}
+
+{% block body_classes %}brief-builder{% endblock %}
+
+
+{% block breadcrumb %}
+{%
+  with
+  items = [
+  {
+  "link": url_for('.index'),
+  "label": "Home"
+},
+{
+  "label": "Work Order"
+}
+]
+%}
+{% include "toolkit/breadcrumb.html" %}
+{% endwith %}
+{% endblock %}
+
+{% block main_content %}
+  <div class="single-question-page">
+    <div class="grid-row">
+      <div class="column-two-thirds">
+
+        {% with
+          heading = "Award which seller?",
+          smaller = true
+        %}
+          {% include 'toolkit/page-heading.html' %}
+        {% endwith %}
+
+      </div>
+    </div>
+
+    <form method="post" enctype="multipart/form-data" action="{{ request.path }}">
+      <div class="grid-row">
+        <div class="column-two-thirds">
+
+          <fieldset id="{{ name }}">
+            <legend>
+              <span class="question-heading"></span>
+            </legend>
+            <input type="radio" name="sellerName" id="input-sellerName-1" value="alphaInc"/>
+            <label for="input-sellerName-1">
+              Alpha Inc
+            </label>
+            <input type="radio" name="sellerName" id="input-sellerName-2" value="betaPty"/>
+            <label for="input-sellerName-2">
+              Beta Pty
+            </label>
+            <input type="radio" name="sellerName" id="input-sellerName-3" value="charlieLtd"/>
+            <label for="input-sellerName-3">
+              Charlie Ltd
+            </label>
+          </fieldset>
+
+          {% with
+            type = "create-work-order",
+            label = "Create work order",
+            role = "button"
+          %}
+            {% include 'toolkit/button.html' %}
+          {% endwith %}
+          
+        </div>
+      </div>
+    </form>
+
+  </div>
+{% endblock %}
