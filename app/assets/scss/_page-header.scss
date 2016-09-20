@@ -1,5 +1,5 @@
 .govau--header {
-  @include linear-gradient(to left, $aqua, $dark-navy, $fallback: $dark-navy);
+  @include linear-gradient(to left, $dark-aqua, $dark-navy, $fallback: $dark-navy);
   padding: $small-spacing 0;
 
   .logo {
@@ -15,7 +15,7 @@
   padding: $medium-spacing 0 ($base-spacing * 3);
   padding-bottom: $medium-spacing;
   margin-bottom: 0;
-  background-color: #0098b0;
+  background-color: $aqua;
   color: $body-inverted-text-colour;
 
   @include media($tablet) {
@@ -103,7 +103,7 @@
   
   padding: 0 0 ($base-spacing * 2);
   margin-bottom: 0;
-  background-color: #0098b0;
+  background-color: $aqua;
   color: $body-inverted-text-colour;
 
   h1 {
