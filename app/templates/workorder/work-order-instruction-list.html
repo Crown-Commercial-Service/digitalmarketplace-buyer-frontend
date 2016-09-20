@@ -1,0 +1,123 @@
+{% extends "_base_page.html" %}
+
+{% block page_title %}Work Order – Digital Marketplace{% endblock %}
+
+{% block body_classes %}form-page form-section{% endblock %}
+
+{% block breadcrumb %}
+  {%
+    with items = [
+      {
+        "link": url_for("main.index"),
+        "label": "Home"
+      },
+      {
+        "link": url_for("buyers.buyer_dashboard"),
+        "label": "Dashboard"
+      },
+      {
+        "label": "Work Order Overview"
+      }
+    ]
+  %}
+    {% include "toolkit/breadcrumb.html" %}
+  {% endwith %}
+{% endblock %}
+
+{% block main_content %}
+  <div class="grid-row content-details">
+
+    <div>
+      {% with
+        heading = 'Work Order #'
+      %}
+        {% include "toolkit/page-heading.html" %}
+      {% endwith %}
+
+      <p>
+        This is a contract offer between the Agency and You under the <a href="{{ asset_path }}media/documents/DSPP_Deed_of_Standing_Offer.pdf" target="_blank">Deed of Standing Offer</a>:
+      </p>
+
+      <table class="content-table summary-item-body">
+        <caption class="visuallyhidden"></caption>
+        <thead class="summary-item-field-headings">
+          <tr>
+            <th scope="col" class="summary-item-field-heading-first">
+              <span class="visuallyhidden">Requirements attribute name</span>
+            </th>
+            <th scope="col" class="summary-item-field-heading">
+              <span class="visuallyhidden">Requirements attribute</span>
+            </th>
+            <th scope="col" class="summary-item-field-heading">
+              <span class="visuallyhidden">Action</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="summary-item-row">
+            <td class="summary-item-field-first">
+              <span>What is the work order number?</span>
+            </td>
+            <td class="summary-item-field">
+              <span>
+                <a href="#">Add work order number</a>
+              </span>
+            </td>
+            <td class="summary-item-field-with-action"></td>
+          </tr>
+          <tr class="summary-item-row">
+            <td class="summary-item-field-first">
+              <span>Seller</span>
+            </td>
+            <td class="summary-item-field">
+              <span>
+                <a href="#">Lorem</a><br>
+                <a href="#">Ipsum</a><br>
+                <a href="#">Dolor</a><br>
+                <a href="#">Sit</a>
+              </span>
+            </td>
+            <td class="summary-item-field-with-action"></td>
+          </tr>
+          <tr class="summary-item-row">
+            <td class="summary-item-field-first">
+              <span>Agency</span>
+            </td>
+            <td class="summary-item-field">
+              <span>
+                DTO<br>
+                <a href="#">Add contract</a>
+              </span>
+            </td>
+            <td class="summary-item-field-with-action"></td>
+          </tr>
+          <tr class="summary-item-row">
+            <td class="summary-item-field-first">
+              <span>Lorem ipsum dolor sit amet</span>
+            </td>
+            <td class="summary-item-field">
+              <span>
+                <a href="#">Lorem ipsum dolor sit amet</a>
+              </span>
+            </td>
+            <td class="summary-item-field-with-action"></td>
+          </tr>
+          <tr class="summary-item-row">
+            <td class="summary-item-field-first">
+              <span>Lorem ipsum dolor sit amet</span>
+            </td>
+            <td class="summary-item-field">
+              <span>
+                <a href="#">Lorem ipsum dolor sit amet</a>
+              </span>
+            </td>
+            <td class="summary-item-field-with-action"></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="m-t-1">
+        <a href="#">Download as PDF</a>
+      </div>
+    </div>
+  </div>
+{% endblock %}

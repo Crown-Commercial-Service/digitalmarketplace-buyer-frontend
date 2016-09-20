@@ -1,0 +1,66 @@
+{% extends "_base_page.html" %}
+
+{% block page_title %}Agency Details – Digital Marketplace{% endblock %}
+{% block body_classes %}form-page{% endblock %}
+
+{% block main_content %}
+
+  <div class="grid-row">
+    <div class="column-two-thirds">
+
+      {% with
+        heading = 'Agency Details',
+        smaller = true
+      %}
+        {% include 'toolkit/page-heading.html' %}
+      {% endwith %}
+
+    </div>
+  </div>
+
+  <form method="post" enctype="multipart/form-data" action="#">
+
+    <div class="grid-row">
+      <div class="column-two-thirds">
+        <div class="question" id="contact-officer">
+          <p>
+            Lorem ipsum dolor sit amet.
+          </p>
+          <label for="input-contact-officer">
+            <span class="question-heading-with-hint">
+              Contact Officer
+            </span>
+          </label>
+          <input type="text" name="contact-officer" id="input-contact-officer" class="text-box" aria-describedby="input-contact-officer-question-advice input-contact-officer-answer-advice">
+          <span class="hint word-count-counter" id="input-contact-officer-answer-advice">
+            <p>100 characters maximum</p>
+          </span>
+        </div>
+        <div class="question" id="email">
+          <label for="input-email">
+            <span class="question-heading-with-hint">
+              Email
+            </span>
+          </label>
+          <input type="text" name="email" id="input-email" class="text-box" aria-describedby="input-email-question-advice">
+        </div>
+        <div class="question" id="abn">
+          <label for="input-abn">
+            <span class="question-heading-with-hint">
+              ABN
+            </span>
+          </label>
+          <input type="text" name="abn" id="input-abn" class="text-box" aria-describedby="input-abn-question-advice">
+        </div>
+        <br>
+        {% with
+          type = "save-and-continue",
+          label = "Save and continue",
+          role = "button"
+        %}
+          {% include 'toolkit/button.html' %}
+        {% endwith %}
+      </div>
+    </div>
+  </form>
+{% endblock %}

@@ -59,9 +59,10 @@ ol.instruction-list {
 
 // Buyer Brief forms
 
-
+.form-page,
 .brief-builder {
 
+  &.form-section,
   &.brief-section {
     main {
       .content-main {
