@@ -223,12 +223,12 @@
         While your brief is live you must answer seller questions. After the brief closes, shortlist the sellers who applied. Then evaluate your shortlist using the methods you set when writing the brief and award a contract to the chosen seller.
       </p>
       <h2>Useful links</h2>
-      <p>
-        <a href="{{ url_for('main.how_to_answer_supplier_questions') }}">How to answer seller questions</a><br>
-        <a href="{{ url_for('main.how_to_shortlist_suppliers') }}">How to shortlist sellers</a><br>
-        <a href="{{ url_for('main.how_to_evaluate_suppliers') }}">How to evaluate sellers</a><br>
-        <a href="{{ url_for('main.buyers_guide') }}">How to award a contract</a><br>
-      </p>
+      <ul>
+        <li><a  href="{{ url_for('main.how_to_answer_supplier_questions') }}">How to answer seller questions</a></li>
+        <li><a href="{{ url_for('main.how_to_shortlist_suppliers') }}">How to shortlist sellers</a></li>
+        <li><a href="{{ url_for('main.how_to_evaluate_suppliers') }}">How to evaluate sellers</a></li>
+        <li><a href="{{ url_for('main.buyers_guide') }}">How to award a contract</a></li>
+      </ul>
     </div>
   </div>
   {% if not delete_requested %}
