@@ -25,53 +25,40 @@
 {% endblock %}
 
 {% block main_content %}
-  <div class="single-question-page">
-    <div class="grid-row">
-      <div class="column-two-thirds">
 
-        {% with
-          heading = "Award which seller?",
-          smaller = true
-        %}
-          {% include 'toolkit/page-heading.html' %}
-        {% endwith %}
-
-      </div>
-    </div>
+    {% with
+      heading = "Award which seller?",
+      smaller = true
+    %}
+      {% include 'toolkit/page-heading.html' %}
+    {% endwith %}
 
     <form method="post" enctype="multipart/form-data" action="{{ request.path }}">
-      <div class="grid-row">
-        <div class="column-two-thirds">
+      <div class="column-two-thirds">
 
-          <fieldset id="{{ name }}">
-            <legend>
-              <span class="question-heading"></span>
-            </legend>
-            <input type="radio" name="sellerName" id="input-sellerName-1" value="alphaInc"/>
-            <label for="input-sellerName-1">
-              Alpha Inc
-            </label>
-            <input type="radio" name="sellerName" id="input-sellerName-2" value="betaPty"/>
-            <label for="input-sellerName-2">
-              Beta Pty
-            </label>
-            <input type="radio" name="sellerName" id="input-sellerName-3" value="charlieLtd"/>
-            <label for="input-sellerName-3">
-              Charlie Ltd
-            </label>
-          </fieldset>
+        <fieldset id="{{ name }}">
+          <input type="radio" name="sellerName" id="input-sellerName-1" value="alphaInc"/>
+          <label for="input-sellerName-1">
+            Alpha Inc
+          </label>
+          <input type="radio" name="sellerName" id="input-sellerName-2" value="betaPty"/>
+          <label for="input-sellerName-2">
+            Beta Pty
+          </label>
+          <input type="radio" name="sellerName" id="input-sellerName-3" value="charlieLtd"/>
+          <label for="input-sellerName-3">
+            Charlie Ltd
+          </label>
+        </fieldset>
 
-          {% with
-            type = "create-work-order",
-            label = "Create work order",
-            role = "button"
-          %}
-            {% include 'toolkit/button.html' %}
-          {% endwith %}
-          
-        </div>
+        {% with
+          type = "create-work-order",
+          label = "Create work order",
+          role = "button"
+        %}
+          {% include 'toolkit/button.html' %}
+        {% endwith %}
+        
       </div>
     </form>
-
-  </div>
 {% endblock %}
