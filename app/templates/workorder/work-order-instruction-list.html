@@ -1,0 +1,259 @@
+{% extends "_base_page.html" %}
+
+{% block page_title %}Work Order – Digital Marketplace{% endblock %}
+
+{% block body_classes %}form-page form-section{% endblock %}
+
+{% block breadcrumb %}
+  {%
+    with items = [
+      {
+        "link": url_for("main.index"),
+        "label": "Home"
+      },
+      {
+        "link": url_for("buyers.buyer_dashboard"),
+        "label": "Dashboard"
+      },
+      {
+        "label": "Work Order Overview"
+      }
+    ]
+  %}
+    {% include "toolkit/breadcrumb.html" %}
+  {% endwith %}
+{% endblock %}
+
+{% block main_content %}
+
+  {% with
+    heading = 'Work Order #'
+  %}
+    {% include "toolkit/page-heading.html" %}
+  {% endwith %}
+
+  <p>
+    This is a contract offer between the Agency and You under the <a href="{{ asset_path }}media/documents/DSPP_Deed_of_Standing_Offer.pdf" target="_blank">Deed of Standing Offer</a>:
+  </p>
+
+  <table class="content-table summary-item-body">
+    <caption class="visuallyhidden"></caption>
+    <thead>
+      <tr>
+        <th scope="col">
+          <span class="visuallyhidden">Requirements attribute name</span>
+        </th>
+        <th scope="col">
+          <span class="visuallyhidden">Requirements attribute</span>
+        </th>
+        <th scope="col">
+          <span class="visuallyhidden">Action</span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <span>Work Order number</span>          
+        </td>
+        <td>
+          <span>
+            <a href="#">Add work order number</a>
+          </span>
+        </td>
+        <td>
+          <!-- action link would go here -->
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <span>Deed SON number</span>
+        </td>
+        <td>
+          <span>
+            SON3364729
+          </span>
+        </td>
+        <td>
+          <!-- action link would go here -->
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <span>Agency</span><br>
+          <span>Agency name</span><br>
+          <span>Agency representative</span><br>
+          <span>ABN</span>
+        </td>
+        <td>
+          <span>
+            <a href="#">Add agency details</a><br>
+          </span>
+        </td>
+        <td>
+          <!-- action link would go here -->
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <span>You</span><br>
+          <span>Company name</span><br>
+          <span>Company representative</span><br>
+          <span>ABN</span>
+        </td>
+        <td>
+          <span>
+            [Prepopulated content from selected seller]
+          </span>
+        </td>
+        <td>
+          <a href="#">Edit</a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <span>Order period</span>
+        </td>
+        <td>
+          <span>
+            ['how long is the contract' from bb]
+          </span>
+        </td>
+        <td>
+          <!-- action link would go here -->
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <span>Services and deliverables</span>
+        </td>
+        <td>
+          <span>
+            <a href="#">Add service details</a><br>
+            ['summary of your brief???' from bb]
+          </span>
+        </td>
+        <td>
+          <!-- action link would go here -->
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <span>Specified personnel</span>
+        </td>
+        <td>
+          <span>
+            <a href="#">Add specified personnel</a>
+          </span>
+        </td>
+        <td>
+          <!-- action link would go here -->
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <span>Performance criteria</span>
+        </td>
+        <td>
+          <span>
+            <a href="#">Add performance criteria</a>
+          </span>
+        </td>
+        <td>
+          <!-- action link would go here -->
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <span>Quoted service charges</span>
+        </td>
+        <td>
+          <span>
+            <a href="#">Add service charges</a>
+          </span>
+        </td>
+        <td>
+          <!-- action link would go here -->
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <span>Expenses</span>
+        </td>
+        <td>
+          <span>
+            <a href="#">Add additional expenses</a>
+          </span>
+        </td>
+        <td>
+          <!-- action link would go here -->
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <span>Agency intellectual property</span>
+        </td>
+        <td>
+          <span>
+            ['what work has already been done' from outcome bb]<br>
+            ['???' from individual bb]
+          </span>
+        </td>
+        <td>
+          <a href="#">Edit</a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <span>Seller intellectual property</span>
+        </td>
+        <td>
+          <span>
+            <a href="#">Add seller intellectual property details</a>
+          </span>
+        </td>
+        <td>
+          <!-- action link would go here -->
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <span>Security requirements</span>
+        </td>
+        <td>
+          <span>
+            ['is security clearance required' from bb]
+          </span>
+        </td>
+        <td>
+          <a href="#">Edit</a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <span>Additional terms and conditions</span>
+        </td>
+        <td>
+          <span>
+            ['addtional terms and conditions' from bb]
+          </span>
+        </td>
+        <td>
+          <a href="#">Edit</a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  {% with
+    type = "save-work-order",
+    label = "Save work order",
+    role = "button"
+  %}
+    {% include 'toolkit/button.html' %}
+  {% endwith %}
+
+  <div class="m-t-1">
+    <a href="#">Download as PDF</a>
+  </div>
+{% endblock %}
