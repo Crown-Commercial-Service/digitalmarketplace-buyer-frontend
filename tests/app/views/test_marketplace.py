@@ -85,6 +85,7 @@ class TestHomepageBrowseList(BaseApplicationTest):
 class TestStaticMarketplacePages(BaseApplicationTest):
     def setup(self):
         super(TestStaticMarketplacePages, self).setup()
+        self.terms_manager.load_versions(self.app)
 
     def test_toc_page(self):
         res = self.client.get(self.expand_path('/terms-of-use'))

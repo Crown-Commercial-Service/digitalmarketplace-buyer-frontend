@@ -14,7 +14,6 @@ from app.helpers.terms_helpers import TermsManager
 cache = Cache()
 login_manager = LoginManager()
 data_api_client = dmapiclient.DataAPIClient()
-terms_manager = TermsManager()
 
 content_loader = ContentLoader('app/content')
 content_loader.load_manifest('g-cloud-6', 'services', 'search_filters')
@@ -48,5 +47,7 @@ def create_app(config_name):
     login_manager.login_message_category = "must_login"
 
     init_frontend_app(application, data_api_client, login_manager)
+    terms_manager = TermsManager()
+    terms_manager.init_app(application)
 
     return application

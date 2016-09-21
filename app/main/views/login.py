@@ -16,13 +16,15 @@ from dmutils.email import (
 )
 from dmutils.forms import render_template_with_csrf
 from dmutils.formats import DATETIME_FORMAT
+from dmutils import terms_of_use
+from app import data_api_client
 from app.main import main
 from app.helpers.login_helpers import (
     decode_buyer_creation_token, generate_buyer_creation_token, redirect_logged_in_user,
     send_buyer_account_activation_email
 )
+from app.helpers.terms_helpers import check_terms_acceptance
 from app.main.forms import auth_forms
-from ... import data_api_client
 from ...api_client.error import HTTPError
 
 
@@ -60,6 +62,7 @@ def process_login():
 
         login_user(user)
         current_app.logger.info('login.success: {user}', extra={'user': user_logging_string(user)})
+        check_terms_acceptance()
         return redirect_logged_in_user(next_url)
 
     else:
@@ -361,7 +364,7 @@ def submit_create_buyer_account(token):
     return redirect_logged_in_user()
 
 
-@flask_featureflags.is_active_feature('TERMS_UPDATE_PAGE')
+@flask_featureflags.is_active_feature('ENFORCE_TERMS_REVIEW')
 @main.route('/terms-updated', methods=['GET'])
 @login_required
 def terms_updated():
@@ -372,7 +375,7 @@ def terms_updated():
     )
 
 
-@flask_featureflags.is_active_feature('TERMS_UPDATE_PAGE')
+@flask_featureflags.is_active_feature('ENFORCE_TERMS_REVIEW')
 @main.route('/terms-updated', methods=['POST'])
 @login_required
 def accept_updated_terms():
@@ -385,4 +388,5 @@ def accept_updated_terms():
         )
     timestamp = datetime.utcnow().strftime(DATETIME_FORMAT)
     data_api_client.update_user(current_user.id, fields={'termsAcceptedAt': timestamp})
+    terms_of_use.set_session_flag(False)
     return redirect_logged_in_user()
