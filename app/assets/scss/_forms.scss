@@ -30,6 +30,56 @@
       margin-top: 0;
     }
   }
+
+  .signatures-section {
+
+    margin-bottom: 4em;
+
+    p {
+
+      font-size: rem(14);
+      margin-bottom: 0;
+      padding-bottom: 3em;
+
+      &::before {
+        border-top: 1px solid $light-grey;
+        content: '';
+        display: block;
+        @include media($mobile) {
+          width: 100%;
+        }
+        @include media($tablet) {
+          width: 80%;
+        }
+        @include media($desktop) {
+          width: 70%;
+        }
+      }
+
+      &.intro {
+        font-size: rem(17);
+        padding-bottom: 0;
+        &::before {
+          border-top: 0;
+        }
+      }
+
+      &.section-title {
+        display: inline-block;
+        font-size: rem(17);
+        font-weight: $bold-font-weight;
+        margin: 1.5em 0 $tiny-spacing;
+        padding-bottom: 0;
+        &::before {
+          border-top: 0;
+        }
+
+        & + p::before {
+          border-top: 0;
+        }
+      }
+    }
+  }
 }
 
 .registration-pages {
