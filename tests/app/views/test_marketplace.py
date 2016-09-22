@@ -73,10 +73,7 @@ class TestHomepageBrowseList(BaseApplicationTest):
 
         res = self.client.get(self.expand_path('/'))
         assert_equal(200, res.status_code)
-        document = html.fromstring(res.get_data(as_text=True))
-        links = document.xpath('//ul[@class="homepage-dashboard"]/li')
 
-        assert len(links) == 3
         data_api_client.get_buyers_count.asssert_called_once()
         data_api_client.get_suppliers_count.asssert_called_once()
         data_api_client.get_briefs_count.asssert_called_once()

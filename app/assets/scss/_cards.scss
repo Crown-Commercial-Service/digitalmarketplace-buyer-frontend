@@ -1,0 +1,111 @@
+a.card {
+  box-shadow: 0 2px 6px 0 rgba(0,0,0,0.10);
+  position: relative;
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  margin-right: 0;
+  padding: rem(13) rem(16);
+  background-color: $white;
+  border: 1px solid $light-grey;
+  width: 100%;
+
+  @include media($tablet) {
+    margin-bottom: 0.75rem;
+    margin-right: rem(8);
+    padding: rem(18);
+    width: 32%;
+  }
+
+  @include media($sm-desktop) {
+    margin-right: rem(20);
+    width: 30%;
+  }
+
+  &:active,
+  &:focus,
+  &:hover {
+    box-shadow: 0 2px 6px 0 rgba(0,0,0,0.30);
+    background-color: $white;
+
+    p:last-of-type {
+      background-color: $light-aqua;
+    }
+  }
+
+  &.buyer {
+    p {
+      color: $aqua;
+      &:last-of-type {
+        color: $non-black;
+      }
+    }
+  }
+  &.seller {
+    p {
+      color: $maroon;
+      &:last-of-type {
+        color: $non-black;
+      }
+    }
+  }
+
+  p {
+    margin-bottom: 0;
+
+    &:first-of-type {
+      font-size: rem(20);
+      font-weight: $bold-font-weight;
+      margin-bottom: 0.5em;
+    }
+
+    span {
+      display: inline;
+      line-height: 0.8;
+      @include media($tablet) {
+        font-size: rem(60);
+        display: block;
+      }
+    }
+
+    &:last-of-type {
+      border-bottom: 1px solid $light-aqua;
+      display: inline;
+    }
+  }
+
+  &::after {
+    @extend %icon-arrow-right--aqua;
+    content: '';
+    position: absolute;
+    display: block;
+    top: rem(33);
+    right: 1em;
+    width: rem(24);
+    height: rem(24);
+    background-repeat: no-repeat;
+    background-position: right $tiny-spacing;
+    background-size: 0.9em auto;
+
+    @include media($tablet) {
+      display: none;
+    }
+  }
+}
+
+.super {
+
+  h2 {
+    display: none;
+    @include media($tablet) {
+      display: block;
+    }
+  }
+
+  a:last-of-type {
+    margin-bottom: 0;
+    margin-right: 0;
+    @include media ($tablet) {
+      margin-bottom: 1.5rem;
+    }
+  }
+}

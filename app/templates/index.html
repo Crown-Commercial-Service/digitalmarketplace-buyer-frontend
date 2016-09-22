@@ -13,40 +13,46 @@
   {% endwith %}
   {% endblock %}
 
+  {% block content_super %}
+  {% if 'HOMEPAGE_DASHBOARD' is active_feature %}
+    <div class="content-main super">
+      <div class="wrapper">
+        <div>
+          <h2>Currently we have</h2>
+          {% if briefs_count > 0 %}
+            <a href="{{ url_for('.list_opportunities', framework_slug='digital-service-professionals') }}" class="card seller">
+              <p>
+                <span>{{ briefs_count }}</span>
+                <strong>Opportunities</strong>
+              </p>
+              <p>View the latest briefs</p>
+            </a>
+          {% endif %}
+          {% if suppliers_count > 0 %}
+            <a href="{{ url_for('.supplier_search') }}" class="card buyer">
+              <p>
+                <span>{{ suppliers_count }}</span>
+                <strong>Approved sellers</strong>
+              </p>
+              <p>Browse the catalogue</p>
+            </a>
+          {% endif %}
+          {% if buyers_count > 0 %}
+            <a href="{{ url_for('main.buyer_signup') }}" class="card buyer">
+              <p>
+                <span>{{ buyers_count }}</span>
+                <strong>Registered buyers</strong>
+              </p>
+              <p>Create a buyer account</p>
+            </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+  {% endblock %}
+
   {% block main_content %}
-
-      {% if 'HOMEPAGE_DASHBOARD' is active_feature %}
-          <ul class="homepage-dashboard">
-
-            {% if suppliers_count > 0 %}
-                <li>
-                    <article>
-                        <h3>{{ suppliers_count }}</h3>
-                        <p>Digital Service Providers</p>
-                    </article>
-                </li>
-            {% endif %}
-
-            {% if buyers_count > 0 %}
-                <li>
-                    <article>
-                        <h3>{{ buyers_count }}</h3>
-                        <p>Registered Government Buyers</p>
-                    </article>
-                </li>
-            {% endif %}
-
-            {% if briefs_count > 0 %}
-                <li>
-                    <article>
-                        <h3>{{ briefs_count }}</h3>
-                        <p>Opportunities</p>
-                    </article>
-                </li>
-            {% endif %}
-
-          </ul>
-      {% endif %}
 
   <ul class="list-vertical">
     <li>
