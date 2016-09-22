@@ -11,11 +11,12 @@ from dmapiclient import APIError
 from dmcontent.content_loader import ContentNotFoundError
 from app.main.utils import get_page_list
 
-from ...main import main
+from app import data_api_client, content_loader
+from app.main import main
+from app.helpers.terms_helpers import check_terms_acceptance, get_current_terms_version
 
 from ..forms.brief_forms import BriefSearchForm
 
-from app import data_api_client, content_loader, terms_manager
 from flask_weasyprint import HTML, render_pdf
 
 
@@ -35,6 +36,7 @@ def index():
         briefs_count = 0
         current_app.logger.error(e)
 
+    check_terms_acceptance()
     return render_template(
         'index.html',
         buyers_count=buyers_count,
@@ -100,7 +102,7 @@ def copyright():
 
 @main.route('/terms-of-use')
 def terms_of_use():
-    terms = terms_manager.current_version
+    terms = get_current_terms_version()
     return render_template(terms.template_file, update_time=terms.date)
 
 

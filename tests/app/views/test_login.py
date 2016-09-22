@@ -719,6 +719,9 @@ class TestCreateBuyer(BaseApplicationTest):
         with self.app.app_context():
             return generate_buyer_creation_token(name, email_address)
 
+    def create_user_setup(self, data_api_client):
+        data_api_client.create_user.return_value = self.user(123, 'test@example.gov.au', None, None, 'valid name')
+
     def test_should_be_an_error_for_invalid_token(self):
         token = "1234"
         res = self.client.get(
@@ -929,6 +932,7 @@ class TestCreateBuyer(BaseApplicationTest):
     @mock.patch('app.main.views.login.data_api_client')
     def test_should_create_user_if_user_does_not_exist(self, data_api_client):
         data_api_client.get_user.return_value = None
+        self.create_user_setup(data_api_client)
 
         token = self._generate_token()
         res = self.client.post(
@@ -942,7 +946,7 @@ class TestCreateBuyer(BaseApplicationTest):
         )
 
         assert res.status_code == 302
-        assert res.location == 'http://localhost' + self.expand_path('/')
+        assert res.location == self.url_for('buyers.buyer_dashboard', _external=True)
 
         data_api_client.create_user.assert_called_once_with({
             'role': 'buyer',
@@ -978,6 +982,7 @@ class TestCreateBuyer(BaseApplicationTest):
     @mock.patch('app.main.views.login.data_api_client')
     def test_should_strip_whitespace_surrounding_create_user_name_field(self, data_api_client):
         data_api_client.get_user.return_value = None
+        self.create_user_setup(data_api_client)
         token = self._generate_token()
         res = self.client.post(
             self.url_for('main.submit_create_buyer_account', token=token),
@@ -999,6 +1004,7 @@ class TestCreateBuyer(BaseApplicationTest):
     @mock.patch('app.main.views.login.data_api_client')
     def test_should_not_strip_whitespace_surrounding_create_user_password_field(self, data_api_client):
         data_api_client.get_user.return_value = None
+        self.create_user_setup(data_api_client)
         token = self._generate_token()
         res = self.client.post(
             self.url_for('main.submit_create_buyer_account', token=token),
@@ -1083,12 +1089,14 @@ class TestTermsUpdate(BaseApplicationTest):
             res = self.client.get(self.url_for('main.terms_updated'))
             assert res.status_code == 302
 
+    @mock.patch('app.main.views.login.terms_of_use')
     @mock.patch('app.main.views.login.data_api_client')
-    def test_submit(self, data_api_client):
+    def test_submit(self, data_api_client, terms_of_use):
         with self.app.app_context():
             self.login_as_buyer(user_id=42)
             res = self.client.post(self.url_for('main.accept_updated_terms'), data=self.payload)
             data_api_client.update_user.assert_called_once_with(42, fields=mock.ANY)
+            terms_of_use.set_session_flag.assert_called_once_with(False)
             assert res.status_code == 302
 
     @mock.patch('app.main.views.login.data_api_client')

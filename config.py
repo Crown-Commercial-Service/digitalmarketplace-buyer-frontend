@@ -22,6 +22,8 @@ class Config(object):
     CSRF_ENABLED = True
     CSRF_TIME_LIMIT = 8*3600
 
+    DM_TIMEZONE = 'Australia/Sydney'
+
     DM_DATA_API_URL = None
     DM_DATA_API_AUTH_TOKEN = None
     DM_HTTP_PROTO = 'http'
@@ -76,8 +78,8 @@ class Config(object):
     # List all your feature flags below
     FEATURE_FLAGS = {
         'BRIEF_FILTER': True,
-        'TERMS_UPDATE_PAGE': True,
         'HOMEPAGE_DASHBOARD': True,
+        'ENFORCE_TERMS_REVIEW': True,
     }
 
     # LOGGING
@@ -135,8 +137,8 @@ class Live(Config):
     # List all your feature flags below
     FEATURE_FLAGS = {
         'BRIEF_FILTER': False,
-        'TERMS_UPDATE_PAGE': False,
         'HOMEPAGE_DASHBOARD': False,
+        'ENFORCE_TERMS_REVIEW': False,
     }
 
 

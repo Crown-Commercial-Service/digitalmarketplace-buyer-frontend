@@ -5,6 +5,7 @@ import json
 import re
 
 from app import create_app, data_api_client
+from app.helpers.terms_helpers import TermsManager
 from flask_featureflags import FeatureFlag
 
 from dmutils.forms import FakeCsrf
@@ -20,6 +21,8 @@ class BaseApplicationTest(object):
     def setup(self):
         self.app = create_app('test')
         self.client = self.app.test_client()
+        self.terms_manager = TermsManager()
+        self.terms_manager.init_app(self.app, ['2016-01-01 00:00.html'])
         feature_flags = FeatureFlag(self.app)
         self.get_user_patch = None
 
@@ -34,12 +37,16 @@ class BaseApplicationTest(object):
         self.teardown_login()
 
     @staticmethod
-    def user(id, email_address, supplier_code, supplier_name, name,
-             is_token_valid=True, locked=False, active=True, role='buyer'):
+    def user(id, email_address, supplier_code, supplier_name, name, is_token_valid=True, locked=False, active=True,
+             role='buyer', terms_accepted_date=None):
+
+        now = datetime.utcnow()
 
         hours_offset = -1 if is_token_valid else 1
-        date = datetime.utcnow() + timedelta(hours=hours_offset)
-        password_changed_at = date.strftime(DATETIME_FORMAT)
+        password_changed_date = now + timedelta(hours=hours_offset)
+
+        if terms_accepted_date is None:
+            terms_accepted_date = now
 
         user = {
             "id": id,
@@ -48,7 +55,8 @@ class BaseApplicationTest(object):
             "role": role,
             "locked": locked,
             'active': active,
-            'passwordChangedAt': password_changed_at
+            'passwordChangedAt': password_changed_date.strftime(DATETIME_FORMAT),
+            'termsAcceptedAt': terms_accepted_date.strftime(DATETIME_FORMAT),
         }
 
         if supplier_code:
@@ -169,26 +177,28 @@ class BaseApplicationTest(object):
             login_api_client.authenticate_user.assert_called_once_with(
                 "valid@email.com", "1234567890")
 
-    def login_as_buyer(self, user_id=123):
+    def login_as_buyer(self, user_id=123, terms_accepted_date=None):
         with patch('app.main.views.login.data_api_client') as login_api_client:
-            login_api_client.authenticate_user.return_value = self.user(
-                user_id, "buyer@email.com", None, None, 'Name')
-
-            self.get_user_patch = patch.object(
-                data_api_client,
-                'get_user',
-                return_value=self.user(user_id, "buyer@email.com", None, None, 'Some Buyer')
+            user = self.user(
+                user_id,
+                'buyer@email.com',
+                None,
+                None,
+                'Some Buyer',
+                terms_accepted_date=terms_accepted_date,
             )
+            login_api_client.authenticate_user.return_value = user
+
+            self.get_user_patch = patch.object(data_api_client, 'get_user', return_value=user)
             self.get_user_patch.start()
 
             response = self.client.post(self.expand_path('/login'), data={
-                'email_address': 'valid@email.com',
+                'email_address': 'buyer@email.com',
                 'password': '1234567890',
                 'csrf_token': FakeCsrf.valid_token,
             })
 
-            login_api_client.authenticate_user.assert_called_once_with(
-                "valid@email.com", "1234567890")
+            login_api_client.authenticate_user.assert_called_once_with('buyer@email.com', '1234567890')
 
     def login_as_admin(self):
         with patch('app.main.views.login.data_api_client') as login_api_client:
