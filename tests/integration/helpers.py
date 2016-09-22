@@ -19,6 +19,10 @@ def login(browser, email, password):
     browser.fill('email_address', email)
     browser.fill('password', password)
     click_button('Log in', browser)
+    if browser.title.startswith('Terms of Use Updated'):
+        accept_checkbox = browser.find_by_xpath("//label[text()='I accept the updated Terms of Use']").first
+        accept_checkbox.click()
+        click_button('Accept', browser)
 
 
 def click_button(text, browser):
