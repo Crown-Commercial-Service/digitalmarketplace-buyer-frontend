@@ -569,3 +569,14 @@ def send_new_opportunity_email_to_sellers(brief_json, brief_url):
                     extra={
                         'error': six.text_type(e), })
                 abort(503, response='Failed to send seller new opportunity email.')
+
+@buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/work-order/create', methods=['GET'])
+def start_new_work_order(framework_slug, lot_slug, brief_id):
+    responses = data_api_client.find_brief_responses(brief_id)
+
+    return render_template_with_csrf(
+        "workorder/select-seller.html",
+        brief={},
+        framework=framework,
+        lot=lot,
+    )
