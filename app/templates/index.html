@@ -13,40 +13,40 @@
   {% endwith %}
   {% endblock %}
 
+  {% block content_super %}
+  {% if 'HOMEPAGE_DASHBOARD' is active_feature %}
+    <div class="content-main super">
+      <div class="wrapper">
+        <div>
+          <h2>Currently we have</h2>
+          {% if briefs_count > 0 %}
+            <a href="#" class="card">
+              <p><strong>Opportunities</strong></p>
+              <p class="count seller">{{ briefs_count }}</p>
+              <p>View the latest briefs</p>
+            </a>
+          {% endif %}
+          {% if suppliers_count > 0 %}
+            <a href="#" class="card">
+              <p><strong>Approved sellers</strong></p>
+              <p class="count seller">{{ suppliers_count }}</p>
+              <p>View them all</p>
+            </a>
+          {% endif %}
+          {% if buyers_count > 0 %}
+            <a href="#" class="card">
+              <p><strong>Registered buyers</strong></p>
+              <p class="count buyer">{{ buyers_count }}</p>
+              <p>Create an account</p>
+            </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+  {% endblock %}
+
   {% block main_content %}
-
-      {% if 'HOMEPAGE_DASHBOARD' is active_feature %}
-          <ul class="homepage-dashboard">
-
-            {% if suppliers_count > 0 %}
-                <li>
-                    <article>
-                        <h3>{{ suppliers_count }}</h3>
-                        <p>Digital Service Providers</p>
-                    </article>
-                </li>
-            {% endif %}
-
-            {% if buyers_count > 0 %}
-                <li>
-                    <article>
-                        <h3>{{ buyers_count }}</h3>
-                        <p>Registered Government Buyers</p>
-                    </article>
-                </li>
-            {% endif %}
-
-            {% if briefs_count > 0 %}
-                <li>
-                    <article>
-                        <h3>{{ briefs_count }}</h3>
-                        <p>Opportunities</p>
-                    </article>
-                </li>
-            {% endif %}
-
-          </ul>
-      {% endif %}
 
   <ul class="list-vertical">
     <li>

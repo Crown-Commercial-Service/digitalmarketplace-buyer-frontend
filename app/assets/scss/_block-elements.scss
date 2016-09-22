@@ -103,6 +103,7 @@ main {
   }
 }
 
+.super,
 .sub {
   background: $non-white;
   margin-top: $base-spacing;
@@ -116,6 +117,10 @@ main {
       @include span-columns(12 of 16);
     }
   }
+}
+
+.super {
+  margin-top: 0;
 }
 
 .q-and-a-section {

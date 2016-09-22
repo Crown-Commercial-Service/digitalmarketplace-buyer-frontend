@@ -1,0 +1,51 @@
+a.card {
+  box-shadow: 0 2px 6px 0 rgba(0,0,0,0.10);
+  position: relative;
+  display: inline-block;
+  margin-right: 0;
+  margin-bottom: 0.75rem;
+  padding: rem(20);
+  background-color: $white;
+  border: 1px solid $light-grey;
+  width: 100%;
+
+  @include media($tablet) {
+    margin-right: rem(24);
+    width: 30%;
+  }
+
+  &:hover {
+    box-shadow: 0 2px 6px 0 rgba(0,0,0,0.30);
+    background-color: $white;
+
+    p:last-of-type {
+      background-color: $light-aqua;
+    }
+  }
+
+  p {
+    margin-bottom: 0;
+
+    &.count {
+      font-size: rem(60);
+      font-weight: $bold-font-weight;
+      &.buyer {
+        color: $aqua;
+      }
+      &.seller {
+        color: $maroon;
+      }
+    }
+
+    &:last-of-type {
+      border-bottom: 1px solid $light-aqua;
+      display: inline;
+    }
+  }
+}
+
+.super {
+  a:last-of-type {
+    margin-right: 0;
+  }
+}
