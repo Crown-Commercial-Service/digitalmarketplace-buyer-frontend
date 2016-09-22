@@ -1430,7 +1430,7 @@ class TestBriefSummaryPage(BaseApplicationTest):
             document = html.fromstring(page_html)
 
             assert (document.xpath('//h1')[0]).text_content().strip() == "I need a thing to do a thing"
-            assert [e.text_content() for e in document.xpath('//*[@id="content"]//ul/li/a')] == [
+            assert [e.text_content() for e in document.xpath('//*[@id="content"]//ul[@class="instruction-list-item-top"]/li/a')] == [  # noqa
                 'Title',
                 'Specialist role',
                 'Location',
@@ -1468,7 +1468,7 @@ class TestBriefSummaryPage(BaseApplicationTest):
             document = html.fromstring(page_html)
 
             assert (document.xpath('//h1')[0]).text_content().strip() == "I need a thing to do a thing"
-            assert [e.text_content() for e in document.xpath('//*[@id="content"]//ul/li/a')] == [
+            assert [e.text_content() for e in document.xpath('//*[@id="content"]//ul[@class="instruction-list-item-top"]/li/a')] == [  # noqa
                 'View question and answer dates',
                 'View your published requirements'
             ]
@@ -1500,7 +1500,7 @@ class TestBriefSummaryPage(BaseApplicationTest):
             document = html.fromstring(page_html)
 
             assert (document.xpath('//h1')[0]).text_content().strip() == "I need a thing to do a thing"
-            assert [e.text_content() for e in document.xpath('//*[@id="content"]//ul/li/a')] == [
+            assert [e.text_content() for e in document.xpath('//*[@id="content"]//ul[@class="instruction-list-item-top"]/li/a')] == [  # noqa
                 'View your published requirements'
             ]
 
