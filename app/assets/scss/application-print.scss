@@ -24,7 +24,18 @@ header[role="banner"],
 .skip-to,
 .visually-hidden,
 .visuallyhidden,
+.summary-item-body tbody tr td:last-of-type a,
 footer,
 .m-t-1 a {
   display: none;
+}
+
+.content-main {
+  .signatures-section {
+    p {
+      &::before {
+        width: 90%;
+      }
+    }
+  }
 }
