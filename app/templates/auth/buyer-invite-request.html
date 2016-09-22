@@ -50,7 +50,7 @@
       value = form.manager_name.data,
       error = form.manager_name.errors[0]
   %}
-    {% include "au-ui-toolkit/forms/textbox.html" %}
+    {% include "toolkit/forms/textbox.html" %}
   {% endwith %}
 
   {%
@@ -61,7 +61,7 @@
       value = form.manager_email.data,
       error = form.manager_email.errors[0]
   %}
-    {% include "au-ui-toolkit/forms/textbox.html" %}
+    {% include "toolkit/forms/textbox.html" %}
   {% endwith %}
 
   <p>Remember to let this person know we’ll be sending them an email requesting their authorisation.</p>
@@ -72,7 +72,7 @@
       role = "button",
       label = "Request invitation"
   %}
-  {% include "au-ui-toolkit/button.html" %}
+  {% include "toolkit/button.html" %}
   {% endwith %}
   <p><small>By requesting an account invitation, you agree to the <a href="{{ url_for('main.terms_of_use') }}">Terms of Use</a>.</small></p>
 </form>

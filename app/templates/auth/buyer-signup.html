@@ -48,7 +48,7 @@
       value = form.name.data,
       error = form.name.errors[0]
   %}
-    {% include "au-ui-toolkit/forms/textbox.html" %}
+    {% include "toolkit/forms/textbox.html" %}
   {% endwith %}
 
   {%
@@ -59,16 +59,18 @@
       value = form.email_address.data,
       error = form.email_address.errors[0]
   %}
-    {% include "au-ui-toolkit/forms/textbox.html" %}
+    {% include "toolkit/forms/textbox.html" %}
   {% endwith %}
 
-  {%
-    with
-      type = "save",
-      role = "button",
-      label = "Continue"
-  %}
-  {% include "au-ui-toolkit/button.html" %}
+  <div class="m-t-1">
+    {%
+      with
+        type = "save",
+        role = "button",
+        label = "Continue"
+    %}
+    {% include "toolkit/button.html" %}
+  </div>
   {% endwith %}
   <p><small>By requesting an account invitation, you agree to the <a href="{{ url_for('main.terms_of_use') }}">Terms of Use</a>.</small></p>
 </form>

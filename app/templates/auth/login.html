@@ -51,7 +51,7 @@
 {% with
   heading = "Log in to the Marketplace"
 %}
-  {% include "au-ui-toolkit/page-heading.html" %}
+  {% include "toolkit/page-heading.html" %}
 {% endwith %}
 
 <p>
@@ -87,7 +87,7 @@
     url = url_for('.request_password_reset'),
     text = "Forgot your password?"
   %}
-    {% include "au-ui-toolkit/secondary-action-link.html" %}
+    {% include "toolkit/secondary-action-link.html" %}
   {% endwith %}
   </p>
 
@@ -98,7 +98,7 @@
     role = "button",
     label = "Log in"
   %}
-    {% include "au-ui-toolkit/button.html" %}
+    {% include "toolkit/button.html" %}
   {% endwith %}
   </p>
 
