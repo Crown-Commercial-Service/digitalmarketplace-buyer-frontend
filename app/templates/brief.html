@@ -86,6 +86,8 @@
   {% include "toolkit/secondary-action-link.html" %}
   {% endwith %}
   {% else %}
+  {% if is_restricted_brief %}<p>Only invited sellers can apply for 'Open to one' or 'Open to selected' briefs.</p>{% endif %}
+  <p>
   {% with
   url = "{}/sellers/opportunities/{}/responses/create".format(config['URL_PREFIX'], brief.id),
   role = "button",

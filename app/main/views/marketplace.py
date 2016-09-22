@@ -127,12 +127,16 @@ def get_brief_by_id(framework_slug, brief_id):
     brief_content = content_loader.get_builder('digital-service-professionals', 'display_brief').filter(
         brief
     )
+
+    is_restricted_brief = brief.get('sellerSelector', '') in ('someSellers', 'oneSeller')
+
     return render_template(
         'brief.html',
         brief=brief,
         brief_responses=brief_responses,
         content=brief_content,
-        show_pdf_link=brief['status'] in ['live', 'closed']
+        show_pdf_link=brief['status'] in ['live', 'closed'],
+        is_restricted_brief=is_restricted_brief,
     )
 
 
