@@ -31,8 +31,8 @@
 
 {% if brief.status == 'closed' %}
 
-<div class="callout--info">
-  <h2>This opportunity is closed for applications.</h2>
+<div class="callout--info" role="alert">
+  <p><strong>This opportunity is closed for applications.</strong></p>
   <p>The deadline was {{brief.applicationsClosedAt|dateformat}}</p>
   {{ action }}
 </div>

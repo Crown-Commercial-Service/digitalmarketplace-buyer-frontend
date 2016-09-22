@@ -19,37 +19,33 @@
 
 {% block main_content %}
 
-    <div class="grid-row">
 
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    {% if category == 'error' %}
-                        <div class="banner-destructive-without-action">
-                    {% else %}
-                        <div class="banner-success-without-action">
-                    {% endif %}
-                            <p class="banner-message">
-                    {% if 'requirements_deleted' in message %}
-                            Your requirements &lsquo;{{ message.get('requirements_deleted') }}&rsquo; were deleted
-                    {% else %}
-                        {{ message }}
-                    {% endif %}
-                            </p>
-                        </div>
-                {% endfor %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            {% if category == 'error' %}
+                <div class="banner-destructive-without-action">
+            {% else %}
+                <div class="banner-success-without-action">
             {% endif %}
-        {% endwith %}
+                    <p class="banner-message">
+            {% if 'requirements_deleted' in message %}
+                    Your requirements &lsquo;{{ message.get('requirements_deleted') }}&rsquo; were deleted
+            {% else %}
+                {{ message }}
+            {% endif %}
+                    </p>
+                </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
         
-        <div class="column-two-thirds">
-            {% with
-                context = current_user.email_address,
-                heading = current_user.name
-            %}
-            {% include 'toolkit/page-heading.html' %}
-            {% endwith %}
-        </div>
-    </div>
+{% with
+    context = current_user.email_address,
+    heading = current_user.name
+%}
+{% include 'toolkit/page-heading.html' %}
+{% endwith %}
 
 
 {{ summary.heading("Unpublished requirements", id="unpublished_requirements") }}

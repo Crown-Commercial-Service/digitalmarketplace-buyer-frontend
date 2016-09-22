@@ -147,6 +147,15 @@ form {
     }
   }
 
+  .filter-fieldset,
+  #location,
+  #culturalFitCriteria {
+    legend {
+      display: none !important;
+      visibility: hidden;
+    }
+  }
+
   input[type='checkbox'] + label,
   input[type='radio'] + label {
     outline: 1px solid $light-grey;
