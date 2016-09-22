@@ -9,4 +9,5 @@ git+https://github.com/AusDTO/dto-digitalmarketplace-content-loader.git@1.5.1#eg
 git+https://github.com/AusDTO/dto-digitalmarketplace-apiclient.git@6.5.1#egg=dto-digitalmarketplace-apiclient==6.5.1
 
 newrelic==2.68.0.50
+cffi==1.5.2
 Flask-WeasyPrint==0.5
