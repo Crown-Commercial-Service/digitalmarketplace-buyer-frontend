@@ -107,6 +107,9 @@ class Test(Config):
     DM_DATA_API_URL = "http://localhost:5000"
     DM_DATA_API_AUTH_TOKEN = "myToken"
 
+    # Used a fixed timezone for tests. Using Sydney timezone will catch more timezone bugs than London.
+    DM_TIMEZONE = 'Australia/Sydney'
+
     SECRET_KEY = 'TestKeyTestKeyTestKeyTestKeyTestKeyTestKeyX='
     SHARED_EMAIL_KEY = SECRET_KEY
     SERVER_NAME = 'localhost'

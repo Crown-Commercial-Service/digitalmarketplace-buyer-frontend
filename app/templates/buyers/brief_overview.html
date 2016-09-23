@@ -79,8 +79,8 @@
               'title': 'Publish your brief',
               'description': {
                 'draft': '',
-                'live': 'Your requirements are open for applications until {}.'.format(brief.applicationsClosedAt | dateformat),
-                'closed': 'Your requirements closed for applications on {}.'.format(brief.applicationsClosedAt | dateformat),
+                'live': 'Your requirements are open for applications until {}.'.format(brief.applicationsClosedAt | dateformat if brief.applicationsClosedAt),
+                'closed': 'Your requirements closed for applications on {}.'.format(brief.applicationsClosedAt | dateformat if brief.applicationsClosedAt),
               },
               'links': [
                 {

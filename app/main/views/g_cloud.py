@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 from flask import abort, render_template, request, redirect, current_app
 
-from dmutils.formats import get_label_for_lot_param, dateformat
+from dmutils.formats import DateFormatter, get_label_for_lot_param
 from dmapiclient import HTTPError
 from dmutils.formats import LOTS
 
@@ -83,11 +83,12 @@ def get_service_by_id(service_id):
         except HTTPError as e:
             abort(e.status_code)
 
+        date_formatter = DateFormatter(current_app.config['DM_TIMEZONE'])
         service_unavailability_information = None
         status_code = 200
         if service['serviceMadeUnavailableAuditEvent'] is not None:
             service_unavailability_information = {
-                'date': dateformat(service['serviceMadeUnavailableAuditEvent']['createdAt']),
+                'date': date_formatter.dateformat(service['serviceMadeUnavailableAuditEvent']['createdAt']),
                 'type': service['serviceMadeUnavailableAuditEvent']['type']
             }
             # mark the resource as unavailable in the headers

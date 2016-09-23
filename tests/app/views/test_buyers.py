@@ -2199,7 +2199,7 @@ class TestViewQuestionAndAnswerDates(BaseApplicationTest):
 
             assert (document.xpath('//h1')[0]).text_content().strip() == "Question and answer dates"
             row_headers = [e.text_content() for e in document.xpath('//*[@id="content"]//th/span')]
-            for date in ['2 April', '8 April', '15 April', '16 April']:
+            for date in ['3 April', '9 April', '16 April', '17 April']:
                 assert date in row_headers, date
 
     def test_do_not_show_question_and_answer_dates_for_draft_brief(self, data_api_client):
