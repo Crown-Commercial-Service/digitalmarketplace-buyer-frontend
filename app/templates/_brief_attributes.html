@@ -3,8 +3,8 @@
 {% call(item) summary.list_table(
   [
     {"label": "Published", "value": brief.publishedAt|dateformat},
-    {"label": "Deadline for asking questions", "value": brief.clarificationQuestionsClosedAt|dateformat},
-    {"label": "Closing date for applications", "value": brief.applicationsClosedAt|dateformat}
+    {"label": "Deadline for asking questions", "value": brief.clarificationQuestionsClosedAt|dateformat if brief.clarificationQuestionsClosedAt is defined},
+    {"label": "Closing date for applications", "value": brief.applicationsClosedAt|dateformat if brief.applicationsClosedAt is defined}
   ],
   caption="Important dates",
   field_headings=[

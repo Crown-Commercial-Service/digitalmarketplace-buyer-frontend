@@ -1,14 +1,18 @@
 # coding=utf-8
 from flask.helpers import url_for
 
+from datetime import datetime
+from lxml import html
+import pytest
 import mock
 from nose.tools import assert_equal, assert_true, assert_in
 from six import iteritems
 from six.moves.urllib.parse import urlparse, parse_qs
-from lxml import html
+
 from ...helpers import BaseApplicationTest
+
 from dmapiclient import APIError
-import pytest
+from dmutils.formats import DATETIME_FORMAT
 
 
 @pytest.mark.skipif(True, reason="not applicable to AU")
@@ -199,7 +203,9 @@ class TestBriefPage(BaseApplicationTest):
         assert qa_session_link_text == "Log in to view question and answer session details"
 
     def test_dos_brief_question_and_answer_session_details_hidden_when_questions_closed(self):
+        closed_timestamp = datetime.strftime(datetime(2015, 1, 1), DATETIME_FORMAT)
         self.brief['briefs']['clarificationQuestionsAreClosed'] = True
+        self.brief['briefs']['clarificationQuestionsClosedAt'] = closed_timestamp
         brief_id = self.brief['briefs']['id']
         res = self.client.get(self.expand_path('/digital-service-professionals/opportunities/{})'.format(brief_id)))
 

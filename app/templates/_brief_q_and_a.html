@@ -31,16 +31,18 @@
   {% endcall %}
 {% endcall %}
 
-{% if brief.status == 'live' and not brief.clarificationQuestionsAreClosed %}
-<p>
-  <a href="{{ config['URL_PREFIX'] }}/sellers/opportunities/{{ brief.id }}/ask-a-question">
-    {% if current_user.is_authenticated and current_user.role == 'supplier' %}
-      Ask a question
-    {% else %}
-      Log in to ask a question
-    {% endif %}
-  </a>
-</p>
-{% elif brief.status == 'live' %}
-  The deadline for asking questions about this opportunity was {{ brief.clarificationQuestionsClosedAt|dateformat }}.
+{% if brief.status == 'live' %}
+  {% if brief.clarificationQuestionsAreClosed %}
+	The deadline for asking questions about this opportunity was {{ brief.clarificationQuestionsClosedAt|dateformat }}.
+  {% else %}
+  <p>
+	<a href="{{ config['URL_PREFIX'] }}/sellers/opportunities/{{ brief.id }}/ask-a-question">
+	  {% if current_user.is_authenticated and current_user.role == 'supplier' %}
+		Ask a question
+	  {% else %}
+		Log in to ask a question
+	  {% endif %}
+	</a>
+  </p>
+  {% endif %}
 {% endif %}
