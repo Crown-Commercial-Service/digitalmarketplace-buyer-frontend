@@ -76,6 +76,7 @@ def process_login():
 @main.route('/logout', methods=["GET"])
 def logout():
     current_app.logger.info('logout: {user}', extra={'user': user_logging_string(current_user)})
+    terms_of_use.set_session_flag(False)
     logout_user()
     return redirect(url_for('.render_login'))
 
