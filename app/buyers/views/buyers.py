@@ -19,8 +19,9 @@ from app.helpers.buyers_helpers import (
 from dmutils.forms import render_template_with_csrf, check_csrf, valid_csrf_or_abort
 from dmutils.logging import notify_team
 
-from dmapiclient import HTTPError
+from dmapiclient import HTTPError, APIError
 from dmutils.dates import get_publishing_dates
+from app.main.forms.work_order_forms import WorkOrderSellerForm
 
 
 @buyers.route('/buyers')
@@ -570,13 +571,74 @@ def send_new_opportunity_email_to_sellers(brief_json, brief_url):
                         'error': six.text_type(e), })
                 abort(503, response='Failed to send seller new opportunity email.')
 
-@buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/work-order/create', methods=['GET'])
-def start_new_work_order(framework_slug, lot_slug, brief_id):
-    responses = data_api_client.find_brief_responses(brief_id)
 
+@buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<int:brief_id>/work-order/create',
+              methods=['GET'])
+def select_seller_for_work_order(framework_slug, lot_slug, brief_id):
+    brief = data_api_client.get_brief(brief_id)["briefs"]
+
+    if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id):
+        abort(404)
+
+    form = WorkOrderSellerForm(data_api_client=data_api_client, brief_id=brief_id)
+
+    return render_template_with_csrf('workorder/select-seller.html',
+                                     brief=brief,
+                                     form=form)
+
+
+@buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<int:brief_id>/work-order/create',
+              methods=['POST'])
+def create_new_work_order(framework_slug, lot_slug, brief_id):
+    brief = data_api_client.get_brief(brief_id)["briefs"]
+
+    if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id):
+        abort(404)
+
+    form = WorkOrderSellerForm(request.form, data_api_client=data_api_client, brief_id=brief_id)
+
+    if not form.validate():
+        return render_template_with_csrf(
+            'workorder/select-seller.html',
+            status_code=400,
+            brief=brief,
+            form=form
+        )
+
+    try:
+        work_order = data_api_client.create_work_order(
+            briefId=brief_id,
+            supplierCode=form.seller.data
+        )["workOrder"]
+
+    except APIError as e:
+        return render_template_with_csrf(
+            "workorder/select-seller.html",
+            status_code=e.status_code,
+            brief=brief,
+            form=form,
+            error=e.message,
+        )
+
+    return redirect(
+        url_for(
+            'buyers.get_work_order',
+            framework_slug=framework_slug,
+            lot_slug=lot_slug,
+            brief_id=brief_id,
+            work_order_id=work_order['id'],
+        )
+    )
+
+
+@buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<int:brief_id>/work-order/'
+              '<int:work_order_id>',
+              methods=['GET'])
+def get_work_order(framework_slug, lot_slug, brief_id, work_order_id):
     return render_template_with_csrf(
-        "workorder/select-seller.html",
-        brief={},
-        framework=framework,
-        lot=lot,
+        'workorder/work-order-instruction-list.html',
+        framework_slug=framework_slug,
+        lot_slug=lot_slug,
+        brief_id=brief_id,
+        work_order_id=work_order_id,
     )
