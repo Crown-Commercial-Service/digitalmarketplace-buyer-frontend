@@ -11,10 +11,8 @@ class WorkOrderSellerForm(DmForm):
         ]
     )
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, brief_id, data_api_client, *args, **kwargs):
         super(WorkOrderSellerForm, self).__init__(*args, **kwargs)
 
-        brief_id = kwargs.pop('brief_id')
-        data_api_client = kwargs.pop('data_api_client')
         responses = data_api_client.find_brief_responses(brief_id)
         self.seller.choices = [(br['supplierCode'], br['supplierName']) for br in responses['briefResponses']]

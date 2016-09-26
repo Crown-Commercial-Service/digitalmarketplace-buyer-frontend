@@ -595,7 +595,7 @@ def create_new_work_order(framework_slug, lot_slug, brief_id):
     if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id):
         abort(404)
 
-    form = WorkOrderSellerForm(request.form, data_api_client=data_api_client, brief_id=brief_id)
+    form = WorkOrderSellerForm(formdata=request.form, data_api_client=data_api_client, brief_id=brief_id)
 
     if not form.validate():
         return render_template_with_csrf(
@@ -631,9 +631,9 @@ def create_new_work_order(framework_slug, lot_slug, brief_id):
     )
 
 
-@buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<int:brief_id>/work-order/'
-              '<int:work_order_id>',
-              methods=['GET'])
+@buyers.route(
+    '/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<int:brief_id>/work-order/<int:work_order_id>',
+    methods=['GET'])
 def get_work_order(framework_slug, lot_slug, brief_id, work_order_id):
     return render_template_with_csrf(
         'workorder/work-order-instruction-list.html',
