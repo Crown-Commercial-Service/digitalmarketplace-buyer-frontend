@@ -89,4 +89,10 @@ table.content-table {
       border-bottom: 0;
     }
   }
+
+  .summary-item-free-text {
+    span {
+      white-space: pre-wrap;
+    }
+  }
 }
