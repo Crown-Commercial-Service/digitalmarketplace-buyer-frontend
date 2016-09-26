@@ -12,7 +12,7 @@
   with
   items = [
   {
-  "link": url_for('.index'),
+  "link": url_for('main.index'),
   "label": "Home"
 },
 {
@@ -25,6 +25,14 @@
 {% endblock %}
 
 {% block main_content %}
+    {% include "_form_errors.html" %}
+    {% if error %}
+        <div>
+            <p>
+                {{ error }}
+            </p>
+        </div>
+    {% endif %}
 
     {% with
       heading = "Award which seller?",
@@ -33,23 +41,10 @@
       {% include 'toolkit/page-heading.html' %}
     {% endwith %}
 
-    <form method="post" enctype="multipart/form-data" action="{{ request.path }}">
-      <div class="column-two-thirds">
-
-        <fieldset id="{{ name }}">
-          <input type="radio" name="sellerName" id="input-sellerName-1" value="alphaInc"/>
-          <label for="input-sellerName-1">
-            Alpha Inc
-          </label>
-          <input type="radio" name="sellerName" id="input-sellerName-2" value="betaPty"/>
-          <label for="input-sellerName-2">
-            Beta Pty
-          </label>
-          <input type="radio" name="sellerName" id="input-sellerName-3" value="charlieLtd"/>
-          <label for="input-sellerName-3">
-            Charlie Ltd
-          </label>
-        </fieldset>
+    <div class="column-two-thirds">
+      <form method="post" action="{{ url_for('.create_new_work_order',framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id) }}">
+       {{ form.csrf_token }}
+       {{ form.seller }}
 
         {% with
           type = "create-work-order",
@@ -59,6 +54,6 @@
           {% include 'toolkit/button.html' %}
         {% endwith %}
         
-      </div>
-    </form>
+      </form>
+    </div>
 {% endblock %}

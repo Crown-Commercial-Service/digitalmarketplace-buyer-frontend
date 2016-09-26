@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 from ...helpers import BaseApplicationTest
 from dmutils.forms import FakeCsrf
-from dmapiclient import api_stubs, HTTPError
+from dmapiclient import api_stubs, HTTPError, APIError
 from dmcontent.content_loader import ContentLoader
 import mock
 from lxml import html
@@ -2244,3 +2244,121 @@ class TestViewQuestionAndAnswerDates(BaseApplicationTest):
             ))
 
             assert res.status_code == 404
+
+
+@mock.patch('app.buyers.views.buyers.data_api_client')
+class TestSelectSeller(BaseApplicationTest):
+    def test_start_work_order_page_renders(self, data_api_client):
+        with self.app.app_context():
+            self.login_as_buyer()
+            data_api_client.get_brief.return_value = api_stubs.brief()
+            data_api_client.find_brief_responses.return_value = {
+                'briefResponses': [
+                    {
+                        'supplierCode': 1234,
+                        'supplierName': 'test supplier'
+                    }
+                ]
+            }
+
+            res = self.client.get(self.expand_path(
+                '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234'
+                '/work-order/create')
+            )
+
+            assert FakeCsrf.valid_token in res.get_data(as_text=True)
+            assert res.status_code == 200
+
+    def test_404_if_brief_incorrect(self, data_api_client):
+        with self.app.app_context():
+            self.login_as_buyer()
+            data_api_client.get_brief.return_value = {'briefs': {'frameworkSlug': 'xxxx', 'lotSlug': 'yyyyy'}}
+            res = self.client.get(self.expand_path(
+                '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234'
+                '/work-order/create')
+            )
+
+            assert res.status_code == 404
+
+
+@mock.patch('app.buyers.views.buyers.data_api_client')
+class TestCreateNewWorkOrder(BaseApplicationTest):
+    def test_create_new_work_order(self, data_api_client):
+        self.login_as_buyer()
+        data_api_client.get_brief.return_value = api_stubs.brief()
+        data_api_client.find_brief_responses.return_value = {
+            'briefResponses': [
+                {
+                    'supplierCode': 4321,
+                    'supplierName': 'test supplier'
+                }
+            ]
+        }
+
+        res = self.client.post(
+            self.expand_path(
+                '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234'
+                '/work-order/create'
+            ),
+            data={
+                'seller': 4321,
+                'csrf_token': FakeCsrf.valid_token,
+            })
+
+        assert res.status_code == 302
+        data_api_client.create_work_order.assert_called_with(
+            briefId=1234,
+            supplierCode=4321,
+        )
+
+    def test_create_new_work_order_invalid_form(self, data_api_client):
+        self.login_as_buyer()
+        data_api_client.get_brief.return_value = api_stubs.brief()
+        data_api_client.find_brief_responses.return_value = {
+            'briefResponses': [
+                {
+                    'supplierCode': 4321,
+                    'supplierName': 'test supplier'
+                }
+            ]
+        }
+
+        res = self.client.post(
+            self.expand_path(
+                '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234'
+                '/work-order/create'
+            ),
+            data={
+                'seller': 9999,
+                'csrf_token': FakeCsrf.valid_token,
+            })
+
+        assert res.status_code == 400
+
+    def test_create_new_work_order_api_error(self, data_api_client):
+        self.login_as_buyer()
+        data_api_client.get_brief.return_value = api_stubs.brief()
+        data_api_client.find_brief_responses.return_value = {
+            'briefResponses': [
+                {
+                    'supplierCode': 4321,
+                    'supplierName': 'test supplier'
+                }
+            ]
+        }
+
+        data_api_client.create_work_order.side_effect = APIError(mock.Mock(status_code=500))
+
+        res = self.client.post(
+            self.expand_path(
+                '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234'
+                '/work-order/create'
+            ),
+            data={
+                'seller': 4321,
+                'csrf_token': FakeCsrf.valid_token,
+            })
+
+        text = res.get_data(as_text=True)
+        assert res.status_code == 500
+        assert 'Request failed' in text
