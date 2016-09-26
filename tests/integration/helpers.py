@@ -38,6 +38,11 @@ def click_link(link_text, browser):
     browser.click_link_by_text(link_text)
 
 
+def click_text(text, browser):
+    element = browser.find_by_text(text)
+    element.click()
+
+
 def visit_page(page, browser):
     browser.visit('{0}{1}'.format(config['DM_FRONTEND_URL'], page))
 

@@ -1,7 +1,8 @@
 from pytest_bdd import given, when, then, parsers
 import pytest
 from config import config
-from helpers import random_string, login, logout, click_button, delete_brief, visit_page, click_link, enter_title
+from helpers import random_string, login, logout, click_button, delete_brief, \
+    visit_page, click_link, enter_title, click_text
 
 
 @pytest.fixture(scope='session')
@@ -48,6 +49,11 @@ def click_link_fixture(link_text, browser):
 @when(parsers.parse('I click the {button_text} button'))
 def click_button_fixture(button_text, browser):
     click_button(button_text, browser)
+
+
+@when(parsers.parse('I click the {text} text'))
+def click_button_fixture(text, browser):
+    click_text(text, browser)
 
 
 @when('I enter a title')
