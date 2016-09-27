@@ -27,9 +27,7 @@ def index():
 
         suppliers_count = data_api_client.get_suppliers_count()['suppliers']['total']
 
-        briefs_count_json = data_api_client.get_briefs_count()
-        briefs_count = briefs_count_json['briefs']['open_to_all'] + briefs_count_json['briefs']['open_to_one'] + \
-            briefs_count_json['briefs']['open_to_selected']
+        briefs_count = data_api_client.get_briefs_count()['briefs']['total']
     except Exception as e:
         buyers_count = 0
         suppliers_count = 0
