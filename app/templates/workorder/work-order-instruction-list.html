@@ -27,7 +27,7 @@
 {% block main_content %}
 
   {% with
-    heading = 'Work Order #'
+    heading = "Work Order " + work_order.get("number", "")
   %}
     {% include "toolkit/page-heading.html" %}
   {% endwith %}
@@ -52,195 +52,14 @@
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td>
-          <span>Work Order number</span>          
-        </td>
-        <td>
-          <span>
-            <a href="#">Add work order number</a>
-          </span>
-        </td>
-        <td>
-          <!-- action link would go here -->
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <span>Deed SON number</span>
-        </td>
-        <td>
-          <span>
-            SON3364729
-          </span>
-        </td>
-        <td>
-          <!-- action link would go here -->
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <span>Agency</span><br>
-          <span>Agency name</span><br>
-          <span>Agency representative</span><br>
-          <span>ABN</span>
-        </td>
-        <td>
-          <span>
-            <a href="#">Add agency details</a><br>
-          </span>
-        </td>
-        <td>
-          <!-- action link would go here -->
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <span>You</span><br>
-          <span>Company name</span><br>
-          <span>Company representative</span><br>
-          <span>ABN</span>
-        </td>
-        <td>
-          <br>
-          <span>{{ work_order.seller.name }}</span><br>
-          <span>{{ work_order.seller.contact }}</span><br>
-          <span>{{ work_order.seller.abn }}</span><br>
-        </td>
-        <td>
-          <a href="#">Edit</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <span>Order period</span>
-        </td>
-        <td>
-          <span>
-            {{ work_order.orderPeriod }}
-          </span>
-        </td>
-        <td>
-          <a href="#">Edit</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <span>Services and deliverables</span>
-        </td>
-        <td>
-          <span>
-            {{ work_order.deliverables }}
-          </span>
-        </td>
-        <td>
-          <a href="#">Edit</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <span>Specified personnel</span>
-        </td>
-        <td>
-          <span>
-            <a href="#">Add specified personnel</a>
-          </span>
-        </td>
-        <td>
-          <!-- action link would go here -->
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <span>Performance criteria</span>
-        </td>
-        <td>
-          <span>
-            <a href="#">Add performance criteria</a>
-          </span>
-        </td>
-        <td>
-          <!-- action link would go here -->
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <span>Quoted service charges</span>
-        </td>
-        <td>
-          <span>
-            <a href="#">Add service charges</a>
-          </span>
-        </td>
-        <td>
-          <!-- action link would go here -->
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <span>Expenses</span>
-        </td>
-        <td>
-          <span>
-            <a href="#">Add additional expenses</a>
-          </span>
-        </td>
-        <td>
-          <!-- action link would go here -->
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <span>Agency intellectual property</span>
-        </td>
-        <td>
-          <span>
-            <a href="#">Add agency intellectual property details</a>
-          </span>
-        </td>
-        <td>
-          <!-- action link would go here -->
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <span>Seller intellectual property</span>
-        </td>
-        <td>
-          <span>
-            <a href="#">Add seller intellectual property details</a>
-          </span>
-        </td>
-        <td>
-          <!-- action link would go here -->
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <span>Security requirements</span>
-        </td>
-        <td>
-          <span>
-             {{ work_order.additionalTerms }}
-          </span>
-        </td>
-        <td>
-          <a href="#">Edit</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <span>Additional terms and conditions</span>
-        </td>
-        <td>
-          <span>
-            {{ work_order.securityClearance }}
-          </span>
-        </td>
-        <td>
-          <a href="#">Edit</a>
-        </td>
-      </tr>
+
+      {%
+        with slugs = ['number', 'son', 'agency', 'seller', 'orderPeriod', 'deliverables', 'personnel', 'performanceCriteria', 'serviceCharges',
+                  'expenses', 'agencyProperty', 'sellerProperty', 'securityClearance', 'additionalTerms']
+      %}
+        {% include "macros/work_order_link.html" %}
+      {% endwith %}
+
     </tbody>
   </table>
 
