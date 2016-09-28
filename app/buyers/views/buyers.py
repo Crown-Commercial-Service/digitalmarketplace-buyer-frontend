@@ -16,7 +16,7 @@ from app.helpers.buyers_helpers import (
     brief_can_be_edited, add_unanswered_counts_to_briefs, is_brief_correct,
     section_has_at_least_one_required_question
 )
-from dmutils.forms import render_template_with_csrf, check_csrf, valid_csrf_or_abort
+from dmutils.forms import render_template_with_csrf
 from dmutils.logging import notify_team
 
 from dmapiclient import HTTPError, APIError
@@ -63,7 +63,6 @@ def start_new_brief(framework_slug, lot_slug):
 
 
 @buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/create', methods=['POST'])
-@check_csrf
 def create_new_brief(framework_slug, lot_slug):
 
     framework, lot = get_framework_and_lot(framework_slug, lot_slug, data_api_client,
@@ -201,7 +200,6 @@ def edit_brief_question(framework_slug, lot_slug, brief_id, section_slug, questi
 @buyers.route(
     '/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/edit/<section_id>/<question_id>',
     methods=['POST'])
-@check_csrf
 def update_brief_submission(framework_slug, lot_slug, brief_id, section_id, question_id):
     get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
     brief = data_api_client.get_brief(brief_id)["briefs"]
@@ -394,7 +392,6 @@ def publish_brief(framework_slug, lot_slug, brief_id):
     unanswered_required, unanswered_optional = count_unanswered_questions(sections)
 
     if request.method == 'POST':
-        valid_csrf_or_abort()
         if unanswered_required > 0:
             abort(400, 'There are still unanswered required questions')
         data_api_client.publish_brief(brief_id, brief_user_name)
@@ -452,7 +449,6 @@ def view_brief_timeline(framework_slug, lot_slug, brief_id):
 
 
 @buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/delete', methods=['POST'])
-@check_csrf
 def delete_a_brief(framework_slug, lot_slug, brief_id):
     get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
     brief = data_api_client.get_brief(brief_id)["briefs"]
@@ -511,7 +507,6 @@ def add_supplier_question(framework_slug, lot_slug, brief_id):
 
     if request.method == "POST":
         try:
-            valid_csrf_or_abort()
             data_api_client.add_brief_clarification_question(brief_id,
                                                              update_data['question'],
                                                              update_data['answer'],
