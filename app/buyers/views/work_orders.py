@@ -83,9 +83,6 @@ def create_new_work_order(framework_slug, lot_slug, brief_id):
     return redirect(
         url_for(
             'buyers.get_work_order',
-            framework_slug=framework_slug,
-            lot_slug=lot_slug,
-            brief_id=brief_id,
             work_order_id=work_order['id'],
         )
     )

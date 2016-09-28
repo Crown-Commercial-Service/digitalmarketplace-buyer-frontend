@@ -195,12 +195,11 @@
         </td>
         <td>
           <span>
-            ['what work has already been done' from outcome bb]<br>
-            ['???' from individual bb]
+            <a href="#">Add agency intellectual property details</a>
           </span>
         </td>
         <td>
-          <a href="#">Edit</a>
+          <!-- action link would go here -->
         </td>
       </tr>
       <tr>
@@ -222,7 +221,7 @@
         </td>
         <td>
           <span>
-            ['is security clearance required' from bb]
+             {{ work_order.additionalTerms }}
           </span>
         </td>
         <td>
@@ -235,7 +234,7 @@
         </td>
         <td>
           <span>
-            {{ work_order.additionalTerms }}
+            {{ work_order.securityClearance }}
           </span>
         </td>
         <td>
