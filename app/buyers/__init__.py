@@ -22,3 +22,4 @@ def require_login():
 
 from ..main import errors
 from .views import buyers as buyers_views
+from .views import work_orders

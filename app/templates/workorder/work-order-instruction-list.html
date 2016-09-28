@@ -102,9 +102,10 @@
           <span>ABN</span>
         </td>
         <td>
-          <span>
-            [Prepopulated content from selected seller]
-          </span>
+          <br>
+          <span>{{ work_order.seller.name }}</span><br>
+          <span>{{ work_order.seller.contact }}</span><br>
+          <span>{{ work_order.seller.abn }}</span><br>
         </td>
         <td>
           <a href="#">Edit</a>
@@ -116,11 +117,11 @@
         </td>
         <td>
           <span>
-            ['how long is the contract' from bb]
+            {{ work_order.orderPeriod }}
           </span>
         </td>
         <td>
-          <!-- action link would go here -->
+          <a href="#">Edit</a>
         </td>
       </tr>
       <tr>
@@ -129,12 +130,11 @@
         </td>
         <td>
           <span>
-            <a href="#">Add service details</a><br>
-            ['summary of your brief???' from bb]
+            {{ work_order.deliverables }}
           </span>
         </td>
         <td>
-          <!-- action link would go here -->
+          <a href="#">Edit</a>
         </td>
       </tr>
       <tr>
@@ -235,7 +235,7 @@
         </td>
         <td>
           <span>
-            ['addtional terms and conditions' from bb]
+            {{ work_order.additionalTerms }}
           </span>
         </td>
         <td>
