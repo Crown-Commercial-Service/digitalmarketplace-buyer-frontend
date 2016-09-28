@@ -78,7 +78,6 @@ class Config(object):
     # List all your feature flags below
     FEATURE_FLAGS = {
         'BRIEF_FILTER': True,
-        'HOMEPAGE_DASHBOARD': True,
         'ENFORCE_TERMS_REVIEW': True,
     }
 
@@ -140,7 +139,6 @@ class Live(Config):
     # List all your feature flags below
     FEATURE_FLAGS = {
         'BRIEF_FILTER': False,
-        'HOMEPAGE_DASHBOARD': False,
         'ENFORCE_TERMS_REVIEW': False,
     }
 
