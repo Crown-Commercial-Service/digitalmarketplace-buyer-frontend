@@ -20,13 +20,12 @@ brew install pango
 
 ### Set environment variables
 
-The buyer frontend app requires access to both the API (for service pages) and
-to the search API (for search results). The location and access tokens for 
-these services is set with environment variables.
+The buyer frontend app requires access to the API backend and AWS. The location and access tokens for
+these backends is set with environment variables.
 
 
-For development you can either point the environment variables to use the 
-preview environment's `API` and `Search API` boxes, or use local API instances if 
+For development you can either point the environment variables to use the
+staging environment's `API` instance, or use local API instances if
 you have them running:
 
 ```
@@ -37,7 +36,7 @@ export AWS_SECRET_ACCESS_KEY=<secret key corresponding to the above key ID>
 export AWS_DEFAULT_REGION=<region for AWS>
 ```
 
-Where `DM_DATA_API_AUTH_TOKEN` is a token accepted by the Data API 
+Where `DM_DATA_API_AUTH_TOKEN` is a token accepted by the Data API
 instance pointed to by `DM_API_URL`.
 
 The AWS key is currently used for email sending.
@@ -118,7 +117,7 @@ Front-end code (both development and production) is compiled using [Node](http:/
 
 ### Requirements
 
-You need Node (version 5.5.0 recommended), which will also get you [NPM](npmjs.org), Node's package management tool. 
+You need Node (version 5.5.0 recommended), which will also get you [NPM](npmjs.org), Node's package management tool.
 
 To check the version you're running, type:
 
