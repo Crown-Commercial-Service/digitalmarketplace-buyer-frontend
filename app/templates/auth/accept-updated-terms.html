@@ -10,14 +10,18 @@
 {%
   with
   smaller = true,
-  heading = "Our Terms of Use have been Updated"
+  heading = "Our Terms of Use have been updated"
 %}
   {% include "toolkit/page-heading.html" %}
 {% endwith %}
 
 <p>
-  To continue using the Marketplace please accept the latest <a href="{{ url_for('main.terms_of_use') }}">version</a>.
+  To continue using the Marketplace please accept the latest <a class="expand-terms" href="{{ url_for('main.terms_of_use') }}">version</a>.
 </p>
+
+<div class="accept-new-terms-content">
+  {% include terms_content %}
+</div>
 
 {% include "_form_errors.html" %}
 

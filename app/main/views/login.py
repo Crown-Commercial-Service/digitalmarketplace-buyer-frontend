@@ -23,7 +23,7 @@ from app.helpers.login_helpers import (
     decode_buyer_creation_token, generate_buyer_creation_token, redirect_logged_in_user,
     send_buyer_account_activation_email
 )
-from app.helpers.terms_helpers import check_terms_acceptance
+from app.helpers.terms_helpers import check_terms_acceptance, get_current_terms_version
 from app.main.forms import auth_forms
 from ...api_client.error import HTTPError
 
@@ -369,9 +369,12 @@ def submit_create_buyer_account(token):
 @login_required
 def terms_updated():
     form = auth_forms.AcceptUpdatedTerms()
+    terms = get_current_terms_version()
     return render_template_with_csrf(
         'auth/accept-updated-terms.html',
-        form=form
+        form=form,
+        terms_content=terms.template_file,
+        update_time=terms.date
     )
 
 
