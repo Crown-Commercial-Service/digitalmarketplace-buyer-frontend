@@ -385,10 +385,13 @@ def terms_updated():
 def accept_updated_terms():
     form = auth_forms.AcceptUpdatedTerms(request.form)
     if not form.validate():
+        terms = get_current_terms_version()
         return render_template_with_csrf(
             'auth/accept-updated-terms.html',
             status_code=400,
-            form=form
+            form=form,
+            terms_content=terms.template_file,
+            update_time=terms.date
         )
     timestamp = datetime.utcnow().strftime(DATETIME_FORMAT)
     data_api_client.update_user(current_user.id, fields={'termsAcceptedAt': timestamp})
