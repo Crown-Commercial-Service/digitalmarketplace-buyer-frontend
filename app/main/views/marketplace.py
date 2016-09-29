@@ -102,7 +102,7 @@ def copyright():
 def terms_of_use():
     terms = get_current_terms_version()
     return render_template(
-        terms.template_file,
+        terms.template,
         terms_content=terms.template_file,
         update_time=terms.date)
 
