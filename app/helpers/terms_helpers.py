@@ -32,7 +32,6 @@ class TermsVersion(object):
         date = datetime.strptime(timestamp, '%Y-%m-%d %H:%M')
         self.date = date.replace(tzinfo=tz)
         self.template_file = os.path.join(TERMS_DIR, filename)
-        self.template = os.path.join(TERMS_DIR, '_template.html')
 
 
 class TermsManager(object):
