@@ -68,6 +68,7 @@ class TestHomepageBrowseList(BaseApplicationTest):
 
         data_api_client.get_briefs_count.return_value = {
             "briefs": {
+                "total": 8,
                 "open_to_all": 7,
                 "open_to_one": 0,
                 "open_to_selected": 1,

@@ -166,7 +166,7 @@ class TestLogin(BaseApplicationTest):
         assert res.status_code == 403
 
     def test_should_be_validation_error_if_no_email_or_password(self):
-        res = self.client.post(self.expand_path('/login'), data={})
+        res = self.client.post(self.expand_path('/login'), data={'csrf_token': FakeCsrf.valid_token})
         data = res.get_data(as_text=True)
         assert res.status_code == 400
 
@@ -751,7 +751,8 @@ class TestCreateBuyer(BaseApplicationTest):
             data={
                 'password': '123456789',
                 'name': 'name',
-                'email_address': 'valid@example.gov.au'
+                'email_address': 'valid@example.gov.au',
+                'csrf_token': FakeCsrf.valid_token,
             }
         )
 
@@ -763,7 +764,7 @@ class TestCreateBuyer(BaseApplicationTest):
         token = self._generate_token()
         res = self.client.post(
             self.url_for('main.submit_create_buyer_account', token=token),
-            data={}
+            data={'csrf_token': FakeCsrf.valid_token}
         )
 
         assert res.status_code == 400
@@ -776,8 +777,9 @@ class TestCreateBuyer(BaseApplicationTest):
         res = self.client.post(
             self.url_for('main.submit_create_buyer_account', token=token),
             data={
-                'password': "123456789",
-                'name': ""
+                'password': '123456789',
+                'name': '',
+                'csrf_token': FakeCsrf.valid_token,
             }
         )
 
@@ -797,7 +799,8 @@ class TestCreateBuyer(BaseApplicationTest):
                 self.url_for('main.submit_create_buyer_account', token=token),
                 data={
                     'password': fiftyone,
-                    'name': twofiftysix
+                    'name': twofiftysix,
+                    'csrf_token': FakeCsrf.valid_token,
                 }
             )
 

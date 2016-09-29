@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 from ...helpers import BaseApplicationTest
 from dmutils.forms import FakeCsrf
-from dmapiclient import api_stubs, HTTPError
+from dmapiclient import api_stubs, HTTPError, APIError
 from dmcontent.content_loader import ContentLoader
 import mock
 from lxml import html
