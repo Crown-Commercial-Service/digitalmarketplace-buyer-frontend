@@ -19,9 +19,11 @@
   To continue using the Marketplace please accept the latest <a class="expand-terms" href="{{ url_for('main.terms_of_use') }}">version</a>.
 </p>
 
+{% if terms_content %}
 <div class="accept-new-terms-content">
   {% include terms_content %}
 </div>
+{% endif %}
 
 {% include "_form_errors.html" %}
 
