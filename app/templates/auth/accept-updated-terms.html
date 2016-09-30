@@ -10,7 +10,7 @@
 {%
   with
   smaller = true,
-  heading = "Our Terms of Use have been Updated"
+  heading = "Our Terms of Use have been updated"
 %}
   {% include "toolkit/page-heading.html" %}
 {% endwith %}
@@ -24,7 +24,7 @@
 <form action="{{ url_for('main.accept_updated_terms') }}" method="POST">
   {{ form.csrf_token }}
 
-  <div>
+  <div class="form-control">
     {% if form.accept_terms.errors %}
         {{ form.accept_terms(class="invalid") }}
     {% else %}

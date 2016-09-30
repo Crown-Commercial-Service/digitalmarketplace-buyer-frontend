@@ -128,10 +128,14 @@
     }
   }
 
-  #employment_status {
+  #employment_status, .form-control {
     list-style: none;
     margin: $base-spacing 0;
     padding: 0;
+
+    label:last-child  {
+      margin: 0;
+    }
   }
 }
 

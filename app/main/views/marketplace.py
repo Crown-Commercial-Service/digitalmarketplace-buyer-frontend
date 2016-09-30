@@ -101,7 +101,10 @@ def copyright():
 @main.route('/terms-of-use')
 def terms_of_use():
     terms = get_current_terms_version()
-    return render_template(terms.template_file, update_time=terms.date)
+    return render_template(
+        'content/terms-of-use/_template.html',
+        terms_content=terms.template_file,
+        update_time=terms.date)
 
 
 @main.route('/<framework_slug>/opportunities/<brief_id>')
