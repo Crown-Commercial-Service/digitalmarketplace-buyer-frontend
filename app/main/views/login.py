@@ -5,7 +5,6 @@ from datetime import datetime
 
 from flask_login import current_user
 from flask import abort, current_app, flash, redirect, render_template, request, session, url_for, get_flashed_messages
-import flask_featureflags
 from flask_login import logout_user, login_user, login_required
 
 from dmapiclient.audit import AuditTypes
@@ -365,7 +364,6 @@ def submit_create_buyer_account(token):
     return redirect_logged_in_user()
 
 
-@flask_featureflags.is_active_feature('ENFORCE_TERMS_REVIEW')
 @main.route('/terms-updated', methods=['GET'])
 @login_required
 def terms_updated():
@@ -376,7 +374,6 @@ def terms_updated():
     )
 
 
-@flask_featureflags.is_active_feature('ENFORCE_TERMS_REVIEW')
 @main.route('/terms-updated', methods=['POST'])
 @login_required
 def accept_updated_terms():
