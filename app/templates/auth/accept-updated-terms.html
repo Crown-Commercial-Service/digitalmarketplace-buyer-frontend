@@ -16,12 +16,8 @@
 {% endwith %}
 
 <p>
-  To continue using the Marketplace please accept the latest <a class="expand-terms" href="{{ url_for('main.terms_of_use') }}">version</a>.
+  To continue using the Marketplace please accept the latest <a target="_blank" class="expand-terms" href="{{ url_for('main.terms_of_use') }}">version</a>.
 </p>
-
-<div class="accept-new-terms-content hidden">
-  {% include terms_content %}
-</div>
 
 {% include "_form_errors.html" %}
 

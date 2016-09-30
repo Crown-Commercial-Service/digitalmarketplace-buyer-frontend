@@ -22,7 +22,7 @@ class BaseApplicationTest(object):
         self.app = create_app('test')
         self.client = self.app.test_client()
         self.terms_manager = TermsManager()
-        self.terms_manager.init_app(self.app, ['2016-09-02 11:00.html'])
+        self.terms_manager.init_app(self.app, ['2016-01-01 00:00.html'])
         feature_flags = FeatureFlag(self.app)
         self.get_user_patch = None
 

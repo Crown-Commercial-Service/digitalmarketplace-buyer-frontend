@@ -16,7 +16,6 @@
 //= include _selection-buttons.js
 //= include _main.js
 //= include _specify_seller.js
-//= include _terms.js
 
 (function(GOVUK, GDM) {
 
