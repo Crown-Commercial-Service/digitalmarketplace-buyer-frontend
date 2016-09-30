@@ -24,7 +24,7 @@
 <form action="{{ url_for('main.accept_updated_terms') }}" method="POST">
   {{ form.csrf_token }}
 
-  <div>
+  <div class="form-control">
     {% if form.accept_terms.errors %}
         {{ form.accept_terms(class="invalid") }}
     {% else %}
