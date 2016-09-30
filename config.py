@@ -77,7 +77,6 @@ class Config(object):
     # List all your feature flags below
     FEATURE_FLAGS = {
         'BRIEF_FILTER': True,
-        'ENFORCE_TERMS_REVIEW': True,
     }
 
     # LOGGING
@@ -129,7 +128,6 @@ class Live(Config):
     # List all your feature flags below
     FEATURE_FLAGS = {
         'BRIEF_FILTER': False,
-        'ENFORCE_TERMS_REVIEW': True,
     }
 
 
