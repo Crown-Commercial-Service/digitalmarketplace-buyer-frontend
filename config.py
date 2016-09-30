@@ -129,7 +129,7 @@ class Live(Config):
     # List all your feature flags below
     FEATURE_FLAGS = {
         'BRIEF_FILTER': False,
-        'ENFORCE_TERMS_REVIEW': False,
+        'ENFORCE_TERMS_REVIEW': True,
     }
 
 
