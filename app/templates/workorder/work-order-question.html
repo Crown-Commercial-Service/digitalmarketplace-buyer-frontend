@@ -1,0 +1,68 @@
+{% extends "_base_page.html" %}
+
+{% block page_title %}Work Order Details – Digital Marketplace{% endblock %}
+{% block body_classes %}form-page{% endblock %}
+
+{% block breadcrumb %}
+  {%
+    with items = [
+      {
+        "link": url_for("main.index"),
+        "label": "Home"
+      },
+      {
+        "link": url_for("buyers.buyer_dashboard"),
+        "label": "Dashboard"
+      },
+      {
+        "link": url_for("buyers.get_work_order", work_order_id=work_order_id),
+        "label": "Work Order Overview"
+      },
+      {
+        "label": form.heading
+      }
+    ]
+  %}
+    {% include "toolkit/breadcrumb.html" %}
+  {% endwith %}
+{% endblock %}
+
+{% block main_content %}
+
+  {% with
+    heading = form.heading,
+    smaller = true
+  %}
+    {% include 'toolkit/page-heading.html' %}
+  {% endwith %}
+
+  {% include "_form_errors.html" %}
+
+  <p>
+    {{ form.summary }}
+  </p>
+
+  <form method="post" enctype="multipart/form-data" action="{{ url_for('buyers.update_work_order_question', work_order_id=work_order_id, question_slug=question_slug)}}">
+
+    {{ form.csrf_token }}
+
+    {% for field in form %}
+      {% if field.name != 'csrf_token' %}
+        <div class="question">
+          {{ field.label }}
+          {{ field }}
+        </div>
+      {% endif %}
+    {% endfor %}
+    <br>
+
+    {% with
+      type = "save-and-continue",
+      label = "Save and continue",
+      role = "button"
+    %}
+      {% include 'toolkit/button.html' %}
+    {% endwith %}
+
+  </form>
+{% endblock %}

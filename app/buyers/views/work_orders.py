@@ -8,7 +8,8 @@ from app.helpers.buyers_helpers import is_brief_correct
 from dmutils.forms import render_template_with_csrf
 
 from dmapiclient import HTTPError, APIError
-from app.main.forms.work_order_forms import WorkOrderSellerForm
+from app.main.forms.work_order_forms import WorkOrderSellerForm, FormFactory
+from app.main.forms.work_order_data import questions
 
 
 def create_work_order_from_brief(brief, seller):
@@ -17,6 +18,7 @@ def create_work_order_from_brief(brief, seller):
     contact_name = contact.get('name') if contact is not None else ''
 
     return {
+        'son': 'SON3364729',
         'seller': {
             'abn': seller.get('abn', ''),
             'name': seller.get('name', ''),
@@ -95,4 +97,75 @@ def get_work_order(work_order_id):
     except APIError as e:
         abort(e.status_code)
 
-    return render_template_with_csrf('workorder/work-order-instruction-list.html', work_order=work_order)
+    return render_template_with_csrf('workorder/work-order-instruction-list.html',
+                                     work_order=work_order,
+                                     questions=questions)
+
+
+@buyers.route('/work-orders/<int:work_order_id>/questions/<question_slug>', methods=['GET'])
+def get_work_order_question(work_order_id, question_slug):
+    try:
+        work_order = data_api_client.get_work_order(work_order_id)['workOrder']
+    except APIError as e:
+        abort(e.status_code)
+
+    if questions.get(question_slug, None) is None:
+        abort(404)
+
+    form = FormFactory(question_slug)
+    value = work_order.get(question_slug, None)
+
+    if value is not None:
+        if questions[question_slug].get('type') == 'address':
+            form.abn.data = value['abn']
+            form.contact.data = value['contact']
+            form.name.data = value['name']
+        else:
+            form[question_slug].data = value
+
+    return render_template_with_csrf(
+        'workorder/work-order-question.html',
+        work_order_id=work_order_id,
+        question_slug=question_slug,
+        form=form
+    )
+
+
+@buyers.route('/work-orders/<int:work_order_id>/questions/<question_slug>', methods=['POST'])
+def update_work_order_question(work_order_id, question_slug):
+    try:
+        data_api_client.get_work_order(work_order_id)['workOrder']
+    except APIError as e:
+        abort(e.status_code)
+
+    if questions.get(question_slug, None) is None:
+        abort(404)
+
+    form = FormFactory(question_slug, formdata=request.form)
+
+    if not form.validate():
+        return render_template_with_csrf(
+            'workorder/work-order-question.html',
+            status_code=400,
+            work_order_id=work_order_id,
+            question_slug=question_slug,
+            form=form
+        )
+
+    if questions[question_slug].get("type") == 'address':
+        data = {question_slug: {
+            'abn': request.form['abn'],
+            'name': request.form['name'],
+            'contact': request.form['contact']}
+        }
+    else:
+        data = {question_slug: request.form[question_slug]}
+
+    data_api_client.update_work_order(work_order_id, data)
+
+    return redirect(
+        url_for(
+            'buyers.get_work_order',
+            work_order_id=work_order_id,
+        )
+    )

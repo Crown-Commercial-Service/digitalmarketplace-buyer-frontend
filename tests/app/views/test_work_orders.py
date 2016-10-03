@@ -9,6 +9,20 @@ import mock
 from lxml import html
 import pytest
 
+test_work_order = {
+    "workOrder":
+        {"additionalTerms": "test", "agency": {"abn": "1", "contact": "3", "name": "2"},
+         "briefId": 221, "expenses": "dqdas", "id": 5, "number": "test23",
+         "orderPeriod": "12",
+         "seller": {
+             "abn": "43 096 505 805",
+             "contact": "Kris Crouchervdsfds",
+             "name": "Adelphi Digital Consulting Group"},
+         "son": "SON3364729",
+         "supplierCode": 119,
+         "supplierName": "Adelphi Digital Consulting Group"}
+}
+
 
 @mock.patch('app.buyers.views.work_orders.data_api_client')
 class TestSelectSellerForWorkOrder(BaseApplicationTest):
@@ -82,17 +96,9 @@ class TestCreateNewWorkOrder(BaseApplicationTest):
         data_api_client.create_work_order.assert_called_with(
             briefId=1234,
             supplierCode=4321,
-            workOrder={
-                'orderPeriod': '',
-                'securityClearance': '',
-                'additionalTerms': '',
-                'deliverables': '',
-                'seller': {
-                    'contact': 'joe bloggs',
-                    'name': 'test supplier',
-                    'abn': '123456'
-                }
-            }
+            workOrder={'orderPeriod': '', 'deliverables': '',
+                       'seller': {'contact': u'joe bloggs', 'name': u'test supplier', 'abn': u'123456'},
+                       'securityClearance': '', 'additionalTerms': '', 'son': 'SON3364729'}
         )
 
     def test_create_new_work_order_invalid_form(self, data_api_client):
@@ -153,19 +159,7 @@ class TestViewWorkOrder(BaseApplicationTest):
     def test_view_work_order(self, data_api_client):
         with self.app.app_context():
             self.login_as_buyer()
-            data_api_client.get_work_order.return_value = {
-                'workOrder': {
-                    'orderPeriod': '',
-                    'securityClearance': '',
-                    'additionalTerms': '',
-                    'deliverables': '',
-                    'seller': {
-                        'contact': 'joe bloggs',
-                        'name': 'test supplier',
-                        'abn': '123456'
-                    }
-                }
-            }
+            data_api_client.get_work_order.return_value = test_work_order
 
             res = self.client.get(self.expand_path('/work-orders/1234'))
             assert res.status_code == 200
@@ -180,3 +174,74 @@ class TestViewWorkOrder(BaseApplicationTest):
             )
 
             assert res.status_code == 404
+
+
+@mock.patch('app.buyers.views.work_orders.data_api_client')
+class TestEditWorkOrderQuestion(BaseApplicationTest):
+    def test_view_work_order_question(self, data_api_client):
+        with self.app.app_context():
+            self.login_as_buyer()
+            data_api_client.get_work_order.return_value = test_work_order
+
+            res = self.client.get(self.expand_path('/work-orders/1234/questions/number'))
+            assert res.status_code == 200
+
+    def test_404_if_work_order_question_not_found(self, data_api_client):
+        with self.app.app_context():
+            self.login_as_buyer()
+            data_api_client.get_work_order.return_value = test_work_order
+
+            res = self.client.get(self.expand_path(
+                '/work-orders/1234/questions/blah')
+            )
+
+            assert res.status_code == 404
+
+    def test_update_work_order_question(self, data_api_client):
+        self.login_as_buyer()
+        data_api_client.get_work_order.return_value = test_work_order
+
+        res = self.client.post(
+            self.expand_path('/work-orders/1234/questions/number'),
+            data={
+                'number': 4321,
+                'csrf_token': FakeCsrf.valid_token,
+            })
+
+        assert res.status_code == 302
+        data_api_client.update_work_order.assert_called_with(1234, {'number': '4321'})
+
+    def test_update_work_order_address_question(self, data_api_client):
+        self.login_as_buyer()
+        data_api_client.get_work_order.return_value = test_work_order
+
+        res = self.client.post(
+            self.expand_path('/work-orders/1234/questions/agency'),
+            data={
+                'abn': 'test abn',
+                'contact': 'test contact',
+                'name': 'test name',
+                'csrf_token': FakeCsrf.valid_token,
+            })
+
+        assert res.status_code == 302
+        data_api_client.update_work_order.assert_called_with(
+            1234,
+            {'agency': {
+                'abn': 'test abn',
+                'contact': 'test contact',
+                'name': 'test name'}}
+        )
+
+    def test_update_new_work_order_question_invalid_form(self, data_api_client):
+        self.login_as_buyer()
+        data_api_client.get_work_order.return_value = test_work_order
+
+        res = self.client.post(
+            self.expand_path('/work-orders/1234/questions/number'),
+            data={
+                'number': '',
+                'csrf_token': FakeCsrf.valid_token,
+            })
+
+        assert res.status_code == 400
