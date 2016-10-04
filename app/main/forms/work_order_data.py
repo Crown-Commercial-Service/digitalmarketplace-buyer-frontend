@@ -1,113 +1,187 @@
-questions = {
-    'number': {
+from collections import OrderedDict
+
+questions = OrderedDict([(
+    'number', {
+        'description': 'Work Order number',
+        'infoToAdd': 'Add a work order number',
         'heading': 'Work Order number',
-        'text': 'Add a work order number',
         'summary': 'This is a seller-supplied work order number',
         'label': 'Work Order number',
         'message': 'You must provide a Work Order number',
         'type': 'text',
-    },
-    'son': {
+    }), (
+    'son', {
+        'description': 'SON',
+        'infoToAdd': 'Add an SON',
         'heading': 'SON',
-        'text': 'Add an SON',
         'summary': 'This is the SON',
         'label': 'SON',
         'message': 'You must provide an SON',
         'type': 'text',
-    },
-    'orderPeriod': {
-        'heading': 'Order period',
-        'text': 'Add an order period',
-        'summary': 'This is the order period',
-        'label': 'Order period',
-        'message': 'You must provide an order period',
+    }), (
+    'costCode', {
+        'description': 'Buyer cost code',
+        'infoToAdd': 'Add a buyer cost code (optional)',
+        'heading': 'Buyer cost code',
+        'summary': 'Add a buyer cost code',
+        'label': 'Buyer cost code',
+        'message': 'You must provide a buyer cost code',
         'type': 'text',
-    },
-    'deliverables': {
-        'heading': 'Services and deliverables',
-        'text': 'Add services and deliverables',
-        'summary': 'This is the order period',
-        'label': 'Services and deliverables',
-        'message': 'You must provide an order period'
-    },
-    'personnel': {
-        'heading': 'Specified personnel',
-        'text': 'Add specified personnel',
-        'summary': 'This is the specified personnel',
-        'label': 'Specified personnel',
-        'message': 'You must provide specified personnel'
-    },
-    'performanceCriteria': {
-        'heading': 'Performance criteria',
-        'text': 'Add performance criteria',
-        'summary': 'This is the performance criteria',
-        'label': 'Performance criteria',
-        'message': 'You must provide performance criteria'
-    },
-    'serviceCharges': {
-        'heading': 'Quoted service charges',
-        'text': 'Add service charges',
-        'summary': 'This is the service charges',
-        'label': 'Quoted service charges',
-        'message': 'You must provide service charges'
-    },
-    'expenses': {
-        'heading': 'Expenses',
-        'text': 'Add additional expenses',
-        'summary': 'This is the additional expenses',
-        'label': 'Expenses',
-        'message': 'You must provide additional expenses'
-    },
-    'agencyProperty': {
-        'heading': 'Agency intellectual property',
-        'text': 'Add agency intellectual property details',
-        'summary': 'This is the Agency intellectual property',
-        'label': 'Agency intellectual property',
-        'message': 'You must provide agency intellectual property details'
-    },
-    'sellerProperty': {
-        'heading': 'Seller intellectual property',
-        'text': 'Add seller intellectual property details',
-        'summary': 'This is the Seller intellectual property',
-        'label': 'Seller intellectual property',
-        'message': 'You must provide seller intellectual property details'
-    },
-    'securityClearance': {
-        'heading': 'Security requirements',
-        'text': 'Add security requirements details',
-        'summary': 'This is the security requirements',
-        'label': 'Security requirements',
-        'message': 'You must provide security requirements details'
-    },
-    'additionalTerms': {
-        'heading': 'Additional terms and conditions',
-        'text': 'Add additional terms and conditions',
-        'summary': 'This is the Additional terms and conditions',
-        'label': 'Additional terms and conditions',
-        'message': 'You must provide Additional terms and conditions'
-    },
-    'agency': {
-        'heading': 'Agency',
-        'text': 'Add agency',
-        'summary': 'Agency summary',
-        'abn': 'Abn',
-        'abnMessage': 'You must provide an abn',
-        'name': 'Agency Name',
-        'nameMessage': 'You must provide an agency name',
-        'contact': 'Agency Representative',
-        'contactMessage': 'You must provide an agency representative',
+    }), (
+    'glCode', {
+        'description': 'GL code',
+        'infoToAdd': 'Add GL code (optional)',
+        'heading': 'GL code',
+        'summary': 'Add GL code',
+        'label': 'GL code',
+        'message': 'You must provide a GL code',
+        'type': 'text',
+    }), (
+    'agency', {
+        'description': 'Buyer',
+        'infoToAdd': 'Add buyer details',
+        'heading': 'Buyer',
+        'summary': 'Add your name, the name of your agency and the agency\'s ABN.',
+        'contactLabel': 'Your name',
+        'contactMessage': 'You need to add your name',
+        'nameLabel': 'Agency Name',
+        'nameMessage': 'You need to add the name of your agency',
+        'abnLabel': 'Agency Abn',
+        'abnMessage': 'You need to add the ABN of your agency',
         'type': 'address'
-    },
-    'seller': {
+    }), (
+    'seller', {
+        'description': 'You',
+        'infoToAdd': 'Add company',
         'heading': 'You',
-        'text': 'Add company',
         'summary': 'Company summary',
-        'abn': 'Abn',
+        'abnLabel': 'Abn',
         'abnMessage': 'You must provide an abn',
-        'name': 'Company Name',
+        'nameLabel': 'Company Name',
         'nameMessage': 'You must provide an company name',
-        'contact': 'Company Representative',
+        'contactLabel': 'Company Representative',
         'contactMessage': 'You must provide an company representative',
         'type': 'address'
-    },
-}
+    }), (
+    'orderPeriod', {
+        'description': 'Timeline',
+        'infoToAdd': 'Add start date, end date or duration and extension options',
+        'heading': 'Timeline',
+        'summary': 'Add the start date, end date and any extension options, '
+                   'for example \'3 months at a time, notified by email\'.',
+        'label': 'Order period and extension options',
+        'message': 'You must provide an order period',
+    }), (
+    'services', {
+        'description': 'Services',
+        'infoToAdd': 'Add services',
+        'heading': 'Services',
+        'summary': 'Add the services and deliverables to be provided by the seller',
+        'label': 'Services',
+        'message': 'You need to add the services the seller will provide'
+    }), (
+    'deliverables', {
+        'description': 'Deliverables',
+        'infoToAdd': 'Add deliverables (optional)',
+        'heading': 'Deliverables',
+        'summary': 'Add any artifacts or outcomes that will be created as part of this order.',
+        'label': 'Add deliverables',
+        'message': 'You must provide deliverables'
+    }), (
+    'performanceCriteria', {
+        'description': 'Performance criteria',
+        'infoToAdd': 'Add performance criteria (optional)',
+        'heading': 'Performance criteria',
+        'summary': 'How will judge the quality of timeliness, quality and other attributes of the services '
+                   'or deliverables? Are you applying the Digital Service Standard? If so, add that information here.',
+        'label': 'Performance criteria',
+        'message': 'You need to add the performance criteria'
+    }), (
+    'governance', {
+        'description': 'Governance',
+        'infoToAdd': 'Add governance details (optional)',
+        'heading': 'Governance',
+        'summary': 'Add any governance requirements such as regular meetings, reports or training.',
+        'label': 'Governance',
+        'message': 'You need to add goveranance details'
+    }), (
+    'personnel', {
+        'description': 'Specified personnel',
+        'infoToAdd': 'Add specified personnel (optional)',
+        'heading': 'Specified personnel',
+        'summary': 'Add the full names of all people who will do the work and specify if any are subcontractors. '
+                   'For example, \'Matt Jones (Subcontractor)\'.',
+        'label': 'Names',
+        'message': 'You need to add names of all personnel'
+    }), (
+    'securityClearance', {
+        'description': 'Security requirements',
+        'infoToAdd': 'Add security requirements (optional)',
+        'heading': 'Security requirements',
+        'summary': 'Only request security clearance if access to classified material, '
+                   'environments or assets is required.',
+        'label': 'Security requirements',
+        'message': 'You must provide security requirements'
+    }), (
+    'pricing', {
+        'description': 'Pricing',
+        'infoToAdd': 'Add the billable items',
+        'heading': 'Pricing',
+        'summary': '"Add the unit pricing. Each item should have a separate field. '
+                   'For example, Senior Developer at $1200 for a 6 month contract (Capped at $149,500). '
+                   'Use a new line for each additional cost item.',
+        'label': 'Description and cost (excl. GST)',
+        'message': 'You need to add pricing information'
+    }), (
+    'paymentMilestones', {
+        'description': 'Payment milestones',
+        'infoToAdd': 'Add payment milestones (optional)',
+        'heading': 'Payment milestones',
+        'summary': 'Add payment milestones. For example 50% upfront, '
+                   '25% on completion of concept design and 25% on acception into Live.',
+        'label': 'Payment milestones (Optional)',
+        'message': 'You need to add payment milestones'
+    }), (
+    'expenses', {
+        'description': 'Expenses',
+        'infoToAdd': 'Add expenses (optional)',
+        'heading': 'Expenses',
+        'summary': 'Add expenses description and costs.',
+        'label': 'Description / Cost (excl. GST) (optional)',
+        'message': 'You must provide expenses'
+    }), (
+    'agencyProperty', {
+        'description': 'Buyer intellectual property',
+        'infoToAdd': 'Add buyer intellectual property details (optional)',
+        'heading': 'Buyer intellectual property',
+        'summary': 'Add details of any intellectual property you will provide to the seller and conditions of use.',
+        'label': 'Buyer intellectual property',
+        'message': 'You must provide buyer intellectual property details'
+    }), (
+    'sellerProperty', {
+        'description': 'Seller intellectual property',
+        'infoToAdd': 'Add seller intellectual property details (optional)',
+        'heading': 'Seller intellectual property',
+        'summary': 'Add details of any intellectual property you will provide to the buyer and conditions of use.',
+        'label': 'Seller\'s intellectual property (optional)',
+        'message': 'You must provide seller intellectual property details'
+    }), (
+    'additionalTerms', {
+        'description': 'Additional terms and conditions',
+        'infoToAdd': 'Add additional requirements',
+        'heading': 'Additional terms and conditions',
+        'summary': 'Add any additional requirements consistent with the Deed. '
+                   'For example, professional and public liability insurance.',
+        'label': 'Additional terms and conditions (optional)',
+        'message': 'You must provide additional requirements'
+    }), (
+    'additionalDocumentation', {
+        'description': 'Additional documentation incorporated by reference',
+        'infoToAdd': 'Add references to the additional documentation',
+        'heading': 'Additional documentation incorporated by reference',
+        'summary': 'Add the documention including dates version numbers or specify \'current at time of order\'. '
+                   'Any documentation specified must be emailed to the other party.',
+        'label': 'Additional documentation',
+        'message': 'You must provide additional documentation'
+    })
+])
