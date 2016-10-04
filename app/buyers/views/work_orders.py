@@ -74,12 +74,12 @@ def create_new_work_order(framework_slug, lot_slug, brief_id):
         )['workOrder']
 
     except APIError as e:
+        form.errors['seller'] = [e.message]
         return render_template_with_csrf(
             'workorder/select-seller.html',
             status_code=e.status_code,
             brief=brief,
             form=form,
-            error=e.message,
         )
 
     return redirect(

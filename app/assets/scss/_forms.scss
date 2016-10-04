@@ -82,6 +82,17 @@
   }
 }
 
+@mixin form-control {
+  list-style: none;
+  margin: $base-spacing 0;
+  padding: 0;
+  @content;
+
+  label:last-child  {
+    margin: 0;
+  }
+}
+
 .registration-pages {
 
   p {
@@ -128,18 +139,16 @@
     }
   }
 
-  #employment_status, .form-control {
-    list-style: none;
-    margin: $base-spacing 0;
-    padding: 0;
-
-    label:last-child  {
-      margin: 0;
-    }
+  #employment_status {
+    @include form-control;
   }
 }
 
 form {
+
+  .form-control {
+    @include form-control;
+  }
 
   .question-heading {
     font-weight: $bold-font-weight;

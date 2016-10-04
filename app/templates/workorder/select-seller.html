@@ -26,13 +26,6 @@
 
 {% block main_content %}
     {% include "_form_errors.html" %}
-    {% if error %}
-        <div>
-            <p>
-                {{ error }}
-            </p>
-        </div>
-    {% endif %}
 
     {% with
       heading = "Award which seller?",
@@ -44,7 +37,7 @@
     <div class="column-two-thirds">
       <form method="post" action="{{ url_for('.create_new_work_order',framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id) }}">
        {{ form.csrf_token }}
-       {{ form.seller }}
+       {{ form.seller(class="form-control") }}
 
         {% with
           type = "create-work-order",

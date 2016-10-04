@@ -34,15 +34,15 @@
       <td>
         <span>{{ question.get("label") }}</span>
       </td>
-      <td>
-        <span>
-          {% if value is not string %}
-            <a href="{{ url }}">{{ question.get("text") }}</a>
-          {% else %}
-            {{ value }}
-          {% endif %}
-        </span>
-      </td>
+      {% if value is not string %}
+        <td>
+          <a href="{{ url }}">{{ question.get("text") }}</a>
+        </td>
+      {% else -%}
+        <td class="summary-item-free-text">
+          <span>{{ value }}</span>
+        </td>
+      {%- endif %}
       <td>
         {% if value is string %}
           <a href="{{ url }}">Edit</a>
