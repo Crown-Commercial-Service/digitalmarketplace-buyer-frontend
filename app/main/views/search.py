@@ -50,7 +50,9 @@ def get_all_roles(data_api_client):
 
 @main.route('/search/sellers')
 def supplier_search():
-    sort_order = request.args.get('sort_order', 'asc')  # asc or desc
+    sort_order = request.args.get('sort_order', 'asc')
+    if sort_order not in ('asc', 'desc'):
+        abort(400, 'Invalid sort_order: {}'.format(sort_order))
     sort_terms = request.args.getlist('sort_term')
     keyword = request.args.get('keyword', None)
 
@@ -77,11 +79,16 @@ def supplier_search():
             sort_queries.append({
                 sort_term: {"order": sort_order, "mode": "min"}
             })
+        else:
+            abort(400, 'Invalid sort_term: {}'.format(sort_term))
 
     if selected_roles:
         filters = []
         for role in selected_roles:
-            filters.extend(raw_role_data[role])
+            if role in raw_role_data:
+                filters.extend(raw_role_data[role])
+            else:
+                abort(400, 'Invalid role: {}'.format(role))
         query = {
             "query": {
                 "filtered": {
@@ -90,7 +97,7 @@ def supplier_search():
                     },
                     "filter": {
                         "terms": {"prices.serviceRole.role": filters},
-                        }
+                    }
                 }
             },
             "sort": sort_queries,
@@ -113,7 +120,10 @@ def supplier_search():
             "sort": sort_queries
         }
 
-    page = int(request.args.get('page', 1))
+    try:
+        page = int(request.args.get('page', 1))
+    except ValueError:
+        abort(400, 'Invalid page number: {}'.format(request.args['page']))
     results_from = (page - 1) * SUPPLIER_RESULTS_PER_PAGE
 
     find_suppliers_params = {

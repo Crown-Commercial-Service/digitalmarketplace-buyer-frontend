@@ -116,3 +116,22 @@ class TestCataloguePage(BaseApplicationTest):
             if button.attrib['href'] not in self.base_url:
                 valid = False
         assert valid
+
+    def test_invalid_sort_order(self):
+        response = self.client.get(self.url_for('main.supplier_search', sort_order='no'))
+        assert response.status_code == 400
+
+    def test_invalid_sort_term(self):
+        response = self.client.get(self.url_for('main.supplier_search', sort_term='no'))
+        assert response.status_code == 400
+        assert 'sort_term' in response.get_data(as_text=True)
+
+    def test_invalid_role(self):
+        response = self.client.get(self.url_for('main.supplier_search', role='no'))
+        assert response.status_code == 400
+        assert 'role' in response.get_data(as_text=True)
+
+    def test_invalid_page(self):
+        response = self.client.get(self.url_for('main.supplier_search', page='no'))
+        assert response.status_code == 400
+        assert 'page' in response.get_data(as_text=True)
