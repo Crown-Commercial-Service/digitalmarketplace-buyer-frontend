@@ -14,7 +14,7 @@
       <td>
         <span>
           {% if value is not iterable %}
-            <a href="{{ url }}">{{ question.get("infoToAdd") }}</a>
+            <a  class="work-order__add" href="{{ url }}">{{ question.get("infoToAdd") }}</a>
           {% else %}
             <br>
             <span>{{ value.get("name") }}</span><br>
@@ -36,7 +36,7 @@
       </td>
       {% if value is not string %}
         <td>
-          <a href="{{ url }}">{{ question.get("infoToAdd") }}</a>
+          <a class="work-order__add" href="{{ url }}">{{ question.get("infoToAdd") }}</a>
         </td>
       {% else -%}
         <td class="summary-item-free-text">
