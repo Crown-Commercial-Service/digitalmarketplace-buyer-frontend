@@ -101,15 +101,11 @@
     </p>
   </section>
 
-  {% with
-    type = "save-work-order",
-    label = "Save work order",
-    role = "button"
-  %}
-    {% include 'toolkit/button.html' %}
-  {% endwith %}
+  <div class="m-t-1">
+    <a href="{{ url_for('buyers.get_brief_pdf', work_order_id=work_order.id) }}">Download as PDF</a>
+  </div>
 
   <div class="m-t-1">
-    <a href="#">Download as PDF</a>
+    <a href="{{ url_for('buyers.buyer_dashboard') }}">Save and return to dashboard</a>
   </div>
 {% endblock %}

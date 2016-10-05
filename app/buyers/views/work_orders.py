@@ -172,7 +172,8 @@ def update_work_order_question(work_order_id, question_slug):
         )
     )
 
+
 @buyers.route('/work-orders/workorder_<work_order_id>.pdf')
 def get_brief_pdf(work_order_id):
-    html = get_work_order(work_order_id)
-    return render_pdf(HTML(string=html))
+    response, code = get_work_order(work_order_id)
+    return render_pdf(HTML(string=response.data))

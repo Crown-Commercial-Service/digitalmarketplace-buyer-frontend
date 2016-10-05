@@ -175,6 +175,13 @@ class TestViewWorkOrder(BaseApplicationTest):
 
             assert res.status_code == 404
 
+    def test_work_order_pdf(self, data_api_client):
+        self.login_as_buyer()
+        data_api_client.get_work_order.return_value = test_work_order
+        res = self.client.get(self.expand_path('/work-orders/workorder_1234.pdf'))
+        assert 200 == res.status_code
+        assert res.mimetype == 'application/pdf'
+
 
 @mock.patch('app.buyers.views.work_orders.data_api_client')
 class TestEditWorkOrderQuestion(BaseApplicationTest):
