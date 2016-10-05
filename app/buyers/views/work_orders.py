@@ -11,6 +11,8 @@ from dmapiclient import HTTPError, APIError
 from app.main.forms.work_order_forms import WorkOrderSellerForm, FormFactory
 from app.main.forms.work_order_data import questions
 
+from flask_weasyprint import HTML, render_pdf
+
 
 def create_work_order_from_brief(brief, seller):
     contacts = seller.get('contacts', None)
@@ -169,3 +171,8 @@ def update_work_order_question(work_order_id, question_slug):
             work_order_id=work_order_id,
         )
     )
+
+@buyers.route('/work-orders/workorder_<work_order_id>.pdf')
+def get_brief_pdf(work_order_id):
+    html = get_work_order(work_order_id)
+    return render_pdf(HTML(string=html))
