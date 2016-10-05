@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 from ...helpers import BaseApplicationTest
 from dmutils.forms import FakeCsrf
-from dmapiclient import api_stubs, HTTPError, APIError
+from dmapiclient import HTTPError, APIError
 from dmcontent.content_loader import ContentLoader
 import mock
 from lxml import html
@@ -23,13 +23,36 @@ test_work_order = {
          "supplierName": "Adelphi Digital Consulting Group"}
 }
 
+test_brief = {
+    "briefs": {
+        "id": 1234,
+        "title": "I need a thing to do a thing",
+        "frameworkSlug": "digital-outcomes-and-specialists",
+        "frameworkName": "Digital Outcomes and Specialists",
+        "lotSlug": "digital-specialists",
+        "status": "draft",
+        "users": [{"active": True,
+                   "role": "buyer",
+                   "emailAddress": "buyer@email.com",
+                   "id": 123,
+                   "name": "Buyer User"}],
+        "createdAt": "2016-03-29T10:11:12.000000Z",
+        "updatedAt": "2016-03-29T10:11:13.000000Z",
+        "clarificationQuestions": [],
+        "summary": "test summary",
+        "contractLength": "6 months",
+        "additionalTerms": "some terms",
+        "securityClearance": "I have clearance",
+    }
+}
+
 
 @mock.patch('app.buyers.views.work_orders.data_api_client')
 class TestSelectSellerForWorkOrder(BaseApplicationTest):
     def test_start_work_order_page_renders(self, data_api_client):
         with self.app.app_context():
             self.login_as_buyer()
-            data_api_client.get_brief.return_value = api_stubs.brief()
+            data_api_client.get_brief.return_value = test_brief
             data_api_client.find_brief_responses.return_value = {
                 'briefResponses': [
                     {
@@ -63,7 +86,7 @@ class TestSelectSellerForWorkOrder(BaseApplicationTest):
 class TestCreateNewWorkOrder(BaseApplicationTest):
     def test_create_new_work_order(self, data_api_client):
         self.login_as_buyer()
-        data_api_client.get_brief.return_value = api_stubs.brief()
+        data_api_client.get_brief.return_value = test_brief
         data_api_client.find_brief_responses.return_value = {
             'briefResponses': [
                 {
@@ -96,14 +119,23 @@ class TestCreateNewWorkOrder(BaseApplicationTest):
         data_api_client.create_work_order.assert_called_with(
             briefId=1234,
             supplierCode=4321,
-            workOrder={'orderPeriod': '', 'deliverables': '',
-                       'seller': {'contact': u'joe bloggs', 'name': u'test supplier', 'abn': u'123456'},
-                       'securityClearance': '', 'additionalTerms': '', 'son': 'SON3364729'}
+            workOrder={
+                'orderPeriod': u'6 months',
+                'seller': {
+                    'contact': u'joe bloggs',
+                    'name': u'test supplier',
+                    'abn': u'123456'
+                },
+                'deliverables': u'test summary',
+                'son': 'SON3364729',
+                'additionalTerms': 'some terms',
+                'securityClearance': 'I have clearance'
+            }
         )
 
     def test_create_new_work_order_invalid_form(self, data_api_client):
         self.login_as_buyer()
-        data_api_client.get_brief.return_value = api_stubs.brief()
+        data_api_client.get_brief.return_value = test_brief
         data_api_client.find_brief_responses.return_value = {
             'briefResponses': [
                 {
@@ -127,7 +159,7 @@ class TestCreateNewWorkOrder(BaseApplicationTest):
 
     def test_create_new_work_order_api_error(self, data_api_client):
         self.login_as_buyer()
-        data_api_client.get_brief.return_value = api_stubs.brief()
+        data_api_client.get_brief.return_value = test_brief
         data_api_client.find_brief_responses.return_value = {
             'briefResponses': [
                 {

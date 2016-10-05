@@ -15,22 +15,30 @@ from flask_weasyprint import HTML, render_pdf
 
 
 def create_work_order_from_brief(brief, seller):
-    contacts = seller.get('contacts', None)
-    contact = contacts[0] if contacts is not None and 0 < len(contacts) else None
-    contact_name = contact.get('name') if contact is not None else ''
+    contacts = seller.get('contacts')
+    contact = contacts[0] if contacts else {}
 
-    return {
+    mapping = {
+        'summary': 'deliverables',
+        'contractLength': 'orderPeriod',
+        'additionalTerms': 'additionalTerms',
+        'securityClearance': 'securityClearance',
+    }
+
+    data = {
         'son': 'SON3364729',
         'seller': {
             'abn': seller.get('abn', ''),
             'name': seller.get('name', ''),
-            'contact': contact_name,
-        },
-        'deliverables': brief.get('summary', ''),
-        'orderPeriod': brief.get('contractLength', ''),
-        'additionalTerms': brief.get('additionalTerms', ''),
-        'securityClearance': brief.get('securityClearance', ''),
+            'contact': contact.get('name', ''),
+        }
     }
+
+    for key, value in brief.items():
+        if key in mapping:
+            data[mapping[key]] = value
+
+    return data
 
 
 @buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<int:brief_id>/work-orders/create',
