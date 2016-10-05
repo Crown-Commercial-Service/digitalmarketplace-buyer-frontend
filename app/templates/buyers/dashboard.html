@@ -117,7 +117,7 @@
         {{ summary.service_link(item.title, url_for(".view_brief_overview", framework_slug=item.frameworkSlug, lot_slug=item.lot, brief_id=item.id)) }}
         {{ summary.text(item.applicationsClosedAt|dateformat) }}
         {{ summary.link("View responses", url_for(".view_brief_responses", framework_slug=item.frameworkSlug, lot_slug=item.lot, brief_id=item.id)) }}
-        {% if item.work_order_id == 0 %}
+        {% if 'work_order_id' not in item %}
             {{ summary.link("Create work order", url_for("buyers.select_seller_for_work_order", framework_slug=item.frameworkSlug, lot_slug=item.lot, brief_id=item.id)) }}
         {% else %}
             {{ summary.link("Edit work order", url_for("buyers.get_work_order", work_order_id=item.work_order_id)) }}
