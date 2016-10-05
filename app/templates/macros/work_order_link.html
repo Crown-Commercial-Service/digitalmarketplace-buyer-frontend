@@ -1,4 +1,4 @@
-{%- for slug in slugs -%}
+{%- for slug in questions.keys() -%}
   {% set question = questions.get(slug) %}
   {% set value = work_order.get(slug) %}
   {% set url = url_for('buyers.get_work_order_question', work_order_id=work_order.id, question_slug=slug) %}
@@ -6,20 +6,20 @@
   {% if question.type == 'address' %}
     <tr>
       <td>
-        <span>{{ question.get("heading") }}</span><br>
-        <span>{{ question.get("abn") }}</span><br>
-        <span>{{ question.get("name") }}</span><br>
-        <span>{{ question.get("contact") }}</span>
+        <span>{{ question.get("description") }}</span><br>
+        <span>{{ question.get("nameLabel") }}</span><br>
+        <span>{{ question.get("contactLabel") }}</span><br>
+        <span>{{ question.get("abnLabel") }}</span><br>
       </td>
       <td>
         <span>
           {% if value is not iterable %}
-            <a href="{{ url }}">{{ question.get("text") }}</a>
+            <a href="{{ url }}">{{ question.get("infoToAdd") }}</a>
           {% else %}
             <br>
-            <span>{{ value.get("abn") }}</span><br>
             <span>{{ value.get("name") }}</span><br>
-            <span>{{ value.get("contact") }}</span>
+            <span>{{ value.get("contact") }}</span><br>
+            <span>{{ value.get("abn") }}</span><br>
           {% endif %}
         </span>
       </td>
@@ -32,11 +32,11 @@
   {% else %}
     <tr>
       <td>
-        <span>{{ question.get("label") }}</span>
+        <span>{{ question.get("description") }}</span>
       </td>
       {% if value is not string %}
         <td>
-          <a href="{{ url }}">{{ question.get("text") }}</a>
+          <a href="{{ url }}">{{ question.get("infoToAdd") }}</a>
         </td>
       {% else -%}
         <td class="summary-item-free-text">

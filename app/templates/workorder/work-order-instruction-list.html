@@ -52,14 +52,7 @@
       </tr>
     </thead>
     <tbody>
-
-      {%
-        with slugs = ['number', 'son', 'agency', 'seller', 'orderPeriod', 'deliverables', 'personnel', 'performanceCriteria', 'serviceCharges',
-                  'expenses', 'agencyProperty', 'sellerProperty', 'securityClearance', 'additionalTerms']
-      %}
-        {% include "macros/work_order_link.html" %}
-      {% endwith %}
-
+      {% include "macros/work_order_link.html" %}
     </tbody>
   </table>
 

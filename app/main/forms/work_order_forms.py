@@ -32,18 +32,15 @@ def FormFactory(slug, formdata=None):
             validators=[DataRequired(message=questions[slug]['message'])]
         ))
     elif type == 'address':
-        setattr(WorkOrderQuestionForm, 'abn', StripWhitespaceStringField(
-            questions[slug]['abn'],
-            validators=[DataRequired(message=questions[slug]['abnMessage'])]))
-
         setattr(WorkOrderQuestionForm, 'name', StripWhitespaceStringField(
-            questions[slug]['name'],
+            questions[slug]['nameLabel'],
             validators=[DataRequired(message=questions[slug]['nameMessage'])]))
-
         setattr(WorkOrderQuestionForm, 'contact', StripWhitespaceStringField(
-            questions[slug]['contact'],
+            questions[slug]['contactLabel'],
             validators=[DataRequired(message=questions[slug]['contactMessage'])]))
-
+        setattr(WorkOrderQuestionForm, 'abn', StripWhitespaceStringField(
+            questions[slug]['abnLabel'],
+            validators=[DataRequired(message=questions[slug]['abnMessage'])]))
     else:
         setattr(WorkOrderQuestionForm, slug, TextAreaField(
             questions[slug]['label'],
