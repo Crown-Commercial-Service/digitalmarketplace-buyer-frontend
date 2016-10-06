@@ -59,7 +59,10 @@ Seller search – Digital Marketplace
     </div>
   </div>
   {% else %}
-    <h2>Your search returned no results.</h2>
+    <p class="number-results"><span>0 sellers</p>
+
+    <p>Try using a smaller part of the name or filter by the capabilities you need.</p>
+    <a href="{{ url_for('main.supplier_search') }}">Clear this search to try again</a>
   {% endif %}
 
     <ul class="list-horizontal">
