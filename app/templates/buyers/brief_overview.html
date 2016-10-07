@@ -44,6 +44,17 @@
           </form>
         </div>
       {% endif %}
+      {% if brief.status == 'live' %}
+      <div class="banner-success-without-action">
+        <h2>
+          Brief published
+        </h2>
+        <p class="banner-message">
+          Your brief has been successfully published. It will be open until {{ brief.applicationsClosedAt | dateformat }}
+        </p>
+        <a href="{{ url_for("main.get_brief_by_id", framework_slug=framework.slug, brief_id=brief.id) }}" role="button">View Live Brief</a>
+      </div>
+      {% endif %}
     {% endblock %}
     <div>
       {% with

@@ -129,8 +129,7 @@
       {% if not published %}
         <div>
             <p>
-                <a href="{{ url_for('main.get_brief_by_id', framework_slug=brief.frameworkSlug, brief_id=brief.id) }}"
-                   target="_blank" rel="external">Preview this brief</a>
+                <a href="{{ url_for('main.get_brief_by_id', framework_slug=brief.frameworkSlug, brief_id=brief.id) }}">Preview this brief</a>
             </p>
         </div>
         <form action="{{ url_for('.publish_brief', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id) }}" method="POST">
