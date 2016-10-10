@@ -223,10 +223,24 @@ span {
 }
 
 .banner-warning-without-action {
+   @extend .callout;
+   margin: 1.6em 0;
+   box-shadow: none;
+   background-color: $light-blue;
+
+   @media print {
+     border: 1px solid $non-black;
+   }
+
+   h2 {
+     margin-top: 0.8em;
+   }
+ }
+.banner-success-without-action {
   @extend .callout;
   margin: 1.6em 0;
   box-shadow: none;
-  background-color: $light-blue;
+  background-color: $light-green;
 
   @media print {
     border: 1px solid $non-black;

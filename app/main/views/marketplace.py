@@ -9,6 +9,7 @@ from flask import abort, current_app, make_response, render_template, request, u
 
 from dmapiclient import APIError
 from dmcontent.content_loader import ContentNotFoundError
+from dmutils.forms import render_template_with_csrf
 from app.main.utils import get_page_list
 
 from app import data_api_client, content_loader
@@ -131,7 +132,7 @@ def get_brief_by_id(framework_slug, brief_id):
 
     is_restricted_brief = brief.get('sellerSelector', '') in ('someSellers', 'oneSeller')
 
-    return render_template(
+    return render_template_with_csrf(
         'brief.html',
         brief=brief,
         brief_responses=brief_responses,

@@ -42,14 +42,26 @@
 {% if brief.status == 'draft' %}
     <div class="grid-row">
       <div class="column-one-whole">
-        {%
-          with
-          type = "warning",
-          heading = "This is a preview only.",
-          message = "The brief is not published yet."
-        %}
-          {% include "toolkit/notification-banner.html" %}
-        {% endwith %}
+        <div class="banner-warning-without-action">
+
+            <h2>
+              Preview only
+            </h2>
+          <p class="banner-message">
+            This brief is not published yet.
+            <form action="{{ url_for('buyers.publish_brief', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id) }}" method="POST">
+              {{ form.csrf_token }}
+              {%
+                  with
+                  type = "save",
+                  role = "button",
+                  label = "Publish brief"
+                  %}
+                {% include "toolkit/button.html" %}
+              {% endwith %}
+            </form>
+          </p>
+        </div>
       </div>
     </div>
 {% endif %}
