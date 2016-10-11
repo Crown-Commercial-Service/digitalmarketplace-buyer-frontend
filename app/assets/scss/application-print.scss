@@ -24,7 +24,6 @@ $path: "/static/images/";
 @import 'links';
 @import 'tables';
 @import 'forms';
-@import 'buyerpages';
 @import 'cards';
 @import 'print';
 
@@ -51,4 +50,8 @@ footer,
       }
     }
   }
+}
+
+.work-order__add {
+  display: none;
 }
