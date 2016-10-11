@@ -48,6 +48,7 @@ Scenario: Enter the Description of work for your brief
     And I enter My Org into organisation
     And I enter Task to complete into specialistWork
     And I enter People you will work with into existingTeam
+    And I enter Additional Info into additionalRelevantInformation
     And I enter Surry Hills NSW into workplaceAddress
     And I enter These are the working arrangements into workingArrangements
     And I enter I have security clearnace into securityClearance
