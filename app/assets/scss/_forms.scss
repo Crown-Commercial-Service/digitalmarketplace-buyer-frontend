@@ -122,7 +122,7 @@
     fieldset {
       label {
         margin-top: 0;
-        padding-left: rem(40);
+        padding-left: rem(60);
       }
       input[type='checkbox'] + label::before {
         left: 0;
@@ -138,10 +138,6 @@
       }
     }
   }
-
-  #employment_status {
-    @include form-control;
-  }
 }
 
 form {
@@ -150,13 +146,21 @@ form {
     @include form-control;
   }
 
-  .question-heading {
+  .question-heading, legend {
     font-weight: $bold-font-weight;
   }
 
   fieldset {
     legend {
       margin-bottom: 0.8em;
+    }
+  }
+
+  .radio-list {
+    &.validation-error {
+      input[type='radio'] + label {
+        outline-color: #c00;
+      }
     }
   }
 
@@ -199,4 +203,8 @@ form {
       top: 17px;
     }
   }
+}
+
+.validation-masthead-heading {
+    margin: 0 0 1.6rem;
 }

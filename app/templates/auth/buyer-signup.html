@@ -8,8 +8,6 @@
 {% block body_classes %} registration-pages form-page{% endblock %}
 {% block main_content %}
 
-{% include "_form_errors.html" %}
-
 {% if form.email_address.flags.non_gov %}
 <div>
   <h2>You need a government email address</h2>
@@ -35,10 +33,22 @@
 
 <p>To create a buyer account you need to be a government employee or be authorised by a government employee. Choose the option below that matches your situation.</p>
 
+{% include "_form_errors.html" %}
+
 <form method="POST" action="{{ url_for('.submit_buyer_signup') }}">
   {{ form.csrf_token }}
 
-  {{ form.employment_status }}
+  {%
+    with
+      question = "Your employment status",
+      name = form.employment_status.name,
+      hint = "",
+      options = form.employment_status,
+      error = form.employment_status.errors[0]
+  %}
+    {% include "toolkit/forms/radio-list.html" %}
+  {% endwith %}
+
 
   {%
     with

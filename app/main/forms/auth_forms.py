@@ -39,6 +39,7 @@ class BuyerSignupForm(DmForm):
             ('employee', 'I am an employee under the Commonwealth Public Service Act (1999) or under equivalent state or territory legislation and need access to the Digital Marketplace to perform my role.'),  # noqa
             ('contractor', 'I am a contractor working in local, state or federal government.'),
         ],
+        default='',
         validators=[
             DataRequired(message='You must specify your employment status')
         ]
