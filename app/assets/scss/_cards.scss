@@ -32,20 +32,23 @@ a.card {
     }
   }
 
+  div {
+    &:last-of-type {
+      font-size: rem(17);
+      color: $non-black;
+      border-bottom: 1px solid $light-aqua;
+      display: inline-block;
+    }
+  }
+
   &.buyer {
     p {
       color: $aqua;
-      &:last-of-type {
-        color: $non-black;
-      }
     }
   }
   &.seller {
     p {
       color: $maroon;
-      &:last-of-type {
-        color: $non-black;
-      }
     }
   }
 
@@ -65,11 +68,6 @@ a.card {
         font-size: rem(60);
         display: block;
       }
-    }
-
-    &:last-of-type {
-      border-bottom: 1px solid $light-aqua;
-      display: inline;
     }
   }
 

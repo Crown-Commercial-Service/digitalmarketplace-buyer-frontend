@@ -109,12 +109,14 @@ main {
   margin-top: $base-spacing;
   padding: $base-spacing*2 0;
 
-  .wrapper > div {
-    @include media($tablet) {
-      @include span-columns(12 of 12);
-    }
-    @include media($desktop) {
-      @include span-columns(12 of 16);
+  .wrapper {
+    & > div, & > nav {
+      @include media($tablet) {
+        @include span-columns(12 of 12);
+      }
+      @include media($desktop) {
+        @include span-columns(12 of 16);
+      }
     }
   }
 }
