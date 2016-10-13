@@ -85,6 +85,9 @@ class Config(object):
     DM_APP_NAME = 'buyer-frontend'
     DM_DOWNSTREAM_REQUEST_ID_HEADER = 'X-Amz-Cf-Id'
 
+    REACT_RENDER_URL = 'http://127.0.0.1:63578/render'
+    REACT_RENDER = not DEBUG
+
 
 class Test(Config):
     DEBUG = True
