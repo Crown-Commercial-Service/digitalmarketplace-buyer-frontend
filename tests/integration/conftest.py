@@ -7,7 +7,7 @@ from helpers import random_string, login, logout, click_button, delete_brief, \
 
 @pytest.fixture(scope='session')
 def splinter_webdriver():
-    return 'firefox'
+    return 'chrome'
 
 
 @pytest.fixture(scope='session')
