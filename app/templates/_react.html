@@ -1,8 +1,8 @@
 {% extends "_base_page.html" %}
 
 {% block body_end %}
-  <script type="text/javascript" src="{{ url_for('static', filename='webpack/vendor.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename=component.get_bundle()) }}"></script>
+  <script type="text/javascript" src="{{ component.get_vendor_bundle() }}"></script>
+  <script type="text/javascript" src="{{ component.get_bundle() }}"></script>
 {% endblock %}
 
 {% block main_content %}

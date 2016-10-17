@@ -21,7 +21,12 @@ class RenderedComponent(object):
         return unicode(self.markup)
 
     def get_bundle(self):
-        return 'webpack/' + self.slug + '.js'
+        bundle_url = current_app.config.get('REACT_BUNDLE_URL', '/')
+        return bundle_url + self.slug + '.js'
+
+    def get_vendor_bundle(self):
+        bundle_url = current_app.config.get('REACT_BUNDLE_URL', '/')
+        return bundle_url + 'vendor.js'
 
     def get_slug(self):
         return self.slug
