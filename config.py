@@ -85,8 +85,8 @@ class Config(object):
     DM_APP_NAME = 'buyer-frontend'
     DM_DOWNSTREAM_REQUEST_ID_HEADER = 'X-Amz-Cf-Id'
 
-    REACT_BUNDLE_URL = 'https://dm-dev-frontend.apps.staging.digital.gov.au/bundle/'
-    REACT_RENDER_URL = 'https://dm-dev-frontend.apps.staging.digital.gov.au/render'
+    REACT_BUNDLE_URL = 'http://127.0.0.1:63578/bundle/'
+    REACT_RENDER_URL = 'http://127.0.0.1:63578/render'
     REACT_RENDER = not DEBUG
 
 

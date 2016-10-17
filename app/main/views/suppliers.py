@@ -7,6 +7,7 @@ import flask_featureflags
 
 from app.main import main
 from app.api_client.data import DataAPIClient
+from app.helpers.react.render import render_component
 
 
 def can_view_supplier_page(code):
@@ -37,9 +38,25 @@ def get_supplier(code):
         for price in supplier['prices']
     )
 
+    # supplier_casestudies = [{"id":"1","links":{"edit":"#edit", "delete":"#delete"},
+    #                          "timeframe":"2015-2016",
+    #                          "company":"Example Pty Ltd",
+    #                          "title":"Giizmo Refactoring",
+    #                          "sections":[
+    #                              {"title":"In the beginning",
+    #                               "content": "we did good"}]
+    #                          }]
+    supplier_casestudies = []
+    for casestudy_id in supplier['case_study_ids']:
+        casestudy = DataAPIClient().get_case_study(casestudy_id)['caseStudy']
+        supplier_casestudies.append(casestudy)
+
+
     return render_template(
         'suppliers_details.html',
         supplier=supplier,
         supplier_categories=supplier_categories,
+        supplier_casestudies=supplier_casestudies,
         user_owns_page=user_owns_page(code),
+        render_component=render_component
     )

@@ -64,6 +64,16 @@
     </article>
   </li>
   <li>
+    <p>Case Studies</p>
+    <article>
+      {% for casestudy in supplier_casestudies %}
+        {% with component = render_component('bundles/CaseStudy/CaseStudyViewWidget.js',{ "casestudy": casestudy }) %}
+          {% include "_react_component.html" %}
+        {% endwith %}
+      {%  endfor %}
+    </article>
+  </li>
+  <li>
     <p>Contact</p>
     <article>
       {% for contact in supplier.contacts %}

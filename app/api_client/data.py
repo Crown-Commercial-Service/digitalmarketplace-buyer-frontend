@@ -15,6 +15,11 @@ class DataAPIClient(BaseAPIClient):
             "/suppliers/{}".format(supplier_code)
         )
 
+    def get_case_study(self, case_study_id):
+        return self._get(
+            "/case-studies/{}".format(case_study_id)
+        )
+
     def get_roles(self, data=None, params=None):
         return self._get(
             "/roles",

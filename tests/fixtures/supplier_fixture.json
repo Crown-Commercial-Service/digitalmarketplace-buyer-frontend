@@ -1,5 +1,5 @@
-{"supplier":
-  {
+{
+  "supplier": {
     "name": "Example PTY LTD",
     "longName": "Example PTY LTD (formerly just \"Example\")",
     "code": 123456,
@@ -13,36 +13,66 @@
       "country": "Australia"
     },
     "website": "https://example.com/",
-    "extraLinks": [{
-      "url": "https://social-media.example.com/example-pty-ltd",
-      "label": "Example PTY LTD on Social Media"
-    }],
+    "extraLinks": [
+      {
+        "url": "https://social-media.example.com/example-pty-ltd",
+        "label": "Example PTY LTD on Social Media"
+      }
+    ],
     "abn": "50 110 219 460",
     "acn": "071 408 449",
-    "contacts": [{
-      "contactFor": "Testing",
-      "name": "Jo Example",
-      "role": "Example Provider",
-      "email": "jo@example.com",
-      "phone": "+61",
-      "fax": "+61"
-    }],
-    "references": [{
-      "name": "Bot",
-      "organisation": "Super Cheap References",
-      "role": "Reference Provider",
-      "email": "bot@example.com"
-    }, {
-      "name": "Another Bot",
-      "organisation": "Super Cheap References",
-      "role": "Reference Provider",
-      "email": "another.bot@example.com"
-    }],
-    "prices": [{
-      "serviceRole": { "category": "Business Analysis", "role": "Junior Business Analyst" },
-      "hourlyRate": "0.10",
-      "dailyRate": "1.90",
-      "gstIncluded": true
-    }]
+    "contacts": [
+      {
+        "contactFor": "Testing",
+        "name": "Jo Example",
+        "role": "Example Provider",
+        "email": "jo@example.com",
+        "phone": "+61",
+        "fax": "+61"
+      }
+    ],
+    "references": [
+      {
+        "name": "Bot",
+        "organisation": "Super Cheap References",
+        "role": "Reference Provider",
+        "email": "bot@example.com"
+      },
+      {
+        "name": "Another Bot",
+        "organisation": "Super Cheap References",
+        "role": "Reference Provider",
+        "email": "another.bot@example.com"
+      }
+    ],
+    "prices": [
+      {
+        "serviceRole": {
+          "category": "Business Analysis",
+          "role": "Junior Business Analyst"
+        },
+        "hourlyRate": "0.10",
+        "dailyRate": "1.90",
+        "gstIncluded": true
+      }
+    ],
+    "caseStudies": [
+      {
+        "id": "1",
+        "links": {
+          "edit": "#edit",
+          "delete": "#delete"
+        },
+        "timeframe": "2015-2016",
+        "company": "Example Pty Ltd",
+        "title": "Gizmo Refactoring",
+        "sections": [
+          {
+            "title": "In the beginning",
+            "content": "we did good"
+          }
+        ]
+      }
+    ]
   }
 }
