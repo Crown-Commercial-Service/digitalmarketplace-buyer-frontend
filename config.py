@@ -27,6 +27,7 @@ class Config(object):
     DM_DATA_API_AUTH_TOKEN = None
     DM_HTTP_PROTO = 'http'
     DM_DEFAULT_CACHE_MAX_AGE = 24*3600
+    DM_EMAIL_RETURN_ADDRESS = None
     DM_SEND_EMAIL_TO_STDERR = False
     DM_CACHE_TYPE = 'dev'
 
