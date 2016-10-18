@@ -28,16 +28,8 @@ a.card {
     background-color: $white;
 
     p:last-of-type {
-      background-color: $light-aqua;
-    }
-  }
-
-  div {
-    &:last-of-type {
-      font-size: rem(17);
-      color: $non-black;
-      border-bottom: 1px solid $light-aqua;
       display: inline-block;
+      background-color: $light-aqua;
     }
   }
 
@@ -69,6 +61,12 @@ a.card {
         display: block;
       }
     }
+
+    &:last-of-type {
+      color: $non-black;
+      border-bottom: 1px solid $light-aqua;
+      display: inline-block;
+     }
   }
 
   &::after {
