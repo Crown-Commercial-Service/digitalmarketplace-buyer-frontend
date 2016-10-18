@@ -56,23 +56,6 @@
         "gstIncluded": true
       }
     ],
-    "caseStudies": [
-      {
-        "id": "1",
-        "links": {
-          "edit": "#edit",
-          "delete": "#delete"
-        },
-        "timeframe": "2015-2016",
-        "company": "Example Pty Ltd",
-        "title": "Gizmo Refactoring",
-        "sections": [
-          {
-            "title": "In the beginning",
-            "content": "we did good"
-          }
-        ]
-      }
-    ]
+    "case_study_ids": [1]
   }
 }

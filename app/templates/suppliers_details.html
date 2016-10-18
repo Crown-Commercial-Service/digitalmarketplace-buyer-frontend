@@ -55,7 +55,7 @@
         <dl class="visually-hidden">
           <dt>Capabilities</dt>
         </dl>
-        {% for category in supplier_categories|sort() %}
+        {% for category in supplier["categories"]|sort() %}
         <dd>
           <a href="#" class="disabled">{{ category }}</a>
         </dd>
@@ -63,16 +63,18 @@
       </footer>
     </article>
   </li>
+  {% if supplier["caseStudies"]|count > 0 %}
   <li>
     <p>Case Studies</p>
     <article>
-      {% for casestudy in supplier_casestudies %}
+      {% for casestudy in supplier["caseStudies"] %}
         {% with component = render_component('bundles/CaseStudy/CaseStudyViewWidget.js',{ "casestudy": casestudy }) %}
           {% include "_react_component.html" %}
         {% endwith %}
       {%  endfor %}
     </article>
   </li>
+  {% endif %}
   <li>
     <p>Contact</p>
     <article>
