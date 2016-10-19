@@ -18,6 +18,7 @@ class TestSuppliersPage(BaseApplicationTest):
 
         self.supplier = self._get_supplier_fixture_data()
         self.supplier_with_minimum_data = self._get_supplier_with_minimum_fixture_data()
+        self.case_study = self._get_case_study_fixture_data()
 
     def teardown(self):
         self._data_api_client.stop()
@@ -40,6 +41,7 @@ class TestSuppliersPage(BaseApplicationTest):
     def test_suppliers_can_see_own_page(self, api_client):
         self.login_as_supplier(supplier_code=1234)
         api_client.return_value.get_supplier.return_value = self.supplier
+        api_client.return_value.get_case_study.return_value = self.case_study
 
         res = self.client.get(self.url_for('main.get_supplier', code=1234))
         document = html.fromstring(res.get_data(as_text=True))
@@ -50,6 +52,7 @@ class TestSuppliersPage(BaseApplicationTest):
     def test_should_have_supplier_details_on_supplier_page(self, api_client):
         self.login_as_buyer()
         api_client.return_value.get_supplier.return_value = self.supplier
+        api_client.return_value.get_case_study.return_value = self.case_study
 
         res = self.client.get(self.url_for('main.get_supplier', code=1))
         document = html.fromstring(res.get_data(as_text=True))
@@ -60,6 +63,7 @@ class TestSuppliersPage(BaseApplicationTest):
     def test_should_show_supplier_with_minimum_data(self, api_client):
         self.login_as_buyer()
         api_client.return_value.get_supplier.return_value = self.supplier_with_minimum_data
+        api_client.return_value.get_case_study.return_value = self.case_study
 
         res = self.client.get(self.url_for('main.get_supplier', code=1))
         document = html.fromstring(res.get_data(as_text=True))

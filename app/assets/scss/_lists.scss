@@ -24,13 +24,26 @@
     h3 {
       min-height: auto;
     }
+    p {
+      min-height: 2.4em;
+    }
+  }
+}
+
+.list-vertical--thirds {
+  width: 65%;
+
+  > li {
+    padding-top: 9px;
+    flex: none;
+    border-top: 4px solid $light-aqua;
   }
 }
 
 .list-horizontal,
 .list-vertical,
 .list-vertical--thirds,
-.list-vertical--fourths, {
+.list-vertical--fourths {
   > li {
     article {
       width: 100%;

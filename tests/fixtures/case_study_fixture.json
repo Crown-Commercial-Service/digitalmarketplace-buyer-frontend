@@ -1,0 +1,21 @@
+{"caseStudy":
+{
+  "company": "Example Pty Ltd",
+  "createdAt": "2016-10-14T13:55:03.276000+00:00",
+  "id": 1,
+  "links": {
+    "self": "http://localhost:5000/work-orders/1",
+    "supplier": "http://localhost:5000/suppliers/1"
+  },
+  "sections": [
+    {
+      "content": "we did good",
+      "title": "In the beginning"
+    }
+  ],
+  "supplierCode": 1,
+  "supplierName": "Alpha Digital Consulting Group",
+  "timeframe": "2015-2016",
+  "title": "Gizmo Refactoring"
+}
+}

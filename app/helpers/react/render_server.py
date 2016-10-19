@@ -54,7 +54,7 @@ class RenderServer(object):
             }
         })
 
-        serialized_props = json.dumps(props, cls=JSONEncoder)
+        serialized_props = json.dumps(dict(props), cls=JSONEncoder)
 
         if not current_app.config.get('REACT_RENDER', ''):
             return RenderedComponent('', serialized_props)

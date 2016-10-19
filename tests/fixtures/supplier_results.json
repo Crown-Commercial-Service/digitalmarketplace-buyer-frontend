@@ -20,6 +20,7 @@
             "state": "NSW",
             "suburb": "Surry Hills"
           },
+          "case_study_ids": [1],
           "code": 119,
           "contacts": [
             {

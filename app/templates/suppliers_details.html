@@ -55,7 +55,7 @@
         <dl class="visually-hidden">
           <dt>Capabilities</dt>
         </dl>
-        {% for category in supplier_categories|sort() %}
+        {% for category in supplier["categories"]|sort() %}
         <dd>
           <a href="#" class="disabled">{{ category }}</a>
         </dd>
@@ -63,6 +63,21 @@
       </footer>
     </article>
   </li>
+  {% if supplier["caseStudies"]|count > 0 %}
+  <li>
+    <p>Case Studies</p>
+    <ul class="list-vertical--thirds">
+
+      {% for casestudy in supplier["caseStudies"] %}
+        <li>
+        <article>
+        <h3><a href="{{ url_for('.get_supplier_case_study', casestudy_id=casestudy.id) }}">{{ casestudy.title  }}</a></h3>
+        <p><small>{{ casestudy.company }}</small></p>
+        </article>
+      {%  endfor %}
+    </ul>
+  </li>
+  {% endif %}
   <li>
     <p>Contact</p>
     <article>
