@@ -50,9 +50,9 @@
             <p>This will show you what the supplier application deadline will be if you publish your requirements today.</p>
           </div>
         {% else %}
-          <p>Your requirements will be open for {{ dates.application_open_weeks }}.</p>
+          <p>Your requirements will be open for {{ brief.dates.application_open_weeks }}.</p>
           <div class="dmspeak">
-            <p>If you publish your requirements today ({{ dates.published_date | shortdateformat }}), suppliers will be able to apply until {{ dates.closing_time }}, {{ dates.closing_date | shortdateformat}}.</p>
+            <p>If you publish your requirements today ({{ current_date|shortdateformat }}), suppliers will be able to apply until {{ brief.dates.hypothetical_closing_time | datetimeformat }}.</p>
           </div>
         {% endif %}
     {% endif %}
@@ -100,7 +100,7 @@
         {% endcall %}
         {% if brief.questionAndAnswerSessionDetails %}
           {% call summary.row(bold_border=True) %}
-            {{ summary.field_heading_date("Before {}".format(dates.questions_close | shortdateformat), rowspan='3', scope='row') }}
+            {{ summary.field_heading_date("Before {}".format(brief.dates.questions_close | shortdateformat), rowspan='3', scope='row') }}
             {{ summary.text_bold("Details of your question and answer session") }}
             {% if not published %}
               {{ summary.edit_link("Edit", url_for('.edit_brief_question', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id, section_slug=question_and_answers.slug, question_id=question_and_answers.id)) }}
@@ -110,19 +110,19 @@
             {{ summary.text(brief.questionAndAnswerSessionDetails) }}
           {% endcall %}
           {% call summary.row(no_border=True) %}
-            {{ summary.text_bold("You must hold your question and answer session before {}.".format(dates.questions_close | shortdateformat), border=True) }}
+            {{ summary.text_bold("You must hold your question and answer session before {}.".format(brief.dates.questions_close | shortdateformat), border=True) }}
           {% endcall %}
         {% endif %}
         {% call summary.row(bold_border=True) %}
-          {{ summary.field_heading_date(dates.questions_close | shortdateformat, scope='row') }}
+          {{ summary.field_heading_date(brief.dates.questions_close | shortdateformat, scope='row') }}
           {{ summary.text("The last day suppliers can ask questions.") }}
         {% endcall %}
         {% call summary.row(bold_border=True) %}
-          {{ summary.field_heading_date(dates.answers_close | shortdateformat, scope='row') }}
+          {{ summary.field_heading_date(brief.dates.answers_close | shortdateformat, scope='row') }}
           {{ summary.text("You must have published answers to all suppliers’ questions.") }}
         {% endcall %}
         {% call summary.row(bold_border=True) %}
-          {{ summary.field_heading_date(dates.closing_date | shortdateformat, scope='row') }}
+          {{ summary.field_heading_date(brief.dates.closing_date | shortdateformat, scope='row') }}
           {{ summary.text("The last day suppliers can apply.") }}
         {% endcall %}
       {% endcall %}

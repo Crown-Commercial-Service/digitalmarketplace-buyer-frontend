@@ -4,6 +4,7 @@ from dmutils.email import send_email, EmailError, hash_email
 from flask.globals import current_app
 import six
 import unicodecsv
+import pendulum
 
 from flask import abort, render_template, request, redirect, url_for, flash, Response
 from flask_login import current_user
@@ -20,7 +21,6 @@ from dmutils.forms import render_template_with_csrf
 from dmutils.logging import notify_team
 
 from dmapiclient import HTTPError, APIError
-from dmutils.dates import get_publishing_dates
 
 
 @buyers.route('/buyers')
@@ -369,6 +369,8 @@ def download_brief_responses(framework_slug, lot_slug, brief_id):
 
 @buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/publish', methods=['GET', 'POST'])
 def publish_brief(framework_slug, lot_slug, brief_id):
+    TZ = current_app.config['DM_TIMEZONE']
+
     get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
     brief = data_api_client.get_brief(brief_id)["briefs"]
 
@@ -416,7 +418,6 @@ def publish_brief(framework_slug, lot_slug, brief_id):
     else:
 
         email_address = brief_users['emailAddress']
-        dates = get_publishing_dates(brief)
 
         return render_template_with_csrf(
             "buyers/brief_publish_confirmation.html",
@@ -425,25 +426,25 @@ def publish_brief(framework_slug, lot_slug, brief_id):
             unanswered_required=unanswered_required,
             sections=sections,
             brief=brief,
-            dates=dates
+            current_date=pendulum.now(TZ)
         )
 
 
 @buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/timeline', methods=['GET'])
 def view_brief_timeline(framework_slug, lot_slug, brief_id):
+    TZ = current_app.config['DM_TIMEZONE']
+
     get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
     brief = data_api_client.get_brief(brief_id)["briefs"]
     if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id) or brief.get('status') != 'live':
         abort(404)
 
-    dates = get_publishing_dates(brief)
-
     return render_template(
         "buyers/brief_publish_confirmation.html",
         email_address=brief['users'][0]['emailAddress'],
         published=True,
-        brief=brief,
-        dates=dates
+        current_date=pendulum.now(TZ),
+        brief=brief
     )
 
 
@@ -540,10 +541,8 @@ def send_new_opportunity_email_to_sellers(brief_json, brief_url):
         to_email_addresses += brief_json['sellerEmailList']
 
     if to_email_addresses:
-
         email_body = render_template(
             'emails/seller_new_opportunity.html',
-            dates=get_publishing_dates(brief_json),
             brief_url=brief_url
         )
 
