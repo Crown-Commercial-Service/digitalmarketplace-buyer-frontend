@@ -66,13 +66,16 @@
   {% if supplier["caseStudies"]|count > 0 %}
   <li>
     <p>Case Studies</p>
-    <article>
+    <ul class="list-vertical--thirds">
+
       {% for casestudy in supplier["caseStudies"] %}
-        {% with component = render_component('bundles/CaseStudy/CaseStudyViewWidget.js',{ "casestudy": casestudy }) %}
-          {% include "_react_component.html" %}
-        {% endwith %}
+        <li>
+        <article>
+        <h3><a href="{{ url_for('.get_supplier_case_study', casestudy_id=casestudy.id) }}">{{ casestudy.title  }}</a></h3>
+        <p><small>{{ casestudy.company }}</small></p>
+        </article>
       {%  endfor %}
-    </article>
+    </ul>
   </li>
   {% endif %}
   <li>
