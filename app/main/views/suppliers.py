@@ -55,7 +55,7 @@ def get_supplier(code):
     )
 
 
-@main.route('/supplier/case-study/<int:casestudy_id>')
+@main.route('/case-study/<int:casestudy_id>')
 @login_required
 def get_supplier_case_study(casestudy_id):
     casestudy = DataAPIClient().get_case_study(casestudy_id)['caseStudy']
