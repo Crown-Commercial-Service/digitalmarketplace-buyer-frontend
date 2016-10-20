@@ -12,8 +12,7 @@ machine:
     - sudo chmod +x /usr/local/bin/ecs-cli
     - /usr/local/bin/ecs-cli --version
     # For integration tests
-    - sudo chmod -R o+r /usr/local/lib/python2.7/dist-packages
-    - pip install mozdownload mozinstall
+    - sudo pip install mozdownload mozinstall
     - mozdownload --version latest --destination firefox.tar.bz2
     - mozinstall firefox.tar.bz2
     - wget -O geckodriver.tar.gz https://github.com/mozilla/geckodriver/releases/download/v0.10.0/geckodriver-v0.10.0-linux64.tar.gz
