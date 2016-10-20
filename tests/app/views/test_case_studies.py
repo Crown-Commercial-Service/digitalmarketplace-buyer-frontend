@@ -1,5 +1,6 @@
 # coding: utf-8
 import mock
+import pytest
 from lxml import html
 
 from ...helpers import BaseApplicationTest
