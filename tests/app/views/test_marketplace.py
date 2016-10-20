@@ -485,6 +485,36 @@ class TestBriefPage(BaseApplicationTest):
 
         self._assert_view_application(document, brief_id)
 
+    def test_new_supplier_flow_feature_flag_shows_correct_message_and_button_when_on(self):
+        self.app.config['FEATURE_FLAGS_NEW_SUPPLIER_FLOW'] = True
+        brief_id = self.brief['briefs']['id']
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
+        assert_equal(200, res.status_code)
+        text = res.get_data(as_text=True)
+        document = html.fromstring(text)
+
+        message = "To apply, you must give evidence for all the essential and nice-to-have " \
+                  "skills and experience you have."
+        button = document.xpath('//*[@class="link-button-with-advice"]')[0]
+
+        assert message in text
+        assert button.text == 'Apply'
+
+    def test_new_supplier_flow_feature_flag_does_not_show_message_when_off(self):
+        self.app.config['FEATURE_FLAGS_NEW_SUPPLIER_FLOW'] = False
+        brief_id = self.brief['briefs']['id']
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
+        assert_equal(200, res.status_code)
+        text = res.get_data(as_text=True)
+        document = html.fromstring(text)
+
+        message = "To apply, you must give evidence for all the essential and nice-to-have " \
+                  "skills and experience you have."
+        button = document.xpath('//*[@class="link-button"]')[0]
+
+        assert message not in text
+        assert button.text == 'Start application'
+
 
 class TestCatalogueOfBriefsPage(BaseApplicationTest):
     def setup(self):
