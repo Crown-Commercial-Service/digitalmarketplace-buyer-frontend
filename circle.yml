@@ -11,6 +11,11 @@ machine:
     - sudo curl -o /usr/local/bin/ecs-cli https://s3.amazonaws.com/amazon-ecs-cli/ecs-cli-linux-amd64-latest
     - sudo chmod +x /usr/local/bin/ecs-cli
     - /usr/local/bin/ecs-cli --version
+    # For integration tests
+    - wget -O geckodriver.tar.gz https://github.com/mozilla/geckodriver/releases/download/v0.10.0/geckodriver-v0.10.0-linux64.tar.gz
+    - gunzip -c geckodriver.tar.gz | tar xopf -
+    - chmod +x geckodriver
+    - sudo mv geckodriver /home/ubuntu/bin
 
 dependencies:
   pre:
