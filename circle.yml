@@ -30,6 +30,7 @@ deployment:
     commands:
       - cf login -a https://api.system.staging.digital.gov.au -o dto -u $CF_USER_STAGING -p $CF_PASSWORD_STAGING
       - APP_GROUP=dm-dev-buyer HOSTNAME=dm-dev DOMAIN=apps.staging.digital.gov.au MANIFEST=service.gov.au-manifest.staging.yml ./scripts/cf_deploy_all.sh
+      - py.test -x ./tests/integration
 
   production:
     tag: /release-.*/
