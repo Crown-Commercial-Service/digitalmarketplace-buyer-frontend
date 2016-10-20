@@ -9,16 +9,6 @@ import mock
 from lxml import html
 import pytest
 
-BRIEF_DATES = {
-    "answers_close": None,
-    "application_open_weeks": "2 weeks",
-    "closing_date": None,
-    "closing_time": None,
-    "hypothetical_closing_time": "2016-04-02T20:10:00.00000+00:00",
-    "published_date": None,
-    "questions_close": None
-}
-
 
 @mock.patch('app.buyers.views.buyers.data_api_client')
 class TestBuyerDashboard(BaseApplicationTest):
@@ -1012,7 +1002,6 @@ class TestPublishBrief(BaseApplicationTest):
             'workingArrangements': 'arrangements',
             'workplaceAddress': 'address',
             'requirementsLength': '1 week'
-            # 'dates': DATES
         })
         data_api_client.get_brief.return_value = brief_json
 
@@ -1128,7 +1117,6 @@ class TestPublishBrief(BaseApplicationTest):
         brief_json = api_stubs.brief(status="draft")
         brief_questions = brief_json['briefs']
         brief_questions.update({
-            'dates': BRIEF_DATES,
             'backgroundInformation': 'test background info',
             'contractLength': 'A very long time',
             'culturalFitCriteria': ['CULTURAL', 'FIT'],
@@ -1175,7 +1163,6 @@ class TestPublishBrief(BaseApplicationTest):
         brief_json = api_stubs.brief(status="draft")
         brief_questions = brief_json['briefs']
         brief_questions.update({
-            'dates': BRIEF_DATES,
             'requirementsLength': '1 week'
         })
         data_api_client.get_brief.return_value = brief_json
@@ -1189,7 +1176,6 @@ class TestPublishBrief(BaseApplicationTest):
         assert res.status_code == 200
         assert 'Publish requirements' not in page_html
 
-    @pytest.mark.skip
     def test_warning_about_setting_requirement_length_is_not_displayed_if_not_specialist_brief(self, data_api_client):
         self.login_as_buyer()
         data_api_client.get_framework.return_value = api_stubs.framework(
@@ -1233,7 +1219,6 @@ class TestPublishBrief(BaseApplicationTest):
         assert 'This will show you what the supplier application deadline will be' in page_html
         assert 'Your requirements will be open for' not in page_html
 
-    @pytest.mark.skip
     def test_correct_content_is_displayed_if_requirementLength_is_1_week(self, data_api_client):
         self.login_as_buyer()
         data_api_client.get_framework.return_value = api_stubs.framework(
@@ -1246,22 +1231,19 @@ class TestPublishBrief(BaseApplicationTest):
 
         brief_json = api_stubs.brief(status="draft")
         brief_questions = brief_json['briefs']
-        brief_questions.update({
-            'requirementsLength': '1 week'
-        })
+        brief_questions['requirementsLength'] = '1 week'
+        brief_questions['dates']['hypothetical']['application_open_weeks'] = '1 week'
         data_api_client.get_brief.return_value = brief_json
 
         res = self.client.get(self.expand_path("/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
                                                "digital-specialists/1234/publish"))
 
         page_html = res.get_data(as_text=True)
-
         assert res.status_code == 200
-        assert 'Your requirements will be open for 1 week.' in page_html
+        assert '1 week.' in page_html
         assert 'This will show you what the supplier application deadline will be' not in page_html
         assert 'Your requirements will be open for 2 weeks' not in page_html
 
-    @pytest.mark.skip
     def test_correct_content_is_displayed_if_requirementLength_is_2_weeks(self, data_api_client):
         self.login_as_buyer()
         data_api_client.get_framework.return_value = api_stubs.framework(
@@ -1274,9 +1256,8 @@ class TestPublishBrief(BaseApplicationTest):
 
         brief_json = api_stubs.brief(status="draft")
         brief_questions = brief_json['briefs']
-        brief_questions.update({
-            'requirementsLength': '2 weeks'
-        })
+        brief_questions['requirementsLength'] = '2 weeks'
+        brief_questions['dates']['hypothetical']['application_open_weeks'] = '2 weeks'
         data_api_client.get_brief.return_value = brief_json
 
         res = self.client.get(self.expand_path(
@@ -1289,36 +1270,6 @@ class TestPublishBrief(BaseApplicationTest):
         assert 'Your requirements will be open for 2 weeks.' in page_html
         assert 'This will show you what the supplier application deadline will be' not in page_html
         assert 'Your requirements will be open for 1 week' not in page_html
-
-    def test_correct_content_is_displayed_if_requirementLength_is_not_set(self, data_api_client):
-        self.login_as_buyer()
-        data_api_client.get_framework.return_value = api_stubs.framework(
-            slug='digital-outcomes-and-specialists',
-            status='live',
-            lots=[
-                api_stubs.lot(slug='digital-specialists', allows_brief=True)
-            ]
-        )
-
-        brief_json = api_stubs.brief(status="draft")
-        brief_questions = brief_json['briefs']
-        brief_questions.update({
-            'requirementsLength': None
-        })
-        data_api_client.get_brief.return_value = brief_json
-
-        res = self.client.get(self.expand_path(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
-            "digital-specialists/1234/publish"
-        ))
-        page_html = res.get_data(as_text=True)
-        document = html.fromstring(page_html)
-
-        assert res.status_code == 200
-        assert 'Your requirements will be open for 2 weeks.' not in page_html
-        assert 'This will show you what the supplier application deadline will be' in page_html
-        assert 'Your requirements will be open for 1 week' not in page_html
-        assert not document.xpath('//a[contains(text(), "Set how long your requirements will be live for")]')
 
 
 @mock.patch('app.buyers.views.buyers.data_api_client')
@@ -2196,17 +2147,6 @@ class TestViewQuestionAndAnswerDates(BaseApplicationTest):
                 ]
             )
             brief_json = api_stubs.brief(status="live")
-            dates = {
-                "answers_close": "2016-10-19T07:00:00+00:00",
-                "application_open_weeks": "2 weeks",
-                "closing_date": "2016-10-20",
-                "closing_time": "2016-10-20T07:00:00+00:00",
-                "hypothetical_closing_time": None,
-                "published_date": "2016-10-06",
-                "questions_close": "2016-10-13T07:00:00+00:00"
-            }
-
-            brief_json['briefs']['dates'] = dates
             brief_json['briefs']['requirementsLength'] = '2 weeks'
             brief_json['briefs']['publishedAt'] = u"2016-10-06T04:44:48.883669+00:00"
             brief_json['briefs']['specialistRole'] = 'communicationsManager'
