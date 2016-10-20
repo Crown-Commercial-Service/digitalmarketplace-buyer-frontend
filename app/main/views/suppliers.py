@@ -1,8 +1,9 @@
 # coding=utf-8
 import re
 
-from flask import render_template, current_app, flash, jsonify, redirect, url_for
+from flask import render_template, current_app, flash, jsonify, redirect, url_for, request
 from flask_login import current_user, login_required
+from wtforms.csrf.session import SessionCSRF
 import flask_featureflags
 
 from app.main import main
@@ -10,6 +11,7 @@ from app.api_client.data import DataAPIClient
 from app.api_client.error import APIError
 from app.helpers.react.render import render_component
 from app.helpers.shared_helpers import request_wants_json
+from dmutils.forms import DmForm
 
 
 def can_view_supplier_page(code):
@@ -82,8 +84,9 @@ def new_supplier_case_study():
     if not current_user.role == 'supplier':
         flash('buyer-role-required', 'error')
         return current_app.login_manager.unauthorized()
-
-    rendered_component = render_component('bundles/CaseStudy/CaseStudyWidget.js', {})
+    form = DmForm()
+    rendered_component = render_component('bundles/CaseStudy/CaseStudyWidget.js',
+                                          {'form_options': {'csrf_token': form.csrf_token.current_token}})
     return render_template(
         '_react.html',
         component=rendered_component
@@ -97,15 +100,27 @@ def create_new_supplier_case_study():
         flash('buyer-role-required', 'error')
         return current_app.login_manager.unauthorized()
 
-    casestudy = {'supplierCode': current_user.supplier_code}
+    casestudy = {}
+    for key in request.form.keys():
+        if key not in ['csrf_token']:
+            value = request.form.getlist(key)
+            if len(value) == 1 and key not in ['projectLinks', 'outcome']:
+                casestudy[key] = value[0]
+            else:
+                casestudy[key] = value
+    casestudy['supplierCode'] = current_user.supplier_code
 
     try:
-        work_order = DataAPIClient().create_work_order(
+        case_study = DataAPIClient().create_case_study(
             caseStudy=casestudy
-        )['workOrder']
+        )['caseStudy']
 
     except APIError as e:
-        rendered_component = render_component('bundles/CaseStudy/CaseStudyWidget.js', {'errors':e.message})
+        form = DmForm()
+        rendered_component = render_component('bundles/CaseStudy/CaseStudyWidget.js',
+                                              {'errors': e.message,
+                                               'form_options': {'csrf_token': form.csrf_token.current_token},
+                                               'caseStudy': casestudy})
         return render_template(
             '_react.html',
             component=rendered_component
@@ -113,7 +128,7 @@ def create_new_supplier_case_study():
 
     return redirect(
         url_for(
-            'suppliers.get_supplier_case_study',
-            work_order_id=work_order['id'],
+            'main.get_supplier_case_study',
+            casestudy_id=case_study['id'],
         )
     )
