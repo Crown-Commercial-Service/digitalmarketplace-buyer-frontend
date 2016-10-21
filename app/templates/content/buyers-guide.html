@@ -5,81 +5,122 @@
 {% block body_classes %}buyers-guide secondary-page{% endblock %}
 
 {% block main_content %}
-  <h1>Buying from the Digital Marketplace</h1>
-
-  <h2>Digital Marketplace overview</h2>
+  <h1>Buyer's guide</h1>
   <p>
-    The Digital Marketplace makes it easy to engage digital specialist services. As an agile development, the Marketplace will expand over time to offer more services, more sellers and ways to do business.
+    The Digital Marketplace makes it easier for government buyers to engage specialist digital services. As an agile development, the Marketplace will grow over time to offer more services, more sellers and more ways to do business.
   </p>
 
-  <h2>What can you buy</h2>
-  
-  <h3>Digital specialists</h3>
+  <h3>Introducing our buyers</h3>
   <p>
-    These are individual specialists with the skills essential to deliver today’s digital projects. Find out more about the <a href="{{ url_for('main.roles_and_services') }}">capabilities</a> available, including guidance on the rates you might expect to pay.
+    If you work in government and you need to procure digital services you can become a buyer in the Digital Marketplace.
   </p>
-  
+  <p>
+    Our buyers are from across all levels of government — local, state and federal — and from corporate government entities such as the ABC and Melbourne Water.
+  </p>
+
+  <p>
+    If you have an email address ending in <b>.gov.au</b> you can create a buyer account now.
+  </p>
+  <p>
+    If you work in government but your email is different we will need to confirm you are a government entity before you can register. Email your request to <a href="mailto:marketplace@digital.gov.au">marketplace@digital.gov.au</a>
+  </p>
+
+  <br>
+
+  <p>
+    <a href="{{ url_for('main.buyer_signup') }}" role="button">Create a buyer account</a>
+  </p>
+
+  <h3>Who are the sellers</h3>
+
+  <p>
+    There are <a href="{{ url_for('main.supplier_search') }}">hundreds of sellers</a> in the Marketplace who can deliver professional services and outcomes for digital projects.
+  </p>
+  <p>
+    All sellers in the Marketplace are members of the Digital Service Professionals Panel (SON3364729) and have accepted the Marketplace’s <a href="{{ asset_path }}media/documents/DSPP_Deed_of_Standing_Offer.pdf">Deed of Standing Offer</a>. This deed provides the basis of any contract you enter for services procured through the Marketplace.
+  </p>
+  <p>
+    Every Marketplace seller has been through an approval process, but you still need to make your own assessment about whether a seller is suitable for your own project.
+  </p>
+
+  <h2>What you can buy</h2>
+
   <h3>Outcomes</h3>
   <p>
-    If you need a team of digital specialists with the expertise to deliver an outcome, for example a booking system or a website redesign and development.
+    If you need a team of digital specialists with the expertise to deliver an outcome, such as a new responsive website or an accessibility audit, you can find them in the Marketplace.
   </p>
 
-  <h2>About the sellers</h2>
   <p>
-    There are more than 200 sellers in the Digital Marketplace who can deliver professional services and outcomes for digital projects. You’ll need to make your own assessment about whether a seller has the skills, experience and suitability for your own project.
-  </p>
-  <p>
-    All sellers in the Digital Marketplace are members of the Digital Service Professionals Panel (SON3364729) and have accepted the Marketplace’s <a href="{{ asset_path }}media/documents/DSPP_Deed_of_Standing_Offer.pdf" target="_blank">Deed of Standing Offer</a>. This deed provides the basis of any contract you enter for services procured through the Marketplace. This panel was established through an open approach to market by the Digital Transformation Office.
-  </p>
-  
-  <h2>How to find and engage sellers for your digital project</h2>
-  <p>
-    There are 2 ways to engage sellers on the Digital Marketplace.
+    <a role="button" href="{{url_for('main.info_page_for_starting_a_brief', framework_slug='digital-service-professionals', lot_slug='digital-outcome')}}">Create a brief for an outcome</a>
   </p>
 
-  <h3>Publish a brief</h3>
+  <h3>Specialists</h3>
+  <p>
+    Engage individual specialists with the <a href="{{ url_for('main.roles_and_services') }}">essential skills</a> to deliver today’s digital projects through the Marketplace.
+  </p>
+
+  <p>
+    <a role="button" href="{{url_for('main.info_page_for_starting_a_brief', framework_slug='digital-service-professionals', lot_slug='digital-professionals')}}">Create a brief for an individual</a>
+  </p>
+
+  <h2>How to buy</h2>
+
+  <h3>Publishing a brief</h3>
+
   <p>
     Publish a brief of your requirements and evaluation criteria in the Marketplace for 1 or 2 weeks. Sellers can apply online if they meet the essential evaluation criteria you’ve set, and are available when you need them. After your brief closes, you’ll only need to evaluate in detail the number of sellers you said you would consider (for example, just the top 3 responses).
   </p>
-
-  <h3>Publish brief to selected sellers</h3>
   <p>
     If you want to limit the number of sellers who can respond, at the end of building your brief you can choose to invite one or more sellers to respond. Your brief will still be published in the Marketplace but only the sellers you nominate are able to apply.
   </p>
 
+
+
+
+
+  <h3>Awarding a contract</h3>
+  <p>
+    After shortlisting and evaluating sellers who respond to your brief you can award a contract by creating and signing a Work Order.
+  </p>
+  <p>
+    When you’re logged in and viewing your <a href="{{ url_for('buyers.buyer_dashboard') }}">dashboard</a> simply click the link for ‘create a work order’ beside any closed briefs.
+  </p>
+  <p>
+    Some of the information will be pre-filled in based on the information from your brief, some you will have to provide with the help of your chosen seller. Once complete, you can print and sign creating the contract.
+  </p>
+
   <h2>Documents and templates</h2>
   <p>
-    <a href="{{ asset_path }}media/documents/Requirements_Brief_Template.xlsx" target="_blank">Draft requirements template</a><br>
-    Use this template if you want to develop and socialise your requirements before creating a brief in the Digital Marketplace.
+    <a href="{{ asset_path }}media/documents/Requirements_Brief_Template.xlsx" target="_blank">Download Draft requirements template</a><br>
+    Use this template if you want to develop a brief with your team before creating and publishing a brief in the Marketplace.
   </p>
   <p>
-    <a href="{{ asset_path }}media/documents/Scoring_Template.xlsx" target="_blank">Evaluation template</a><br>
-    Use this template when evaluating which seller best meets your needs after you’ve shortlisted the responses to your requirements brief.
+
+    <a href="{{ asset_path }}media/documents/Scoring_Template.xlsx" target="_blank">Download Evaluation template</a><br>
+    Use this template when evaluating which seller best meets your needs after you’ve shortlisted the responses to your brief.
   </p>
   <p>
-    <a href="{{ asset_path }}media/documents/DSPP_Deed_of_Standing_Offer.pdf" target="_blank">Deed of Standing Offer</a><br>
+    <a href="{{ asset_path }}media/documents/DSPP_Deed_of_Standing_Offer.pdf" target="_blank">View Deed of Standing Offer</a><br>
     This document details the terms under which sellers are contracted through the Digital Marketplace.
   </p>
 
   <h2>Commonwealth Procurement Rules</h2>
   <p>
-    All sellers listed in the Digital Marketplace are on the Digital Service Professionals Panel (SON3364729). This panel was established through an open approach to market by the Digital Transformation Office and has complied with the requirements of conducting an open tender as set out in the  Commonwealth Procurement Rules. All panel members have executed a Deed of Standing Offer which can be accessed <a href="{{ asset_path }}media/documents/DSPP_Deed_of_Standing_Offer.pdf">here</a>.
+    All sellers listed in the Marketplace are on the Digital Service Professionals Panel (SON3364729).
   </p>
   <p>
-    Although the Digital Marketplace makes it easy to comply with the Commonwealth Procurement Rules as a government buyer, you are still responsible for complying with these rules and any Accountable Authority Instructions related to procurement in your agency or issued by the Department of Finance. If you’re not sure of these requirements, please check with the procurement section in your own agency.
+    This panel was established through an open approach to market by the Digital Transformation Office and meets the requirements of an open tender as set out in the Commonwealth Procurement Rules.
   </p>
   <p>
-    Local, state and territory government buyers are welcome to use the Digital Marketplace but should make sure that they comply with any additional procurement rules that apply in their state or territory.
+    Although the Marketplace makes it easy to comply with the Commonwealth Procurement Rules, you’re still responsible for complying with these rules and any Accountable Authority Instructions related to procurement in your agency or issued by the Department of Finance. If you’re not sure of these requirements, please check with the procurement team in your own agency.
   </p>
-
-  <h2>Where can I get help?</h2>
   <p>
-    You can get help from your agency’s procurement team. You can also contact the Digital Marketplace team through <a href="mailto:marketplace@digital.gov.au">marketplace@digital.gov.au</a>, especially if you have any questions or feedback about the Digital Marketplace itself.
+    Local, state and territory government buyers are welcome to use the Marketplace but should make sure that they comply with any additional procurement rules that apply in their state or territory.
   </p>
 
-  <h2>Contact us</h2>
+  <h2>Want to know more?</h2>
+
   <p>
-    The Digital Marketplace is an agile development in its beta stage. This means the site will evolve over time in response to user needs. If you have any questions, feedback or would like to be involved in user research, email us at <a href="mailto:marketplace@digital.gov.au">marketplace@digital.gov.au</a>.
+    The Digital Marketplace is an agile development in Beta. This means it will evolve over time in response to user needs. If you have any questions, feedback or would like to be involved in user research, email us at <a href="mailto:marketplace@digital.gov.au">marketplace@digital.gov.au</a>
   </p>
 {% endblock %}
-
