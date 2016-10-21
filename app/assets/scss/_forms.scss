@@ -142,8 +142,20 @@
 
 form {
 
-  .form-control {
+  .form-control, .field {
     @include form-control;
+  }
+
+  .validation-message {
+    color: $error-colour;
+    display: block;
+    font-size: rem(14);
+    font-weight: $base-font-weight;
+  }
+
+  .hint {
+    color: $grey;
+    margin-bottom: 0;
   }
 
   .question-heading, legend {
@@ -201,6 +213,33 @@ form {
 
     &::after {
       top: 17px;
+    }
+  }
+
+  .list-entry {
+    .text-box-number-label + input[class='text-box'] {
+      width: 80%;
+    }
+    .button-secondary {
+      margin-left: 1em;
+    }
+  }
+
+  /* TODO I think there is a link mixin from UI Kit. */
+  .button-secondary {
+    @include link-colours($non-black, $light-aqua, $non-black);
+    display: inline;
+    background: none;
+    border: 0;
+    border-bottom: 1px solid $light-aqua;
+    font-weight: 400;
+    width: auto;
+    padding: 0;
+
+    &:hover,
+    &:focus {
+      background-color: $light-aqua;
+      color: $non-black;
     }
   }
 }
