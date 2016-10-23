@@ -9,10 +9,11 @@ from .exceptions import ReactRenderingError, RenderServerError
 
 
 class RenderedComponent(object):
-    def __init__(self, markup, props, slug):
+    def __init__(self, markup, props, slug, files):
         self.markup = markup
         self.props = props
         self.slug = slug
+        self.files = files
 
     def __str__(self):
         return self.markup
@@ -22,11 +23,11 @@ class RenderedComponent(object):
 
     def get_bundle(self):
         bundle_url = current_app.config.get('REACT_BUNDLE_URL', '/')
-        return bundle_url + self.slug + '.js'
+        return bundle_url + self.files.get(self.slug)
 
     def get_vendor_bundle(self):
         bundle_url = current_app.config.get('REACT_BUNDLE_URL', '/')
-        return bundle_url + 'vendor.js'
+        return bundle_url + self.files.get('vendor', 'vendor.js')
 
     def get_slug(self):
         return self.slug
@@ -93,6 +94,7 @@ class RenderServer(object):
         markup = obj.get('markup', None)
         err = obj.get('error', None)
         slug = obj.get('slug', 'main')
+        files = obj.get('files', dict())
 
         if err:
             if 'message' in err and 'stack' in err:
@@ -104,7 +106,7 @@ class RenderServer(object):
         if markup is None:
             raise ReactRenderingError('Render server failed to return markup. Returned: {}'.format(obj))
 
-        return RenderedComponent(markup, serialized_props, slug)
+        return RenderedComponent(markup, serialized_props, slug, files)
 
 
 render_server = RenderServer()
