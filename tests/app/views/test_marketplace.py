@@ -413,7 +413,7 @@ class TestBriefPage(BaseApplicationTest):
         assert len(document.xpath(
             '//a[@href="{0}"][contains(normalize-space(text()), normalize-space("{1}"))]'.format(
                 "/suppliers/opportunities/{}/responses/create".format(brief_id),
-                "Start application",
+                "Apply",
             )
         )) == 1
 
