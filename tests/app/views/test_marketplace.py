@@ -427,6 +427,7 @@ class TestBriefPage(BaseApplicationTest):
         )) == 1
 
     def test_unauthenticated_start_application(self):
+        self.app.config['FEATURE_FLAGS_NEW_SUPPLIER_FLOW'] = False
         brief_id = self.brief['briefs']['id']
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
         assert_equal(200, res.status_code)
@@ -435,6 +436,7 @@ class TestBriefPage(BaseApplicationTest):
         self._assert_start_application(document, brief_id)
 
     def test_buyer_start_application(self):
+        self.app.config['FEATURE_FLAGS_NEW_SUPPLIER_FLOW'] = False
         self.login_as_buyer()
         brief_id = self.brief['briefs']['id']
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
@@ -444,6 +446,7 @@ class TestBriefPage(BaseApplicationTest):
         self._assert_start_application(document, brief_id)
 
     def test_supplier_start_application(self):
+        self.app.config['FEATURE_FLAGS_NEW_SUPPLIER_FLOW'] = False
         self.login_as_supplier()
         # mocking that we haven't applied
         self._data_api_client.find_brief_responses.return_value = {
