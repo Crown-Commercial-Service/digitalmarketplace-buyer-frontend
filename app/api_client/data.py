@@ -38,6 +38,13 @@ class DataAPIClient(BaseAPIClient):
             data={"caseStudy": caseStudy},
         )
 
+    def delete_case_study(self, caseStudyId, user):
+        return self._delete_with_updated_by(
+            "/case-studies/{}".format(caseStudyId),
+            {},
+            user
+        )
+
     def get_roles(self, data=None, params=None):
         return self._get(
             "/roles",

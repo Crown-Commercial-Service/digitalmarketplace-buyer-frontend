@@ -49,8 +49,15 @@ class BaseAPIClient(object):
     def _post(self, url, data):
         return self._request("POST", url, data=data)
 
+    def _patch(self, url, data):
+        return self._request("PATCH", url, data=data)
+
     def _delete(self, url, data=None):
         return self._request("DELETE", url, data=data)
+
+    def _delete_with_updated_by(self, url, data, user):
+        data = dict(data, updated_by=user)
+        return self._delete(url, data)
 
     def _request(self, method, url, data=None, params=None):
         if not self.enabled:
