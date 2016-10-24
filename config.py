@@ -63,7 +63,7 @@ class Config(object):
 
     # Feature Flags
     RAISE_ERROR_ON_MISSING_FEATURES = True
-    FEATURE_FLAGS_NEW_SUPPLIER_FLOW = False
+    FEATURE_FLAGS_NEW_SUPPLIER_FLOW = True
 
     # LOGGING
     DM_LOG_LEVEL = 'DEBUG'
