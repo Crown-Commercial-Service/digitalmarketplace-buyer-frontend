@@ -7,6 +7,7 @@ from dmutils.forms import FakeCsrf
 from ...helpers import BaseApplicationTest
 
 test_case_study = {
+    "acknowledge": "on",
     "title": "Case Study Title",
     "opportunity": "The opportunity",
     "client": "The Client Name",
@@ -16,7 +17,7 @@ test_case_study = {
         "Outcome 1",
         "Outcome 2"
     ],
-    "links": [
+    "projectLinks": [
         "http://gov.au/"
     ]
 }

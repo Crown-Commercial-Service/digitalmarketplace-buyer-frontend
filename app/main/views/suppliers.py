@@ -7,8 +7,8 @@ from flask_login import current_user, login_required
 from app.main import main
 from app.api_client.data import DataAPIClient
 from app.api_client.error import APIError
-from app.helpers.react.response import from_response
-from app.helpers.react.render import render_component
+from react.response import from_response
+from react.render import render_component
 from app.helpers.shared_helpers import request_wants_json
 from dmutils.forms import DmForm
 
@@ -123,6 +123,17 @@ def create_new_supplier_case_study():
 
     casestudy = from_response(request)
     casestudy['supplierCode'] = current_user.supplier_code
+    errors = _validate_case_study(casestudy)
+    if errors:
+        form = DmForm()
+        rendered_component = render_component('bundles/CaseStudy/CaseStudyWidget.js',
+                                              {'form_options': {'csrf_token': form.csrf_token.current_token,
+                                                                'errors': errors},
+                                               'form': {'caseStudy': casestudy}})
+        return render_template(
+            '_react.html',
+            component=rendered_component
+        )
 
     try:
         case_study = DataAPIClient().create_case_study(
@@ -131,9 +142,9 @@ def create_new_supplier_case_study():
 
     except APIError as e:
         form = DmForm()
+        flash('', 'error')
         rendered_component = render_component('bundles/CaseStudy/CaseStudyWidget.js',
-                                              {'errors': e.message,
-                                               'form_options': {'csrf_token': form.csrf_token.current_token},
+                                              {'form_options': {'csrf_token': form.csrf_token.current_token},
                                                'form': {'caseStudy': casestudy}})
         return render_template(
             '_react.html',
@@ -168,6 +179,16 @@ def edit_supplier_case_study(casestudy_id):
     )
 
 
+def _validate_case_study(casestudy):
+    errors = {}
+    requiredFields = ["acknowledge", "opportunity", "title", "client",
+                      "projectLinks", "timeframe", "outcome", "approach"]
+    for field in requiredFields:
+        if not casestudy.get(field, None) or not casestudy.get(field)[0]:
+            errors[field] = {"required": True}
+    return errors
+
+
 @main.route('/case-study/<int:casestudy_id>/update', methods=['POST'])
 @login_required
 def update_supplier_case_study(casestudy_id):
@@ -181,15 +202,26 @@ def update_supplier_case_study(casestudy_id):
     casestudy = from_response(request)
     casestudy['id'] = casestudy_id
     casestudy['supplierCode'] = current_user.supplier_code
+    errors = _validate_case_study(casestudy)
+    if errors:
+        form = DmForm()
+        rendered_component = render_component('bundles/CaseStudy/CaseStudyWidget.js',
+                                              {'form_options': {'csrf_token': form.csrf_token.current_token,
+                                                                'errors': errors},
+                                               'form': {'caseStudy': casestudy}})
+        return render_template(
+            '_react.html',
+            component=rendered_component
+        )
 
     try:
         case_study = DataAPIClient().update_case_study(casestudy_id, casestudy)['caseStudy']
 
     except APIError as e:
         form = DmForm()
+        flash('', 'error')
         rendered_component = render_component('bundles/CaseStudy/CaseStudyWidget.js',
-                                              {'errors': e.message,
-                                               'form_options': {'csrf_token': form.csrf_token.current_token},
+                                              {'form_options': {'csrf_token': form.csrf_token.current_token},
                                                'form': {'caseStudy': casestudy}})
         return render_template(
             '_react.html',
