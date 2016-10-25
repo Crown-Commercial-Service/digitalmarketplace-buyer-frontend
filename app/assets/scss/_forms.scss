@@ -148,14 +148,28 @@ form {
 
   .validation-message {
     color: $error-colour;
-    display: block;
+    display: inline-block;
     font-size: rem(14);
     font-weight: $base-font-weight;
+    border: 0;
+
+    &:hover, &:active, &:focus {
+      background: none;
+    }
   }
 
   .hint {
     color: $grey;
     margin-bottom: 0;
+  }
+
+  textarea {
+    height: 14.375em;
+  }
+
+  .word-count-counter {
+    color: $input-count-colour;
+    float: right;
   }
 
   .question-heading, legend {
@@ -189,6 +203,7 @@ form {
   input[type='radio'] + label {
     outline: 1px solid $light-grey;
     margin: 0 0 8px;
+    padding: 12px 12px 12px 60px;
 
     >p {
       font-size: rem(14);
@@ -217,7 +232,7 @@ form {
   }
 
   .list-entry {
-    .text-box-number-label + input[class='text-box'] {
+    .text-box-number-label + .text-box {
       width: 80%;
     }
     .button-secondary {
