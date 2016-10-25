@@ -1,5 +1,6 @@
+from config import config
 from pytest_bdd import scenario, given, when, then, parsers
-from helpers import save_and_continue, create_brief, visit_page
+from helpers import save_and_continue, create_brief, visit_page, wait_for_page
 
 
 @scenario('build_brief.feature', 'Anonymous users cannot create brief')
@@ -55,14 +56,16 @@ def test_publish_brief():
 @given(parsers.parse('I have created a brief'))
 def verify_brief(brief_title, browser):
     visit_page('/buyers', browser)
-    if browser.is_text_present(brief_title):
+    if browser.is_text_present(brief_title, config['DM_SELENIUM_WAIT_TIME']):
         browser.click_link_by_text(brief_title)
+        wait_for_page('Write your brief', browser)
     else:
         create_brief(brief_title, browser)
 
 
-@when(parsers.parse('I enter {input_text} into {input_names}'))
-def enter_text(input_text, input_names, browser):
+@when(parsers.parse('I enter {input_text} into {input_names} on the {page_text} page'))
+def enter_text(input_text, input_names, page_text, browser):
+    wait_for_page(page_text, browser)
     for text, input in zip(input_text.split(','), input_names.split(',')):
         browser.fill(input, text)
     save_and_continue(browser)
@@ -75,5 +78,5 @@ def select_digital_specialist(browser):
 
 
 @then('I should see the Overview')
-def verify_overview(brief_title, browser):
-    assert browser.title.startswith(brief_title)
+def verify_overview(browser):
+    wait_for_page('quick and easy to publish a brief', browser)

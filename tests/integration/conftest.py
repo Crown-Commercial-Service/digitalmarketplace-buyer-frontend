@@ -2,7 +2,7 @@ from pytest_bdd import given, when, then, parsers
 import pytest
 from config import config
 from helpers import random_string, login, logout, click_button, delete_brief, \
-    visit_page, click_link, enter_title, click_text
+    visit_page, click_link, enter_title, click_text, wait_for_page
 
 
 @pytest.fixture(scope='session')
@@ -61,11 +61,16 @@ def enter_title_fixture(brief_title, browser):
     enter_title(brief_title, browser)
 
 
+@when(parsers.parse('the {page_text} page loads'))
+def wait_for_page_load(page_text, browser):
+    wait_for_page(page_text, browser)
+
+
 @then(parsers.parse('I should see the {title} page'))
 def page_verify(title, browser):
-    assert browser.title == title
+    wait_for_page(title, browser)
 
 
 @then(parsers.parse('I should see {text} text'))
 def text_verify(text, browser):
-    assert browser.is_element_present_by_text(text)
+    wait_for_page(text, browser)
