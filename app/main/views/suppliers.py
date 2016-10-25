@@ -171,7 +171,7 @@ def edit_supplier_case_study(casestudy_id):
 
     form = DmForm()
     rendered_component = render_component('bundles/CaseStudy/CaseStudyWidget.js', {
-        'form_options': {'csrf_token': form.csrf_token.current_token},
+        'form_options': {'csrf_token': form.csrf_token.current_token, 'mode': 'edit'},
         'form': {'caseStudy': casestudy}})
     return render_template(
         '_react.html',
@@ -207,7 +207,7 @@ def update_supplier_case_study(casestudy_id):
         form = DmForm()
         rendered_component = render_component('bundles/CaseStudy/CaseStudyWidget.js',
                                               {'form_options': {'csrf_token': form.csrf_token.current_token,
-                                                                'errors': errors},
+                                                                'errors': errors, 'mode': 'edit'},
                                                'form': {'caseStudy': casestudy}})
         return render_template(
             '_react.html',
