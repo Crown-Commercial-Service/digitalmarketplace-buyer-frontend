@@ -3,6 +3,8 @@ machine:
     - docker  # For monitoring
   node:
     version: 5.5.0
+  python:
+    version: 2.7.10
   timezone:
     Australia/Sydney
   post:
