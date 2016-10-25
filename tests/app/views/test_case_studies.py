@@ -7,6 +7,7 @@ from dmutils.forms import FakeCsrf
 from ...helpers import BaseApplicationTest
 
 test_case_study = {
+    "acknowledge": "on",
     "title": "Case Study Title",
     "opportunity": "The opportunity",
     "client": "The Client Name",
@@ -16,7 +17,7 @@ test_case_study = {
         "Outcome 1",
         "Outcome 2"
     ],
-    "links": [
+    "projectLinks": [
         "http://gov.au/"
     ]
 }
@@ -77,7 +78,7 @@ class TestCaseStudyViewPage(BaseApplicationTest):
         # assert document.xpath('//h2')[0].text.strip() == 'Gizmo Refactoring'
 
 
-@mock.patch('app.buyers.views.work_orders.data_api_client')
+@mock.patch('app.main.suppliers.DataAPIClient')
 class TestCaseStudyCreatePage(BaseApplicationTest):
     def setup(self):
         super(TestCaseStudyCreatePage, self).setup()
@@ -108,13 +109,59 @@ class TestCaseStudyCreatePage(BaseApplicationTest):
             # assert FakeCsrf.valid_token in res.get_data(as_text=True)
             assert res.status_code == 200
 
-    def test_create_new_work_order(self, data_api_client):
+    def test_create_new_case_study(self, data_api_client):
         self.login_as_supplier(1)
         data = test_case_study
         data['csrf_token'] = FakeCsrf.valid_token
         res = self.client.post(
             self.expand_path(
                 '/case-study/create'
+            ),
+            data=data)
+
+        assert res.status_code == 302
+
+
+@mock.patch('app.main.suppliers.DataAPIClient')
+class TestCaseStudyEditPage(BaseApplicationTest):
+    def setup(self):
+        super(TestCaseStudyEditPage, self).setup()
+
+        self._data_api_client = mock.patch(
+            'app.main.suppliers.DataAPIClient'
+        ).start()
+
+        self._render_component = mock.patch(
+            'app.main.suppliers.render_component'
+        ).start()
+
+        self.case_study = self._get_case_study_fixture_data()
+
+    def teardown(self):
+        self._data_api_client.stop()
+        self._render_component.stop()
+
+    def test_edit_case_study_page_renders(self, api_client):
+        self.login_as_supplier(1)
+        api_client.return_value.get_case_study.return_value = self.case_study
+
+        res = self.client.get(self.expand_path(
+            '/case-study/1/update'
+        )
+        )
+
+        # assert FakeCsrf.valid_token in res.get_data(as_text=True)
+        assert res.status_code == 200
+
+    def test_edit_case_study(self, api_client):
+        self.login_as_supplier(1)
+        api_client.return_value.get_case_study.return_value = self.case_study
+
+        data = test_case_study
+        data['csrf_token'] = FakeCsrf.valid_token
+        res = self.client.post(
+            self.expand_path(
+                '/case-study/1/update'
             ),
             data=data)
 

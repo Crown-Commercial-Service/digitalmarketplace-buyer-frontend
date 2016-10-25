@@ -3,8 +3,7 @@
 {% block page_title %}{{ supplier.name }} – Digital Marketplace{% endblock %}
 
 {% block breadcrumb %}
-  {%
-    with
+  {% with
     items = [
       {
           "link": url_for('main.index'),
@@ -17,8 +16,7 @@
       {
           "label": "Seller details"
       }
-    ]
-  %}
+    ] %}
     {% include "toolkit/breadcrumb.html" %}
   {% endwith %}
 {% endblock %}
@@ -26,157 +24,176 @@
 {% block body_classes %}content-details{% endblock %}
 {% block main_content %}
 
-{%
-  with
+  {% with messages = get_flashed_messages(with_categories=True) %}
+    {% for category, message in messages %}
+      <div class="banner-success-without-action">
+        <p class="banner-message">
+          {% if category == 'casestudy_deleted' %}
+            <strong>{{message.casestudy_name}}</strong> was deleted
+          {% endif %}
+        </p>
+      </div>
+    {% endfor %}
+  {% endwith %}
+
+
+  {% with
   heading = supplier.name,
-  smaller = True
-%}
-  {% if user_owns_page %}
-    <span class="cta-link">
+  smaller = True %}
+    {% if user_owns_page %}
+      <span class="cta-link">
       <a href="/sellers/edit">Edit profile</a>
     </span>
+    {% endif %}
+    {% include "toolkit/page-heading.html" %}
+  {% endwith %}
+
+  {% if supplier.summary %}
+    <p>
+      {{ supplier.summary }}
+    </p>
   {% endif %}
-  {% include "toolkit/page-heading.html" %}
-{% endwith %}
 
-{% if supplier.summary %}
-<p>
-  {{ supplier.summary }}
-</p>
-{% endif %}
+  <hr>
 
-<hr>
-
-<ul class="list-horizontal">
-  <li>
-    <p>Seller capabilities</p>
-    <article>
-      <footer class="tags">
-        <dl class="visually-hidden">
-          <dt>Capabilities</dt>
-        </dl>
-        {% for category in supplier["categories"]|sort() %}
-        <dd>
-          <a href="#" class="disabled">{{ category }}</a>
-        </dd>
-        {% endfor %}
-      </footer>
-    </article>
-  </li>
-  {% if supplier["caseStudies"]|count > 0 %}
-  <li>
-    <p>Case Studies</p>
-    <ul class="list-vertical--thirds">
-
-      {% for casestudy in supplier["caseStudies"] %}
-        <li>
-        <article>
-        <h3><a href="{{ url_for('.get_supplier_case_study', casestudy_id=casestudy.id) }}">{{ casestudy.title  }}</a></h3>
-        <p><small>{{ casestudy.company }}</small></p>
-        </article>
-      {%  endfor %}
-    </ul>
-  </li>
-  {% endif %}
-  <li>
-    <p>Contact</p>
-    <article>
-      {% for contact in supplier.contacts %}
-      <p>
-        <strong>Name</strong><br>
-        {{ contact.name }}
-      </p>
-      <p>
-        <strong>Email</strong><br>
-        <a href="mailto:{{ contact.email }}">{{ contact.email }}</a>
-      </p>
-      <p>
-        <strong>Phone</strong><br>
-        {{ contact.phone }}
-      </p>
-      {% if not loop.last %}
-      <hr>
-      {% endif %}
-      {% endfor %}
-    </article>
-  </li>
-  <li>
-    <p>Company Details</p>
-    <article>
-      <p>
-        <strong>ABN</strong><br>
-        {{ supplier.abn }}
-      </p>
-      {% if supplier.website %}
-      <p>
-        <strong>Website</strong><br>
-        <a href="{{ supplier.website }}" target="_blank">{{ supplier.website }}</a>
-      </p>
-      {% endif %}
-      {% for link in supplier.extraLinks %}
-      <p>
-        <strong>{{ link.label }}</strong><br>
-        <a href="{{ link.url }}" target="_blank">{{ link.url }}</a>
-      </p>
-      {% endfor %}
-    </article>
-  </li>
-  <li>
-    <p>Address</p>
-    <article>
-      <p>
-        {{ supplier.address.addressLine }}<br>
-        {{ supplier.address.suburb }}<br>
-        {{ supplier.address.state }} {{ supplier.address.postalCode }}
-      </p>
-    </article>
-  </li>
-  {% if supplier.references %}
-  <li>
-    <p>References</p>
-    {% for reference in supplier.references %}
-    <article>
-      To be added
-    </article>
-    {% endfor %}
-  </li>
-  {% endif %}
-  <li class="hidden">
-    <p>Endorsements</p>
-    <article>
-      To be added
-    </article>
-  </li>
-  <li class="hidden">
-    <p>Case studies</p>
-    <article>
-      To be added
-    </article>
-  </li>
-
-  <li>
-    <p>Rate card</p>
-  {% if supplier.prices %}
-    <article>
-      <table class="content-table">
-        <thead>
-          <tr>
-            <th scope="col">Roles</th>
-            <th scope="col">Day rates</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for price in supplier.prices|sort(attribute='serviceRole.role') %}
-          <tr>
-            <th scope="row">{{ price.serviceRole.role }}</th>
-            <td>${{ price.dailyRate }}</td>
-          </tr>
+  <ul class="list-horizontal">
+    <li>
+      <p>Seller capabilities</p>
+      <article>
+        <footer class="tags">
+          <dl class="visually-hidden">
+            <dt>Capabilities</dt>
+          </dl>
+          {% for category in supplier["categories"]|sort() %}
+            <dd>
+              <a href="#" class="disabled">{{ category }}</a>
+            </dd>
           {% endfor %}
-        </tbody>
-      </table>
-    </article>
-  {% endif %}
-  </li>
+        </footer>
+      </article>
+    </li>
 
-</ul>
+    <li>
+      <p>Case Studies</p>
+      <ul class="list-vertical--thirds">
+        {% if supplier["caseStudies"]|count > 0 %}
+          {% for casestudy in supplier["caseStudies"] %}
+            <li>
+            <article>
+              <h3>
+                <a href="{{ url_for('.get_supplier_case_study', casestudy_id=casestudy.id) }}">{{ casestudy.title }}</a>
+              </h3>
+              <p>
+                <small>{{ casestudy.client }}</small>
+              </p>
+            </article>
+          {% endfor %}
+        {% endif %}
+        {% if user_owns_page %}
+          <a href="{{ url_for('.new_supplier_case_study')}}">Add case study</a>
+        {% endif %}
+      </ul>
+    </li>
+
+    <li>
+      <p>Contact</p>
+      <article>
+        {% for contact in supplier.contacts %}
+          <p>
+            <strong>Name</strong><br>
+            {{ contact.name }}
+          </p>
+          <p>
+            <strong>Email</strong><br>
+            <a href="mailto:{{ contact.email }}">{{ contact.email }}</a>
+          </p>
+          <p>
+            <strong>Phone</strong><br>
+            {{ contact.phone }}
+          </p>
+          {% if not loop.last %}
+            <hr>
+          {% endif %}
+        {% endfor %}
+      </article>
+    </li>
+    <li>
+      <p>Company Details</p>
+      <article>
+        <p>
+          <strong>ABN</strong><br>
+          {{ supplier.abn }}
+        </p>
+        {% if supplier.website %}
+          <p>
+            <strong>Website</strong><br>
+            <a href="{{ supplier.website }}" target="_blank">{{ supplier.website }}</a>
+          </p>
+        {% endif %}
+        {% for link in supplier.extraLinks %}
+          <p>
+            <strong>{{ link.label }}</strong><br>
+            <a href="{{ link.url }}" target="_blank">{{ link.url }}</a>
+          </p>
+        {% endfor %}
+      </article>
+    </li>
+    <li>
+      <p>Address</p>
+      <article>
+        <p>
+          {{ supplier.address.addressLine }}<br>
+          {{ supplier.address.suburb }}<br>
+          {{ supplier.address.state }} {{ supplier.address.postalCode }}
+        </p>
+      </article>
+    </li>
+    {% if supplier.references %}
+      <li>
+        <p>References</p>
+        {% for reference in supplier.references %}
+          <article>
+            To be added
+          </article>
+        {% endfor %}
+      </li>
+    {% endif %}
+    <li class="hidden">
+      <p>Endorsements</p>
+      <article>
+        To be added
+      </article>
+    </li>
+    <li class="hidden">
+      <p>Case studies</p>
+      <article>
+        To be added
+      </article>
+    </li>
+
+    <li>
+      <p>Rate card</p>
+      {% if supplier.prices %}
+        <article>
+          <table class="content-table">
+            <thead>
+            <tr>
+              <th scope="col">Roles</th>
+              <th scope="col">Day rates</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for price in supplier.prices|sort(attribute='serviceRole.role') %}
+              <tr>
+                <th scope="row">{{ price.serviceRole.role }}</th>
+                <td>${{ price.dailyRate }}</td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        </article>
+      {% endif %}
+    </li>
+
+  </ul>
 {% endblock %}
