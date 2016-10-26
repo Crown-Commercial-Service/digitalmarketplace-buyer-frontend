@@ -119,11 +119,11 @@ class Live(Config):
 
 
 class Preview(Live):
-    pass
+    FEATURE_FLAGS_NEW_SUPPLIER_FLOW = enabled_since('2016-10-26')
 
 
 class Staging(Live):
-    pass
+    FEATURE_FLAGS_NEW_SUPPLIER_FLOW = enabled_since('2016-10-26')
 
 
 class Production(Live):
