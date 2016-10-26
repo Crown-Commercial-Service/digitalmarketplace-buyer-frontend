@@ -8,5 +8,4 @@ config = {
     'DM_SUPPLIER_PASSWORD': os.getenv('DM_SUPPLIER_PASSWORD', ''),
     'DM_DATA_API_URL': os.getenv('DM_DATA_API_URL', ''),
     'DM_DATA_API_AUTH_TOKEN': os.getenv('DM_DATA_API_AUTH_TOKEN', ''),
-    'DM_SELENIUM_WAIT_TIME': os.getenv('DM_SELENIUM_WAIT_TIME', 20),
 }

@@ -16,7 +16,7 @@ def logout(browser):
 def login(browser, email, password):
     logout(browser)
     browser.visit('{0}{1}'.format(config['DM_FRONTEND_URL'], '/login'))
-    browser.is_element_present_by_name('email_address', config['DM_SELENIUM_WAIT_TIME'])
+    browser.is_element_present_by_name('email_address')
     browser.fill('email_address', email)
     browser.fill('password', password)
     click_button('Log in', browser)
@@ -74,7 +74,7 @@ def delete_brief(title):
 def wait_for_page(page_text, browser):
     for i in range(0, 3):
         try:
-            result = browser.is_text_present(page_text, config['DM_SELENIUM_WAIT_TIME'])
+            result = browser.is_text_present(page_text)
         except Exception as exception:
             if type(exception).__name__ == 'StaleElementReferenceException':
                 continue

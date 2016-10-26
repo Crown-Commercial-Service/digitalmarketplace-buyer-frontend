@@ -56,7 +56,7 @@ def test_publish_brief():
 @given(parsers.parse('I have created a brief'))
 def verify_brief(brief_title, browser):
     visit_page('/buyers', browser)
-    if browser.is_text_present(brief_title, config['DM_SELENIUM_WAIT_TIME']):
+    if browser.is_text_present(brief_title):
         browser.click_link_by_text(brief_title)
         wait_for_page('Write your brief', browser)
     else:
