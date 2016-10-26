@@ -1,4 +1,5 @@
 #!/bin/sh
+set -xe
 npm install
 pip install --upgrade pip setuptools
 pip install -U -r requirements_for_test.txt
