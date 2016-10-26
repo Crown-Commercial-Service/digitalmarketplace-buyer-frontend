@@ -1,6 +1,6 @@
 #!/bin/sh
 
-: ${LIGHTTPD=/usr/sbin/lighttpd}
+LIGHTTPD=`which lighttpd`
 
 CONF=lighttpd.conf
 
