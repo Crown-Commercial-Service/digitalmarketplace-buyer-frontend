@@ -78,6 +78,7 @@ class Config(object):
     # List all your feature flags below
     FEATURE_FLAGS = {
         'BRIEF_FILTER': True,
+        'CASE_STUDY': True,
     }
 
     # LOGGING
@@ -133,6 +134,7 @@ class Live(Config):
     # List all your feature flags below
     FEATURE_FLAGS = {
         'BRIEF_FILTER': False,
+        'CASE_STUDY': False,
     }
 
 
