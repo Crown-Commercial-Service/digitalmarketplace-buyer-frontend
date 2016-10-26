@@ -6,6 +6,6 @@
 {% endblock %}
 
 {% block main_content %}
-    <div id="react-bundle-{{component.get_slug()}}-state" style="display:none;">{{component.get_props()|safe}}</div>
+    <div id="react-bundle-{{component.get_slug()}}-state" style="display:none;">{{component.get_props()|tojson|forceescape}}</div>
     <div id="react-bundle-{{component.get_slug()}}">{{component|safe}}</div>
 {% endblock %}
