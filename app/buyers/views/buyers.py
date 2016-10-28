@@ -3,8 +3,10 @@ from __future__ import unicode_literals
 from dmutils.email import send_email, EmailError, hash_email
 from flask.globals import current_app
 import six
-import unicodecsv
+import csvx
 import pendulum
+import io
+from collections import OrderedDict as od
 
 from flask import abort, render_template, request, redirect, url_for, flash, Response
 from flask_login import current_user
@@ -307,58 +309,40 @@ def download_brief_responses(framework_slug, lot_slug, brief_id):
     if brief['status'] != "closed":
         abort(404)
 
-    sorted_brief_responses = get_sorted_responses_for_brief(brief, data_api_client)
+    responses = get_sorted_responses_for_brief(brief, data_api_client)
 
-    content = content_loader.get_manifest(brief['frameworkSlug'], 'output_brief_response').filter(
-        {'lot': brief['lotSlug']}
-    )
-    section = content.get_section('view-response-to-requirements')
+    ESS = 'essentialRequirements'
+    NTH = 'niceToHaveRequirements'
 
-    column_headings = []
-    question_key_sequence = []
-    boolean_list_questions = []
-    csv_rows = []
+    ess_req_names = brief.get(ESS, [])
+    nth_req_names = brief.get(NTH, [])
 
-    # Build header row from manifest and add it to the list of rows
-    for question in section.questions:
-        question_key_sequence.append(question.id)
-        if question['type'] == 'boolean_list' and brief.get(question.id):
-            column_headings.extend(brief[question.id])
-            boolean_list_questions.append(question.id)
-        else:
-            column_headings.append(question.name)
-    csv_rows.append(column_headings)
+    def row(r):
+        answers = od()
 
-    # Add a row for each eligible response received
-    for brief_response in sorted_brief_responses:
-        if all_essentials_are_true(brief_response):
-            row = []
-            for key in question_key_sequence:
-                if key in boolean_list_questions:
-                    row.extend(brief_response.get(key))
-                else:
-                    row.append(brief_response.get(key))
-            csv_rows.append(row)
+        ess_responses = r.get(ESS, [])
+        nth_responses = r.get(NTH, [])
 
-    def iter_csv(rows):
-        class Line(object):
-            def __init__(self):
-                self._line = None
+        answers.update({'Contact': r.get('respondToEmailAddress', 'UNKNOWN')})
+        answers.update({'Availability Date': r.get('availability', 'UNKNOWN')})
+        answers.update(zip(ess_req_names, ess_responses))
+        answers.update(zip(nth_req_names, nth_responses))
+        return answers
 
-            def write(self, line):
-                self._line = line
+    rows = [row(_) for _ in responses]
 
-            def read(self):
-                return self._line
+    first = rows[0].keys() if responses else []
+    rows = [first] + [_.values() for _ in rows]
 
-        line = Line()
-        writer = unicodecsv.writer(line, lineterminator='\n')
-        for row in rows:
-            writer.writerow(row)
-            yield line.read()
+    transposed = zip(*rows)
+
+    outdata = io.StringIO()
+    with csvx.Writer(outdata) as csv_out:
+        csv_out.write_rows(transposed)
+        csvdata = outdata.getvalue()
 
     return Response(
-        iter_csv(csv_rows),
+        csvdata,
         mimetype='text/csv',
         headers={
             "Content-Disposition": "attachment;filename=responses-to-requirements-{}.csv".format(brief['id']),
