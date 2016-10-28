@@ -1,23 +1,25 @@
 from marionette_driver import Wait, expected
 from helpers import go_home
 
+timeout = 20
+
 
 def test_view_briefs(client):
     go_home(client)
     link = client.find_element('id', 'opportunities__call-to-action')
     link.click()
-    Wait(client).until(expected.elements_present('class name', 'brief-result'))
+    Wait(client, timeout=timeout).until(expected.elements_present('class name', 'brief-result'))
 
 
 def test_view_catalogue(client):
     go_home(client)
     link = client.find_element('id', 'catalogue__call-to-action')
     link.click()
-    Wait(client).until(expected.elements_present('class name', 'supplier-result'))
+    Wait(client, timeout=timeout).until(expected.elements_present('class name', 'supplier-result'))
 
 
 def test_register_buyer(client):
     go_home(client)
     link = client.find_element('id', 'buyer__call-to-action')
     link.click()
-    Wait(client).until(expected.element_present('id', 'employment_status'))
+    Wait(client, timeout=timeout).until(expected.element_present('id', 'employment_status'))
