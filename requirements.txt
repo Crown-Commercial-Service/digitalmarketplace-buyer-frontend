@@ -13,3 +13,4 @@ cffi==1.5.2
 Flask-WeasyPrint==0.5
 
 pendulum==0.6.2
+csvx==0.1.1459403998
