@@ -5,7 +5,7 @@ from datetime import datetime
 import flask_featureflags
 
 from flask_login import current_user
-from flask import abort, current_app, make_response, render_template, request, url_for
+from flask import abort, current_app, make_response, render_template, request, url_for, jsonify
 
 from dmapiclient import APIError
 from dmcontent.content_loader import ContentNotFoundError
@@ -24,11 +24,10 @@ from flask_weasyprint import HTML, render_pdf
 @main.route('/')
 def index():
     try:
-        buyers_count = data_api_client.get_buyers_count({'account_type': 'buyer'})['buyers']['total']
-
-        suppliers_count = data_api_client.get_suppliers_count()['suppliers']['total']
-
-        briefs_count = data_api_client.get_briefs_count()['briefs']['total']
+        metrics = data_api_client.get_metrics()
+        buyers_count = metrics['buyer_count']['value']
+        suppliers_count = metrics['supplier_count']['value']
+        briefs_count = metrics['briefs_total']['value']
     except Exception as e:
         buyers_count = 0
         suppliers_count = 0
@@ -42,6 +41,20 @@ def index():
         suppliers_count=suppliers_count,
         briefs_count=briefs_count
     )
+
+
+@main.route('/metrics')
+def metrics():
+    data = data_api_client.get_metrics()
+    del data["brief_response_count"]
+    return jsonify(data)
+
+
+@main.route('/metrics/history')
+def metrics_historical():
+    data = data_api_client.get_metrics_historical()
+    del data["brief_response_count"]
+    return jsonify(data)
 
 
 @main.route('/ideation')
