@@ -31,7 +31,9 @@ $path: "/static/images/";
 // @import 'breadcrumbs';
 @import 'buyerpages';
 @import 'cards';
-@import 'case-study';
 
 // Neat grid boilerplate
 @import 'neat-grid';
+
+// Things that use the grid!
+@import 'case-study';

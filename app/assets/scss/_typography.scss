@@ -278,3 +278,41 @@ span {
     }
   }
 }
+
+.freetext {
+  white-space: pre-wrap;
+}
+
+.callout--success {
+  @extend %base-callout;
+
+  border-left: $tiny-spacing solid $green;
+  padding-left: $base-spacing - $tiny-spacing;
+
+  .callout--success__heading {
+    margin: 0;
+  }
+}
+
+.callout--warn {
+  @extend %base-callout;
+
+  border-left: $tiny-spacing solid $yellow;
+  padding-left: $base-spacing - $tiny-spacing;
+  @include link-colours($non-black, $light-aqua, $non-black);
+  @include button-colours($button-bg-colour, $button-bg-colour--hover, $button-bg-colour--active, $button-text-colour);
+
+  button {
+    border: 0;
+    border-bottom: 1px solid #5bcbe3;
+    color: #313131;
+    background: none;
+
+    &.button-secondary {
+      &:hover {
+        background: $light-aqua;
+        color: $non-black;
+      }
+    }
+  }
+}

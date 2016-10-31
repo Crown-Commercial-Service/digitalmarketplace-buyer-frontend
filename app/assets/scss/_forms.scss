@@ -1,3 +1,20 @@
+@mixin button-secondary {
+  @include link-colours($non-black, $light-aqua, $non-black);
+  display: inline;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid $light-aqua;
+  font-weight: 400;
+  width: auto;
+  padding: 0;
+
+  &:hover,
+  &:focus {
+    background-color: $light-aqua;
+    color: $non-black;
+  }
+}
+
 .content-main {
 
   .list-entry {
@@ -17,6 +34,7 @@
       margin: 0;
       position: absolute;
       top: 0.7em;
+      z-index: 1;
 
       & + input {
         margin-bottom: 1em;
@@ -232,31 +250,20 @@ form {
   }
 
   .list-entry {
-    .text-box-number-label + .text-box {
-      width: 80%;
-    }
     .button-secondary {
-      margin-left: 1em;
+      margin-top: 0.4em
     }
   }
 
-  /* TODO I think there is a link mixin from UI Kit. */
   .button-secondary {
-    @include link-colours($non-black, $light-aqua, $non-black);
-    display: inline;
-    background: none;
-    border: 0;
-    border-bottom: 1px solid $light-aqua;
-    font-weight: 400;
-    width: auto;
-    padding: 0;
-
-    &:hover,
-    &:focus {
-      background-color: $light-aqua;
-      color: $non-black;
-    }
+    @include button-secondary;
   }
+
+}
+
+/* TODO I think there is a link mixin from UI Kit. */
+.button-secondary {
+  @include button-secondary;
 }
 
 .validation-masthead-heading {

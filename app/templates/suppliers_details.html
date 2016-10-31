@@ -26,12 +26,10 @@
 
   {% with messages = get_flashed_messages(with_categories=True) %}
     {% for category, message in messages %}
-      <div class="banner-success-without-action">
-        <p class="banner-message">
-          {% if category == 'casestudy_deleted' %}
-            <strong>{{message.casestudy_name}}</strong> was deleted
-          {% endif %}
-        </p>
+      <div class="callout--success" aria-labelledby="callout--success__heading" aria-role="group" tabindex="-1" role="alert">
+        {% if category == 'casestudy_deleted' %}
+          <p id="callout--success__heading">The case study <strong>{{message.casestudy_name}}</strong> has been deleted</p>
+        {% endif %}
       </div>
     {% endfor %}
   {% endwith %}
@@ -40,12 +38,14 @@
   {% with
   heading = supplier.name,
   smaller = True %}
+  <div class="cta-heading-wrap">
     {% if user_owns_page %}
       <span class="cta-link">
       <a href="/sellers/edit">Edit profile</a>
     </span>
     {% endif %}
     {% include "toolkit/page-heading.html" %}
+  </div>
   {% endwith %}
 
   {% if supplier.summary %}
@@ -75,6 +75,7 @@
     {% if 'CASE_STUDY' is active_feature %}
     <li>
       <p>Case Studies</p>
+      <div class="casestudy-wrapper">
       <ul class="list-vertical--thirds">
         {% if supplier["caseStudies"]|count > 0 %}
           {% for casestudy in supplier["caseStudies"] %}
@@ -87,12 +88,14 @@
                 <small>{{ casestudy.client }}</small>
               </p>
             </article>
+            </li>
           {% endfor %}
         {% endif %}
-        {% if user_owns_page %}
-          <a href="{{ url_for('.new_supplier_case_study')}}">Add case study</a>
-        {% endif %}
       </ul>
+      {% if user_owns_page %}
+        <p><a href="{{ url_for('.new_supplier_case_study')}}">Add case study</a></p>
+      {% endif %}
+      </div>
     </li>
     {% endif %}
     <li>

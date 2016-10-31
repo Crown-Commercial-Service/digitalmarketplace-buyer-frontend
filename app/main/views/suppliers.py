@@ -61,8 +61,10 @@ def get_supplier(code):
 @login_required
 def get_supplier_case_study(casestudy_id):
     casestudy = DataAPIClient().get_case_study(casestudy_id)['caseStudy']
-    casestudy['meta'] = {'editLink': url_for('.update_supplier_case_study', casestudy_id=casestudy_id),
-                         'deleteLink': url_for('.delete_supplier_case_study', casestudy_id=casestudy_id)}
+    if current_user.role == 'supplier':
+        casestudy['meta'] = {'editLink': url_for('.update_supplier_case_study', casestudy_id=casestudy_id),
+                             'deleteLink': url_for('.delete_supplier_case_study', casestudy_id=casestudy_id)}
+
     supplier_code = casestudy.get('supplierCode') if casestudy else None
 
     if not can_view_supplier_page(supplier_code):
@@ -75,6 +77,12 @@ def get_supplier_case_study(casestudy_id):
     rendered_component = render_component('bundles/CaseStudy/CaseStudyViewWidget.js', {"casestudy": dict(casestudy)})
     return render_template(
         '_react.html',
+        breadcrumb_items=[
+            {'link': url_for('main.index'), 'label': 'Home'},
+            {'link': url_for('main.supplier_search'), 'label': 'Sellers catalogue'},
+            {'link': url_for('main.get_supplier', code=supplier_code), 'label': 'Seller details'},
+            {'label': 'Case Study'}
+        ],
         component=rendered_component
     )
 
@@ -86,10 +94,18 @@ def new_supplier_case_study():
         flash('buyer-role-required', 'error')
         return current_app.login_manager.unauthorized()
     form = DmForm()
-    rendered_component = render_component('bundles/CaseStudy/CaseStudyWidget.js',
-                                          {'form_options': {'csrf_token': form.csrf_token.current_token}})
+    rendered_component = render_component('bundles/CaseStudy/CaseStudyWidget.js', {
+        'form_options': {'csrf_token': form.csrf_token.current_token},
+        'casestudy': {'returnLink': url_for('main.get_supplier', code=current_user.supplier_code)}})
+
     return render_template(
         '_react.html',
+        breadcrumb_items=[
+            {'link': url_for('main.index'), 'label': 'Home'},
+            {'link': url_for('main.supplier_search'), 'label': 'Sellers catalogue'},
+            {'link': url_for('main.get_supplier', code=current_user.supplier_code), 'label': 'Seller details'},
+            {'label': 'Add case study'}
+        ],
         component=rendered_component
     )
 
@@ -172,9 +188,16 @@ def edit_supplier_case_study(casestudy_id):
     form = DmForm()
     rendered_component = render_component('bundles/CaseStudy/CaseStudyWidget.js', {
         'form_options': {'csrf_token': form.csrf_token.current_token, 'mode': 'edit'},
+        'casestudy': {'returnLink': url_for('main.get_supplier', code=current_user.supplier_code)},
         'form': {'caseStudy': casestudy}})
     return render_template(
         '_react.html',
+        breadcrumb_items=[
+            {'link': url_for('main.index'), 'label': 'Home'},
+            {'link': url_for('main.supplier_search'), 'label': 'Sellers catalogue'},
+            {'link': url_for('main.get_supplier', code=current_user.supplier_code), 'label': 'Seller details'},
+            {'label': 'Edit case study'}
+        ],
         component=rendered_component
     )
 
@@ -182,7 +205,7 @@ def edit_supplier_case_study(casestudy_id):
 def _validate_case_study(casestudy):
     errors = {}
     requiredFields = ["acknowledge", "opportunity", "title", "client",
-                      "projectLinks", "timeframe", "outcome", "approach"]
+                      "timeframe", "outcome", "approach"]
     for field in requiredFields:
         if not casestudy.get(field, None) or not casestudy.get(field)[0]:
             errors[field] = {"required": True}
