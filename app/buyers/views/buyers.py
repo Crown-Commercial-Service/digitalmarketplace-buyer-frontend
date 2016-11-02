@@ -323,8 +323,10 @@ def download_brief_responses(framework_slug, lot_slug, brief_id):
         ess_responses = r.get(ESS, [])
         nth_responses = r.get(NTH, [])
 
+        answers.update({'Supplier': r.get('supplierName', 'UNKNOWN')})
         answers.update({'Contact': r.get('respondToEmailAddress', 'UNKNOWN')})
         answers.update({'Availability Date': r.get('availability', 'UNKNOWN')})
+        answers.update({'Day rate': r.get('dayRate', '')})
         answers.update(zip(ess_req_names, ess_responses))
         answers.update(zip(nth_req_names, nth_responses))
         return answers

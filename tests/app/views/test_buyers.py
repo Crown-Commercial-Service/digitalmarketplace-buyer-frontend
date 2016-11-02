@@ -1,4 +1,5 @@
 # coding: utf-8
+
 from __future__ import unicode_literals
 
 from ...helpers import BaseApplicationTest
@@ -9,8 +10,10 @@ import mock
 from lxml import html
 import pytest
 
-CSV_EXPECTED = """Contact,test4@email.com,test2@email.com,test3@email.com,test1@email.com,test5@email.com
+CSV_EXPECTED = """Supplier,Kev's Fried Noodles,Kev's Pies,Kev's Doughnuts,Kev's Butties,Kev's Pizza
+Contact,test4@email.com,test2@email.com,test3@email.com,test1@email.com,test5@email.com
 Availability Date,After Christmas,A week Friday,As soon as the sugar is delivered,Next Tuesday,Within the hour
+Day rate,12.35,&euro;3.50,10,¥1.49,£350
 E1,False,True,True,True,False
 E2,True,True,False,True,False
 Nice1,True,False,True,True,False
@@ -1969,7 +1972,7 @@ class TestDownloadBriefResponsesCsv(BaseApplicationTest):
             {
                 "supplierName": "Kev's Butties",
                 "availability": "Next Tuesday",
-                "dayRate": "£1.49",
+                "dayRate": "¥1.49",
                 "essentialRequirements": [True, True],
                 "niceToHaveRequirements": [True, False, False],
                 "respondToEmailAddress": "test1@email.com",
@@ -1977,7 +1980,7 @@ class TestDownloadBriefResponsesCsv(BaseApplicationTest):
             {
                 "supplierName": "Kev's Pies",
                 "availability": "A week Friday",
-                "dayRate": "£3.50",
+                "dayRate": "&euro;3.50",
                 "essentialRequirements": [True, True],
                 "niceToHaveRequirements": [False, True, True],
                 "respondToEmailAddress": "test2@email.com",
@@ -1985,7 +1988,7 @@ class TestDownloadBriefResponsesCsv(BaseApplicationTest):
             {
                 "supplierName": "Kev's Doughnuts",
                 "availability": "As soon as the sugar is delivered",
-                "dayRate": "£10 a dozen",
+                "dayRate": "10",
                 "essentialRequirements": [True, False],
                 "niceToHaveRequirements": [True, True, False],
                 "respondToEmailAddress": "test3@email.com",
@@ -1993,7 +1996,7 @@ class TestDownloadBriefResponsesCsv(BaseApplicationTest):
             {
                 "supplierName": "Kev's Fried Noodles",
                 "availability": "After Christmas",
-                "dayRate": "£12.35",
+                "dayRate": "12.35",
                 "essentialRequirements": [False, True],
                 "niceToHaveRequirements": [True, True, True],
                 "respondToEmailAddress": "test4@email.com",
@@ -2014,7 +2017,7 @@ class TestDownloadBriefResponsesCsv(BaseApplicationTest):
             {
                 "supplierName": "K,ev’s \"Bu,tties",
                 "availability": "❝Next — Tuesday❞",
-                "dayRate": "¥1.49,",
+                "dayRate": "1.49",
                 "essentialRequirements": [True, True],
                 "niceToHaveRequirements": [True, False, False],
                 "respondToEmailAddress": "test1@email.com",
@@ -2022,7 +2025,7 @@ class TestDownloadBriefResponsesCsv(BaseApplicationTest):
             {
                 "supplierName": "Kev\'s \'Pies",
                 "availability": "&quot;A week Friday&rdquot;",
-                "dayRate": "&euro;3.50",
+                "dayRate": "3.50",
                 "essentialRequirements": [True, True],
                 "niceToHaveRequirements": [False, True, True],
                 "respondToEmailAddress": "te,st2@email.com",
@@ -2095,8 +2098,10 @@ class TestDownloadBriefResponsesCsv(BaseApplicationTest):
         lines = page.splitlines()
 
         assert lines == [
+            u'Supplier,"K,ev\u2019s ""Bu,tties",Kev\'s \'Pies',
             u'Contact,test1@email.com,"te,st2@email.com"',
             u'Availability Date,\u275dNext \u2014 Tuesday\u275e,&quot;A week Friday&rdquot;',
+            u'Day rate,1.49,3.50',
             u'E1,True,True',
             u'E2,True,True'
         ]
