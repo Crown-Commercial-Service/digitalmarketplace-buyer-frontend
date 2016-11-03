@@ -172,6 +172,9 @@ def create_new_supplier_case_study(step=None):
                 'csrf_token': form.csrf_token.current_token,
                 'errors': errors
             },
+            'casestudy': {
+                'returnLink': url_for('main.get_supplier', code=current_user.supplier_code)
+            },
             'caseStudyForm': casestudy,
             'basename': basename
         })
@@ -298,6 +301,9 @@ def update_supplier_case_study(casestudy_id, step=None):
                 'csrf_token': form.csrf_token.current_token,
                 'errors': errors,
                 'mode': 'edit'
+            },
+            'casestudy': {
+                'returnLink': url_for('main.get_supplier', code=current_user.supplier_code)
             },
             'caseStudyForm': casestudy,
             'basename': basename
