@@ -129,3 +129,17 @@
     transform: translateX(-50%);
   }
 }
+
+.step-navigation {
+  a {
+    &.active,
+    &.is-active {
+      font-weight: $bold-font-weight;
+    }
+
+    &.is-current {
+      background-color: $focus-colour;
+      border-color: $border-contrast-colour;
+    }
+  }
+}

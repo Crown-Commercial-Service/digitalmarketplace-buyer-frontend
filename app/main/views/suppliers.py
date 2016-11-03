@@ -1,13 +1,13 @@
 # coding=utf-8
 import re
 
-from flask import render_template, current_app, flash, jsonify, redirect, url_for, request
+from flask import render_template, current_app, flash, jsonify, redirect, url_for, request, session
 from flask_login import current_user, login_required
 
 from app.main import main
 from app.api_client.data import DataAPIClient
 from app.api_client.error import APIError
-from react.response import from_response
+from react.response import from_response, validate_form_data
 from react.render import render_component
 from app.helpers.shared_helpers import request_wants_json
 from dmutils.forms import DmForm
@@ -88,15 +88,28 @@ def get_supplier_case_study(casestudy_id):
 
 
 @main.route('/case-study/create', methods=['GET'])
+@main.route('/case-study/create/reference', methods=['GET'], endpoint='new_supplier_case_study_reference')
 @login_required
 def new_supplier_case_study():
     if not current_user.role == 'supplier':
         flash('buyer-role-required', 'error')
         return current_app.login_manager.unauthorized()
     form = DmForm()
-    rendered_component = render_component('bundles/CaseStudy/CaseStudyWidget.js', {
-        'form_options': {'csrf_token': form.csrf_token.current_token},
-        'casestudy': {'returnLink': url_for('main.get_supplier', code=current_user.supplier_code)}})
+    basename = url_for('.new_supplier_case_study')
+    props = {
+        'form_options': {
+            'csrf_token': form.csrf_token.current_token
+        },
+        'casestudy': {
+            'returnLink': url_for('main.get_supplier', code=current_user.supplier_code)
+        },
+        'basename': basename
+    }
+
+    if 'casestudy' in session:
+        props['caseStudyForm'] = session['casestudy']
+
+    rendered_component = render_component('bundles/CaseStudy/CaseStudyWidget.js', props)
 
     return render_template(
         '_react.html',
@@ -130,25 +143,49 @@ def delete_supplier_case_study(casestudy_id):
     )
 
 
+@main.route('/case-study/create/<path:step>', methods=['POST'])
 @main.route('/case-study/create', methods=['POST'])
 @login_required
-def create_new_supplier_case_study():
+def create_new_supplier_case_study(step=None):
     if not current_user.role == 'supplier':
         flash('buyer-role-required', 'error')
         return current_app.login_manager.unauthorized()
 
     casestudy = from_response(request)
     casestudy['supplierCode'] = current_user.supplier_code
-    errors = _validate_case_study(casestudy)
+
+    fields = ['opportunity', 'title', 'client', 'timeframe', 'outcome', 'approach']
+    if step == 'reference':
+        fields = fields + ['acknowledge']
+
+        # Permission is only required if any of these four fields have values.
+        optional_require_errors = validate_form_data(casestudy, ['name', 'role', 'phone', 'email'])
+        if not len(optional_require_errors) == 4:
+            fields = fields + ['permission']
+
+    basename = url_for('.new_supplier_case_study')
+    errors = validate_form_data(casestudy, fields)
     if errors:
         form = DmForm()
-        rendered_component = render_component('bundles/CaseStudy/CaseStudyWidget.js',
-                                              {'form_options': {'csrf_token': form.csrf_token.current_token,
-                                                                'errors': errors},
-                                               'form': {'caseStudy': casestudy}})
+        rendered_component = render_component('bundles/CaseStudy/CaseStudyWidget.js', {
+            'form_options': {
+                'csrf_token': form.csrf_token.current_token,
+                'errors': errors
+            },
+            'caseStudyForm': casestudy,
+            'basename': basename
+        })
+
         return render_template(
             '_react.html',
             component=rendered_component
+        )
+
+    if not step:
+        # Store in session for retrieval on /reference
+        session['casestudy'] = casestudy
+        return redirect(
+            url_for('.new_supplier_case_study_reference')
         )
 
     try:
@@ -159,14 +196,21 @@ def create_new_supplier_case_study():
     except APIError as e:
         form = DmForm()
         flash('', 'error')
-        rendered_component = render_component('bundles/CaseStudy/CaseStudyWidget.js',
-                                              {'form_options': {'csrf_token': form.csrf_token.current_token},
-                                               'form': {'caseStudy': casestudy}})
+        rendered_component = render_component('bundles/CaseStudy/CaseStudyWidget.js', {
+            'form_options': {
+                'csrf_token': form.csrf_token.current_token
+            },
+            'caseStudyForm': casestudy,
+            'basename': basename
+        })
+
         return render_template(
             '_react.html',
             component=rendered_component
         )
 
+    # If everything is good, remove stored values from session.
+    session.pop('casestudy', None)
     return redirect(
         url_for(
             'main.get_supplier_case_study',
@@ -176,6 +220,11 @@ def create_new_supplier_case_study():
 
 
 @main.route('/case-study/<int:casestudy_id>/update', methods=['GET'])
+@main.route(
+    '/case-study/<int:casestudy_id>/update/reference',
+    methods=['GET'],
+    endpoint='edit_supplier_case_study_reference'
+)
 @login_required
 def edit_supplier_case_study(casestudy_id):
     casestudy = DataAPIClient().get_case_study(casestudy_id)['caseStudy']
@@ -186,10 +235,19 @@ def edit_supplier_case_study(casestudy_id):
         return current_app.login_manager.unauthorized()
 
     form = DmForm()
+    basename = url_for('.edit_supplier_case_study', casestudy_id=casestudy.get('id'))
     rendered_component = render_component('bundles/CaseStudy/CaseStudyWidget.js', {
-        'form_options': {'csrf_token': form.csrf_token.current_token, 'mode': 'edit'},
-        'casestudy': {'returnLink': url_for('main.get_supplier', code=current_user.supplier_code)},
-        'form': {'caseStudy': casestudy}})
+        'form_options': {
+            'csrf_token': form.csrf_token.current_token,
+            'mode': 'edit'
+        },
+        'casestudy': {
+            'returnLink': url_for('main.get_supplier', code=current_user.supplier_code)
+        },
+        'caseStudyForm': casestudy,
+        'basename': basename
+    })
+
     return render_template(
         '_react.html',
         breadcrumb_items=[
@@ -202,19 +260,14 @@ def edit_supplier_case_study(casestudy_id):
     )
 
 
-def _validate_case_study(casestudy):
-    errors = {}
-    requiredFields = ["acknowledge", "opportunity", "title", "client",
-                      "timeframe", "outcome", "approach"]
-    for field in requiredFields:
-        if not casestudy.get(field, None) or not casestudy.get(field)[0]:
-            errors[field] = {"required": True}
-    return errors
-
-
 @main.route('/case-study/<int:casestudy_id>/update', methods=['POST'])
+@main.route(
+    '/case-study/<int:casestudy_id>/update/<path:step>',
+    methods=['POST'],
+    endpoint='update_supplier_case_study_step'
+)
 @login_required
-def update_supplier_case_study(casestudy_id):
+def update_supplier_case_study(casestudy_id, step=None):
     old_casestudy = DataAPIClient().get_case_study(casestudy_id)['caseStudy']
     supplier_code = old_casestudy.get('supplierCode') if old_casestudy else None
 
@@ -225,13 +278,31 @@ def update_supplier_case_study(casestudy_id):
     casestudy = from_response(request)
     casestudy['id'] = casestudy_id
     casestudy['supplierCode'] = current_user.supplier_code
-    errors = _validate_case_study(casestudy)
+
+    fields = ['opportunity', 'title', 'client', 'timeframe', 'outcome', 'approach']
+    if step == 'reference':
+        fields = fields + ['acknowledge']
+
+        # Permission is only required if any of these four fields have values.
+        optional_require_errors = validate_form_data(casestudy, ['name', 'role', 'phone', 'email'])
+        if not len(optional_require_errors) == 4:
+            fields = fields + ['permission']
+
+    basename = url_for('.edit_supplier_case_study', casestudy_id=casestudy.get('id'))
+    errors = validate_form_data(casestudy, fields)
     if errors:
         form = DmForm()
-        rendered_component = render_component('bundles/CaseStudy/CaseStudyWidget.js',
-                                              {'form_options': {'csrf_token': form.csrf_token.current_token,
-                                                                'errors': errors, 'mode': 'edit'},
-                                               'form': {'caseStudy': casestudy}})
+
+        rendered_component = render_component('bundles/CaseStudy/CaseStudyWidget.js', {
+            'form_options': {
+                'csrf_token': form.csrf_token.current_token,
+                'errors': errors,
+                'mode': 'edit'
+            },
+            'caseStudyForm': casestudy,
+            'basename': basename
+        })
+
         return render_template(
             '_react.html',
             component=rendered_component
@@ -243,12 +314,25 @@ def update_supplier_case_study(casestudy_id):
     except APIError as e:
         form = DmForm()
         flash('', 'error')
-        rendered_component = render_component('bundles/CaseStudy/CaseStudyWidget.js',
-                                              {'form_options': {'csrf_token': form.csrf_token.current_token},
-                                               'form': {'caseStudy': casestudy}})
+        rendered_component = render_component('bundles/CaseStudy/CaseStudyWidget.js', {
+            'form_options': {
+                'csrf_token': form.csrf_token.current_token
+            },
+            'caseStudyForm': casestudy,
+            'basename': basename
+        })
+
         return render_template(
             '_react.html',
             component=rendered_component
+        )
+
+    if not step:
+        return redirect(
+            url_for(
+                '.edit_supplier_case_study_reference',
+                casestudy_id=casestudy_id,
+            )
         )
 
     return redirect(

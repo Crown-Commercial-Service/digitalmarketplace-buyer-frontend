@@ -1,17 +1,26 @@
-@mixin button-secondary {
-  @include link-colours($non-black, $light-aqua, $non-black);
-  display: inline;
-  background: none;
-  border: 0;
-  border-bottom: 1px solid $light-aqua;
-  font-weight: 400;
-  width: auto;
-  padding: 0;
+.list-entry {
+  position: relative;
 
-  &:hover,
-  &:focus {
-    background-color: $light-aqua;
-    color: $non-black;
+  label {
+    @extend h4;
+
+    & + input {
+      margin-top: $tiny-spacing;
+    }
+
+    &.text-box-number-label {
+      color: $grey;
+      left: $tiny-spacing;
+      margin: 0;
+      position: absolute;
+      top: 0.7em;
+      z-index: 1;
+
+      & + input {
+        margin-bottom: 1em;
+        padding-left: 2.2em;
+      }
+    }
   }
 }
 
@@ -158,113 +167,112 @@
   }
 }
 
-form {
+main {
+  form {
+    a.validation-message {
+      display: inline-block;
+      border: 0;
 
-  .form-control, .field {
-    @include form-control;
-  }
+      span {
+        color: $error-colour;
+        font-size: rem(14);
+        font-weight: $base-font-weight;
+      }
 
-  .validation-message {
-    color: $error-colour;
-    display: inline-block;
-    font-size: rem(14);
-    font-weight: $base-font-weight;
-    border: 0;
-
-    &:hover, &:active, &:focus {
-      background: none;
-    }
-  }
-
-  .hint {
-    color: $grey;
-    margin-bottom: 0;
-  }
-
-  textarea {
-    height: 14.375em;
-  }
-
-  .word-count-counter {
-    color: $input-count-colour;
-    float: right;
-  }
-
-  .question-heading, legend {
-    font-weight: $bold-font-weight;
-  }
-
-  fieldset {
-    legend {
-      margin-bottom: 0.8em;
-    }
-  }
-
-  .radio-list {
-    &.validation-error {
-      input[type='radio'] + label {
-        outline-color: #c00;
+      &:hover, &:active, &:focus {
+        background: none;
       }
     }
-  }
-
-  .filter-fieldset,
-  #location,
-  #culturalFitCriteria {
-    legend {
-      display: none !important;
-      visibility: hidden;
-    }
-  }
-
-  input[type='checkbox'] + label,
-  input[type='radio'] + label {
-    outline: 1px solid $light-grey;
-    margin: 0 0 8px;
-    padding: 12px 12px 12px 60px;
-
-    >p {
-      font-size: rem(14);
-      font-weight: 400;
-      margin-bottom: 0.1em;
-      padding-right: 20px;
-    }
-
-    &::before {
-      top: 12px;
-    }
-
-    &::after {
-      top: 17px;
-    }
-  }
-
-  input[type='checkbox']:checked + label,
-  input[type='radio']:checked + label {
-    font-weight: 700;
-    outline: 2px solid $grey;
-
-    &::after {
-      top: 17px;
-    }
-  }
-
-  .list-entry {
-    .button-secondary {
-      margin-top: 0.4em
-    }
-  }
-
-  .button-secondary {
-    @include button-secondary;
-  }
-
 }
 
-/* TODO I think there is a link mixin from UI Kit. */
-.button-secondary {
-  @include button-secondary;
+form {
+  .form-control, .field {
+      @include form-control;
+    }
+
+    .hint {
+      color: $grey;
+      margin-bottom: 0;
+    }
+
+    textarea {
+      height: 14.375em;
+    }
+
+    .word-count-counter {
+      color: $input-count-colour;
+      float: right;
+    }
+
+    .question-heading, legend {
+      font-weight: $bold-font-weight;
+    }
+
+    fieldset {
+      legend {
+        margin-bottom: 0.8em;
+      }
+    }
+
+    .radio-list {
+      &.validation-error {
+        input[type='radio'] + label {
+          outline-color: #c00;
+        }
+      }
+    }
+
+    .filter-fieldset,
+    #location,
+    #culturalFitCriteria {
+      legend {
+        display: none !important;
+        visibility: hidden;
+      }
+    }
+
+    input[type='checkbox'] + label,
+    input[type='radio'] + label {
+      outline: 1px solid $light-grey;
+      margin: 0 0 8px;
+      padding: 12px 12px 12px 60px;
+
+      >p {
+        font-size: rem(14);
+        font-weight: 400;
+        margin-bottom: 0.1em;
+        padding-right: 20px;
+      }
+
+      &::before {
+        top: 12px;
+      }
+
+      &::after {
+        top: 17px;
+      }
+    }
+
+    input[type='checkbox']:checked + label,
+    input[type='radio']:checked + label {
+      font-weight: 700;
+      outline: 2px solid $grey;
+
+      &::after {
+        top: 17px;
+      }
+    }
+
+    .list-entry {
+      .button-secondary {
+        margin-top: 0.4em
+      }
+    }
+
+  }  
 }
+
+
 
 .validation-masthead-heading {
     margin: 0 0 1.6rem;
