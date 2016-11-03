@@ -133,12 +133,12 @@
             <a href="{{ supplier.website }}" target="_blank">{{ supplier.website }}</a>
           </p>
         {% endif %}
-        {% for link in supplier.extraLinks %}
+        {% if supplier.linkedin %}
           <p>
-            <strong>{{ link.label }}</strong><br>
-            <a href="{{ link.url }}" target="_blank">{{ link.url }}</a>
+            <strong>LinkedIn</strong><br>
+            <a href="{{ supplier.linkedin }}" target="_blank">{{ supplier.linkedin }}</a>
           </p>
-        {% endfor %}
+        {% endif %}
       </article>
     </li>
     <li>
