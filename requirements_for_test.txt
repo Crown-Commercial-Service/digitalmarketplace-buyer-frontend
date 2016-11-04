@@ -14,3 +14,4 @@ pytest-cov==2.2.0
 python-coveralls==2.5.0
 
 marionette-client==3.2.0
+openpyxl==2.4.0

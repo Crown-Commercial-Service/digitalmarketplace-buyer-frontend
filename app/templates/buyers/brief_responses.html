@@ -65,6 +65,12 @@
                 "link": url_for('buyers.download_brief_responses', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id),
                 "file_type": "CSV",
                 "download": "True"
+              },
+              {
+                "title": ("Download seller responses to &lsquo;" + brief.get('title', brief['lotName']) + "&rsquo;")|safe,
+                "link": url_for('buyers.download_brief_responses_xlsx', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id),
+                "file_type": "XLSX",
+                "download": "True"
               }
             ]
           %}

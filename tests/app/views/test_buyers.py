@@ -9,6 +9,9 @@ from dmcontent.content_loader import ContentLoader
 import mock
 from lxml import html
 import pytest
+from tempfile import NamedTemporaryFile
+from openpyxl import load_workbook
+
 
 CSV_EXPECTED = """Supplier,Kev's Fried Noodles,Kev's Pies,Kev's Doughnuts,Kev's Butties,Kev's Pizza
 Contact,test4@email.com,test2@email.com,test3@email.com,test1@email.com,test5@email.com
@@ -2055,6 +2058,33 @@ class TestDownloadBriefResponsesCsv(BaseApplicationTest):
         res = self.client.get(self.url)
         page = res.get_data(as_text=True)
         assert page.splitlines() == CSV_EXPECTED.splitlines()
+
+    def test_xlsx_includes_all_eligible_responses_and_no_ineligible_responses(self, data_api_client):
+        data_api_client.find_brief_responses.return_value = self.brief_responses
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='live',
+            lots=[
+                api_stubs.lot(slug='digital-specialists', allows_brief=True),
+            ]
+        )
+        data_api_client.get_brief.return_value = self.brief
+
+        self.login_as_buyer()
+        res = self.client.get(self.url.replace('download', 'xlsxdownload'))
+        page = res.get_data(as_text=False)
+
+        with NamedTemporaryFile(mode='wb', suffix='.xlsx') as f:
+            f.write(page)
+            f.flush()
+            wb = load_workbook(f.name)
+
+        ws = wb['Responses']
+
+        rows = [','.join(unicode(c.value) for c in r)
+                for r in ws.rows]
+
+        assert rows == CSV_EXPECTED.splitlines()
 
     def test_download_brief_responses_for_brief_without_nice_to_haves(self, data_api_client):
         data_api_client.get_framework.return_value = api_stubs.framework(

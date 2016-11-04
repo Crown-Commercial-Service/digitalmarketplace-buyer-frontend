@@ -8,6 +8,9 @@ import pendulum
 import io
 from collections import OrderedDict as od
 
+import xlsxwriter
+from string import ascii_uppercase
+
 from flask import abort, render_template, request, redirect, url_for, flash, Response
 from flask_login import current_user
 
@@ -297,20 +300,7 @@ def view_brief_responses(framework_slug, lot_slug, brief_id):
     ), 200
 
 
-@buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/responses/download',
-              methods=['GET'])
-def download_brief_responses(framework_slug, lot_slug, brief_id):
-    get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
-    brief = data_api_client.get_brief(brief_id)["briefs"]
-
-    if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id):
-        abort(404)
-
-    if brief['status'] != "closed":
-        abort(404)
-
-    responses = get_sorted_responses_for_brief(brief, data_api_client)
-
+def prepared_response_contents_for_brief(brief, responses):
     ESS = 'essentialRequirements'
     NTH = 'niceToHaveRequirements'
 
@@ -332,6 +322,23 @@ def download_brief_responses(framework_slug, lot_slug, brief_id):
         return answers
 
     rows = [row(_) for _ in responses]
+    return rows
+
+
+@buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/responses/download',
+              methods=['GET'])
+def download_brief_responses(framework_slug, lot_slug, brief_id):
+    get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
+    brief = data_api_client.get_brief(brief_id)["briefs"]
+
+    if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id):
+        abort(404)
+
+    if brief['status'] != "closed":
+        abort(404)
+
+    responses = get_sorted_responses_for_brief(brief, data_api_client)
+    rows = prepared_response_contents_for_brief(brief, responses)
 
     first = rows[0].keys() if responses else []
     rows = [first] + [_.values() for _ in rows]
@@ -349,6 +356,56 @@ def download_brief_responses(framework_slug, lot_slug, brief_id):
         headers={
             "Content-Disposition": "attachment;filename=responses-to-requirements-{}.csv".format(brief['id']),
             "Content-Type": "text/csv; header=present"
+        }
+    ), 200
+
+
+@buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/responses/xlsxdownload',
+              methods=['GET'])
+def download_brief_responses_xlsx(framework_slug, lot_slug, brief_id):
+    get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
+    brief = data_api_client.get_brief(brief_id)["briefs"]
+
+    if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id):
+        abort(404)
+
+    if brief['status'] != "closed":
+        abort(404)
+
+    responses = get_sorted_responses_for_brief(brief, data_api_client)
+    rows = prepared_response_contents_for_brief(brief, responses)
+
+    first = rows[0].keys() if responses else []
+    rows = [first] + [_.values() for _ in rows]
+
+    outdata = io.BytesIO()
+
+    workbook = xlsxwriter.Workbook(outdata)
+    bold = workbook.add_format({'bold': True})
+
+    sheet = workbook.add_worksheet('Responses')
+
+    COLUMN_WIDTH = 25
+
+    for column_letter, r in zip(ascii_uppercase, rows):
+        sheet.set_column('{x}:{x}'.format(x=column_letter), COLUMN_WIDTH)
+
+        for row_number, c in enumerate(r, start=1):
+            cell = '{}{}'.format(column_letter, row_number)
+
+            if column_letter == 'A':
+                sheet.write(cell, unicode(c), bold)
+            else:
+                sheet.write(cell, unicode(c))
+
+    workbook.close()
+
+    return Response(
+        outdata.getvalue(),
+        mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        headers={
+            "Content-Disposition": "attachment;filename=responses-to-requirements-{}.xlsx".format(brief['id']),
+            "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         }
     ), 200
 
