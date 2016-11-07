@@ -31,12 +31,7 @@
 {% block main_content %}
 <div class="grid-row">
   <div class="column-two-thirds">
-    {% with
-      heading = "Shortlist sellers",
-      smaller = true
-    %}
-    {% include "toolkit/page-heading.html" %}
-    {% endwith %}
+    <h1>You've had {{ response_counts['eligible'] or 'no' }} response{{ pluralize(response_counts['eligible'], "", "s") }} to your brief{% if brief.get("status") != "closed" %} so far{% endif %}.</h1>
   </div>
 </div>
 
@@ -44,66 +39,52 @@
   <div class="column-two-thirds">
     <div class="dmspeak">
       {% if response_counts['eligible'] > 0 %}
-        <p>
-          <span class='visual-emphasis'>{{ response_counts['eligible'] }} {{ pluralize(response_counts['eligible'], "seller", "sellers") }}</span>
-          responded to your requirements and {{ pluralize(response_counts['eligible'], "meets", "meet") }} all your essential skills and experience.
-        </p>
-        <p>
-          Sellers that did not meet all your essential requirements have already been told they were unsuccessful.
-        </p>
+        <p>This spreadsheet contains the response from each seller to the brief’s essential and nice-to-have criteria. You can contact sellers for more information if you wish.</p>
 
-        <p>
-          Download the list of seller responses and follow the guidance on <a href="{{ url_for('main.how_to_shortlist_suppliers') }}">how to shortlist</a>.
-        </p>
+        {%
+          with
+          items = [
+            {
+              "title": ("Download seller responses to &lsquo;" + brief.get('title', brief['lotName']) + "&rsquo;")|safe,
+              "link": url_for('buyers.download_brief_responses', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id),
+              "file_type": "CSV",
+              "download": "True"
+            },
+            {
+              "title": ("Download seller responses to &lsquo;" + brief.get('title', brief['lotName']) + "&rsquo;")|safe,
+              "link": url_for('buyers.download_brief_responses_xlsx', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id),
+              "file_type": "XLSX",
+              "download": "True"
+            }
+          ]
+        %}
+        <ul class='document-list' style="list-style: none;">
+          {% for item in items %}
+            <li class='document-list-item'>
+                <a href="{{ item.link }}" class="document-link-with-icon download">
+                  ⇩ {{ item.title }}: {{ item.file_type }}</span>
+                </a>
+            </li>
+          {% endfor %}
+        </ul>
+        {% endwith %}
 
-        {% if brief.get("status") == "closed" %}
-          {%
-            with
-            items = [
-              {
-                "title": ("Download seller responses to &lsquo;" + brief.get('title', brief['lotName']) + "&rsquo;")|safe,
-                "link": url_for('buyers.download_brief_responses', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id),
-                "file_type": "CSV",
-                "download": "True"
-              },
-              {
-                "title": ("Download seller responses to &lsquo;" + brief.get('title', brief['lotName']) + "&rsquo;")|safe,
-                "link": url_for('buyers.download_brief_responses_xlsx', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id),
-                "file_type": "XLSX",
-                "download": "True"
-              }
-            ]
-          %}
-            {% include "toolkit/documents.html" %}
-          {% endwith %}
-        {% else %}
-        <p>
-          The file will be available here once applications have closed.
+        <p>Once you have reviewed the responses in the spreadsheet, select  sellers to take through to the evaluation stage. As a courtesy, please inform the other sellers who were unsuccessful.</p>
+        <p>For more information, read our guide on <a href="{{ url_for('main.how_to_shortlist_suppliers') }}">how to shortlist</a>.
         </p>
-        {% endif %}
-
       {% else %}
         <p>
-          No sellers met your essential skills and experience requirements.
+          No sellers responded to your brief. If you still need this service, you should start the buying process again.
         </p>
         <p>
-          All the sellers who applied have already been told they were unsuccessful.
+            If you still need this service, you should start the buying process again. Consider talking to sellers before you start, or rewriting your requirements.
         </p>
-        <div class='explanation-list'>
-          <p class='lead'>
-            If you still need this service, you should start the buying process again. Consider: 
-          </p>
-          <ul class='list-bullet'>
-            <li>talking to sellers before you start</li>
-            <li>rewriting your requirements</li>
-          </ul>
-        </div>
       {% endif %}
     </div>
     {%
       with
-      url = url_for('buyers.view_brief_overview', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id),
-      text = "Back to overview"
+      url = url_for('buyers.buyer_dashboard'),
+      text = "Back to your dashboard"
     %}
       {% include "toolkit/secondary-action-link.html" %}
     {% endwith %}

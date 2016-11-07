@@ -1829,8 +1829,8 @@ class TestViewBriefResponsesPage(BaseApplicationTest):
         page = res.get_data(as_text=True)
 
         assert res.status_code == 200
-        assert "2 sellers" in page
-        assert "responded to your requirements and meet all your essential skills and experience." in page
+        assert "2 responses" in page
+        assert "This spreadsheet contains the response from each seller to the brief’s" in page
 
     def test_page_does_not_pluralise_for_single_response(self, data_api_client):
         data_api_client.find_brief_responses.return_value = {
@@ -1851,8 +1851,8 @@ class TestViewBriefResponsesPage(BaseApplicationTest):
         ))
         page = res.get_data(as_text=True)
         assert res.status_code == 200
-        assert "1 seller" in page
-        assert "responded to your requirements and meets all your essential skills and experience." in page
+        assert "1 response" in page
+        assert "This spreadsheet contains the response from each seller to the brief’s" in page
 
     def test_page_shows_correct_message_if_no_eligible_suppliers(self, data_api_client):
         data_api_client.find_brief_responses.return_value = {
@@ -1874,7 +1874,7 @@ class TestViewBriefResponsesPage(BaseApplicationTest):
         page = res.get_data(as_text=True)
 
         assert res.status_code == 200
-        assert "No sellers met your essential skills and experience requirements." in page
+        assert "No sellers responded to your brief." in page
 
     def test_page_shows_csv_download_link_if_brief_closed(self, data_api_client):
         data_api_client.find_brief_responses.return_value = self.two_good_three_bad_responses
@@ -1899,35 +1899,7 @@ class TestViewBriefResponsesPage(BaseApplicationTest):
         )[0]
 
         assert res.status_code == 200
-        assert self._strip_whitespace(csv_link.text_content()) == \
-            "CSVdocument:Downloadsellerresponsesto‘Ineedathingtodoathing’"
-
-    def test_page_does_not_show_csv_download_link_if_brief_open(self, data_api_client):
-        data_api_client.find_brief_responses.return_value = self.two_good_three_bad_responses
-        data_api_client.get_framework.return_value = api_stubs.framework(
-            slug='digital-outcomes-and-specialists',
-            status='live',
-            lots=[
-                api_stubs.lot(slug='digital-outcomes', allows_brief=True),
-            ]
-        )
-        data_api_client.get_brief.return_value = api_stubs.brief(lot_slug="digital-outcomes", status='live')
-
-        self.login_as_buyer()
-        res = self.client.get(self.expand_path(
-            '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1234/responses'
-        ))
-        page = res.get_data(as_text=True)
-        document = html.fromstring(page)
-        csv_link = document.xpath(
-            '//a[@href="/buyers/frameworks/digital-outcomes-and-specialists/requirements/'
-            'digital-outcomes/1234/responses/download"]'
-            # noqa
-        )
-
-        assert res.status_code == 200
-        assert len(csv_link) == 0
-        assert "The file will be available here once applications have closed." in page
+        assert "Download seller responses to" in csv_link.text_content()
 
     def test_404_if_brief_does_not_belong_to_buyer(self, data_api_client):
         data_api_client.get_framework.return_value = api_stubs.framework(
