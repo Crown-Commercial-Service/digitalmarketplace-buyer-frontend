@@ -2,6 +2,11 @@
 
 .index-page {
 
+  h2 {
+    @include bold-27;
+    margin-bottom: $gutter;
+  }
+
   .browse-list {
     .browse-list-item {
       margin-bottom: 20px;
@@ -66,10 +71,6 @@
   }
 
   .supplier-messages {
-    h2 {
-      @include bold-27;
-      margin-bottom: $gutter;
-    }
 
     p {
       margin: 0;
@@ -149,11 +150,4 @@
       color: $light-blue-50;
     }
   }
-}
-
-.marketplace-homepage-subheading {
-
-  @include bold-27;
-  padding-bottom: 30px;
-
 }
