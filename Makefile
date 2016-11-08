@@ -4,7 +4,7 @@ VIRTUALENV_ROOT := $(shell [ -z $$VIRTUAL_ENV ] && echo $$(pwd)/venv || echo $$V
 run_all: requirements frontend_build run_app
 
 run_app: show_environment virtualenv
-	python application.py runserver
+	${VIRTUALENV_ROOT}/bin/python application.py runserver
 
 virtualenv:
 	[ -z $$VIRTUAL_ENV ] && [ ! -d venv ] && virtualenv venv || true
