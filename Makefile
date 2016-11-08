@@ -15,7 +15,7 @@ requirements: virtualenv requirements.txt
 requirements_for_test: virtualenv requirements_for_test.txt
 	${VIRTUALENV_ROOT}/bin/pip install -r requirements_for_test.txt
 
-npm_install:
+npm_install: package.json
 	npm install
 
 frontend_build:
