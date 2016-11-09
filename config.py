@@ -79,6 +79,7 @@ class Config(object):
     FEATURE_FLAGS = {
         'BRIEF_FILTER': True,
         'CASE_STUDY': True,
+        'XLSX_EXPORT': True
     }
 
     # LOGGING
@@ -135,6 +136,7 @@ class Live(Config):
     FEATURE_FLAGS = {
         'BRIEF_FILTER': False,
         'CASE_STUDY': False,
+        'XLSX_EXPORT': False
     }
 
     REACT_BUNDLE_URL = 'https://dm-frontend.apps.platform.digital.gov.au/bundle/'

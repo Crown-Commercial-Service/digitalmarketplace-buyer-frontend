@@ -60,11 +60,13 @@
         %}
         <ul class='document-list' style="list-style: none;">
           {% for item in items %}
+          {% if 'XLSX_EXPORT' is active_feature or item.file_type != 'XLSX' %}
             <li class='document-list-item'>
                 <a href="{{ item.link }}" class="document-link-with-icon download">
                   ⇩ {{ item.title }}: {{ item.file_type }}</span>
                 </a>
             </li>
+            {% endif %}
           {% endfor %}
         </ul>
         {% endwith %}
