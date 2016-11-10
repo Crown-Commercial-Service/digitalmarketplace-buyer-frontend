@@ -377,13 +377,23 @@ class TestBriefPage(BaseApplicationTest):
 
         assert_equal(qa_link_text.strip(), "Ask a question")
 
-    def test_can_apply_to_live_brief(self):
+    def test_can_apply_to_live_brief_with_old_supplier_flow(self):
+        self.app.config['FEATURE_FLAGS_NEW_SUPPLIER_FLOW'] = False
         brief_id = self.brief['briefs']['id']
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
         assert_equal(200, res.status_code)
         document = html.fromstring(res.get_data(as_text=True))
 
         apply_links = document.xpath('//a[@href="/suppliers/opportunities/{}/responses/create"]'.format(brief_id))
+        assert len(apply_links) == 1
+
+    def test_can_apply_to_live_brief_with_new_supplier_flow(self):
+        brief_id = self.brief['briefs']['id']
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
+        assert_equal(200, res.status_code)
+        document = html.fromstring(res.get_data(as_text=True))
+
+        apply_links = document.xpath('//a[@href="/suppliers/opportunities/{}/responses/start"]'.format(brief_id))
         assert len(apply_links) == 1
 
     def test_cannot_apply_to_closed_brief(self):
