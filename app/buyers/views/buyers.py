@@ -445,7 +445,7 @@ def add_supplier_question(framework_slug, lot_slug, brief_id):
     if brief["status"] != "live":
         abort(404)
 
-    content = content_loader.get_manifest(brief['frameworkSlug'], "clarification_question")
+    content = content_loader.get_manifest(brief['frameworkSlug'], "clarification_question").filter({})
     section = content.get_section(content.get_next_editable_section_id())
     update_data = section.get_data(request.form)
 
