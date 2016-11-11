@@ -2,6 +2,11 @@
 
 .index-page {
 
+  h2 {
+    @include bold-27;
+    margin-bottom: $gutter;
+  }
+
   .browse-list {
     .browse-list-item {
       margin-bottom: 20px;
@@ -66,10 +71,6 @@
   }
 
   .supplier-messages {
-    h2 {
-      @include bold-27;
-      margin-bottom: $gutter;
-    }
 
     p {
       margin: 0;
@@ -112,4 +113,41 @@
     margin-bottom: 5px;
   }
 
+}
+
+.marketplace-homepage-heading {
+
+  background-color: $govuk-blue;
+  width: 100%;
+  margin: -10px 0 40px;
+  padding: 0 0 20px;
+  color: white;
+
+  h1 {
+    @extend %site-width-container;
+    @include bold-48;
+    padding-top: 7px;
+    padding-bottom: 13px;
+  }
+
+  .phase-banner {
+    border-bottom: 0px;
+
+    .phase-tag {
+      margin-left: 3px;
+    }
+  }
+
+  .phase-banner p {
+    margin: -6px 0 10px;
+    color: white;
+
+    a, a:visited {
+        color: $white;
+      }
+
+    a:hover, a:active {
+      color: $light-blue-50;
+    }
+  }
 }
