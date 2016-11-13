@@ -191,3 +191,14 @@ ol.instruction-list {
     margin-top: 0.4em;
   }
 }
+
+
+ol.bold-numbers {
+  > li {
+    font-weight: bold;
+
+    li, p, span, em, a {
+      font-weight: normal;
+    }
+  }
+}
