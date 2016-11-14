@@ -184,13 +184,6 @@ def create_new_supplier_case_study(step=None):
             component=rendered_component
         )
 
-    if not step:
-        # Store in session for retrieval on /reference
-        session['casestudy'] = casestudy
-        return redirect(
-            url_for('.new_supplier_case_study_reference')
-        )
-
     try:
         case_study = DataAPIClient().create_case_study(
             caseStudy=casestudy
@@ -212,8 +205,6 @@ def create_new_supplier_case_study(step=None):
             component=rendered_component
         )
 
-    # If everything is good, remove stored values from session.
-    session.pop('casestudy', None)
     return redirect(
         url_for(
             'main.get_supplier_case_study',
@@ -331,14 +322,6 @@ def update_supplier_case_study(casestudy_id, step=None):
         return render_template(
             '_react.html',
             component=rendered_component
-        )
-
-    if not step:
-        return redirect(
-            url_for(
-                '.edit_supplier_case_study_reference',
-                casestudy_id=casestudy_id,
-            )
         )
 
     return redirect(
