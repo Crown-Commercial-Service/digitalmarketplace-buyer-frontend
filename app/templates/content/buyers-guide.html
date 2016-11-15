@@ -6,9 +6,24 @@
 
 {% block main_content %}
   <h1>Buyer's guide</h1>
-  <h2>What is the Digital Marketplace?</h2>
+
+  <nav class="index-links">
+    <h2>In this section</h2>
+    <ul>
+        <li><a href="#what-is-the-digital-marketplace">What is the Digital Marketplace?</a></li>
+        <li><a href="#who-can-be-a-buyer">Who can be a buyer?</a></li>
+        <li><a href="#what-can-you-buy">What can you buy?</a></li>
+        <li><a href="#the-buying-process">The buying process</a></li>
+        <li><a href="#how-we-meet-procurement-rules">How we meet procurement rules</a></li>
+        <li><a href="#do-i-need-to-use-austender">Do I need to use AusTender as well?</a></li>
+        <li><a href="#help-us-build-a-better-marketplace">Help us build a better Marketplace</a></li>
+    </ul>
+  </nav>
+
+
+  <h2 id="what-is-the-digital-marketplace">What is the Digital Marketplace?</h2>
   <p>
-    As part of the <a rel="external" href="http://www.innovation.gov.au/page/agenda">National Science an Innovation Agenda</a>, the Digital Marketplace is making it easier for digital businesses to work with government.
+    As part of the <a rel="external" href="http://www.innovation.gov.au/page/agenda">National Science and Innovation Agenda</a> the Digital Marketplace is making it easier for digital businesses to work with government.
   </p>
 
   <p>
@@ -16,7 +31,7 @@
   </p>
 
 
-  <h2>Who can be a buyer?</h2>
+  <h2 id="who-can-be-a-buyer">Who can be a buyer?</h2>
   <p>
     If you work in government and you need digital services you can become a buyer in the Digital Marketplace. Our buyers are from across all levels of government — local, state and federal — and from corporate government entities such as the ABC, the National Museum of Australia and Melbourne Water.
   </p>
@@ -28,14 +43,14 @@
   
 
   <p>
-    If you have an email address ending in <strong>.gov.au</strong> you can create a buyer account now. If you work in government but your email is different, email your request to create a buyer account to <a href="mailto:marketplace@digital.gov.au">marketplace@digital.gov.au</a>
+    If you have an email address ending in <strong>.gov.au</strong> you can create a buyer account now. If you work in government but your email is different, email your account request to <a href="mailto:marketplace@digital.gov.au">marketplace@digital.gov.au</a>
   </p>
 
   <p>
     <a href="{{ url_for('main.buyer_signup') }}" role="button">Create a buyer account</a>
   </p>
 
-  <h2>What can you buy?</h2>
+  <h2 id="what-can-you-buy">What can you buy?</h2>
   <h3>Outcomes</h3>
   <p>
     If you need a team of digital specialists with the expertise to deliver an outcome, such as a new responsive website or an accessibility audit, you can find them in the Marketplace. So far the our buyers have asked for new strategies, cultural change
@@ -54,7 +69,7 @@
     <a role="button" href="{{url_for('main.info_page_for_starting_a_brief', framework_slug='digital-service-professionals', lot_slug='digital-professionals')}}">Create a brief for a specialist</a>
   </p>
 
-  <h3>The buying process</h3>
+  <h2 id="the-buying-process">The buying process</h2>
   <p>
     Until now, successful procurement involved a lot of pre-research. Before you could go to market you had to carefully define your requirements and find a small group of potential sellers who could meet them. The Digital Marketplace turns this around. By posting what you need ‘Open to all’ buyers in the Digital Marketplace it’s easy to find sellers who are available and have the expertise you need. And it make the process easier, instead of going to Market you simply let the Market come to you.
   </p>
@@ -129,7 +144,7 @@
   </ol>
 
 
-  <h2>How we meet procurement rules</h2>
+  <h2 id="how-we-meet-procurement-rules">How we meet procurement rules</h2>
 
   <h3>Does the Digital Marketplace meet Commonwealth Procurement Rules?</h3>
   <p>
@@ -153,12 +168,12 @@
     Other local, state and territory government buyers are also welcome to use the Marketplace but should ensure that they comply with any additional procurement rules that apply in their state or territory. 
   </p>
 
-  <h2>Do I need to use AusTender as well?</h2>
+  <h2 id="do-i-need-to-use-austender">Do I need to use AusTender as well?</h2>
   <p>
     You still need to meet the Department of Finance <a rel="external" href="https://www.finance.gov.au/procurement/procurement-policy-and-guidance/buying/reporting-requirements/contracts-agency/principles.html">reporting requirements</a>, which include notifying AusTender of contracts (and contract amendments) that are above the reporting threshold within 42 days. 
   </p>
 
-  <h2>Help us build a better Marketplace</h2>
+  <h2 id="help-us-build-a-better-marketplace">Help us build a better Marketplace</h2>
   <p>
     The Marketplace is being shaped by the needs of buyers and sellers. To help us make your procurements as fast and simple as they can be, share your feedback or take part in user research. Whether your office is in Canberra or Kalgoorlie we’re happy to hear from you. Email your thoughts or interest to <a href="mailto:marketplace@digital.gov.au">marketplace@digital.gov.au</a>
   </p>
