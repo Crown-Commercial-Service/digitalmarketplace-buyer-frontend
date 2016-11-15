@@ -23,6 +23,9 @@ def redirect_logged_in_user(next_url=None):
         if current_user.role == 'supplier':
             return redirect(url_for('.list_opportunities', framework_slug='digital-service-professionals'))
 
+        if current_user.role == 'applicant':
+            return redirect('/sellers/application')
+
     return redirect(url_for('.index'))
 
 
