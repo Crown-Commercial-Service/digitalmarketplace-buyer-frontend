@@ -95,6 +95,8 @@ class Test(Config):
     SHARED_EMAIL_KEY = "KEY"
     SECRET_KEY = "KEY"
 
+    FEATURE_FLAGS_NEW_SUPPLIER_FLOW = enabled_since('2016-10-26')
+
 
 class Development(Config):
     DEBUG = True
@@ -109,6 +111,8 @@ class Development(Config):
     DM_MANDRILL_API_KEY = "not_a_real_key"
     SECRET_KEY = "verySecretKey"
     SHARED_EMAIL_KEY = "very_secret"
+
+    FEATURE_FLAGS_NEW_SUPPLIER_FLOW = enabled_since('2016-10-26')
 
 
 class Live(Config):
