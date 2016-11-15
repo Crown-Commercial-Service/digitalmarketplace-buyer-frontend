@@ -36,6 +36,10 @@
       <p class="callout">
           You must log in with a buyer account to see this page.
       </p>
+    {% elif message == 'applicant-role-required' %}
+      <p class="callout">
+        You must log in with a applicant account to see this page.
+      </p>
     {% elif category != 'must_login' %}
       {{ message }}
     {% endif %}
