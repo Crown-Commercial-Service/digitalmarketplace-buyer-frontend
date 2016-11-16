@@ -11,6 +11,7 @@
     <h2>In this section</h2>
     <ul>
         <li><a href="#what-is-the-digital-marketplace">What is the Digital Marketplace?</a></li>
+        <li><a href="#why-use-the-digital-marketplace">Why use the Digital Marketplace?</a></li>
         <li><a href="#who-can-be-a-buyer">Who can be a buyer?</a></li>
         <li><a href="#what-can-you-buy">What can you buy?</a></li>
         <li><a href="#the-buying-process">The buying process</a></li>
@@ -30,17 +31,15 @@
     Now in Beta, the Digital Marketplace is about more than bringing a government panel available online. We’re building an end-to-end digital environment that makes all digital procurement easier — whether it’s straightforward, more complex or requiring a higher degree of collaboration and creativity.
   </p>
 
+  <h2 id="why-use-the-digital-marketplace">Why use the Digital Marketplace?</h2>
+  <p>The Digital Marketplace can help you get a better procurement outcome and it can help you get there faster.</p>
+  <p>It gives government buyers access to a large pool of approved digital businesses and it makes the procurement process simpler. First time buyers have reported they can create and publish a brief within 30 minutes. Briefs can remain open for 1 or 2 weeks. So, if what you need is straightforward, you can have a proposal or resumes on your desk in a little over a week.</p>
+
 
   <h2 id="who-can-be-a-buyer">Who can be a buyer?</h2>
   <p>
     If you work in government and you need digital services you can become a buyer in the Digital Marketplace. Our buyers are from across all levels of government — local, state and federal — and from corporate government entities such as the ABC, the National Museum of Australia and Melbourne Water.
   </p>
-
-  <img src="{{ asset_path }}images/buyer-logos@2x.jpg" alt="Some of our current buyers from across local, state and federal government" />
-  <p>
-    <small><em>Some of our current buyers from across local, state and federal government.</em></small>  
-  </p>
-  
 
   <p>
     If you have an email address ending in <strong>.gov.au</strong> you can create a buyer account now. If you work in government but your email is different, email your account request to <a href="mailto:marketplace@digital.gov.au">marketplace@digital.gov.au</a>
@@ -53,12 +52,13 @@
   <h2 id="what-can-you-buy">What can you buy?</h2>
   <h3>Outcomes</h3>
   <p>
-    If you need a team of digital specialists with the expertise to deliver an outcome, such as a new responsive website or an accessibility audit, you can find them in the Marketplace. So far the our buyers have asked for new strategies, cultural change
+     Agencies are using the Digital Marketplace for a variety of projects large and small. From a <a href="{{ url_for('main.get_brief_by_id', framework_slug='digital-service-professionals', brief_id=163) }}">short assessment of a team’s capabilities</a>, to <a href="{{ url_for('main.get_brief_by_id', framework_slug='digital-service-professionals', brief_id=155) }}">software reviews for next-generation submarines</a> or <a href="{{ url_for('main.get_brief_by_id', framework_slug='digital-service-professionals', brief_id=93) }}">multi-million dollar website projects</a> and everything in between.
   </p>
 
   <p>
     <a role="button" href="{{url_for('main.info_page_for_starting_a_brief', framework_slug='digital-service-professionals', lot_slug='digital-outcome')}}">Create a brief for an outcome</a>
   </p>
+  <p>Need a hand with your brief? <a href="mailto:marketplace@digital.gov.au">Contact us</a>.</p>
 
   <h3>Specialists</h3>
   <p>
@@ -68,6 +68,7 @@
   <p>
     <a role="button" href="{{url_for('main.info_page_for_starting_a_brief', framework_slug='digital-service-professionals', lot_slug='digital-professionals')}}">Create a brief for a specialist</a>
   </p>
+  <p>Need a hand with your brief? <a href="mailto:marketplace@digital.gov.au">Contact us</a>.</p>
 
   <h2 id="the-buying-process">The buying process</h2>
   <p>
@@ -75,9 +76,6 @@
   </p>
   
   <img src="{{ asset_path }}images/How-to-buy@2x.jpg" alt="Follow these 6 steps to buy in the Digital Marketplace; Prepare, Publish, Respond, Shortlist, Evaluate, Award." />
-  <p>
-    <small><em>Some of our current buyers from across local, state and federal government.</em></small>
-  </p>
 
   <ol class="bold-numbers">
     <li>
@@ -97,6 +95,7 @@
         <li>Follow the steps in the brief builder to create your brief</li>
         <li>Choose whether you want to go ‘Open to 1’, ‘Open to selected’, or ‘Open to all’ (recommended)</li>
         <li>Choose whether you want your brief to be open for 1 or 2 weeks</li>
+        <li>Preview your brief and get final approval, if required</li>
         <li>Publish your brief on the Digital Marketplace</li>
       </ul>
     </li>
@@ -170,7 +169,7 @@
 
   <h2 id="do-i-need-to-use-austender">Do I need to use AusTender as well?</h2>
   <p>
-    You still need to meet the Department of Finance <a rel="external" href="https://www.finance.gov.au/procurement/procurement-policy-and-guidance/buying/reporting-requirements/contracts-agency/principles.html">reporting requirements</a>, which include notifying AusTender of contracts (and contract amendments) that are above the reporting threshold within 42 days. 
+    You still need to meet the Department of Finance <a rel="external" href="https://www.finance.gov.au/procurement/procurement-policy-and-guidance/buying/reporting-requirements/contracts-agency/principles.html">reporting requirements</a>, which include notifying AusTender of contracts (and contract amendments) that are valued at or above the reporting threshold within 42 days. 
   </p>
 
   <h2 id="help-us-build-a-better-marketplace">Help us build a better Marketplace</h2>
