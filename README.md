@@ -7,6 +7,18 @@ Frontend buyer application for the digital marketplace.
 
 - Python app, based on the [Flask framework](http://flask.pocoo.org/)
 
+## Quickstart
+
+Install [Virtualenv](https://virtualenv.pypa.io/en/latest/)
+```
+sudo easy_install virtualenv
+```
+
+Install dependencies, run migrations and run the app
+```
+make run_all
+````
+
 ## Setup
 
 Install [Virtualenv](https://virtualenv.pypa.io/en/latest/)
