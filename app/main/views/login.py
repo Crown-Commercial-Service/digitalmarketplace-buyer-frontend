@@ -88,8 +88,7 @@ def send_reset_password_email():
 
             token = generate_token(
                 {
-                    "user": user.id,
-                    "email": user.email_address
+                    "user": user.id
                 },
                 current_app.config['SECRET_KEY'],
                 current_app.config['RESET_PASSWORD_SALT']
