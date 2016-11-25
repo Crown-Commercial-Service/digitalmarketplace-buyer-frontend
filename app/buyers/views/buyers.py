@@ -6,6 +6,7 @@ import six
 import csvx
 import pendulum
 import io
+import re
 from collections import OrderedDict as od
 
 import xlsxwriter
@@ -307,6 +308,9 @@ def prepared_response_contents_for_brief(brief, responses):
     ess_req_names = brief.get(ESS, [])
     nth_req_names = brief.get(NTH, [])
 
+    def csv_cell_sanitize(text):
+        return re.sub(r"^(=|\+|-|@|!|\|{|}|\[|\]|<)+", '', unicode(text).strip())
+
     def row(r):
         answers = od()
 
@@ -319,6 +323,10 @@ def prepared_response_contents_for_brief(brief, responses):
         answers.update({'Day rate': r.get('dayRate', '')})
         answers.update(zip(ess_req_names, ess_responses))
         answers.update(zip(nth_req_names, nth_responses))
+
+        for k, v in answers.items():
+            answers[k] = csv_cell_sanitize(v)
+
         return answers
 
     rows = [row(_) for _ in responses]
@@ -343,7 +351,7 @@ def download_brief_responses(framework_slug, lot_slug, brief_id):
     first = rows[0].keys() if responses else []
     rows = [first] + [_.values() for _ in rows]
 
-    transposed = zip(*rows)
+    transposed = list(six.moves.zip_longest(*rows))
 
     outdata = io.StringIO()
     with csvx.Writer(outdata) as csv_out:
