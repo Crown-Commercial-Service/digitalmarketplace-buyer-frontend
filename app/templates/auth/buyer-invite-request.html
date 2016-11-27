@@ -45,7 +45,7 @@
   {%
     with
       question = "Line manager's name",
-      hint = 'We may contact your line manager for verification purposes.'|safe,
+      hint = 'We may contact your line manager for verification purposes.',
       name = "manager_name",
       value = form.manager_name.data,
       error = form.manager_name.errors[0]
@@ -56,7 +56,7 @@
   {%
     with
       question = "Line manager's email address",
-      hint = 'Your line manager\'s email address must be a government email address.'|safe,
+      hint = 'Your line manager\'s email address must be a government email address.',
       name = "manager_email",
       value = form.manager_email.data,
       error = form.manager_email.errors[0]
