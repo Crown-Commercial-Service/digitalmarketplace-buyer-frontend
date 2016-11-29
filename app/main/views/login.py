@@ -140,7 +140,7 @@ def send_reset_password_email():
 @main.route('/reset-password/<token>', methods=["GET"])
 def reset_password(token):
     decoded = decode_password_reset_token(token, data_api_client)
-    if decoded.get('error', None):
+    if 'error' in decoded:
         flash(decoded['error'], 'error')
         return redirect(url_for('.request_password_reset'))
 
@@ -156,7 +156,7 @@ def reset_password(token):
 def update_password(token):
     form = ChangePasswordForm()
     decoded = decode_password_reset_token(token, data_api_client)
-    if decoded.get('error', None):
+    if 'error' in decoded:
         flash(decoded['error'], 'error')
         return redirect(url_for('.request_password_reset'))
 
@@ -211,7 +211,7 @@ def submit_create_buyer_account():
             )
             url = url_for('main.create_user', encoded_token=token, _external=True)
             email_body = render_template("emails/create_buyer_user_email.html", url=url)
-            # print("CREATE ACCOUNT URL: {}".format(url))
+
             try:
                 send_email(
                     email_address,
@@ -258,7 +258,7 @@ def create_user(encoded_token):
             "auth/create-buyer-user-error.html",
             token=None), 400
 
-    user_json = data_api_client.get_user(email_address=token.get("email_address"))
+    user_json = data_api_client.get_user(email_address=token["email_address"])
 
     if not user_json:
         return render_template(
@@ -295,14 +295,14 @@ def submit_create_user(encoded_token):
                 "auth/create-user.html",
                 form=form,
                 token=encoded_token,
-                email_address=token.get('email_address')), 400
+                email_address=token['email_address']), 400
 
         try:
             user = data_api_client.create_user({
                 'name': form.name.data,
                 'password': form.password.data,
                 'phoneNumber': form.phone_number.data,
-                'emailAddress': token.get('email_address'),
+                'emailAddress': token['email_address'],
                 'role': 'buyer'
             })
 
