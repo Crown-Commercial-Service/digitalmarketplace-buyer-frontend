@@ -8,6 +8,7 @@ from ...helpers import BaseApplicationTest
 from lxml import html, cssselect
 import mock
 from flask import session
+import pytest
 
 EMAIL_EMPTY_ERROR = "You must provide an email address"
 EMAIL_INVALID_ERROR = "You must provide a valid email address"
@@ -644,7 +645,7 @@ class TestCreateUser(BaseApplicationTest):
         assert res.location == 'http://localhost/create-user'
 
     @mock.patch('app.main.views.login.data_api_client')
-    def test_should_be_an_error_for_invalid_token_contents(self, data_api_client):
+    def test_invalid_token_contents_500s(self, data_api_client):
         token = generate_token(
             {
                 'this_is_not_expected': 1234
@@ -653,11 +654,10 @@ class TestCreateUser(BaseApplicationTest):
             self.app.config['INVITE_EMAIL_SALT']
         )
 
-        res = self.client.get(
-            '/create-user/{}'.format(token)
-        )
-        assert res.status_code == 400
-        assert data_api_client.get_user.called is False
+        with pytest.raises(KeyError):
+            self.client.get(
+                '/create-user/{}'.format(token)
+            )
 
     def test_should_be_a_bad_request_if_token_expired(self):
         res = self.client.get(

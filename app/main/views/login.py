@@ -249,7 +249,7 @@ def submit_create_buyer_account():
 def create_user(encoded_token):
     form = CreateUserForm()
 
-    token = decode_invitation_token(encoded_token, role='buyer')
+    token = decode_invitation_token(encoded_token)
     if token is None:
         current_app.logger.warning(
             "createuser.token_invalid: {encoded_token}",
@@ -277,8 +277,7 @@ def create_user(encoded_token):
 @main.route('/create-user/<string:encoded_token>', methods=["POST"])
 def submit_create_user(encoded_token):
     form = CreateUserForm()
-
-    token = decode_invitation_token(encoded_token, role='buyer')
+    token = decode_invitation_token(encoded_token)
     if token is None:
         current_app.logger.warning("createuser.token_invalid: {encoded_token}",
                                    extra={'encoded_token': encoded_token})
