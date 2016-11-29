@@ -7,6 +7,7 @@ from dmutils.forms import FakeCsrf
 from dmapiclient import api_stubs, HTTPError, APIError
 from dmcontent.content_loader import ContentLoader
 import mock
+from copy import deepcopy
 from lxml import html
 import pytest
 from tempfile import NamedTemporaryFile
@@ -2002,9 +2003,17 @@ class TestDownloadBriefResponsesCsv(BaseApplicationTest):
                 "availability": "&quot;A week Friday&rdquot;",
                 "dayRate": "3.50",
                 "essentialRequirements": [True, True],
-                "niceToHaveRequirements": [False, True, True],
+                "niceToHaveRequirements": [False, True, False],
                 "respondToEmailAddress": "te,st2@email.com",
             },
+            {
+                "supplierName": "@SUM(1+1)*cmd|' /C calc'!A0",
+                "availability": "=cmd| '/c calc'!A0",
+                "dayRate": "3.50",
+                "essentialRequirements": [True, True],
+                "niceToHaveRequirements": [False, False, True],
+                "respondToEmailAddress": "+SUM(1+1)*cmd|' /C calc'!A0",
+            }
         ]
     }
 
@@ -2069,17 +2078,20 @@ class TestDownloadBriefResponsesCsv(BaseApplicationTest):
 
         for response in self.brief_responses['briefResponses']:
             del response["niceToHaveRequirements"]
+
+        brief_without_nice_to_haves = deepcopy(self.brief)
+
         data_api_client.find_brief_responses.return_value = self.brief_responses
 
-        data_api_client.get_brief.return_value = self.brief
+        data_api_client.get_brief.return_value = brief_without_nice_to_haves
 
         self.login_as_buyer()
 
-        del self.brief['briefs']['niceToHaveRequirements']
+        del brief_without_nice_to_haves['briefs']['niceToHaveRequirements']
         res = self.client.get(self.url)
         assert res.status_code, 200
 
-        self.brief['briefs']['niceToHaveRequirements'] = []
+        brief_without_nice_to_haves['briefs']['niceToHaveRequirements'] = []
         res = self.client.get(self.url)
         assert res.status_code, 200
 
@@ -2100,12 +2112,15 @@ class TestDownloadBriefResponsesCsv(BaseApplicationTest):
         lines = page.splitlines()
 
         assert lines == [
-            u'Supplier,"K,ev\u2019s ""Bu,tties",Kev\'s \'Pies',
-            u'Contact,test1@email.com,"te,st2@email.com"',
-            u'Availability Date,\u275dNext \u2014 Tuesday\u275e,&quot;A week Friday&rdquot;',
-            u'Day rate,1.49,3.50',
-            u'E1,True,True',
-            u'E2,True,True'
+            u'Supplier,"K,ev\u2019s ""Bu,tties",Kev\'s \'Pies,SUM(1+1)*cmd|\' /C calc\'!A0',
+            u'Contact,test1@email.com,"te,st2@email.com",SUM(1+1)*cmd|\' /C calc\'!A0',
+            u"Availability Date,\u275dNext \u2014 Tuesday\u275e,&quot;A week Friday&rdquot;,cmd| '/c calc'!A0",
+            u'Day rate,1.49,3.50,3.50',
+            u'E1,True,True,True',
+            u'E2,True,True,True',
+            u'Nice1,True,False,False',
+            u'Nice2,False,True,False',
+            u'Nice3,False,False,True'
         ]
 
     def test_404_if_brief_does_not_belong_to_buyer(self, data_api_client):
