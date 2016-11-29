@@ -5,7 +5,7 @@ from dmapiclient import HTTPError
 from dmapiclient.audit import AuditTypes
 from dmutils.email import generate_token, MandrillException
 from ...helpers import BaseApplicationTest
-from lxml import html
+from lxml import html, cssselect
 import mock
 from flask import session
 
@@ -21,7 +21,7 @@ NEW_PASSWORD_CONFIRM_EMPTY_ERROR = "Please confirm your new password"
 USER_CREATION_EMAIL_ERROR = "Failed to send user creation email."
 PASSWORD_RESET_EMAIL_ERROR = "Failed to send password reset."
 
-TOKEN_CREATED_BEFORE_PASSWORD_LAST_CHANGED_ERROR = "This password reset link is invalid."
+TOKEN_CREATED_BEFORE_PASSWORD_LAST_CHANGED_ERROR = "This password reset link has expired."
 USER_LINK_EXPIRED_ERROR = "The link you used to create an account may have expired."
 
 
@@ -395,7 +395,11 @@ class TestResetPassword(BaseApplicationTest):
             }, follow_redirects=True)
 
             assert res.status_code == 200
-            assert TOKEN_CREATED_BEFORE_PASSWORD_LAST_CHANGED_ERROR in res.get_data(as_text=True)
+            document = html.fromstring(res.get_data(as_text=True))
+            error_selector = cssselect.CSSSelector('div.banner-destructive-without-action')
+            error_elements = error_selector(document)
+            assert len(error_elements) == 1
+            assert TOKEN_CREATED_BEFORE_PASSWORD_LAST_CHANGED_ERROR in error_elements[0].text_content()
 
     @mock.patch('app.main.views.login.send_email')
     def test_should_call_send_email_with_correct_params(
