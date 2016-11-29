@@ -1,14 +1,14 @@
 <section class="hero{% if url_for('.index') == request.path %}-main{% endif %}">
   <div class="wrapper">
     <div class="content--hero">
-      <h1 class="site-title">{{ site_title|safe }}</h1>
-      <p class="tagline">{{ tagline|safe }}</p>
-      {% if extra %}<p class="tagline">{{ extra|safe }}</p>{% endif %}
+      <h1 class="site-title">{{ site_title }}<span class="badge--beta">BETA</span></h1>
+      <p class="tagline">{{ tagline }}</p>
+      {% if extra %}<p class="tagline">{{ extra }}</p>{% endif %}
     </div>
     {% if callout_title %}
       <div class="callout--hero">
-        <h2>{{ callout_title|safe }}</h2>
-        <p>{{ callout_text|safe }}</p>
+        <h2><a href="{{ url_for('main.about_us') }}">{{ callout_title }}</a></h2>
+        <p>{{ callout_text }}</p>
       </div>
     {% endif %}
   </div>

@@ -67,7 +67,9 @@
         {{ summary.text(item.createdAt|dateformat) }}
         
         {% if item.unanswered_required > 0 and item.unanswered_optional > 0 %}
-            {{ summary.text("{} required<br>{} optional".format(item.unanswered_required, item.unanswered_optional)|safe) }}
+            {{ summary.text("{} required".format(item.unanswered_required)) }}
+            <br>
+            {{ summary.text("{} optional".format(item.unanswered_optional)) }}
         {% elif item.unanswered_required > 0 %}
             {{ summary.text("{} required".format(item.unanswered_required)) }}
         {% elif item.unanswered_optional > 0 %}
