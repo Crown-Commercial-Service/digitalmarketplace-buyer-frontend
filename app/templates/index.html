@@ -102,7 +102,14 @@
         </li>
         <li>
           <article>
-            <h3><a href="/sellers/signup">Join the Digital Marketplace</a></h3>
+            <h3>
+              {% if 'SELLER_REGISTRATION' is active_feature %}
+              <a href="/sellers/signup">
+              {% else %}
+              <a href="{{ url_for('.new_seller') }}">
+              {% endif %}
+              Join the Digital Marketplace</a>
+            </h3>
             <p>Register your interest in listing your business in the Marketplace.</p>
           </article>
         </li>
