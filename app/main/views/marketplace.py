@@ -57,6 +57,11 @@ def metrics_historical():
     return jsonify(data)
 
 
+@main.route('/evaluation-criteria')
+def evaluation_criteria():
+    return render_template('content/evaluation-criteria.html')
+
+
 @main.route('/ideation')
 def ideation():
     return render_template('content/ideation.html')
