@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from datetime import datetime
+
 from flask_login import current_user
 from flask import abort, current_app, render_template, request
+import flask_featureflags as feature
 
 from dmapiclient import APIError
 from dmcontent.content_loader import ContentNotFoundError
@@ -82,11 +85,18 @@ def get_brief_by_id(framework_slug, brief_id):
     brief_content = content_loader.get_builder('digital-outcomes-and-specialists', 'display_brief').filter(
         brief
     )
+
+    new_flow_brief = False
+    if feature.is_active('NEW_SUPPLIER_FLOW'):
+        new_flow_brief = (datetime.strptime(current_app.config['FEATURE_FLAGS_NEW_SUPPLIER_FLOW'], "%Y-%m-%d")
+                          <= datetime.strptime(brief['publishedAt'][0:10], "%Y-%m-%d"))
+
     return render_template(
         'brief.html',
         brief=brief,
         brief_responses=brief_responses,
         content=brief_content,
+        new_flow_brief=new_flow_brief,
     )
 
 
