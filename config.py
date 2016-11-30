@@ -95,7 +95,7 @@ class Test(Config):
     SHARED_EMAIL_KEY = "KEY"
     SECRET_KEY = "KEY"
 
-    FEATURE_FLAGS_NEW_SUPPLIER_FLOW = enabled_since('2016-10-26')
+    FEATURE_FLAGS_NEW_SUPPLIER_FLOW = enabled_since('2016-11-29')
 
 
 class Development(Config):
@@ -112,7 +112,7 @@ class Development(Config):
     SECRET_KEY = "verySecretKey"
     SHARED_EMAIL_KEY = "very_secret"
 
-    FEATURE_FLAGS_NEW_SUPPLIER_FLOW = enabled_since('2016-10-26')
+    FEATURE_FLAGS_NEW_SUPPLIER_FLOW = enabled_since('2016-11-29')
 
 
 class Live(Config):
@@ -123,7 +123,7 @@ class Live(Config):
 
 
 class Preview(Live):
-    FEATURE_FLAGS_NEW_SUPPLIER_FLOW = enabled_since('2016-10-26')
+    FEATURE_FLAGS_NEW_SUPPLIER_FLOW = enabled_since('2016-11-29')
 
 
 class Staging(Live):
