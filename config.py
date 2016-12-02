@@ -127,7 +127,7 @@ class Preview(Live):
 
 
 class Staging(Live):
-    FEATURE_FLAGS_NEW_SUPPLIER_FLOW = enabled_since('2016-10-26')
+    pass
 
 
 class Production(Live):
