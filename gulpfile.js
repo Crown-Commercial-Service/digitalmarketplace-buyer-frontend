@@ -238,10 +238,10 @@ gulp.task(
 );
 
 gulp.task(
-  'copy:ssp_content',
+  'copy:frameworks',
   copyFactory(
-    "content YAML into app folder",
-    sspContentRoot, 'app/content'
+    "frameworks YAML into app folder",
+    sspContentRoot + '/frameworks', 'app/content/frameworks'
   )
 );
 
@@ -267,6 +267,7 @@ gulp.task('test', function () {
 gulp.task('watch', ['build:development'], function () {
   var jsWatcher = gulp.watch([ assetsFolder + '/**/*.js' ], ['js']);
   var cssWatcher = gulp.watch([ assetsFolder + '/**/*.scss' ], ['sass']);
+  var dmWatcher = gulp.watch([ bowerRoot + '/digitalmarketplace-frameworks/**' ], ['copy:frameworks']);
   var notice = function (event) {
     console.log('File ' + event.path + ' was ' + event.type + ' running tasks...');
   };
@@ -288,7 +289,7 @@ gulp.task('set_environment_to_production', function (cb) {
 gulp.task(
   'copy',
   [
-    'copy:ssp_content',
+    'copy:frameworks',
     'copy:template_assets:images',
     'copy:template_assets:stylesheets',
     'copy:template_assets:javascripts',
