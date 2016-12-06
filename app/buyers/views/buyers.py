@@ -594,6 +594,7 @@ def send_new_opportunity_email_to_sellers(brief_json, brief_url):
     if to_email_addresses:
         email_body = render_template(
             'emails/seller_new_opportunity.html',
+            brief=brief_json,
             brief_url=brief_url
         )
 
