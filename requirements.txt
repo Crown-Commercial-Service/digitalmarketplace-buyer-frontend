@@ -15,3 +15,6 @@ Flask-WeasyPrint==0.5
 pendulum==0.6.2
 csvx==0.1.1459403998
 xlsxwriter==0.9.3
+
+blinker==1.4
+rollbar==0.13.8
