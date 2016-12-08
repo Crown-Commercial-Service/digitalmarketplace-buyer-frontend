@@ -3,23 +3,27 @@
 {% block email_subject %}{{ config['SELLER_NEW_OPPORTUNITY_EMAIL_SUBJECT'] }}{% endblock %}
 
 {% block email_body %}
-    <p>Dear seller,*</p>
+    <p>Dear seller,</p>
 
-    <p>
-        Great news!  A government buyer has just directly invited you to apply for a new opportunity in the
-        Digital Marketplace.
-    </p>
+  <p>
+    Great news! A government buyer has just directly invited you to apply for a new opportunity in the Digital Marketplace.
+  </p>
 
-    <p>
-        <a href="{{ brief_url }}">Click here to view the opportunity</a>
-    </p>
 
-    <p>Good luck and remember the closing date for applications is {{ brief['dates']['hypothetical']['closing_date'] }}.</p>
-    <p><strong>The Digital Marketplace team</strong></p>
+  <p>
+    <a href="{{ brief_url }}">Click here to view the opportunity</a>
+  </p>
 
-    <p>
-        * We'll remember your name soon. The Digital Marketplace is an agile development in its beta stage. This means
-        our site and communications will evolve over time in response to user needs. If you have any questions, feedback
-        or would like to be involved in user research, please email us at {{ config['DM_GENERIC_SUPPORT_EMAIL'] }}.
-    </p>
+
+  <p> Please confirm you have received this invitation and whether this opportunity interests you by emailing marketplace@digital.gov.au</p>
+
+
+  <p>Good luck and remember the closing date for applications is {{ dates.closing_date|shortdateformat }}.</p>
+
+
+  <p><strong>The Digital Marketplace team</strong></p>
+  <p>
+    The Digital Marketplace is an agile development in its beta stage. This means our site and communications will evolve over time in response to user needs.
+    If you have any questions, feedback or would like to be involved in user research, please email us at {{ config['DM_GENERIC_SUPPORT_EMAIL'] }}.
+  </p>
 {% endblock %}
