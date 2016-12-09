@@ -123,7 +123,7 @@ class Live(Config):
 
 
 class Preview(Live):
-    FEATURE_FLAGS_NEW_SUPPLIER_FLOW = enabled_since('2016-11-29')
+    FEATURE_FLAGS_NEW_SUPPLIER_FLOW = enabled_since('2017-02-01')
 
 
 class Staging(Live):
