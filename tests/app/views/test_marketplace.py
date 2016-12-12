@@ -271,8 +271,8 @@ class TestBriefPage(BaseApplicationTest):
 
     def test_dos_brief_has_important_dates(self):
         brief_id = self.brief['briefs']['id']
-        self.brief['briefs']['clarificationQuestionsClosedAt'] = "2016-03-10T11:08:28.054129Z"
-        self.brief['briefs']['applicationsClosedAt'] = "2016-03-11T11:08:28.054129Z"
+        self.brief['briefs']['clarificationQuestionsClosedAt'] = "2016-12-14T11:08:28.054129Z"
+        self.brief['briefs']['applicationsClosedAt'] = "2016-12-15T11:08:28.054129Z"
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
         assert_equal(200, res.status_code)
 
@@ -282,18 +282,18 @@ class TestBriefPage(BaseApplicationTest):
             '(//table[@class="summary-item-body"])[1]/tbody/tr')
 
         assert_equal(len(brief_important_dates), 3)
-        assert_true(brief_important_dates[0].xpath(
+        assert_equal(brief_important_dates[0].xpath(
             'td[@class="summary-item-field-first"]')[0].text_content().strip(), "Published")
-        assert_true(brief_important_dates[0].xpath(
-            'td[@class="summary-item-field"]')[0].text_content().strip(), "Thursday 25 February 2016")
-        assert_true(brief_important_dates[1].xpath(
+        assert_equal(brief_important_dates[0].xpath(
+            'td[@class="summary-item-field"]')[0].text_content().strip(), "Thursday 1 December 2016")
+        assert_equal(brief_important_dates[1].xpath(
             'td[@class="summary-item-field-first"]')[0].text_content().strip(), "Deadline for asking questions")
-        assert_true(brief_important_dates[1].xpath(
-            'td[@class="summary-item-field"]')[0].text_content().strip(), "Thursday 10 March 2016")
-        assert_true(brief_important_dates[2].xpath(
+        assert_equal(brief_important_dates[1].xpath(
+            'td[@class="summary-item-field"]')[0].text_content().strip(), "Wednesday 14 December 2016")
+        assert_equal(brief_important_dates[2].xpath(
             'td[@class="summary-item-field-first"]')[0].text_content().strip(), "Closing date for applications")
-        assert_true(brief_important_dates[2].xpath(
-            'td[@class="summary-item-field"]')[0].text_content().strip(), "Thursday 11 March 2016")
+        assert_equal(brief_important_dates[2].xpath(
+            'td[@class="summary-item-field"]')[0].text_content().strip(), "Thursday 15 December 2016")
 
     def test_dos_brief_has_at_least_one_section(self):
         brief_id = self.brief['briefs']['id']
