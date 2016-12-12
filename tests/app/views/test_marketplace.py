@@ -400,8 +400,23 @@ class TestBriefPage(BaseApplicationTest):
     def test_cannot_apply_to_closed_brief(self):
         brief = self.brief.copy()
         brief['briefs']['status'] = "closed"
-        brief['briefs']['publishedAt'] = "2000-01-25T12:00:00.000000Z"
-        brief['briefs']['applicationsClosedAt'] = "2000-02-25T12:00:00.000000Z"
+        brief['briefs']['publishedAt'] = "2016-12-01T12:00:00.000000Z"
+        brief['briefs']['applicationsClosedAt'] = "2016-12-02T12:00:00.000000Z"
+        self._data_api_client.get_brief.return_value = brief
+        brief_id = brief['briefs']['id']
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
+        assert_equal(200, res.status_code)
+        document = html.fromstring(res.get_data(as_text=True))
+
+        apply_links = document.xpath('//a[@href="/suppliers/opportunities/{}/responses/start"]'.format(brief_id))
+        assert len(apply_links) == 0
+        assert '2 December 2016' in document.xpath('//p[@class="banner-message"]')[0].text_content()
+
+    def test_cannot_apply_to_closed_legacy_brief(self):
+        brief = self.brief.copy()
+        brief['briefs']['status'] = "closed"
+        brief['briefs']['publishedAt'] = "2016-11-20T12:00:00.000000Z"
+        brief['briefs']['applicationsClosedAt'] = "2016-11-21T12:00:00.000000Z"
         self._data_api_client.get_brief.return_value = brief
         brief_id = brief['briefs']['id']
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
@@ -410,7 +425,23 @@ class TestBriefPage(BaseApplicationTest):
 
         apply_links = document.xpath('//a[@href="/suppliers/opportunities/{}/responses/create"]'.format(brief_id))
         assert len(apply_links) == 0
-        assert '25 February 2000' in document.xpath('//p[@class="banner-message"]')[0].text_content()
+        assert '21 November 2016' in document.xpath('//p[@class="banner-message"]')[0].text_content()
+
+    def test_cannot_apply_to_closed_brief_with_legacy_supplier_flow(self):
+        self.app.config['FEATURE_FLAGS_NEW_SUPPLIER_FLOW'] = False
+        brief = self.brief.copy()
+        brief['briefs']['status'] = "closed"
+        brief['briefs']['publishedAt'] = "2016-12-01T12:00:00.000000Z"
+        brief['briefs']['applicationsClosedAt'] = "2016-12-02T12:00:00.000000Z"
+        self._data_api_client.get_brief.return_value = brief
+        brief_id = brief['briefs']['id']
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
+        assert_equal(200, res.status_code)
+        document = html.fromstring(res.get_data(as_text=True))
+
+        apply_links = document.xpath('//a[@href="/suppliers/opportunities/{}/responses/create"]'.format(brief_id))
+        assert len(apply_links) == 0
+        assert '2 December 2016' in document.xpath('//p[@class="banner-message"]')[0].text_content()
 
     def test_dos_brief_specialist_role_displays_label(self):
         brief_id = self.brief['briefs']['id']
