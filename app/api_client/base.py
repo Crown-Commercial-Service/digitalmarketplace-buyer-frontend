@@ -11,6 +11,8 @@ except ImportError:
 import requests
 from flask import has_request_context, request, current_app
 
+from functools import partial
+
 
 def pretty_print_request(prep):
     """
@@ -34,11 +36,25 @@ def pretty_print_request(prep):
         ))
 
 
+class GenericRequester(object):
+    def __init__(self, client):
+        self.client = client
+
+    def __getattr__(self, name):
+        method_name, route = name.split('_', 1)
+        method_call_name = '_{}'.format(method_name)
+        method = getattr(self.client, method_call_name)
+
+        route_name = '/{}'.format(route)
+        return partial(method, route_name)
+
+
 class BaseAPIClient(object):
     def __init__(self, base_url=None, auth_token=None, enabled=True):
         self.base_url = base_url or current_app.config.get('DM_DATA_API_URL', '')
         self.auth_token = auth_token or current_app.config.get('DM_DATA_API_AUTH_TOKEN', '')
         self.enabled = enabled
+        self.req = GenericRequester(self)
 
     def _put(self, url, data):
         return self._request("PUT", url, data=data)

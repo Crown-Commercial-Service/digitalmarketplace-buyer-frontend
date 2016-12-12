@@ -4,6 +4,7 @@ import json
 from flask.helpers import url_for
 import os
 from flask import abort, render_template, request, redirect, current_app
+import flask_featureflags as feature
 from app.api_client.data import DataAPIClient
 from app.main.utils import get_page_list
 
@@ -28,7 +29,6 @@ def normalise_role(role_name):
     return role_name.replace('Senior ', '').replace('Junior ', '')  # Mind the white space after Junior
 
 
-@cache.cached(timeout=300, key_prefix='get_all_roles')
 def get_all_roles(data_api_client):
     """
     Returns a two-valued tuple:
@@ -48,8 +48,16 @@ def get_all_roles(data_api_client):
     return roles, raw_role_data
 
 
+def get_all_domains(data_api_client):
+    return [_['name'] for _ in data_api_client.req.get_domains()['domains']]
+
+
 @main.route('/search/sellers')
 def supplier_search():
+    DOMAINS_SEARCH = feature.is_active('DOMAINS_SEARCH')
+
+    data_api_client = DataAPIClient()
+
     sort_order = request.args.get('sort_order', 'asc')
     if sort_order not in ('asc', 'desc'):
         abort(400, 'Invalid sort_order: {}'.format(sort_order))
@@ -62,7 +70,11 @@ def supplier_search():
     data_api_client = DataAPIClient()
 
     selected_roles = set(request.args.getlist('role'))
-    roles, raw_role_data = get_all_roles(data_api_client)
+
+    if DOMAINS_SEARCH:
+        roles = get_all_domains(data_api_client)
+    else:
+        roles, raw_role_data = get_all_roles(data_api_client)
 
     sidepanel_roles = [Option('role', role, role, role in selected_roles) for role in roles]
     sidepanel_filters = [
@@ -70,7 +82,9 @@ def supplier_search():
     ]
 
     sort_queries = []
+
     allowed_sort_terms = set(('name',))  # Limit what can be sorted
+
     for sort_term in sort_terms:
         if sort_term in allowed_sort_terms:
             if sort_term == 'name':  # Use 'name' in url to keep it clean but query needs to search on not analyzed.
@@ -83,12 +97,20 @@ def supplier_search():
             abort(400, 'Invalid sort_term: {}'.format(sort_term))
 
     if selected_roles:
-        filters = []
-        for role in selected_roles:
-            if role in raw_role_data:
-                filters.extend(raw_role_data[role])
-            else:
-                abort(400, 'Invalid role: {}'.format(role))
+        if DOMAINS_SEARCH:
+            for each in selected_roles:
+                if each not in roles:
+                    abort(400, 'Invalid role: {}'.format(each))
+            filter_terms = {"domains.assessed": list(selected_roles)}
+        else:
+            filters = []
+            for role in selected_roles:
+                if role in raw_role_data:
+                    filters.extend(raw_role_data[role])
+                else:
+                    abort(400, 'Invalid role: {}'.format(role))
+            filter_terms = {"prices.serviceRole.role": filters}
+
         query = {
             "query": {
                 "filtered": {
@@ -96,12 +118,13 @@ def supplier_search():
                         "match_all": {}
                     },
                     "filter": {
-                        "terms": {"prices.serviceRole.role": filters},
+                        "terms": filter_terms,
                     }
                 }
             },
             "sort": sort_queries,
             }
+
     elif keyword:
         query = {
             "query": {
@@ -130,25 +153,31 @@ def supplier_search():
         'from': results_from,
         'size': SUPPLIER_RESULTS_PER_PAGE
     }
+
     response = data_api_client.find_suppliers(data=query, params=find_suppliers_params)
 
     results = []
+
     for supplier in response['hits']['hits']:
         details = supplier['_source']
 
-        supplier_roles = []
-        seen_supplier_roles = set()
-        for price in details['prices']:
-            role = normalise_role(price['serviceRole']['role'])
-            if role not in seen_supplier_roles:
-                supplier_roles.append(Role(role))
-                seen_supplier_roles.add(role)
+        if DOMAINS_SEARCH:
+            tags = [Role(d) for d in details['domains']['assessed']]
+        else:
+            supplier_roles = []
+            seen_supplier_roles = set()
+            for price in details['prices']:
+                role = normalise_role(price['serviceRole']['role'])
+                if role not in seen_supplier_roles:
+                    supplier_roles.append(Role(role))
+                    seen_supplier_roles.add(role)
+            tags = supplier_roles
 
         result = Result(
             details['name'],
             details['summary'],
             [],
-            sorted(supplier_roles),
+            sorted(tags),
             url_for('.get_supplier', code=details['code']))
 
         results.append(result)

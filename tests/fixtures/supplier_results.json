@@ -32,6 +32,11 @@
           "creationTime": "2016-08-01T06:13:37.244362Z",
           "dataVersion": null,
           "description": null,
+          "domains": {
+            "assessed": [],
+            "legacy": [],
+            "unassessed": []
+          },
           "extraLinks": [
             {
               "label": "LinkedIn",
@@ -248,6 +253,11 @@
           "creationTime": "2016-08-01T06:16:42.342497Z",
           "dataVersion": null,
           "description": null,
+          "domains": {
+            "assessed": [],
+            "legacy": [],
+            "unassessed": []
+          },
           "extraLinks": [
             {
               "label": "LinkedIn",
@@ -482,6 +492,11 @@
           "creationTime": "2016-08-01T06:16:42.837430Z",
           "dataVersion": null,
           "description": null,
+          "domains": {
+            "assessed": [],
+            "legacy": [],
+            "unassessed": []
+          },
           "extraLinks": [
             {
               "label": "LinkedIn",
@@ -563,6 +578,11 @@
           "creationTime": "2016-08-01T06:16:43.321421Z",
           "dataVersion": null,
           "description": null,
+          "domains": {
+            "assessed": [],
+            "legacy": [],
+            "unassessed": []
+          },
           "extraLinks": [
             {
               "label": "LinkedIn",
@@ -626,6 +646,11 @@
           "creationTime": "2016-08-01T06:16:44.079194Z",
           "dataVersion": null,
           "description": null,
+          "domains": {
+            "assessed": [],
+            "legacy": [],
+            "unassessed": []
+          },
           "extraLinks": [
             {
               "label": "LinkedIn",
@@ -670,6 +695,11 @@
           "creationTime": "2016-08-01T06:16:45.109155Z",
           "dataVersion": null,
           "description": null,
+          "domains": {
+            "assessed": [],
+            "legacy": [],
+            "unassessed": []
+          },
           "extraLinks": [
             {
               "label": "LinkedIn",
@@ -714,6 +744,11 @@
           "creationTime": "2016-08-01T06:16:45.432966Z",
           "dataVersion": null,
           "description": null,
+          "domains": {
+            "assessed": [],
+            "legacy": [],
+            "unassessed": []
+          },
           "extraLinks": [],
           "lastUpdateTime": "2016-08-01T06:16:45.426472Z",
           "longName": "Lambda Interactive Pty Ltd",
@@ -753,6 +788,11 @@
           "creationTime": "2016-08-01T06:16:45.844182Z",
           "dataVersion": null,
           "description": null,
+          "domains": {
+            "assessed": [],
+            "legacy": [],
+            "unassessed": []
+          },
           "extraLinks": [
             {
               "label": "LinkedIn",
@@ -797,6 +837,11 @@
           "creationTime": "2016-08-01T06:16:46.246238Z",
           "dataVersion": null,
           "description": null,
+          "domains": {
+            "assessed": [],
+            "legacy": [],
+            "unassessed": []
+          },
           "extraLinks": [
             {
               "label": "LinkedIn",
@@ -841,6 +886,11 @@
           "creationTime": "2016-08-01T06:16:46.588626Z",
           "dataVersion": null,
           "description": null,
+          "domains": {
+            "assessed": [],
+            "legacy": [],
+            "unassessed": []
+          },
           "extraLinks": [
             {
               "label": "LinkedIn",
@@ -885,6 +935,11 @@
           "creationTime": "2016-08-01T06:16:47.021709Z",
           "dataVersion": null,
           "description": null,
+          "domains": {
+            "assessed": [],
+            "legacy": [],
+            "unassessed": []
+          },
           "extraLinks": [],
           "lastUpdateTime": "2016-08-01T06:16:47.015065Z",
           "longName": "Pi Interactive Pty Ltd",
@@ -924,6 +979,11 @@
           "creationTime": "2016-08-01T06:16:44.519376Z",
           "dataVersion": null,
           "description": null,
+          "domains": {
+            "assessed": [],
+            "legacy": [],
+            "unassessed": []
+          },
           "extraLinks": [
             {
               "label": "LinkedIn",

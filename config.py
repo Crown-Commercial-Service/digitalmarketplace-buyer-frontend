@@ -80,7 +80,8 @@ class Config(object):
         'BRIEF_FILTER': True,
         'CASE_STUDY': True,
         'XLSX_EXPORT': True,
-        'SELLER_REGISTRATION': True
+        'SELLER_REGISTRATION': True,
+        'DOMAINS_SEARCH': False
     }
 
     # LOGGING
