@@ -377,16 +377,6 @@ class TestBriefPage(BaseApplicationTest):
 
         assert_equal(qa_link_text.strip(), "Ask a question")
 
-    def test_can_apply_to_live_brief_with_legacy_supplier_flow(self):
-        self.app.config['FEATURE_FLAGS_NEW_SUPPLIER_FLOW'] = False
-        brief_id = self.brief['briefs']['id']
-        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
-        assert_equal(200, res.status_code)
-        document = html.fromstring(res.get_data(as_text=True))
-
-        apply_links = document.xpath('//a[@href="/suppliers/opportunities/{}/responses/create"]'.format(brief_id))
-        assert len(apply_links) == 1
-
     def test_can_apply_to_live_brief(self):
         brief_id = self.brief['briefs']['id']
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
@@ -482,63 +472,13 @@ class TestBriefPage(BaseApplicationTest):
         self._data_api_client.find_brief_responses.return_value = {
             "briefResponses": [{"lazy": "mock"}],
         }
-        brief = self.brief.copy()
-        brief['briefs']['status'] = "closed"
-        self._data_api_client.get_brief.return_value = brief
-        brief_id = brief['briefs']['id']
+        self.brief['briefs']['status'] = "closed"
+        brief_id = self.brief['briefs']['id']
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
         assert_equal(200, res.status_code)
         document = html.fromstring(res.get_data(as_text=True))
 
         self._assert_view_application(document, brief_id)
-
-    def test_opportunity_page_shows_correct_apply_message_and_button(self):
-        self.app.config['FEATURE_FLAGS_NEW_SUPPLIER_FLOW'] = '2000-01-01'
-        brief_id = self.brief['briefs']['id']
-
-        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
-        assert_equal(200, res.status_code)
-
-        text = res.get_data(as_text=True)
-        document = html.fromstring(text)
-        message = "To apply, you must give evidence for all the essential and nice-to-have " \
-                  "skills and experience you have."
-        button = document.xpath('//*[@class="link-button-with-advice"]')[0]
-
-        assert message in text
-        assert button.text == 'Apply'
-
-    def test_opportunity_page_shows_correct_button_and_no_message_for_legacy_brief(self):
-        self.app.config['FEATURE_FLAGS_NEW_SUPPLIER_FLOW'] = '2010-01-01'
-        self.brief['briefs']['publishedAt'] = '2000-01-01T12:00:00.000000Z'
-        brief_id = self.brief['briefs']['id']
-
-        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
-        assert_equal(200, res.status_code)
-
-        text = res.get_data(as_text=True)
-        document = html.fromstring(text)
-        message = "To apply, you must give evidence for all the essential and nice-to-have " \
-                  "skills and experience you have."
-        button = document.xpath('//*[@class="link-button"]')[0]
-
-        assert message not in text
-        assert button.text == 'Start application'
-
-    def test_opportunity_page_shows_correct_button_and_no_message_when_in_legacy_supplier_flow(self):
-        self.app.config['FEATURE_FLAGS_NEW_SUPPLIER_FLOW'] = False
-        brief_id = self.brief['briefs']['id']
-        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
-        assert_equal(200, res.status_code)
-        text = res.get_data(as_text=True)
-        document = html.fromstring(text)
-
-        message = "To apply, you must give evidence for all the essential and nice-to-have " \
-                  "skills and experience you have."
-        button = document.xpath('//*[@class="link-button"]')[0]
-
-        assert message not in text
-        assert button.text == 'Start application'
 
 
 class TestCatalogueOfBriefsPage(BaseApplicationTest):
