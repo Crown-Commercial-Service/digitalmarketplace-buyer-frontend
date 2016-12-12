@@ -2,7 +2,7 @@
   "briefs": {
     "backgroundInformation": "Testing the new platform.",
     "contractLength": "4 weeks",
-    "createdAt": "2016-02-25T10:47:23.126761Z",
+    "createdAt": "2016-11-25T10:47:23.126761Z",
     "essentialRequirements": [
       "Can write Capybara tests",
       "Is competent with Linux, Ruby and JavaScript"
@@ -29,13 +29,13 @@
       "Devops skills and experience"
     ],
     "organisation": "ByteMe IT",
-    "publishedAt": "2016-02-25T11:08:28.054129Z",
+    "publishedAt": "2016-12-01T11:09:28.054129Z",
     "questionAndAnswerSessionDetails": "session details",
     "specialistRole": "qualityAssurance",
-    "startDate": "01/03/2016",
+    "startDate": "01/03/2017",
     "status": "live",
     "title": "QA tester for next-gen web project",
-    "updatedAt": "2016-02-25T11:08:28.061327Z",
+    "updatedAt": "2016-12-01T11:08:28.061327Z",
     "users": [
       {
         "active": true,
@@ -46,7 +46,7 @@
       }
     ],
     "clarificationQuestions": [
-      {"question": "Why?", "answer": "Because", "publishedAt": "2016-02-26T00:00:00.000000Z"}
+      {"question": "Why?", "answer": "Because", "publishedAt": "2016-12-02T00:00:00.000000Z"}
     ]
   }
 }
