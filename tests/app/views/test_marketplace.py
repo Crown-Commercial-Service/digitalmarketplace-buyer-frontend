@@ -314,7 +314,7 @@ class TestBriefPage(BaseApplicationTest):
         assert_equal(section_heading.get('id'), 'opportunity-attributes-1')
         assert_equal(section_heading.text.strip(), 'Overview')
         assert_equal(start_date_key[0], 'Latest start date')
-        assert_equal(start_date_value[0], '01/03/2016')
+        assert_equal(start_date_value[0], '01/03/2017')
         assert_equal(contract_length_key[0], 'Expected contract length')
         assert_equal(contract_length_value[0], '4 weeks')
 
@@ -388,7 +388,6 @@ class TestBriefPage(BaseApplicationTest):
         assert len(apply_links) == 1
 
     def test_can_apply_to_live_brief(self):
-        self.brief['briefs']['publishedAt'] = "2016-12-25T12:00:00.000000Z"
         brief_id = self.brief['briefs']['id']
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
         assert_equal(200, res.status_code)
@@ -398,50 +397,16 @@ class TestBriefPage(BaseApplicationTest):
         assert len(apply_links) == 1
 
     def test_cannot_apply_to_closed_brief(self):
-        brief = self.brief.copy()
-        brief['briefs']['status'] = "closed"
-        brief['briefs']['publishedAt'] = "2016-12-01T12:00:00.000000Z"
-        brief['briefs']['applicationsClosedAt'] = "2016-12-02T12:00:00.000000Z"
-        self._data_api_client.get_brief.return_value = brief
-        brief_id = brief['briefs']['id']
+        self.brief['briefs']['status'] = "closed"
+        self.brief['briefs']['applicationsClosedAt'] = "2016-12-15T11:08:28.054129Z"
+        brief_id = self.brief['briefs']['id']
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
         assert_equal(200, res.status_code)
         document = html.fromstring(res.get_data(as_text=True))
 
         apply_links = document.xpath('//a[@href="/suppliers/opportunities/{}/responses/start"]'.format(brief_id))
         assert len(apply_links) == 0
-        assert '2 December 2016' in document.xpath('//p[@class="banner-message"]')[0].text_content()
-
-    def test_cannot_apply_to_closed_legacy_brief(self):
-        brief = self.brief.copy()
-        brief['briefs']['status'] = "closed"
-        brief['briefs']['publishedAt'] = "2016-11-20T12:00:00.000000Z"
-        brief['briefs']['applicationsClosedAt'] = "2016-11-21T12:00:00.000000Z"
-        self._data_api_client.get_brief.return_value = brief
-        brief_id = brief['briefs']['id']
-        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
-        assert_equal(200, res.status_code)
-        document = html.fromstring(res.get_data(as_text=True))
-
-        apply_links = document.xpath('//a[@href="/suppliers/opportunities/{}/responses/create"]'.format(brief_id))
-        assert len(apply_links) == 0
-        assert '21 November 2016' in document.xpath('//p[@class="banner-message"]')[0].text_content()
-
-    def test_cannot_apply_to_closed_brief_with_legacy_supplier_flow(self):
-        self.app.config['FEATURE_FLAGS_NEW_SUPPLIER_FLOW'] = False
-        brief = self.brief.copy()
-        brief['briefs']['status'] = "closed"
-        brief['briefs']['publishedAt'] = "2016-12-01T12:00:00.000000Z"
-        brief['briefs']['applicationsClosedAt'] = "2016-12-02T12:00:00.000000Z"
-        self._data_api_client.get_brief.return_value = brief
-        brief_id = brief['briefs']['id']
-        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
-        assert_equal(200, res.status_code)
-        document = html.fromstring(res.get_data(as_text=True))
-
-        apply_links = document.xpath('//a[@href="/suppliers/opportunities/{}/responses/create"]'.format(brief_id))
-        assert len(apply_links) == 0
-        assert '2 December 2016' in document.xpath('//p[@class="banner-message"]')[0].text_content()
+        assert '15 December 2016' in document.xpath('//p[@class="banner-message"]')[0].text_content()
 
     def test_dos_brief_specialist_role_displays_label(self):
         brief_id = self.brief['briefs']['id']
@@ -469,7 +434,6 @@ class TestBriefPage(BaseApplicationTest):
         )) == 1
 
     def test_unauthenticated_start_application(self):
-        self.app.config['FEATURE_FLAGS_NEW_SUPPLIER_FLOW'] = False
         brief_id = self.brief['briefs']['id']
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
         assert_equal(200, res.status_code)
@@ -478,7 +442,6 @@ class TestBriefPage(BaseApplicationTest):
         self._assert_start_application(document, brief_id)
 
     def test_buyer_start_application(self):
-        self.app.config['FEATURE_FLAGS_NEW_SUPPLIER_FLOW'] = False
         self.login_as_buyer()
         brief_id = self.brief['briefs']['id']
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
@@ -488,7 +451,6 @@ class TestBriefPage(BaseApplicationTest):
         self._assert_start_application(document, brief_id)
 
     def test_supplier_start_application(self):
-        self.app.config['FEATURE_FLAGS_NEW_SUPPLIER_FLOW'] = False
         self.login_as_supplier()
         # mocking that we haven't applied
         self._data_api_client.find_brief_responses.return_value = {
