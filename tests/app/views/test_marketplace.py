@@ -407,10 +407,14 @@ class TestBriefPage(BaseApplicationTest):
 
     @staticmethod
     def _assert_start_application(document, brief_id):
+        message = document.xpath("//p[@class='dmspeak']/text()")[0]
+
+        assert message == "To apply, you must give evidence for all the essential and nice-to-have " \
+                  "skills and experience you have."
         assert len(document.xpath(
             '//a[@href="{0}"][contains(normalize-space(text()), normalize-space("{1}"))]'.format(
-                "/suppliers/opportunities/{}/responses/create".format(brief_id),
-                "Start application",
+                "/suppliers/opportunities/{}/responses/start".format(brief_id),
+                "Apply",
             )
         )) == 1
 
