@@ -5,8 +5,10 @@ from nose.tools import assert_equal, assert_true, assert_in
 from six import iteritems
 from six.moves.urllib.parse import urlparse, parse_qs
 from lxml import html
+from datetime import datetime
 from ...helpers import BaseApplicationTest
 from dmapiclient import APIError
+from dmutils.formats import DATETIME_FORMAT, DISPLAY_DATE_FORMAT
 
 
 class TestApplication(BaseApplicationTest):
@@ -242,6 +244,10 @@ class TestBriefPage(BaseApplicationTest):
 
         self.brief = self._get_dos_brief_fixture_data()
         self._data_api_client.get_brief.return_value = self.brief
+        self.application_path = 'start'
+        self.expected_message = "To apply, you must give evidence for all the essential and nice-to-have " \
+            "skills and experience you have."
+        self.expected_button_text = 'Apply'
 
     def teardown(self):
         self._data_api_client.stop()
@@ -269,6 +275,10 @@ class TestBriefPage(BaseApplicationTest):
 
         self._assert_page_title(document)
 
+    def _convert_date_to_display_date_format(self, date_string):
+        date_object = datetime.strptime(date_string, DATETIME_FORMAT)
+        return date_object.strftime(DISPLAY_DATE_FORMAT)
+
     def test_dos_brief_has_important_dates(self):
         brief_id = self.brief['briefs']['id']
         self.brief['briefs']['clarificationQuestionsClosedAt'] = "2016-12-14T11:08:28.054129Z"
@@ -280,20 +290,22 @@ class TestBriefPage(BaseApplicationTest):
 
         brief_important_dates = document.xpath(
             '(//table[@class="summary-item-body"])[1]/tbody/tr')
-
         assert_equal(len(brief_important_dates), 3)
         assert_equal(brief_important_dates[0].xpath(
             'td[@class="summary-item-field-first"]')[0].text_content().strip(), "Published")
         assert_equal(brief_important_dates[0].xpath(
-            'td[@class="summary-item-field"]')[0].text_content().strip(), "Thursday 1 December 2016")
+            'td[@class="summary-item-field"]')[0].text_content().strip(),
+            self._convert_date_to_display_date_format(self.brief['briefs']['publishedAt']))
         assert_equal(brief_important_dates[1].xpath(
             'td[@class="summary-item-field-first"]')[0].text_content().strip(), "Deadline for asking questions")
         assert_equal(brief_important_dates[1].xpath(
-            'td[@class="summary-item-field"]')[0].text_content().strip(), "Wednesday 14 December 2016")
+            'td[@class="summary-item-field"]')[0].text_content().strip(),
+            self._convert_date_to_display_date_format(self.brief['briefs']['clarificationQuestionsClosedAt']))
         assert_equal(brief_important_dates[2].xpath(
             'td[@class="summary-item-field-first"]')[0].text_content().strip(), "Closing date for applications")
         assert_equal(brief_important_dates[2].xpath(
-            'td[@class="summary-item-field"]')[0].text_content().strip(), "Thursday 15 December 2016")
+            'td[@class="summary-item-field"]')[0].text_content().strip(),
+            self._convert_date_to_display_date_format(self.brief['briefs']['applicationsClosedAt']))
 
     def test_dos_brief_has_at_least_one_section(self):
         brief_id = self.brief['briefs']['id']
@@ -383,7 +395,10 @@ class TestBriefPage(BaseApplicationTest):
         assert_equal(200, res.status_code)
         document = html.fromstring(res.get_data(as_text=True))
 
-        apply_links = document.xpath('//a[@href="/suppliers/opportunities/{}/responses/start"]'.format(brief_id))
+        apply_links = document.xpath('//a[@href="/suppliers/opportunities/{}/responses/{}"]'.format(
+            brief_id, self.application_path)
+        )
+
         assert len(apply_links) == 1
 
     def test_cannot_apply_to_closed_brief(self):
@@ -394,7 +409,10 @@ class TestBriefPage(BaseApplicationTest):
         assert_equal(200, res.status_code)
         document = html.fromstring(res.get_data(as_text=True))
 
-        apply_links = document.xpath('//a[@href="/suppliers/opportunities/{}/responses/start"]'.format(brief_id))
+        apply_links = document.xpath('//a[@href="/suppliers/opportunities/{}/responses/{}"]'.format(
+            brief_id, self.application_path
+            )
+        )
         assert len(apply_links) == 0
         assert '15 December 2016' in document.xpath('//p[@class="banner-message"]')[0].text_content()
 
@@ -405,16 +423,15 @@ class TestBriefPage(BaseApplicationTest):
         assert 'qualityAssurance' not in res.get_data(as_text=True)
         assert 'Quality assurance analyst' in res.get_data(as_text=True)
 
-    @staticmethod
-    def _assert_start_application(document, brief_id):
-        message = document.xpath("//p[@class='dmspeak']/text()")[0]
+    def _assert_start_application(self, document, brief_id):
+        message_list = document.xpath("//p[@class='dmspeak']/text()")
+        message = message_list[0] if message_list else None
 
-        assert message == "To apply, you must give evidence for all the essential and nice-to-have " \
-                  "skills and experience you have."
+        assert message == self.expected_message
         assert len(document.xpath(
             '//a[@href="{0}"][contains(normalize-space(text()), normalize-space("{1}"))]'.format(
-                "/suppliers/opportunities/{}/responses/start".format(brief_id),
-                "Apply",
+                "/suppliers/opportunities/{}/responses/{}".format(brief_id, self.application_path),
+                self.expected_button_text,
             )
         )) == 1
 
@@ -483,6 +500,33 @@ class TestBriefPage(BaseApplicationTest):
         document = html.fromstring(res.get_data(as_text=True))
 
         self._assert_view_application(document, brief_id)
+
+
+class TestBriefPageWithLegacyBrief(TestBriefPage):
+    # This set of tests is to check the behavior of the brief page with the new flow active, but with a brief published
+    # before the new flow was activated. It should exhibit the same behaviour as the legacy flow.
+    # This class just overwrites the specific data and re-runs all the same tests in the previous class with it.
+
+    def setup(self):
+        super(TestBriefPageWithLegacyBrief, self).setup()
+        self.brief['briefs']['publishedAt'] = "2016-11-01T11:09:28.054129Z"
+        self.application_path = 'create'
+        self.expected_message = None
+        self.expected_button_text = 'Start application'
+
+
+class TestBriefPageWithLegacyFlow(TestBriefPage):
+    # This set of tests is to check the behaviour of the brief page with the new flow not active. This is important as
+    # the production environment will not have the new flow turned on until all the work is in place and ready. These
+    # tests make sure we don't break anything in the mean time.
+    # This class just overwrites the specific data and re-runs all the same tests in the previous class with it.
+
+    def setup(self):
+        super(TestBriefPageWithLegacyFlow, self).setup()
+        self.app.config['FEATURE_FLAGS_NEW_SUPPLIER_FLOW'] = False
+        self.application_path = 'create'
+        self.expected_message = None
+        self.expected_button_text = 'Start application'
 
 
 class TestCatalogueOfBriefsPage(BaseApplicationTest):
