@@ -1,8 +1,8 @@
 # coding=utf-8
-import re
 
 from flask import render_template, current_app, flash, jsonify, redirect, url_for, request, session
 from flask_login import current_user, login_required
+import flask_featureflags as feature
 
 from app.main import main
 from app.api_client.data import DataAPIClient
@@ -48,7 +48,26 @@ def get_supplier(code):
 
     if request_wants_json():
         return jsonify(dict(supplier))
+    if feature.is_active('SELLER_REGISTRATION'):
+        # add business/authorized representative contact details
+        if len(supplier['contacts']) > 0:
+            supplier['email'] = supplier['contacts'][0]['email']
+            supplier['phone'] = supplier['contacts'][0]['phone']
+            supplier['representative'] = supplier['contacts'][0]['name']
+        props = {"application": supplier}
+        props['application']['case_study_url'] = '/case-study/'
+        props['basename'] = url_for('.get_supplier', code=code)
+        props['form_options'] = {
+            'action': "/sellers/edit",
+            'submit_url': "/sellers/edit",
 
+        }
+        rendered_component = render_component('bundles/SellerRegistration/ApplicationPreviewWidget.js', props)
+
+        return render_template(
+            '_react.html',
+            component=rendered_component
+        )
     return render_template(
         'suppliers_details.html',
         supplier=supplier,
