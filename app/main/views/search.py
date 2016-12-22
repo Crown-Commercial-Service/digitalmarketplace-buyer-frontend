@@ -166,11 +166,12 @@ def supplier_search():
         else:
             supplier_roles = []
             seen_supplier_roles = set()
-            for price in details['prices']:
-                role = normalise_role(price['serviceRole']['role'])
-                if role not in seen_supplier_roles:
-                    supplier_roles.append(Role(role))
-                    seen_supplier_roles.add(role)
+            if details.get('prices'):
+                for price in details['prices']:
+                    role = normalise_role(price['serviceRole']['role'])
+                    if role not in seen_supplier_roles:
+                        supplier_roles.append(Role(role))
+                        seen_supplier_roles.add(role)
             tags = supplier_roles
 
         result = Result(
