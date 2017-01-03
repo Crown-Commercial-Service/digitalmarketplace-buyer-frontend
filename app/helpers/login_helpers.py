@@ -1,4 +1,5 @@
 import six
+import rollbar
 import urlparse
 
 from flask_login import current_user
@@ -64,6 +65,7 @@ def send_buyer_account_activation_email(name, email_address, token):
         )
         session['email_sent_to'] = email_address
     except EmailError as e:
+        rollbar.report_exc_info()
         current_app.logger.error(
             'buyercreate.fail: Create user email failed to send. '
             'error {error} email_hash {email_hash}',

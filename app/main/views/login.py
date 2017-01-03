@@ -1,6 +1,7 @@
 from __future__ import absolute_import
 
 import six
+import rollbar
 from datetime import datetime
 
 from flask_login import current_user
@@ -121,6 +122,7 @@ def send_reset_password_email():
                     current_app.config['RESET_PASSWORD_EMAIL_NAME'],
                 )
             except EmailError as e:
+                rollbar.report_exc_info()
                 current_app.logger.error(
                     "Password reset email failed to send. "
                     "error {error} email_hash {email_hash}",
@@ -249,6 +251,7 @@ def submit_buyer_invite_request():
             current_app.config['BUYER_INVITE_REQUEST_EMAIL_NAME'],
         )
     except EmailError as e:
+        rollbar.report_exc_info()
         current_app.logger.error(
             'buyerinvite.fail: Buyer account invite request email failed to send. '
             'error {error} invite email_hash {email_hash}',
@@ -267,8 +270,9 @@ def submit_buyer_invite_request():
             current_app.config['BUYER_INVITE_MANAGER_CONFIRMATION_NAME'],
         )
     except EmailError as e:
+        rollbar.report_exc_info()
         current_app.logger.error(
-            'buyerinvite.fail: Buyer account invite request mananger email failed to send. '
+            'buyerinvite.fail: Buyer account invite request manager email failed to send. '
             'error {error} invite email_hash {email_hash} manager email_hash {manager_email_hash}',
             extra={
                 'error': six.text_type(e),
