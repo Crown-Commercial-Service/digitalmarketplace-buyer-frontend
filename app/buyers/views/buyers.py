@@ -7,6 +7,7 @@ import csvx
 import pendulum
 import io
 import re
+import rollbar
 from collections import OrderedDict as od
 
 import xlsxwriter
@@ -609,6 +610,7 @@ def send_new_opportunity_email_to_sellers(brief_json, brief_url):
                     current_app.config['DM_GENERIC_SUPPORT_NAME'],
                 )
             except EmailError as e:
+                rollbar.report_exc_info()
                 current_app.logger.error(
                     'seller new opportunity email failed to send. '
                     'error {error}',
