@@ -12,8 +12,8 @@ from dmutils.formats import DATETIME_FORMAT, DISPLAY_DATE_FORMAT
 
 
 class TestApplication(BaseApplicationTest):
-    def setup(self):
-        super(TestApplication, self).setup()
+    def setup_method(self, method):
+        super(TestApplication, self).setup_method(method)
 
     def test_analytics_code_should_be_in_javascript(self):
         res = self.client.get('/static/javascripts/application.js')
@@ -71,8 +71,8 @@ class TestHomepageBrowseList(BaseApplicationTest):
 
 
 class TestHomepageSidebarMessage(BaseApplicationTest):
-    def setup(self):
-        super(TestHomepageSidebarMessage, self).setup()
+    def setup_method(self, method):
+        super(TestHomepageSidebarMessage, self).setup_method(method)
 
     @staticmethod
     def _find_frameworks(framework_slugs_and_statuses):
@@ -213,8 +213,8 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
 
 
 class TestStaticMarketplacePages(BaseApplicationTest):
-    def setup(self):
-        super(TestStaticMarketplacePages, self).setup()
+    def setup_method(self, method):
+        super(TestStaticMarketplacePages, self).setup_method(method)
 
     def test_cookie_page(self):
         res = self.client.get('/cookies')
@@ -235,8 +235,8 @@ class TestStaticMarketplacePages(BaseApplicationTest):
 
 class TestBriefPage(BaseApplicationTest):
 
-    def setup(self):
-        super(TestBriefPage, self).setup()
+    def setup_method(self, method):
+        super(TestBriefPage, self).setup_method(method)
 
         self._data_api_client = mock.patch(
             'app.main.views.marketplace.data_api_client'
@@ -249,7 +249,7 @@ class TestBriefPage(BaseApplicationTest):
             "skills and experience you have."
         self.expected_button_text = 'Apply'
 
-    def teardown(self):
+    def teardown_method(self, method):
         self._data_api_client.stop()
 
     def _assert_page_title(self, document):
@@ -507,8 +507,8 @@ class TestBriefPageWithLegacyBrief(TestBriefPage):
     # before the new flow was activated. It should exhibit the same behaviour as the legacy flow.
     # This class just overwrites the specific data and re-runs all the same tests in the previous class with it.
 
-    def setup(self):
-        super(TestBriefPageWithLegacyBrief, self).setup()
+    def setup_method(self, method):
+        super(TestBriefPageWithLegacyBrief, self).setup_method(method)
         self.brief['briefs']['publishedAt'] = "2016-11-01T11:09:28.054129Z"
         self.application_path = 'create'
         self.expected_message = None
@@ -521,8 +521,8 @@ class TestBriefPageWithLegacyFlow(TestBriefPage):
     # tests make sure we don't break anything in the mean time.
     # This class just overwrites the specific data and re-runs all the same tests in the previous class with it.
 
-    def setup(self):
-        super(TestBriefPageWithLegacyFlow, self).setup()
+    def setup_method(self, method):
+        super(TestBriefPageWithLegacyFlow, self).setup_method(method)
         self.app.config['FEATURE_FLAGS_NEW_SUPPLIER_FLOW'] = False
         self.application_path = 'create'
         self.expected_message = None
@@ -530,8 +530,8 @@ class TestBriefPageWithLegacyFlow(TestBriefPage):
 
 
 class TestCatalogueOfBriefsPage(BaseApplicationTest):
-    def setup(self):
-        super(TestCatalogueOfBriefsPage, self).setup()
+    def setup_method(self, method):
+        super(TestCatalogueOfBriefsPage, self).setup_method(method)
 
         self._data_api_client = mock.patch(
             'app.main.views.marketplace.data_api_client'
@@ -551,7 +551,7 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
             ]
         }}
 
-    def teardown(self):
+    def teardown_method(self, method):
         self._data_api_client.stop()
 
     def test_catalogue_of_briefs_page(self):

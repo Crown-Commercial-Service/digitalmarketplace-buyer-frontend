@@ -26,8 +26,8 @@ class UnavailableBanner(object):
 
 class TestServicePage(BaseApplicationTest):
 
-    def setup(self):
-        super(TestServicePage, self).setup()
+    def setup_method(self, method):
+        super(TestServicePage, self).setup_method(method)
 
         self._data_api_client = mock.patch(
             'app.main.views.g_cloud.data_api_client'
@@ -43,7 +43,7 @@ class TestServicePage(BaseApplicationTest):
             'SCS': 'Specialist Cloud Services'
         }
 
-    def teardown(self):
+    def teardown_method(self, method):
         self._data_api_client.stop()
 
     def _assert_contact_details(self, document):

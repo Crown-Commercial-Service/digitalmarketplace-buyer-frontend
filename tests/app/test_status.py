@@ -7,8 +7,8 @@ from nose.tools import assert_equal, assert_false
 
 class TestStatus(BaseApplicationTest):
 
-    def setup(self):
-        super(TestStatus, self).setup()
+    def setup_method(self, method):
+        super(TestStatus, self).setup_method(method)
 
         self._data_api_client = mock.patch(
             'app.status.views.data_api_client'
@@ -17,7 +17,7 @@ class TestStatus(BaseApplicationTest):
             'app.status.views.search_api_client'
         ).start()
 
-    def teardown(self):
+    def teardown_method(self, method):
         self._data_api_client.stop()
         self._search_api_client.stop()
 

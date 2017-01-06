@@ -1878,8 +1878,8 @@ class TestViewBriefResponsesPage(BaseApplicationTest):
 class TestDownloadBriefResponsesCsv(BaseApplicationTest):
     url = "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/responses/download"
 
-    def setup(self):
-        super(TestDownloadBriefResponsesCsv, self).setup()
+    def setup_method(self, method):
+        super(TestDownloadBriefResponsesCsv, self).setup_method(method)
         self.brief = api_stubs.brief(status='closed')
         self.brief['briefs']['essentialRequirements'] = ["E1", "E2"]
         self.brief['briefs']['niceToHaveRequirements'] = ["Nice1", "Nice2", "Nice3"]

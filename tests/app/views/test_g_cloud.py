@@ -4,8 +4,8 @@ from ...helpers import BaseApplicationTest
 
 
 class TestGCloudIndexResults(BaseApplicationTest):
-    def setup(self):
-        super(TestGCloudIndexResults, self).setup()
+    def setup_method(self, method):
+        super(TestGCloudIndexResults, self).setup_method(method)
 
         self._search_api_client = mock.patch(
             'app.main.views.g_cloud.search_api_client'
@@ -13,7 +13,7 @@ class TestGCloudIndexResults(BaseApplicationTest):
 
         self.search_results = self._get_search_results_fixture_data()
 
-    def teardown(self):
+    def teardown_method(self, method):
         self._search_api_client.stop()
 
     def test_renders_correct_search_links(self):

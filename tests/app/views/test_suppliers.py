@@ -6,8 +6,8 @@ from dmapiclient import APIError
 
 
 class TestSuppliersPage(BaseApplicationTest):
-    def setup(self):
-        super(TestSuppliersPage, self).setup()
+    def setup_method(self, method):
+        super(TestSuppliersPage, self).setup_method(method)
 
         self._data_api_client = mock.patch(
             'app.main.suppliers.data_api_client'
@@ -21,7 +21,7 @@ class TestSuppliersPage(BaseApplicationTest):
         self._data_api_client.find_suppliers.return_value = self.suppliers_by_prefix  # noqa
         self._data_api_client.get_supplier.return_value = self.supplier  # noqa
 
-    def teardown(self):
+    def teardown_method(self, method):
         self._data_api_client.stop()
 
     def test_should_call_api_with_correct_params(self):

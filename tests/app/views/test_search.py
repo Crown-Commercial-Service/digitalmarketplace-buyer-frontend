@@ -18,8 +18,8 @@ def find_search_summary(res_data):
 
 
 class TestSearchResults(BaseApplicationTest):
-    def setup(self):
-        super(TestSearchResults, self).setup()
+    def setup_method(self, method):
+        super(TestSearchResults, self).setup_method(method)
 
         self._search_api_client = mock.patch(
             'app.main.views.g_cloud.search_api_client'
@@ -29,7 +29,7 @@ class TestSearchResults(BaseApplicationTest):
         self.search_results_multiple_page = \
             self._get_search_results_multiple_page_fixture_data()
 
-    def teardown(self):
+    def teardown_method(self, method):
         self._search_api_client.stop()
 
     def test_search_page_results_service_links(self):
