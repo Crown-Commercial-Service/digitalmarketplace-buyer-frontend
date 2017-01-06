@@ -48,13 +48,13 @@ def get_supplier(code):
 
     if request_wants_json():
         return jsonify(dict(supplier))
-    if feature.is_active('SELLER_REGISTRATION'):
+    if feature.is_active('NEW_SELLER_PROFILE'):
         # add business/authorized representative contact details
         if len(supplier['contacts']) > 0:
             supplier['email'] = supplier['contacts'][0]['email']
             supplier['phone'] = supplier['contacts'][0]['phone']
             supplier['representative'] = supplier['contacts'][0]['name']
-        props = {"application": supplier}
+        props = {"application": {key: supplier[key] for key in supplier if key not in ['disclosures']}}
         props['application']['case_study_url'] = '/case-study/'
         props['basename'] = url_for('.get_supplier', code=code)
         props['form_options'] = {
