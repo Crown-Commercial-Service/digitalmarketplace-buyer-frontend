@@ -1,7 +1,6 @@
 # coding=utf-8
 
 import mock
-from nose.tools import assert_equal, assert_true, assert_in
 from six import iteritems
 from six.moves.urllib.parse import urlparse, parse_qs
 from lxml import html
@@ -17,18 +16,14 @@ class TestApplication(BaseApplicationTest):
 
     def test_analytics_code_should_be_in_javascript(self):
         res = self.client.get('/static/javascripts/application.js')
-        assert_equal(200, res.status_code)
-        assert_true(
-            'trackPageview'
-            in res.get_data(as_text=True))
+        assert res.status_code == 200
+        assert 'trackPageview' in res.get_data(as_text=True)
 
     def test_should_use_local_cookie_page_on_cookie_message(self):
         res = self.client.get('/')
-        assert_equal(200, res.status_code)
-        assert_true(
-            '<p>GOV.UK uses cookies to make the site simpler. <a href="/cookies">Find out more about cookies</a></p>'
-            in res.get_data(as_text=True)
-        )
+        assert res.status_code == 200
+        assert '<p>GOV.UK uses cookies to make the site simpler. <a href="/cookies">' \
+            'Find out more about cookies</a></p>' in res.get_data(as_text=True)
 
 
 class TestHomepageAccountCreationVirtualPageViews(BaseApplicationTest):
@@ -111,13 +106,13 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
 
         data_api_client.find_frameworks.return_value = self._find_frameworks(framework_slugs_and_statuses)
         res = self.client.get('/')
-        assert_equal(200, res.status_code)
+        assert res.status_code == 200
         response_data = res.get_data(as_text=True)
 
         if framework_messages:
             self._assert_message_container_is_not_empty(response_data)
             for message in framework_messages:
-                assert_in(message, response_data)
+                assert message in response_data
         else:
             self._assert_message_container_is_empty(response_data)
 
@@ -209,7 +204,7 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
 
         data_api_client.find_frameworks.return_value = self._find_frameworks(framework_slugs_and_statuses)
         res = self.client.get('/')
-        assert_equal(500, res.status_code)
+        assert res.status_code == 500
 
 
 class TestStaticMarketplacePages(BaseApplicationTest):
@@ -218,19 +213,13 @@ class TestStaticMarketplacePages(BaseApplicationTest):
 
     def test_cookie_page(self):
         res = self.client.get('/cookies')
-        assert_equal(200, res.status_code)
-        assert_true(
-            '<h1>Cookies</h1>'
-            in self._strip_whitespace(res.get_data(as_text=True))
-        )
+        assert res.status_code == 200
+        assert '<h1>Cookies</h1>' in self._strip_whitespace(res.get_data(as_text=True))
 
     def test_cookie_page(self):
         res = self.client.get('/terms-and-conditions')
-        assert_equal(200, res.status_code)
-        assert_true(
-            '<h1>Termsandconditions</h1>'
-            in self._strip_whitespace(res.get_data(as_text=True))
-        )
+        assert res.status_code == 200
+        assert '<h1>Termsandconditions</h1>' in self._strip_whitespace(res.get_data(as_text=True))
 
 
 class TestBriefPage(BaseApplicationTest):
@@ -264,12 +253,12 @@ class TestBriefPage(BaseApplicationTest):
         self.brief['briefs']['status'] = 'draft'
         brief_id = self.brief['briefs']['id']
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
-        assert_equal(404, res.status_code)
+        assert res.status_code == 404
 
     def test_dos_brief_has_correct_title(self):
         brief_id = self.brief['briefs']['id']
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
-        assert_equal(200, res.status_code)
+        assert res.status_code == 200
 
         document = html.fromstring(res.get_data(as_text=True))
 
@@ -284,33 +273,30 @@ class TestBriefPage(BaseApplicationTest):
         self.brief['briefs']['clarificationQuestionsClosedAt'] = "2016-12-14T11:08:28.054129Z"
         self.brief['briefs']['applicationsClosedAt'] = "2016-12-15T11:08:28.054129Z"
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
-        assert_equal(200, res.status_code)
+        assert res.status_code == 200
 
         document = html.fromstring(res.get_data(as_text=True))
 
         brief_important_dates = document.xpath(
             '(//table[@class="summary-item-body"])[1]/tbody/tr')
-        assert_equal(len(brief_important_dates), 3)
-        assert_equal(brief_important_dates[0].xpath(
-            'td[@class="summary-item-field-first"]')[0].text_content().strip(), "Published")
-        assert_equal(brief_important_dates[0].xpath(
-            'td[@class="summary-item-field"]')[0].text_content().strip(),
-            self._convert_date_to_display_date_format(self.brief['briefs']['publishedAt']))
-        assert_equal(brief_important_dates[1].xpath(
-            'td[@class="summary-item-field-first"]')[0].text_content().strip(), "Deadline for asking questions")
-        assert_equal(brief_important_dates[1].xpath(
-            'td[@class="summary-item-field"]')[0].text_content().strip(),
-            self._convert_date_to_display_date_format(self.brief['briefs']['clarificationQuestionsClosedAt']))
-        assert_equal(brief_important_dates[2].xpath(
-            'td[@class="summary-item-field-first"]')[0].text_content().strip(), "Closing date for applications")
-        assert_equal(brief_important_dates[2].xpath(
-            'td[@class="summary-item-field"]')[0].text_content().strip(),
-            self._convert_date_to_display_date_format(self.brief['briefs']['applicationsClosedAt']))
+        assert 3 == len(brief_important_dates)
+        assert brief_important_dates[0].xpath('td[@class="summary-item-field-first"]')[0].text_content().strip() \
+            == "Published"
+        assert brief_important_dates[0].xpath('td[@class="summary-item-field"]')[0].text_content().strip() \
+            == self._convert_date_to_display_date_format(self.brief['briefs']['publishedAt'])
+        assert brief_important_dates[1].xpath('td[@class="summary-item-field-first"]')[0].text_content().strip() \
+            == "Deadline for asking questions"
+        assert brief_important_dates[1].xpath('td[@class="summary-item-field"]')[0].text_content().strip() \
+            == self._convert_date_to_display_date_format(self.brief['briefs']['clarificationQuestionsClosedAt'])
+        assert brief_important_dates[2].xpath('td[@class="summary-item-field-first"]')[0].text_content().strip() \
+            == "Closing date for applications"
+        assert brief_important_dates[2].xpath('td[@class="summary-item-field"]')[0].text_content().strip() \
+            == self._convert_date_to_display_date_format(self.brief['briefs']['applicationsClosedAt'])
 
     def test_dos_brief_has_at_least_one_section(self):
         brief_id = self.brief['briefs']['id']
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
-        assert_equal(200, res.status_code)
+        assert res.status_code == 200
 
         document = html.fromstring(res.get_data(as_text=True))
 
@@ -323,12 +309,12 @@ class TestBriefPage(BaseApplicationTest):
         contract_length_key = section_attributes[3].xpath('td[1]/span/text()')
         contract_length_value = section_attributes[3].xpath('td[2]/span/text()')
 
-        assert_equal(section_heading.get('id'), 'opportunity-attributes-1')
-        assert_equal(section_heading.text.strip(), 'Overview')
-        assert_equal(start_date_key[0], 'Latest start date')
-        assert_equal(start_date_value[0], '01/03/2017')
-        assert_equal(contract_length_key[0], 'Expected contract length')
-        assert_equal(contract_length_value[0], '4 weeks')
+        assert section_heading.get('id') == 'opportunity-attributes-1'
+        assert section_heading.text.strip() == 'Overview'
+        assert start_date_key[0] == 'Latest start date'
+        assert start_date_value[0] == '01/03/2017'
+        assert contract_length_key[0] == 'Expected contract length'
+        assert contract_length_value[0] == '4 weeks'
 
     def test_dos_brief_has_question_and_answer_session_details_link(self):
         brief_id = self.brief['briefs']['id']
@@ -358,7 +344,7 @@ class TestBriefPage(BaseApplicationTest):
     def test_dos_brief_has_questions_and_answers(self):
         brief_id = self.brief['briefs']['id']
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
-        assert_equal(200, res.status_code)
+        assert res.status_code == 200
 
         document = html.fromstring(res.get_data(as_text=True))
 
@@ -371,28 +357,28 @@ class TestBriefPage(BaseApplicationTest):
         qa_link_text = document.xpath('//a[@href="/suppliers/opportunities/{}/ask-a-question"]/text()'
                                       .format(brief_id))[0].strip()
 
-        assert_equal(number, "1.")
-        assert_equal(question, "Why?")
-        assert_equal(answer, "Because")
-        assert_equal(qa_link_text, "Log in to ask a question")
+        assert number == "1."
+        assert question == "Why?"
+        assert answer == "Because"
+        assert qa_link_text == "Log in to ask a question"
 
     def test_dos_brief_has_different_link_text_for_logged_in_supplier(self):
         self.login_as_supplier()
         brief_id = self.brief['briefs']['id']
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
-        assert_equal(200, res.status_code)
+        assert res.status_code == 200
 
         document = html.fromstring(res.get_data(as_text=True))
 
         qa_link_text = document.xpath('//a[@href="/suppliers/opportunities/{}/ask-a-question"]/text()'
                                       .format(brief_id))[0]
 
-        assert_equal(qa_link_text.strip(), "Ask a question")
+        assert qa_link_text.strip() == "Ask a question"
 
     def test_can_apply_to_live_brief(self):
         brief_id = self.brief['briefs']['id']
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
-        assert_equal(200, res.status_code)
+        assert res.status_code == 200
         document = html.fromstring(res.get_data(as_text=True))
 
         apply_links = document.xpath('//a[@href="/suppliers/opportunities/{}/responses/{}"]'.format(
@@ -406,7 +392,7 @@ class TestBriefPage(BaseApplicationTest):
         self.brief['briefs']['applicationsClosedAt'] = "2016-12-15T11:08:28.054129Z"
         brief_id = self.brief['briefs']['id']
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
-        assert_equal(200, res.status_code)
+        assert res.status_code == 200
         document = html.fromstring(res.get_data(as_text=True))
 
         apply_links = document.xpath('//a[@href="/suppliers/opportunities/{}/responses/{}"]'.format(
@@ -447,7 +433,7 @@ class TestBriefPage(BaseApplicationTest):
     def test_unauthenticated_start_application(self):
         brief_id = self.brief['briefs']['id']
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
-        assert_equal(200, res.status_code)
+        assert res.status_code == 200
         document = html.fromstring(res.get_data(as_text=True))
 
         self._assert_start_application(document, brief_id)
@@ -456,7 +442,7 @@ class TestBriefPage(BaseApplicationTest):
         self.login_as_buyer()
         brief_id = self.brief['briefs']['id']
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
-        assert_equal(200, res.status_code)
+        assert res.status_code == 200
         document = html.fromstring(res.get_data(as_text=True))
 
         self._assert_start_application(document, brief_id)
@@ -469,7 +455,7 @@ class TestBriefPage(BaseApplicationTest):
         }
         brief_id = self.brief['briefs']['id']
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
-        assert_equal(200, res.status_code)
+        assert res.status_code == 200
         document = html.fromstring(res.get_data(as_text=True))
 
         self._assert_start_application(document, brief_id)
@@ -482,7 +468,7 @@ class TestBriefPage(BaseApplicationTest):
         }
         brief_id = self.brief['briefs']['id']
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
-        assert_equal(200, res.status_code)
+        assert res.status_code == 200
         document = html.fromstring(res.get_data(as_text=True))
 
         self._assert_view_application(document, brief_id)
@@ -496,7 +482,7 @@ class TestBriefPage(BaseApplicationTest):
         self.brief['briefs']['status'] = "closed"
         brief_id = self.brief['briefs']['id']
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
-        assert_equal(200, res.status_code)
+        assert res.status_code == 200
         document = html.fromstring(res.get_data(as_text=True))
 
         self._assert_view_application(document, brief_id)
@@ -556,7 +542,7 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
 
     def test_catalogue_of_briefs_page(self):
         res = self.client.get('/digital-outcomes-and-specialists/opportunities')
-        assert_equal(200, res.status_code)
+        assert res.status_code == 200
         document = html.fromstring(res.get_data(as_text=True))
 
         self._data_api_client.get_framework.assert_called_once_with("digital-outcomes-and-specialists")
@@ -599,7 +585,7 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
     def test_catalogue_of_briefs_page_filtered(self):
         original_url = "/digital-outcomes-and-specialists/opportunities?page=2&status=live&lot=lot-one&lot=lot-three"
         res = self.client.get(original_url)
-        assert_equal(200, res.status_code)
+        assert res.status_code == 200
         document = html.fromstring(res.get_data(as_text=True))
 
         self._data_api_client.get_framework.assert_called_once_with("digital-outcomes-and-specialists")
@@ -656,7 +642,7 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         original_url = "/digital-outcomes-and-specialists/opportunities?status=live&lot=lot-one&lot=lot-three"\
             "&status=closed&lot=lot-four"
         res = self.client.get(original_url)
-        assert_equal(200, res.status_code)
+        assert res.status_code == 200
         document = html.fromstring(res.get_data(as_text=True))
 
         self._data_api_client.get_framework.assert_called_once_with("digital-outcomes-and-specialists")
@@ -716,7 +702,7 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
 
     def test_catalogue_of_briefs_page_shows_pagination_if_more_pages(self):
         res = self.client.get('/digital-outcomes-and-specialists/opportunities')
-        assert_equal(200, res.status_code)
+        assert res.status_code == 200
         page = res.get_data(as_text=True)
         document = html.fromstring(page)
 
@@ -731,7 +717,7 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         del self.briefs['links']['prev']
         del self.briefs['links']['next']
         res = self.client.get('/digital-outcomes-and-specialists/opportunities')
-        assert_equal(200, res.status_code)
+        assert res.status_code == 200
         page = res.get_data(as_text=True)
 
         assert '<li class="previous">' not in page
@@ -741,5 +727,5 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         self._data_api_client.get_framework.return_value = {'frameworks': {}}
         res = self.client.get('/digital-giraffes-and-monkeys/opportunities')
 
-        assert_equal(404, res.status_code)
+        assert res.status_code == 404
         self._data_api_client.get_framework.assert_called_once_with('digital-giraffes-and-monkeys')

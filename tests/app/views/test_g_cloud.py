@@ -1,5 +1,4 @@
 import mock
-from nose.tools import assert_equal, assert_true
 from ...helpers import BaseApplicationTest
 
 
@@ -21,19 +20,9 @@ class TestGCloudIndexResults(BaseApplicationTest):
             self.search_results
 
         res = self.client.get('/g-cloud')
-        assert_equal(200, res.status_code)
-        assert_true(
-            'form action="/g-cloud/search'
-            in res.get_data(as_text=True))
-        assert_true(
-            '/g-cloud/search?lot=saas'
-            in res.get_data(as_text=True))
-        assert_true(
-            '/g-cloud/search?lot=scs'
-            in res.get_data(as_text=True))
-        assert_true(
-            '/g-cloud/search?lot=paas'
-            in res.get_data(as_text=True))
-        assert_true(
-            '/g-cloud/search?lot=iaas'
-            in res.get_data(as_text=True))
+        assert res.status_code == 200
+        assert 'form action="/g-cloud/search' in res.get_data(as_text=True)
+        assert '/g-cloud/search?lot=saas' in res.get_data(as_text=True)
+        assert '/g-cloud/search?lot=scs' in res.get_data(as_text=True)
+        assert '/g-cloud/search?lot=paas' in res.get_data(as_text=True)
+        assert '/g-cloud/search?lot=iaas' in res.get_data(as_text=True)

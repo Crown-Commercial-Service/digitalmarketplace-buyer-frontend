@@ -1,7 +1,6 @@
 import mock
 import re
 import json
-from nose.tools import assert_equal, assert_true, assert_false, assert_in
 from ...helpers import BaseApplicationTest
 
 
@@ -37,122 +36,88 @@ class TestSearchResults(BaseApplicationTest):
             self.search_results
 
         res = self.client.get('/g-cloud/search?q=email')
-        assert_equal(200, res.status_code)
-        assert_true(
-            '<a href="/g-cloud/services/5-G3-0279-010">CDN VDMS</a>'
-            in res.get_data(as_text=True))
+        assert res.status_code == 200
+        assert '<a href="/g-cloud/services/5-G3-0279-010">CDN VDMS</a>' in res.get_data(as_text=True)
 
     def test_search_page_form(self):
         self._search_api_client.search_services.return_value = \
             self.search_results
 
         res = self.client.get('/g-cloud/search?q=email')
-        assert_equal(200, res.status_code)
-        assert_true(
-            '<form action="/g-cloud/search" method="get">'
-            in res.get_data(as_text=True))
+        assert res.status_code == 200
+        assert '<form action="/g-cloud/search" method="get">' in res.get_data(as_text=True)
 
     def test_search_page_allows_non_keyword_search(self):
         self._search_api_client.search_services.return_value = \
             self.search_results
 
         res = self.client.get('/g-cloud/search?lot=saas')
-        assert_equal(200, res.status_code)
-        assert_true(
-            '<a href="/g-cloud/services/5-G3-0279-010">CDN VDMS</a>'
-            in res.get_data(as_text=True))
+        assert res.status_code == 200
+        assert '<a href="/g-cloud/services/5-G3-0279-010">CDN VDMS</a>' in res.get_data(as_text=True)
 
     def test_should_not_render_pagination_on_single_results_page(self):
         self._search_api_client.search_services.return_value = \
             self.search_results
 
         res = self.client.get('/g-cloud/search?lot=saas')
-        assert_equal(200, res.status_code)
-        assert_false(
-            '<li class="next">'
-            in res.get_data(as_text=True))
-        assert_false(
-            '<li class="previous">'
-            in res.get_data(as_text=True))
+        assert res.status_code == 200
+        assert '<li class="next">' not in res.get_data(as_text=True)
+        assert '<li class="previous">' not in res.get_data(as_text=True)
 
     def test_should_render_pagination_link_on_first_results_page(self):
         self._search_api_client.search_services.return_value = \
             self.search_results_multiple_page
 
         res = self.client.get('/g-cloud/search?lot=saas')
-        assert_equal(200, res.status_code)
-        assert_true(
-            'previous-next-navigation'
-            in res.get_data(as_text=True))
-        assert_false(
-            '<li class="previous">'
-            in res.get_data(as_text=True))
-        assert_true(
-            '<li class="next">'
-            in res.get_data(as_text=True))
+        assert res.status_code == 200
+        assert 'previous-next-navigation' in res.get_data(as_text=True)
+        assert '<li class="previous">' not in res.get_data(as_text=True)
+        assert '<li class="next">' in res.get_data(as_text=True)
 
         (next_link,) = find_pagination_links(res.get_data(as_text=True))
-        assert_true('page=2' in next_link)
-        assert_true('lot=saas' in next_link)
+        assert 'page=2' in next_link
+        assert 'lot=saas' in next_link
 
     def test_should_render_pagination_link_on_second_results_page(self):
         self._search_api_client.search_services.return_value = \
             self.search_results_multiple_page
 
         res = self.client.get('/g-cloud/search?lot=saas&page=2')
-        assert_equal(200, res.status_code)
-        assert_true(
-            'previous-next-navigation'
-            in res.get_data(as_text=True))
-        assert_true(
-            '<li class="previous">'
-            in res.get_data(as_text=True))
-        assert_true(
-            '<li class="next">'
-            in res.get_data(as_text=True))
+        assert res.status_code == 200
+        assert 'previous-next-navigation' in res.get_data(as_text=True)
+        assert '<li class="previous">' in res.get_data(as_text=True)
+        assert '<li class="next">' in res.get_data(as_text=True)
         (prev_link, next_link) = find_pagination_links(
             res.get_data(as_text=True))
 
-        assert_true('page=1' in prev_link)
-        assert_true('lot=saas' in prev_link)
-        assert_true('page=3' in next_link)
-        assert_true('lot=saas' in next_link)
+        assert 'page=1' in prev_link
+        assert 'lot=saas' in prev_link
+        assert 'page=3' in next_link
+        assert 'lot=saas' in next_link
 
     def test_should_render_total_pages_on_pagination_links(self):
         self._search_api_client.search_services.return_value = \
             self.search_results_multiple_page
 
         res = self.client.get('/g-cloud/search?lot=saas&page=2')
-        assert_equal(200, res.status_code)
-        assert_true(
-            'previous-next-navigation'
-            in res.get_data(as_text=True))
-        assert_true(
-            '<span class="page-numbers">1 of 200</span>'
-            in res.get_data(as_text=True))
-        assert_true(
-            '<span class="page-numbers">3 of 200</span>'
-            in res.get_data(as_text=True))
+        assert res.status_code == 200
+        assert 'previous-next-navigation' in res.get_data(as_text=True)
+        assert '<span class="page-numbers">1 of 200</span>' in res.get_data(as_text=True)
+        assert '<span class="page-numbers">3 of 200</span>' in res.get_data(as_text=True)
 
     def test_should_render_pagination_link_on_last_results_page(self):
         self._search_api_client.search_services.return_value = \
             self.search_results_multiple_page
 
         res = self.client.get('/g-cloud/search?lot=saas&page=200')
-        assert_equal(200, res.status_code)
-        assert_true(
-            'previous-next-navigation'
-            in res.get_data(as_text=True))
-        assert_true(
-            '<li class="previous">'
-            in res.get_data(as_text=True))
-        assert_false(
-            '<li class="next">'
-            in res.get_data(as_text=True))
+        assert res.status_code == 200
+        assert 'previous-next-navigation' in res.get_data(as_text=True)
+        assert '<li class="previous">' in res.get_data(as_text=True)
+        assert '<li class="next">' not in res.get_data(as_text=True)
 
         (prev_link,) = find_pagination_links(res.get_data(as_text=True))
-        assert_true('page=199' in prev_link)
-        assert_true('lot=saas' in prev_link)
+        assert 'page=199' in prev_link
+        assert 'lot=saas' in prev_link
 
     def test_should_render_summary_for_0_results_in_SaaS_no_keywords(self):
         self._search_api_client.search_services.return_value = {
@@ -166,11 +131,9 @@ class TestSearchResults(BaseApplicationTest):
         }
 
         res = self.client.get('/g-cloud/search?lot=saas')
-        assert_equal(200, res.status_code)
+        assert res.status_code == 200
         summary = find_search_summary(res.get_data(as_text=True))[0]
-        assert_true(
-            '<span class="search-summary-count">0</span> results found' +
-            ' in <em>Software as a Service</em>' in summary)
+        assert '<span class="search-summary-count">0</span> results found in <em>Software as a Service</em>' in summary
 
     def test_should_render_summary_for_1_result_in_SaaS_no_keywords(self):
         return_value = self.search_results_multiple_page
@@ -179,11 +142,9 @@ class TestSearchResults(BaseApplicationTest):
         self._search_api_client.search_services.return_value = return_value
 
         res = self.client.get('/g-cloud/search?lot=saas')
-        assert_equal(200, res.status_code)
+        assert res.status_code == 200
         summary = find_search_summary(res.get_data(as_text=True))[0]
-        assert_true(
-            '<span class="search-summary-count">1</span> result found' +
-            ' in <em>Software as a Service</em>' in summary)
+        assert '<span class="search-summary-count">1</span> result found in <em>Software as a Service</em>' in summary
 
     def test_should_render_summary_for_1_result_in_IaaS_no_keywords(self):
         return_value = self.search_results_multiple_page
@@ -192,11 +153,10 @@ class TestSearchResults(BaseApplicationTest):
         self._search_api_client.search_services.return_value = return_value
 
         res = self.client.get('/g-cloud/search?lot=iaas')
-        assert_equal(200, res.status_code)
+        assert res.status_code == 200
         summary = find_search_summary(res.get_data(as_text=True))[0]
-        assert_true(
-            '<span class="search-summary-count">1</span> result found' +
-            ' in <em>Infrastructure as a Service</em>' in summary)
+        assert '<span class="search-summary-count">1</span> result found' \
+            ' in <em>Infrastructure as a Service</em>' in summary
 
     def test_should_render_summary_for_1_result_in_SaaS_with_keywords(self):
         return_value = self.search_results_multiple_page
@@ -205,12 +165,11 @@ class TestSearchResults(BaseApplicationTest):
         self._search_api_client.search_services.return_value = return_value
 
         res = self.client.get('/g-cloud/search?q=email&lot=saas')
-        assert_equal(200, res.status_code)
+        assert res.status_code == 200
         summary = find_search_summary(res.get_data(as_text=True))[0]
-        assert_true(
-            '<span class="search-summary-count">1</span> result found' +
-            ' containing <em>email</em> in' +
-            ' <em>Software as a Service</em>' in summary)
+        assert '<span class="search-summary-count">1</span> result found' \
+            ' containing <em>email</em> in' \
+            ' <em>Software as a Service</em>' in summary
 
     def test_should_render_summary_with_a_group_of_1_boolean_filter(self):
         return_value = self.search_results_multiple_page
@@ -220,13 +179,12 @@ class TestSearchResults(BaseApplicationTest):
 
         res = self.client.get(
             '/g-cloud/search?q=email&lot=saas&freeOption=true')
-        assert_equal(200, res.status_code)
+        assert res.status_code == 200
         summary = find_search_summary(res.get_data(as_text=True))[0]
-        assert_true(
-            '<span class="search-summary-count">1</span> result found' +
-            ' containing <em>email</em> in' +
-            ' <em>Software as a Service</em>' +
-            ' with a <em>Free option</em>' in summary)
+        assert '<span class="search-summary-count">1</span> result found' \
+            ' containing <em>email</em> in' \
+            ' <em>Software as a Service</em>' \
+            ' with a <em>Free option</em>' in summary
 
     def test_should_render_summary_with_a_group_of_2_boolean_filters(self):
         return_value = self.search_results_multiple_page
@@ -237,15 +195,14 @@ class TestSearchResults(BaseApplicationTest):
         res = self.client.get(
             '/g-cloud/search?q=email&lot=saas&freeOption=true' +
             '&trialOption=true')
-        assert_equal(200, res.status_code)
+        assert res.status_code == 200
         summary = find_search_summary(res.get_data(as_text=True))[0]
-        assert_true(
-            '<span class="search-summary-count">1</span> result found' +
-            ' containing <em>email</em> in' +
-            ' <em>Software as a Service</em>' +
-            ' with a ' in summary)
-        assert_true('<em>Free option</em>' in summary)
-        assert_true('<em>Trial option</em>' in summary)
+        assert '<span class="search-summary-count">1</span> result found' \
+            ' containing <em>email</em> in' \
+            ' <em>Software as a Service</em>' \
+            ' with a ' in summary
+        assert '<em>Free option</em>' in summary
+        assert '<em>Trial option</em>' in summary
 
     def test_should_render_summary_with_a_group_of_1_array_filter(self):
         return_value = self.search_results_multiple_page
@@ -255,14 +212,13 @@ class TestSearchResults(BaseApplicationTest):
 
         res = self.client.get(
             '/g-cloud/search?q=email&lot=saas&minimumContractPeriod=hour')
-        assert_equal(200, res.status_code)
+        assert res.status_code == 200
         summary = find_search_summary(res.get_data(as_text=True))[0]
-        assert_true(
-            '<span class="search-summary-count">1</span> result found' +
-            ' containing <em>email</em> in' +
-            ' <em>Software as a Service</em>' +
-            ' with a minimum contract period of an <em>Hour</em>'
-            in summary)
+        assert '<span class="search-summary-count">1</span> result found' \
+            ' containing <em>email</em> in' \
+            ' <em>Software as a Service</em>' \
+            ' with a minimum contract period of an <em>Hour</em>' \
+            in summary
 
     def test_should_render_summary_with_a_group_of_2_array_filters(self):
         return_value = self.search_results_multiple_page
@@ -273,15 +229,14 @@ class TestSearchResults(BaseApplicationTest):
         res = self.client.get(
             '/g-cloud/search?q=email&lot=saas&minimumContractPeriod=hour' +
             '&minimumContractPeriod=day')
-        assert_equal(200, res.status_code)
+        assert res.status_code == 200
         summary = find_search_summary(res.get_data(as_text=True))[0]
-        assert_true(
-            '<span class="search-summary-count">1</span> result found' +
-            ' containing <em>email</em> in' +
-            ' <em>Software as a Service</em>' +
-            ' with a minimum contract period of ' in summary)
-        assert_true('an <em>Hour</em>' in summary)
-        assert_true('a <em>Day</em>' in summary)
+        assert '<span class="search-summary-count">1</span> result found' \
+            ' containing <em>email</em> in' \
+            ' <em>Software as a Service</em>' \
+            ' with a minimum contract period of ' in summary
+        assert 'an <em>Hour</em>' in summary
+        assert 'a <em>Day</em>' in summary
 
     def test_should_render_summary_with_2_groups_of_filters(self):
         return_value = self.search_results_multiple_page
@@ -292,16 +247,15 @@ class TestSearchResults(BaseApplicationTest):
         res = self.client.get(
             '/g-cloud/search?q=email&lot=saas&freeOption=true' +
             '&minimumContractPeriod=hour&minimumContractPeriod=day')
-        assert_equal(200, res.status_code)
+        assert res.status_code == 200
         summary = find_search_summary(res.get_data(as_text=True))[0]
-        assert_true(
-            '<span class="search-summary-count">1</span> result found' +
-            ' containing <em>email</em> in' +
-            ' <em>Software as a Service</em>' in summary)
-        assert_true('with a <em>Free option</em>' in summary)
-        assert_true('with a minimum contract period of' in summary)
-        assert_true('an <em>Hour</em>' in summary)
-        assert_true('a <em>Day</em>' in summary)
+        assert '<span class="search-summary-count">1</span> result found' \
+            ' containing <em>email</em> in' \
+            ' <em>Software as a Service</em>' in summary
+        assert 'with a <em>Free option</em>' in summary
+        assert 'with a minimum contract period of' in summary
+        assert 'an <em>Hour</em>' in summary
+        assert 'a <em>Day</em>' in summary
 
     def test_should_render_summary_with_3_groups_of_filters(self):
         return_value = self.search_results_multiple_page
@@ -313,18 +267,17 @@ class TestSearchResults(BaseApplicationTest):
             '/g-cloud/search?q=email&lot=saas&freeOption=true' +
             '&minimumContractPeriod=hour&minimumContractPeriod=day' +
             '&datacentreTier=tia-942+tier+1')
-        assert_equal(200, res.status_code)
+        assert res.status_code == 200
         summary = find_search_summary(res.get_data(as_text=True))[0]
-        assert_true(
-            '<span class="search-summary-count">1</span> result found' +
-            ' containing <em>email</em> in' +
-            ' <em>Software as a Service</em>' in summary)
-        assert_true('with a <em>Free option</em>' in summary)
-        assert_true('with a minimum contract period of' in summary)
-        assert_true('an <em>Hour</em>' in summary)
-        assert_true('a <em>Day</em>' in summary)
-        assert_true('with a datacentre tier of' in summary)
-        assert_true('<em>TIA-942 Tier 1</em>' in summary)
+        assert '<span class="search-summary-count">1</span> result found' \
+            ' containing <em>email</em> in' \
+            ' <em>Software as a Service</em>' in summary
+        assert 'with a <em>Free option</em>' in summary
+        assert 'with a minimum contract period of' in summary
+        assert 'an <em>Hour</em>' in summary
+        assert 'a <em>Day</em>' in summary
+        assert 'with a datacentre tier of' in summary
+        assert '<em>TIA-942 Tier 1</em>' in summary
 
     def test_should_ignore_unknown_arguments(self):
         return_value = self.search_results_multiple_page
@@ -336,7 +289,7 @@ class TestSearchResults(BaseApplicationTest):
             '/g-cloud/search?q=&lot=saas' +
             '&minimumContractPeriod=hr&minimumContractPeriod=dy')
 
-        assert_equal(200, res.status_code)
+        assert res.status_code == 200
 
     def test_query_text_is_escaped(self):
         return_value = self.search_results_multiple_page
@@ -346,9 +299,9 @@ class TestSearchResults(BaseApplicationTest):
 
         res = self.client.get('/g-cloud/search?q=<div>XSS</div>')
 
-        assert_equal(200, res.status_code)
+        assert res.status_code == 200
         summary = find_search_summary(res.get_data(as_text=True))[0]
-        assert_in('&lt;div&gt;XSS&lt;/div&gt;', summary)
+        assert '&lt;div&gt;XSS&lt;/div&gt;' in summary
 
     def test_summary_for_unicode_query_keywords(self):
         return_value = self.search_results_multiple_page
@@ -357,9 +310,8 @@ class TestSearchResults(BaseApplicationTest):
         self._search_api_client.search_services.return_value = return_value
 
         res = self.client.get(u'/g-cloud/search?q=email+\U0001f47e&lot=saas')
-        assert_equal(200, res.status_code)
+        assert res.status_code == 200
         summary = find_search_summary(res.get_data(as_text=True))[0]
-        assert_true(
-            u'<span class="search-summary-count">1</span> result found' +
-            u' containing <em>email \U0001f47e</em> in' +
-            u' <em>Software as a Service</em>' in summary)
+        assert u'<span class="search-summary-count">1</span> result found' \
+            u' containing <em>email \U0001f47e</em> in' \
+            u' <em>Software as a Service</em>' in summary

@@ -1,7 +1,6 @@
 import os
 import json
 import unittest
-from nose.tools import assert_equal
 
 from flask import Markup
 from app.presenters.search_results import SearchResults
@@ -52,7 +51,7 @@ class TestSearchResults(unittest.TestCase):
     def test_search_results_total_is_set(self):
         search_results_instance = SearchResults(self.fixture)
         self.assertTrue(hasattr(search_results_instance, 'total'))
-        assert_equal(search_results_instance.total, 9)
+        assert search_results_instance.total == 9
 
     def test_search_results_page_is_not_set(self):
         search_results_instance = SearchResults(self.fixture)
@@ -61,7 +60,7 @@ class TestSearchResults(unittest.TestCase):
     def test_search_results_page_is_set(self):
         search_results_instance = SearchResults(self.multiple_pages_fixture)
         self.assertTrue(hasattr(search_results_instance, 'page'))
-        assert_equal(search_results_instance.page, "20")
+        assert search_results_instance.page == "20"
 
     def test_highlighting_for_one_line_summary(self):
         search_results_instance = SearchResults(self.fixture)
