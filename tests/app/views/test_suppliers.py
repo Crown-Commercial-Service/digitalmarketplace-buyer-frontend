@@ -1,13 +1,12 @@
 # coding: utf-8
 import mock
-from nose.tools import assert_equal, assert_true, assert_false
 from ...helpers import BaseApplicationTest
 from dmapiclient import APIError
 
 
 class TestSuppliersPage(BaseApplicationTest):
-    def setup(self):
-        super(TestSuppliersPage, self).setup()
+    def setup_method(self, method):
+        super(TestSuppliersPage, self).setup_method(method)
 
         self._data_api_client = mock.patch(
             'app.main.suppliers.data_api_client'
@@ -21,7 +20,7 @@ class TestSuppliersPage(BaseApplicationTest):
         self._data_api_client.find_suppliers.return_value = self.suppliers_by_prefix  # noqa
         self._data_api_client.get_supplier.return_value = self.supplier  # noqa
 
-    def teardown(self):
+    def teardown_method(self, method):
         self._data_api_client.stop()
 
     def test_should_call_api_with_correct_params(self):
@@ -30,57 +29,58 @@ class TestSuppliersPage(BaseApplicationTest):
 
     def test_should_show_suppliers_prefixed_by_a_default(self):
         res = self.client.get('/g-cloud/suppliers')
-        assert_equal(200, res.status_code)
-        assert_true(
-            self._strip_whitespace('<li class="selected"><span class="visuallyhidden">Suppliers starting with </span><strong>A</strong></li>')  # noqa
-            in self._strip_whitespace(res.get_data(as_text=True)))
+        assert res.status_code == 200
+        assert self._strip_whitespace(
+            '<li class="selected"><span class="visuallyhidden">Suppliers starting with </span><strong>A</strong></li>'
+        ) in self._strip_whitespace(res.get_data(as_text=True))
 
     def test_should_show_suppliers_prefixed_by_a_param(self):
         res = self.client.get('/g-cloud/suppliers?prefix=M')
         self._data_api_client.find_suppliers.assert_called_once_with('M', 1, 'g-cloud')
-        assert_equal(200, res.status_code)
-        assert_true(
-            self._strip_whitespace('<li class="selected"><span class="visuallyhidden">Suppliers starting with </span><strong>M</strong></li>')  # noqa
-            in self._strip_whitespace(res.get_data(as_text=True)))
+        assert res.status_code == 200
+        assert self._strip_whitespace(
+            '<li class="selected"><span class="visuallyhidden">Suppliers starting with </span><strong>M</strong></li>'
+        ) in self._strip_whitespace(res.get_data(as_text=True))
 
     def test_should_use_uppercase_prefix(self):
         res = self.client.get('/g-cloud/suppliers?prefix=b')
-        assert_equal(200, res.status_code)
-        assert_true(
-            self._strip_whitespace('<li class="selected"><span class="visuallyhidden">Suppliers starting with </span><strong>B</strong></li>')  # noqa
-            in self._strip_whitespace(res.get_data(as_text=True)))
+        assert res.status_code == 200
+        assert self._strip_whitespace(
+            '<li class="selected"><span class="visuallyhidden">Suppliers starting with </span><strong>B</strong></li>'
+        ) in self._strip_whitespace(res.get_data(as_text=True))
 
     def test_should_use_default_if_invalid(self):
         res = self.client.get('/g-cloud/suppliers?prefix=+')
         self._data_api_client.find_suppliers.assert_called_once_with('A', 1, 'g-cloud')
 
-        assert_equal(200, res.status_code)
-        assert_true(
-            self._strip_whitespace('<li class="selected"><span class="visuallyhidden">Suppliers starting with </span><strong>A</strong></li>')  # noqa
-            in self._strip_whitespace(res.get_data(as_text=True)))
+        assert res.status_code == 200
+        assert self._strip_whitespace(
+            '<li class="selected"><span class="visuallyhidden">Suppliers starting with </span><strong>A</strong></li>'
+        ) in self._strip_whitespace(res.get_data(as_text=True))
 
     def test_should_use_default_if_multichar_prefix(self):
         res = self.client.get('/g-cloud/suppliers?prefix=Prefix')
         self._data_api_client.find_suppliers.assert_called_once_with('A', 1, 'g-cloud')
 
-        assert_equal(200, res.status_code)
+        assert res.status_code == 200
 
-        assert_true(
-            self._strip_whitespace('<li class="selected"><span class="visuallyhidden">Suppliers starting with </span><strong>A</strong></li>')  # noqa
-            in self._strip_whitespace(res.get_data(as_text=True)))
+        assert self._strip_whitespace(
+            '<li class="selected"><span class="visuallyhidden">Suppliers starting with </span><strong>A</strong></li>'
+        ) in self._strip_whitespace(res.get_data(as_text=True))
 
     def test_should_use_number_range_prefix(self):
         res = self.client.get('/g-cloud/suppliers?prefix=other')
         self._data_api_client.find_suppliers.assert_called_once_with(u'other', 1, 'g-cloud')
 
-        assert_equal(200, res.status_code)
-        assert_true(
-            self._strip_whitespace(u'<li class="selected"><span class="visuallyhidden">Suppliers starting with </span><strong>1–9</strong></li>')  # noqa
-            in self._strip_whitespace(res.get_data(as_text=True)))
+        assert res.status_code == 200
+        assert self._strip_whitespace(
+            u'<li class="selected"><span class="visuallyhidden">Suppliers starting with </span>' +
+            u'<strong>1–9</strong></li>'
+        ) in self._strip_whitespace(res.get_data(as_text=True))
 
     def test_should_show_supplier_names_link_and_description(self):
         res = self.client.get('/g-cloud/suppliers')
-        assert_equal(200, res.status_code)
+        assert res.status_code == 200
 
         supplier_html = self._strip_whitespace('''
         <div class="search-result">
@@ -93,13 +93,11 @@ class TestSuppliersPage(BaseApplicationTest):
         </p>
         </div>''')  # noqa
 
-        assert_true(
-            supplier_html
-            in self._strip_whitespace(res.get_data(as_text=True)))
+        assert supplier_html in self._strip_whitespace(res.get_data(as_text=True))
 
     def test_should_show_a_t_z_nav(self):
         res = self.client.get('/g-cloud/suppliers')
-        assert_equal(200, res.status_code)
+        assert res.status_code == 200
 
         supplier_html = self._strip_whitespace(u'''
                 <li class="selected"><span class="visuallyhidden">Suppliers starting with </span><strong>A</strong></li>
@@ -130,181 +128,116 @@ class TestSuppliersPage(BaseApplicationTest):
                 <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=Z">Z</a></li>
                 <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=other">1–9</a></li>
         ''')  # noqa
-        assert_true(
-            supplier_html
-            in self._strip_whitespace(res.get_data(as_text=True)))
+        assert supplier_html in self._strip_whitespace(res.get_data(as_text=True))
 
     def test_should_show_no_suppliers_page_if_api_returns_404(self):
         self._data_api_client.find_suppliers.side_effect = APIError(mock.Mock(status_code=404))
 
         res = self.client.get('/g-cloud/suppliers')
-        assert_equal(404, res.status_code)
+        assert res.status_code == 404
 
     def test_should_show_next_page_on_supplier_list(self):
         res = self.client.get('/g-cloud/suppliers')
-        assert_equal(200, res.status_code)
+        assert res.status_code == 200
         html_tag = '<li class="next">'
         html_link = '<a href="/g-cloud/suppliers?'
         html_prefix = 'prefix=A'
         html_page = 'page=2'
 
-        assert_true(
-            html_tag
-            in res.get_data(as_text=True)
-        )
-        assert_true(
-            html_prefix
-            in res.get_data(as_text=True)
-        )
-        assert_true(
-            html_link
-            in res.get_data(as_text=True)
-        )
-        assert_true(
-            html_page
-            in res.get_data(as_text=True)
-        )
+        assert html_tag in res.get_data(as_text=True)
+        assert html_prefix in res.get_data(as_text=True)
+        assert html_link in res.get_data(as_text=True)
+        assert html_page in res.get_data(as_text=True)
 
     def test_should_show_next_nav_on_supplier_list(self):
         self._data_api_client.find_suppliers.return_value = self.suppliers_by_prefix_page_2  # noqa
         res = self.client.get('/g-cloud/suppliers?page=2')
         self._data_api_client.find_suppliers.assert_called_once_with('A', 2, 'g-cloud')
 
-        assert_equal(200, res.status_code)
+        assert res.status_code == 200
         html_tag = '<li class="previous">'
         html_link = '<a href="/g-cloud/suppliers?'
         html_prefix = 'prefix=A'
         html_page = 'page=1'
-        assert_true(
-            html_tag
-            in res.get_data(as_text=True)
-        )
-        assert_true(
-            html_prefix
-            in res.get_data(as_text=True)
-        )
-        assert_true(
-            html_link
-            in res.get_data(as_text=True)
-        )
-        assert_true(
-            html_page
-            in res.get_data(as_text=True)
-        )
+        assert html_tag in res.get_data(as_text=True)
+        assert html_prefix in res.get_data(as_text=True)
+        assert html_link in res.get_data(as_text=True)
+        assert html_page in res.get_data(as_text=True)
 
     def test_should_show_next_and_prev_nav_on_supplier_list(self):
         self._data_api_client.find_suppliers.return_value = self.suppliers_by_prefix_next_and_prev  # noqa
         res = self.client.get('/g-cloud/suppliers?page=2')
 
-        assert_equal(200, res.status_code)
+        assert res.status_code == 200
 
         previous_html_tag = '<li class="previous">'
         previous_html_link = '<a href="/g-cloud/suppliers?'
         previous_html_prefix = 'prefix=A'
         previous_html_page = 'page=1'
 
-        assert_true(
-            previous_html_tag
-            in res.get_data(as_text=True)
-        )
-        assert_true(
-            previous_html_prefix
-            in res.get_data(as_text=True)
-        )
-        assert_true(
-            previous_html_link
-            in res.get_data(as_text=True)
-        )
-        assert_true(
-            previous_html_page
-            in res.get_data(as_text=True)
-        )
+        assert previous_html_tag in res.get_data(as_text=True)
+        assert previous_html_prefix in res.get_data(as_text=True)
+        assert previous_html_link in res.get_data(as_text=True)
+        assert previous_html_page in res.get_data(as_text=True)
 
         next_html_tag = '<li class="next">'
         next_html_link = '<a href="/g-cloud/suppliers?'
         next_html_prefix = 'prefix=A'
         next_html_page = 'page=3'
 
-        assert_true(
-            next_html_tag
-            in res.get_data(as_text=True)
-        )
-        assert_true(
-            next_html_link
-            in res.get_data(as_text=True)
-        )
-        assert_true(
-            next_html_prefix
-            in res.get_data(as_text=True)
-        )
-        assert_true(
-            next_html_page
-            in res.get_data(as_text=True)
-        )
+        assert next_html_tag in res.get_data(as_text=True)
+        assert next_html_link in res.get_data(as_text=True)
+        assert next_html_prefix in res.get_data(as_text=True)
+        assert next_html_page in res.get_data(as_text=True)
 
     def test_should_have_supplier_details_on_supplier_page(self):
         res = self.client.get('/g-cloud/supplier/92191')
-        assert_equal(200, res.status_code)
-        assert_true(
-            '<h1>ExampleCompanyLimited</h1>'
-            in self._strip_whitespace(res.get_data(as_text=True))
-        )
-        assert_true(
-            "Example Company Limited is an innovation station sensation; we deliver software so bleeding edge you literally won&#39;t be able to run any of it on your systems."  # noqa
-            in res.get_data(as_text=True))
+        assert res.status_code == 200
+        assert '<h1>ExampleCompanyLimited</h1>' in self._strip_whitespace(res.get_data(as_text=True))
+        assert "Example Company Limited is an innovation station sensation; we deliver software so bleeding "\
+            "edge you literally won&#39;t be able to run any of it on your systems." in res.get_data(as_text=True)
 
     def test_should_show_supplier_with_no_desc_or_clients(self):
         self._data_api_client.get_supplier.return_value = self.supplier_with_minimum_data  # noqa
 
         res = self.client.get('/g-cloud/supplier/92191')
-        assert_equal(200, res.status_code)
-        assert_true(
-            '<h1>ExampleCompanyLimited</h1>'
-            in self._strip_whitespace(res.get_data(as_text=True)))
-        assert_false(
-            self._strip_whitespace("<h2>Clients</h2>")
-            in self._strip_whitespace(res.get_data(as_text=True)))
+        assert res.status_code == 200
+        assert '<h1>ExampleCompanyLimited</h1>' in self._strip_whitespace(res.get_data(as_text=True))
+        assert self._strip_whitespace("<h2>Clients</h2>") not in self._strip_whitespace(res.get_data(as_text=True))
 
     def test_should_have_supplier_contact_details_on_supplier_page(self):
         res = self.client.get('/g-cloud/supplier/92191')
 
-        assert_equal(200, res.status_code)
-        assert_true(
-            self._strip_whitespace('<span itemprop="name">John Example</span>')
-            in self._strip_whitespace(res.get_data(as_text=True)))
-        assert_true(
-            self._strip_whitespace('<span itemprop="telephone">07309404738</span>')
-            in self._strip_whitespace(res.get_data(as_text=True)))
+        assert res.status_code == 200
+        assert self._strip_whitespace(
+            '<span itemprop="name">John Example</span>'
+        ) in self._strip_whitespace(res.get_data(as_text=True))
+        assert self._strip_whitespace(
+            '<span itemprop="telephone">07309404738</span>'
+        ) in self._strip_whitespace(res.get_data(as_text=True))
 
         email_html = '''<a href="mailto:j@examplecompany.biz"
         data-event-category="Email a supplier"
         data-event-label="Example Company Limited">j@examplecompany.biz</a>'''
 
-        assert_true(
-            self._strip_whitespace(email_html)
-            in self._strip_whitespace(res.get_data(as_text=True)))
+        assert self._strip_whitespace(email_html) in self._strip_whitespace(res.get_data(as_text=True))
 
     def test_should_have_minimum_supplier_contact_details_on_supplier_page(self):
         self._data_api_client.get_supplier.return_value = self.supplier_with_minimum_data  # noqa
 
         res = self.client.get('/g-cloud/supplier/92191')
 
-        assert_equal(200, res.status_code)
-        assert_true(
-            self._strip_whitespace('<span itemprop="name">John Example</span>')
-            in self._strip_whitespace(res.get_data(as_text=True)))
+        assert res.status_code == 200
+        assert self._strip_whitespace(
+            '<span itemprop="name">John Example</span>'
+        ) in self._strip_whitespace(res.get_data(as_text=True))
 
         email_html = '''<a href="mailto:j@examplecompany.biz"
         data-event-category="Email a supplier"
         data-event-label="Example Company Limited">j@examplecompany.biz</a>'''
 
-        assert_true(
-            self._strip_whitespace(email_html)
-            in self._strip_whitespace(res.get_data(as_text=True)))
+        assert self._strip_whitespace(email_html) in self._strip_whitespace(res.get_data(as_text=True))
 
     def test_should_not_show_web_address(self):
         res = self.client.get('/g-cloud/supplier/92191')
-        assert_false(
-            'www.examplecompany.biz'
-            in res.get_data(as_text=True)
-        )
+        assert 'www.examplecompany.biz' not in res.get_data(as_text=True)

@@ -1,11 +1,10 @@
 import mock
-from nose.tools import assert_equal, assert_true
 from ...helpers import BaseApplicationTest
 
 
 class TestGCloudIndexResults(BaseApplicationTest):
-    def setup(self):
-        super(TestGCloudIndexResults, self).setup()
+    def setup_method(self, method):
+        super(TestGCloudIndexResults, self).setup_method(method)
 
         self._search_api_client = mock.patch(
             'app.main.views.g_cloud.search_api_client'
@@ -13,7 +12,7 @@ class TestGCloudIndexResults(BaseApplicationTest):
 
         self.search_results = self._get_search_results_fixture_data()
 
-    def teardown(self):
+    def teardown_method(self, method):
         self._search_api_client.stop()
 
     def test_renders_correct_search_links(self):
@@ -21,19 +20,9 @@ class TestGCloudIndexResults(BaseApplicationTest):
             self.search_results
 
         res = self.client.get('/g-cloud')
-        assert_equal(200, res.status_code)
-        assert_true(
-            'form action="/g-cloud/search'
-            in res.get_data(as_text=True))
-        assert_true(
-            '/g-cloud/search?lot=saas'
-            in res.get_data(as_text=True))
-        assert_true(
-            '/g-cloud/search?lot=scs'
-            in res.get_data(as_text=True))
-        assert_true(
-            '/g-cloud/search?lot=paas'
-            in res.get_data(as_text=True))
-        assert_true(
-            '/g-cloud/search?lot=iaas'
-            in res.get_data(as_text=True))
+        assert res.status_code == 200
+        assert 'form action="/g-cloud/search' in res.get_data(as_text=True)
+        assert '/g-cloud/search?lot=saas' in res.get_data(as_text=True)
+        assert '/g-cloud/search?lot=scs' in res.get_data(as_text=True)
+        assert '/g-cloud/search?lot=paas' in res.get_data(as_text=True)
+        assert '/g-cloud/search?lot=iaas' in res.get_data(as_text=True)

@@ -1,6 +1,7 @@
-import mock
-import unittest
 import datetime
+
+import mock
+import pytest
 from werkzeug.exceptions import NotFound
 
 import app.helpers as helpers
@@ -13,7 +14,7 @@ content_loader.load_manifest('dos', 'data', 'edit_brief')
 questions_builder = content_loader.get_builder('dos', 'edit_brief')
 
 
-class TestBuyersHelpers(unittest.TestCase):
+class TestBuyersHelpers(object):
     def test_get_framework_and_lot(self):
         data_api_client = mock.Mock()
         data_api_client.get_framework.return_value = api_stubs.framework(
@@ -49,8 +50,13 @@ class TestBuyersHelpers(unittest.TestCase):
             ]
         )
 
-        self.assertRaises(NotFound, helpers.buyers_helpers.get_framework_and_lot, 'digital-outcomes-and-specialists',
-                          'digital-specialists', data_api_client, {'status': 'live'})
+        with pytest.raises(NotFound):
+            helpers.buyers_helpers.get_framework_and_lot(
+                'digital-outcomes-and-specialists',
+                'digital-specialists',
+                data_api_client,
+                status='live',
+            )
 
     def test_get_framework_and_lot_404s_if_allows_brief_required(self):
         data_api_client = mock.Mock()
@@ -62,8 +68,13 @@ class TestBuyersHelpers(unittest.TestCase):
             ]
         )
 
-        self.assertRaises(NotFound, helpers.buyers_helpers.get_framework_and_lot, 'digital-outcomes-and-specialists',
-                          'digital-specialists', data_api_client, {'must_allow_brief': True})
+        with pytest.raises(NotFound):
+            helpers.buyers_helpers.get_framework_and_lot(
+                'digital-outcomes-and-specialists',
+                'digital-specialists',
+                data_api_client,
+                must_allow_brief=True,
+            )
 
     def test_is_brief_correct(self):
         brief = api_stubs.brief(user_id=123, status='live')['briefs']

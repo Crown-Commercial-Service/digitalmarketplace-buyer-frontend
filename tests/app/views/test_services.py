@@ -2,7 +2,6 @@
 import mock
 import re
 from lxml import html
-from nose.tools import assert_equal, assert_in, assert_false, assert_true
 from ...helpers import BaseApplicationTest
 
 
@@ -26,8 +25,8 @@ class UnavailableBanner(object):
 
 class TestServicePage(BaseApplicationTest):
 
-    def setup(self):
-        super(TestServicePage, self).setup()
+    def setup_method(self, method):
+        super(TestServicePage, self).setup_method(method)
 
         self._data_api_client = mock.patch(
             'app.main.views.g_cloud.data_api_client'
@@ -43,7 +42,7 @@ class TestServicePage(BaseApplicationTest):
             'SCS': 'Specialist Cloud Services'
         }
 
-    def teardown(self):
+    def teardown_method(self, method):
         self._data_api_client.stop()
 
     def _assert_contact_details(self, document):
@@ -58,14 +57,14 @@ class TestServicePage(BaseApplicationTest):
             for p in meta.xpath('//div[@class="contact-details"]//p')
         ]
 
-        assert_equal(supplier_name, contact_heading)
+        assert contact_heading == supplier_name
 
         for contact_detail in [
             contact_info['contactName'],
             contact_info['phoneNumber'],
             contact_info['email']
         ]:
-            assert_in("{}".format(contact_detail), ps)
+            assert "{}".format(contact_detail) in ps
 
     def _assert_document_links(self, document):
 
@@ -84,17 +83,17 @@ class TestServicePage(BaseApplicationTest):
 
         for url_key in url_keys:
             if url_key in self.service['services']:
-                assert_in(
+                assert (
                     # Replace all runs of whitespace with a '%20'
-                    self._replace_whitespace(service[url_key], '%20'),
-                    doc_hrefs
+                    self._replace_whitespace(service[url_key], '%20')
+                    in doc_hrefs
                 )
 
         if 'additionalDocumentURLs' in service:
             for document_url in service['additionalDocumentURLs']:
-                assert_in(
-                    self._replace_whitespace(document_url, '%20'),
-                    doc_hrefs
+                assert (
+                    self._replace_whitespace(document_url, '%20')
+                    in doc_hrefs
                 )
 
     def _replace_whitespace(self, string, replacement_substring):
@@ -115,19 +114,15 @@ class TestServicePage(BaseApplicationTest):
         }
 
         breadcrumbs = document.xpath('//div[@id="global-breadcrumb"]//a')
-        assert_equal(3, len(breadcrumbs))
+        assert len(breadcrumbs) == 3
 
         for breadcrumb in breadcrumbs:
             breadcrumb_text = breadcrumb.text_content().strip()
             breakcrumb_href = breadcrumb.get('href').strip()
             # check that the link exists in our expected breadcrumbs
-            assert_in(
-                breakcrumb_href, breadcrumbs_expected
-            )
+            assert breakcrumb_href in breadcrumbs_expected
             # check that the link text is the same
-            assert_equal(
-                breadcrumb_text, breadcrumbs_expected[breakcrumb_href]
-            )
+            assert breadcrumb_text == breadcrumbs_expected[breakcrumb_href]
 
     def _assert_service_page_url(self):
 
@@ -135,12 +130,12 @@ class TestServicePage(BaseApplicationTest):
         service_title = self.service['services']['title']
 
         res = self.client.get('/g-cloud/services/{}'.format(service_id))
-        assert_equal(200, res.status_code)
+        assert res.status_code == 200
 
         document = html.fromstring(res.get_data(as_text=True))
 
         page_title = document.xpath('//div[@id="wrapper"]//h1/text()')[0]
-        assert_equal("{}".format(service_title), page_title)
+        assert page_title == "{}".format(service_title)
 
         self._assert_contact_details(document)
         self._assert_document_links(document)
@@ -203,10 +198,10 @@ class TestServicePage(BaseApplicationTest):
         self._data_api_client.get_service.return_value = self.service
         service_id = self.service['services']['id']
         res = self.client.get('/g-cloud/services/{}'.format(service_id))
-        assert_equal(200, res.status_code)
+        assert res.status_code == 200
         document = html.fromstring(res.get_data(as_text=True))
         unavailable_banner = UnavailableBanner(document)
-        assert_false(unavailable_banner.exists)
+        assert not unavailable_banner.exists
 
     def test_enabled_service_has_unavailable_banner(self):
         self.service = self._get_g6_service_fixture_data()
@@ -223,23 +218,17 @@ class TestServicePage(BaseApplicationTest):
             self.service
         service_id = self.service['services']['id']
         res = self.client.get('/g-cloud/services/{}'.format(service_id))
-        assert_equal(410, res.status_code)
+        assert res.status_code == 410
 
         document = html.fromstring(res.get_data(as_text=True))
 
         unavailable_banner = UnavailableBanner(document)
-        assert_true(unavailable_banner.exists)
-        assert_equal(
-            unavailable_banner.heading_text(),
-            '{} stopped offering this service on {}'.format(
-                self.service['services']['supplierName'],
-                'Tuesday 5 January 2016.'
-            )
+        assert unavailable_banner.exists
+        assert unavailable_banner.heading_text() == '{} stopped offering this service on {}'.format(
+            self.service['services']['supplierName'],
+            'Tuesday 5 January 2016.',
         )
-        assert_equal(
-            unavailable_banner.body_text(),
-            'Any existing contracts for this service are still valid.'
-        )
+        assert unavailable_banner.body_text() == 'Any existing contracts for this service are still valid.'
 
     def test_disabled_service_has_unavailable_banner(self):
         self.service = self._get_g6_service_fixture_data()
@@ -256,23 +245,17 @@ class TestServicePage(BaseApplicationTest):
             self.service
         service_id = self.service['services']['id']
         res = self.client.get('/g-cloud/services/{}'.format(service_id))
-        assert_equal(410, res.status_code)
+        assert res.status_code == 410
 
         document = html.fromstring(res.get_data(as_text=True))
 
         unavailable_banner = UnavailableBanner(document)
-        assert_true(unavailable_banner.exists)
-        assert_equal(
-            unavailable_banner.heading_text(),
-            '{} stopped offering this service on {}'.format(
-                self.service['services']['supplierName'],
-                'Tuesday 5 January 2016.'
-            )
+        assert unavailable_banner.exists
+        assert unavailable_banner.heading_text() == '{} stopped offering this service on {}'.format(
+            self.service['services']['supplierName'],
+            'Tuesday 5 January 2016.',
         )
-        assert_equal(
-            unavailable_banner.body_text(),
-            'Any existing contracts for this service are still valid.'
-        )
+        assert unavailable_banner.body_text() == 'Any existing contracts for this service are still valid.'
 
     def test_expired_framework_causes_service_to_have_unavailable_banner(self):
         self.service = self._get_g6_service_fixture_data()
@@ -289,25 +272,20 @@ class TestServicePage(BaseApplicationTest):
             self.service
         service_id = self.service['services']['id']
         res = self.client.get('/g-cloud/services/{}'.format(service_id))
-        assert_equal(410, res.status_code)
+        assert res.status_code == 410
 
         document = html.fromstring(res.get_data(as_text=True))
         unavailable_banner = UnavailableBanner(document)
-        assert_true(unavailable_banner.exists)
-        assert_equal(
-            unavailable_banner.heading_text(),
-            'This {} service is no longer available to buy.'.format(
-                self.service['services']['frameworkName']
-            )
+        assert unavailable_banner.exists
+        assert unavailable_banner.heading_text() == 'This {} service is no longer available to buy.'.format(
+            self.service['services']['frameworkName'],
         )
-        assert_equal(
-            unavailable_banner.body_text(),
-            'The {} framework expired on {}. Any existing contracts with {} are still valid.'.format(
+        assert unavailable_banner.body_text() == 'The {} framework expired on {}. Any existing contracts with {} are' \
+            ' still valid.'.format(
                 self.service['services']['frameworkName'],
                 'Tuesday 5 January 2016',
-                self.service['services']['supplierName']
+                self.service['services']['supplierName'],
             )
-        )
 
     def test_pre_live_framework_causes_404(self):
         self.service = self._get_g6_service_fixture_data()
@@ -317,7 +295,7 @@ class TestServicePage(BaseApplicationTest):
 
         res = self.client.get('/g-cloud/services/{}'.format(service_id))
 
-        assert_equal(404, res.status_code)
+        assert res.status_code == 404
 
     def test_certifications_section_not_displayed_if_service_has_none(self):
         self.service = self._get_g6_service_fixture_data()
@@ -326,7 +304,7 @@ class TestServicePage(BaseApplicationTest):
         service_id = self.service['services']['id']
 
         res = self.client.get('/g-cloud/services/{}'.format(service_id))
-        assert_equal(200, res.status_code)
+        assert res.status_code == 200
 
         document = html.fromstring(res.get_data(as_text=True))
 
@@ -337,4 +315,4 @@ class TestServicePage(BaseApplicationTest):
         attribute_headings = [
             heading.strip() for heading in attribute_headings]
 
-        assert_false('Certifications' in attribute_headings)
+        assert 'Certifications' not in attribute_headings

@@ -1,7 +1,6 @@
 # coding=utf-8
 
 import mock
-from nose.tools import assert_equal, assert_true
 from dmapiclient import HTTPError
 from ...helpers import BaseApplicationTest
 
@@ -10,33 +9,29 @@ from ...helpers import BaseApplicationTest
 class TestErrors(BaseApplicationTest):
     def test_404(self, search_api_mock):
         res = self.client.get('/g-cloud/service/1234')
-        assert_equal(404, res.status_code)
-        assert_true(
-            "Check you've entered the correct web "
-            "address or start again on the Digital Marketplace homepage."
-            in res.get_data(as_text=True))
-        assert_true(
-            "If you can't find what you're looking for, email "
-            "<a href=\"mailto:enquiries@digitalmarketplace.service.gov.uk?"
-            "subject=Digital%20Marketplace%20feedback\" title=\"Please "
-            "send feedback to enquiries@digitalmarketplace.service.gov.uk\">"
-            "enquiries@digitalmarketplace.service.gov.uk</a>"
-            in res.get_data(as_text=True))
+        assert res.status_code == 404
+        assert "Check you've entered the correct web " \
+            "address or start again on the Digital Marketplace homepage." \
+            in res.get_data(as_text=True)
+        assert "If you can't find what you're looking for, email " \
+            "<a href=\"mailto:enquiries@digitalmarketplace.service.gov.uk?" \
+            "subject=Digital%20Marketplace%20feedback\" title=\"Please " \
+            "send feedback to enquiries@digitalmarketplace.service.gov.uk\">" \
+            "enquiries@digitalmarketplace.service.gov.uk</a>" \
+            in res.get_data(as_text=True)
 
     def test_410(self, search_api_mock):
         res = self.client.get('/digital-services/framework')
-        assert_equal(410, res.status_code)
-        assert_true(
-            "Check you've entered the correct web "
-            "address or start again on the Digital Marketplace homepage."
-            in res.get_data(as_text=True))
-        assert_true(
-            "If you can't find what you're looking for, email "
-            "<a href=\"mailto:enquiries@digitalmarketplace.service.gov.uk?"
-            "subject=Digital%20Marketplace%20feedback\" title=\"Please "
-            "send feedback to enquiries@digitalmarketplace.service.gov.uk\">"
-            "enquiries@digitalmarketplace.service.gov.uk</a>"
-            in res.get_data(as_text=True))
+        assert res.status_code == 410
+        assert "Check you've entered the correct web " \
+            "address or start again on the Digital Marketplace homepage." \
+            in res.get_data(as_text=True)
+        assert "If you can't find what you're looking for, email " \
+            "<a href=\"mailto:enquiries@digitalmarketplace.service.gov.uk?" \
+            "subject=Digital%20Marketplace%20feedback\" title=\"Please " \
+            "send feedback to enquiries@digitalmarketplace.service.gov.uk\">" \
+            "enquiries@digitalmarketplace.service.gov.uk</a>" \
+            in res.get_data(as_text=True)
 
     def test_500(self, search_api_mock):
         self.app.config['DEBUG'] = False
@@ -46,10 +41,6 @@ class TestErrors(BaseApplicationTest):
         search_api_mock.search_services.side_effect = HTTPError(api_response)
 
         res = self.client.get('/g-cloud/search?q=email')
-        assert_equal(503, res.status_code)
-        assert_true(
-            "Sorry, we're experiencing technical difficulties"
-            in res.get_data(as_text=True))
-        assert_true(
-            "Try again later."
-            in res.get_data(as_text=True))
+        assert res.status_code == 503
+        assert "Sorry, we're experiencing technical difficulties" in res.get_data(as_text=True)
+        assert "Try again later." in res.get_data(as_text=True)

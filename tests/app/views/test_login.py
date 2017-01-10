@@ -28,8 +28,8 @@ USER_LINK_EXPIRED_ERROR = "The link you used to create an account may have expir
 
 class TestLogin(BaseApplicationTest):
 
-    def setup(self):
-        super(TestLogin, self).setup()
+    def setup_method(self, method):
+        super(TestLogin, self).setup_method(method)
 
         data_api_client_config = {'authenticate_user.return_value': self.user(
             123, "email@email.com", 1234, 'name', 'name'
@@ -40,7 +40,7 @@ class TestLogin(BaseApplicationTest):
         )
         self.data_api_client_mock = self._data_api_client.start()
 
-    def teardown(self):
+    def teardown_method(self, method):
         self._data_api_client.stop()
 
     def test_should_show_login_page(self):
@@ -213,8 +213,8 @@ class TestResetPassword(BaseApplicationTest):
 
     _user = None
 
-    def setup(self):
-        super(TestResetPassword, self).setup()
+    def setup_method(self, method):
+        super(TestResetPassword, self).setup_method(method)
 
         data_api_client_config = {'get_user.return_value': self.user(
             123, "email@email.com", 1234, 'name', 'Name'
@@ -230,7 +230,7 @@ class TestResetPassword(BaseApplicationTest):
         )
         self.data_api_client_mock = self._data_api_client.start()
 
-    def teardown(self):
+    def teardown_method(self, method):
         self._data_api_client.stop()
 
     def test_email_should_not_be_empty(self):
