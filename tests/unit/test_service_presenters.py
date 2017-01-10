@@ -76,8 +76,8 @@ class TestService(object):
         self.fixture['onboardingGuidance'] = invalidValue
         service = Service(self.fixture, content_loader.get_builder('g-cloud-6', 'display_service'))
         for group in service.attributes:
-            assert group['name'] == 'External interface protection' and 'onboardingGuidance' in group, "Attribute " \
-                " with tuple value should not be in group"
+            assert not (group['name'] == 'External interface protection' and 'onboardingGuidance' in group), \
+                "Attribute with tuple value should not be in group"
 
     def test_attributes_with_assurance_in_the_fields_add_it_correctly(self):
         service = Service(self.fixture, content_loader.get_builder('g-cloud-6', 'display_service'))
