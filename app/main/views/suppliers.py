@@ -56,17 +56,19 @@ def get_supplier(code):
             supplier['representative'] = supplier['contacts'][0]['name']
         props = {"application": {key: supplier[key] for key in supplier if key not in ['disclosures']}}
         props['application']['case_study_url'] = '/case-study/'
+        props['application']['public_profile'] = True
         props['basename'] = url_for('.get_supplier', code=code)
         props['form_options'] = {
             'action': "/sellers/edit",
-            'submit_url': "/sellers/edit",
-
+            'submit_url': "/sellers/edit"
         }
+
         rendered_component = render_component('bundles/SellerRegistration/ApplicationPreviewWidget.js', props)
 
         return render_template(
             '_react.html',
-            component=rendered_component
+            component=rendered_component,
+            main_class='collapse'
         )
     return render_template(
         'suppliers_details.html',

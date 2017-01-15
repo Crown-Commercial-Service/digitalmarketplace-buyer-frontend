@@ -1,5 +1,11 @@
 {% extends "_base_page.html" %}
 
+{% if main_class %}
+  {% block main_class -%}
+    {{ main_class }}
+  {%- endblock %}
+{% endif %}
+
 {% block breadcrumb %}
   {% if breadcrumb_items|count > 0 %}
     {% with items = breadcrumb_items %}
@@ -11,6 +17,10 @@
 {% block body_end %}
   <script type="text/javascript" src="{{ component.get_vendor_bundle() }}" defer></script>
   <script type="text/javascript" src="{{ component.get_bundle() }}" defer></script>
+  {# May not be the best place to load this, time will tell. #}
+  {% if component.get_file('stylesheet') %}
+    <link type="text/css" rel="stylesheet" media="screen" href="{{ component.get_file('stylesheet') }}">
+  {% endif %}
 {% endblock %}
 
 {% block content %}
