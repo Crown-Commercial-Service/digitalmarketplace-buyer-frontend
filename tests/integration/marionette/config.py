@@ -1,7 +1,7 @@
 import os
 
 config = {
-    'DM_FRONTEND_URL': os.getenv('DM_FRONTEND_URL', 'http://localhost:5002/marketplace'),
+    'DM_FRONTEND_URL': os.getenv('DM_FRONTEND_URL', 'http://localhost:5002/'),
     'DM_BUYER_EMAIL': os.getenv('DM_BUYER_EMAIL', ''),
     'DM_BUYER_PASSWORD': os.getenv('DM_BUYER_PASSWORD', ''),
     'DM_SUPPLIER_EMAIL': os.getenv('DM_SUPPLIER_EMAIL', ''),
