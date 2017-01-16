@@ -44,10 +44,8 @@ class TestSuppliersPage(BaseApplicationTest):
         api_client.return_value.get_case_study.return_value = self.case_study
 
         res = self.client.get(self.url_for('main.get_supplier', code=1234))
-        document = html.fromstring(res.get_data(as_text=True))
 
         assert res.status_code == 200
-        assert len(document.xpath('//a[contains(@href,"sellers/update")]')) > 0
 
     def test_should_have_supplier_details_on_supplier_page(self, api_client):
         self.login_as_buyer()
