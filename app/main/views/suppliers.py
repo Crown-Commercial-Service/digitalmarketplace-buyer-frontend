@@ -46,6 +46,8 @@ def get_supplier(code):
         casestudy = DataAPIClient().get_case_study(casestudy_id)['caseStudy']
         supplier["caseStudies"].append(casestudy)
 
+    owns_profile = user_owns_page(code)
+
     if request_wants_json():
         return jsonify(dict(supplier))
     if feature.is_active('NEW_SELLER_PROFILE'):
@@ -56,7 +58,7 @@ def get_supplier(code):
             supplier['representative'] = supplier['contacts'][0]['name']
         props = {"application": {key: supplier[key] for key in supplier if key not in ['disclosures']}}
         props['application']['case_study_url'] = '/case-study/'
-        props['application']['public_profile'] = True
+        props['application']['public_profile'] = not owns_profile
         props['basename'] = url_for('.get_supplier', code=code)
         props['form_options'] = {
             'action': "/sellers/edit",
@@ -68,12 +70,12 @@ def get_supplier(code):
         return render_template(
             '_react.html',
             component=rendered_component,
-            main_class='collapse'
+            main_class='collapse' if not owns_profile else None
         )
     return render_template(
         'suppliers_details.html',
         supplier=supplier,
-        user_owns_page=user_owns_page(code),
+        user_owns_page=owns_profile,
         render_component=render_component
     )
 
