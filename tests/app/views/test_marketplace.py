@@ -457,7 +457,13 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         assert (parsed_original_url.path == parsed_prev_url.path == parsed_next_url.path) or \
             '' == parsed_prev_url.path == parsed_next_url.path
 
-        normalize_qs = lambda qs: {k: set(v) for k, v in iteritems(parse_qs(qs)) if k != "page"}
+        def normalize_qs(qs):
+            return {
+                k: set(v) for k, v
+                in iteritems(parse_qs(qs))
+                if k != "page"
+            }
+
         assert normalize_qs(parsed_original_url.query) == \
             normalize_qs(parsed_next_url.query) == \
             normalize_qs(parsed_prev_url.query)
@@ -520,7 +526,9 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         parsed_next_url = urlparse(document.xpath("//li[@class='next']/a/@href")[0])
         parsed_prev_url = urlparse(document.xpath("//li[@class='previous']/a/@href")[0])
 
-        normalize_qs = lambda qs: {k: set(v) for k, v in iteritems(parse_qs(qs)) if k != "page"}
+        def normalize_qs(qs):
+            return {k: set(v) for k, v in iteritems(parse_qs(qs)) if k != "page"}
+
         assert normalize_qs(parsed_original_url.query) == normalize_qs(parsed_prev_url.query) == \
             normalize_qs(parsed_next_url.query)
 

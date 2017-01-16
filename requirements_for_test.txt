@@ -1,18 +1,21 @@
--r requirements.txt
+-e git+https://github.com/AusDTO/dto-digitalmarketplace-utils.git@master#egg=dto-digitalmarketplace-utils
+-e git+https://github.com/AusDTO/dto-digitalmarketplace-content-loader.git@master#egg=dto-digitalmarketplace-content-loader
+-e git+https://github.com/AusDTO/dto-digitalmarketplace-apiclient.git@master#egg=dto-digitalmarketplace-apiclient
 
-#Required for testing
-pytest==3.0.4
-pytest_bdd==2.17.1
-pep8==1.5.7
-nose==1.3.4
-mock==1.0.1
-lxml==3.6.4
-cssselect==0.9.1
-watchdog==0.8.3
+-e .
 
-coverage==3.7.1
-pytest-cov==2.2.0
-python-coveralls==2.5.0
+pytest
+pytest_bdd
+pep8
+nose
+mock
+lxml
+cssselect
+watchdog
 
-marionette-client==3.2.0
-openpyxl==2.4.0
+coverage
+pytest-cov
+python-coveralls
+
+marionette-client
+openpyxl
