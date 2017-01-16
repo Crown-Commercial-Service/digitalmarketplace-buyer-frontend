@@ -82,7 +82,7 @@ class Config(object):
         'XLSX_EXPORT': True,
         'SELLER_REGISTRATION': False,
         'DOMAINS_SEARCH': False,
-        'NEW_SELLER_PROFILE': False
+        'NEW_SELLER_PROFILE': True
     }
 
     # LOGGING
