@@ -41,7 +41,7 @@ jmespath==0.9.0
 lxml==3.7.2
 Mako==1.0.6
 manifestparser==1.1
-marionette-client==3.3.0
+marionette-harness==4.0.0
 marionette-driver==2.2.0
 Markdown==2.6.7
 MarkupSafe==0.23

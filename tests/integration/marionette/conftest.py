@@ -1,4 +1,4 @@
-from marionette import Marionette
+from marionette_driver.marionette import Marionette
 import pytest
 
 

@@ -17,5 +17,5 @@ coverage
 pytest-cov
 python-coveralls
 
-marionette-client
+marionette-harness
 openpyxl
