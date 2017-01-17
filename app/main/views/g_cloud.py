@@ -22,7 +22,7 @@ from ...helpers.search_helpers import (
     clean_request_args
 )
 
-from ...exceptions import AuthException
+from ..exceptions import AuthException
 from app import search_api_client, data_api_client, content_loader
 
 
