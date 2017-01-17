@@ -8,14 +8,14 @@ from dmapiclient import HTTPError
 from dmutils.formats import LOTS
 
 from ...main import main
-from ...presenters.search_presenters import (
+from ..presenters.search_presenters import (
     filters_for_lot,
     set_filter_states,
 )
-from ...presenters.search_results import SearchResults
-from ...presenters.search_summary import SearchSummary
-from ...presenters.service_presenters import Service
-from ...helpers.search_helpers import (
+from ..presenters.search_results import SearchResults
+from ..presenters.search_summary import SearchSummary
+from ..presenters.service_presenters import Service
+from ..helpers.search_helpers import (
     get_keywords_from_request, pagination,
     get_page_from_request, query_args_for_pagination,
     get_lot_from_request, build_search_query,

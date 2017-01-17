@@ -13,7 +13,10 @@ try:
     from urllib import unquote
 except ImportError:
     from urllib.parse import unquote
-from ..helpers.shared_helpers import chunk_string
+
+
+def chunk_string(string, chunk_length):
+    return (string[0+i:chunk_length+i] for i in range(0, len(string), chunk_length))
 
 
 class Service(object):

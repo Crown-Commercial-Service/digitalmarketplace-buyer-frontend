@@ -4,7 +4,7 @@ from mock import Mock
 from dmcontent.content_loader import ContentLoader
 from werkzeug.datastructures import MultiDict
 
-from app.presenters.search_presenters import filters_for_lot, set_filter_states
+from app.main.presenters.search_presenters import filters_for_lot, set_filter_states
 
 
 content_loader = ContentLoader('tests/fixtures/content')
@@ -14,7 +14,7 @@ questions_builder = content_loader.get_builder('g6', 'manifest')
 
 def _get_fixture_data():
     test_root = os.path.abspath(
-        os.path.join(os.path.dirname(__file__), "..")
+        os.path.join(os.path.dirname(__file__), "../..")
     )
     fixture_path = os.path.join(
         test_root, 'fixtures', 'search_results_fixture.json'
@@ -25,7 +25,7 @@ def _get_fixture_data():
 
 def _get_fixture_multiple_pages_data():
     test_root = os.path.abspath(
-        os.path.join(os.path.dirname(__file__), "..")
+        os.path.join(os.path.dirname(__file__), "../..")
     )
     fixture_path = os.path.join(
         test_root, 'fixtures', 'search_results_multiple_pages_fixture.json'

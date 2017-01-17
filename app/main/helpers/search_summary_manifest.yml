@@ -32,7 +32,7 @@
     preposition: a
     id: Month
   -
-    preposition: a  
+    preposition: a
     id: Year
   -
     preposition:
@@ -81,7 +81,7 @@
 -
   id: Interoperability
   labelPreposition: which have
-  label: 
+  label:
   filtersPreposition:
   filterRules:
   conjunction: and

@@ -2,12 +2,12 @@ import os
 import json
 
 from flask import Markup
-from app.presenters.search_results import SearchResults
+from app.main.presenters.search_results import SearchResults
 
 
 def _get_fixture_data():
     test_root = os.path.abspath(
-        os.path.join(os.path.dirname(__file__), "..")
+        os.path.join(os.path.dirname(__file__), "../..")
     )
     fixture_path = os.path.join(
         test_root, 'fixtures', 'search_results_fixture.json'
@@ -18,7 +18,7 @@ def _get_fixture_data():
 
 def _get_fixture_multiple_pages_data():
     test_root = os.path.abspath(
-        os.path.join(os.path.dirname(__file__), "..")
+        os.path.join(os.path.dirname(__file__), "../..")
     )
     fixture_path = os.path.join(
         test_root, 'fixtures', 'search_results_multiple_pages_fixture.json'
