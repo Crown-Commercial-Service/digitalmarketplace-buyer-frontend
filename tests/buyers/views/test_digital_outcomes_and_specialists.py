@@ -7,7 +7,7 @@ import mock
 from lxml import html
 
 
-@mock.patch('app.main.views.digital_outcomes_and_specialists.data_api_client')
+@mock.patch('app.buyers.views.digital_outcomes_and_specialists.data_api_client')
 class TestStartBriefInfoPage(BaseApplicationTest):
     def test_show_start_brief_info_page(self, data_api_client):
         with self.app.app_context():
@@ -54,7 +54,7 @@ class TestStartBriefInfoPage(BaseApplicationTest):
             assert res.status_code == 404
 
 
-@mock.patch('app.main.views.digital_outcomes_and_specialists.data_api_client')
+@mock.patch('app.buyers.views.digital_outcomes_and_specialists.data_api_client')
 class TestStartStudiosInfoPage(BaseApplicationTest):
     def test_show_start_studios_info_page(self, data_api_client):
         with self.app.app_context():

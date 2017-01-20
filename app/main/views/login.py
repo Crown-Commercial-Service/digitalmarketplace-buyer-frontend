@@ -15,8 +15,8 @@ from dmutils.email import (
 )
 from .. import main
 from ..forms.auth_forms import LoginForm, EmailAddressForm, ChangePasswordForm, CreateUserForm
-from ...helpers import hash_email
-from ...helpers.login_helpers import redirect_logged_in_user
+from ..helpers import hash_email
+from ..helpers.login_helpers import redirect_logged_in_user
 from ... import data_api_client
 
 

@@ -4,7 +4,7 @@ import mock
 import pytest
 from werkzeug.exceptions import NotFound
 
-import app.helpers as helpers
+import app.buyers.helpers as helpers
 from dmcontent.content_loader import ContentLoader
 
 from dmapiclient import api_stubs

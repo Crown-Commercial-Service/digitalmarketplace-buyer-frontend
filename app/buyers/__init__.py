@@ -3,6 +3,7 @@ from flask_login import current_user, login_required
 from dmcontent.content_loader import ContentLoader
 
 buyers = Blueprint('buyers', __name__)
+dos = Blueprint('dos', __name__)
 
 content_loader = ContentLoader('app/content')
 content_loader.load_manifest('digital-outcomes-and-specialists', 'briefs', 'edit_brief')
@@ -25,3 +26,4 @@ def add_cache_control(response):
 
 from ..main import errors
 from .views import buyers as buyers_views
+from .views import digital_outcomes_and_specialists
