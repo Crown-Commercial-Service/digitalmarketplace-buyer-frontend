@@ -1,5 +1,5 @@
 import json
-from ..helpers import BaseApplicationTest
+from ...helpers import BaseApplicationTest
 
 import mock
 
