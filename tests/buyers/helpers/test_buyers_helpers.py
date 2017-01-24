@@ -164,37 +164,6 @@ class TestBuyersHelpers(object):
             'unanswered_optional': 2
         }]
 
-    def test_all_essentials_are_true(self):
-        assert helpers.buyers_helpers.all_essentials_are_true(
-            {"essentialRequirements": [True, True, True, True, True]}
-        ) is True
-
-        assert helpers.buyers_helpers.all_essentials_are_true(
-            {"essentialRequirements": [True, True, False, True, True]}
-        ) is False
-
-        assert helpers.buyers_helpers.all_essentials_are_true(
-            {"essentialRequirements": [False, False, False, False, False]}
-        ) is False
-
-        assert helpers.buyers_helpers.all_essentials_are_true(
-            {"essentialRequirements": [True, True, True, True, False]}
-        ) is False
-
-    def test_counts_for_failed_and_eligible_brief_responses(self):
-        data_api_client = mock.Mock()
-        data_api_client.find_brief_responses.return_value = {
-            "briefResponses": [
-                {"essentialRequirements": [True, True, True, True, True]},
-                {"essentialRequirements": [True, False, True, True, True]},
-                {"essentialRequirements": [True, True, False, False, True]},
-                {"essentialRequirements": [True, True, True, True, True]},
-                {"essentialRequirements": [True, True, True, True, False]},
-            ]
-        }
-
-        assert helpers.buyers_helpers.counts_for_failed_and_eligible_brief_responses(1, data_api_client) == (3, 2)
-
     def test_get_sorted_responses_for_brief(self):
         data_api_client = mock.Mock()
         data_api_client.find_brief_responses.return_value = {

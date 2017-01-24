@@ -11,7 +11,6 @@ from flask_login import current_user
 from app import data_api_client
 from .. import buyers, content_loader
 from ..helpers.buyers_helpers import (
-    all_essentials_are_true, counts_for_failed_and_eligible_brief_responses,
     get_framework_and_lot, get_sorted_responses_for_brief, count_unanswered_questions,
     brief_can_be_edited, add_unanswered_counts_to_briefs, is_brief_correct,
     section_has_at_least_one_required_question
@@ -28,6 +27,8 @@ from datetime import datetime
 from odf.style import TextProperties, TableRowProperties, TableColumnProperties, TableCellProperties, FontFace
 
 from io import BytesIO
+
+from collections import Counter
 
 
 @buyers.route('')
@@ -272,11 +273,24 @@ def view_brief_responses(framework_slug, lot_slug, brief_id):
     if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id):
         abort(404)
 
-    failed_count, eligible_count = counts_for_failed_and_eligible_brief_responses(brief["id"], data_api_client)
+    brief_responses = data_api_client.find_brief_responses(brief_id)['briefResponses']
+
+    met = None
+
+    counter = Counter()
+
+    for response in brief_responses:
+        value = met = response.get('essentialRequirementsMet', None)
+
+        if met is None:
+            value = all(response['essentialRequirements'])
+
+        counter[value] += 1
 
     return render_template(
         "buyers/brief_responses.html",
-        response_counts={"failed": failed_count, "eligible": eligible_count},
+        response_counts={"failed": counter[False], "eligible": counter[True]},
+        ods=met is not None,  # will be None for legacy responses
         brief=brief
     ), 200
 
@@ -348,7 +362,7 @@ class DownloadBriefResponsesView(View):
 
         # Add a row for each eligible response received
         for brief_response in context['responses']:
-            if all_essentials_are_true(brief_response):
+            if all(brief_response['essentialRequirements']):
                 row = []
                 for key in question_key_sequence:
                     if key in boolean_list_questions:
