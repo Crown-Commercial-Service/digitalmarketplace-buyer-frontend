@@ -14,6 +14,11 @@
   {% endblock %}
 
   {% block content_super %}
+    {% if 'DM_FRAMEWORK' is active_feature %}
+      {% set framework_slug='digital-marketplace' %}
+    {% else %}
+      {% set framework_slug='digital-service-professionals' %}
+    {% endif %}
     <div class="content-main super">
       <div class="wrapper">
         <nav role="navigation" id="main-navigation">
@@ -21,7 +26,7 @@
             {% if briefs_count > 0 %}
               <a
                 aria-labelledby="opportunities__call-to-action"
-                href="{{ url_for('.list_opportunities', framework_slug='digital-service-professionals') }}"
+                href="{{ url_for('.list_opportunities', framework_slug=framework_slug) }}"
                 class="card seller">
                 <p>
                   <span>{{ briefs_count }}</span>
@@ -60,20 +65,24 @@
   {% endblock %}
 
   {% block main_content %}
-
+    {% if 'DM_FRAMEWORK' is active_feature %}
+      {% set framework_slug='digital-marketplace' %}
+    {% else %}
+      {% set framework_slug='digital-service-professionals' %}
+    {% endif %}
   <ul class="list-vertical">
     <li>
       <h2>Government buyers</h2>
       <ul class="list-horizontal">
         <li>
           <article>
-            <h3><a href="{{ url_for('.info_page_for_starting_a_brief', framework_slug='digital-service-professionals', lot_slug='digital-outcome') }}">Request an outcome</a></h3>
+            <h3><a href="{{ url_for('.info_page_for_starting_a_brief', framework_slug=framework_slug, lot_slug='digital-outcome') }}">Request an outcome</a></h3>
             <p>Make use of Marketplace expertise to realise your project or policy goal.</p>
           </article>
         </li>
         <li>
           <article>
-            <h3><a href="{{ url_for('.info_page_for_starting_a_brief', framework_slug='digital-service-professionals', lot_slug='digital-professionals') }}">Find an individual specialist</a></h3>
+            <h3><a href="{{ url_for('.info_page_for_starting_a_brief', framework_slug=framework_slug, lot_slug='digital-professionals') }}">Find an individual specialist</a></h3>
             <p>Add digital people to your project in as little as 2 weeks.</p>
           </article>
         </li>
@@ -96,7 +105,7 @@
       <ul class="list-horizontal">
         <li>
           <article>
-            <h3><a href="{{ url_for('.list_opportunities', framework_slug='digital-service-professionals') }}">View the latest opportunities</a></h3>
+            <h3><a href="{{ url_for('.list_opportunities', framework_slug=framework_slug) }}">View the latest opportunities</a></h3>
             <p>Browse briefs that buyers have created for individuals and outcomes.</p>
           </article>
         </li>

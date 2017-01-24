@@ -5,6 +5,11 @@
 {% block body_classes %}buyers-guide secondary-page{% endblock %}
 
 {% block main_content %}
+  {% if 'DM_FRAMEWORK' is active_feature %}
+    {% set framework_slug='digital-marketplace' %}
+  {% else %}
+    {% set framework_slug='digital-service-professionals' %}
+  {% endif %}
   <h1>Selling through the Digital Marketplace</h1>
   <p>
   <strong>
@@ -25,11 +30,11 @@
   </h2>
 
   <p>
-    Government buyers publish <a href="{{ url_for('.list_opportunities', framework_slug='digital-service-professionals') }}">opportunities</a> to the Marketplace by creating a brief for an individual specialist or a brief for a team to provide an outcome. As a seller you are encouraged to apply for any of these briefs if you have the skills, experience and availability required.
+    Government buyers publish <a href="{{ url_for('.list_opportunities', framework_slug=framework_slug) }}">opportunities</a> to the Marketplace by creating a brief for an individual specialist or a brief for a team to provide an outcome. As a seller you are encouraged to apply for any of these briefs if you have the skills, experience and availability required.
   </p>
 
   <p>
-    Check the <a href="{{ url_for('.list_opportunities', framework_slug='digital-service-professionals') }}">opportunities</a> regularly as they’re only open for 1 or 2 weeks.
+    Check the <a href="{{ url_for('.list_opportunities', framework_slug=framework_slug) }}">opportunities</a> regularly as they’re only open for 1 or 2 weeks.
   </p>
 
   <h2>
@@ -37,7 +42,7 @@
   </h2>
 
   <p>
-    When viewing the latest <a href="{{ url_for('.list_opportunities', framework_slug='digital-service-professionals') }}">opportunities</a> if there are any that interest you, and you have the necessary skills and availability, select ‘Start application’ and follow the prompts to complete your application. When applying for an individual specialist brief, the quote for your day rate can’t exceed the price you have agreed to for the Digital Service Professionals Panel.  
+    When viewing the latest <a href="{{ url_for('.list_opportunities', framework_slug=framework_slug) }}">opportunities</a> if there are any that interest you, and you have the necessary skills and availability, select ‘Start application’ and follow the prompts to complete your application. When applying for an individual specialist brief, the quote for your day rate can’t exceed the price you have agreed to for the Digital Service Professionals Panel.
   </p>  
 
   <p>

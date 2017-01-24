@@ -4,6 +4,7 @@ import urlparse
 
 from flask_login import current_user
 from flask import current_app, redirect, render_template, session, url_for
+import flask_featureflags as feature
 
 from dmutils.email import (
     decode_token, EmailError, generate_token, hash_email, InvalidToken, ONE_DAY_IN_SECONDS, send_email
@@ -22,6 +23,8 @@ def redirect_logged_in_user(next_url=None):
             return redirect(url_for('buyers.buyer_dashboard'))
 
         if current_user.role == 'supplier':
+            if feature.is_active('DM_FRAMEWORK'):
+                return redirect(url_for('.list_opportunities', framework_slug='digital-marketplace'))
             return redirect(url_for('.list_opportunities', framework_slug='digital-service-professionals'))
 
         if current_user.role == 'applicant':
