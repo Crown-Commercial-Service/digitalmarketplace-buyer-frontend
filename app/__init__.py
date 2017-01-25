@@ -11,6 +11,8 @@ from dmcontent.content_loader import ContentLoader
 from config import configs
 from app.helpers.terms_helpers import TermsManager
 
+from react.render import render_component
+
 cache = Cache()
 login_manager = LoginManager()
 data_api_client = dmapiclient.DataAPIClient()
@@ -49,5 +51,19 @@ def create_app(config_name):
     init_frontend_app(application, data_api_client, login_manager)
     terms_manager = TermsManager()
     terms_manager.init_app(application)
+
+    def component_filter(x, thing, *args, **kwargs):
+        from jinja2 import Markup  # , escape
+        from flask import current_app
+
+        COMPONENTS = 'components'
+        EXTENSION = '.html'
+
+        t = current_app.jinja_env.get_template(
+            COMPONENTS + '/' + thing + EXTENSION)
+        return Markup(t.render(x=x, **kwargs))
+
+    application.jinja_env.filters['as'] = component_filter
+    application.jinja_env.globals.update(render_component=render_component)
 
     return application
