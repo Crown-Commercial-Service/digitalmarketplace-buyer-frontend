@@ -62,22 +62,22 @@
         </div>
         {% endif %}
         <div class="user-nav">
-          <ul class="inline-links--inverted">
-            {% if not current_user.is_authenticated %}
-            <li><a href="{{ url_for('main.buyer_signup') }}">Register</a></li>
-            <li><a href="{{ url_for('main.render_login') }}">Log in</a></li>
-            {% else %}
-            <li><a href="{% if current_user.role == 'buyer' %}
-                              {{ url_for('buyers.buyer_dashboard') }}
-                         {% elif current_user.role == 'applicant'  %}
-                              /sellers/application
-                         {% else %}
-                              /sellers
-                         {% endif %}">Dashboard</a>
-            </li>
-            <li><a href="{{ url_for('main.logout') }}">Log out</a></li>
-            {% endif %}
-          </ul>
+          {% if current_user.role == 'buyer' %}
+            {% set dashboardUrl = url_for('buyers.buyer_dashboard') %}
+          {% elif current_user.role == 'applicant'  %}
+            {% set dashboardUrl = '/sellers/application' %}
+          {% else %}
+            {% set dashboardUrl = '/sellers' %}
+          {% endif %}
+          {% set props = {
+              'registerUrl': url_for('main.buyer_signup'),
+              'loginUrl': url_for('main.render_login'),
+              'dashboardUrl': dashboardUrl,
+              'logoutUrl': url_for('main.logout'),
+              'isAuthenticated': current_user.is_authenticated
+          } %}
+          {% set auth_component = render_component('bundles/Header/AuthWidget.js', props, True) %}
+          {{ auth_component|as('react_bundle') }}
         </div>
       </div>
     </section>
@@ -104,7 +104,8 @@
     </div>
   </footer>
 
-  {% block body_end %}{% endblock %} 
+  {{ auth_component|as('react_assets') }}
+  {% block body_end %}{% endblock %}
   
   {% block uikit %}
     <script type="text/javascript" src="https://gov-au-ui-kit.apps.staging.digital.gov.au/latest/ui-kit.min.js"></script>
