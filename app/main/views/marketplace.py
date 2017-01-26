@@ -82,7 +82,7 @@ def get_brief_by_id(framework_slug, brief_id):
         for index, question in enumerate(brief['clarificationQuestions'])
     ]
 
-    brief_content = content_loader.get_builder('digital-outcomes-and-specialists', 'display_brief').filter(
+    brief_content = content_loader.get_builder(framework_slug, 'display_brief').filter(
         brief
     )
 
