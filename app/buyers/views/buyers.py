@@ -7,7 +7,7 @@ from flask_login import current_user
 
 from app import data_api_client
 from .. import buyers, content_loader
-from ...helpers.buyers_helpers import (
+from ..helpers.buyers_helpers import (
     all_essentials_are_true, counts_for_failed_and_eligible_brief_responses,
     get_framework_and_lot, get_sorted_responses_for_brief, count_unanswered_questions,
     brief_can_be_edited, add_unanswered_counts_to_briefs, is_brief_correct,
@@ -19,7 +19,7 @@ from dmutils.dates import get_publishing_dates
 from dmutils import csv_generator
 
 
-@buyers.route('/buyers')
+@buyers.route('')
 def buyer_dashboard():
     user_briefs = data_api_client.find_briefs(current_user.id).get('briefs', [])
     draft_briefs = add_unanswered_counts_to_briefs([brief for brief in user_briefs if brief['status'] == 'draft'],
@@ -35,7 +35,7 @@ def buyer_dashboard():
     )
 
 
-@buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/create', methods=['GET'])
+@buyers.route('/frameworks/<framework_slug>/requirements/<lot_slug>/create', methods=['GET'])
 def start_new_brief(framework_slug, lot_slug):
 
     framework, lot = get_framework_and_lot(framework_slug, lot_slug, data_api_client,
@@ -57,7 +57,7 @@ def start_new_brief(framework_slug, lot_slug):
     ), 200
 
 
-@buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/create', methods=['POST'])
+@buyers.route('/frameworks/<framework_slug>/requirements/<lot_slug>/create', methods=['POST'])
 def create_new_brief(framework_slug, lot_slug):
 
     framework, lot = get_framework_and_lot(framework_slug, lot_slug, data_api_client,
@@ -102,7 +102,7 @@ def create_new_brief(framework_slug, lot_slug):
                 brief_id=brief['id']))
 
 
-@buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>', methods=['GET'])
+@buyers.route('/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>', methods=['GET'])
 def view_brief_overview(framework_slug, lot_slug, brief_id):
     framework, lot = get_framework_and_lot(
         framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
@@ -140,7 +140,7 @@ def view_brief_overview(framework_slug, lot_slug, brief_id):
     ), 200
 
 
-@buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/<section_slug>', methods=['GET'])
+@buyers.route('/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/<section_slug>', methods=['GET'])
 def view_brief_section_summary(framework_slug, lot_slug, brief_id, section_slug):
     get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
     brief = data_api_client.get_brief(brief_id)["briefs"]
@@ -163,7 +163,7 @@ def view_brief_section_summary(framework_slug, lot_slug, brief_id, section_slug)
 
 
 @buyers.route(
-    '/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/edit/<section_slug>/<question_id>',
+    '/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/edit/<section_slug>/<question_id>',
     methods=['GET'])
 def edit_brief_question(framework_slug, lot_slug, brief_id, section_slug, question_id):
     get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
@@ -192,7 +192,7 @@ def edit_brief_question(framework_slug, lot_slug, brief_id, section_slug, questi
 
 
 @buyers.route(
-    '/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/edit/<section_id>/<question_id>',
+    '/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/edit/<section_id>/<question_id>',
     methods=['POST'])
 def update_brief_submission(framework_slug, lot_slug, brief_id, section_id, question_id):
     get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
@@ -253,7 +253,7 @@ def update_brief_submission(framework_slug, lot_slug, brief_id, section_id, ques
     )
 
 
-@buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/responses', methods=['GET'])
+@buyers.route('/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/responses', methods=['GET'])
 def view_brief_responses(framework_slug, lot_slug, brief_id):
     get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
     brief = data_api_client.get_brief(brief_id)["briefs"]
@@ -270,7 +270,7 @@ def view_brief_responses(framework_slug, lot_slug, brief_id):
     ), 200
 
 
-@buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/responses/download',
+@buyers.route('/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/responses/download',
               methods=['GET'])
 def download_brief_responses(framework_slug, lot_slug, brief_id):
     get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
@@ -325,7 +325,7 @@ def download_brief_responses(framework_slug, lot_slug, brief_id):
     ), 200
 
 
-@buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/publish', methods=['GET', 'POST'])
+@buyers.route('/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/publish', methods=['GET', 'POST'])
 def publish_brief(framework_slug, lot_slug, brief_id):
     get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
     brief = data_api_client.get_brief(brief_id)["briefs"]
@@ -377,7 +377,7 @@ def publish_brief(framework_slug, lot_slug, brief_id):
         ), 200
 
 
-@buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/timeline', methods=['GET'])
+@buyers.route('/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/timeline', methods=['GET'])
 def view_brief_timeline(framework_slug, lot_slug, brief_id):
     get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
     brief = data_api_client.get_brief(brief_id)["briefs"]
@@ -395,7 +395,7 @@ def view_brief_timeline(framework_slug, lot_slug, brief_id):
     ), 200
 
 
-@buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/delete', methods=['POST'])
+@buyers.route('/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/delete', methods=['POST'])
 def delete_a_brief(framework_slug, lot_slug, brief_id):
     get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
     brief = data_api_client.get_brief(brief_id)["briefs"]
@@ -409,7 +409,7 @@ def delete_a_brief(framework_slug, lot_slug, brief_id):
 
 
 @buyers.route(
-    "/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/supplier-questions",
+    "/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/supplier-questions",
     methods=["GET"])
 def supplier_questions(framework_slug, lot_slug, brief_id):
     get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
@@ -433,7 +433,7 @@ def supplier_questions(framework_slug, lot_slug, brief_id):
 
 
 @buyers.route(
-    "/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/supplier-questions/answer-question",
+    "/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/supplier-questions/answer-question",
     methods=["GET", "POST"])
 def add_supplier_question(framework_slug, lot_slug, brief_id):
     get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)

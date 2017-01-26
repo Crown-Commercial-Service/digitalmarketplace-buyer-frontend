@@ -1,20 +1,28 @@
 import os
 import json
-from app.presenters.service_presenters import (
-    Service, Attribute, Meta, lowercase_first_character_unless_part_of_acronym
+from app.main.presenters.service_presenters import (
+    Service, Meta, lowercase_first_character_unless_part_of_acronym,
+    chunk_string
 )
 from app import content_loader
 
 
 def _get_fixture_data():
     test_root = os.path.abspath(
-        os.path.join(os.path.dirname(__file__), "..")
+        os.path.join(os.path.dirname(__file__), "../..")
     )
     fixture_path = os.path.join(
         test_root, 'fixtures', 'g6_service_fixture.json'
     )
     with open(fixture_path) as fixture_file:
         return json.load(fixture_file)
+
+
+def test_chunk_string():
+    assert list(chunk_string("123456", 3)) == ["123", "456"]
+    assert list(chunk_string("1234567", 3)) == ["123", "456", "7"]
+    assert list(chunk_string("12345678910", 4)) == ["1234", "5678", "910"]
+    assert list(chunk_string("123456789101", 4)) == ["1234", "5678", "9101"]
 
 
 class TestService(object):
@@ -226,13 +234,6 @@ class TestMeta(object):
         assert 'Trial and free options available' not in price_caveats
         assert 'Free option available' not in price_caveats
         assert 'Trial option available' in price_caveats
-
-    def test_options_are_correct_if_free_is_true_and_trial_false(self):
-        self.fixture['freeOption'] = True
-        price_caveats = self.meta.get_price_caveats(self.fixture)
-        assert 'Trial and free options available' not in price_caveats
-        assert 'Trial option available' not in price_caveats
-        assert 'Free option available' in price_caveats
 
     def test_options_are_correct_if_free_is_true_and_trial_false(self):
         self.fixture['freeOption'] = True

@@ -11,7 +11,7 @@ from dmapiclient import APIError
 from dmcontent.content_loader import ContentNotFoundError
 
 from ...main import main
-from ...helpers.shared_helpers import get_one_framework_by_status_in_order_of_preference, parse_link
+from ..helpers.shared_helpers import get_one_framework_by_status_in_order_of_preference, parse_link
 
 from ..forms.brief_forms import BriefSearchForm
 

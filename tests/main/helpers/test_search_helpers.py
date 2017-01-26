@@ -3,7 +3,7 @@ import mock
 import pytest
 from werkzeug.datastructures import MultiDict
 
-from app.helpers import search_helpers
+from app.main.helpers import search_helpers
 
 
 def test_should_hide_both_next_and_prev_if_no_services():
