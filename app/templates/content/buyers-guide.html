@@ -5,6 +5,11 @@
 {% block body_classes %}buyers-guide secondary-page{% endblock %}
 
 {% block main_content %}
+  {% if 'DM_FRAMEWORK' is active_feature %}
+    {% set framework_slug='digital-marketplace' %}
+  {% else %}
+    {% set framework_slug='digital-service-professionals' %}
+  {% endif %}
   <h1>Buyer's guide</h1>
 
   <nav class="index-links">
@@ -57,7 +62,7 @@
   </p>
 
   <p>
-    <a role="button" href="{{url_for('main.info_page_for_starting_a_brief', framework_slug='digital-service-professionals', lot_slug='digital-outcome')}}">Create a brief for an outcome</a>
+    <a role="button" href="{{url_for('main.info_page_for_starting_a_brief', framework_slug=framework_slug, lot_slug='digital-outcome')}}">Create a brief for an outcome</a>
   </p>
   <p>Need a hand with your brief? <a href="mailto:marketplace@digital.gov.au">Contact us</a>.</p>
 
@@ -67,7 +72,7 @@
   </p>
 
   <p>
-    <a role="button" href="{{url_for('main.info_page_for_starting_a_brief', framework_slug='digital-service-professionals', lot_slug='digital-professionals')}}">Create a brief for a specialist</a>
+    <a role="button" href="{{url_for('main.info_page_for_starting_a_brief', framework_slug=framework_slug, lot_slug='digital-professionals')}}">Create a brief for a specialist</a>
   </p>
   <p>Need a hand with your brief? <a href="mailto:marketplace@digital.gov.au">Contact us</a>.</p>
 

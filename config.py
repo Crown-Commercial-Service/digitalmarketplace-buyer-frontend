@@ -82,7 +82,8 @@ class Config(object):
         'XLSX_EXPORT': True,
         'SELLER_REGISTRATION': False,
         'DOMAINS_SEARCH': False,
-        'NEW_SELLER_PROFILE': True
+        'NEW_SELLER_PROFILE': True,
+        'DM_FRAMEWORK': False
     }
 
     # LOGGING
@@ -143,7 +144,8 @@ class Live(Config):
         'CASE_STUDY': False,
         'XLSX_EXPORT': False,
         'SELLER_REGISTRATION': False,
-        'NEW_SELLER_PROFILE': False
+        'NEW_SELLER_PROFILE': False,
+        'DM_FRAMEWORK': False
     }
 
     REACT_BUNDLE_URL = 'https://dm-frontend.apps.platform.digital.gov.au/bundle/'

@@ -11,6 +11,9 @@ content_loader.load_manifest('digital-outcomes-and-specialists', 'clarification_
 content_loader.load_manifest('digital-service-professionals', 'briefs', 'edit_brief')
 content_loader.load_manifest('digital-service-professionals', 'brief-responses', 'output_brief_response')
 content_loader.load_manifest('digital-service-professionals', 'clarification_question', 'clarification_question')
+content_loader.load_manifest('digital-marketplace', 'briefs', 'edit_brief')
+content_loader.load_manifest('digital-marketplace', 'brief-responses', 'output_brief_response')
+content_loader.load_manifest('digital-marketplace', 'clarification_question', 'clarification_question')
 
 
 @buyers.before_request
