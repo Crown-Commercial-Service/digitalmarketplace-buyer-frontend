@@ -364,7 +364,8 @@ def submit_create_buyer_account(token):
             error=e.message,
             token=None)
 
-    flash('account-created', 'flag')
+    flash('Welcome to your buyer dashboard. \
+           This is where you can create and track the opportunities you publish in the Marketplace.', 'flag')
     return redirect_logged_in_user()
 
 

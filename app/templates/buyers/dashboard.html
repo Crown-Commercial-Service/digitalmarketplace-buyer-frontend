@@ -48,11 +48,11 @@
 {% endwith %}
 
 
-{{ summary.heading("Unpublished requirements", id="unpublished_requirements") }}
+{{ summary.heading("Drafts", id="unpublished_requirements") }}
 {% call(item) summary.list_table(
     draft_briefs,
     caption="Unpublished requirements caption",
-    empty_message="You don’t have any unpublished requirements",
+    empty_message="You have not started any opportunities yet.",
     field_headings=[
     "Brief name",
     "Created",
@@ -79,11 +79,14 @@
     {% endcall %}
 {% endcall %}
 
-{{ summary.heading("Published requirements", id="published_requirements") }}
+<p><a href="{{url_for('main.info_page_for_starting_a_brief', framework_slug='digital-service-professionals', lot_slug='digital-professionals')}}">Create a new opportunity for a digital specialist</a></p>
+<p><a href="{{url_for('main.info_page_for_starting_a_brief', framework_slug='digital-service-professionals', lot_slug='digital-outcome')}}">Create a new opportunity for an outcome </a></p>
+
+{{ summary.heading("Live briefs", id="published_requirements") }}
 {% call(item) summary.list_table(
     live_briefs,
     caption="Published requirements caption",
-    empty_message="You don’t have any published requirements",
+    empty_message="You don’t have any live briefs.",
     field_headings=[
     "Brief name",
     "Published",
@@ -99,11 +102,11 @@
     {% endcall %}
 {% endcall %}
         
-{{ summary.heading("Closed requirements", id="closed_requirements") }}
+{{ summary.heading("Closed briefs", id="closed_requirements") }}
 {% call(item) summary.list_table(
     closed_briefs,
     caption="Closed requirements caption",
-    empty_message="You don’t have any requirements that are closed",
+    empty_message="You don’t have any briefs that are closed.",
     field_headings=[
     "Brief name",
     "Closed",
@@ -124,4 +127,8 @@
         {% endif %}
     {% endcall %}
 {% endcall %}
+
+{{ summary.heading("Need a hand?", id="need_a_hand") }}
+<p><a href="/buyers-guide">Read the buyers guide</a> or <a href="mailto:marketplace@digital.gov.au">send us an email</a> — we can help you write your brief.</p>
+
 {% endblock %}
