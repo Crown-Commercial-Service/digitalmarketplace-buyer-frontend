@@ -15,7 +15,7 @@ def test_view_catalogue(client):
     go_home(client)
     link = client.find_element('id', 'catalogue__call-to-action')
     link.click()
-    Wait(client, timeout=timeout).until(expected.elements_present('class name', 'supplier-result'))
+    Wait(client, timeout=timeout).until(expected.elements_present('id', 'react-bundle-search'))
 
 
 def test_register_buyer(client):
