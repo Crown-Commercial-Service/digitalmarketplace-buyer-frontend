@@ -1,6 +1,7 @@
 from wtforms import IntegerField, SelectMultipleField
 from wtforms.validators import NumberRange
 from dmutils.forms import DmForm
+import flask_featureflags
 
 
 class BriefSearchForm(DmForm):
@@ -41,12 +42,15 @@ class BriefSearchForm(DmForm):
         statuses = self.status.data or tuple(id for id, label in self.status.choices)
         lots = self.lot.data or tuple(id for id, label in self.lot.choices)
 
+        # disable framework filtering when digital marketplace framework is live
+        kwargs = {} if flask_featureflags.is_active('DM_FRAMEWORK') else {"framework": self._framework_slug}
+
         return self._data_api_client.find_briefs(
             status=",".join(statuses),
             lot=",".join(lots),
-            framework=self._framework_slug,
             page=self.page.data,
-            human=True
+            human=True,
+            **kwargs
         )
 
     def get_filters(self):
