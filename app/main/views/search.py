@@ -3,10 +3,12 @@ from collections import defaultdict
 import json
 from flask.helpers import url_for
 import os
-from flask import abort, render_template, request, redirect, current_app
+from flask import abort, render_template, request, redirect, current_app, jsonify
 import flask_featureflags as feature
 from app.api_client.data import DataAPIClient
 from app.main.utils import get_page_list
+from react.render import render_component
+from app.helpers.shared_helpers import request_wants_json
 
 from ...main import main
 from app import cache
@@ -75,6 +77,8 @@ def supplier_search():
         roles = get_all_domains(data_api_client)
     else:
         roles, raw_role_data = get_all_roles(data_api_client)
+
+    role_filters = {role: role in selected_roles for role in roles}
 
     sidepanel_roles = [Option('role', role, role, role in selected_roles) for role in roles]
     sidepanel_filters = [
@@ -174,12 +178,24 @@ def supplier_search():
                         seen_supplier_roles.add(role)
             tags = supplier_roles
 
-        result = Result(
-            details['name'],
-            details['summary'],
-            [],
-            sorted(tags),
-            url_for('.get_supplier', code=details['code']))
+        if feature.is_active('SEARCH'):
+            services = {}
+            for tag in sorted(tags):
+                services[tag.label] = True
+
+            result = {
+                'title': details['name'],
+                'description': details['summary'],
+                'link': url_for('.get_supplier', code=details['code']),
+                'services': services
+            }
+        else:
+            result = Result(
+                details['name'],
+                details['summary'],
+                [],
+                sorted(tags),
+                url_for('.get_supplier', code=details['code']))
 
         results.append(result)
 
@@ -187,6 +203,33 @@ def supplier_search():
     results_to = min(num_results, page * SUPPLIER_RESULTS_PER_PAGE)
 
     pages = get_page_list(SUPPLIER_RESULTS_PER_PAGE, num_results, page)
+
+    if feature.is_active('SEARCH'):
+        props = {
+            'form_options': {
+                'action': url_for('.supplier_search')
+            },
+            'search': {
+                'results': results,
+                'keyword': keyword,
+                'role': role_filters,
+                'type': {}
+            },
+            'pagination': {
+                'pages': pages,
+                'page': page,
+                'pageCount': pages[-1]
+            }
+        }
+
+        if request_wants_json():
+            return jsonify(dict({'results': results}))
+        else:
+            component = render_component('bundles/Search/SearchWidget.js', props)
+            return render_template(
+                '_react.html',
+                component=component
+            )
 
     return render_template(
         'search_sellers.html',

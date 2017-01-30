@@ -83,7 +83,8 @@ class Config(object):
         'SELLER_REGISTRATION': False,
         'DOMAINS_SEARCH': False,
         'NEW_SELLER_PROFILE': True,
-        'DM_FRAMEWORK': False
+        'DM_FRAMEWORK': False,
+        'SEARCH': True
     }
 
     # LOGGING
@@ -115,6 +116,17 @@ class Test(Config):
     SHARED_EMAIL_KEY = SECRET_KEY
     SERVER_NAME = 'localhost'
 
+    FEATURE_FLAGS = {
+        'BRIEF_FILTER': True,
+        'CASE_STUDY': True,
+        'XLSX_EXPORT': True,
+        'SELLER_REGISTRATION': False,
+        'DOMAINS_SEARCH': False,
+        'NEW_SELLER_PROFILE': True,
+        'DM_FRAMEWORK': False,
+        'SEARCH': False
+    }
+
 
 class Development(Config):
     DEBUG = True
@@ -145,7 +157,8 @@ class Live(Config):
         'XLSX_EXPORT': False,
         'SELLER_REGISTRATION': False,
         'NEW_SELLER_PROFILE': False,
-        'DM_FRAMEWORK': False
+        'DM_FRAMEWORK': False,
+        'SEARCH': False
     }
 
     REACT_BUNDLE_URL = 'https://dm-frontend.apps.platform.digital.gov.au/bundle/'
