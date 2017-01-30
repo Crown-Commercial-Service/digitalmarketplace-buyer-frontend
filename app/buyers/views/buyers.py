@@ -284,7 +284,7 @@ def download_brief_responses(framework_slug, lot_slug, brief_id):
 
     sorted_brief_responses = get_sorted_responses_for_brief(brief, data_api_client)
 
-    content = content_loader.get_manifest(brief['frameworkSlug'], 'output_brief_response').filter(
+    content = content_loader.get_manifest(brief['frameworkSlug'], 'legacy_output_brief_response').filter(
         {'lot': brief['lotSlug']}
     )
     section = content.get_section('view-response-to-requirements')
