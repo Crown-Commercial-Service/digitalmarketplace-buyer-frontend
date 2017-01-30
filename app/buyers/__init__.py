@@ -12,6 +12,11 @@ content_loader.load_manifest('digital-outcomes-and-specialists', 'brief-response
 content_loader.load_manifest('digital-outcomes-and-specialists', 'clarification_question', 'clarification_question')
 
 
+content_loader.load_manifest('digital-outcomes-and-specialists-2', 'briefs', 'edit_brief')
+content_loader.load_manifest('digital-outcomes-and-specialists-2', 'brief-responses', 'output_brief_response')
+content_loader.load_manifest('digital-outcomes-and-specialists-2', 'clarification_question', 'clarification_question')
+
+
 @buyers.before_request
 @login_required
 def require_login():
