@@ -4,9 +4,22 @@ from __future__ import unicode_literals
 from ...helpers import BaseApplicationTest
 from dmapiclient import api_stubs, HTTPError
 from dmcontent.content_loader import ContentLoader
+from dmcontent.questions import Question
 import mock
 from lxml import html
 import pytest
+
+from app.buyers.views import buyers
+from dmcontent.content_loader import ContentLoader
+from dmapiclient import DataAPIClient
+import functools
+import inflection
+import sys
+
+from werkzeug.exceptions import NotFound
+
+
+po = functools.partial(mock.patch.object, autospec=True)
 
 
 @mock.patch('app.buyers.views.buyers.data_api_client')
@@ -1872,6 +1885,406 @@ class TestViewBriefResponsesPage(BaseApplicationTest):
         )
 
         assert res.status_code == 404
+
+
+class TestDownloadBriefResponsesView(BaseApplicationTest):
+    def setup_method(self, method):
+        super(TestDownloadBriefResponsesView, self).setup_method(method)
+
+        self.data_api_client = mock.MagicMock(spec_set=DataAPIClient)
+        self.content_loader = mock.MagicMock(spec_set=ContentLoader)
+
+        self.instance = buyers.DownloadBriefResponsesView(
+            data_api_client=self.data_api_client,
+            content_loader=self.content_loader
+        )
+
+        self.brief = api_stubs.brief(status='closed')['briefs']
+        self.brief['essentialRequirements'] = [
+            "Good nose for tea",
+            "Good eye for biscuits",
+            "Knowledgable about tea"
+        ]
+        self.brief['niceToHaveRequirements'] = [
+            "Able to bake",
+            "Able to perform the tea ceremony"
+        ]
+        self.brief['blah'] = ['Affirmative', 'Negative']
+
+        self.responses = [
+            {
+                "supplierName": "Prof. T. Maker",
+                "respondToEmailAddress": "t.maker@example.com",
+                "niceToHaveRequirements": [
+                    {
+                        "yesNo": False
+                    },
+                    {
+                        "yesNo": False
+                    }
+                ],
+                "availability": "2017-12-25",
+                "essentialRequirementsMet": True,
+                "essentialRequirements": [
+                    {
+                        "evidence": "From Assan to Yixing I've got you covered."
+                    },
+                    {
+                        "evidence": "There will be no nobhobs or cream custards on my watch."
+                    },
+                    {
+                        "evidence": "I even memorised the entire T section of the dictionary"
+                    }
+                ],
+                "dayRate": "750",
+                "blah": [True, False]
+            },
+            {
+                "supplierName": "Tea Boy Ltd.",
+                "respondToEmailAddress": "teaboy@example.com",
+                "niceToHaveRequirements": [
+                    {
+                        "yesNo": True,
+                        "evidence": "Winner of GBBO 2009"
+                    },
+                    {
+                        "yesNo": True,
+                        "evidence": "Currently learning from the re-incarnation of Eisai himself"
+                    }
+                ],
+                "availability": "Tomorrow",
+                "essentialRequirementsMet": True,
+                "essentialRequirements": [
+                    {
+                        "evidence": "I know my Silver needle from my Red lychee"
+                    },
+                    {
+                        "evidence": "Able to identify fake hobnobs and custard cremes a mile off"
+                    },
+                    {
+                        "evidence": "Have visited the Flagstaff House Museum of Tea Ware in Hong Kong"
+                    }
+                ],
+                "dayRate": "1000",
+                "blah": [False, True]
+            }
+        ]
+
+    def teardown_method(self, method):
+        self.instance = None
+
+        super(TestDownloadBriefResponsesView, self).teardown_method(method)
+
+    def test_end_to_end(self):
+        self.data_api_client.find_brief_responses.return_value = {
+            'briefResponses': self.responses
+        }
+        self.data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='live',
+            lots=[
+                api_stubs.lot(slug='digital-specialists', allows_brief=True),
+            ]
+        )
+        self.data_api_client.get_brief.return_value = {'briefs': self.brief}
+
+        with mock.patch.object(buyers, 'data_api_client', self.data_api_client):
+            self.login_as_buyer()
+            res = self.client.get(
+                "/buyers/frameworks/digital-outcomes-and-specialists"
+                "/requirements/digital-specialists/1234/responses/download"
+            )
+
+        assert res.status_code == 200
+        assert res.mimetype == 'application/vnd.oasis.opendocument.spreadsheet'
+        assert len(res.data) > 100
+
+    def test_get_responses(self):
+        brief = mock.Mock()
+
+        with po(buyers, 'get_sorted_responses_for_brief') as m:
+            result = self.instance.get_responses(brief)
+
+        assert result == m.return_value
+
+        m.assert_called_once_with(brief, self.instance.data_api_client)
+
+    def test_get_question(self):
+        framework_slug = mock.Mock()
+        lot_slug = mock.Mock()
+        manifest = mock.Mock()
+
+        obj = self.content_loader.get_manifest.return_value
+        content = obj.filter.return_value
+
+        result = self.instance.get_questions(framework_slug, lot_slug, manifest)
+
+        assert result == content.get_section.return_value.questions
+
+        self.content_loader.get_manifest\
+            .assert_called_once_with(framework_slug, manifest)
+
+        obj.filter.assert_called_once_with({'lot': lot_slug})
+
+        content.get_section\
+               .assert_called_once_with('view-response-to-requirements')
+
+    def test_get_question_fails_with_empty_list(self):
+        framework_slug = mock.Mock()
+        lot_slug = mock.Mock()
+        manifest = mock.Mock()
+
+        self.content_loader.get_manifest.return_value\
+                           .filter.return_value\
+                           .get_section.return_value = None
+
+        result = self.instance.get_questions(framework_slug, lot_slug, manifest)
+
+        assert result == []
+
+    def test_get_context_data(self):
+        self.instance.get_responses = mock.Mock()
+
+        brief = api_stubs.brief(status='closed')
+
+        kwargs = {
+            'brief_id': mock.Mock(),
+            'framework_slug': mock.Mock(),
+            'lot_slug': mock.Mock()
+        }
+
+        text_type = str if sys.version_info[0] == 3 else unicode
+
+        filename = inflection.parameterize(text_type(brief['briefs']['title']))
+
+        expected = dict(**kwargs)
+        expected['brief'] = brief['briefs']
+        expected['responses'] = self.instance.get_responses.return_value
+        expected['filename'] = 'supplier-responses-' + filename
+
+        self.instance.data_api_client.get_brief.return_value = brief
+
+        with po(buyers, 'get_framework_and_lot') as get_framework_and_lot,\
+                po(buyers, 'is_brief_correct') as is_brief_correct,\
+                mock.patch.object(buyers, 'current_user') as current_user:
+
+            result = self.instance.get_context_data(**kwargs)
+
+        is_brief_correct.assert_called_once_with(brief['briefs'],
+                                                 kwargs['framework_slug'],
+                                                 kwargs['lot_slug'],
+                                                 current_user.id)
+
+        self.instance.data_api_client.get_brief\
+            .assert_called_once_with(kwargs['brief_id'])
+
+        self.instance.get_responses\
+            .assert_called_once_with(brief['briefs'])
+
+        assert result == expected
+
+    def test_get_context_data_with_incorrect_brief(self):
+        self.instance.get_responses = mock.Mock()
+
+        brief = api_stubs.brief(status='closed')
+
+        kwargs = {
+            'brief_id': mock.Mock(),
+            'framework_slug': mock.Mock(),
+            'lot_slug': mock.Mock()
+        }
+
+        self.instance.data_api_client.get_brief.return_value = brief
+
+        with po(buyers, 'get_framework_and_lot') as get_framework_and_lot,\
+                po(buyers, 'is_brief_correct') as is_brief_correct,\
+                mock.patch.object(buyers, 'current_user') as current_user:
+
+            is_brief_correct.return_value = False
+            with pytest.raises(NotFound):
+                self.instance.get_context_data(**kwargs)
+
+    def test_get_context_data_with_open_brief(self):
+        self.instance.get_responses = mock.Mock()
+
+        brief = api_stubs.brief(status='live')
+
+        kwargs = {
+            'brief_id': mock.Mock(),
+            'framework_slug': mock.Mock(),
+            'lot_slug': mock.Mock()
+        }
+
+        self.instance.data_api_client.get_brief.return_value = brief
+
+        with po(buyers, 'get_framework_and_lot') as get_framework_and_lot,\
+                po(buyers, 'is_brief_correct') as is_brief_correct,\
+                mock.patch.object(buyers, 'current_user') as current_user:
+
+            is_brief_correct.return_value = True
+            with pytest.raises(NotFound):
+                self.instance.get_context_data(**kwargs)
+
+    def test_generate_ods(self):
+        questions = [
+            {'id': 'supplierName', 'name': 'Supplier', 'type': 'text'},
+            {'id': 'respondToEmailAddress', 'name': 'Email address', 'type': 'text'},
+            {'id': 'availability', 'name': 'Availability', 'type': 'text'},
+            {'id': 'dayRate', 'name': 'Day rate', 'type': 'text'},
+        ]
+
+        self.instance.get_questions = mock.Mock(return_value=[
+            Question(question) for question in questions
+        ])
+
+        doc = self.instance.generate_ods(self.brief, self.responses)
+
+        sheet = doc.sheet("Supplier evidence")
+
+        assert sheet.read_cell(0, 0) == self.brief['title']
+
+        for i, question in enumerate(questions):
+            assert sheet.read_cell(0, i + 1) == question['name']
+            assert sheet.read_cell(1, i + 1) == ''
+
+            for j, response in enumerate(self.responses):
+                assert sheet.read_cell(j + 2, i + 1) == response[question['id']]
+
+    def test_generate_ods_with_boolean_list(self):
+        questions = [
+            {'id': 'blah', 'name': 'Blah Blah', 'type': 'boolean_list'},
+        ]
+
+        self.instance.get_questions = mock.Mock(return_value=[
+            Question(question) for question in questions
+        ])
+
+        doc = self.instance.generate_ods(self.brief, self.responses)
+
+        sheet = doc.sheet("Supplier evidence")
+
+        k = 0
+
+        for i, question in enumerate(questions):
+            length = len(self.brief[question['id']])
+            offset = 0
+
+            for l, name in enumerate(self.brief[question['id']]):
+                k += 1
+
+                if l == 0:
+                    assert sheet.read_cell(0, k) == question['name']
+                else:
+                    assert sheet.read_cell(0, k) == ''
+
+                assert sheet.read_cell(1, k) == name
+
+                for j, response in enumerate(self.responses):
+                    assert sheet.read_cell(j + 2, k) == str(response[question['id']][l]).lower()
+
+    def test_generate_ods_with_dynamic_list(self):
+        questions = [
+            {'id': 'niceToHaveRequirements', 'name': 'Nice-to-have skills & evidence', 'type': 'dynamic_list'},
+            {'id': 'essentialRequirements', 'name': 'Essential skills & evidence', 'type': 'dynamic_list'},
+        ]
+
+        self.instance.get_questions = mock.Mock(return_value=[
+            Question(question) for question in questions
+        ])
+
+        doc = self.instance.generate_ods(self.brief, self.responses)
+
+        sheet = doc.sheet("Supplier evidence")
+
+        k = 0
+
+        for i, question in enumerate(questions):
+            length = len(self.brief[question['id']])
+            offset = 0
+
+            for l, name in enumerate(self.brief[question['id']]):
+                k += 1
+
+                if l == 0:
+                    assert sheet.read_cell(0, k) == question['name']
+                else:
+                    assert sheet.read_cell(0, k) == ''
+
+                assert sheet.read_cell(1, k) == name
+
+                for j, response in enumerate(self.responses):
+                    assert sheet.read_cell(j + 2, k) == response[question['id']][l].get('evidence', '')
+
+    def test_create_ods_response(self):
+        context = {'brief': api_stubs.brief(status='closed')['briefs'],
+                   'responses': mock.Mock(),
+                   'filename': 'foobar'}
+
+        self.instance.generate_ods = mock.Mock()
+
+        with po(buyers, 'BytesIO') as BytesIO,\
+                po(buyers, 'Response') as Response:
+
+            result = self.instance.create_ods_response(context)
+
+        assert result == (Response.return_value, 200)
+
+        BytesIO.assert_called_once_with()
+
+        buf = BytesIO.return_value
+
+        self.instance.generate_ods.assert_called_once_with(context['brief'],
+                                                           context['responses'])
+
+        self.instance.generate_ods.return_value.save\
+            .assert_called_once_with(buf)
+
+        Response.assert_called_once_with(
+            buf.getvalue.return_value,
+            mimetype='application/vnd.oasis.opendocument.spreadsheet',
+            headers={
+                "Content-Disposition": (
+                    "attachment;filename=foobar.ods"
+                ).format(context['brief']['id']),
+                "Content-Type": "application/vnd.oasis.opendocument.spreadsheet"
+            }
+        )
+
+    def test_create_response(self):
+        self.instance.create_ods_response = mock.Mock()
+        self.instance.create_csv_response = mock.Mock()
+
+        context = {'responses': [{'essentialRequirementsMet': True}]}
+
+        result = self.instance.create_response(context)
+
+        assert result == self.instance.create_ods_response.return_value
+
+        self.instance.create_ods_response.assert_called_once_with(context)
+
+        self.instance.create_ods_response = mock.Mock()
+        self.instance.create_csv_response = mock.Mock()
+
+        context = {'responses': [{}]}
+
+        result = self.instance.create_response(context)
+
+        assert result == self.instance.create_csv_response.return_value
+
+        self.instance.create_csv_response.assert_called_once_with(context)
+
+    def test_dispatch_request(self):
+        kwargs = {'foo': 'bar', 'baz': 'abc'}
+
+        self.instance.get_context_data = get_context_data = mock.Mock()
+
+        self.instance.create_response = create_response = mock.Mock()
+
+        result = self.instance.dispatch_request(**kwargs)
+
+        assert create_response.return_value == result
+
+        self.instance.get_context_data.assert_called_once_with(**kwargs)
 
 
 @mock.patch("app.buyers.views.buyers.data_api_client")
