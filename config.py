@@ -81,7 +81,7 @@ class Config(object):
         'CASE_STUDY': True,
         'XLSX_EXPORT': True,
         'SELLER_REGISTRATION': False,
-        'DOMAINS_SEARCH': False,
+        'DOMAINS_SEARCH': True,
         'NEW_SELLER_PROFILE': True,
         'DM_FRAMEWORK': False,
         'SEARCH': True
@@ -158,6 +158,7 @@ class Live(Config):
         'SELLER_REGISTRATION': False,
         'NEW_SELLER_PROFILE': False,
         'DM_FRAMEWORK': False,
+        'DOMAINS_SEARCH': False,
         'SEARCH': False
     }
 
