@@ -280,12 +280,9 @@ def view_brief_responses(framework_slug, lot_slug, brief_id):
     counter = Counter()
 
     for response in brief_responses:
-        value = met = response.get('essentialRequirementsMet', None)
+        met = response.get('essentialRequirementsMet', None)
 
-        if met is None:
-            value = all(response['essentialRequirements'])
-
-        counter[value] += 1
+        counter[all(response['essentialRequirements'])] += 1
 
     return render_template(
         "buyers/brief_responses.html",
