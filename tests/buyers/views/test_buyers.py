@@ -2215,6 +2215,33 @@ class TestDownloadBriefResponsesView(BaseApplicationTest):
                 for j, response in enumerate(self.responses):
                     assert sheet.read_cell(j + 2, k) == response[question['id']][l].get('evidence', '')
 
+    def test_generate_ods_missing_with_dynamic_list(self):
+        questions = [
+            {'id': 'niceToHaveRequirements', 'name': 'Nice-to-have skills & evidence', 'type': 'dynamic_list'},
+            {'id': 'essentialRequirements', 'name': 'Essential skills & evidence', 'type': 'dynamic_list'},
+        ]
+
+        self.instance.get_questions = mock.Mock(return_value=[
+            Question(question) for question in questions
+        ])
+
+        self.brief['niceToHaveRequirements'] = []
+
+        del self.responses[0]['niceToHaveRequirements']
+        del self.responses[1]['niceToHaveRequirements']
+
+        doc = self.instance.generate_ods(self.brief, self.responses)
+
+        sheet = doc.sheet("Supplier evidence")
+
+        k = 0
+
+        for l, name in enumerate(self.brief['essentialRequirements']):
+            k += 1
+
+            for j, response in enumerate(self.responses):
+                assert sheet.read_cell(j + 2, k) == response['essentialRequirements'][l].get('evidence', '')
+
     def test_create_ods_response(self):
         context = {'brief': api_stubs.brief(status='closed')['briefs'],
                    'responses': mock.Mock(),

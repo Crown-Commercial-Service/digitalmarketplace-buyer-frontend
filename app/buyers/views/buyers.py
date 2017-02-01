@@ -452,20 +452,26 @@ class DownloadBriefResponsesView(View):
 
             for question in questions:
                 if question.type == 'dynamic_list':
+                    if not brief.get(question.id):
+                        continue
+
                     for i, item in enumerate(response[question.id]):
                         row = sheet.get_row("{0}[{1}]".format(question.id, i))
                         # TODO this is stupid, fix it (key should not be hard coded)
                         row.write_cell(item.get('evidence') or '',
                                        stylename="ce1")
 
-                elif question.type == 'boolean_list':
+                elif question.type == 'boolean_list' and brief.get(question.id):
+                    if not brief.get(question.id):
+                        continue
+
                     for i, item in enumerate(response[question.id]):
                         row = sheet.get_row("{0}[{1}]".format(question.id, i))
                         row.write_cell(str(bool(item)).lower(),
                                        stylename="ce1")
 
                 else:
-                    sheet.get_row(question.id).write_cell(response[question.id],
+                    sheet.get_row(question.id).write_cell(response.get(question.id, ''),
                                                           stylename="ce1")
 
         return doc
