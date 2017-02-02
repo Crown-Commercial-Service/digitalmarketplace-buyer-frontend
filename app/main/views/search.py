@@ -58,20 +58,19 @@ def get_all_domains(data_api_client):
 def supplier_search():
     DOMAINS_SEARCH = feature.is_active('DOMAINS_SEARCH')
 
-    data_api_client = DataAPIClient()
-
     sort_order = request.args.get('sort_order', 'asc')
     if sort_order not in ('asc', 'desc'):
         abort(400, 'Invalid sort_order: {}'.format(sort_order))
     sort_terms = request.args.getlist('sort_term')
     keyword = request.args.get('keyword', None)
 
+    selected_roles = set(request.args.getlist('role'))
+    selected_seller_types = set(request.args.getlist('type'))
+
     if not sort_terms:  # Sort by A-Z for default
         sort_terms = ['name']
 
     data_api_client = DataAPIClient()
-
-    selected_roles = set(request.args.getlist('role'))
 
     if DOMAINS_SEARCH:
         roles = get_all_domains(data_api_client)
@@ -79,11 +78,6 @@ def supplier_search():
         roles, raw_role_data = get_all_roles(data_api_client)
 
     role_filters = {role: role in selected_roles for role in roles}
-
-    sidepanel_roles = [Option('role', role, role, role in selected_roles) for role in roles]
-    sidepanel_filters = [
-        Filter('Capabilities', sidepanel_roles),
-    ]
 
     sort_queries = []
 
@@ -100,6 +94,9 @@ def supplier_search():
         else:
             abort(400, 'Invalid sort_term: {}'.format(sort_term))
 
+    query_contents = {}
+    filter_terms = {}
+
     if selected_roles:
         if DOMAINS_SEARCH:
             for each in selected_roles:
@@ -115,37 +112,30 @@ def supplier_search():
                     abort(400, 'Invalid role: {}'.format(role))
             filter_terms = {"prices.serviceRole.role": filters}
 
-        query = {
-            "query": {
-                "filtered": {
-                    "query": {
-                        "match_all": {}
-                    },
-                    "filter": {
-                        "terms": filter_terms,
-                    }
-                }
-            },
-            "sort": sort_queries,
-            }
+    if selected_seller_types:
+        filter_terms['seller_types'] = list(selected_seller_types)
 
-    elif keyword:
-        query = {
+    if filter_terms:
+        query_contents['filtered'] = {
             "query": {
-                "match_phrase_prefix": {
-                    "name": keyword
-                }
+                "match_all": {}
             },
-            "sort": sort_queries
+            "filter": {
+                "terms": filter_terms,
+            }
+        }
+
+    if keyword:
+        query_contents['match_phrase_prefix'] = {
+            "name": keyword
         }
     else:
-        query = {
-            "query": {
-                "match_all": {
-                }
-            },
-            "sort": sort_queries
-        }
+        query_contents['match_all'] = {}
+
+    query = {
+        "query": query_contents,
+        "sort": sort_queries
+    }
 
     try:
         page = int(request.args.get('page', 1))
@@ -187,7 +177,8 @@ def supplier_search():
                 'title': details['name'],
                 'description': details['summary'],
                 'link': url_for('.get_supplier', code=details['code']),
-                'services': services
+                'services': services,
+                'badges': details.get('seller_type', {})
             }
         else:
             result = Result(
@@ -204,6 +195,21 @@ def supplier_search():
 
     pages = get_page_list(SUPPLIER_RESULTS_PER_PAGE, num_results, page)
 
+    SELLER_TYPE_KEYS = [
+        'start_up',
+        'sme',
+        'nfp_social_enterprise',
+        'product',
+        'indigenous'
+    ]
+
+    seller_type_filters = {st: st in selected_seller_types for st in SELLER_TYPE_KEYS}
+
+    sidepanel_roles = [Option('role', role, role, role in selected_roles) for role in roles]
+    sidepanel_filters = [
+        Filter('Capabilities', sidepanel_roles),
+    ]
+
     if feature.is_active('SEARCH'):
         props = {
             'form_options': {
@@ -213,12 +219,13 @@ def supplier_search():
                 'results': results,
                 'keyword': keyword,
                 'role': role_filters,
-                'type': {}
+                'type': seller_type_filters
             },
             'pagination': {
                 'pages': pages,
                 'page': page,
-                'pageCount': pages[-1]
+                'pageCount': pages[-1],
+                'total': num_results
             }
         }
 
