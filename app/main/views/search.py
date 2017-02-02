@@ -226,11 +226,12 @@ def supplier_search():
                 'page': page,
                 'pageCount': pages[-1],
                 'total': num_results
-            }
+            },
+            'basename': url_for('.supplier_search')
         }
 
         if request_wants_json():
-            return jsonify(dict({'results': results}))
+            return jsonify(dict(props))
         else:
             component = render_component('bundles/Search/SearchWidget.js', props)
             return render_template(
