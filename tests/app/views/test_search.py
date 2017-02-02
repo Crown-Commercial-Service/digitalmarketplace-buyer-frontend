@@ -93,6 +93,7 @@ class TestCataloguePageNewDomains(BaseApplicationTest):
                                                      'role=Data+science')
         found = False
         for element, attribute, link, pos in page.find_class('pagination')[0].iterlinks():
+            print(link)
             # Because it can be in any order
             if 'page=2' in link and 'sort_term=name' in link and 'sort_order=desc' in link and \
                'role=Cyber+security' in link and 'role=Data+science' in link:
@@ -118,6 +119,10 @@ class TestCataloguePageNewDomains(BaseApplicationTest):
             if button.attrib['href'] not in self.base_url:
                 valid = False
         assert valid
+
+    def test_with_sort_by_parameter(self):
+        response = self.client.get(self.url_for('main.supplier_search', sort_by='latest'))
+        assert response.status_code == 200
 
     def test_invalid_sort_order(self):
         response = self.client.get(self.url_for('main.supplier_search', sort_order='no'))

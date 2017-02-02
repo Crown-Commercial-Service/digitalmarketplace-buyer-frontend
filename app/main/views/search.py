@@ -58,6 +58,7 @@ def get_all_domains(data_api_client):
 def supplier_search():
     DOMAINS_SEARCH = feature.is_active('DOMAINS_SEARCH')
 
+    sort_by = request.args.get('sort_by', None)
     sort_order = request.args.get('sort_order', 'asc')
     if sort_order not in ('asc', 'desc'):
         abort(400, 'Invalid sort_order: {}'.format(sort_order))
@@ -88,8 +89,13 @@ def supplier_search():
             if sort_term == 'name':  # Use 'name' in url to keep it clean but query needs to search on not analyzed.
                 sort_term = 'name.not_analyzed'
 
+            spec = {"order": sort_order, "mode": "min"}
+
+            if sort_by:
+                spec['sort_by'] = sort_by
+
             sort_queries.append({
-                sort_term: {"order": sort_order, "mode": "min"}
+                sort_term: spec
             })
         else:
             abort(400, 'Invalid sort_term: {}'.format(sort_term))
