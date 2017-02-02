@@ -93,7 +93,6 @@ class TestCataloguePageNewDomains(BaseApplicationTest):
                                                      'role=Data+science')
         found = False
         for element, attribute, link, pos in page.find_class('pagination')[0].iterlinks():
-            print(link)
             # Because it can be in any order
             if 'page=2' in link and 'sort_term=name' in link and 'sort_order=desc' in link and \
                'role=Cyber+security' in link and 'role=Data+science' in link:
