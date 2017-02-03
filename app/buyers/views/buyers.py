@@ -116,7 +116,7 @@ def create_new_brief(framework_slug, lot_slug):
 @buyers.route('/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>', methods=['GET'])
 def view_brief_overview(framework_slug, lot_slug, brief_id):
     framework, lot = get_framework_and_lot(
-        framework_slug, lot_slug, data_api_client, status=('live',), must_allow_brief=True)
+        framework_slug, lot_slug, data_api_client, status=('live','expired'), must_allow_brief=True)
     brief = data_api_client.get_brief(brief_id)["briefs"]
 
     if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id):
@@ -266,7 +266,7 @@ def update_brief_submission(framework_slug, lot_slug, brief_id, section_id, ques
 
 @buyers.route('/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/responses', methods=['GET'])
 def view_brief_responses(framework_slug, lot_slug, brief_id):
-    get_framework_and_lot(framework_slug, lot_slug, data_api_client, status=('live',), must_allow_brief=True)
+    get_framework_and_lot(framework_slug, lot_slug, data_api_client, status=('live','expired'), must_allow_brief=True)
     brief = data_api_client.get_brief(brief_id)["briefs"]
 
     if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id):
@@ -293,7 +293,7 @@ class DownloadBriefResponsesView(View):
 
     def get_context_data(self, **kwargs):
         get_framework_and_lot(kwargs['framework_slug'], kwargs['lot_slug'],
-                              self.data_api_client, status=('live',),
+                              self.data_api_client, status=('live','expired'),
                               must_allow_brief=True)
 
         brief = self.data_api_client.get_brief(kwargs['brief_id'])["briefs"]
