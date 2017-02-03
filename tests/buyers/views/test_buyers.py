@@ -1726,18 +1726,7 @@ class TestAddBriefClarificationQuestion(BaseApplicationTest):
         assert res.status_code == 500
 
 
-@mock.patch("app.buyers.views.buyers.data_api_client")
-class TestViewBriefResponsesPage(BaseApplicationTest):
-    two_good_three_bad_responses = {
-        "briefResponses": [
-            {"essentialRequirements": [True, True, True, True, True]},
-            {"essentialRequirements": [True, False, True, True, True]},
-            {"essentialRequirements": [True, True, False, False, True]},
-            {"essentialRequirements": [True, True, True, True, True]},
-            {"essentialRequirements": [True, True, True, True, False]},
-        ]
-    }
-
+class AbstractViewBriefResponsesPage(BaseApplicationTest):
     def test_page_shows_correct_count_of_eligible_suppliers(self, data_api_client):
         data_api_client.find_brief_responses.return_value = self.two_good_three_bad_responses
         data_api_client.get_framework.return_value = api_stubs.framework(
@@ -1761,7 +1750,7 @@ class TestViewBriefResponsesPage(BaseApplicationTest):
 
     def test_page_does_not_pluralise_for_single_response(self, data_api_client):
         data_api_client.find_brief_responses.return_value = {
-            "briefResponses": [{"essentialRequirements": [True, True, True, True, True]}]
+            "briefResponses": [self.two_good_three_bad_responses["briefResponses"][0]]
         }
         data_api_client.get_framework.return_value = api_stubs.framework(
             slug='digital-outcomes-and-specialists',
@@ -1780,52 +1769,6 @@ class TestViewBriefResponsesPage(BaseApplicationTest):
         assert res.status_code == 200
         assert "1 supplier" in page
         assert "responded to your requirements and meets all your essential skills and experience." in page
-
-    def test_page_shows_correct_message_if_no_eligible_suppliers(self, data_api_client):
-        data_api_client.find_brief_responses.return_value = {
-            "briefResponses": [{"essentialRequirements": [True, False, True, True, True]}]
-        }
-        data_api_client.get_framework.return_value = api_stubs.framework(
-            slug='digital-outcomes-and-specialists',
-            status='live',
-            lots=[
-                api_stubs.lot(slug='digital-outcomes', allows_brief=True),
-            ]
-        )
-        data_api_client.get_brief.return_value = api_stubs.brief(lot_slug="digital-outcomes")
-
-        self.login_as_buyer()
-        res = self.client.get(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1234/responses"
-        )
-        page = res.get_data(as_text=True)
-
-        assert res.status_code == 200
-        assert "No suppliers met your essential skills and experience requirements." in page
-
-    def test_page_shows_csv_download_link_if_brief_closed(self, data_api_client):
-        data_api_client.find_brief_responses.return_value = self.two_good_three_bad_responses
-        data_api_client.get_framework.return_value = api_stubs.framework(
-            slug='digital-outcomes-and-specialists',
-            status='live',
-            lots=[
-                api_stubs.lot(slug='digital-outcomes', allows_brief=True),
-            ]
-        )
-        data_api_client.get_brief.return_value = api_stubs.brief(lot_slug="digital-outcomes", status='closed')
-
-        self.login_as_buyer()
-        res = self.client.get(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1234/responses"
-        )
-        document = html.fromstring(res.get_data(as_text=True))
-        csv_link = document.xpath(
-            '//a[@href="/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1234/responses/download"]'  # noqa
-        )[0]
-
-        assert res.status_code == 200
-        assert self._strip_whitespace(csv_link.text_content()) == \
-            "CSVdocument:Downloadsupplierresponsesto‘Ineedathingtodoathing’"
 
     def test_page_does_not_show_csv_download_link_if_brief_open(self, data_api_client):
         data_api_client.find_brief_responses.return_value = self.two_good_three_bad_responses
@@ -1885,6 +1828,99 @@ class TestViewBriefResponsesPage(BaseApplicationTest):
         )
 
         assert res.status_code == 404
+
+
+@mock.patch("app.buyers.views.buyers.data_api_client")
+class TestViewBriefResponsesPage(AbstractViewBriefResponsesPage):
+    two_good_three_bad_responses = {
+        "briefResponses": [
+            {"essentialRequirements": [True, True, True, True, True]},
+            {"essentialRequirements": [True, False, True, True, True]},
+            {"essentialRequirements": [True, True, False, False, True]},
+            {"essentialRequirements": [True, True, True, True, True]},
+            {"essentialRequirements": [True, True, True, True, False]},
+        ]
+    }
+
+    def test_page_shows_correct_message_if_no_eligible_suppliers(self, data_api_client):
+        data_api_client.find_brief_responses.return_value = {
+            "briefResponses": [self.two_good_three_bad_responses["briefResponses"][1]]
+        }
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='live',
+            lots=[
+                api_stubs.lot(slug='digital-outcomes', allows_brief=True),
+            ]
+        )
+        data_api_client.get_brief.return_value = api_stubs.brief(lot_slug="digital-outcomes")
+
+        self.login_as_buyer()
+        res = self.client.get(
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1234/responses"
+        )
+        page = res.get_data(as_text=True)
+
+        assert res.status_code == 200
+        assert "No suppliers met your essential skills and experience requirements." in page
+
+    def test_page_shows_csv_download_link_if_brief_closed(self, data_api_client):
+        data_api_client.find_brief_responses.return_value = self.two_good_three_bad_responses
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='live',
+            lots=[
+                api_stubs.lot(slug='digital-outcomes', allows_brief=True),
+            ]
+        )
+        data_api_client.get_brief.return_value = api_stubs.brief(lot_slug="digital-outcomes", status='closed')
+
+        self.login_as_buyer()
+        res = self.client.get(
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1234/responses"
+        )
+        document = html.fromstring(res.get_data(as_text=True))
+        csv_link = document.xpath(
+            '//a[@href="/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1234/responses/download"]'  # noqa
+        )[0]
+
+        assert res.status_code == 200
+        assert self._strip_whitespace(csv_link.text_content()) == \
+            "CSVdocument:Downloadsupplierresponsesto‘Ineedathingtodoathing’"
+
+
+@mock.patch("app.buyers.views.buyers.data_api_client")
+class TestViewBriefResponsesPage2(AbstractViewBriefResponsesPage):
+    two_good_three_bad_responses = {
+        "briefResponses": [
+            {"essentialRequirementsMet": True, "essentialRequirements": [{"evidence": "blah"}]},
+            {"essentialRequirementsMet": True, "essentialRequirements": [{"evidence": "blah"}]},
+        ]
+    }
+
+    def test_page_shows_ods_download_link_if_brief_closed(self, data_api_client):
+        data_api_client.find_brief_responses.return_value = self.two_good_three_bad_responses
+        data_api_client.get_framework.return_value = api_stubs.framework(
+            slug='digital-outcomes-and-specialists',
+            status='live',
+            lots=[
+                api_stubs.lot(slug='digital-outcomes', allows_brief=True),
+            ]
+        )
+        data_api_client.get_brief.return_value = api_stubs.brief(lot_slug="digital-outcomes", status='closed')
+
+        self.login_as_buyer()
+        res = self.client.get(
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1234/responses"
+        )
+        document = html.fromstring(res.get_data(as_text=True))
+        csv_link = document.xpath(
+            '//a[@href="/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1234/responses/download"]'  # noqa
+        )[0]
+
+        assert res.status_code == 200
+        assert self._strip_whitespace(csv_link.text_content()) == \
+            "ODSdocument:Downloadsupplierresponsestothisrequirement"
 
 
 class TestDownloadBriefResponsesView(BaseApplicationTest):

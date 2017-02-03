@@ -69,22 +69,6 @@ def add_unanswered_counts_to_briefs(briefs, content_loader):
     return briefs
 
 
-def counts_for_failed_and_eligible_brief_responses(brief_id, data_api_client):
-    brief_responses = data_api_client.find_brief_responses(brief_id)['briefResponses']
-    failed_count = 0
-    eligible_count = 0
-    for brief_response in brief_responses:
-        if all_essentials_are_true(brief_response):
-            eligible_count += 1
-        else:
-            failed_count += 1
-    return failed_count, eligible_count
-
-
-def all_essentials_are_true(brief_response):
-    return all(brief_response['essentialRequirements'])
-
-
 def get_sorted_responses_for_brief(brief, data_api_client):
     brief_responses = data_api_client.find_brief_responses(brief['id'])['briefResponses']
     if brief.get("niceToHaveRequirements"):

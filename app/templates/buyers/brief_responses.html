@@ -37,8 +37,59 @@
 
 <div class="grid-row">
     <div class="column-two-thirds">
-        <div class="dmspeak">
-          {% if response_counts['eligible'] > 0 %}
+      {% if response_counts['eligible'] > 0 %}
+        {% if ods %}
+          <div class="dmspeak">
+              <p>
+                <span class='visual-emphasis'>{{ response_counts['eligible'] }} {{ pluralize(response_counts['eligible'], "supplier", "suppliers") }}</span>
+                responded to your requirements and {{ pluralize(response_counts['eligible'], "meets", "meet") }} all your essential skills and experience. Suppliers that didn't meet all your essential requirements have already been told they were unsuccessful.
+              </p>
+              <p>
+                You said you’d take <span class='visual-emphasis'>{{ brief.numberOfSuppliers }} {{ pluralize(brief.numberOfSuppliers, "supplier", "suppliers") }}</span> through to the evaluation stage. To do this, you need to:
+              </p>
+          </div>
+          {% with items = [
+              {
+                  "body": 'Read the <a href="https://www.gov.uk/guidance/how-to-shortlist-digital-outcomes-and-specialists-suppliers">guidance on how to shortlist.</a>'|safe,
+              },
+              {
+                  "body": 'Review and score the evidence suppliers have given.',
+              },
+              {
+                  "body": 'Tell the highest scoring suppliers that they’re through to the next stage.',
+              },
+              {
+                  "body": 'Tell any unsuccessful suppliers who don\'t make it through to the next stage.',
+              }
+          ]
+          %}
+              {% include "toolkit/instruction-list.html" %}
+          {% endwith %}
+
+          {% if brief.get("status") == "closed" %}
+              {%
+              with
+              items = [
+                  {
+                      "title": "Download supplier responses to this requirement",
+                      "link": url_for('buyers.download_brief_responses', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id),
+                      "file_type": "ODS",
+                      "download": "True"
+                  }
+              ]
+              %}
+                  {% include "toolkit/documents.html" %}
+              {% endwith %}
+          {% else %}
+          <div class="dmspeak">
+            <p>
+                The file will be available here once applications have closed.
+            </p>
+          </div>
+          {% endif %}
+
+        {% else %}
+          <div class="dmspeak">
             <p>
                 <span class='visual-emphasis'>{{ response_counts['eligible'] }} {{ pluralize(response_counts['eligible'], "supplier", "suppliers") }}</span>
                 responded to your requirements and {{ pluralize(response_counts['eligible'], "meets", "meet") }} all your essential skills and experience.
@@ -50,53 +101,58 @@
             <p>
               Download the list of supplier responses and follow the guidance on <a href="https://www.gov.uk/guidance/how-to-shortlist-digital-outcomes-and-specialists-suppliers">how to shortlist</a>.
             </p>
+          </div>
 
-            {% if brief.get("status") == "closed" %}
-                {%
-                with
-                items = [
-                    {
-                        "title": ("Download supplier responses to &lsquo;" + brief.get('title', brief['lotName']) + "&rsquo;")|safe,
-                        "link": url_for('buyers.download_brief_responses', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id),
-                        "file_type": "CSV",
-                        "download": "True"
-                    }
-                ]
-                %}
-                    {% include "toolkit/documents.html" %}
-                {% endwith %}
-            {% else %}
+          {% if brief.get("status") == "closed" %}
+              {%
+              with
+              items = [
+                  {
+                      "title": "Download supplier responses to \u2018" + brief.get('title', brief['lotName']) + "\u2019",
+                      "link": url_for('buyers.download_brief_responses', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id),
+                      "file_type": "CSV",
+                      "download": "True"
+                  }
+              ]
+              %}
+                  {% include "toolkit/documents.html" %}
+              {% endwith %}
+          {% else %}
+          <div class="dmspeak">
             <p>
                 The file will be available here once applications have closed.
             </p>
-            {% endif %}
+          </div>
+          {% endif %}
 
-          {% else %}
-            <p>
-                No suppliers met your essential skills and experience requirements.
-            </p>
-            <p>
-                All the suppliers who applied have already been told they were unsuccessful.
-            </p>
-            <div class='explanation-list'>
-                <p class='lead'>
-                    If you still need this service, you should start the buying process again. Consider: 
-                </p>
-                <ul class='list-bullet'>
-                    <li>talking to suppliers before you start</li>
-                    <li>rewriting your requirements</li>
-                </ul>
-            </div>
-        </div>
         {% endif %}
-        
-        {%
-            with
-            url = url_for('buyers.view_brief_overview', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id),
-            text = "Back to overview"
-        %}
-            {% include "toolkit/secondary-action-link.html" %}
-        {% endwith %}
+      {% else %}
+        <div class="dmspeak">
+          <p>
+              No suppliers met your essential skills and experience requirements.
+          </p>
+          <p>
+              All the suppliers who applied have already been told they were unsuccessful.
+          </p>
+        </div>
+        <div class='explanation-list'>
+            <p class='lead'>
+                If you still need this service, you should start the buying process again. Consider:
+            </p>
+            <ul class='list-bullet'>
+                <li>talking to suppliers before you start</li>
+                <li>rewriting your requirements</li>
+            </ul>
+        </div>
+      {% endif %}
+
+      {%
+          with
+          url = url_for('buyers.view_brief_overview', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id),
+          text = "Back to overview"
+      %}
+          {% include "toolkit/secondary-action-link.html" %}
+      {% endwith %}
     </div>
 </div>
 {% endblock %}
