@@ -21,7 +21,7 @@ def studios_start_page(framework_slug):
 @dos.route('/frameworks/<framework_slug>/requirements/<lot_slug>', methods=['GET'])
 def info_page_for_starting_a_brief(framework_slug, lot_slug):
     framework, lot = get_framework_and_lot(framework_slug, lot_slug, data_api_client,
-                                           status='live', must_allow_brief=True)
+                                           status=('live',), must_allow_brief=True)
     return render_template(
         "buyers/start_brief_info.html",
         framework=framework,
