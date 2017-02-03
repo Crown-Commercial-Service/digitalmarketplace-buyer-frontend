@@ -121,12 +121,15 @@ def get_brief_by_id(framework_slug, brief_id):
 
 @main.route('/<framework_slug>/opportunities')
 def list_opportunities(framework_slug):
-    framework = data_api_client.get_framework(framework_slug)['frameworks']
-    if not framework:
+    frameworks = data_api_client.find_frameworks()['frameworks']
+
+    frameworks = [v for v in frameworks if v['framework'] == framework_slug]
+
+    if not frameworks:
         abort(404, "No framework {}".format(framework_slug))
 
     # disabling csrf protection as this should only ever be a GET request
-    form = BriefSearchForm(request.args, framework=framework, data_api_client=data_api_client, csrf_enabled=False)
+    form = BriefSearchForm(request.args, frameworks=frameworks, data_api_client=data_api_client, csrf_enabled=False)
     if not form.validate():
         abort(404, "Invalid form data")
 
@@ -148,7 +151,7 @@ def list_opportunities(framework_slug):
         next_link_args.setlist("page", api_next_link_args.get("page") or ())
 
     return render_template('search/briefs.html',
-                           framework=framework,
+                           framework=frameworks[-1],
                            form=form,
                            filters=form.get_filters(),
                            filters_applied=form.filters_applied(),

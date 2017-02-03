@@ -636,16 +636,41 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         self.briefs = self._get_dos_brief_fixture_data(multi=True)
         self._data_api_client.find_briefs.return_value = self.briefs
 
-        self._data_api_client.get_framework.return_value = {'frameworks': {
-            'name': "Digital Outcomes and Specialists",
-            'slug': "digital-outcomes-and-specialists",
-            'lots': [
-                {'name': 'Lot 1', 'slug': 'lot-one', 'allowsBrief': True},
-                {'name': 'Lot 2', 'slug': 'lot-two', 'allowsBrief': False},
-                {'name': 'Lot 3', 'slug': 'lot-three', 'allowsBrief': True},
-                {'name': 'Lot 4', 'slug': 'lot-four', 'allowsBrief': True},
-            ]
-        }}
+        self._data_api_client.find_frameworks.return_value = {'frameworks': [
+            {
+                'name': "Digital Outcomes and Specialists 2",
+                'slug': "digital-outcomes-and-specialists-2",
+                'framework': "digital-outcomes-and-specialists",
+                'lots': [
+                    {'name': 'Lot 1', 'slug': 'lot-one', 'allowsBrief': True},
+                    {'name': 'Lot 2', 'slug': 'lot-two', 'allowsBrief': False},
+                    {'name': 'Lot 3', 'slug': 'lot-three', 'allowsBrief': True},
+                    {'name': 'Lot 4', 'slug': 'lot-four', 'allowsBrief': True},
+                ]
+            },
+            {
+                'name': "Digital Outcomes and Specialists",
+                'slug': "digital-outcomes-and-specialists",
+                'framework': "digital-outcomes-and-specialists",
+                'lots': [
+                    {'name': 'Lot 1', 'slug': 'lot-one', 'allowsBrief': True},
+                    {'name': 'Lot 2', 'slug': 'lot-two', 'allowsBrief': False},
+                    {'name': 'Lot 3', 'slug': 'lot-three', 'allowsBrief': True},
+                    {'name': 'Lot 4', 'slug': 'lot-four', 'allowsBrief': True},
+                ]
+            },
+            {
+                'name': "Foobar",
+                'slug': "foobar",
+                'framework': "foobar",
+                'lots': [
+                    {'name': 'Lot 1', 'slug': 'lot-one', 'allowsBrief': True},
+                    {'name': 'Lot 2', 'slug': 'lot-two', 'allowsBrief': False},
+                    {'name': 'Lot 3', 'slug': 'lot-three', 'allowsBrief': True},
+                    {'name': 'Lot 4', 'slug': 'lot-four', 'allowsBrief': True},
+                ]
+            }
+        ]}
 
     def teardown_method(self, method):
         self._data_api_client.stop()
@@ -655,12 +680,12 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         assert res.status_code == 200
         document = html.fromstring(res.get_data(as_text=True))
 
-        self._data_api_client.get_framework.assert_called_once_with("digital-outcomes-and-specialists")
+        self._data_api_client.find_frameworks.assert_called_once_with()
         regular_args = {
             k: v for k, v in iteritems(self._data_api_client.find_briefs.call_args[1]) if k not in ("status", "lot",)
         }
         assert regular_args == {
-            "framework": "digital-outcomes-and-specialists",
+            "framework": "digital-outcomes-and-specialists-2,digital-outcomes-and-specialists",
             "page": 1,
             "human": True,
         }
@@ -698,12 +723,12 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         assert res.status_code == 200
         document = html.fromstring(res.get_data(as_text=True))
 
-        self._data_api_client.get_framework.assert_called_once_with("digital-outcomes-and-specialists")
+        self._data_api_client.find_frameworks.assert_called_once_with()
         regular_args = {
             k: v for k, v in iteritems(self._data_api_client.find_briefs.call_args[1]) if k not in ("status", "lot",)
         }
         assert regular_args == {
-            "framework": "digital-outcomes-and-specialists",
+            "framework": "digital-outcomes-and-specialists-2,digital-outcomes-and-specialists",
             "page": 2,
             "human": True,
         }
@@ -755,12 +780,12 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         assert res.status_code == 200
         document = html.fromstring(res.get_data(as_text=True))
 
-        self._data_api_client.get_framework.assert_called_once_with("digital-outcomes-and-specialists")
+        self._data_api_client.find_frameworks.assert_called_once_with()
         regular_args = {
             k: v for k, v in iteritems(self._data_api_client.find_briefs.call_args[1]) if k not in ("status", "lot",)
         }
         assert regular_args == {
-            "framework": "digital-outcomes-and-specialists",
+            "framework": "digital-outcomes-and-specialists-2,digital-outcomes-and-specialists",
             "page": 1,
             "human": True,
         }
@@ -834,8 +859,7 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         assert '<li class="next">' not in page
 
     def test_catalogue_of_briefs_page_404_for_framework_that_does_not_exist(self):
-        self._data_api_client.get_framework.return_value = {'frameworks': {}}
         res = self.client.get('/digital-giraffes-and-monkeys/opportunities')
 
         assert res.status_code == 404
-        self._data_api_client.get_framework.assert_called_once_with('digital-giraffes-and-monkeys')
+        self._data_api_client.find_frameworks.assert_called_once_with()
