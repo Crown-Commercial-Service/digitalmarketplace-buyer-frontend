@@ -380,16 +380,14 @@ class DownloadBriefResponsesView(View):
         ), parentstylename="Default")
 
         doc.add_style("ce2", "table-cell", (
-            TableCellProperties(wrapoption="wrap", verticalalign="top",
-                                backgroundcolor="#f3f3f3"),
+            TableCellProperties(wrapoption="wrap", verticalalign="top"),
             TextProperties(fontfamily="Arial", fontnameasian="Arial",
                            fontnamecomplex="Arial", fontsize="11pt",
                            fontweight="bold"),
         ), parentstylename="Default")
 
         doc.add_style("ce3", "table-cell", (
-            TableCellProperties(wrapoption="wrap", verticalalign="top",
-                                backgroundcolor="#f3f3f3"),
+            TableCellProperties(wrapoption="wrap", verticalalign="top"),
             TextProperties(fontfamily="Arial", fontnameasian="Arial",
                            fontnamecomplex="Arial", fontsize="11pt"),
         ))
