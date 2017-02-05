@@ -69,12 +69,20 @@
           {% else %}
             {% set dashboardUrl = '/sellers' %}
           {% endif %}
+          {% if 'SELLER_REGISTRATION' is active_feature %}
+            {% set registerUrl = '/sellers/signup' %}
+            {% set registerText = 'Become a seller' %}
+          {% else %}
+            {% set registerUrl = url_for('main.buyer_signup') %}
+            {% set registerText = 'Register' %}
+          {% endif %}
           {% set props = {
-              'registerUrl': url_for('main.buyer_signup'),
-              'loginUrl': url_for('main.render_login'),
-              'dashboardUrl': dashboardUrl,
-              'logoutUrl': url_for('main.logout'),
-              'isAuthenticated': current_user.is_authenticated
+          'registerUrl': registerUrl,
+          'registerText': registerText,
+          'loginUrl': url_for('main.render_login'),
+          'dashboardUrl': dashboardUrl,
+          'logoutUrl': url_for('main.logout'),
+          'isAuthenticated': current_user.is_authenticated
           } %}
           {% set auth_component = render_component('bundles/Header/AuthWidget.js', props, True) %}
           {{ auth_component|as('react_bundle') }}
