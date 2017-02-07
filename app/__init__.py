@@ -19,6 +19,7 @@ content_loader = ContentLoader('app/content')
 content_loader.load_manifest('g-cloud-6', 'services', 'search_filters')
 content_loader.load_manifest('g-cloud-6', 'services', 'display_service')
 content_loader.load_manifest('digital-outcomes-and-specialists', 'briefs', 'display_brief')
+content_loader.load_manifest('digital-outcomes-and-specialists-2', 'briefs', 'display_brief')
 
 
 def create_app(config_name):
