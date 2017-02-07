@@ -195,9 +195,10 @@ Style guide: Navigation.6 Footer navigation
 .local-nav-toggle {
   position: relative;
   width: 100%;
-  margin: $base-spacing 0 0;
+  margin: $base-spacing 0 $base-spacing;
   text-align: left;
   font-weight: $base-font-weight;
+  border: 0;
 
   &,
   &:hover {
@@ -227,6 +228,13 @@ Style guide: Navigation.6 Footer navigation
 
   @include media($tablet) {
     display: none;
+  }
+}
+
+.local-nav-heading {
+  display: none;
+  @include media($tablet) {
+    display: block;
   }
 }
 
@@ -305,27 +313,7 @@ Style guide: Navigation.6 Footer navigation
     }
 
     a {
-      display: block;
-      border: none;
-      border-left: 4px solid transparent;
-      border-bottom: none;
-      padding: $medium-spacing / 2 $small-spacing;
-      text-decoration: none;
-      transition: border-color $transition-timing-fast $transition-easing;
-
-      &:hover {
-        border-color: $border-contrast-colour;
-      }
-
-      &.active,
-      &.is-active {
-        font-weight: $bold-font-weight;
-      }
-
-      &.current {
-        background-color: $focus-colour;
-      }
-
+      margin-left: $base-spacing;
     }
 
   }

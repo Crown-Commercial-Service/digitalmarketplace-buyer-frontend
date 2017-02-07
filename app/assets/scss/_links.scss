@@ -19,7 +19,6 @@
 main article:first-of-type,
 main section:first-of-type {
   @include link-colours($non-black, $light-aqua, $non-black);
-  @include button-colours($button-bg-colour, $button-bg-colour--hover, $button-bg-colour--active, $button-text-colour);
 
   .button-secondary {
     @include button-secondary;
