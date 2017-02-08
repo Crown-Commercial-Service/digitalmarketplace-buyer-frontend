@@ -57,64 +57,12 @@ def metrics_historical():
     return jsonify(data)
 
 
-@main.route('/assessment-criteria')
-def assessment_criteria():
-    return render_template('content/assessment-criteria.html')
-
-
-@main.route('/ideation')
-def ideation():
-    return render_template('content/ideation.html')
-
-
-@main.route('/new-seller')
-def new_seller():
-    return render_template('content/new-seller.html')
-
-
-@main.route('/pitch')
-def pitch():
-    return render_template('content/pitch.html')
-
-
-@main.route('/about-us')
-def about_us():
-    return render_template('content/about-us.html')
-
-
-@main.route('/capabilities-and-rates')
-def roles_and_services():
-    return render_template('content/capabilities-and-rates.html')
-
-
-@main.route('/contact-us')
-def contact_us():
-    return render_template('content/contact-us.html')
-
-
-@main.route('/privacy-policy')
-def privacy_policy():
-    return render_template('content/privacy-policy.html')
-
-
-@main.route('/disclaimer')
-def disclaimer():
-    return render_template('content/disclaimer.html')
-
-
-@main.route('/buyers-guide')
-def buyers_guide():
-    return render_template('content/buyers-guide.html')
-
-
-@main.route('/sellers-guide')
-def sellers_guide():
-    return render_template('content/sellers-guide.html')
-
-
-@main.route('/copyright')
-def copyright():
-    return render_template('content/copyright.html')
+@main.route('/<template_name>')
+def content(template_name):
+    try:
+        return render_template('content/{}.html'.format(template_name))
+    except:
+        abort(404)
 
 
 @main.route('/terms-of-use')
