@@ -9,10 +9,9 @@ from flask_login import logout_user, login_user
 from dmapiclient import HTTPError
 from dmapiclient.audit import AuditTypes
 from dmutils.user import User
-from dmutils.email import (
-    decode_invitation_token, decode_password_reset_token, generate_token, send_email,
-    MandrillException
-)
+from dmutils.email import (decode_invitation_token, decode_password_reset_token, generate_token, send_email)
+from dmutils.email.exceptions import EmailError
+
 from .. import main
 from ..forms.auth_forms import LoginForm, EmailAddressForm, ChangePasswordForm, CreateUserForm
 from ..helpers import hash_email
@@ -111,7 +110,7 @@ def send_reset_password_email():
                     current_app.config['RESET_PASSWORD_EMAIL_NAME'],
                     ["password-resets"]
                 )
-            except MandrillException as e:
+            except EmailError as e:
                 current_app.logger.error(
                     "Password reset email failed to send. "
                     "error {error} email_hash {email_hash}",
@@ -223,7 +222,7 @@ def submit_create_buyer_account():
                     ["user-creation"]
                 )
                 session['email_sent_to'] = email_address
-            except MandrillException as e:
+            except EmailError as e:
                 current_app.logger.error(
                     "buyercreate.fail: Create user email failed to send. "
                     "error {error} email_hash {email_hash}",
