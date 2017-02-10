@@ -19,6 +19,7 @@ requirements_freeze:
 	${VIRTUALENV_ROOT}/bin/pip install --upgrade pip
 	${VIRTUALENV_ROOT}/bin/pip install --upgrade -r requirements_for_test.txt
 	${VIRTUALENV_ROOT}/bin/pip freeze | grep -v buyer-frontend > requirements.txt
+	sed '/^-e /s/-e //' -i requirements.txt
 
 npm_install:
 	npm install
