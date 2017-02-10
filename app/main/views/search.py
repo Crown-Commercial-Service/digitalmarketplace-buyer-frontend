@@ -58,7 +58,7 @@ def get_all_domains(data_api_client):
 def supplier_search():
     DOMAINS_SEARCH = feature.is_active('DOMAINS_SEARCH')
 
-    sort_by = request.args.get('sort_by', None)
+    sort_by = request.args.get('sort_by', 'a-z')
     sort_order = request.args.get('sort_order', 'asc')
     if sort_order not in ('asc', 'desc'):
         abort(400, 'Invalid sort_order: {}'.format(sort_order))
@@ -223,7 +223,10 @@ def supplier_search():
             },
             'search': {
                 'results': results,
+                'products': [],
                 'keyword': keyword,
+                'sort_by': sort_by,
+                'view': request.args.get('view', 'sellers'),
                 'role': role_filters,
                 'type': seller_type_filters
             },
@@ -231,7 +234,8 @@ def supplier_search():
                 'pages': pages,
                 'page': page,
                 'pageCount': pages[-1],
-                'total': num_results
+                'total': num_results,
+                'total_products': 0
             },
             'basename': url_for('.supplier_search')
         }
