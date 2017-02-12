@@ -70,8 +70,8 @@
             {% set dashboardUrl = '/sellers' %}
           {% endif %}
           {% if 'SELLER_REGISTRATION' is active_feature %}
-            {% set registerUrl = '/sellers/signup' %}
-            {% set registerText = 'Become a seller' %}
+            {% set registerUrl = '/signup' %}
+            {% set registerText = 'Join the marketplace' %}
           {% else %}
             {% set registerUrl = url_for('main.buyer_signup') %}
             {% set registerText = 'Register' %}

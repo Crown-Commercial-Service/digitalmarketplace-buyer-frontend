@@ -26,6 +26,8 @@ from app.helpers.login_helpers import (
 from app.helpers.terms_helpers import check_terms_acceptance
 from app.main.forms import auth_forms
 from ...api_client.error import HTTPError
+from react.render import render_component
+from react.response import from_response, validate_form_data
 
 
 @main.route('/login', methods=["GET"])
@@ -189,6 +191,50 @@ def update_password(token):
                                          email_address=email_address,
                                          form=form,
                                          token=token)
+
+
+@main.route('/signup', methods=['GET'])
+def single_signup(applicant=None, errors=None):
+    applicant = applicant or {}
+
+    rendered_component = render_component(
+        'bundles/SellerRegistration/SignupWidget.js', {
+            'form_options': {
+                'errors': errors,
+                'buyer_url': '/signup',
+                'seller_url': '/sellers/signup'
+            },
+        }
+    )
+
+    return render_template(
+        '_react.html',
+        component=rendered_component
+    )
+
+
+@main.route('/signup', methods=['POST'])
+def submit_single_signup():
+    user = from_response(request)
+
+    fields = ['name', 'email_address', 'employment_status', 'user_type']
+    errors = validate_form_data(user, fields)
+    if errors:
+        return single_signup(user, errors)
+
+    if user['employment_status'] == 'employee':
+        token = generate_buyer_creation_token(user['name'], user['email_address'])
+        send_buyer_account_activation_email(
+            name=user["name"],
+            email_address=user["email_address"],
+            token=token
+        )
+        return render_template('auth/buyer-signup-email-sent.html', email_address=user["email_address"])
+
+    assert user['employment_status'] == 'contractor'
+
+    form = auth_forms.BuyerInviteRequestForm(request.form)
+    return render_template_with_csrf('auth/buyer-invite-request.html', form=form)
 
 
 @main.route('/buyers/signup', methods=['GET'])

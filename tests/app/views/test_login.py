@@ -615,6 +615,53 @@ class TestBuyerSignupForm(BaseApplicationTest):
         assert has_validation_errors(data, 'name')
 
 
+class TestSingleSignupForm(BaseApplicationTest):
+    complete_signup_request = {
+        'csrf_token': FakeCsrf.valid_token,
+        'employment_status': 'employee',
+        'name': 'Me',
+        'email_address': 'me@test.gov.au',
+        'user_type': 'buyer'
+    }
+
+    @mock.patch('app.main.views.login.render_component')
+    def test_signup_page_renders(self, render_component):
+        render_component.return_value.get_props.return_value = {}
+        render_component.return_value.get_slug.return_value = 'slug'
+
+        res = self.client.get(self.expand_path('/signup'))
+
+        assert res.status_code == 200
+
+    @mock.patch('app.main.views.login.send_buyer_account_activation_email')
+    def test_employee_signup(self, send_email):
+
+        res = self.client.post(
+            self.expand_path('/signup'),
+            data=self.complete_signup_request
+        )
+
+        assert res.status_code == 200
+        send_email.assert_called_once_with(
+            email_address=self.complete_signup_request['email_address'],
+            name=self.complete_signup_request['name'],
+            token=mock.ANY
+        )
+
+    @mock.patch('app.main.views.login.send_buyer_account_activation_email')
+    def test_contractor_signup(self, send_email):
+
+        contractor_request = dict(self.complete_signup_request)
+        contractor_request['employment_status'] = 'contractor'
+        res = self.client.post(
+            self.expand_path('/signup'),
+            data=contractor_request
+        )
+
+        assert res.status_code == 200
+        send_email.assert_not_called()
+
+
 class TestSendBuyerInvite(BaseApplicationTest):
 
     def generate_token(self):
