@@ -55,11 +55,13 @@ def index():
 
     # Capture the slug for the most recent live framework. There will only be multiple if currently transitioning
     # between frameworks and more than one has a `live` status.
-    dos_slug = sorted(
-        live_dos_frameworks,
-        reverse=True,
-        key=lambda framework: framework['id'],
-    )[0]['slug']
+    dos_slug = None
+    if live_dos_frameworks:
+        dos_slug = sorted(
+            live_dos_frameworks,
+            reverse=True,
+            key=lambda framework: framework['id'],
+        )[0]['slug']
 
     return render_template(
         'index.html',
