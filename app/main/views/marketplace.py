@@ -47,8 +47,23 @@ def index():
             "framework {} status {}".format(framework.get('slug'), framework.get('status')))
         abort(500)
 
+    live_dos_frameworks = filter(
+        lambda framework: framework['framework'] == 'digital-outcomes-and-specialists'
+        and framework['status'] == 'live',
+        frameworks,
+    )
+
+    # Capture the slug for the most recent live framework. There will only be multiple if currently transitioning
+    # between frameworks and more than one has a `live` status.
+    dos_slug = sorted(
+        live_dos_frameworks,
+        reverse=True,
+        key=lambda framework: framework['id'],
+    )[0]['slug']
+
     return render_template(
         'index.html',
+        dos_slug=dos_slug,
         frameworks={framework['slug']: framework for framework in frameworks},
         temporary_message=temporary_message
     )
