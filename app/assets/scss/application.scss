@@ -16,8 +16,9 @@ $path: "/static/images/";
 @import "toolkit/shared_scss/_dmspeak.scss";
 
 /* Blocks shared between multiple selectors */
-@import "shared_placeholders/_temporary-messages.scss";
-@import "shared_placeholders/_dm-typography.scss";
+@import "toolkit/shared_placeholders/_temporary-messages.scss";
+@import "toolkit/shared_placeholders/_placeholders.scss";
+@import "toolkit/shared_placeholders/_dm-typography.scss";
 
 // Digtial Marketplace Front-end toolkit styles
 @import "toolkit/_breadcrumb.scss";
