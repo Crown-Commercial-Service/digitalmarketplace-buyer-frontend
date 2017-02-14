@@ -1,8 +1,13 @@
 <div id="requirements-meta">
   <h2 class="sidebar-heading">Published</h2>
   <p class="sidebar-content">{{ brief.publishedAt|dateformat }}</p>
-  <h2 class="sidebar-heading">Closing</h2>
-  <p class="sidebar-content">Tuesday 27 October 2017</p>
+  {% if brief.status == 'closed' %}
+    <h2 class="sidebar-heading">Closed</h2>
+    <p class="sidebar-content">{{ brief.applicationsClosedAt|dateformat }}</p>
+  {% else %}
+    <h2 class="sidebar-heading">Closing</h2>
+    <p class="sidebar-content">{{ brief.applicationsClosedAt|dateformat }}</p>
+  {% endif %}
   <h2 class="sidebar-heading">Framework</h2>
   <p class="framework-name">{{ brief.frameworkName }}</p>
 </div>
