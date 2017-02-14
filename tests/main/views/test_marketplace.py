@@ -186,7 +186,6 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
         _frameworks = []
 
         for index, framework_slug_and_status in enumerate(framework_slugs_and_statuses):
-
             framework_slug, framework_status = framework_slug_and_status
             _frameworks.append({
                 'framework': 'framework',
@@ -258,7 +257,6 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
 
         framework_slugs_and_statuses = [
             ('g-cloud-7', 'pending'),
-            ('digital-outcomes-and-specialists', 'live')
         ]
         framework_messages = [
             u"G‑Cloud 7 is closed for applications",
