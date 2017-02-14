@@ -129,6 +129,7 @@ def view_brief_overview(framework_slug, lot_slug, brief_id):
 
     content_loader.load_messages(brief['frameworkSlug'], ['urls'])
     call_off_contract_url = content_loader.get_message(brief['frameworkSlug'], 'urls', 'call_off_contract_url')
+    framework_agreement_url = content_loader.get_message(brief['frameworkSlug'], 'urls', 'framework_agreement_url')
 
     completed_sections = {}
     for section in sections:
@@ -153,6 +154,7 @@ def view_brief_overview(framework_slug, lot_slug, brief_id):
         step_sections=[section.step for section in sections if hasattr(section, 'step')],
         delete_requested=delete_requested,
         call_off_contract_url=call_off_contract_url,
+        framework_agreement_url=framework_agreement_url,
     ), 200
 
 
