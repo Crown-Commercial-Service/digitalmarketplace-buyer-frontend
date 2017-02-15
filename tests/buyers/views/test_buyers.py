@@ -1564,7 +1564,6 @@ class TestBriefSummaryPage(BaseApplicationTest):
         for framework_slug, framework_name in zip(framework_slugs, framework_names):
             with self.app.app_context():
                 self.login_as_buyer()
-
                 for heading, brief_status in zip(sidebar_heading_content, brief_statuses):
                     data_api_client.get_framework.return_value = api_stubs.framework(
                         slug=framework_slug,
@@ -1589,12 +1588,10 @@ class TestBriefSummaryPage(BaseApplicationTest):
                     sidebar_headings = document.xpath('//*[@class="sidebar-heading"]/text()')
                     sidebar_content = document.xpath('//*[@class="sidebar-content"]/text()')
                     framework_name_content = document.xpath('//*[@class="framework-name"]/a/text()')[0]
-                    contract_link_text = document.xpath('//main[@id="content"]//ul/li/a/text()')[-1]
 
                     assert sidebar_headings == ['Published', heading, 'Framework']
                     assert sidebar_content == ['Tuesday 29 March 2016', 'Thursday 7 April 2016']
                     assert framework_name_content == framework_name
-                    assert contract_link_text == "View the {} contract".format(framework_name)
 
     def test_links_to_correct_call_off_contract_and_framework_agreement_for_briefs_framework(self, data_api_client):
         framework_slugs = ["digital-outcomes-and-specialists", "digital-outcomes-and-specialists-2"]
@@ -1636,9 +1633,11 @@ class TestBriefSummaryPage(BaseApplicationTest):
                         document.xpath('//main[@id="content"]//ul/li/a')[-1].values()[0]
                     framework_agreement_link_destination = \
                         document.xpath('//*[@class="framework-name"]/a')[0].values()[0]
+                    contract_link_text = document.xpath('//main[@id="content"]//ul/li/a/text()')[-1]
 
                     assert call_off_contract_link_destination == call_off_contract_url
                     assert framework_agreement_link_destination == framework_agreement_url
+                    assert contract_link_text == "View the {} contract".format(framework_name)
 
 
 @mock.patch("app.buyers.views.buyers.data_api_client")
