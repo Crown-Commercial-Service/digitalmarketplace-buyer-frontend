@@ -273,7 +273,13 @@ def update_brief_submission(framework_slug, lot_slug, brief_id, section_id, ques
 
 @buyers.route('/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/responses', methods=['GET'])
 def view_brief_responses(framework_slug, lot_slug, brief_id):
-    get_framework_and_lot(framework_slug, lot_slug, data_api_client, allowed_statuses='live', must_allow_brief=True)
+    get_framework_and_lot(
+        framework_slug,
+        lot_slug,
+        data_api_client,
+        allowed_statuses=['live', 'expired'],
+        must_allow_brief=True,
+    )
     brief = data_api_client.get_brief(brief_id)["briefs"]
 
     if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id):
