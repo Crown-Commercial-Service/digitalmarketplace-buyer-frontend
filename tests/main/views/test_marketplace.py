@@ -26,8 +26,8 @@ class TestApplication(BaseApplicationTest):
             'Find out more about cookies</a></p>' in res.get_data(as_text=True)
 
 
+@mock.patch('app.main.views.marketplace.data_api_client')
 class TestHomepageAccountCreationVirtualPageViews(BaseApplicationTest):
-    @mock.patch('app.main.views.marketplace.data_api_client')
     def test_data_analytics_track_page_view_is_shown_if_account_created_flag_flash_message(self, data_api_client):
         with self.client.session_transaction() as session:
             session['_flashes'] = [('flag', 'account-created')]
@@ -37,7 +37,6 @@ class TestHomepageAccountCreationVirtualPageViews(BaseApplicationTest):
 
         assert 'data-analytics="trackPageView" data-url="/vpv/?account-created=true"' in data
 
-    @mock.patch('app.main.views.marketplace.data_api_client')
     def test_data_analytics_track_page_view_not_shown_if_no_account_created_flag_flash_message(self, data_api_client):
         res = self.client.get("/")
         data = res.get_data(as_text=True)
@@ -45,14 +44,30 @@ class TestHomepageAccountCreationVirtualPageViews(BaseApplicationTest):
         assert 'data-analytics="trackPageView" data-url="/vpv/?account-created=true"' not in data
 
 
+@mock.patch('app.main.views.marketplace.data_api_client')
 class TestHomepageBrowseList(BaseApplicationTest):
-    @mock.patch('app.main.views.marketplace.data_api_client')
+
+    mock_live_dos_1_framework = {
+        "framework": "digital-outcomes-and-specialists",
+        "slug": "digital-outcomes-and-specialists",
+        "status": "live",
+        "id": 5
+    }
+
+    mock_live_dos_2_framework = {
+        "framework": "digital-outcomes-and-specialists",
+        "slug": "digital-outcomes-and-specialists-2",
+        "status": "live",
+        "id": 7
+    }
+
     def test_dos_links_are_shown(self, data_api_client):
         with self.app.app_context():
-            data_api_client.find_frameworks.return_value = {"frameworks": [
-                {"slug": "digital-outcomes-and-specialists",
-                 "status": "live"}
-            ]}
+            data_api_client.find_frameworks.return_value = {
+                "frameworks": [
+                    self.mock_live_dos_1_framework
+                ]
+            }
 
             res = self.client.get("/")
             document = html.fromstring(res.get_data(as_text=True))
@@ -63,6 +78,102 @@ class TestHomepageBrowseList(BaseApplicationTest):
             assert link_texts[0] == "Find an individual specialist"
             assert link_texts[-1] == "Buy physical datacentre space for legacy systems"
             assert "Find specialists to work on digital projects" not in link_texts
+
+    def test_links_are_for_existing_dos_framework_when_a_new_dos_framework_in_standstill_exists(self, data_api_client):
+        with self.app.app_context():
+            mock_standstill_dos_2_framework = self.mock_live_dos_2_framework.copy()
+            mock_standstill_dos_2_framework.update({"status": "standstill"})
+
+            data_api_client.find_frameworks.return_value = {
+                "frameworks": [
+                    self.mock_live_dos_1_framework,
+                    mock_standstill_dos_2_framework,
+                ]
+            }
+
+            res = self.client.get("/")
+            document = html.fromstring(res.get_data(as_text=True))
+
+            assert res.status_code == 200
+
+            link_locations = [item.values()[1] for item in document.cssselect('.browse-list-item a')]
+
+            lots = ['digital-specialists', 'digital-outcomes', 'user-research-participants', 'user-research-studios']
+            dos_base_path = '/buyers/frameworks/digital-outcomes-and-specialists/requirements/{}'
+
+            for index, lot_slug in enumerate(lots):
+                assert link_locations[index] == dos_base_path.format(lot_slug)
+
+    def test_links_are_for_the_newest_live_dos_framework_when_multiple_live_dos_frameworks_exist(self, data_api_client):
+        with self.app.app_context():
+            data_api_client.find_frameworks.return_value = {
+                "frameworks": [
+                    self.mock_live_dos_1_framework,
+                    self.mock_live_dos_2_framework,
+                ]
+            }
+
+            res = self.client.get("/")
+            document = html.fromstring(res.get_data(as_text=True))
+
+            assert res.status_code == 200
+
+            link_locations = [item.values()[1] for item in document.cssselect('.browse-list-item a')]
+
+            lots = ['digital-specialists', 'digital-outcomes', 'user-research-participants', 'user-research-studios']
+            dos2_base_path = '/buyers/frameworks/digital-outcomes-and-specialists-2/requirements/{}'
+
+            for index, lot_slug in enumerate(lots):
+                assert link_locations[index] == dos2_base_path.format(lot_slug)
+
+    def test_links_are_for_live_dos_framework_when_expired_dos_framework_exists(self, data_api_client):
+        with self.app.app_context():
+            mock_expired_dos_1_framework = self.mock_live_dos_1_framework.copy()
+            mock_expired_dos_1_framework.update({"status": "expired"})
+
+            data_api_client.find_frameworks.return_value = {
+                "frameworks": [
+                    mock_expired_dos_1_framework,
+                    self.mock_live_dos_2_framework,
+                ]
+            }
+
+            res = self.client.get("/")
+            document = html.fromstring(res.get_data(as_text=True))
+
+            assert res.status_code == 200
+
+            link_locations = [item.values()[1] for item in document.cssselect('.browse-list-item a')]
+
+            lots = ['digital-specialists', 'digital-outcomes', 'user-research-participants', 'user-research-studios']
+            dos2_base_path = '/buyers/frameworks/digital-outcomes-and-specialists-2/requirements/{}'
+
+            for index, lot_slug in enumerate(lots):
+                assert link_locations[index] == dos2_base_path.format(lot_slug)
+
+    def test_non_dos_links_are_shown_if_no_live_dos_framework(self, data_api_client):
+        with self.app.app_context():
+            mock_expired_dos_1_framework = self.mock_live_dos_1_framework.copy()
+            mock_expired_dos_1_framework.update({"status": "expired"})
+            mock_expired_dos_2_framework = self.mock_live_dos_2_framework.copy()
+            mock_expired_dos_2_framework.update({"status": "expired"})
+
+            data_api_client.find_frameworks.return_value = {
+                "frameworks": [
+                    mock_expired_dos_1_framework,
+                    mock_expired_dos_2_framework,
+                ]
+            }
+
+            res = self.client.get("/")
+            document = html.fromstring(res.get_data(as_text=True))
+
+            assert res.status_code == 200
+
+            link_texts = [item.text_content().strip() for item in document.cssselect('.browse-list-item a')]
+            assert link_texts[0] == "Find cloud technology and support"
+            assert link_texts[1] == "Buy physical datacentre space for legacy systems"
+            assert len(link_texts) == 2
 
 
 class TestHomepageSidebarMessage(BaseApplicationTest):
@@ -103,7 +214,6 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
 
     @mock.patch('app.main.views.marketplace.data_api_client')
     def _load_homepage(self, framework_slugs_and_statuses, framework_messages, data_api_client):
-
         data_api_client.find_frameworks.return_value = self._find_frameworks(framework_slugs_and_statuses)
         res = self.client.get('/')
         assert res.status_code == 200
@@ -146,7 +256,7 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
     def test_homepage_sidebar_message_exists_g_cloud_7_pending(self):
 
         framework_slugs_and_statuses = [
-            ('g-cloud-7', 'pending')
+            ('g-cloud-7', 'pending'),
         ]
         framework_messages = [
             u"G‑Cloud 7 is closed for applications",
