@@ -1528,7 +1528,34 @@ class TestBriefSummaryPage(BaseApplicationTest):
             assert section_4_link[0].get('href').strip() == \
                 '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/section-4'
 
-    def test_shows_correct_content_for_open_and_closed_dos_1_and_2_briefs(self, data_api_client):
+    def test_no_meta_data_is_shown_for_a_draft_brief(self, data_api_client):
+        with self.app.app_context():
+            self.login_as_buyer()
+            data_api_client.get_framework.return_value = api_stubs.framework(
+                slug="digital-outcomes-and-specialists-2",
+                status='live',
+                lots=[
+                    api_stubs.lot(slug='digital-specialists', allows_brief=True),
+                ]
+            )
+            data_api_client.get_brief.return_value = api_stubs.brief(
+                status="draft",
+                framework_slug="digital-outcomes-and-specialists-2",
+                framework_name="Digital Outcomes and Specialists 2",
+            )
+
+            res = self.client.get(
+                "/buyers/frameworks/digital-outcomes-and-specialists-2/requirements/digital-specialists/1234"
+            )
+            assert res.status_code == 200
+
+            document = html.fromstring(res.get_data(as_text=True))
+
+            meta_data_container = document.xpath('//*[@id="requirements-meta"]')
+
+            assert not meta_data_container
+
+    def test_shows_correct_content_for_draft_open_and_closed_dos_1_and_2_briefs(self, data_api_client):
         framework_slugs = ["digital-outcomes-and-specialists", "digital-outcomes-and-specialists-2"]
         framework_names = ["Digital Outcomes and Specialists", "Digital Outcomes and Specialists 2"]
         sidebar_heading_content = ['Closing', 'Closed']
