@@ -320,9 +320,13 @@ class DownloadBriefResponsesView(View):
         return get_sorted_responses_for_brief(brief, self.data_api_client)
 
     def get_context_data(self, **kwargs):
-        get_framework_and_lot(kwargs['framework_slug'], kwargs['lot_slug'],
-                              self.data_api_client, allowed_statuses='live',
-                              must_allow_brief=True)
+        get_framework_and_lot(
+            kwargs['framework_slug'],
+            kwargs['lot_slug'],
+            self.data_api_client,
+            allowed_statuses=['live', 'expired'],
+            must_allow_brief=True,
+        )
 
         brief = self.data_api_client.get_brief(kwargs['brief_id'])["briefs"]
 
