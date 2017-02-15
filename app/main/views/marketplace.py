@@ -124,6 +124,7 @@ def list_opportunities(framework_slug):
     frameworks = data_api_client.find_frameworks()['frameworks']
 
     frameworks = [v for v in frameworks if v['framework'] == framework_slug]
+    frameworks.sort(key=lambda x: x['id'], reverse=True)
 
     if not frameworks:
         abort(404, "No framework {}".format(framework_slug))

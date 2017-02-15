@@ -638,6 +638,7 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
 
         self._data_api_client.find_frameworks.return_value = {'frameworks': [
             {
+                'id': 3,
                 'name': "Digital Outcomes and Specialists 2",
                 'slug': "digital-outcomes-and-specialists-2",
                 'framework': "digital-outcomes-and-specialists",
@@ -649,6 +650,7 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
                 ]
             },
             {
+                'id': 1,
                 'name': "Digital Outcomes and Specialists",
                 'slug': "digital-outcomes-and-specialists",
                 'framework': "digital-outcomes-and-specialists",
@@ -660,6 +662,7 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
                 ]
             },
             {
+                'id': 2,
                 'name': "Foobar",
                 'slug': "foobar",
                 'framework': "foobar",
@@ -669,7 +672,7 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
                     {'name': 'Lot 3', 'slug': 'lot-three', 'allowsBrief': True},
                     {'name': 'Lot 4', 'slug': 'lot-four', 'allowsBrief': True},
                 ]
-            }
+            },
         ]}
 
     def teardown_method(self, method):
