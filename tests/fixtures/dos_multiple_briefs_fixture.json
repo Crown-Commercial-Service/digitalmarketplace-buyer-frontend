@@ -3,7 +3,7 @@
     {
       "clarificationQuestionsAreClosed":true,
       "status":"live",
-      "frameworkFramework":"dos",
+      "frameworkFramework":"digital-outcomes-and-specialists",
       "links":{
         "framework":"http://localhost:5000/frameworks/digital-outcomes-and-specialists",
         "self":"http://localhost:5000/briefs/17"
@@ -51,7 +51,7 @@
       "id":4,
       "createdAt":"2016-02-12T16:30:55.808730Z",
       "clarificationQuestionsAreClosed":true,
-      "frameworkFramework":"dos",
+      "frameworkFramework":"digital-outcomes-and-specialists",
       "clarificationQuestionsClosedAt":"2016-03-15T00:00:00.000000Z",
       "lotSlug":"digital-specialists",
       "workingArrangements":"Work",
