@@ -591,7 +591,13 @@ def publish_brief(framework_slug, lot_slug, brief_id):
 
 @buyers.route('/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/timeline', methods=['GET'])
 def view_brief_timeline(framework_slug, lot_slug, brief_id):
-    get_framework_and_lot(framework_slug, lot_slug, data_api_client, allowed_statuses='live', must_allow_brief=True)
+    get_framework_and_lot(
+        framework_slug,
+        lot_slug,
+        data_api_client,
+        allowed_statuses=['live', 'expired'],
+        must_allow_brief=True
+    )
     brief = data_api_client.get_brief(brief_id)["briefs"]
     if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id) or brief.get('status') != 'live':
         abort(404)
@@ -624,7 +630,13 @@ def delete_a_brief(framework_slug, lot_slug, brief_id):
     "/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/supplier-questions",
     methods=["GET"])
 def supplier_questions(framework_slug, lot_slug, brief_id):
-    get_framework_and_lot(framework_slug, lot_slug, data_api_client, allowed_statuses='live', must_allow_brief=True)
+    get_framework_and_lot(
+        framework_slug,
+        lot_slug,
+        data_api_client,
+        allowed_statuses=['live', 'expired'],
+        must_allow_brief=True
+    )
     brief = data_api_client.get_brief(brief_id)["briefs"]
 
     if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id):
@@ -648,7 +660,12 @@ def supplier_questions(framework_slug, lot_slug, brief_id):
     "/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/supplier-questions/answer-question",
     methods=["GET", "POST"])
 def add_supplier_question(framework_slug, lot_slug, brief_id):
-    get_framework_and_lot(framework_slug, lot_slug, data_api_client, allowed_statuses='live', must_allow_brief=True)
+    get_framework_and_lot(
+        framework_slug,
+        lot_slug, data_api_client,
+        allowed_statuses=['live', 'expired'],
+        must_allow_brief=True
+    )
     brief = data_api_client.get_brief(brief_id)["briefs"]
 
     if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id):
