@@ -1528,6 +1528,117 @@ class TestBriefSummaryPage(BaseApplicationTest):
             assert section_4_link[0].get('href').strip() == \
                 '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/section-4'
 
+    def test_no_meta_data_is_shown_for_a_draft_brief(self, data_api_client):
+        with self.app.app_context():
+            self.login_as_buyer()
+            data_api_client.get_framework.return_value = api_stubs.framework(
+                slug="digital-outcomes-and-specialists-2",
+                status='live',
+                lots=[
+                    api_stubs.lot(slug='digital-specialists', allows_brief=True),
+                ]
+            )
+            data_api_client.get_brief.return_value = api_stubs.brief(
+                status="draft",
+                framework_slug="digital-outcomes-and-specialists-2",
+                framework_name="Digital Outcomes and Specialists 2",
+            )
+
+            res = self.client.get(
+                "/buyers/frameworks/digital-outcomes-and-specialists-2/requirements/digital-specialists/1234"
+            )
+            assert res.status_code == 200
+
+            document = html.fromstring(res.get_data(as_text=True))
+
+            meta_data_container = document.xpath('//*[@id="requirements-meta"]')
+
+            assert not meta_data_container
+
+    def test_shows_correct_content_for_draft_open_and_closed_dos_1_and_2_briefs(self, data_api_client):
+        framework_slugs = ["digital-outcomes-and-specialists", "digital-outcomes-and-specialists-2"]
+        framework_names = ["Digital Outcomes and Specialists", "Digital Outcomes and Specialists 2"]
+        sidebar_heading_content = ['Closing', 'Closed']
+        brief_statuses = ['live', 'closed']
+
+        for framework_slug, framework_name in zip(framework_slugs, framework_names):
+            with self.app.app_context():
+                self.login_as_buyer()
+                for heading, brief_status in zip(sidebar_heading_content, brief_statuses):
+                    data_api_client.get_framework.return_value = api_stubs.framework(
+                        slug=framework_slug,
+                        status='live',
+                        lots=[
+                            api_stubs.lot(slug='digital-specialists', allows_brief=True),
+                        ]
+                    )
+                    data_api_client.get_brief.return_value = api_stubs.brief(
+                        status=brief_status,
+                        framework_slug=framework_slug,
+                        framework_name=framework_name,
+                    )
+
+                    res = self.client.get(
+                        "/buyers/frameworks/{}/requirements/digital-specialists/1234".format(framework_slug)
+                    )
+                    assert res.status_code == 200
+
+                    document = html.fromstring(res.get_data(as_text=True))
+
+                    sidebar_headings = document.xpath('//*[@class="sidebar-heading"]/text()')
+                    sidebar_content = document.xpath('//*[@class="sidebar-content"]/text()')
+                    framework_name_content = document.xpath('//*[@class="framework-name"]/a/text()')[0]
+
+                    assert sidebar_headings == ['Published', heading, 'Framework']
+                    assert sidebar_content == ['Tuesday 29 March 2016', 'Thursday 7 April 2016']
+                    assert framework_name_content == framework_name
+
+    def test_links_to_correct_call_off_contract_and_framework_agreement_for_briefs_framework(self, data_api_client):
+        framework_slugs = ["digital-outcomes-and-specialists", "digital-outcomes-and-specialists-2"]
+        framework_names = ["Digital Outcomes and Specialists", "Digital Outcomes and Specialists 2"]
+        call_off_contract_urls = [
+            "https://www.gov.uk/government/publications/digital-outcomes-and-specialists-call-off-contract",
+            "https://www.gov.uk/government/publications/digital-outcomes-and-specialists-2-call-off-contract"
+        ]
+        framework_agreement_urls = [
+            "https://www.gov.uk/government/publications/digital-outcomes-and-specialists-framework-agreement",
+            "https://www.gov.uk/government/publications/digital-outcomes-and-specialists-2-framework-agreement"
+        ]
+
+        for framework_slug, framework_name, call_off_contract_url, framework_agreement_url in \
+                zip(framework_slugs, framework_names, call_off_contract_urls, framework_agreement_urls):
+                with self.app.app_context():
+                    self.login_as_buyer()
+                    data_api_client.get_framework.return_value = api_stubs.framework(
+                        slug=framework_slug,
+                        status='live',
+                        lots=[
+                            api_stubs.lot(slug='digital-specialists', allows_brief=True),
+                        ]
+                    )
+                    data_api_client.get_brief.return_value = api_stubs.brief(
+                        status='live',
+                        framework_slug=framework_slug,
+                        framework_name=framework_name,
+                    )
+
+                    res = self.client.get(
+                        "/buyers/frameworks/{}/requirements/digital-specialists/1234".format(framework_slug)
+                    )
+                    assert res.status_code == 200
+
+                    document = html.fromstring(res.get_data(as_text=True))
+
+                    call_off_contract_link_destination = \
+                        document.xpath('//main[@id="content"]//ul/li/a')[-1].values()[0]
+                    framework_agreement_link_destination = \
+                        document.xpath('//*[@class="framework-name"]/a')[0].values()[0]
+                    contract_link_text = document.xpath('//main[@id="content"]//ul/li/a/text()')[-1]
+
+                    assert call_off_contract_link_destination == call_off_contract_url
+                    assert framework_agreement_link_destination == framework_agreement_url
+                    assert contract_link_text == "View the {} contract".format(framework_name)
+
 
 @mock.patch("app.buyers.views.buyers.data_api_client")
 class TestAddBriefClarificationQuestion(BaseApplicationTest):

@@ -127,6 +127,10 @@ def view_brief_overview(framework_slug, lot_slug, brief_id):
     sections = content.summary(brief)
     delete_requested = True if request.args.get('delete_requested') else False
 
+    content_loader.load_messages(brief['frameworkSlug'], ['urls'])
+    call_off_contract_url = content_loader.get_message(brief['frameworkSlug'], 'urls', 'call_off_contract_url')
+    framework_agreement_url = content_loader.get_message(brief['frameworkSlug'], 'urls', 'framework_agreement_url')
+
     completed_sections = {}
     for section in sections:
         required, optional = count_unanswered_questions([section])
@@ -149,6 +153,8 @@ def view_brief_overview(framework_slug, lot_slug, brief_id):
         completed_sections=completed_sections,
         step_sections=[section.step for section in sections if hasattr(section, 'step')],
         delete_requested=delete_requested,
+        call_off_contract_url=call_off_contract_url,
+        framework_agreement_url=framework_agreement_url,
     ), 200
 
 
