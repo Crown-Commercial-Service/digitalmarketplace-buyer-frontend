@@ -87,7 +87,7 @@ def terms_and_conditions():
 def get_brief_by_id(framework_slug, brief_id):
     briefs = data_api_client.get_brief(brief_id)
     brief = briefs.get('briefs')
-    if brief['status'] not in ['live', 'closed']:
+    if brief['status'] not in ['live', 'closed'] or brief['frameworkFramework'] != framework_slug:
         abort(404, "Opportunity '{}' can not be found".format(brief_id))
 
     if getattr(current_user, "supplier_id", None) is None:
@@ -101,7 +101,7 @@ def get_brief_by_id(framework_slug, brief_id):
         for index, question in enumerate(brief['clarificationQuestions'])
     ]
 
-    brief_content = content_loader.get_builder(framework_slug, 'display_brief').filter(
+    brief_content = content_loader.get_builder(brief['frameworkSlug'], 'display_brief').filter(
         brief
     )
 
