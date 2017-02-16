@@ -43,7 +43,6 @@ $path: "/static/images/";
 @import "toolkit/forms/_textboxes.scss";
 @import "toolkit/forms/_validation.scss";
 @import "toolkit/search/_search-result.scss";
-@import "toolkit/_secondary-action-link.scss";
 
 #wrapper {
   @extend %site-width-container;
@@ -63,6 +62,7 @@ $path: "/static/images/";
 @import "_service-page.scss";
 @import "_index-page.scss";
 @import "_search-page.scss";
+@import "_secondary-action-link.scss";
 @import "_pagination.scss";
 @import "_publication.scss";
 @import "_supplier-a-to-z.scss";

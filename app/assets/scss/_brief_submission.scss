@@ -80,12 +80,3 @@ ol.steps {
    @extend %markdown-description;
    padding-bottom: 30px;
 }
-
-.secondary-action-link {
-    margin-top: 30px;
-}
-
-button.button-save + .secondary-action-link,
-input.button-save + .secondary-action-link {
-    margin-top: 5px;
-}
