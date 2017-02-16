@@ -55,7 +55,7 @@ class TestBuyersHelpers(object):
                 'digital-outcomes-and-specialists',
                 'digital-specialists',
                 data_api_client,
-                allowed_statuses='live',
+                allowed_statuses=['live'],
             )
 
     def test_get_framework_and_lot_404s_if_allows_brief_required(self):

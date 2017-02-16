@@ -51,7 +51,7 @@ def buyer_dashboard():
 def start_new_brief(framework_slug, lot_slug):
 
     framework, lot = get_framework_and_lot(framework_slug, lot_slug, data_api_client,
-                                           allowed_statuses='live', must_allow_brief=True)
+                                           allowed_statuses=['live'], must_allow_brief=True)
 
     content = content_loader.get_manifest(framework_slug, 'edit_brief').filter(
         {'lot': lot['slug']}
@@ -73,7 +73,7 @@ def start_new_brief(framework_slug, lot_slug):
 def create_new_brief(framework_slug, lot_slug):
 
     framework, lot = get_framework_and_lot(framework_slug, lot_slug, data_api_client,
-                                           allowed_statuses='live', must_allow_brief=True)
+                                           allowed_statuses=['live'], must_allow_brief=True)
 
     content = content_loader.get_manifest(framework_slug, 'edit_brief').filter(
         {'lot': lot['slug']}
@@ -195,7 +195,7 @@ def view_brief_section_summary(framework_slug, lot_slug, brief_id, section_slug)
     '/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/edit/<section_slug>/<question_id>',
     methods=['GET'])
 def edit_brief_question(framework_slug, lot_slug, brief_id, section_slug, question_id):
-    get_framework_and_lot(framework_slug, lot_slug, data_api_client, allowed_statuses='live', must_allow_brief=True)
+    get_framework_and_lot(framework_slug, lot_slug, data_api_client, allowed_statuses=['live'], must_allow_brief=True)
     brief = data_api_client.get_brief(brief_id)["briefs"]
 
     if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id) or not brief_can_be_edited(brief):
@@ -224,7 +224,7 @@ def edit_brief_question(framework_slug, lot_slug, brief_id, section_slug, questi
     '/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/edit/<section_id>/<question_id>',
     methods=['POST'])
 def update_brief_submission(framework_slug, lot_slug, brief_id, section_id, question_id):
-    get_framework_and_lot(framework_slug, lot_slug, data_api_client, allowed_statuses='live', must_allow_brief=True)
+    get_framework_and_lot(framework_slug, lot_slug, data_api_client, allowed_statuses=['live'], must_allow_brief=True)
     brief = data_api_client.get_brief(brief_id)["briefs"]
 
     if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id) or not brief_can_be_edited(brief):
@@ -549,7 +549,7 @@ buyers.add_url_rule('/frameworks/<framework_slug>/requirements/<lot_slug>/<brief
 
 @buyers.route('/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/publish', methods=['GET', 'POST'])
 def publish_brief(framework_slug, lot_slug, brief_id):
-    get_framework_and_lot(framework_slug, lot_slug, data_api_client, allowed_statuses='live', must_allow_brief=True)
+    get_framework_and_lot(framework_slug, lot_slug, data_api_client, allowed_statuses=['live'], must_allow_brief=True)
     brief = data_api_client.get_brief(brief_id)["briefs"]
 
     if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id) or not brief_can_be_edited(brief):
