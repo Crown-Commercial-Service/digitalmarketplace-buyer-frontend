@@ -30,6 +30,10 @@ from io import BytesIO
 
 from collections import Counter
 
+from typogrify.filters import widont
+from typogrify.templatetags.jinja_filters import make_safe
+
+buyers.add_app_template_filter(make_safe(widont))
 
 @buyers.route('')
 def buyer_dashboard():
