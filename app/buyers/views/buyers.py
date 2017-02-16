@@ -35,6 +35,7 @@ from typogrify.templatetags.jinja_filters import make_safe
 
 buyers.add_app_template_filter(make_safe(widont))
 
+
 @buyers.route('')
 def buyer_dashboard():
     user_briefs = data_api_client.find_briefs(current_user.id).get('briefs', [])

@@ -32,12 +32,22 @@ class TestBuyerDashboard(BaseApplicationTest):
                     {"status": "draft",
                      "title": "A draft brief",
                      "createdAt": "2016-02-02T00:00:00.000000Z",
-                     "frameworkSlug": "digital-outcomes-and-specialists"},
+                     "frameworkSlug": "digital-outcomes-and-specialists",
+                     "frameworkName": "Digital Outcomes and Specialists"},
                     {"status": "live",
                      "title": "A live brief",
                      "createdAt": "2016-02-01T00:00:00.000000Z",
                      "publishedAt": "2016-02-04T12:00:00.000000Z",
-                     "frameworkSlug": "digital-outcomes-and-specialists"},
+                     "applicationsClosedAt": "2016-02-15T12:00:00.000000Z",
+                     "frameworkSlug": "digital-outcomes-and-specialists",
+                     "frameworkName": "Digital Outcomes and Specialists"},
+                    {"status": "closed",
+                     "title": "A closed brief",
+                     "createdAt": "2016-02-01T00:00:00.000000Z",
+                     "publishedAt": "2016-02-04T12:00:00.000000Z",
+                     "applicationsClosedAt": "2016-02-15T12:00:00.000000Z",
+                     "frameworkSlug": "digital-outcomes-and-specialists",
+                     "frameworkName": "Digital Outcomes and Specialists"},
                 ]
             }
 
@@ -49,11 +59,17 @@ class TestBuyerDashboard(BaseApplicationTest):
             tables = document.xpath('//table')
             draft_row = [cell.text_content().strip() for cell in tables[0].xpath('.//tbody/tr/td')]
             assert draft_row[0] == "A draft brief"
-            assert draft_row[1] == "Tuesday 2 February 2016"
+            assert draft_row[1] == "Tuesday 2 February\u00a02016"
 
             live_row = [cell.text_content().strip() for cell in tables[1].xpath('.//tbody/tr/td')]
             assert live_row[0] == "A live brief"
-            assert live_row[1] == "Thursday 4 February 2016"
+            assert live_row[1] == "Digital Outcomes and\u00a0Specialists"
+            assert live_row[2] == "Thursday 4 February\u00a02016"
+
+            closed_row = [cell.text_content().strip() for cell in tables[2].xpath('.//tbody/tr/td')]
+            assert closed_row[0] == "A closed brief"
+            assert closed_row[1] == "Digital Outcomes and\u00a0Specialists"
+            assert closed_row[2] == "Monday 15 February\u00a02016"
 
 
 @mock.patch('app.buyers.views.buyers.data_api_client')
