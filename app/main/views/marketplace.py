@@ -83,11 +83,11 @@ def terms_and_conditions():
     return render_template('content/terms-and-conditions.html')
 
 
-@main.route('/<framework_slug>/opportunities/<brief_id>')
-def get_brief_by_id(framework_slug, brief_id):
+@main.route('/<framework_framework>/opportunities/<brief_id>')
+def get_brief_by_id(framework_framework, brief_id):
     briefs = data_api_client.get_brief(brief_id)
     brief = briefs.get('briefs')
-    if brief['status'] not in ['live', 'closed']:
+    if brief['status'] not in ['live', 'closed'] or brief['frameworkFramework'] != framework_framework:
         abort(404, "Opportunity '{}' can not be found".format(brief_id))
 
     if getattr(current_user, "supplier_id", None) is None:
@@ -101,7 +101,7 @@ def get_brief_by_id(framework_slug, brief_id):
         for index, question in enumerate(brief['clarificationQuestions'])
     ]
 
-    brief_content = content_loader.get_builder(framework_slug, 'display_brief').filter(
+    brief_content = content_loader.get_builder(brief['frameworkSlug'], 'display_brief').filter(
         brief
     )
 
@@ -119,14 +119,18 @@ def get_brief_by_id(framework_slug, brief_id):
     )
 
 
-@main.route('/<framework_slug>/opportunities')
-def list_opportunities(framework_slug):
-    framework = data_api_client.get_framework(framework_slug)['frameworks']
-    if not framework:
-        abort(404, "No framework {}".format(framework_slug))
+@main.route('/<framework_framework>/opportunities')
+def list_opportunities(framework_framework):
+    frameworks = data_api_client.find_frameworks()['frameworks']
+
+    frameworks = [v for v in frameworks if v['framework'] == framework_framework]
+    frameworks.sort(key=lambda x: x['id'], reverse=True)
+
+    if not frameworks:
+        abort(404, "No framework {}".format(framework_framework))
 
     # disabling csrf protection as this should only ever be a GET request
-    form = BriefSearchForm(request.args, framework=framework, data_api_client=data_api_client, csrf_enabled=False)
+    form = BriefSearchForm(request.args, frameworks=frameworks, data_api_client=data_api_client, csrf_enabled=False)
     if not form.validate():
         abort(404, "Invalid form data")
 
@@ -148,7 +152,7 @@ def list_opportunities(framework_slug):
         next_link_args.setlist("page", api_next_link_args.get("page") or ())
 
     return render_template('search/briefs.html',
-                           framework=framework,
+                           framework=frameworks[-1],
                            form=form,
                            filters=form.get_filters(),
                            filters_applied=form.filters_applied(),
