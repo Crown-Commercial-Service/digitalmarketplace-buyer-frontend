@@ -41,7 +41,7 @@
   <input type="hidden" id="{{ form.employment_status.id }}" name="{{ form.employment_status.name }}" value="{{ form.employment_status.data }}">
   <input type="hidden" id="{{ form.name.id }}" name="{{ form.name.name }}" value="{{ form.name.data }}">
   <input type="hidden" id="{{ form.email_address.id }}" name="{{ form.email_address.name }}" value="{{ form.email_address.data }}">
-
+<div>
   {%
     with
       question = "Line manager's name",
@@ -51,8 +51,8 @@
       error = form.manager_name.errors[0]
   %}
     {% include "toolkit/forms/textbox.html" %}
-  {% endwith %}
-
+  {% endwith %}</div>
+<div>
   {%
     with
       question = "Line manager's email address",
@@ -63,7 +63,7 @@
   %}
     {% include "toolkit/forms/textbox.html" %}
   {% endwith %}
-
+</div>
   <p>Remember to let this person know we’ll be sending them an email requesting their authorisation.</p>
 
   {%

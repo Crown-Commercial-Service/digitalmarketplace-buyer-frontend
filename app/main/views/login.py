@@ -28,6 +28,7 @@ from app.main.forms import auth_forms
 from ...api_client.error import HTTPError
 from react.render import render_component
 from react.response import from_response, validate_form_data
+from dmutils.forms import is_government_email
 
 
 @main.route('/login', methods=["GET"])
@@ -194,11 +195,13 @@ def update_password(token):
 
 
 @main.route('/signup', methods=['GET'])
-def single_signup(applicant=None, errors=None):
-    applicant = applicant or {}
+def single_signup(user=None, errors=None):
+    user = user or {}
 
     rendered_component = render_component(
         'bundles/SellerRegistration/SignupWidget.js', {
+            'application': {'signupForm': user},
+            'signupForm': user,
             'form_options': {
                 'errors': errors,
                 'buyer_url': '/signup',
@@ -216,9 +219,13 @@ def single_signup(applicant=None, errors=None):
 @main.route('/signup', methods=['POST'])
 def submit_single_signup():
     user = from_response(request)
+    if user['user_type'] != 'buyer':
+        return abort(400)
 
     fields = ['name', 'email_address', 'employment_status', 'user_type']
     errors = validate_form_data(user, fields)
+    if not is_government_email(user['email_address']):
+        errors['email_address'] = {"government_email": True}
     if errors:
         return single_signup(user, errors)
 
