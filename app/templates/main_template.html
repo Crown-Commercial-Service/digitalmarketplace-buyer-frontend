@@ -62,16 +62,18 @@
         </div>
         {% endif %}
         <div class="user-nav">
+          {% set dashboardText = 'Dashboard' %}
           {% if current_user.role == 'buyer' %}
             {% set dashboardUrl = url_for('buyers.buyer_dashboard') %}
           {% elif current_user.role == 'applicant'  %}
+            {% set dashboardText = 'Become a seller' %}
             {% set dashboardUrl = '/sellers/application' %}
           {% else %}
             {% set dashboardUrl = '/sellers' %}
           {% endif %}
           {% if 'SELLER_REGISTRATION' is active_feature %}
             {% set registerUrl = '/signup' %}
-            {% set registerText = 'Join the marketplace' %}
+            {% set registerText = 'Join the Marketplace' %}
           {% else %}
             {% set registerUrl = url_for('main.buyer_signup') %}
             {% set registerText = 'Register' %}
@@ -81,6 +83,7 @@
           'registerText': registerText,
           'loginUrl': url_for('main.render_login'),
           'dashboardUrl': dashboardUrl,
+          'dashboardText': dashboardText,
           'logoutUrl': url_for('main.logout'),
           'isAuthenticated': current_user.is_authenticated
           } %}
