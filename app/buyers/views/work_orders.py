@@ -4,7 +4,7 @@ from flask_login import current_user
 
 from app import data_api_client
 from .. import buyers
-from app.helpers.buyers_helpers import is_brief_correct
+from app.helpers.buyers_helpers import is_brief_correct, is_brief_associated_with_user
 from dmutils.forms import render_template_with_csrf
 
 from dmapiclient import HTTPError, APIError
@@ -14,7 +14,7 @@ from app.main.forms.work_order_data import questions
 from flask_weasyprint import HTML, render_pdf
 
 
-def create_work_order_from_brief(brief, seller):
+def _create_work_order_from_brief(brief, seller):
     contacts = seller.get('contacts')
     contact = contacts[0] if contacts else {}
 
@@ -80,7 +80,7 @@ def create_new_work_order(framework_slug, lot_slug, brief_id):
         work_order = data_api_client.create_work_order(
             briefId=brief_id,
             supplierCode=form.seller.data,
-            workOrder=create_work_order_from_brief(brief, seller)
+            workOrder=_create_work_order_from_brief(brief, seller)
         )['workOrder']
 
     except APIError as e:
@@ -107,6 +107,10 @@ def get_work_order(work_order_id):
     except APIError as e:
         abort(e.status_code)
 
+    brief = data_api_client.get_brief(work_order['briefId'])["briefs"]
+    if not is_brief_associated_with_user(brief, current_user.id):
+        abort(404)
+
     return render_template_with_csrf('workorder/work-order-instruction-list.html',
                                      work_order=work_order,
                                      questions=questions)
@@ -118,6 +122,10 @@ def get_work_order_question(work_order_id, question_slug):
         work_order = data_api_client.get_work_order(work_order_id)['workOrder']
     except APIError as e:
         abort(e.status_code)
+
+    brief = data_api_client.get_brief(work_order['briefId'])["briefs"]
+    if not is_brief_associated_with_user(brief, current_user.id):
+        abort(404)
 
     if questions.get(question_slug, None) is None:
         abort(404)
@@ -144,9 +152,13 @@ def get_work_order_question(work_order_id, question_slug):
 @buyers.route('/work-orders/<int:work_order_id>/questions/<question_slug>', methods=['POST'])
 def update_work_order_question(work_order_id, question_slug):
     try:
-        data_api_client.get_work_order(work_order_id)['workOrder']
+        work_order = data_api_client.get_work_order(work_order_id)['workOrder']
     except APIError as e:
         abort(e.status_code)
+
+    brief = data_api_client.get_brief(work_order['briefId'])["briefs"]
+    if not is_brief_associated_with_user(brief, current_user.id):
+        abort(404)
 
     if questions.get(question_slug, None) is None:
         abort(404)
