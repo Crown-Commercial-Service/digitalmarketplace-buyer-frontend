@@ -66,7 +66,7 @@
           {% if current_user.role == 'buyer' %}
             {% set dashboardUrl = url_for('buyers.buyer_dashboard') %}
           {% elif current_user.role == 'applicant'  %}
-            {% set dashboardText = 'Become a seller' %}
+            {% set dashboardText = 'Continue application' %}
             {% set dashboardUrl = '/sellers/application' %}
           {% else %}
             {% set dashboardUrl = '/sellers' %}
