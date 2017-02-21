@@ -38,11 +38,12 @@
 <div class="grid-row">
     <div class="column-two-thirds">
       {% if response_counts['eligible'] > 0 %}
-        {% if ods %}
+        {% if new_flow_brief %}
           <div class="dmspeak">
               <p>
                 <span class='visual-emphasis'>{{ response_counts['eligible'] }} {{ pluralize(response_counts['eligible'], "supplier", "suppliers") }}</span>
-                responded to your requirements and {{ pluralize(response_counts['eligible'], "meets", "meet") }} all your essential skills and experience. Suppliers that didn't meet all your essential requirements have already been told they were unsuccessful.
+                responded to your requirements and {{ pluralize(response_counts['eligible'], "meets", "meet") }} all your essential skills and experience.
+                Any suppliers that did not meet all your essential requirements have already been told they were unsuccessful.
               </p>
               <p>
                 You said you’d take <span class='visual-emphasis'>{{ brief.numberOfSuppliers }} {{ pluralize(brief.numberOfSuppliers, "supplier", "suppliers") }}</span> through to the evaluation stage. To do this, you need to:
@@ -93,11 +94,8 @@
             <p>
                 <span class='visual-emphasis'>{{ response_counts['eligible'] }} {{ pluralize(response_counts['eligible'], "supplier", "suppliers") }}</span>
                 responded to your requirements and {{ pluralize(response_counts['eligible'], "meets", "meet") }} all your essential skills and experience.
+                Any suppliers that did not meet all your essential requirements have already been told they were unsuccessful.
             </p>
-            <p>
-                Suppliers that did not meet all your essential requirements have already been told they were unsuccessful.
-            </p>
-
             <p>
               Download the list of supplier responses and follow the guidance on <a href="https://www.gov.uk/guidance/how-to-shortlist-digital-outcomes-and-specialists-suppliers">how to shortlist</a>.
             </p>
@@ -131,9 +129,11 @@
           <p>
               No suppliers met your essential skills and experience requirements.
           </p>
-          <p>
-              All the suppliers who applied have already been told they were unsuccessful.
-          </p>
+          {% if not new_flow_brief %}
+            <p>
+                All the suppliers who applied have already been told they were unsuccessful.
+            </p>
+          {% endif %}
         </div>
         <div class='explanation-list'>
             <p class='lead'>
