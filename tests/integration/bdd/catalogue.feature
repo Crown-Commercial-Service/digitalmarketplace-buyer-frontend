@@ -10,7 +10,7 @@ Scenario: Anonymous users cannot view supplier details
     Given I am an anonymous user
     And I am on the /search/sellers page
     When I click the first supplier link
-    Then I should see the Log in to the Marketplace page
+    Then I should see the Sign in to the Marketplace page
 
 Scenario: Buyers can view supplier details
     Given I am a Buyer

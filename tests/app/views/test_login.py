@@ -49,7 +49,7 @@ class TestLogin(BaseApplicationTest):
         res = self.client.get(self.expand_path('/login'))
         assert res.status_code == 200
         assert 'private' in res.headers['Cache-Control']
-        assert "Log in to the Marketplace" in res.get_data(as_text=True)
+        assert "Sign in to the Marketplace" in res.get_data(as_text=True)
 
     @mock.patch('app.main.views.login.data_api_client')
     def test_redirect_on_buyer_login(self, data_api_client):
@@ -505,7 +505,7 @@ class TestLoginFormsNotAutofillable(BaseApplicationTest):
     def test_login_form_and_inputs_not_autofillable(self):
         self._forms_and_inputs_not_autofillable(
             self.expand_path('/login'),
-            "Log in to the Marketplace"
+            "Sign in to the Marketplace"
         )
 
     def test_request_password_reset_form_and_inputs_not_autofillable(self):

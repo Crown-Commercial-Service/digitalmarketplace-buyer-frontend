@@ -1,6 +1,6 @@
 {% extends "_base_page.html" %}
 
-{% block page_title %}Log in – Digital Marketplace{% endblock %}
+{% block page_title %}Sign in – Digital Marketplace{% endblock %}
 
 {% block phase_banner %}{% endblock %}
 
@@ -30,15 +30,15 @@
       </p>
     {% elif message == 'supplier-role-required' %}
       <p class="callout">
-        You must log in with a seller account to see this page.
+        You must sign in with a seller account to see this page.
       </p>
     {% elif message == 'buyer-role-required' %}
       <p class="callout">
-          You must log in with a buyer account to see this page.
+          You must sign in with a buyer account to see this page.
       </p>
     {% elif message == 'applicant-role-required' %}
       <p class="callout">
-        You must log in with a applicant account to see this page.
+        You must sign in with a applicant account to see this page.
       </p>
     {% elif category != 'must_login' %}
       {{ message }}
@@ -53,15 +53,11 @@
 {% include "_form_errors.html" %}
 
 {% with
-  heading = "Log in to the Marketplace"
+  heading = "Sign in to the Marketplace"
 %}
   {% include "toolkit/page-heading.html" %}
 {% endwith %}
 
-<p>
-  Don't have a buyer account? <a href="{{ url_for('.buyer_signup') }}">Create one now</a>.<br>
-  Seller account invites coming soon.
-</p>
 
 <form action="{{ url_for('.process_login', next=next) }}" method="POST">
 
@@ -100,12 +96,12 @@
     with
     type = "save",
     role = "button",
-    label = "Log in"
+    label = "Sign in"
   %}
     {% include "toolkit/button.html" %}
   {% endwith %}
   </p>
 
-            
+
 </form>
 {% endblock %}

@@ -52,7 +52,7 @@ def process_login():
             form.password.data)
         if not user_json:
             current_app.logger.info(
-                "login.fail: failed to log in {email_hash}",
+                "login.fail: failed to sign in {email_hash}",
                 extra={'email_hash': hash_email(form.email_address.data)})
             flash("no_account", "error")
             return render_template_with_csrf(

@@ -201,7 +201,7 @@ class TestBriefPage(BaseApplicationTest):
         qa_session_url = self.expand_path('/sellers/opportunities/{}/question-and-answer-session'.format(brief_id))
         qa_session_link_text = document.xpath('//a[@href="{}"]/text()'.format(qa_session_url))[0].strip()
 
-        assert qa_session_link_text == "Log in to view question and answer session details"
+        assert qa_session_link_text == "Sign in to view question and answer session details"
 
     def test_dos_brief_question_and_answer_session_details_hidden_when_questions_closed(self):
         closed_timestamp = datetime.strftime(datetime(2015, 1, 1), DATETIME_FORMAT)
@@ -238,7 +238,7 @@ class TestBriefPage(BaseApplicationTest):
         assert_equal(number, "1.")
         assert_equal(question, "Why?")
         assert_equal(answer, "Because")
-        assert_equal(qa_link_text, "Log in to ask a question")
+        assert_equal(qa_link_text, "Sign in to ask a question")
 
     def test_dos_brief_has_different_link_text_for_logged_in_supplier(self):
         self.login_as_supplier()

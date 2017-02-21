@@ -19,7 +19,7 @@ def login(browser, email, password):
     browser.is_element_present_by_name('email_address')
     browser.fill('email_address', email)
     browser.fill('password', password)
-    click_button('Log in', browser)
+    click_button('Sign in', browser)
     wait_for_page('Dashboard', browser)
 
 

@@ -7,7 +7,7 @@ Scenario: Anonymous users cannot create brief
     When I click the Find an individual specialist link
     And the Finding an individual specialist page loads
     And I click the Create brief button
-    Then I should see the Log in to the Marketplace page
+    Then I should see the Sign in to the Marketplace page
 
 Scenario: Suppliers cannot create brief
     Given I am a Supplier
@@ -15,7 +15,7 @@ Scenario: Suppliers cannot create brief
     When I click the Find an individual specialist link
     And the Finding an individual specialist page loads
     And I click the Create brief button
-    Then I should see the Log in to the Marketplace page
+    Then I should see the Sign in to the Marketplace page
 
 Scenario: Buyers can create a brief
     Given I am a Buyer
@@ -103,4 +103,3 @@ Scenario: Review and publish your requirements
     And I have created a brief
     When I click the Review and publish your requirements link
     Then I should see the All requirements are published on the Digital Marketplace page
-

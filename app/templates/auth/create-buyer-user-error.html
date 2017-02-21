@@ -21,16 +21,16 @@
 {% elif user %}
 
   {% if not user.active %}
-  
+
     <header>
       <h1>Your account has been deactivated.</h1>
     </header>
     <p>
       Email <a href="mailto:marketplace@digital.gov.au">marketplace@digital.gov.au</a> to reactivate your account.
     </p>
-  
+
   {% elif user.locked %}
-  
+
     <header>
       <h1>Your account is locked.</h1>
     </header>
@@ -39,7 +39,7 @@
     </p>
 
   {% elif user.role == 'supplier' %}
-  
+
     <header>
       <h1>The details you provided are registered with a seller.</h1>
     </header>
@@ -48,19 +48,19 @@
       <a href="mailto:marketplace@digital.gov.au">marketplace@digital.gov.au</a> to have your account
       converted to a buyer account.</p>
     <p>
-      Alternatively, <a href="{{ url_for('.render_login') }}">Log in</a> to your {{ user.supplier_name }} account.
+      Alternatively, <a href="{{ url_for('.render_login') }}">Sign in</a> to your {{ user.supplier_name }} account.
     </p>
-  
+
   {% else %}
-  
+
     <header>
       <h1>Account already exists</h1>
     </header>
-  
+
     <p>
-      <a href="{{ url_for('.render_login') }}">Log in</a> to your account.
+      <a href="{{ url_for('.render_login') }}">Sign in</a> to your account.
     </p>
-  
+
   {% endif %}
 {% endif %}
 
