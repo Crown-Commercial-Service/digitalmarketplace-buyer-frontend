@@ -720,6 +720,11 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         ss_elem = document.xpath("//p[@class='search-summary']")[0]
         assert self._normalize_whitespace(self._squashed_element_text(ss_elem)) == "2 opportunities"
 
+        dos1_framework_label = document.xpath("//div[@class='search-result']/ul[2]/li[2]/text()")[0].strip()
+        dos2_framework_label = document.xpath("//div[@class='search-result']/ul[2]/li[2]/text()")[1].strip()
+        assert dos1_framework_label == "Digital Outcomes and Specialists"
+        assert dos2_framework_label == "Digital Outcomes and Specialists 2"
+
     def test_catalogue_of_briefs_page_filtered(self):
         original_url = "/digital-outcomes-and-specialists/opportunities?page=2&status=live&lot=lot-one&lot=lot-three"
         res = self.client.get(original_url)

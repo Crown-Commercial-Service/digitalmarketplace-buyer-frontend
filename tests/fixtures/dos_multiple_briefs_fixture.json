@@ -31,7 +31,7 @@
     {
       "startDate":"29th March",
       "links":{
-        "framework":"http://localhost:5000/frameworks/digital-outcomes-and-specialists",
+        "framework":"http://localhost:5000/frameworks/digital-outcomes-and-specialists-2",
         "self":"http://localhost:5000/briefs/4"
       },
       "evaluationType":[
@@ -73,9 +73,9 @@
         }
       ],
       "title":"Another requirement",
-      "frameworkSlug":"digital-outcomes-and-specialists",
+      "frameworkSlug":"digital-outcomes-and-specialists-2",
       "additionalTerms":"You'll never work in this town again.",
-      "frameworkName":"Digital Outcomes and Specialists",
+      "frameworkName":"Digital Outcomes and Specialists 2",
       "publishedAt":"2016-03-07T16:02:51.591567Z"
     }
   ],
