@@ -38,7 +38,7 @@
 <div class="grid-row">
     <div class="column-two-thirds">
       {% if response_counts['eligible'] > 0 %}
-        {% if new_flow_brief %}
+        {% if brief_responses_require_evidence %}
           <div class="dmspeak">
               <p>
                 <span class='visual-emphasis'>{{ response_counts['eligible'] }} {{ pluralize(response_counts['eligible'], "supplier", "suppliers") }}</span>
@@ -129,7 +129,7 @@
           <p>
               No suppliers met your essential skills and experience requirements.
           </p>
-          {% if not new_flow_brief %}
+          {% if not brief_responses_require_evidence %}
             <p>
                 All the suppliers who applied have already been told they were unsuccessful.
             </p>
