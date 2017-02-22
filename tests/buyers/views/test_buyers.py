@@ -1934,9 +1934,13 @@ class TestAddBriefClarificationQuestion(BaseApplicationTest):
 
 
 class AbstractViewBriefResponsesPage(BaseApplicationTest):
-    def test_page_shows_correct_content_when_eligible_responses(self, data_api_client):
-        data_api_client.find_brief_responses.return_value = self.brief_responses
-        data_api_client.get_framework.return_value = api_stubs.framework(
+    def setup_method(self, method):
+        super(AbstractViewBriefResponsesPage, self).setup_method(method)
+
+        self.data_api_client_patch = mock.patch('app.buyers.views.buyers.data_api_client')
+        self.data_api_client = self.data_api_client_patch.start()
+
+        self.data_api_client.get_framework.return_value = api_stubs.framework(
             slug='digital-outcomes-and-specialists',
             status='live',
             lots=[
@@ -1945,12 +1949,19 @@ class AbstractViewBriefResponsesPage(BaseApplicationTest):
         )
 
         brief_stub = api_stubs.brief(lot_slug="digital-outcomes")
-        brief_stub['briefs'].update({'publishedAt': '2017-01-21T12:00:00.000000Z'})
-        data_api_client.get_brief.return_value = brief_stub
+        brief_stub['briefs'].update({'publishedAt': self.brief_publishing_date})
+        self.data_api_client.get_brief.return_value = brief_stub
 
+        self.data_api_client.find_brief_responses.return_value = self.brief_responses
+
+    def teardown_method(self, method):
+        self.data_api_client_patch.stop()
+        super(AbstractViewBriefResponsesPage, self).teardown_method(method)
+
+    def test_page_shows_correct_content_when_eligible_responses(self):
         self.login_as_buyer()
         res = self.client.get(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1/responses"
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1234/responses"
         )
         page = res.get_data(as_text=True)
 
@@ -1962,65 +1973,37 @@ class AbstractViewBriefResponsesPage(BaseApplicationTest):
             "have already been told they were unsuccessful."
         ) in page
 
-    def test_page_does_not_pluralise_for_single_response(self, data_api_client):
-        data_api_client.find_brief_responses.return_value = {
+    def test_page_does_not_pluralise_for_single_response(self):
+        self.data_api_client.find_brief_responses.return_value = {
             "briefResponses": [self.brief_responses["briefResponses"][0]]
         }
-        data_api_client.get_framework.return_value = api_stubs.framework(
-            slug='digital-outcomes-and-specialists',
-            status='live',
-            lots=[
-                api_stubs.lot(slug='digital-outcomes', allows_brief=True),
-            ]
-        )
-
-        brief_stub = api_stubs.brief(lot_slug="digital-outcomes")
-        brief_stub['briefs'].update({'publishedAt': '2017-01-21T12:00:00.000000Z'})
-        data_api_client.get_brief.return_value = brief_stub
 
         self.login_as_buyer()
         res = self.client.get(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1/responses"
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1234/responses"
         )
         page = res.get_data(as_text=True)
         assert res.status_code == 200
         assert "1 supplier" in page
         assert "responded to your requirements and meets all your essential skills and experience." in page
 
-    def test_page_does_not_show_csv_download_link_if_brief_open(self, data_api_client):
-        data_api_client.find_brief_responses.return_value = self.brief_responses
-        data_api_client.get_framework.return_value = api_stubs.framework(
-            slug='digital-outcomes-and-specialists',
-            status='live',
-            lots=[
-                api_stubs.lot(slug='digital-outcomes', allows_brief=True),
-            ]
-        )
-        data_api_client.get_brief.return_value = api_stubs.brief(lot_slug="digital-outcomes", status='live')
-
+    def test_page_does_not_show_download_link_if_brief_open(self):
         self.login_as_buyer()
         res = self.client.get(
             "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1234/responses"
         )
         page = res.get_data(as_text=True)
         document = html.fromstring(page)
-        csv_link = document.xpath(
+        download_link = document.xpath(
             '//a[@href="/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1234/responses/download"]'  # noqa
         )
 
         assert res.status_code == 200
-        assert len(csv_link) == 0
+        assert len(download_link) == 0
         assert "The file will be available here once applications have closed." in page
 
-    def test_404_if_brief_does_not_belong_to_buyer(self, data_api_client):
-        data_api_client.get_framework.return_value = api_stubs.framework(
-            slug='digital-outcomes-and-specialists',
-            status='live',
-            lots=[
-                api_stubs.lot(slug='digital-outcomes', allows_brief=True),
-            ]
-        )
-        data_api_client.get_brief.return_value = api_stubs.brief(lot_slug="digital-outcomes", user_id=234)
+    def test_404_if_brief_does_not_belong_to_buyer(self):
+        self.data_api_client.get_brief.return_value = api_stubs.brief(lot_slug="digital-outcomes", user_id=234)
 
         self.login_as_buyer()
         res = self.client.get(
@@ -2029,15 +2012,14 @@ class AbstractViewBriefResponsesPage(BaseApplicationTest):
 
         assert res.status_code == 404
 
-    def test_404_if_lot_does_not_allow_brief(self, data_api_client):
-        data_api_client.get_framework.return_value = api_stubs.framework(
+    def test_404_if_lot_does_not_allow_brief(self):
+        self.data_api_client.get_framework.return_value = api_stubs.framework(
             slug='digital-outcomes-and-specialists',
             status='live',
             lots=[
                 api_stubs.lot(slug='digital-outcomes', allows_brief=False),
             ]
         )
-        data_api_client.get_brief.return_value = api_stubs.brief(lot_slug="digital-outcomes")
 
         self.login_as_buyer()
         res = self.client.get(
@@ -2047,7 +2029,6 @@ class AbstractViewBriefResponsesPage(BaseApplicationTest):
         assert res.status_code == 404
 
 
-@mock.patch("app.buyers.views.buyers.data_api_client")
 class TestViewBriefResponsesPageForLegacyBrief(AbstractViewBriefResponsesPage):
     brief_responses = {
         "briefResponses": [
@@ -2059,21 +2040,12 @@ class TestViewBriefResponsesPageForLegacyBrief(AbstractViewBriefResponsesPage):
         ]
     }
 
-    def test_page_shows_correct_message_for_legacy_brief_if_no_eligible_responses(self, data_api_client):
-        data_api_client.find_brief_responses.return_value = {
+    brief_publishing_date = '2016-01-21T12:00:00.000000Z'
+
+    def test_page_shows_correct_message_for_legacy_brief_if_no_eligible_responses(self):
+        self.data_api_client.find_brief_responses.return_value = {
             "briefResponses": [self.brief_responses["briefResponses"][1]]
         }
-        data_api_client.get_framework.return_value = api_stubs.framework(
-            slug='digital-outcomes-and-specialists',
-            status='live',
-            lots=[
-                api_stubs.lot(slug='digital-outcomes', allows_brief=True),
-            ]
-        )
-
-        brief_stub = api_stubs.brief(lot_slug="digital-outcomes")
-        brief_stub['briefs'].update({'publishedAt': '2016-01-21T12:00:00.000000Z'})
-        data_api_client.get_brief.return_value = brief_stub
 
         self.login_as_buyer()
         res = self.client.get(
@@ -2085,16 +2057,8 @@ class TestViewBriefResponsesPageForLegacyBrief(AbstractViewBriefResponsesPage):
         assert "No suppliers met your essential skills and experience requirements." in page
         assert "All the suppliers who applied have already been told they were unsuccessful." in page
 
-    def test_page_shows_csv_download_link_if_brief_closed(self, data_api_client):
-        data_api_client.find_brief_responses.return_value = self.brief_responses
-        data_api_client.get_framework.return_value = api_stubs.framework(
-            slug='digital-outcomes-and-specialists',
-            status='live',
-            lots=[
-                api_stubs.lot(slug='digital-outcomes', allows_brief=True),
-            ]
-        )
-        data_api_client.get_brief.return_value = api_stubs.brief(lot_slug="digital-outcomes", status='closed')
+    def test_page_shows_csv_download_link_if_brief_closed(self):
+        self.data_api_client.get_brief.return_value = api_stubs.brief(lot_slug="digital-outcomes", status='closed')
 
         self.login_as_buyer()
         res = self.client.get(
@@ -2110,7 +2074,6 @@ class TestViewBriefResponsesPageForLegacyBrief(AbstractViewBriefResponsesPage):
             "CSVdocument:Downloadsupplierresponsesto‘Ineedathingtodoathing’"
 
 
-@mock.patch("app.buyers.views.buyers.data_api_client")
 class TestViewBriefResponsesPageForNewFlowBrief(AbstractViewBriefResponsesPage):
     brief_responses = {
         "briefResponses": [
@@ -2119,21 +2082,12 @@ class TestViewBriefResponsesPageForNewFlowBrief(AbstractViewBriefResponsesPage):
         ]
     }
 
-    def test_page_shows_correct_message_for_no_responses(self, data_api_client):
-        data_api_client.find_brief_responses.return_value = {
+    brief_publishing_date = '2017-01-21T12:00:00.000000Z'
+
+    def test_page_shows_correct_message_for_no_responses(self):
+        self.data_api_client.find_brief_responses.return_value = {
             "briefResponses": []
         }
-        data_api_client.get_framework.return_value = api_stubs.framework(
-            slug='digital-outcomes-and-specialists',
-            status='live',
-            lots=[
-                api_stubs.lot(slug='digital-outcomes', allows_brief=True),
-            ]
-        )
-
-        brief_stub = api_stubs.brief(lot_slug="digital-outcomes")
-        brief_stub['briefs'].update({'publishedAt': '2017-01-21T12:00:00.000000Z'})
-        data_api_client.get_brief.return_value = brief_stub
 
         self.login_as_buyer()
         res = self.client.get(
@@ -2145,18 +2099,10 @@ class TestViewBriefResponsesPageForNewFlowBrief(AbstractViewBriefResponsesPage):
         assert "No suppliers met your essential skills and experience requirements." in page
         assert "All the suppliers who applied have already been told they were unsuccessful." not in page
 
-    def test_page_shows_ods_download_link_if_brief_closed(self, data_api_client):
-        data_api_client.find_brief_responses.return_value = self.brief_responses
-        data_api_client.get_framework.return_value = api_stubs.framework(
-            slug='digital-outcomes-and-specialists',
-            status='live',
-            lots=[
-                api_stubs.lot(slug='digital-outcomes', allows_brief=True),
-            ]
-        )
+    def test_page_shows_ods_download_link_if_brief_closed(self):
         brief_stub = api_stubs.brief(lot_slug="digital-outcomes", status='closed')
-        brief_stub['briefs'].update({'publishedAt': '2017-01-21T12:00:00.000000Z'})
-        data_api_client.get_brief.return_value = brief_stub
+        brief_stub['briefs'].update({'publishedAt': self.brief_publishing_date})
+        self.data_api_client.get_brief.return_value = brief_stub
 
         self.login_as_buyer()
         res = self.client.get(
