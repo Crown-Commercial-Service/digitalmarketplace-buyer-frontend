@@ -5,95 +5,192 @@
 {% block body_classes %}buyers-guide secondary-page{% endblock %}
 
 {% block main_content %}
-  {% if 'DM_FRAMEWORK' is active_feature %}
-    {% set framework_slug='digital-marketplace' %}
-  {% else %}
-    {% set framework_slug='digital-service-professionals' %}
-  {% endif %}
-  <h1>Selling through the Digital Marketplace</h1>
-  <p>
-  <strong>
-    New sellers - if you'd like to be part of the Digital Marketplace, register your interest by emailing <a href="mailto:marketplace@digital.gov.au">marketplace@digital.gov.au</a>.
-  </strong>
-  </p>
 
-  <h2>
-    Who can sell
-  </h2>
-
-  <p>
-    Currently, all sellers in the Marketplace are part of the Digital Service Professionals Panel. The panel was created through an open approach to market by the Digital Transformation Office. If you're interested in joining the Marketplace, or want to expand the services you already offer through the Marketplace, contact <a href="mailto:marketplace@digital.gov.au">marketplace@digital.gov.au</a> and we’ll let you know when you can apply to join.
-  </p>
-
-  <h2>
-    How to sell
-  </h2>
-
-  <p>
-    Government buyers publish <a href="{{ url_for('.list_opportunities', framework_slug=framework_slug) }}">opportunities</a> to the Marketplace by creating a brief for an individual specialist or a brief for a team to provide an outcome. As a seller you are encouraged to apply for any of these briefs if you have the skills, experience and availability required.
-  </p>
-
-  <p>
-    Check the <a href="{{ url_for('.list_opportunities', framework_slug=framework_slug) }}">opportunities</a> regularly as they’re only open for 1 or 2 weeks.
-  </p>
-
-  <h2>
-    How to apply for a brief
-  </h2>
-
-  <p>
-    When viewing the latest <a href="{{ url_for('.list_opportunities', framework_slug=framework_slug) }}">opportunities</a> if there are any that interest you, and you have the necessary skills and availability, select ‘Start application’ and follow the prompts to complete your application. When applying for an individual specialist brief, the quote for your day rate can’t exceed the price you have agreed to for the Digital Service Professionals Panel.
-  </p>
-
-  <p>
-    When applying, you’ll be asked whether you have the essential and nice-to-have skills and experience specified on that brief. You must have all essential skills and experience to apply for the brief.
-  </p>
-
-  <p>
-    If the brief is for an individual specialist, you also need to be approved to offer the capability that’s required in the brief, you can check the your approved capabilities by viewing your business in the <a href="{{ url_for('main.supplier_search') }}">seller catalogue</a>.
-  </p>
-
-  <h2>
-    Asking questions
-  </h2>
-
-  <p>
-    If you have any questions about a brief, you can ask them by selecting sign in to ask a question’ and posting your question as directed. Your question will then be emailed by the Marketplace to the buyer to answer. Your question and the buyer’s answer will then be posted on the brief by the buyer.
-  </p>
-
-  <h2>
-    Question and answer sessions
-  </h2>
-
-  <p>
-    Buyers may also offer a question and answer session for potential sellers. You’ll need to sign in to view the details of how to join a question and answer session.
-  </p>
-
-  <h2>
-    What's next
-  </h2>
-
-  <p>
-    After the brief closes you will be informed by the buyer whether or not you have been shortlisted.
-  </p>
-  <p>
-    Shortlisted sellers are then invited into the evaluation stage to select the successful seller. The buyer will provide details of the evaluation if you’re successfully shortlisted.
-  </p>
-
-  <h2>
-    Accessing the Marketplace
-  </h2>
-  <p>
-    All sellers in the Marketplace will be provided with the details to login to the Marketplace. You'll also be able to add additional contributors so other people in your company can access your account.
-  </p>
-  <p>
-    If you have any difficulties logging into the Marketplace, contact the support desk by emailing <a href="mailto:marketplace@digital.gov.au">marketplace@digital.gov.au</a>.
-  </p>
-  <h2>
-    Contact us
-  </h2>
-  <p>
-    The Digital Marketplace is an agile development in its beta stage. This means the site will evolve over time in response to user needs. If you have any questions, feedback or would like to be involved in user research, email us at <a href="mailto:marketplace@digital.gov.au">marketplace@digital.gov.au</a>.
-  </p>
+<p><strong>Request for Proposal </strong></p>
+<p><strong></strong></p>
+<p>This is a Request for Proposal (RFP) for digital businesses to join the Digital Marketplace Panel.</p>
+<p>It is issued by the Commonwealth of Australia as represented by <br />the Digital Transformation Agency. ABN 96 257 979 159 (DTA)</p>
+<p>By completing a seller application you are automatically responding to an open approach to market, whose terms and conditions, like other government tenders, are publicly available.</p>
+<p><a href="https://marketplace.service.gov.au/become-a-seller">New sellers &mdash; apply here</a></p>
+<p><a href="https://marketplace.service.gov.au/sellers/update">Existing sellers &mdash; apply here</a> (Members of the Digital Service Professionals Panel)</p>
+<p>Or apply through the Digital Marketplace website: <br />https://marketplace.service.gov.au/</p>
+<p><strong></strong></p>
+<p><strong></strong></p>
+<p><strong></strong></p>
+<ol>
+  <li><strong> Introduction</strong></li>
+</ol>
+<p><strong></strong></p>
+<p><strong>What is the Digital Marketplace?</strong></p>
+<p><strong></strong></p>
+<p>The Digital Marketplace is an online procurement platform that makes it easier for all levels of government and digital businesses to work together. </p>
+<p><strong></strong></p>
+<p>The Digital Marketplace is funded as part of the National Innovation and Science Agenda and is being delivered by the Digital Transformation Agency (&ldquo;we&rdquo; and &ldquo;us&rdquo; in this document).</p>
+<p><strong></strong></p>
+<p>There are 2 types of <strong>sellers</strong> in the Digital Marketplace: <br /><br /></p>
+<ol>
+  <li><strong>Registered sellers</strong> have a <strong>seller</strong> profile, visible to buyers, on the Digital Marketplace. They can view opportunities but because they are not panel members cannot apply for them. </li>
+  <li><strong>Active sellers</strong> are panel members and have been fully assessed for 1 or more <strong>areas of expertise</strong> and can apply for opportunities in those areas. </li>
+</ol>
+<p><strong></strong></p>
+<p>To join the Digital Marketplace as a <strong>seller</strong>, <strong>you</strong> first apply to become a <strong>registered seller</strong>. As a <strong>registered seller </strong>if <strong>you</strong> express interest in an opportunity, <strong>your</strong> expertise is assessed. If successful in the assessment, <strong>you</strong> become an <strong>active seller</strong> for that <strong>area of expertise</strong>. Once <strong>you</strong> are an <strong>active seller</strong> <strong>you</strong> can respond to opportunities in <strong>your</strong> assessed <strong>areas of expertise.</strong></p>
+<p><strong></strong></p>
+<p>We are not responsible for any costs or expenses incurred by any <strong>seller </strong>or potential<strong> seller </strong>for participation in the Digital Marketplace. </p>
+<p><br />Activity on the Digital Marketplace is covered by the <a href="https://marketplace.service.gov.au/terms-of-use">Terms of Use</a> and, for <strong>active sellers, </strong>the <a href="https://marketplace.service.gov.au/static/media/documents/digital-marketplace-master-agreement.pdf">Master Agreement</a>. </p>
+<p>Words in bold have the same meaning as they do in the <a href="https://marketplace.service.gov.au/static/media/documents/digital-marketplace-master-agreement.pdf">Master Agreement</a>.</p>
+<p><strong>A note on government panels</strong></p>
+<p>Panels are a mechanism for government <strong>buyers</strong> to do business with pre-qualified <strong>sellers</strong> without the need for an open tender on each occasion. <br /><br /></p>
+<p><strong>What areas of expertise are we seeking?</strong></p>
+<p>We are currently seeking <strong>sellers</strong> who can meet <strong>our</strong> assessment criteria in these digital <strong>areas of expertise</strong>:<br /></p>
+<ul>
+  <li>Strategy and policy</li>
+  <li>User research and design</li>
+  <li>Agile delivery and governance</li>
+  <li>Software engineering and development</li>
+  <li>Support and operations</li>
+  <li>Content and publishing</li>
+  <li>Change, training and transformation</li>
+  <li>Marketing, communications and engagement</li>
+  <li>Cyber security</li>
+  <li>Data science</li>
+  <li>Emerging technologies</li>
+</ul>
+<p><strong><strong><br /><br /></strong></strong></p>
+<p>In addition, we are seeking: </p>
+<ul>
+  <li>recruiters who wish to provide candidates with digital expertise </li>
+  <li><strong>sellers</strong> who wish to offer digital software products </li>
+</ul>
+<p>At this point the functionality for digital software products is limited to a catalogue listing. However, in coming months the functionality will evolve in response to the needs of <strong>buyers</strong> and <strong>sellers</strong>. <br /><br /></p>
+<ol start="2">
+  <li><strong> Becoming a registered seller</strong></li>
+</ol>
+<p><strong></strong></p>
+<p>To become a <strong>registered seller</strong> on the Digital Marketplace simply click on the &lsquo;join the Marketplace&rsquo; link at the top of any page on Digital Marketplace or <a href="https://marketplace.service.gov.au/signup">via this link</a>. </p>
+<p><strong>You</strong> will be asked to provide information about <strong>your</strong> business, and case studies, references and supporting documentation to demonstrate expertise in <strong>your</strong> chosen <strong>areas of expertise</strong>. <strong>You</strong> will also be asked to agree to the Digital Marketplace <a href="https://marketplace.service.gov.au/static/media/documents/digital-marketplace-master-agreement.pdf">Master Agreement</a> which will form the basis of any contracts <strong>you</strong> may be awarded. </p>
+<p><strong>We</strong> welcome new <strong>sellers</strong> on the Digital Marketplace and will complete <strong>your</strong> initial assessment promptly. Once <strong>we</strong> complete an initial assessment, <strong>your</strong> <strong>seller</strong> profile will be listed on the Digital Marketplace. </p>
+<p><strong></strong></p>
+<p>As a <strong>registered seller</strong>, Digital Marketplace visitors will be able to see <strong>your</strong> summary information, including <strong>your</strong> name, business summary, the services <strong>you</strong> offer, and badges that identify <strong>your</strong> unique characteristics (for example, Indigenous business). Only <strong>registered buyers</strong> will be able to see and search for more detailed information about <strong>you</strong>. </p>
+<p><strong></strong></p>
+<ol start="3">
+  <li><strong> Becoming an active seller</strong></li>
+</ol>
+<p><br />To become an <strong>active seller</strong> <strong>you</strong> must already be a <strong>registered seller</strong>, and then express interest in a current opportunity published by a <strong>buyer</strong> in an <strong>area of expertise</strong> for which <strong>you</strong> are a <strong>registered seller</strong>. This will trigger an assessment against the relevant <strong>areas of expertise</strong>. The assessment includes:<br /><br /></p>
+<ul>
+  <li>Reviewing <strong>your</strong> case studies against the assessment criteria for the <strong>area of expertise</strong></li>
+  <li>Confirming <strong>your</strong> references</li>
+</ul>
+<ul>
+  <li>Checking <strong>your</strong> corporate documentation and disclosures</li>
+</ul>
+<p><strong></strong></p>
+<p><strong>Your</strong> assessment may also take into account:<br /><br /></p>
+<ul>
+  <li>Tools, methodologies and technologies, where relevant for the <strong>area of expertise</strong></li>
+  <li>Risks not considered in other assessment criteria</li>
+  <li>Pricing (where relevant)</li>
+</ul>
+<p><strong></strong></p>
+<p>Please note, <strong>you</strong> cannot become an <strong>active seller </strong>until a minimum of 25 days have passed after this RFP is published. This is to meet the requirements of the Commonwealth Procurement Rules.</p>
+<p><strong></strong></p>
+<ol start="4">
+  <li><strong> Assessment criteria </strong><strong><br /></strong><strong><br /></strong>Assessments will be conducted according to the <a href="https://marketplace.service.gov.au/assessment-criteria">assessment criteria</a> published on the Digital Marketplace.</li>
+  <li><strong> Adding additional areas of expertise</strong></li>
+</ol>
+<p><strong>You</strong> can offer additional <strong>areas of expertise</strong> at any time by applying to do so through the Digital Marketplace. </p>
+<p><strong></strong></p>
+<ol start="6">
+  <li><strong> Remember to apply early</strong></li>
+</ol>
+<p><strong></strong></p>
+<p><strong>Your</strong> assessment against an <strong>area of expertise</strong> is triggered when <strong>you</strong> express an interest in an opportunity requiring that <strong>area of expertise</strong>. Express <strong>your</strong> interest early! <strong>We</strong> will use reasonable endeavours to complete the assessment in a timeframe so that <strong>you</strong> can apply for the opportunity. </p>
+<p><strong></strong></p>
+<p>If <strong>you</strong> are still being assessed when the opportunity closes <strong>you</strong> won&rsquo;t be able to apply for it. However, the assessment will continue to completion so <strong>you</strong> can apply for future opportunities in that <strong>area of expertise</strong>, if <strong>you</strong> are successful in the assessment. </p>
+<p><strong></strong></p>
+<ol start="7">
+  <li><strong> Unsuccessful assessments</strong></li>
+</ol>
+<p><strong></strong></p>
+<p>If <strong>you</strong> are unsuccessful, <strong>you</strong> can request a verbal debrief from <strong>us</strong>. By updating <strong>your</strong> seller profile to address the feedback, when <strong>you</strong> express interest in another opportunity <strong>you</strong> will be reassessed. </p>
+<p><strong></strong></p>
+<ol start="8">
+  <li><strong> Existing sellers</strong></li>
+</ol>
+<p><strong></strong></p>
+<p>If <strong>you</strong> are a current member of the Digital Service Professionals Panel, <strong>your</strong> current roles have been mapped to the equivalent <strong>areas of expertise</strong> in the new panel and no further assessment is required. To finalise <strong>your </strong>membership of the new Digital Marketplace Panel, all <strong>you</strong> need to do is review and update <strong>your</strong> seller profile information and click to accept the Master Agreement.</p>
+<p><strong></strong></p>
+<p>The existing Digital Service Professionals Panel will cease to operate soon after the Digital Marketplace Panel is established. During the transition from the Digital Service Professionals Panel to the Digital Marketplace Panel, <strong>work orders</strong> that have not been completed will continue to completion under the panel that they commenced.</p>
+<p><strong></strong></p>
+<p><strong>You</strong> can apply at any time to offer additional <strong>areas of expertise </strong>through the Digital Marketplace. The assessment process will be the same as that for new <strong>sellers</strong>.</p>
+<p><strong></strong></p>
+<ol start="9">
+  <li><strong> Joining the Digital Marketplace</strong></li>
+</ol>
+<p><strong></strong></p>
+<p>When <strong>you</strong> register on the Digital Marketplace <strong>you</strong> will be asked to provide information to become a <strong>registered seller.</strong></p>
+<p><strong></strong></p>
+<p><strong>We</strong> may independently validate the information <strong>you</strong> provide, including contacting <strong>your</strong> references. <strong>We</strong> may use any information <strong>we</strong> obtain to inform the assessment process. <strong>We</strong> may also ask <strong>you</strong> additional questions or seek more information about <strong>your</strong> business from other sources, and perform any additional security, probity and financial checks <strong>we</strong> consider are necessary. Delays supplying any additional information <strong>we</strong> require from <strong>you</strong> may delay the overall assessment. </p>
+<p><strong></strong></p>
+<p>If information <strong>you</strong> supply is found to be false, inaccurate or misleading, <strong>your</strong> Digital Marketplace account may be suspended or terminated, or <strong>you</strong> may be disqualified from the Digital Marketplace. </p>
+<p><strong></strong></p>
+<p>As part of the process, <strong>you</strong> will receive notification emails that an assessment is underway, and another to confirm the assessment&rsquo;s outcome. If <strong>you</strong> pass the assessment, <strong>you</strong> are a member of the Digital Marketplace and the Master Agreement is in effect. </p>
+<p><strong></strong></p>
+<ol>
+  <li><strong> This Request for Proposal and AusTender</strong></li>
+</ol>
+<p><strong></strong></p>
+<p>The invitation to join the Digital Marketplace panel will remain open until <strong>we</strong> remove this RFP from AusTender. <strong>You</strong> may apply to join at any time.</p>
+<p><strong></strong></p>
+<p>This RFP may be updated when new <strong>areas of expertise</strong> are needed on the panel, or for other reasons. <strong>We</strong> will alert <strong>sellers</strong> of any changes through the Digital Marketplace and via notices on AusTender.</p>
+<p><strong></strong></p>
+<p><a href="https://www.tenders.gov.au/">AusTender</a> is the federal government&rsquo;s procurement information system. Access to and use of AusTender is subject to its <a href="https://www.tenders.gov.au/?event=public.termsOfUse">terms and conditions</a>. </p>
+<p><strong></strong></p>
+<p>The AusTender Help Desk is available during Canberra working hours for assistance on t: 1-300-651-698 or e: tenders@finance.gov.au.</p>
+<p><strong></strong></p>
+<ol>
+  <li><strong> The Master Agreement </strong></li>
+</ol>
+<p><strong></strong></p>
+<p>The legal terms and conditions underpinning the Digital Marketplace Panel take the form of a Master Agreement. <strong>You</strong> are required to accept these terms without alteration as part of <strong>your </strong>online application to become a <strong>seller</strong> on the Digital Marketplace. </p>
+<p><strong></strong></p>
+<p>All work awarded to Digital Marketplace <strong>sellers</strong> will be on the basis of the Master Agreement. Each award will form a separate contract between the government <strong>buyer</strong> and the successful <strong>seller</strong>. This is called a<strong> work order </strong>and it will contain specific details of the work to be provided including the cost. More complex awards, and &lsquo;as-a-service&rsquo; awards may require additional terms and conditions, and these will be documented in the <strong>work order</strong>. The Master Agreement allows for these additions. </p>
+<p><strong></strong></p>
+<ol start="2">
+  <li><strong> Rights we reserve</strong></li>
+</ol>
+<p><strong></strong></p>
+<p><strong>Our</strong> goal is to make the Digital Marketplace and its processes transparent and simple for the mutual benefit of government and digital businesses. <strong>We</strong> do however need to reserve basic rights in addition to those <strong>we</strong> set out elsewhere in this document. </p>
+<p><strong></strong></p>
+<p><strong>We</strong> reserve the right to: </p>
+<p><strong></strong></p>
+<ul>
+  <li>Add or remove <strong>sellers</strong> from the Digital Marketplace.</li>
+  <li>Make changes to the way content is displayed on the Digital Marketplace.</li>
+  <li>Determine the size and composition of the Digital Marketplace Panel. </li>
+  <li>Add, remove or amend any <strong>areas of expertise</strong>.</li>
+  <li>Publicise the Digital Marketplace, and this invitation, widely to <strong>sellers</strong>, their representative bodies and others.</li>
+  <li>Publish outcomes of opportunities in line with the provisions of the <a href="http://standard.open-contracting.org/latest/en/">Open Contracting Data Standard</a>. </li>
+  <li>Change the registration and panel application processes.</li>
+</ul>
+<ul>
+  <li>Respond to and publish answers to questions from <strong>sellers</strong>.</li>
+  <li>Require additional information from any <strong>seller</strong>.</li>
+</ul>
+<ul>
+  <li>Publish summary or detailed information to different Digital Marketplace stakeholders and audiences.</li>
+  <li>Publish data and commentary about activity in the Digital Marketplace.</li>
+  <li>Amend, clarify or withdraw all or part of the documentation at any time.</li>
+  <li>Send notifications to <strong>buyers</strong> and <strong>sellers</strong> on the Digital Marketplace via email or other means.</li>
+  <li>Use any information obtained through the Digital Marketplace to design an enhanced or new Digital Marketplace.</li>
+  <li>Use additional information in the assessment of offers, including references from third parties, whether nominated by the <strong>seller</strong> or not.</li>
+  <li>Not consider a <strong>seller&rsquo;s</strong> offer if the <strong>seller</strong> becomes insolvent or subject to administration of its affairs or if the offer is incomplete, false or misleading.</li>
+</ul>
+<p><strong></strong></p>
+<ol start="3">
+  <li><strong> Questions and feedback</strong></li>
+</ol>
+<p><strong></strong></p>
+<p>If you have any questions or feedback about this invitation to be part of the Digital Marketplace Panel, please email us at marketplace@digital.gov.au. </p>
+<p><strong><br /><br /><br /></strong></p>
 
 {% endblock %}
