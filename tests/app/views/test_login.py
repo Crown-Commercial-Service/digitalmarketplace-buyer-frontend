@@ -547,14 +547,6 @@ class TestBuyerSignupForm(BaseApplicationTest):
         'email_address': 'me@test.gov.au',
     }
 
-    def test_form_loads(self):
-        res = self.client.get(self.url_for('main.buyer_signup'))
-
-        assert res.status_code == 200
-
-        data = res.get_data(as_text=True)
-        assert '<form' in data
-
     def post_form(self, **kwargs):
         data = dict(self.complete_signup_request)
         data.update(**kwargs)

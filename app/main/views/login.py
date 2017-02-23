@@ -246,9 +246,7 @@ def submit_single_signup():
 
 @main.route('/buyers/signup', methods=['GET'])
 def buyer_signup():
-    form = auth_forms.BuyerSignupForm()
-
-    return render_template_with_csrf('auth/buyer-signup.html', form=form)
+    return redirect('/signup')
 
 
 @main.route('/buyers/signup', methods=['POST'])
