@@ -39,7 +39,7 @@
                 <div class="validation-wrapper">
                     {% endif %}
                     <div class="question" id="{{ form.name.name }}">
-                        {{ form.name.label(class="question-heading") }}
+                        {{ form.name.label(class="question-heading-with-hint") }}
                         <p class="hint">
                             Enter the name to be referred to on the Digital Marketplace
                         </p>
@@ -58,7 +58,7 @@
                     <div class="validation-wrapper">
                 {% endif %}
                     <div class="question" id="{{ form.phone_number.name }}">
-                        {{ form.phone_number.label(class="question-heading") }}
+                        {{ form.phone_number.label(class="question-heading-with-hint") }}
                         <p class="hint">
                           If there are any urgent problems with your requirements, we need your phone number so the support team can help you fix them quickly.
                         </p>
@@ -77,7 +77,7 @@
                     <div class="validation-wrapper">
                 {% endif %}
                     <div class="question" id="{{ form.password.name }}">
-                        {{ form.password.label(class="question-heading") }}
+                        {{ form.password.label(class="question-heading-with-hint") }}
                         <p class="hint">
                           Must be between 10 and 50 characters
                         </p>

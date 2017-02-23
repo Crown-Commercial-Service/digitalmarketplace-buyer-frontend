@@ -4,7 +4,10 @@
 
     if (!GOVUK.SelectionButtons) return;
 
-    new GOVUK.SelectionButtons('.selection-button input');
+    new GOVUK.SelectionButtons('.selection-button input', {
+      'focusedClass' : 'selection-button-focused',
+      'selectedClass' : 'selection-button-selected'
+    });
 
   };
 
