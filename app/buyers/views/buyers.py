@@ -298,19 +298,20 @@ def view_brief_responses(framework_slug, lot_slug, brief_id):
 
     brief_responses = data_api_client.find_brief_responses(brief_id)['briefResponses']
 
-    met = None
+    brief_responses_require_evidence = (
+        datetime.strptime(current_app.config['FEATURE_FLAGS_NEW_SUPPLIER_FLOW'], "%Y-%m-%d")
+        <= datetime.strptime(brief['publishedAt'][0:10], "%Y-%m-%d")
+    )
 
     counter = Counter()
 
     for response in brief_responses:
-        met = response.get('essentialRequirementsMet', None)
-
         counter[all(response['essentialRequirements'])] += 1
 
     return render_template(
         "buyers/brief_responses.html",
         response_counts={"failed": counter[False], "eligible": counter[True]},
-        ods=met is not None,  # will be None for legacy responses
+        brief_responses_require_evidence=brief_responses_require_evidence,
         brief=brief
     ), 200
 
