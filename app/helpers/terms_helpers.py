@@ -7,6 +7,7 @@ from flask import current_app
 from flask_login import current_user
 
 from dmutils import terms_of_use
+import pendulum
 
 
 TERMS_DIR = 'content/terms-of-use/'
@@ -18,7 +19,7 @@ def get_current_terms_version():
 
 def check_terms_acceptance():
     current_version = get_current_terms_version()
-    needs_update = current_user.is_authenticated and current_user.terms_accepted_at < current_version.date
+    needs_update = current_user.is_authenticated and current_user.terms_accepted_at < current_version.datetime
     terms_of_use.set_session_flag(needs_update)
 
 
@@ -28,9 +29,7 @@ class TermsVersion(object):
         if not filename.endswith('.html'):
             raise ValueError()
         timestamp = filename[:-5]
-        tz = pytz.timezone(application.config['DM_TIMEZONE'])
-        date = datetime.strptime(timestamp, '%Y-%m-%d %H:%M')
-        self.date = date.replace(tzinfo=tz)
+        self.datetime = pendulum.parse(timestamp, tz=application.config['DM_TIMEZONE'])
         self.template_file = os.path.join(TERMS_DIR, filename)
 
 
@@ -63,4 +62,4 @@ class TermsManager(object):
         if not self.versions:
             raise LookupError('No valid terms of use found.')
 
-        self.current_version = max(self.versions, key=lambda v: v.date)
+        self.current_version = max(self.versions, key=lambda v: v.datetime)

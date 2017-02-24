@@ -15,6 +15,7 @@ from mock import patch
 from werkzeug.http import parse_cookie
 
 from dmutils.formats import DATETIME_FORMAT
+import pendulum
 
 
 class BaseApplicationTest(object):
@@ -38,15 +39,15 @@ class BaseApplicationTest(object):
 
     @staticmethod
     def user(id, email_address, supplier_code, supplier_name, name, is_token_valid=True, locked=False, active=True,
-             role='buyer', terms_accepted_date=None):
+             role='buyer', terms_accepted_at=None):
 
-        now = datetime.utcnow()
+        now = pendulum.now('UTC')
 
         hours_offset = -1 if is_token_valid else 1
         password_changed_date = now + timedelta(hours=hours_offset)
 
-        if terms_accepted_date is None:
-            terms_accepted_date = now
+        if terms_accepted_at is None:
+            terms_accepted_at = now
 
         user = {
             "id": id,
@@ -55,8 +56,8 @@ class BaseApplicationTest(object):
             "role": role,
             "locked": locked,
             'active': active,
-            'passwordChangedAt': password_changed_date.strftime(DATETIME_FORMAT),
-            'termsAcceptedAt': terms_accepted_date.strftime(DATETIME_FORMAT),
+            'passwordChangedAt': password_changed_date.to_iso8601_string(),
+            'termsAcceptedAt': terms_accepted_at.to_iso8601_string()
         }
 
         if supplier_code:
@@ -181,7 +182,7 @@ class BaseApplicationTest(object):
             login_api_client.authenticate_user.assert_called_once_with(
                 "valid@email.com", "1234567890")
 
-    def login_as_buyer(self, user_id=123, terms_accepted_date=None):
+    def login_as_buyer(self, user_id=123, terms_accepted_at=None):
         with patch('app.main.views.login.data_api_client') as login_api_client:
             user = self.user(
                 user_id,
@@ -189,7 +190,7 @@ class BaseApplicationTest(object):
                 None,
                 None,
                 'Some Buyer',
-                terms_accepted_date=terms_accepted_date,
+                terms_accepted_at=terms_accepted_at,
             )
             login_api_client.authenticate_user.return_value = user
 

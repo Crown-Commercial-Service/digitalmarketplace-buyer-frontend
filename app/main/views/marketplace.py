@@ -71,7 +71,7 @@ def terms_of_use():
     return render_template(
         'content/terms-of-use/_template.html',
         terms_content=terms.template_file,
-        update_time=terms.date)
+        update_time=terms.datetime.date())
 
 
 @main.route('/<framework_slug>/opportunities/<brief_id>')

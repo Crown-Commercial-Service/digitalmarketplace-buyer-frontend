@@ -1,5 +1,7 @@
 from datetime import timedelta
 import mock
+from datetime import date, time, datetime
+import pendulum
 
 from app.helpers.terms_helpers import TermsManager
 
@@ -23,8 +25,9 @@ class TestTermsManager(BaseApplicationTest):
 
     def assert_sane(self):
         assert len(self.terms_manager.versions) > 0
-        dates = [v.date for v in self.terms_manager.versions]
-        assert all(self.terms_manager.current_version.date >= d for d in dates)
+        dates = [v.datetime for v in self.terms_manager.versions]
+
+        assert all(self.terms_manager.current_version.datetime >= d for d in dates)
         assert len(set(dates)) == len(dates)
 
     def test_real_terms_data_is_valid(self):
@@ -59,7 +62,7 @@ class TestTermsManager(BaseApplicationTest):
 class TestAcceptanceCheck(BaseApplicationTest):
 
     versions = [
-        '2016-01-01 00:00.html',
+        '2016-01-01 01:23.html',
     ]
 
     def setup(self):
@@ -67,12 +70,17 @@ class TestAcceptanceCheck(BaseApplicationTest):
         self.terms_manager.load_versions(self.app, self.versions)
 
     def login(self, acceptance_stale):
+        midnight_sydney_time = datetime.combine(self.terms_manager.current_version.datetime, time(1, 23, 0))
+        dt = pendulum.instance(midnight_sydney_time, tz='Australia/Sydney')
+        dt = dt.in_timezone('UTC')
+
         if acceptance_stale:
-            offset = timedelta(days=-1)
+            offset = timedelta(seconds=-1)
         else:
-            offset = timedelta(days=1)
-        acceptance_date = self.terms_manager.current_version.date + offset
-        self.login_as_buyer(terms_accepted_date=acceptance_date)
+            offset = timedelta(seconds=1)
+
+        terms_accepted_at = (dt + offset)
+        self.login_as_buyer(terms_accepted_at=terms_accepted_at)
 
     def test_non_stale_user(self):
         self.login(acceptance_stale=False)
