@@ -63,6 +63,7 @@ class Config(object):
 
     # Feature Flags
     RAISE_ERROR_ON_MISSING_FEATURES = True
+    FEATURE_FLAGS_NEW_SUPPLIER_FLOW = False
 
     # LOGGING
     DM_LOG_LEVEL = 'DEBUG'
@@ -94,6 +95,8 @@ class Test(Config):
     SHARED_EMAIL_KEY = "KEY"
     SECRET_KEY = "KEY"
 
+    FEATURE_FLAGS_NEW_SUPPLIER_FLOW = enabled_since('2016-11-29')
+
 
 class Development(Config):
     DEBUG = True
@@ -109,6 +112,8 @@ class Development(Config):
     SECRET_KEY = "verySecretKey"
     SHARED_EMAIL_KEY = "very_secret"
 
+    FEATURE_FLAGS_NEW_SUPPLIER_FLOW = enabled_since('2016-11-29')
+
 
 class Live(Config):
     """Base config for deployed environments"""
@@ -118,15 +123,15 @@ class Live(Config):
 
 
 class Preview(Live):
-    pass
+    FEATURE_FLAGS_NEW_SUPPLIER_FLOW = enabled_since('2017-02-06')
 
 
 class Staging(Live):
-    pass
+    FEATURE_FLAGS_NEW_SUPPLIER_FLOW = enabled_since('2017-02-07')
 
 
 class Production(Live):
-    pass
+    FEATURE_FLAGS_NEW_SUPPLIER_FLOW = enabled_since('2017-02-08')
 
 
 configs = {

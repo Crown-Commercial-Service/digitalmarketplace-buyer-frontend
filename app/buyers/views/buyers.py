@@ -1,25 +1,37 @@
 # coding: utf-8
 from __future__ import unicode_literals
 import unicodecsv
+import inflection
+import sys
 
-from flask import abort, render_template, request, redirect, url_for, flash, Response
+from flask import abort, render_template, request, redirect, url_for, flash, Response, current_app
+from flask.views import View
 from flask_login import current_user
 
 from app import data_api_client
 from .. import buyers, content_loader
-from ...helpers.buyers_helpers import (
-    all_essentials_are_true, counts_for_failed_and_eligible_brief_responses,
+from ..helpers.buyers_helpers import (
     get_framework_and_lot, get_sorted_responses_for_brief, count_unanswered_questions,
     brief_can_be_edited, add_unanswered_counts_to_briefs, is_brief_correct,
     section_has_at_least_one_required_question
 )
 
+from ..helpers.ods import SpreadSheet
+
 from dmapiclient import HTTPError
 from dmutils.dates import get_publishing_dates
+from dmutils.formats import DATETIME_FORMAT
 from dmutils import csv_generator
+from datetime import datetime
+
+from odf.style import TextProperties, TableRowProperties, TableColumnProperties, TableCellProperties, FontFace
+
+from io import BytesIO
+
+from collections import Counter
 
 
-@buyers.route('/buyers')
+@buyers.route('')
 def buyer_dashboard():
     user_briefs = data_api_client.find_briefs(current_user.id).get('briefs', [])
     draft_briefs = add_unanswered_counts_to_briefs([brief for brief in user_briefs if brief['status'] == 'draft'],
@@ -35,11 +47,11 @@ def buyer_dashboard():
     )
 
 
-@buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/create', methods=['GET'])
+@buyers.route('/frameworks/<framework_slug>/requirements/<lot_slug>/create', methods=['GET'])
 def start_new_brief(framework_slug, lot_slug):
 
     framework, lot = get_framework_and_lot(framework_slug, lot_slug, data_api_client,
-                                           status='live', must_allow_brief=True)
+                                           allowed_statuses=['live'], must_allow_brief=True)
 
     content = content_loader.get_manifest(framework_slug, 'edit_brief').filter(
         {'lot': lot['slug']}
@@ -57,11 +69,11 @@ def start_new_brief(framework_slug, lot_slug):
     ), 200
 
 
-@buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/create', methods=['POST'])
+@buyers.route('/frameworks/<framework_slug>/requirements/<lot_slug>/create', methods=['POST'])
 def create_new_brief(framework_slug, lot_slug):
 
     framework, lot = get_framework_and_lot(framework_slug, lot_slug, data_api_client,
-                                           status='live', must_allow_brief=True)
+                                           allowed_statuses=['live'], must_allow_brief=True)
 
     content = content_loader.get_manifest(framework_slug, 'edit_brief').filter(
         {'lot': lot['slug']}
@@ -102,10 +114,15 @@ def create_new_brief(framework_slug, lot_slug):
                 brief_id=brief['id']))
 
 
-@buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>', methods=['GET'])
+@buyers.route('/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>', methods=['GET'])
 def view_brief_overview(framework_slug, lot_slug, brief_id):
     framework, lot = get_framework_and_lot(
-        framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
+        framework_slug,
+        lot_slug,
+        data_api_client,
+        allowed_statuses=['live', 'expired'],
+        must_allow_brief=True
+    )
     brief = data_api_client.get_brief(brief_id)["briefs"]
 
     if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id):
@@ -114,6 +131,10 @@ def view_brief_overview(framework_slug, lot_slug, brief_id):
     content = content_loader.get_manifest(brief['frameworkSlug'], 'edit_brief').filter({'lot': brief['lotSlug']})
     sections = content.summary(brief)
     delete_requested = True if request.args.get('delete_requested') else False
+
+    content_loader.load_messages(brief['frameworkSlug'], ['urls'])
+    call_off_contract_url = content_loader.get_message(brief['frameworkSlug'], 'urls', 'call_off_contract_url')
+    framework_agreement_url = content_loader.get_message(brief['frameworkSlug'], 'urls', 'framework_agreement_url')
 
     completed_sections = {}
     for section in sections:
@@ -137,12 +158,20 @@ def view_brief_overview(framework_slug, lot_slug, brief_id):
         completed_sections=completed_sections,
         step_sections=[section.step for section in sections if hasattr(section, 'step')],
         delete_requested=delete_requested,
+        call_off_contract_url=call_off_contract_url,
+        framework_agreement_url=framework_agreement_url,
     ), 200
 
 
-@buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/<section_slug>', methods=['GET'])
+@buyers.route('/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/<section_slug>', methods=['GET'])
 def view_brief_section_summary(framework_slug, lot_slug, brief_id, section_slug):
-    get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
+    get_framework_and_lot(
+        framework_slug,
+        lot_slug,
+        data_api_client,
+        allowed_statuses=['live', 'expired'],
+        must_allow_brief=True
+    )
     brief = data_api_client.get_brief(brief_id)["briefs"]
 
     if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id) or not brief_can_be_edited(brief):
@@ -163,10 +192,10 @@ def view_brief_section_summary(framework_slug, lot_slug, brief_id, section_slug)
 
 
 @buyers.route(
-    '/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/edit/<section_slug>/<question_id>',
+    '/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/edit/<section_slug>/<question_id>',
     methods=['GET'])
 def edit_brief_question(framework_slug, lot_slug, brief_id, section_slug, question_id):
-    get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
+    get_framework_and_lot(framework_slug, lot_slug, data_api_client, allowed_statuses=['live'], must_allow_brief=True)
     brief = data_api_client.get_brief(brief_id)["briefs"]
 
     if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id) or not brief_can_be_edited(brief):
@@ -192,10 +221,10 @@ def edit_brief_question(framework_slug, lot_slug, brief_id, section_slug, questi
 
 
 @buyers.route(
-    '/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/edit/<section_id>/<question_id>',
+    '/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/edit/<section_id>/<question_id>',
     methods=['POST'])
 def update_brief_submission(framework_slug, lot_slug, brief_id, section_id, question_id):
-    get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
+    get_framework_and_lot(framework_slug, lot_slug, data_api_client, allowed_statuses=['live'], must_allow_brief=True)
     brief = data_api_client.get_brief(brief_id)["briefs"]
 
     if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id) or not brief_can_be_edited(brief):
@@ -253,81 +282,275 @@ def update_brief_submission(framework_slug, lot_slug, brief_id, section_id, ques
     )
 
 
-@buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/responses', methods=['GET'])
+@buyers.route('/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/responses', methods=['GET'])
 def view_brief_responses(framework_slug, lot_slug, brief_id):
-    get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
+    get_framework_and_lot(
+        framework_slug,
+        lot_slug,
+        data_api_client,
+        allowed_statuses=['live', 'expired'],
+        must_allow_brief=True,
+    )
     brief = data_api_client.get_brief(brief_id)["briefs"]
 
     if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id):
         abort(404)
 
-    failed_count, eligible_count = counts_for_failed_and_eligible_brief_responses(brief["id"], data_api_client)
+    brief_responses = data_api_client.find_brief_responses(brief_id)['briefResponses']
+
+    brief_responses_require_evidence = (
+        datetime.strptime(current_app.config['FEATURE_FLAGS_NEW_SUPPLIER_FLOW'], "%Y-%m-%d")
+        <= datetime.strptime(brief['publishedAt'][0:10], "%Y-%m-%d")
+    )
+
+    counter = Counter()
+
+    for response in brief_responses:
+        counter[all(response['essentialRequirements'])] += 1
 
     return render_template(
         "buyers/brief_responses.html",
-        response_counts={"failed": failed_count, "eligible": eligible_count},
+        response_counts={"failed": counter[False], "eligible": counter[True]},
+        brief_responses_require_evidence=brief_responses_require_evidence,
         brief=brief
     ), 200
 
 
-@buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/responses/download',
-              methods=['GET'])
-def download_brief_responses(framework_slug, lot_slug, brief_id):
-    get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
-    brief = data_api_client.get_brief(brief_id)["briefs"]
+class DownloadBriefResponsesView(View):
+    def __init__(self, **kwargs):
+        self.data_api_client = kwargs.pop('data_api_client', data_api_client)
+        self.content_loader = kwargs.pop('content_loader', content_loader)
 
-    if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id):
-        abort(404)
+        super(View, self).__init__(**kwargs)
 
-    if brief['status'] != "closed":
-        abort(404)
+    def get_responses(self, brief):
+        return get_sorted_responses_for_brief(brief, self.data_api_client)
 
-    sorted_brief_responses = get_sorted_responses_for_brief(brief, data_api_client)
+    def get_context_data(self, **kwargs):
+        get_framework_and_lot(
+            kwargs['framework_slug'],
+            kwargs['lot_slug'],
+            self.data_api_client,
+            allowed_statuses=['live', 'expired'],
+            must_allow_brief=True,
+        )
 
-    content = content_loader.get_manifest(brief['frameworkSlug'], 'output_brief_response').filter(
-        {'lot': brief['lotSlug']}
-    )
-    section = content.get_section('view-response-to-requirements')
+        brief = self.data_api_client.get_brief(kwargs['brief_id'])["briefs"]
 
-    column_headings = []
-    question_key_sequence = []
-    boolean_list_questions = []
-    csv_rows = []
+        if not is_brief_correct(brief, kwargs['framework_slug'],
+                                kwargs['lot_slug'], current_user.id):
+            abort(404)
 
-    # Build header row from manifest and add it to the list of rows
-    for question in section.questions:
-        question_key_sequence.append(question.id)
-        if question['type'] == 'boolean_list' and brief.get(question.id):
-            column_headings.extend(brief[question.id])
-            boolean_list_questions.append(question.id)
-        else:
-            column_headings.append(question.name)
-    csv_rows.append(column_headings)
+        if brief['status'] != "closed":
+            abort(404)
 
-    # Add a row for each eligible response received
-    for brief_response in sorted_brief_responses:
-        if all_essentials_are_true(brief_response):
-            row = []
-            for key in question_key_sequence:
-                if key in boolean_list_questions:
-                    row.extend(brief_response.get(key))
+        text_type = str if sys.version_info[0] == 3 else unicode
+        filename = inflection.parameterize(text_type(brief['title']))
+
+        kwargs.update({
+            'brief': brief,
+            'responses': self.get_responses(brief),
+            'filename': 'supplier-responses-{0}'.format(filename),
+        })
+
+        return kwargs
+
+    def get_questions(self, framework_slug, lot_slug, manifest):
+        section = 'view-response-to-requirements'
+
+        result = self.content_loader.get_manifest(framework_slug, manifest)\
+                                    .filter({'lot': lot_slug})\
+                                    .get_section(section)
+
+        return result.questions if result else []
+
+    def create_csv_response(self, context=None):
+        column_headings = []
+        question_key_sequence = []
+        boolean_list_questions = []
+        csv_rows = []
+        brief = context['brief']
+
+        questions = self.get_questions(context['framework_slug'],
+                                       context['lot_slug'],
+                                       'legacy_output_brief_response')
+
+        # Build header row from manifest and add it to the list of rows
+        for question in questions:
+            question_key_sequence.append(question.id)
+            if question['type'] == 'boolean_list' and brief.get(question.id):
+                column_headings.extend(brief[question.id])
+                boolean_list_questions.append(question.id)
+            else:
+                column_headings.append(question.name)
+        csv_rows.append(column_headings)
+
+        # Add a row for each eligible response received
+        for brief_response in context['responses']:
+            if all(brief_response['essentialRequirements']):
+                row = []
+                for key in question_key_sequence:
+                    if key in boolean_list_questions:
+                        row.extend(brief_response.get(key))
+                    else:
+                        row.append(brief_response.get(key))
+                csv_rows.append(row)
+
+        return Response(
+            csv_generator.iter_csv(csv_rows),
+            mimetype='text/csv',
+            headers={
+                "Content-Disposition": (
+                    "attachment;filename=responses-to-requirements-{}.csv"
+                ).format(brief['id']),
+                "Content-Type": "text/csv; header=present"
+            }
+        ), 200
+
+    def generate_ods(self, brief, responses):
+        doc = SpreadSheet()
+
+        doc.add_font(FontFace(name="Arial", fontfamily="Arial"))
+
+        doc.add_style("ce1", "table-cell", (
+            TableCellProperties(wrapoption="wrap", verticalalign="top"),
+            TextProperties(fontfamily="Arial", fontnameasian="Arial",
+                           fontnamecomplex="Arial", fontsize="11pt"),
+        ), parentstylename="Default")
+
+        doc.add_style("ce2", "table-cell", (
+            TableCellProperties(wrapoption="wrap", verticalalign="top"),
+            TextProperties(fontfamily="Arial", fontnameasian="Arial",
+                           fontnamecomplex="Arial", fontsize="11pt",
+                           fontweight="bold"),
+        ), parentstylename="Default")
+
+        doc.add_style("ce3", "table-cell", (
+            TableCellProperties(wrapoption="wrap", verticalalign="top"),
+            TextProperties(fontfamily="Arial", fontnameasian="Arial",
+                           fontnamecomplex="Arial", fontsize="11pt"),
+        ))
+
+        doc.add_style("co1", "table-column", (
+            TableColumnProperties(columnwidth="150pt", breakbefore="auto"),
+        ))
+
+        doc.add_style("co2", "table-column", (
+            TableColumnProperties(columnwidth="300pt", breakbefore="auto"),
+        ))
+
+        doc.add_style("ro1", "table-row", (
+            TableRowProperties(rowheight="30pt", breakbefore="auto",
+                               useoptimalrowheight="false"),
+        ))
+
+        doc.add_style("ro2", "table-row", (
+            TableRowProperties(rowheight="30pt", breakbefore="auto",
+                               useoptimalrowheight="true"),
+        ))
+
+        sheet = doc.sheet("Supplier evidence")
+
+        questions = self.get_questions(brief['frameworkSlug'],
+                                       brief['lotSlug'],
+                                       'output_brief_response')
+
+        # two intro columns for boolean and dynamic lists
+        sheet.create_column(stylename="co1", defaultcellstylename="ce1")
+        sheet.create_column(stylename="co1", defaultcellstylename="ce1")
+
+        # HEADER
+        row = sheet.create_row("header", stylename="ro1")
+        row.write_cell(brief['title'], stylename="ce2",
+                       numbercolumnsspanned=str(len(responses) + 2))
+
+        # QUESTIONS
+        for question in questions:
+            if question.type in ('boolean_list', 'dynamic_list'):
+                length = len(brief[question.id])
+
+                for i, requirement in enumerate(brief[question.id]):
+                    row = sheet.create_row("{0}[{1}]".format(question.id, i))
+                    if i == 0:
+                        row.write_cell(question.name, stylename="ce2",
+                                       numberrowsspanned=str(length))
+                    else:
+                        row.write_covered_cell()
+                    row.write_cell(requirement, stylename="ce3")
+            else:
+                row = sheet.create_row(question.id, stylename="ro2")
+                row.write_cell(question.name, stylename="ce2",
+                               numbercolumnsspanned="2")
+                row.write_covered_cell()
+
+        # RESPONSES
+        for response in responses:
+            sheet.create_column(stylename="co2", defaultcellstylename="ce1")
+
+            for question in questions:
+                if question.type == 'dynamic_list':
+                    if not brief.get(question.id):
+                        continue
+
+                    for i, item in enumerate(response[question.id]):
+                        row = sheet.get_row("{0}[{1}]".format(question.id, i))
+                        # TODO this is stupid, fix it (key should not be hard coded)
+                        row.write_cell(item.get('evidence') or '',
+                                       stylename="ce1")
+
+                elif question.type == 'boolean_list' and brief.get(question.id):
+                    if not brief.get(question.id):
+                        continue
+
+                    for i, item in enumerate(response[question.id]):
+                        row = sheet.get_row("{0}[{1}]".format(question.id, i))
+                        row.write_cell(str(bool(item)).lower(),
+                                       stylename="ce1")
+
                 else:
-                    row.append(brief_response.get(key))
-            csv_rows.append(row)
+                    sheet.get_row(question.id).write_cell(response.get(question.id, ''),
+                                                          stylename="ce1")
 
-    return Response(
-        csv_generator.iter_csv(csv_rows),
-        mimetype='text/csv',
-        headers={
-            "Content-Disposition": "attachment;filename=responses-to-requirements-{}.csv".format(brief['id']),
-            "Content-Type": "text/csv; header=present"
-        }
-    ), 200
+        return doc
+
+    def create_ods_response(self, context=None):
+        buf = BytesIO()
+
+        self.generate_ods(context['brief'], context['responses']).save(buf)
+
+        return Response(
+            buf.getvalue(),
+            mimetype='application/vnd.oasis.opendocument.spreadsheet',
+            headers={
+                "Content-Disposition": (
+                    "attachment;filename={0}.ods"
+                ).format(context['filename']),
+                "Content-Type": "application/vnd.oasis.opendocument.spreadsheet"
+            }
+        ), 200
+
+    def create_response(self, context=None):
+        responses = context['responses']
+
+        if responses and 'essentialRequirementsMet' in responses[0]:
+            return self.create_ods_response(context)
+
+        return self.create_csv_response(context)
+
+    def dispatch_request(self, **kwargs):
+        context = self.get_context_data(**kwargs)
+
+        return self.create_response(context)
 
 
-@buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/publish', methods=['GET', 'POST'])
+buyers.add_url_rule('/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/responses/download',
+                    view_func=DownloadBriefResponsesView.as_view(str('download_brief_responses')),
+                    methods=['GET'])
+
+
+@buyers.route('/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/publish', methods=['GET', 'POST'])
 def publish_brief(framework_slug, lot_slug, brief_id):
-    get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
+    get_framework_and_lot(framework_slug, lot_slug, data_api_client, allowed_statuses=['live'], must_allow_brief=True)
     brief = data_api_client.get_brief(brief_id)["briefs"]
 
     if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id) or not brief_can_be_edited(brief):
@@ -377,9 +600,15 @@ def publish_brief(framework_slug, lot_slug, brief_id):
         ), 200
 
 
-@buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/timeline', methods=['GET'])
+@buyers.route('/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/timeline', methods=['GET'])
 def view_brief_timeline(framework_slug, lot_slug, brief_id):
-    get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
+    get_framework_and_lot(
+        framework_slug,
+        lot_slug,
+        data_api_client,
+        allowed_statuses=['live', 'expired'],
+        must_allow_brief=True
+    )
     brief = data_api_client.get_brief(brief_id)["briefs"]
     if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id) or brief.get('status') != 'live':
         abort(404)
@@ -395,9 +624,15 @@ def view_brief_timeline(framework_slug, lot_slug, brief_id):
     ), 200
 
 
-@buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/delete', methods=['POST'])
+@buyers.route('/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/delete', methods=['POST'])
 def delete_a_brief(framework_slug, lot_slug, brief_id):
-    get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
+    get_framework_and_lot(
+        framework_slug,
+        lot_slug,
+        data_api_client,
+        allowed_statuses=['live', 'expired'],
+        must_allow_brief=True
+    )
     brief = data_api_client.get_brief(brief_id)["briefs"]
 
     if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id) or not brief_can_be_edited(brief):
@@ -409,10 +644,16 @@ def delete_a_brief(framework_slug, lot_slug, brief_id):
 
 
 @buyers.route(
-    "/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/supplier-questions",
+    "/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/supplier-questions",
     methods=["GET"])
 def supplier_questions(framework_slug, lot_slug, brief_id):
-    get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
+    get_framework_and_lot(
+        framework_slug,
+        lot_slug,
+        data_api_client,
+        allowed_statuses=['live', 'expired'],
+        must_allow_brief=True
+    )
     brief = data_api_client.get_brief(brief_id)["briefs"]
 
     if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id):
@@ -433,10 +674,15 @@ def supplier_questions(framework_slug, lot_slug, brief_id):
 
 
 @buyers.route(
-    "/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/supplier-questions/answer-question",
+    "/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/supplier-questions/answer-question",
     methods=["GET", "POST"])
 def add_supplier_question(framework_slug, lot_slug, brief_id):
-    get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
+    get_framework_and_lot(
+        framework_slug,
+        lot_slug, data_api_client,
+        allowed_statuses=['live', 'expired'],
+        must_allow_brief=True
+    )
     brief = data_api_client.get_brief(brief_id)["briefs"]
 
     if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id):
@@ -445,7 +691,7 @@ def add_supplier_question(framework_slug, lot_slug, brief_id):
     if brief["status"] != "live":
         abort(404)
 
-    content = content_loader.get_manifest(brief['frameworkSlug'], "clarification_question")
+    content = content_loader.get_manifest(brief['frameworkSlug'], "clarification_question").filter({})
     section = content.get_section(content.get_next_editable_section_id())
     update_data = section.get_data(request.form)
 

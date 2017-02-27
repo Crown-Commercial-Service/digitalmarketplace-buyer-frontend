@@ -19,6 +19,7 @@ content_loader = ContentLoader('app/content')
 content_loader.load_manifest('g-cloud-6', 'services', 'search_filters')
 content_loader.load_manifest('g-cloud-6', 'services', 'display_service')
 content_loader.load_manifest('digital-outcomes-and-specialists', 'briefs', 'display_brief')
+content_loader.load_manifest('digital-outcomes-and-specialists-2', 'briefs', 'display_brief')
 
 
 def create_app(config_name):
@@ -36,10 +37,12 @@ def create_app(config_name):
     from .main import main as main_blueprint
     from .status import status as status_blueprint
     from .buyers import buyers as buyers_blueprint
+    from .buyers import dos as dos_blueprint
 
     application.register_blueprint(status_blueprint)
     application.register_blueprint(main_blueprint)
-    application.register_blueprint(buyers_blueprint)
+    application.register_blueprint(buyers_blueprint, url_prefix='/buyers')
+    application.register_blueprint(dos_blueprint, url_prefix='/buyers')
 
     login_manager.login_view = 'main.render_login'
     login_manager.login_message_category = "must_login"

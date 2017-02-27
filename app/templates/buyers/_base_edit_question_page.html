@@ -41,7 +41,7 @@
           {% else %}
             {% if question.question_advice %}
               <span class="question-advice">
-                {{ question.question_advice|markdown }}
+                {{ question.question_advice }}
               </span>
             {% endif %}
             {% for question in question.questions %}

@@ -52,6 +52,13 @@ ol.instruction-list-item-top li {
 }
 
 ol.steps {
+  @include bold-27;
+  padding-left: 1em; // 27px
+
+  @include media( $min-width: $site-width + (2 * (27px + $gutter) ) ) {
+    padding-left: 0;
+  }
+
   list-style: none;
   padding-left: 0;
 

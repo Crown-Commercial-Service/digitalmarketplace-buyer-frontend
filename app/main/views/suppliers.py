@@ -4,7 +4,7 @@ from app.main import main
 from flask import render_template, request, abort
 from app import data_api_client
 from dmapiclient import APIError
-from ...helpers.shared_helpers import parse_link
+from ..helpers.shared_helpers import parse_link
 import re
 
 try:

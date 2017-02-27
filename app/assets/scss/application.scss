@@ -1,5 +1,4 @@
 // GOVUK Front-end toolkit styles
-@import "_phase_banner.scss";
 @import "_grid_layout.scss";
 @import "_typography.scss";
 @import "_url-helpers.scss";
@@ -18,6 +17,7 @@ $path: "/static/images/";
 
 /* Blocks shared between multiple selectors */
 @import "shared_placeholders/_temporary-messages.scss";
+@import "shared_placeholders/_dm-typography.scss";
 
 // Digtial Marketplace Front-end toolkit styles
 @import "toolkit/_breadcrumb.scss";
@@ -25,12 +25,12 @@ $path: "/static/images/";
 @import "toolkit/_buttons.scss";
 @import "toolkit/_contact-details.scss";
 @import "toolkit/_document.scss";
-@import "toolkit/_framework-notice.scss";
 @import "toolkit/_grids.scss";
 @import "toolkit/_instruction-list.scss";
 @import "toolkit/_link-button.scss";
 @import "toolkit/_notification-banners.scss";
 @import "toolkit/_page-headings.scss";
+@import "toolkit/_phase-banner.scss";
 @import "toolkit/_secondary-action-link.scss";
 @import "toolkit/_service-id.scss";
 @import "toolkit/_temporary-message.scss";
@@ -67,55 +67,12 @@ $path: "/static/images/";
 @import "_supplier-a-to-z.scss";
 @import "_atoz_navigation.scss";
 @import "_error-pages.scss";
+@import "_requirements-page.scss";
 
 .return-to-top {
   display: block;
   @include core-19;
   margin: (1.5 * $gutter) 0 (2 * $gutter);
-}
-
-.marketplace-homepage-heading {
-
-  background-color: $govuk-blue;
-  width: 100%;
-  margin: -10px 0 40px;
-  padding: 0 0 20px;
-  color: white;
-
-  h1 {
-    @extend %site-width-container;
-    @include bold-48;
-    padding-top: 7px;
-    padding-bottom: 13px;
-  }
-
-  .phase-banner {
-    border-bottom: 0px;
-
-    .phase-tag {
-      margin-left: 3px;
-    }
-  }
-
-  .phase-banner p {
-    margin: -6px 0 10px;
-    color: white;
-
-    a, a:visited {
-        color: $white;
-      }
-
-    a:hover, a:active {
-      color: $light-blue-50;
-    }
-  }
-}
-
-.marketplace-homepage-subheading {
-
-  @include bold-27;
-  padding-bottom: 30px;
-
 }
 
 .marketplace-paragraph {
@@ -131,15 +88,6 @@ $path: "/static/images/";
 
 .padding-bottom-small {
   padding-bottom: 10px;
-}
-
-.instruction-list {
-  @include bold-27;
-  padding-left: 1em; // 27px
-
-  @include media( $min-width: $site-width + (2 * (27px + $gutter) ) ) {
-    padding-left: 0;
-  }
 }
 
 .break-link {

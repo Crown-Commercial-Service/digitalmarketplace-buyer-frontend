@@ -7,6 +7,18 @@ Frontend buyer application for the digital marketplace.
 
 - Python app, based on the [Flask framework](http://flask.pocoo.org/)
 
+## Quickstart
+
+Install [Virtualenv](https://virtualenv.pypa.io/en/latest/)
+```
+sudo easy_install virtualenv
+```
+
+Install dependencies, run migrations and run the app
+```
+make run_all
+````
+
 ## Setup
 
 Install [Virtualenv](https://virtualenv.pypa.io/en/latest/)
@@ -118,7 +130,7 @@ npm install
 
 - `npm run frontend-build:development` (compile the frontend files for development)
 - `npm run frontend-build:production` (compile the frontend files for production)
-- `npm run frontend-build:watch` (watch all frontend files & rebuild when anything changes)
+- `npm run frontend-build:watch` (watch all frontend+framework files & rebuild when anything changes)
 - `npm run frontend-install` (install all non-NPM dependancies)
 
 Note: `npm run frontend-install` is run automatically as a post-install task when you run `npm install`.

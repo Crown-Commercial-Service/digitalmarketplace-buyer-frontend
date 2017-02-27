@@ -4,7 +4,7 @@
 
 {% block top_header %}
 <header class="marketplace-homepage-heading">
-  {% include "_phase_banner.html" %}
+  {% include "toolkit/phase-banner.html" %}
   <h1>
     Digital Marketplace
   </h1>
@@ -15,56 +15,73 @@
 
 {% block main_content %}
 
-{% set dos_slug = 'digital-outcomes-and-specialists' %}
-
 {% if 'account-created' in get_flashed_messages(category_filter=["flag"]) %}
 <div class="index-page grid-row" data-analytics="trackPageView" data-url="/vpv/?account-created=true">
 {% else %}
 <div class="index-page grid-row">
 {% endif %}
   <div class="column-two-thirds">
-    <h2 class="marketplace-homepage-subheading">Find technology or people for digital projects in the public sector</h2>
-    {% with
-      items = [
-        {
-          "link": url_for("main.info_page_for_starting_a_brief", framework_slug=dos_slug, lot_slug='digital-specialists'),
-          "title": "Find an individual specialist",
-          "body": "eg a developer or user researcher",
-        },
-        {
-          "link": url_for("main.info_page_for_starting_a_brief", framework_slug=dos_slug, lot_slug='digital-outcomes'),
-          "title": "Find a team to provide an outcome",
-          "body": "eg a booking system or accessibility audit",
-        },
-        {
-          "link": url_for("main.info_page_for_starting_a_brief", framework_slug=dos_slug, lot_slug='user-research-participants'),
-          "title": "Find user research participants",
-          "body": "eg people from a specific user group to test your service",
-        },
-        {
-          "link": url_for("main.studios_start_page", framework_slug=dos_slug),
-          "title": "Find a user research lab",
-          "body": "eg a room to conduct research sessions",
-        },
-        {
-          "link": "/g-cloud",
-          "title": "Find cloud technology and support",
-          "body": "eg web hosting or IT health checks",
-        },
-        {
-          "link": "/crown-hosting",
-          "title": "Buy physical datacentre space for legacy systems",
-          "body": "eg for services that can’t be migrated to the cloud",
-        },
-      ]
-    %}
-      {% include "toolkit/browse-list.html" %}
-    {% endwith %}
+    <h2>Find technology or people for digital projects in the public sector</h2>
+      {% if dos_slug %}
+        {% with
+          items = [
+            {
+              "link": url_for("dos.info_page_for_starting_a_brief", framework_slug=dos_slug, lot_slug='digital-specialists'),
+              "title": "Find an individual specialist",
+              "body": "eg a developer or user researcher",
+            },
+            {
+              "link": url_for("dos.info_page_for_starting_a_brief", framework_slug=dos_slug, lot_slug='digital-outcomes'),
+              "title": "Find a team to provide an outcome",
+              "body": "eg a booking system or accessibility audit",
+            },
+            {
+              "link": url_for("dos.info_page_for_starting_a_brief", framework_slug=dos_slug, lot_slug='user-research-participants'),
+              "title": "Find user research participants",
+              "body": "eg people from a specific user group to test your service",
+            },
+            {
+              "link": url_for("dos.studios_start_page", framework_slug=dos_slug),
+              "title": "Find a user research lab",
+              "body": "eg a room to conduct research sessions",
+            },
+            {
+              "link": "/g-cloud",
+              "title": "Find cloud technology and support",
+              "body": "eg web hosting or IT health checks",
+            },
+            {
+              "link": "/crown-hosting",
+              "title": "Buy physical datacentre space for legacy systems",
+              "body": "eg for services that can’t be migrated to the cloud",
+            },
+          ]
+        %}
+          {% include "toolkit/browse-list.html" %}
+        {% endwith %}
+      {% else %}
+        {% with
+          items = [
+            {
+              "link": "/g-cloud",
+              "title": "Find cloud technology and support",
+              "body": "eg web hosting or IT health checks",
+            },
+            {
+              "link": "/crown-hosting",
+              "title": "Buy physical datacentre space for legacy systems",
+              "body": "eg for services that can’t be migrated to the cloud",
+            },
+          ]
+        %}
+          {% include "toolkit/browse-list.html" %}
+        {% endwith %}
+      {% endif %}
   </div>
 
   <div class="supplier-messages column-one-third">
     <aside role="complementary" aria-labelledby="supplier-message-heading">
-      <h2 id="supplier-message-heading">Sell services</h2>
+      <h2>Sell services</h2>
       <div class="padding-bottom-small">
           <p>
             <a href="/digital-outcomes-and-specialists/opportunities" class="top-level-link">

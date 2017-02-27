@@ -12,7 +12,7 @@
           "label": "Digital Marketplace"
       },
       {
-          "link": url_for('.list_opportunities', framework_slug=brief.frameworkSlug),
+          "link": url_for('.list_opportunities', framework_framework=brief.frameworkFramework),
           "label": "Supplier opportunities"
       }
     ]
@@ -70,16 +70,36 @@
     </div>
   </div>
 {% elif brief.status == 'live' %}
-  <div class="grid-row">
-    <div class="column-one-third">
-      {% with
-         url = "/suppliers/opportunities/{}/responses/create".format(brief.id),
-         label = "Start application"
-      %}
-        {% include "toolkit/link-button.html" %}
-      {% endwith %}
+  {% if new_flow_brief %}
+    <div class="grid-row">
+      <div class="column-two-thirds">
+        <h2 class="summary-item-heading">Apply for this opportunity</h2>
+        <p class="dmspeak">To apply, you must give evidence for all the essential and nice-to-have skills and experience you have.</p>
+      </div>
     </div>
-  </div>
+    <div class="grid-row">
+      <div class="column-one-third">
+        {% with
+           url = "/suppliers/opportunities/{}/responses/start".format(brief.id),
+           label = "Apply",
+           advice = True
+        %}
+          {% include "toolkit/link-button.html" %}
+        {% endwith %}
+      </div>
+    </div>
+  {% else %}
+    <div class="grid-row">
+      <div class="column-one-third">
+        {% with
+           url = "/suppliers/opportunities/{}/responses/create".format(brief.id),
+           label = "Start application"
+        %}
+          {% include "toolkit/link-button.html" %}
+        {% endwith %}
+      </div>
+    </div>
+  {% endif %}
 {% endif %}
 
 {% endblock %}
