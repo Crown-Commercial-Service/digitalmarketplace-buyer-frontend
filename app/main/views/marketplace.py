@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 from datetime import datetime
 import flask_featureflags
+import json
 
 from flask_login import current_user
 from flask import abort, current_app, make_response, render_template, request, url_for, jsonify
@@ -48,6 +49,103 @@ def metrics():
     data = data_api_client.get_metrics()
     del data["brief_response_count"]
     return jsonify(data)
+
+
+@main.route('/charts')
+def charts():
+    def format_applications(metrics):
+        output = []
+        dates = set()
+
+        for metric in metrics:
+            for val in metrics[metric]:
+                dates.add(val['ts'])
+        output.append(['x'] + [x.split("T")[0] for x in sorted(list(dates))])
+
+        for metric in metrics:
+            data = [metric]
+            for date in sorted(list(dates)):
+                hasValue = False
+                for val in metrics[metric]:
+                    if val['ts'] == date:
+                        hasValue = True
+                        data.append(val['value'])
+                if not hasValue:
+                    data.append(None)
+            output.append(data)
+
+        return [x for x in metrics], output
+
+    def format_metrics(columns, column_name):
+        column_names = []
+        values = {}
+
+        for column in columns:
+            del column['timestamp']
+            column_names.append(column[column_name])
+            for k in column.keys():
+                if k not in values and k != column_name:
+                    values[k] = []
+
+        for k in values.keys():
+            for column in columns:
+                if k in column:
+                    values[k].append(column[k])
+                else:
+                    values[k].append(None)
+        if column_name == 'step':
+            new_values = []
+            step_order = ['start',
+                          'profile',
+                          'business',
+                          'info',
+                          'disclosures',
+                          'documents',
+                          'tools',
+                          'awards',
+                          'recruiter',
+                          'digital',
+                          'casestudy',
+                          'candidates',
+                          'products',
+                          'review',
+                          'finish-profile',
+                          ]
+            for step in step_order:
+                if step not in column_names:
+                    new_values.append(0)
+                else:
+                    new_values.append(values['count'][column_names.index(step)])
+            column_names = step_order
+            values['count'] = new_values
+        metrics = values.keys()
+        output = [[k] + values[k] for k in values.keys()]
+        return column_names, metrics, output
+    events = data_api_client.req.metrics().applications().history().get()
+    if 'unassessed_domain_count' in events:
+        del events['unassessed_domain_count']
+    (groups, applications) = format_applications(events)
+
+    (domain_columns, domain_groups, domains) \
+        = format_metrics(data_api_client.req.metrics().domains().get(), "domain")
+    (seller_type_columns, seller_type_groups, seller_types) \
+        = format_metrics(data_api_client.req.metrics().applications().seller_types().get(), "seller_type")
+    (steps_columns, steps_groups, steps) \
+        = format_metrics(data_api_client.req.metrics().applications().steps().get(), "step")
+
+    return render_template('charts.html',
+                           applications=json.dumps(applications),
+                           applications_groups=json.dumps(groups),
+                           domains=json.dumps(domains),
+                           domain_groups=json.dumps(domain_groups),
+                           domain_columns=json.dumps(domain_columns),
+                           seller_types=json.dumps(seller_types),
+                           seller_type_groups=json.dumps(seller_type_groups),
+                           seller_type_columns=json.dumps(seller_type_columns),
+                           steps=json.dumps(steps),
+                           steps_groups=json.dumps(steps_groups),
+                           steps_columns=json.dumps(steps_columns),
+                           )
 
 
 @main.route('/metrics/history')
