@@ -357,9 +357,8 @@ class DownloadBriefResponsesView(View):
 
     def get_questions(self, framework_slug, lot_slug, manifest):
         section = 'view-response-to-requirements'
-
         result = self.content_loader.get_manifest(framework_slug, manifest)\
-                                    .filter({'lot': lot_slug})\
+                                    .filter({'lot': lot_slug}, dynamic=False)\
                                     .get_section(section)
 
         return result.questions if result else []
@@ -466,7 +465,7 @@ class DownloadBriefResponsesView(View):
 
         # QUESTIONS
         for question in questions:
-            if question.type in ('boolean_list', 'dynamic_list'):
+            if question._data['type'] in ('boolean_list', 'dynamic_list'):
                 length = len(brief[question.id])
 
                 for i, requirement in enumerate(brief[question.id]):
@@ -488,7 +487,7 @@ class DownloadBriefResponsesView(View):
             sheet.create_column(stylename="co2", defaultcellstylename="ce1")
 
             for question in questions:
-                if question.type == 'dynamic_list':
+                if question._data['type'] == 'dynamic_list':
                     if not brief.get(question.id):
                         continue
 
