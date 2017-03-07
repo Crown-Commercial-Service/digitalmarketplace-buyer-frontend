@@ -1,26 +1,30 @@
 {% extends "_base_page.html" %}
 
-{% block page_title %}Seller onboarding dashboard{% endblock %}
+{% block page_title %}Seller applications dashboard{% endblock %}
 
 {% block body_classes %}buyers-guide secondary-page{% endblock %}
 
 {% block main_content %}
   <script type="text/javascript" src="{{ asset_fingerprinter.get_url('javascripts/charts.js') }}"></script>
 
-  <h1>Seller onboarding dashboard</h1>
-  <h2>Applications by status</h2>
+  <h1>Seller applications dashboard</h1>
+  <h2>Applications</h2>
+  <p>Total number of applications being started and completed by new sellers over time. </p>
   <div id="linechart-legend" class="chart-legend"></div>
   <svg id="linechart" class="chart"></svg>
 
-  <h2>Individual domains by status</h2>
+  <h2>Expertise</h2>
+  <p>Sellers are applying to offer these areas of expertise to government buyers.</p>
   <div id="domain_chart-legend" class="chart-legend"></div>
   <svg id="domain_chart" class="chart"></svg>
 
-  <h2>Seller types in the Marketplace</h2>
+  <h2>Classification</h2>
+  <p>Sellers have identified themselves as businesses of this size, type or as part of these diversity groups. </p>
   <div id="seller_type_chart-legend" class="chart-legend"></div>
   <svg id="seller_type_chart" class="chart"></svg>
 
-  <h2>Steps completed so far</h2>
+  <h2>Steps completed</h2>
+  <p>Some application steps are easy. Some take more time. This data helps us offer assistance and iterate.</p>
   <div id="steps_chart-legend" class="chart-legend"></div>
   <svg id="steps_chart" class="chart"></svg>
 
@@ -43,19 +47,31 @@
           nfp_social_enterprise: 'Not-for-profit',
           recruitment: 'Recruiter',
           sme: 'SME',
-          start_up: 'Start up',
+          start_up: 'Start-up',
           disability: 'Australian disability enterprise',
           product: 'Product based business',
           female_owned: "Female owned",
           regional: "Regional",
           lgbtqi_owned: "LGBTQI owned"
       };
+      var short_titles = {
+          indigenous: 'Indigenous',
+              nfp_social_enterprise: 'Not for profit',
+              recruitment: 'Recruiter',
+              sme: 'SME',
+              start_up: 'Start-up',
+              disability: 'Disability',
+              product: 'Products',
+              female_owned: "Female",
+              regional: "Regional",
+              lgbtqi_owned: "LGBTQI"
+      }
       var steps_columns = {{ steps_columns | safe }};
       var steps = {
           'start': 'Introduction',
           'profile': 'Business basics',
           'business': 'Business details',
-          'info': 'Contacts',
+          'info': 'Contact Details',
           'disclosures': 'Disclosures',
           'documents': 'Documents',
           'tools': 'Methods',
@@ -136,7 +152,7 @@
                   }
               },
               tooltip: {
-                  show: false
+                  show: true
               },
               point: {
                   r: 0
@@ -145,8 +161,13 @@
                   hide: true
               },
               axis: {
+                  y: {
+                      min: 0,
+                      padding: {top:10, bottom:0}
+                  },
                   x: {
                       type: 'timeseries',
+                      fit: true,
                       min: new Date("February 22, 2017 11:13:00"),
                       tick: {
 
@@ -187,10 +208,15 @@
                   rotated: true,
                   x: {
                       tick: {
+                          width: 170,
                           fit: true,
                           culling: false,
                           format: function (x) {
-                              return domains[x];
+                              if (domains[x].length >19) {
+                                  return domains[x].substr(0, 19) + '…';
+                              } else {
+                                  return domains[x];
+                              }
                           }
                       }
                   }
@@ -224,10 +250,11 @@
                   rotated: true,
                   x: {
                       tick: {
+                          width: 100,
                           fit: true,
                           culling: false,
                           format: function (x) {
-                              return titles[seller_types[x]];
+                              return short_titles[seller_types[x]];
                           }
                       }
                   }

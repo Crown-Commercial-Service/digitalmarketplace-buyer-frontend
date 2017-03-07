@@ -51,8 +51,8 @@ def metrics():
     return jsonify(data)
 
 
-@main.route('/charts')
-def charts():
+@main.route('/seller-applications')
+def seller_applications_charts():
     def format_applications(metrics):
         output = []
         dates = set()
@@ -76,6 +76,23 @@ def charts():
 
         return [x for x in metrics], output
 
+    def fix_reverted(input):
+        (metrics, output) = input
+        submitted_k = None
+        reverted_k = None
+        for k, v in enumerate(output):
+            if v[0] == 'submit_application_count':
+                submitted_k = k
+            if v[0] == 'revert_application_count':
+                reverted_k = k
+        if reverted_k:
+            for k, v in enumerate(output[reverted_k]):
+                if k > 0:
+                    output[submitted_k][k] = int(output[submitted_k][k] or 0) + int(output[reverted_k][k] or 0)
+            del output[reverted_k]
+            del metrics[metrics.index('revert_application_count')]
+        return metrics, output
+
     def format_metrics(columns, column_name):
         column_names = []
         values = {}
@@ -93,6 +110,53 @@ def charts():
                     values[k].append(column[k])
                 else:
                     values[k].append(None)
+
+        # order seller type values from largest to smallest
+        if column_name == 'seller_type':
+            type_data = {x['seller_type']: x['count'] for x in columns}
+            ordered_types = reversed(sorted(type_data, key=type_data.get))
+
+            new_values = {'count': []}
+            for seller_type in ordered_types:
+                new_values['count'].append(type_data[seller_type])
+            column_names = type_data.keys()
+            values = new_values
+
+        if column_name == 'domain':
+            metrics = values.keys()
+            new_values = {}
+            domain_order = ['Strategy and Policy',
+                            'User research and Design',
+                            'Agile delivery and Governance',
+                            'Software engineering and Development',
+                            'Support and Operations',
+                            'Content and Publishing',
+                            'Change, Training and Transformation',
+                            'Marketing, Communications and Engagement',
+                            'Cyber security',
+                            'Data science',
+                            'Emerging technologies']
+            domain_names = {'Strategy and Policy': 'Strategy and policy',
+                            'User research and Design': 'User research and design',
+                            'Agile delivery and Governance': 'Agile delivery and governance',
+                            'Software engineering and Development': 'Software engineering and development',
+                            'Support and Operations': 'Support and operations',
+                            'Content and Publishing': 'Content and publishing',
+                            'Change, Training and Transformation': 'Change, training and transformation',
+                            'Marketing, Communications and Engagement': 'Marketing, communications and engagement',
+                            'Cyber security': 'Cyber security',
+                            'Data science': 'Data science',
+                            'Emerging technologies': 'Emerging technologies'}
+            for metric in metrics:
+                new_values[metric] = []
+                for domain in domain_order:
+                    if domain not in column_names:
+                        new_values[metric].append(0)
+                    else:
+                        new_values[metric].append(values[metric][column_names.index(domain)])
+            column_names = [domain_names[x] for x in domain_order]
+            values = new_values
+
         if column_name == 'step':
             new_values = []
             step_order = ['start',
@@ -124,7 +188,7 @@ def charts():
     events = data_api_client.req.metrics().applications().history().get()
     if 'unassessed_domain_count' in events:
         del events['unassessed_domain_count']
-    (groups, applications) = format_applications(events)
+    (groups, applications) = fix_reverted(format_applications(events))
 
     (domain_columns, domain_groups, domains) \
         = format_metrics(data_api_client.req.metrics().domains().get(), "domain")
