@@ -117,9 +117,11 @@ def seller_applications_charts():
             ordered_types = reversed(sorted(type_data, key=type_data.get))
 
             new_values = {'count': []}
+            new_column_names = []
             for seller_type in ordered_types:
+                new_column_names.append(seller_type)
                 new_values['count'].append(type_data[seller_type])
-            column_names = type_data.keys()
+            column_names = new_column_names
             values = new_values
 
         if column_name == 'domain':
