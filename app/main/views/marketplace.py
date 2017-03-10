@@ -105,17 +105,11 @@ def get_brief_by_id(framework_framework, brief_id):
         brief
     )
 
-    new_flow_brief = False
-    if feature.is_active('NEW_SUPPLIER_FLOW'):
-        new_flow_brief = (datetime.strptime(current_app.config['FEATURE_FLAGS_NEW_SUPPLIER_FLOW'], "%Y-%m-%d")
-                          <= datetime.strptime(brief['publishedAt'][0:10], "%Y-%m-%d"))
-
     return render_template(
         'brief.html',
         brief=brief,
         brief_responses=brief_responses,
-        content=brief_content,
-        new_flow_brief=new_flow_brief,
+        content=brief_content
     )
 
 
