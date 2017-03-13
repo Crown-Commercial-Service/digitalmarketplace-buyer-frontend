@@ -47,6 +47,8 @@ button,
 .sidebar {
   button,
   .button,
+  [type='submit'],
+  [type='reset'],
   [role='button'],
   [type='button'] {
     width: 100%;

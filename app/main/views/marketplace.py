@@ -2,11 +2,11 @@
 from __future__ import unicode_literals
 
 from datetime import datetime
-import flask_featureflags
+import flask_featureflags as feature
 import json
 
 from flask_login import current_user
-from flask import abort, current_app, make_response, render_template, request, url_for, jsonify
+from flask import abort, current_app, config, make_response, render_template, request, url_for, jsonify
 
 from dmapiclient import APIError
 from dmcontent.content_loader import ContentNotFoundError
@@ -262,6 +262,14 @@ def get_brief_by_id(framework_slug, brief_id):
 
     is_restricted_brief = brief.get('sellerSelector', '') in ('someSellers', 'oneSeller')
 
+    application_url = "/sellers/opportunities/{}/responses/create".format(brief['id'])
+    add_case_study_url = None
+    if 'areaOfExpertise' in brief:
+        current_supplier = data_api_client.req.suppliers(current_user.supplier_code).get()
+        current_domain = data_api_client.req.domain(brief['areaOfExpertise']).get()
+        if brief['areaOfExpertise'] not in current_supplier['supplier']['domains']['assessed']:
+            add_case_study_url = url_for('.new_supplier_case_study', domain_id=current_domain['domain']['id'])
+
     return render_template_with_csrf(
         'brief.html',
         brief=brief,
@@ -269,6 +277,8 @@ def get_brief_by_id(framework_slug, brief_id):
         content=brief_content,
         show_pdf_link=brief['status'] in ['live', 'closed'],
         is_restricted_brief=is_restricted_brief,
+        application_url=application_url,
+        add_case_study_url=add_case_study_url
     )
 
 
