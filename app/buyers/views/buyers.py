@@ -296,6 +296,9 @@ def view_brief_responses(framework_slug, lot_slug, brief_id):
     if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id):
         abort(404)
 
+    if brief['status'] != "closed":
+        abort(404)
+
     brief_responses = data_api_client.find_brief_responses(brief_id)['briefResponses']
 
     brief_responses_require_evidence = (
