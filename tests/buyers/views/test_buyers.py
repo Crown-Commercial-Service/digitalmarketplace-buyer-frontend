@@ -2279,7 +2279,7 @@ class TestDownloadBriefResponsesView(BaseApplicationTest):
         self.content_loader.get_manifest\
             .assert_called_once_with(framework_slug, manifest)
 
-        obj.filter.assert_called_once_with({'lot': lot_slug})
+        obj.filter.assert_called_once_with({'lot': lot_slug}, dynamic=False)
 
         content.get_section\
                .assert_called_once_with('view-response-to-requirements')
