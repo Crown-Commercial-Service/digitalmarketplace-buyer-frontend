@@ -26,8 +26,9 @@ from app.helpers.buyers_helpers import (
 )
 from dmutils.forms import render_template_with_csrf
 from dmutils.logging import notify_team
-
+from dmutils.documents import get_signed_url
 from dmapiclient import HTTPError, APIError
+from dmutils import s3
 
 
 @buyers.route('/buyers')
@@ -322,6 +323,15 @@ def prepared_response_contents_for_brief(brief, responses):
         answers.update({'Contact': r.get('respondToEmailAddress', 'UNKNOWN')})
         answers.update({'Availability Date': r.get('availability', 'UNKNOWN')})
         answers.update({'Day rate': r.get('dayRate', '')})
+        answers.update({'Attached Document URL': url_for('.download_brief_response_attachment',
+                                                         framework_slug=brief['frameworkSlug'],
+                                                         lot_slug=brief['lotSlug'],
+                                                         brief_id=brief['id'],
+                                                         response_id=r.get('id'),
+                                                         _external=True
+                                                         )
+                        if r.get('attachedDocumentURL') else 'UNKNOWN'})
+
         answers.update(zip(ess_req_names, ess_responses))
         answers.update(zip(nth_req_names, nth_responses))
 
@@ -332,6 +342,31 @@ def prepared_response_contents_for_brief(brief, responses):
 
     rows = [row(_) for _ in responses]
     return rows
+
+
+@buyers.route(
+    '/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/response/<response_id>/attachment',
+    methods=['GET'])
+def download_brief_response_attachment(framework_slug, lot_slug, brief_id, response_id):
+    get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
+    brief = data_api_client.get_brief(brief_id)["briefs"]
+
+    if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id):
+        abort(404)
+
+    if brief['status'] != "closed":
+        abort(404)
+
+    response = data_api_client.get_brief_response(response_id)
+    if not response or not response.get('briefResponses', {}).get('attachedDocumentURL'):
+        abort(404)
+
+    bucket = s3.S3(current_app.config['S3_BUCKET_NAME'],
+                   "s3-"+current_app.config['AWS_DEFAULT_REGION']+".amazonaws.com")
+    url = get_signed_url(bucket, response['briefResponses']['attachedDocumentURL'], None)
+    if not url:
+        abort(404)
+    return redirect(url)
 
 
 @buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/responses/download',

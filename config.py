@@ -98,7 +98,8 @@ class Config(object):
     REACT_RENDER = not DEBUG
 
     ROLLBAR_TOKEN = None
-
+    S3_BUCKET_NAME = None
+    AWS_DEFAULT_REGION = None
 
 class Test(Config):
     DEBUG = True
