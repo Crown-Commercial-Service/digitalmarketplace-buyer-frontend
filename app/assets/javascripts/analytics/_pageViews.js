@@ -7,6 +7,7 @@
 
     'setCustomDimensions': function() {
       var search = GOVUK.GDM.analytics.location.search(),
+          pathname = GOVUK.GDM.analytics.location.pathname(),
           filterGroupDimension = [],
           numberOfOpportunites,
           dimensions,
@@ -16,7 +17,7 @@
           j;
 
       // check that we're on the catalogue page for opportunites
-      if (GOVUK.GDM.analytics.location.pathname() === "/digital-outcomes-and-specialists/opportunities") {
+      if (pathname === "/digital-outcomes-and-specialists/opportunities") {
 
         // if it does, we want to send the current number of opportunites back to GA
         numberOfOpportunites = $('.search-summary-count').text();
@@ -72,6 +73,10 @@
             }
           }
         }
+      }
+      if (/^\/digital-outcomes-and-specialists(.*?)\/opportunities\/(\d+)$/.test(pathname)) {
+        var lot = $('[data-lot]').first().data('lot');
+        GOVUK.analytics.setDimension(26, lot);
       }
     }
   };
