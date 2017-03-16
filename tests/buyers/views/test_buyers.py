@@ -272,7 +272,7 @@ class TestCreateNewBrief(BaseApplicationTest):
 
 
 class TestEveryDamnPage(BaseApplicationTest):
-    def _load_page(self, url, status_code, method='get', data=None, framework_status='live'):
+    def _load_page(self, url, status_code, method='get', data=None, framework_status='live', brief_status='draft'):
         data = {} if data is None else data
         baseurl = "/buyers/frameworks/digital-outcomes-and-specialists/requirements"
         with mock.patch('app.buyers.views.buyers.content_loader') as content_loader, \
@@ -287,8 +287,11 @@ class TestEveryDamnPage(BaseApplicationTest):
                 ]
             )
             brief_stub = api_stubs.brief()
-            brief_stub['briefs'].update({'publishedAt': '2017-01-21T12:00:00.000000Z'})
+            brief_stub['briefs'].update({'status': brief_status})
+            if brief_status != 'draft':
+                brief_stub['briefs'].update({'publishedAt': '2017-01-21T12:00:00.000000Z'})
             data_api_client.get_brief.return_value = brief_stub
+
             content_fixture = ContentLoader('tests/fixtures/content')
             content_fixture.load_manifest('dos', 'data', 'edit_brief')
             content_loader.get_manifest.return_value = content_fixture.get_manifest('dos', 'edit_brief')
@@ -316,7 +319,7 @@ class TestEveryDamnPage(BaseApplicationTest):
 
     def test_get_view_brief_responses(self):
         for framework_status in ['live', 'expired']:
-            self._load_page("/digital-specialists/1234/responses", 200)
+            self._load_page("/digital-specialists/1234/responses", 200, brief_status='closed')
 
     # get and post are the same for publishing
 
@@ -1948,7 +1951,7 @@ class AbstractViewBriefResponsesPage(BaseApplicationTest):
             ]
         )
 
-        brief_stub = api_stubs.brief(lot_slug="digital-outcomes")
+        brief_stub = api_stubs.brief(lot_slug="digital-outcomes", status='closed')
         brief_stub['briefs'].update({'publishedAt': self.brief_publishing_date})
         self.data_api_client.get_brief.return_value = brief_stub
 
@@ -1987,23 +1990,18 @@ class AbstractViewBriefResponsesPage(BaseApplicationTest):
         assert "1 supplier" in page
         assert "responded to your requirements and meets all your essential skills and experience." in page
 
-    def test_page_does_not_show_download_link_if_brief_open(self):
+    def test_404_if_brief_does_not_belong_to_buyer(self):
+        self.data_api_client.get_brief.return_value = api_stubs.brief(lot_slug="digital-outcomes", user_id=234)
+
         self.login_as_buyer()
         res = self.client.get(
             "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1234/responses"
         )
-        page = res.get_data(as_text=True)
-        document = html.fromstring(page)
-        download_link = document.xpath(
-            '//a[@href="/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1234/responses/download"]'  # noqa
-        )
 
-        assert res.status_code == 200
-        assert len(download_link) == 0
-        assert "The file will be available here once applications have closed." in page
+        assert res.status_code == 404
 
-    def test_404_if_brief_does_not_belong_to_buyer(self):
-        self.data_api_client.get_brief.return_value = api_stubs.brief(lot_slug="digital-outcomes", user_id=234)
+    def test_404_if_brief_is_not_closed(self):
+        self.data_api_client.get_brief.return_value = api_stubs.brief(lot_slug="digital-outcomes", status='live')
 
         self.login_as_buyer()
         res = self.client.get(
@@ -2057,7 +2055,7 @@ class TestViewBriefResponsesPageForLegacyBrief(AbstractViewBriefResponsesPage):
         assert "No suppliers met your essential skills and experience requirements." in page
         assert "All the suppliers who applied have already been told they were unsuccessful." in page
 
-    def test_page_shows_csv_download_link_if_brief_closed(self):
+    def test_page_shows_csv_download_link(self):
         self.data_api_client.get_brief.return_value = api_stubs.brief(lot_slug="digital-outcomes", status='closed')
 
         self.login_as_buyer()
@@ -2099,7 +2097,7 @@ class TestViewBriefResponsesPageForNewFlowBrief(AbstractViewBriefResponsesPage):
         assert "No suppliers met your essential skills and experience requirements." in page
         assert "All the suppliers who applied have already been told they were unsuccessful." not in page
 
-    def test_page_shows_ods_download_link_if_brief_closed(self):
+    def test_page_shows_ods_download_link(self):
         brief_stub = api_stubs.brief(lot_slug="digital-outcomes", status='closed')
         brief_stub['briefs'].update({'publishedAt': self.brief_publishing_date})
         self.data_api_client.get_brief.return_value = brief_stub

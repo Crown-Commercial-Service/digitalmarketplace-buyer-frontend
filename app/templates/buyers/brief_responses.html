@@ -67,27 +67,19 @@
               {% include "toolkit/instruction-list.html" %}
           {% endwith %}
 
-          {% if brief.get("status") == "closed" %}
-              {%
-              with
-              items = [
-                  {
-                      "title": "Download supplier responses to this requirement",
-                      "link": url_for('buyers.download_brief_responses', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id),
-                      "file_type": "ODS",
-                      "download": "True"
-                  }
-              ]
-              %}
-                  {% include "toolkit/documents.html" %}
-              {% endwith %}
-          {% else %}
-          <div class="dmspeak">
-            <p>
-                The file will be available here once applications have closed.
-            </p>
-          </div>
-          {% endif %}
+          {%
+          with
+          items = [
+              {
+                  "title": "Download supplier responses to this requirement",
+                  "link": url_for('buyers.download_brief_responses', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id),
+                  "file_type": "ODS",
+                  "download": "True"
+              }
+          ]
+          %}
+              {% include "toolkit/documents.html" %}
+          {% endwith %}
 
         {% else %}
           <div class="dmspeak">
@@ -101,27 +93,19 @@
             </p>
           </div>
 
-          {% if brief.get("status") == "closed" %}
-              {%
-              with
-              items = [
-                  {
-                      "title": "Download supplier responses to \u2018" + brief.get('title', brief['lotName']) + "\u2019",
-                      "link": url_for('buyers.download_brief_responses', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id),
-                      "file_type": "CSV",
-                      "download": "True"
-                  }
-              ]
-              %}
-                  {% include "toolkit/documents.html" %}
-              {% endwith %}
-          {% else %}
-          <div class="dmspeak">
-            <p>
-                The file will be available here once applications have closed.
-            </p>
-          </div>
-          {% endif %}
+          {%
+          with
+          items = [
+              {
+                  "title": "Download supplier responses to \u2018" + brief.get('title', brief['lotName']) + "\u2019",
+                  "link": url_for('buyers.download_brief_responses', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id),
+                  "file_type": "CSV",
+                  "download": "True"
+              }
+          ]
+          %}
+              {% include "toolkit/documents.html" %}
+          {% endwith %}
 
         {% endif %}
       {% else %}
