@@ -370,6 +370,16 @@ class TestBriefPage(BaseApplicationTest):
 
         self._assert_page_title(document)
 
+    def test_dos_brief_has_lot_analytics_string(self):
+        brief = self.brief['briefs']
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief['id']))
+        assert res.status_code == 200
+
+        data = res.get_data(as_text=True)
+        analytics_string = '<span data-lot="{lot_slug}"></span>'.format(lot_slug=brief['lotSlug'])
+
+        assert analytics_string in data
+
     def _convert_date_to_display_date_format(self, date_string):
         date_object = datetime.strptime(date_string, DATETIME_FORMAT)
         return date_object.strftime(DISPLAY_DATE_FORMAT)
