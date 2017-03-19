@@ -286,15 +286,6 @@ class TestBriefPage(BaseApplicationTest):
         assert 'agileCoach' not in res.get_data(as_text=True)
         assert 'Agile Coach' in res.get_data(as_text=True)
 
-    def _assert_start_application(self, document, brief_id):
-        brief_response_url = self.expand_path('/sellers/opportunities/{}/responses/create'.format(brief_id))
-        assert len(document.xpath(
-            '//a[@href="{0}"][contains(normalize-space(text()), normalize-space("{1}"))]'.format(
-                brief_response_url,
-                "Start application",
-            )
-        )) == 1
-
     def _assert_view_application(self, document, brief_id):
         assert len(document.xpath(
             '//a[@href="{0}"][contains(normalize-space(text()), normalize-space("{1}"))]'.format(
@@ -309,7 +300,13 @@ class TestBriefPage(BaseApplicationTest):
         assert_equal(200, res.status_code)
         document = html.fromstring(res.get_data(as_text=True))
 
-        self._assert_start_application(document, brief_id)
+        brief_response_url = self.expand_path('/sellers/opportunities/{}/responses/create'.format(brief_id))
+        assert len(document.xpath(
+            '//a[@href="{0}"][contains(normalize-space(text()), normalize-space("{1}"))]'.format(
+                brief_response_url,
+                "Start application",
+            )
+        )) == 1
 
     def test_buyer_start_application(self):
         self.login_as_buyer()
@@ -318,7 +315,13 @@ class TestBriefPage(BaseApplicationTest):
         assert_equal(200, res.status_code)
         document = html.fromstring(res.get_data(as_text=True))
 
-        self._assert_start_application(document, brief_id)
+        brief_response_url = self.expand_path('/sellers/opportunities/{}/responses/create'.format(brief_id))
+        assert len(document.xpath(
+            '//a[@href="{0}"][contains(normalize-space(text()), normalize-space("{1}"))]'.format(
+                brief_response_url,
+                "Apply now",
+            )
+        )) == 1
 
     def test_supplier_start_application(self):
         self.login_as_supplier()
@@ -331,7 +334,13 @@ class TestBriefPage(BaseApplicationTest):
         assert_equal(200, res.status_code)
         document = html.fromstring(res.get_data(as_text=True))
 
-        self._assert_start_application(document, brief_id)
+        brief_response_url = self.expand_path('/sellers/opportunities/{}/responses/create'.format(brief_id))
+        assert len(document.xpath(
+            '//a[@href="{0}"][contains(normalize-space(text()), normalize-space("{1}"))]'.format(
+                brief_response_url,
+                "Apply now",
+            )
+        )) == 1
 
     def test_supplier_applied_view_application(self):
         self.login_as_supplier()

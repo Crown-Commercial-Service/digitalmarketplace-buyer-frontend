@@ -6,6 +6,7 @@ import flask_featureflags as feature
 
 from app.main import main
 from app.api_client.data import DataAPIClient
+from app import data_api_client
 from app.api_client.error import APIError
 from react.response import from_response, validate_form_data
 from react.render import render_component
@@ -115,21 +116,22 @@ def get_supplier_case_study(casestudy_id):
     )
 
 
-@main.route('/case-study/create', methods=['GET'])
-@main.route('/case-study/create/reference', methods=['GET'], endpoint='new_supplier_case_study_reference')
+@main.route('/case-study/create/<int:domain_id>', methods=['GET'])
 @login_required
-def new_supplier_case_study():
+def new_supplier_case_study(domain_id):
+    domain = data_api_client.req.domain(str(domain_id)).get()
     if not current_user.role == 'supplier':
         flash('buyer-role-required', 'error')
         return current_app.login_manager.unauthorized()
     form = DmForm()
-    basename = url_for('.new_supplier_case_study')
+    basename = url_for('.create_new_supplier_case_study', domain_id=domain_id)
     props = {
         'form_options': {
             'csrf_token': form.csrf_token.current_token
         },
         'casestudy': {
-            'returnLink': url_for('main.get_supplier', code=current_user.supplier_code)
+            'domain_id': domain_id,
+            'service': domain['domain']['name']
         },
         'basename': basename
     }
@@ -171,27 +173,21 @@ def delete_supplier_case_study(casestudy_id):
     )
 
 
-@main.route('/case-study/create/<path:step>', methods=['POST'])
-@main.route('/case-study/create', methods=['POST'])
+@main.route('/case-study/create/<int:domain_id>', methods=['POST'])
 @login_required
-def create_new_supplier_case_study(step=None):
+def create_new_supplier_case_study(domain_id):
+    domain = data_api_client.req.domain(str(domain_id)).get()
     if not current_user.role == 'supplier':
         flash('buyer-role-required', 'error')
         return current_app.login_manager.unauthorized()
 
     casestudy = from_response(request)
+    casestudy['service'] = domain['domain']['name']
     casestudy['supplierCode'] = current_user.supplier_code
 
     fields = ['opportunity', 'title', 'client', 'timeframe', 'outcome', 'approach']
-    if step == 'reference':
-        fields = fields + ['acknowledge']
 
-        # Permission is only required if any of these four fields have values.
-        optional_require_errors = validate_form_data(casestudy, ['name', 'role', 'phone', 'email'])
-        if not len(optional_require_errors) == 4:
-            fields = fields + ['permission']
-
-    basename = url_for('.new_supplier_case_study')
+    basename = url_for('.new_supplier_case_study', domain_id=domain_id)
     errors = validate_form_data(casestudy, fields)
     if errors:
         form = DmForm()
@@ -213,9 +209,42 @@ def create_new_supplier_case_study(step=None):
         )
 
     try:
+        supplier_updates = {'services': {domain['domain']['name']: True}}
+        supplier = data_api_client.update_supplier(
+            current_user.supplier_code,
+            supplier_updates,
+            user=current_user.email_address
+        )
         case_study = DataAPIClient().create_case_study(
             caseStudy=casestudy
         )['caseStudy']
+        framework_slug = 'digital-marketplace' if feature.is_active('DM_FRAMEWORK') else 'digital-service-professionals'
+        props = {
+            'form_options': {
+                'domain': domain['domain']['name'],
+                'opportunityUrl': url_for('.list_opportunities', framework_slug=framework_slug)
+            }
+        }
+
+        rendered_component = render_component('bundles/CaseStudy/CaseStudySubmitConfirmationWidget.js', props)
+
+        return render_template(
+            '_react.html',
+            breadcrumb_items=[
+                {
+                    "link": url_for("main.index"),
+                    "label": "Home"
+                },
+                {
+                    "link": url_for('.list_opportunities', framework_slug=framework_slug),
+                    "label": "Opportunities"
+                },
+                {
+                    "label": "Case Study submitted"
+                }
+            ],
+            component=rendered_component
+        )
 
     except APIError as e:
         form = DmForm()
@@ -233,20 +262,8 @@ def create_new_supplier_case_study(step=None):
             component=rendered_component
         )
 
-    return redirect(
-        url_for(
-            'main.get_supplier_case_study',
-            casestudy_id=case_study['id'],
-        )
-    )
-
 
 @main.route('/case-study/<int:casestudy_id>/update', methods=['GET'])
-@main.route(
-    '/case-study/<int:casestudy_id>/update/reference',
-    methods=['GET'],
-    endpoint='edit_supplier_case_study_reference'
-)
 @login_required
 def edit_supplier_case_study(casestudy_id):
     casestudy = DataAPIClient().get_case_study(casestudy_id)['caseStudy']
