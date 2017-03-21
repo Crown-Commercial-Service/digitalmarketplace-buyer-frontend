@@ -9,6 +9,7 @@ from dmutils.user import User
 
 from config import configs
 
+
 login_manager = LoginManager()
 data_api_client = dmapiclient.DataAPIClient()
 search_api_client = dmapiclient.SearchAPIClient()
@@ -16,10 +17,6 @@ feature_flags = flask_featureflags.FeatureFlag()
 csrf = CsrfProtect()
 
 content_loader = ContentLoader('app/content')
-content_loader.load_manifest('g-cloud-6', 'services', 'search_filters')
-content_loader.load_manifest('g-cloud-6', 'services', 'display_service')
-content_loader.load_manifest('digital-outcomes-and-specialists', 'briefs', 'display_brief')
-content_loader.load_manifest('digital-outcomes-and-specialists-2', 'briefs', 'display_brief')
 
 
 def create_app(config_name):
@@ -33,6 +30,16 @@ def create_app(config_name):
         login_manager=login_manager,
         search_api_client=search_api_client
     )
+
+    for framework_data in data_api_client.find_frameworks().get('frameworks'):
+        if not framework_data['slug'] in application.config.get('DM_FRAMEWORK_CONTENT_MAP', {}):
+            if framework_data['framework'] == 'g-cloud':
+                if framework_data['status'] != 'expired':
+                    content_loader.load_manifest(framework_data['slug'], 'services', 'search_filters')
+                # we need to be able to display old services, even on expired frameworks
+                content_loader.load_manifest(framework_data['slug'], 'services', 'display_service')
+            elif framework_data['framework'] == 'digital-outcomes-and-specialists':
+                content_loader.load_manifest(framework_data['slug'], 'briefs', 'display_brief')
 
     from .main import main as main_blueprint
     from .status import status as status_blueprint

@@ -71,6 +71,11 @@ class Config(object):
     DM_APP_NAME = 'buyer-frontend'
     DM_DOWNSTREAM_REQUEST_ID_HEADER = 'X-Amz-Cf-Id'
 
+    DM_FRAMEWORK_CONTENT_MAP = {
+        'g-cloud-4': 'g-cloud-6',
+        'g-cloud-5': 'g-cloud-6',
+    }
+
     @staticmethod
     def init_app(app):
         repo_root = os.path.abspath(os.path.dirname(__file__))
