@@ -91,9 +91,9 @@ class Test(Config):
     DM_LOG_LEVEL = 'CRITICAL'
     WTF_CSRF_ENABLED = False
 
-    DM_DATA_API_URL = "http://localhost:5000"
+    DM_DATA_API_URL = "http://wrong.completely.invalid:5000"
     DM_DATA_API_AUTH_TOKEN = "myToken"
-    DM_SEARCH_API_URL = "http://localhost:5001"
+    DM_SEARCH_API_URL = "http://wrong.completely.invalid:5001"
     DM_SEARCH_API_AUTH_TOKEN = "myToken"
 
     DM_MANDRILL_API_KEY = 'MANDRILL'
