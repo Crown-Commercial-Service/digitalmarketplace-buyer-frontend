@@ -1,11 +1,29 @@
+<!-- Google Analytics -->
 <script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    window.ga = window.ga || function () {
+            (ga.q = ga.q || []).push(arguments)
+        };
+    ga.l = +new Date;
+    ga('create', '{{ config['DM_GA_CODE'] }}', 'auto');
+    ga('send', 'pageview');
 
-ga('create', '{{ config['DM_GA_CODE'] }}', 'auto');
+    // treat file downloads as external links https://github.com/googleanalytics/autotrack/issues/58
+    ga('require', 'outboundLinkTracker', {
+        shouldTrackOutboundLink: function (link, parseUrl) {
+            var href = link.getAttribute('href') || link.getAttribute('xlink:href');
+            var url = parseUrl(href);
+            var isExternal = (url.hostname != location.hostname && url.protocol.slice(0, 4) == 'http');
 
-ga('send', 'pageview');
+            // treat downloads as external links
+            var exts = 'doc*|xls*|ppt*|pdf|zip|rar|exe|mp3';
+            var regExt = new RegExp(".*\\.(" + exts + ")(\\?.*)?$");
+            var isDownload = url.pathname.match(regExt);
 
+            return isDownload || isExternal;
+        }
+    });
+    ga('require', 'urlChangeTracker');
 </script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+<script async src="{{ asset_fingerprinter.get_url('javascripts/autotrack.js') }}"></script>
+<!-- End Google Analytics -->
