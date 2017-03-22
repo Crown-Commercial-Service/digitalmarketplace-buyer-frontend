@@ -71,6 +71,11 @@ class Config(object):
     DM_APP_NAME = 'buyer-frontend'
     DM_DOWNSTREAM_REQUEST_ID_HEADER = 'X-Amz-Cf-Id'
 
+    #: For some frameworks (represented by the keys in this map), we store no framework content. But
+    #: they work just like some other framework (represented by the values in the map) for which we do
+    #: have content available. The map uses slugs to identify the framework pairs, so that we can still
+    #: find the framework data we need (and so that we can avoid trying to load up framework data that
+    #: isn't actually available).
     DM_FRAMEWORK_CONTENT_MAP = {
         'g-cloud-4': 'g-cloud-6',
         'g-cloud-5': 'g-cloud-6',

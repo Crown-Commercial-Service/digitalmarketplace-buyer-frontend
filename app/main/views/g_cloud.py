@@ -68,6 +68,11 @@ def get_service_by_id(service_id):
 
         service_data = service['services']
         framework_slug = service_data['frameworkSlug']
+
+        # Some frameworks don't actually have framework content of their own (e.g. G-Cloud 4 and 5) - they
+        # use content from some other framework (for those examples, G-Cloud 6 content works fine). In those
+        # cases, we need to override the framework slug that we got from the service data, and load that
+        # content instead.
         override_framework_slug = current_app.config.get('DM_FRAMEWORK_CONTENT_MAP', {}).get(framework_slug)
         if override_framework_slug:
             framework_slug = override_framework_slug
