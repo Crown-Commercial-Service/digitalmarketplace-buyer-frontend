@@ -68,7 +68,7 @@ def get_service_by_id(service_id):
 
         service_data = service['services']
         framework_slug = service_data['frameworkSlug']
-        override_framework_slug = current_app.config.get('DM_FRAMEWORK_CONTENT_MAP').get(framework_slug)
+        override_framework_slug = current_app.config.get('DM_FRAMEWORK_CONTENT_MAP', {}).get(framework_slug)
         if override_framework_slug:
             framework_slug = override_framework_slug
 
