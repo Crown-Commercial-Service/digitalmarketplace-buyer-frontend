@@ -6,7 +6,7 @@ import flask_featureflags as feature
 import json
 
 from flask_login import current_user
-from flask import abort, current_app, config, make_response, render_template, request, url_for, jsonify
+from flask import abort, current_app, config, make_response, redirect, render_template, request, url_for, jsonify
 
 from dmapiclient import APIError
 from dmcontent.content_loader import ContentNotFoundError
@@ -223,6 +223,8 @@ def metrics_historical():
 
 @main.route('/<template_name>')
 def content(template_name):
+    if template_name == 'roles-and-services':
+        return redirect('/capabilities-and-rates', code=301)  # 301 Moved Permanently
     try:
         return render_template('content/{}.html'.format(template_name))
     except:
