@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from datetime import datetime
 
 from flask_login import current_user
 from flask import abort, current_app, render_template, request
-import flask_featureflags as feature
 
 from dmapiclient import APIError
 from dmcontent.content_loader import ContentNotFoundError
@@ -84,7 +82,7 @@ def get_brief_by_id(framework_framework, brief_id):
         brief_responses = data_api_client.find_brief_responses(brief_id, current_user.supplier_id)["briefResponses"]
 
     brief['clarificationQuestions'] = [
-        dict(question, number=index+1)
+        dict(question, number=index + 1)
         for index, question in enumerate(brief['clarificationQuestions'])
     ]
 

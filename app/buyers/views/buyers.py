@@ -1,6 +1,5 @@
 # coding: utf-8
 from __future__ import unicode_literals
-import unicodecsv
 import inflection
 import sys
 
@@ -20,7 +19,6 @@ from ..helpers.ods import SpreadSheet
 
 from dmapiclient import HTTPError
 from dmutils.dates import get_publishing_dates
-from dmutils.formats import DATETIME_FORMAT
 from dmutils import csv_generator
 from datetime import datetime
 
@@ -145,7 +143,7 @@ def view_brief_overview(framework_slug, lot_slug, brief_id):
             completed_sections[section.slug] = True if optional == 0 else False
 
     brief['clarificationQuestions'] = [
-        dict(question, number=index+1)
+        dict(question, number=index + 1)
         for index, question in enumerate(brief['clarificationQuestions'])
     ]
 
@@ -302,8 +300,8 @@ def view_brief_responses(framework_slug, lot_slug, brief_id):
     brief_responses = data_api_client.find_brief_responses(brief_id)['briefResponses']
 
     brief_responses_require_evidence = (
-        datetime.strptime(current_app.config['FEATURE_FLAGS_NEW_SUPPLIER_FLOW'], "%Y-%m-%d")
-        <= datetime.strptime(brief['publishedAt'][0:10], "%Y-%m-%d")
+        datetime.strptime(current_app.config['FEATURE_FLAGS_NEW_SUPPLIER_FLOW'], "%Y-%m-%d") <=
+        datetime.strptime(brief['publishedAt'][0:10], "%Y-%m-%d")
     )
 
     counter = Counter()
@@ -409,53 +407,117 @@ class DownloadBriefResponsesView(View):
             }
         ), 200
 
+    @staticmethod
+    def style_doc(doc):
+        doc.add_font(FontFace(name="Arial", fontfamily="Arial"))
+        standard_arial = {
+            'fontfamily': 'Arial', 'fontnameasian': 'Arial', 'fontnamecomplex': 'Arial', 'fontsize': '11pt'
+        }
+        doc.add_style(
+            "ce1",
+            "table-cell",
+            (TableCellProperties(wrapoption="wrap", verticalalign="top"), TextProperties(**standard_arial)),
+            parentstylename="Default"
+        )
+
+        doc.add_style(
+            "ce2",
+            "table-cell",
+            (
+                TableCellProperties(wrapoption="wrap", verticalalign="top"),
+                TextProperties(fontweight="bold", **standard_arial)
+            ),
+            parentstylename="Default"
+        )
+
+        doc.add_style(
+            "ce3",
+            "table-cell",
+            (TableCellProperties(wrapoption="wrap", verticalalign="top"), TextProperties(**standard_arial))
+        )
+
+        doc.add_style(
+            "co1",
+            "table-column",
+            (TableColumnProperties(columnwidth="150pt", breakbefore="auto"),)
+        )
+
+        doc.add_style(
+            "co2",
+            "table-column",
+            (TableColumnProperties(columnwidth="300pt", breakbefore="auto"),)
+        )
+
+        doc.add_style(
+            "ro1",
+            "table-row",
+            (TableRowProperties(rowheight="30pt", breakbefore="auto", useoptimalrowheight="false"),)
+        )
+
+        doc.add_style(
+            "ro2",
+            "table-row",
+            (TableRowProperties(rowheight="30pt", breakbefore="auto", useoptimalrowheight="true"),)
+        )
+
+    @staticmethod
+    def write_question(sheet, brief, question):
+        if question._data['type'] in ('boolean_list', 'dynamic_list'):
+            length = len(brief[question.id])
+
+            for i, requirement in enumerate(brief[question.id]):
+                row = sheet.create_row("{0}[{1}]".format(question.id, i))
+                if i == 0:
+                    row.write_cell(
+                        question.name,
+                        stylename="ce2",
+                        numberrowsspanned=str(length)
+                    )
+                else:
+                    row.write_covered_cell()
+                row.write_cell(requirement, stylename="ce3")
+        else:
+            row = sheet.create_row(question.id, stylename="ro2")
+            row.write_cell(
+                question.name,
+                stylename="ce2",
+                numbercolumnsspanned="2"
+            )
+            row.write_covered_cell()
+
+    @staticmethod
+    def write_response(sheet, brief, question, response):
+        if question._data['type'] == 'dynamic_list':
+            if not brief.get(question.id):
+                return
+
+            for i, item in enumerate(response[question.id]):
+                row = sheet.get_row("{0}[{1}]".format(question.id, i))
+                # TODO this is stupid, fix it (key should not be hard coded)
+                row.write_cell(item.get('evidence') or '', stylename="ce1")
+
+        elif question.type == 'boolean_list' and brief.get(question.id):
+            if not brief.get(question.id):
+                return
+
+            for i, item in enumerate(response[question.id]):
+                row = sheet.get_row("{0}[{1}]".format(question.id, i))
+                row.write_cell(str(bool(item)).lower(), stylename="ce1")
+
+        else:
+            sheet.get_row(question.id).write_cell(response.get(question.id, ''), stylename="ce1")
+
     def generate_ods(self, brief, responses):
         doc = SpreadSheet()
-
-        doc.add_font(FontFace(name="Arial", fontfamily="Arial"))
-
-        doc.add_style("ce1", "table-cell", (
-            TableCellProperties(wrapoption="wrap", verticalalign="top"),
-            TextProperties(fontfamily="Arial", fontnameasian="Arial",
-                           fontnamecomplex="Arial", fontsize="11pt"),
-        ), parentstylename="Default")
-
-        doc.add_style("ce2", "table-cell", (
-            TableCellProperties(wrapoption="wrap", verticalalign="top"),
-            TextProperties(fontfamily="Arial", fontnameasian="Arial",
-                           fontnamecomplex="Arial", fontsize="11pt",
-                           fontweight="bold"),
-        ), parentstylename="Default")
-
-        doc.add_style("ce3", "table-cell", (
-            TableCellProperties(wrapoption="wrap", verticalalign="top"),
-            TextProperties(fontfamily="Arial", fontnameasian="Arial",
-                           fontnamecomplex="Arial", fontsize="11pt"),
-        ))
-
-        doc.add_style("co1", "table-column", (
-            TableColumnProperties(columnwidth="150pt", breakbefore="auto"),
-        ))
-
-        doc.add_style("co2", "table-column", (
-            TableColumnProperties(columnwidth="300pt", breakbefore="auto"),
-        ))
-
-        doc.add_style("ro1", "table-row", (
-            TableRowProperties(rowheight="30pt", breakbefore="auto",
-                               useoptimalrowheight="false"),
-        ))
-
-        doc.add_style("ro2", "table-row", (
-            TableRowProperties(rowheight="30pt", breakbefore="auto",
-                               useoptimalrowheight="true"),
-        ))
+        self.style_doc(doc)
 
         sheet = doc.sheet("Supplier evidence")
 
-        questions = self.get_questions(brief['frameworkSlug'],
-                                       brief['lotSlug'],
-                                       'output_brief_response')
+        questions = self.get_questions(
+            brief['frameworkSlug'],
+            brief['lotSlug'],
+            'output_brief_response'
+        )
 
         # two intro columns for boolean and dynamic lists
         sheet.create_column(stylename="co1", defaultcellstylename="ce1")
@@ -463,55 +525,16 @@ class DownloadBriefResponsesView(View):
 
         # HEADER
         row = sheet.create_row("header", stylename="ro1")
-        row.write_cell(brief['title'], stylename="ce2",
-                       numbercolumnsspanned=str(len(responses) + 2))
+        row.write_cell(brief['title'], stylename="ce2", numbercolumnsspanned=str(len(responses) + 2))
 
         # QUESTIONS
         for question in questions:
-            if question._data['type'] in ('boolean_list', 'dynamic_list'):
-                length = len(brief[question.id])
-
-                for i, requirement in enumerate(brief[question.id]):
-                    row = sheet.create_row("{0}[{1}]".format(question.id, i))
-                    if i == 0:
-                        row.write_cell(question.name, stylename="ce2",
-                                       numberrowsspanned=str(length))
-                    else:
-                        row.write_covered_cell()
-                    row.write_cell(requirement, stylename="ce3")
-            else:
-                row = sheet.create_row(question.id, stylename="ro2")
-                row.write_cell(question.name, stylename="ce2",
-                               numbercolumnsspanned="2")
-                row.write_covered_cell()
-
+            self.write_question(sheet, brief, question)
         # RESPONSES
         for response in responses:
             sheet.create_column(stylename="co2", defaultcellstylename="ce1")
-
             for question in questions:
-                if question._data['type'] == 'dynamic_list':
-                    if not brief.get(question.id):
-                        continue
-
-                    for i, item in enumerate(response[question.id]):
-                        row = sheet.get_row("{0}[{1}]".format(question.id, i))
-                        # TODO this is stupid, fix it (key should not be hard coded)
-                        row.write_cell(item.get('evidence') or '',
-                                       stylename="ce1")
-
-                elif question.type == 'boolean_list' and brief.get(question.id):
-                    if not brief.get(question.id):
-                        continue
-
-                    for i, item in enumerate(response[question.id]):
-                        row = sheet.get_row("{0}[{1}]".format(question.id, i))
-                        row.write_cell(str(bool(item)).lower(),
-                                       stylename="ce1")
-
-                else:
-                    sheet.get_row(question.id).write_cell(response.get(question.id, ''),
-                                                          stylename="ce1")
+                self.write_response(sheet, brief, question, response)
 
         return doc
 
@@ -524,9 +547,7 @@ class DownloadBriefResponsesView(View):
             buf.getvalue(),
             mimetype='application/vnd.oasis.opendocument.spreadsheet',
             headers={
-                "Content-Disposition": (
-                    "attachment;filename={0}.ods"
-                ).format(context['filename']),
+                "Content-Disposition": ("attachment;filename={0}.ods").format(context['filename']),
                 "Content-Type": "application/vnd.oasis.opendocument.spreadsheet"
             }
         ), 200
@@ -665,7 +686,7 @@ def supplier_questions(framework_slug, lot_slug, brief_id):
         abort(404)
 
     brief['clarificationQuestions'] = [
-        dict(question, number=index+1)
+        dict(question, number=index + 1)
         for index, question in enumerate(brief['clarificationQuestions'])
     ]
 

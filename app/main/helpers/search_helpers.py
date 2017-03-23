@@ -161,7 +161,7 @@ def pagination(num_services, page_size, page=None):
     next_page = None
     prev_page = None
     show_prev = False
-    show_next = False
+    show_next = total_num_pages > 1
 
     # are we currently paginated?
     if page:
@@ -170,18 +170,16 @@ def pagination(num_services, page_size, page=None):
             next_page = page + 1
 
         # prev page is page - 1 OR last page if page beyond upper bound
+        # show previous link if after page 1
         if page > 1:
             prev_page = page - 1
+            show_prev = True
         if page > total_num_pages:
             prev_page = total_num_pages
 
-        # show previous link if after page 1
-        if page > 1:
-            show_prev = True
-
         # Show next link if have multiple pages and are not at last page
-        if total_num_pages > 1 and page < total_num_pages:
-            show_next = True
+        if not page < total_num_pages:
+            show_next = False
     # on first page
     else:
         # next page always page 2 if have more services than page size
@@ -189,16 +187,13 @@ def pagination(num_services, page_size, page=None):
             next_page = 2
         # show next if have more than 1 page
         # not on last page as no page param
-        if total_num_pages > 1:
-            show_next = True
-
     return {
         "total_pages": total_num_pages,
         "show_prev": show_prev,
         "show_next": show_next,
         "next_page": next_page,
         "prev_page": prev_page,
-        }
+    }
 
 
 def valid_page(page):

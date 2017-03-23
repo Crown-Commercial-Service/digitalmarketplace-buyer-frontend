@@ -1,5 +1,4 @@
 # coding=utf-8
-
 from flask import render_template
 from . import main
 from dmapiclient import APIError
@@ -16,7 +15,7 @@ def page_not_found(e):
 
 
 @main.app_errorhandler(410)
-def page_not_found(e):
+def gone(e):
     return _render_error_page(410)
 
 

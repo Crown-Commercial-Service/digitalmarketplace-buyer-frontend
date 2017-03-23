@@ -1,4 +1,3 @@
-
 import mock
 import re
 from lxml import html
@@ -213,7 +212,7 @@ class TestServicePage(BaseApplicationTest):
                 new_status='enabled',
                 timestamp='2016-01-05T17:01:07.649587Z',
                 service=self.service['services']
-            )
+        )
         self._data_api_client.get_service.return_value = \
             self.service
         service_id = self.service['services']['id']
@@ -240,7 +239,7 @@ class TestServicePage(BaseApplicationTest):
                 new_status='disabled',
                 timestamp='2016-01-05T17:01:07.649587Z',
                 service=self.service['services']
-            )
+        )
         self._data_api_client.get_service.return_value = \
             self.service
         service_id = self.service['services']['id']
@@ -267,7 +266,7 @@ class TestServicePage(BaseApplicationTest):
                 new_status='expired',
                 timestamp='2016-01-05T17:01:07.649587Z',
                 service=self.service['services']
-            )
+        )
         self._data_api_client.get_service.return_value = \
             self.service
         service_id = self.service['services']['id']
@@ -285,7 +284,7 @@ class TestServicePage(BaseApplicationTest):
                 self.service['services']['frameworkName'],
                 'Tuesday 5 January 2016',
                 self.service['services']['supplierName'],
-            )
+        )
 
     def test_pre_live_framework_causes_404(self):
         self.service = self._get_g6_service_fixture_data()

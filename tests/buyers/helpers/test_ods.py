@@ -1,11 +1,10 @@
 import mock
-import unittest
 import functools
 
 import app.buyers.helpers.ods as ods
 
 from hypothesis import strategies as st
-from hypothesis import given, example, assume
+from hypothesis import given, example
 
 po = functools.partial(mock.patch.object, autospec=True)
 
@@ -102,7 +101,7 @@ class TestSheet(object):
     def test_get_row(self, instance, name):
         instance._rows[name] = expected = mock.Mock()
 
-        with po(ods, 'Row') as Row:
+        with po(ods, 'Row'):
             assert expected == instance.get_row(name)
 
     @given(st.text().map(ods.Sheet), st.dictionaries(st.text(), st.text()))
@@ -170,8 +169,7 @@ class TestSpreadSheet(object):
 
         Sheet.assert_called_once_with(name)
 
-        instance._document.spreadsheet.addElement\
-                .assert_called_once_with(Sheet.return_value._table)
+        instance._document.spreadsheet.addElement.assert_called_once_with(Sheet.return_value._table)
 
     @given(st.text(), st.text(), st.integers(min_value=0, max_value=10),
            st.dictionaries(st.text(), st.text()))
@@ -186,11 +184,9 @@ class TestSpreadSheet(object):
 
         Style.assert_called_once_with(name=name, family=family, **kwargs)
 
-        Style.return_value.addElement\
-             .assert_has_calls([mock.call(style) for style in styles], True)
+        Style.return_value.addElement.assert_has_calls([mock.call(style) for style in styles], True)
 
-        instance._document.automaticstyles.addElement\
-                .assert_called_once_with(Style.return_value)
+        instance._document.automaticstyles.addElement.assert_called_once_with(Style.return_value)
 
     def test_add_font(self):
         instance = ods.SpreadSheet()
@@ -200,15 +196,14 @@ class TestSpreadSheet(object):
 
         instance.add_font(fontface)
 
-        instance._document.fontfacedecls.addElement\
-                .assert_called_once_with(fontface)
+        instance._document.fontfacedecls.addElement.assert_called_once_with(fontface)
 
-    def save(self):
+    def test_save(self):
         instance = ods.SpreadSheet()
         instance._document = mock.MagicMock(spec_set=instance._document)
 
         buf = mock.Mock()
 
-        instance.add_font(fontface)
+        instance.save(buf)
 
         instance._document.save.assert_called_once_with(buf)

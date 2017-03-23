@@ -96,58 +96,54 @@ class SearchSummary(object):
             self.sentence
         )
 
+    @staticmethod
+    def _get_group_label_for_option(option, filter_groups):
+        for group in filter_groups:
+            for filter in group['filters']:
+                if filter['name'] == option:
+                    return group['label']
+
+    @staticmethod
+    def _get_label_for_string_option(option, filter_groups):
+        for group in filter_groups:
+            for filter in group['filters']:
+                if filter['value'] == option:
+                    return filter['label']
+
+    @staticmethod
+    def _get_label_for_boolean_option(option, filter_groups):
+        for group in filter_groups:
+            for filter in group['filters']:
+                if filter['name'] == option:
+                    return filter['label']
+
+    @staticmethod
+    def _sort_groups(groups, filter_groups):
+        sorted_groups = []
+        filter_group_order = [group['label'] for group in filter_groups]
+        for group in filter_group_order:
+            if group in groups:
+                sorted_groups.append((group, groups[group]))
+        return sorted_groups
+
     def _group_request_filters(self, request_args, filter_groups):
         """arranges the filters from the request into filter groups"""
-
-        def _is_option(values):
-            return (len(values) == 1) and (values[0] == u'true')
-
-        def _get_group_label_for_option(option):
-            for group in filter_groups:
-                for filter in group['filters']:
-                    if filter['name'] == option:
-                        return group['label']
-
-        def _get_label_for_string_option(option):
-            for group in filter_groups:
-                for filter in group['filters']:
-                    if filter['value'] == option:
-                        return filter['label']
-
-        def _get_label_for_boolean_option(option):
-            for group in filter_groups:
-                for filter in group['filters']:
-                    if filter['name'] == option:
-                        return filter['label']
-
-        def _add_filter_to_group(group_name, filter):
-            option_label = _get_label_for_boolean_option(filter)
-            if group_name not in groups:
-                groups[group_name] = [option_label]
-            else:
-                groups[group_name].append(option_label)
-
-        def _sort_groups(groups):
-            sorted_groups = []
-            filter_group_order = [group['label'] for group in filter_groups]
-            for group in filter_group_order:
-                if group in groups:
-                    sorted_groups.append((group, groups[group]))
-            return sorted_groups
-
         groups = {}
         for filter_mapping in request_args.lists():
-            filter, values = filter_mapping
+            option, values = filter_mapping
             if filter == 'lot' or filter == 'q':
                 continue
-            if _is_option(values):
-                group_name = _get_group_label_for_option(filter)
-                _add_filter_to_group(group_name, filter)
+            if (len(values) == 1) and (values[0] == u'true'):
+                group_name = self._get_group_label_for_option(option, filter_groups)
+                option_label = self._get_label_for_boolean_option(option, filter_groups)
+                if group_name not in groups:
+                    groups[group_name] = [option_label]
+                else:
+                    groups[group_name].append(option_label)
             else:  # filter is a group whose values are the options
-                group_name = _get_group_label_for_option(filter)
-                groups[group_name] = [
-                    _get_label_for_string_option(value) for value in values]
-        return _sort_groups(groups)
+                group_name = self._get_group_label_for_option(option, filter_groups)
+                groups[group_name] = [self._get_label_for_string_option(value, filter_groups) for value in values]
+        return self._sort_groups(groups, filter_groups)
 
 
 class SummaryRules(object):

@@ -534,13 +534,13 @@ class TestBuyersCreation(BaseApplicationTest):
     @mock.patch('app.main.views.login.data_api_client')
     def test_creating_account_doesnt_affect_csrf_token(self, data_api_client, send_email):
         with self.client as c:
-            res = c.get(
+            c.get(
                 '/buyers/create',
             )
             original_csrf_token = session.get("csrf_token")
             assert original_csrf_token
         with self.client as c2:
-            res2 = c2.post(
+            c2.post(
                 '/buyers/create',
                 data={'email_address': 'definitely.definitely.definitely.valid@test.gov.uk'},
                 follow_redirects=True
