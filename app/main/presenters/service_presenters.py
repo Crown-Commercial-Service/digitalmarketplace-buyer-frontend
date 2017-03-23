@@ -28,7 +28,9 @@ class Service(object):
         self.service_questions = service_questions
         # required attributes directly mapped to service_data values
         self.title = service_data['serviceName']
-        self.serviceSummary = service_data['serviceSummary']
+        self.serviceSummary = service_data['serviceSummary']\
+            if 'serviceSummary' in service_data else \
+            service_data['serviceDescription']
         self.lot = service_data['lot']
         self.frameworkName = service_data['frameworkName']
         # optional attributes directly mapped to service_data values
@@ -147,13 +149,7 @@ class Meta(object):
         return documents
 
     def get_price_caveats(self, service_data):
-        minimum_contract_str = (
-            (
-                'Minimum contract period: %s'
-                %
-                service_data['minimumContractPeriod']
-            )
-        )
+        caveats = []
         main_caveats = [
             {
                 'key': 'vatIncluded',
@@ -169,24 +165,25 @@ class Meta(object):
                 'key': 'terminationCost',
                 'if_exists': 'Termination costs apply',
                 'if_absent': False
-            },
-            {
-                'key': 'minimumContractPeriod',
-                'if_exists': minimum_contract_str,
-                'if_absent': False
             }
         ]
-        caveats = []
-        options = self._if_both_keys_or_either(
-            service_data,
-            keys=['trialOption', 'freeOption'],
-            values={
-                'if_both': 'Trial and free options available',
-                'if_first': 'Trial option available',
-                'if_second': 'Free option available',
-                'if_neither': False
-            }
-        )
+
+        if 'minimumContractPeriod' in service_data:
+            caveats.append('Minimum contract period: {}'.format(service_data['minimumContractPeriod']))
+
+        if 'freeVersionTrialOption' in service_data:
+            options = 'Free trial option available'
+        else:
+            options = self._if_both_keys_or_either(
+                service_data,
+                keys=['trialOption', 'freeOption'],
+                values={
+                    'if_both': 'Trial and free options available',
+                    'if_first': 'Trial option available',
+                    'if_second': 'Free option available',
+                    'if_neither': False
+                }
+            )
         for item in main_caveats:
             if item['key'] in service_data:
                 if service_data[item['key']]:
