@@ -121,7 +121,7 @@
 
               if (data[0].id == 'count') {
                   text += data[0].values[x].value;
-              } else {
+              } else if (id != "#domain_chart-legend") {
                   text += '<table class="c3-tooltip" width=100%>';
                   for (i = 0; i < data.length; i++) {
                       var value = data[i].values[x].value;
