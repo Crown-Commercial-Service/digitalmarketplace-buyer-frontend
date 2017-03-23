@@ -18,6 +18,7 @@ CSV_EXPECTED = """Supplier,Kev's Fried Noodles,Kev's Pies,Kev's Doughnuts,Kev's 
 Contact,test4@email.com,test2@email.com,test3@email.com,test1@email.com,test5@email.com
 Availability Date,After Christmas,A week Friday,As soon as the sugar is delivered,Next Tuesday,Within the hour
 Day rate,12.35,&euro;3.50,10,¥1.49,£350
+Attached Document URL,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN
 E1,False,True,True,True,False
 E2,True,True,False,True,False
 Nice1,True,False,True,True,False
@@ -2116,6 +2117,7 @@ class TestDownloadBriefResponsesCsv(BaseApplicationTest):
             u'Contact,test1@email.com,"te,st2@email.com",SUM(1+1)*cmd|\' /C calc\'!A0',
             u"Availability Date,\u275dNext \u2014 Tuesday\u275e,&quot;A week Friday&rdquot;,cmd| '/c calc'!A0",
             u'Day rate,1.49,3.50,3.50',
+            u'Attached Document URL,UNKNOWN,UNKNOWN,UNKNOWN',
             u'E1,True,True,True',
             u'E2,True,True,True',
             u'Nice1,True,False,False',
