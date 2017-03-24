@@ -3,6 +3,7 @@ from __future__ import absolute_import
 import os
 import json
 import re
+import mock
 
 from app import create_app, data_api_client
 from datetime import datetime, timedelta
@@ -14,6 +15,12 @@ from dmutils.formats import DATETIME_FORMAT
 
 class BaseApplicationTest(object):
     def setup_method(self, method):
+        # We need to mock the API client in create_app, however we can't use patch the constructor,
+        # as the DataAPIClient instance has already been created; nor can we temporarily replace app.data_api_client
+        # with a mock, because then the shared instance won't have been configured (done in create_app). Instead,
+        # just mock the one function that would make an API call in this case.
+        data_api_client.find_frameworks = mock.Mock()
+        data_api_client.find_frameworks.return_value = BaseApplicationTest._get_fixture_data('frameworks.json')
         self.app = create_app('test')
         self.client = self.app.test_client()
         self.get_user_patch = None

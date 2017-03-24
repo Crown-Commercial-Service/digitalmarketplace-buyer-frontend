@@ -11,10 +11,17 @@ from app.main.presenters.search_summary import SearchSummary, \
 from app import content_loader
 
 
-filter_groups = filters_for_lot(
-    "saas",
-    content_loader.get_builder('g-cloud-6', 'search_filters')
-)
+filter_groups = None
+
+
+def setup_module(module):
+    # for now the tests here are g-cloud-6 (==7/8) specific
+    content_loader.load_manifest('g-cloud-6', 'services', 'search_filters')
+
+    module.filter_groups = filters_for_lot(
+        "saas",
+        content_loader.get_builder('g-cloud-6', 'search_filters')
+    )
 
 
 def _get_fixture_data():

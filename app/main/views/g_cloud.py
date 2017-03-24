@@ -21,6 +21,7 @@ from ..helpers.search_helpers import (
     get_lot_from_request, build_search_query,
     clean_request_args
 )
+from ..helpers import framework_helpers
 
 from ..exceptions import AuthException
 from app import search_api_client, data_api_client, content_loader
@@ -66,9 +67,19 @@ def get_service_by_id(service_id):
             abort(404, "Service ID '{}' can not be found".format(service_id))
 
         service_data = service['services']
+        framework_slug = service_data['frameworkSlug']
+
+        # Some frameworks don't actually have framework content of their own (e.g. G-Cloud 4 and 5) - they
+        # use content from some other framework (for those examples, G-Cloud 6 content works fine). In those
+        # cases, we need to override the framework slug that we got from the service data, and load that
+        # content instead.
+        override_framework_slug = current_app.config.get('DM_FRAMEWORK_CONTENT_MAP', {}).get(framework_slug)
+        if override_framework_slug:
+            framework_slug = override_framework_slug
+
         service_view_data = Service(
             service_data,
-            content_loader.get_builder('g-cloud-6', 'display_service').filter(
+            content_loader.get_builder(framework_slug, 'display_service').filter(
                 service_data
             )
         )
@@ -114,10 +125,14 @@ def get_service_by_id(service_id):
 
 @main.route('/g-cloud/search')
 def search_services():
+    # if there are multiple live g-cloud frameworks, we must assume the same filters work on them all
+    all_frameworks = data_api_client.find_frameworks().get('frameworks')
+    framework = framework_helpers.get_latest_live_framework(all_frameworks, 'g-cloud')
+
     # the bulk of the possible filter parameters are defined through the content loader. they're all boolean and the
     # search api uses the same "question" labels as the content for its attributes, so we can really use those labels
     # verbatim. It also means we can use their human-readable names as defined in the content
-    content_manifest = content_loader.get_manifest('g-cloud-6', 'search_filters')
+    content_manifest = content_loader.get_manifest(framework['slug'], 'search_filters')
     # filters - a seq of dicts describing each parameter group
     filters = filters_for_lot(
         get_lot_from_request(request),
