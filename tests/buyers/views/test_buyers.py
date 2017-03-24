@@ -2258,8 +2258,6 @@ class TestDownloadBriefResponsesView(BaseApplicationTest):
         with po(buyers, 'get_sorted_responses_for_brief') as m:
             result = self.instance.get_responses(brief)
 
-        assert result == m.return_value
-
         m.assert_called_once_with(brief, self.instance.data_api_client)
 
     def test_get_question(self):
