@@ -1,7 +1,6 @@
 import os
 import yaml
 from flask import Markup, escape
-from dmutils.formats import get_label_for_lot_param
 
 
 class SearchSummary(object):
@@ -30,8 +29,10 @@ class SearchSummary(object):
             formatted_conjunction = " {} ".format(final_conjunction)
             return formatted_conjunction.join([u', '.join(start), end])
 
-    def __init__(self, results_total, request_args, filter_groups):
+    def __init__(self, results_total, request_args, filter_groups, lots_by_slug):
+        self._lots_by_slug = lots_by_slug
         self._set_initial_sentence(results_total, request_args)
+
         self.filter_groups = self._group_request_filters(
             request_args,
             filter_groups
@@ -52,8 +53,8 @@ class SearchSummary(object):
 
     def _set_initial_sentence(self, results_total, request_args):
         keywords = escape(request_args.get('q', ''))
-        lot_label = get_label_for_lot_param(
-            request_args.get('lot', 'all', type=str)) or 'All categories'
+        lot_label = (self._lots_by_slug.get(request_args.get('lot'), {}).get('name')
+                     or 'All categories')
         lot = u"{}{}{}".format(
             SearchSummary.LOT_PRE_TAG,
             lot_label,

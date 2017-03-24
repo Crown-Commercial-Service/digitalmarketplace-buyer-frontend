@@ -3,8 +3,6 @@ from math import ceil
 
 from werkzeug.datastructures import MultiDict
 
-from dmutils.formats import lot_to_lot_case
-
 
 def get_lot_from_request(request):
     return request.args.get('lot', None)
@@ -41,7 +39,7 @@ def allowed_request_lot_filters(lot_filters):
     )
 
 
-def clean_request_args(request_args, lot_filters):
+def clean_request_args(request_args, lot_filters, lots_by_slug):
     """Removes any unknown args keys or values from request.
 
     Compares every key/value pair from request query parameters
@@ -63,7 +61,7 @@ def clean_request_args(request_args, lot_filters):
         if request_args.get(key):
             clean_args[key] = request_args[key]
 
-    if lot_to_lot_case(request_args.get('lot')):
+    if request_args.get('lot') in lots_by_slug.keys():
         clean_args['lot'] = request_args.get('lot')
 
     return clean_args
@@ -112,7 +110,7 @@ def replace_g5_search_dots(keywords_query):
     )
 
 
-def build_search_query(request, lot_filters, content_builder):
+def build_search_query(request, lot_filters, content_builder, lots_by_slug):
     """Match request args with known filters.
 
     Removes any unknown query parameters, and will only keep `page`, `q`
@@ -124,7 +122,8 @@ def build_search_query(request, lot_filters, content_builder):
     """
     query = clean_request_args(
         request.args,
-        lot_filters
+        lot_filters,
+        lots_by_slug
     )
 
     if 'q' in query:

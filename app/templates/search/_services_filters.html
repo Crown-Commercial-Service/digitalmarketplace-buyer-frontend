@@ -11,13 +11,11 @@
         {% endif %}
   </li>
   {% for lot in lots %}
-    {% if current_lot == lot.lot %}
-      <li>{{ lot.label }}</li>
-    {% else %}
-      <li>
-        <a href="{{ url_for('.search_services', q=search_keywords, lot=lot.lot) }}">{{ lot.label }}</a>
-      </li>
-    {% endif %}
+    <li>
+      {% if not lot.selected %}<a href="{{ url_for('.search_services', q=search_keywords, lot=lot.slug) }}">{% endif %}
+        {{ lot.name }}
+      {% if not lot.selected %}</a>{% endif %}
+    </li>
   {% endfor %}
   </ul>
 </div>
