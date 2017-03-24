@@ -300,8 +300,8 @@ def view_brief_responses(framework_slug, lot_slug, brief_id):
     brief_responses = data_api_client.find_brief_responses(brief_id)['briefResponses']
 
     brief_responses_require_evidence = (
-        datetime.strptime(current_app.config['FEATURE_FLAGS_NEW_SUPPLIER_FLOW'], "%Y-%m-%d") <=
-        datetime.strptime(brief['publishedAt'][0:10], "%Y-%m-%d")
+        datetime.strptime(current_app.config['FEATURE_FLAGS_NEW_SUPPLIER_FLOW'], "%Y-%m-%d")
+        <= datetime.strptime(brief['publishedAt'][0:10], "%Y-%m-%d")
     )
 
     counter = Counter()

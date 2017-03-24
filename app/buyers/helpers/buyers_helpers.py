@@ -18,10 +18,10 @@ def get_framework_and_lot(framework_slug, lot_slug, data_api_client, allowed_sta
 
 def is_brief_correct(brief, framework_slug, lot_slug, current_user_id):
     return (
-        brief['frameworkSlug'] == framework_slug and
-        brief['lotSlug'] == lot_slug and
-        is_brief_associated_with_user(brief, current_user_id) and
-        not brief_is_withdrawn(brief)
+        brief['frameworkSlug'] == framework_slug
+        and brief['lotSlug'] == lot_slug
+        and is_brief_associated_with_user(brief, current_user_id)
+        and not brief_is_withdrawn(brief)
     )
 
 
