@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from flask import abort, render_template, request, redirect, current_app
+import flask_featureflags as feature
 
 from dmutils.formats import get_label_for_lot_param, dateformat
 from dmapiclient import HTTPError
@@ -29,7 +30,10 @@ from app import search_api_client, data_api_client, content_loader
 
 @main.route('/g-cloud')
 def index_g_cloud():
-    return render_template('index-g-cloud.html')
+    show_search_box = not feature.is_active('GCLOUD9')
+
+    return render_template('index-g-cloud.html',
+                           show_search_box=show_search_box)
 
 
 @main.route('/g-cloud/framework')
