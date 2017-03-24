@@ -1,19 +1,16 @@
 import mock
-import functools
 
 import app.buyers.helpers.ods as ods
 
 from hypothesis import strategies as st
 from hypothesis import given, example
 
-po = functools.partial(mock.patch.object, autospec=True)
-
 
 class TestRow(object):
 
     @given(st.dictionaries(st.text(), st.text()))
     def test___init__(self, kwargs):
-        with po(ods, 'TableRow') as TableRow:
+        with mock.patch.object(ods, 'TableRow', autospec=True) as TableRow:
             instance = ods.Row(**kwargs)
 
         TableRow.assert_called_once_with(**kwargs)
@@ -38,8 +35,8 @@ class TestRow(object):
 
         ps = [mock.Mock() for v in value.split("\n")]
 
-        with po(ods, 'TableCell') as TableCell:
-            with po(ods, 'P') as P:
+        with mock.patch.object(ods, 'TableCell', autospec=True) as TableCell:
+            with mock.patch.object(ods, 'P', autospec=True) as P:
                 P.side_effect = iter(ps)
                 instance.write_cell(value, **kwargs)
 
@@ -60,7 +57,7 @@ class TestRow(object):
 
         instance._row = mock.MagicMock(spec_set=instance._row)
 
-        with po(ods, 'CoveredTableCell') as CoveredTableCell:
+        with mock.patch.object(ods, 'CoveredTableCell', autospec=True) as CoveredTableCell:
             instance.write_covered_cell()
 
         cell = CoveredTableCell.return_value
@@ -71,7 +68,7 @@ class TestRow(object):
 class TestSheet(object):
     @given(st.text())
     def test___init__(self, name):
-        with po(ods, 'Table') as Table:
+        with mock.patch.object(ods, 'Table', autospec=True) as Table:
             instance = ods.Sheet(name)
 
         Table.assert_called_once_with(name=name)
@@ -101,14 +98,14 @@ class TestSheet(object):
     def test_get_row(self, instance, name):
         instance._rows[name] = expected = mock.Mock()
 
-        with po(ods, 'Row'):
+        with mock.patch.object(ods, 'Row', autospec=True):
             assert expected == instance.get_row(name)
 
     @given(st.text().map(ods.Sheet), st.dictionaries(st.text(), st.text()))
     def test_create_column(self, instance, kwargs):
         instance._table = mock.MagicMock(spec_set=instance._table)
 
-        with po(ods, 'TableColumn') as TableColumn:
+        with mock.patch.object(ods, 'TableColumn', autospec=True) as TableColumn:
             instance.create_column(**kwargs)
 
         TableColumn.assert_called_once_with(**kwargs)
@@ -146,7 +143,7 @@ class TestSheet(object):
 
 class TestSpreadSheet(object):
     def test___init__(self):
-        with po(ods, 'OpenDocumentSpreadsheet') as OpenDocumentSpreadsheet:
+        with mock.patch.object(ods, 'OpenDocumentSpreadsheet', autospec=True) as OpenDocumentSpreadsheet:
             instance = ods.SpreadSheet()
 
         OpenDocumentSpreadsheet.assert_called_once_with()
@@ -179,7 +176,7 @@ class TestSpreadSheet(object):
         instance = ods.SpreadSheet()
         instance._document = mock.MagicMock(spec_set=instance._document)
 
-        with po(ods, 'Style') as Style:
+        with mock.patch.object(ods, 'Style', autospec=True) as Style:
             instance.add_style(name, family, styles, **kwargs)
 
         Style.assert_called_once_with(name=name, family=family, **kwargs)

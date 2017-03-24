@@ -1,7 +1,6 @@
 # coding: utf-8
 from __future__ import unicode_literals
 
-import functools
 import sys
 
 import inflection
@@ -17,9 +16,6 @@ from dmcontent.questions import Question
 
 from app.buyers.views import buyers
 from ...helpers import BaseApplicationTest
-
-
-po = functools.partial(mock.patch.object, autospec=True)
 
 
 @mock.patch('app.buyers.views.buyers.data_api_client')
