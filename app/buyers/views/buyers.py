@@ -29,10 +29,11 @@ from dmutils.logging import notify_team
 from dmutils.documents import get_signed_url
 from dmapiclient import HTTPError, APIError
 from dmutils import s3
+from react.render import render_component
 
 
 @buyers.route('/buyers')
-def buyer_dashboard():
+def buyer_briefs():
     user_briefs = data_api_client.find_briefs(current_user.id).get('briefs', [])
     draft_briefs = add_unanswered_counts_to_briefs([brief for brief in user_briefs if brief['status'] == 'draft'],
                                                    content_loader)
@@ -40,10 +41,35 @@ def buyer_dashboard():
     closed_briefs = [brief for brief in user_briefs if brief['status'] == 'closed']
 
     return render_template(
-        'buyers/dashboard.html',
+        'buyers/dashboard-briefs.html',
         draft_briefs=draft_briefs,
         live_briefs=live_briefs,
         closed_briefs=closed_briefs
+    )
+
+
+@buyers.route('/buyers/overview')
+def buyer_overview():
+    email_domain = current_user.email_address.split('@')[-1]
+    teammembers_response = data_api_client.req.teammembers(email_domain).get()
+
+    teammembers = list(sorted(teammembers_response['teammembers'], key=lambda tm: tm['name']))
+
+    rendered_component = render_component(
+        'bundles/BuyerDashboard/BuyerDashboardWidget.js',
+        {
+            'teammembers': teammembers,
+
+            'meta': {
+                'domain': email_domain,
+                'teamname': teammembers_response['teamname']
+            }
+        }
+    )
+
+    return render_template(
+        '_react.html',
+        component=rendered_component,
     )
 
 
@@ -545,7 +571,7 @@ def delete_a_brief(framework_slug, lot_slug, brief_id):
 
     data_api_client.delete_brief(brief_id, current_user.email_address)
     flash({"requirements_deleted": brief.get("title")})
-    return redirect(url_for('.buyer_dashboard'))
+    return redirect(url_for('.buyer_briefs'))
 
 
 @buyers.route(
