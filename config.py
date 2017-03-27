@@ -16,6 +16,8 @@ class Config(object):
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_SECURE = True
 
+    PERMANENT_SESSION_LIFETIME = 36*3600
+
     CSRF_ENABLED = True
     CSRF_TIME_LIMIT = 8*3600
 
@@ -98,6 +100,7 @@ class Config(object):
     ROLLBAR_TOKEN = None
     S3_BUCKET_NAME = None
     AWS_DEFAULT_REGION = None
+
 
 class Test(Config):
     DEBUG = True
