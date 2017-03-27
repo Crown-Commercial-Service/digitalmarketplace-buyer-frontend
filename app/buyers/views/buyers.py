@@ -29,6 +29,7 @@ from dmutils.logging import notify_team
 from dmutils.documents import get_signed_url
 from dmapiclient import HTTPError, APIError
 from dmutils import s3
+from react.render import render_component
 
 
 @buyers.route('/buyers')
@@ -40,10 +41,35 @@ def buyer_dashboard():
     closed_briefs = [brief for brief in user_briefs if brief['status'] == 'closed']
 
     return render_template(
-        'buyers/dashboard.html',
+        'buyers/dashboard-briefs.html',
         draft_briefs=draft_briefs,
         live_briefs=live_briefs,
         closed_briefs=closed_briefs
+    )
+
+
+@buyers.route('/buyers/overview')
+def buyer_overview():
+    email_domain = current_user.email_address.split('@')[-1]
+    teammembers_response = data_api_client.req.teammembers(email_domain).get()
+
+    teammembers = list(sorted(teammembers_response['teammembers'], key=lambda tm: tm['name']))
+
+    rendered_component = render_component(
+        'bundles/BuyerDashboard/BuyerDashboardWidget.js',
+        {
+            'teammembers': teammembers,
+
+            'meta': {
+                'domain': email_domain,
+                'teamname': teammembers_response['teamname']
+            }
+        }
+    )
+
+    return render_template(
+        '_react.html',
+        component=rendered_component,
     )
 
 

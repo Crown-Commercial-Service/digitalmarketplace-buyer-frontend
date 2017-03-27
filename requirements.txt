@@ -1,11 +1,11 @@
-appdirs==1.4.2
+appdirs==1.4.3
 argh==0.26.2
 backoff==1.4.0
 blessings==1.6
 blinker==1.4
 boto==2.46.1
 boto3==1.4.4
-botocore==1.5.19
+botocore==1.5.21
 browsermob-proxy==0.8.0
 cairocffi==0.8.0
 CairoSVG==1.0.22
@@ -17,7 +17,7 @@ cryptography==1.7.2
 cssselect==1.0.1
 csvx==0.1.1459403998
 docutils==0.13.1
-git+https://github.com/AusDTO/dto-digitalmarketplace-apiclient.git@f128e346db262119363693b86e54f439d07867d6#egg=dto_digitalmarketplace_apiclient==whatever
+git+https://github.com/AusDTO/dto-digitalmarketplace-apiclient.git@64eda8f45e051c9b1681d73adb1ab8b460156ec5#egg=dto_digitalmarketplace_apiclient==whatever
 git+https://github.com/AusDTO/dto-digitalmarketplace-content-loader.git@3145d4f0e9d39d411f26643f663cf574afcab1b5#egg=dto_digitalmarketplace_content_loader==whatever
 git+https://github.com/AusDTO/dto-digitalmarketplace-utils.git@cea419d18742d935d76a7738f071fc05d1d08b2e#egg=dto_digitalmarketplace_utils==whatever
 enum34==1.1.6
@@ -32,7 +32,7 @@ funcsigs==1.0.2
 futures==3.0.5
 glob2==0.5
 html5lib==0.999999999
-idna==2.4
+idna==2.5
 inflection==0.3.1
 ipaddress==1.0.18
 itsdangerous==0.24
@@ -45,7 +45,7 @@ manifestparser==1.1
 marionette-driver==2.2.0
 marionette-harness==4.0.0
 Markdown==2.6.8
-MarkupSafe==0.23
+MarkupSafe==1.0
 mock==2.0.0
 monotonic==1.2
 mozcrash==1.0
@@ -61,7 +61,7 @@ moztest==0.8
 mozversion==1.4
 newrelic==2.80.1.61
 nose==1.3.7
-openpyxl==2.4.4
+openpyxl==2.4.5
 packaging==16.8
 parse==1.8.0
 parse-type==0.3.4
@@ -72,7 +72,7 @@ pep8==1.7.0
 py==1.4.32
 pyasn1==0.2.3
 pycparser==2.17
-pyparsing==2.1.10
+pyparsing==2.2.0
 Pyphen==0.9.4
 pytest==3.0.6
 pytest-bdd==2.18.1
