@@ -51,7 +51,9 @@ class TestSearchSummary(BaseApplicationTest):
     def setup_method(self, method):
         super(TestSearchSummary, self).setup_method(method)
 
-        self._lots_by_slug = framework_helpers.get_lots_by_slug(self._get_framework_fixture_data('g-cloud-6')['frameworks'])
+        self._lots_by_slug = framework_helpers.get_lots_by_slug(
+            self._get_framework_fixture_data('g-cloud-6')['frameworks']
+        )
 
         self.fixture = _get_fixture_data()
         self.search_results = SearchResults(self.fixture, self._lots_by_slug)

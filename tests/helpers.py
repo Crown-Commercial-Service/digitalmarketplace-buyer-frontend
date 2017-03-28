@@ -103,7 +103,6 @@ class BaseApplicationTest(object):
                                if f['slug'] == framework_slug)
         }
 
-
     @staticmethod
     def _get_dos_brief_fixture_data(multi=False):
         if multi:

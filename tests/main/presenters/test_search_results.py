@@ -43,7 +43,9 @@ class TestSearchResults(BaseApplicationTest):
 
         self.fixture = _get_fixture_data()
         self.multiple_pages_fixture = _get_fixture_multiple_pages_data()
-        self._lots_by_slug = framework_helpers.get_lots_by_slug(self._get_framework_fixture_data('g-cloud-6')['frameworks'])
+        self._lots_by_slug = framework_helpers.get_lots_by_slug(
+            self._get_framework_fixture_data('g-cloud-6')['frameworks']
+        )
 
     def test_search_results_is_set(self):
         search_results_instance = SearchResults(self.fixture, self._lots_by_slug)

@@ -112,8 +112,9 @@ class TestBuildSearchQueryHelpers(BaseApplicationTest):
                 {'name': 'question6', 'value': 'option3'},
             ]},
         ]
-        self._lots_by_slug = framework_helpers.get_lots_by_slug(self._get_framework_fixture_data('g-cloud-6')['frameworks'])
-
+        self._lots_by_slug = framework_helpers.get_lots_by_slug(
+            self._get_framework_fixture_data('g-cloud-6')['frameworks']
+        )
 
     def _request(self, params):
         return mock.Mock(args=MultiDict(params))
