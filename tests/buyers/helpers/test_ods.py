@@ -1,20 +1,16 @@
 import mock
-import unittest
-import functools
 
 import app.buyers.helpers.ods as ods
 
 from hypothesis import strategies as st
-from hypothesis import given, example, assume
-
-po = functools.partial(mock.patch.object, autospec=True)
+from hypothesis import given, example
 
 
 class TestRow(object):
 
     @given(st.dictionaries(st.text(), st.text()))
     def test___init__(self, kwargs):
-        with po(ods, 'TableRow') as TableRow:
+        with mock.patch.object(ods, 'TableRow', autospec=True) as TableRow:
             instance = ods.Row(**kwargs)
 
         TableRow.assert_called_once_with(**kwargs)
@@ -39,8 +35,8 @@ class TestRow(object):
 
         ps = [mock.Mock() for v in value.split("\n")]
 
-        with po(ods, 'TableCell') as TableCell:
-            with po(ods, 'P') as P:
+        with mock.patch.object(ods, 'TableCell', autospec=True) as TableCell:
+            with mock.patch.object(ods, 'P', autospec=True) as P:
                 P.side_effect = iter(ps)
                 instance.write_cell(value, **kwargs)
 
@@ -61,7 +57,7 @@ class TestRow(object):
 
         instance._row = mock.MagicMock(spec_set=instance._row)
 
-        with po(ods, 'CoveredTableCell') as CoveredTableCell:
+        with mock.patch.object(ods, 'CoveredTableCell', autospec=True) as CoveredTableCell:
             instance.write_covered_cell()
 
         cell = CoveredTableCell.return_value
@@ -72,7 +68,7 @@ class TestRow(object):
 class TestSheet(object):
     @given(st.text())
     def test___init__(self, name):
-        with po(ods, 'Table') as Table:
+        with mock.patch.object(ods, 'Table', autospec=True) as Table:
             instance = ods.Sheet(name)
 
         Table.assert_called_once_with(name=name)
@@ -102,14 +98,14 @@ class TestSheet(object):
     def test_get_row(self, instance, name):
         instance._rows[name] = expected = mock.Mock()
 
-        with po(ods, 'Row') as Row:
+        with mock.patch.object(ods, 'Row', autospec=True):
             assert expected == instance.get_row(name)
 
     @given(st.text().map(ods.Sheet), st.dictionaries(st.text(), st.text()))
     def test_create_column(self, instance, kwargs):
         instance._table = mock.MagicMock(spec_set=instance._table)
 
-        with po(ods, 'TableColumn') as TableColumn:
+        with mock.patch.object(ods, 'TableColumn', autospec=True) as TableColumn:
             instance.create_column(**kwargs)
 
         TableColumn.assert_called_once_with(**kwargs)
@@ -147,7 +143,7 @@ class TestSheet(object):
 
 class TestSpreadSheet(object):
     def test___init__(self):
-        with po(ods, 'OpenDocumentSpreadsheet') as OpenDocumentSpreadsheet:
+        with mock.patch.object(ods, 'OpenDocumentSpreadsheet', autospec=True) as OpenDocumentSpreadsheet:
             instance = ods.SpreadSheet()
 
         OpenDocumentSpreadsheet.assert_called_once_with()
@@ -170,8 +166,7 @@ class TestSpreadSheet(object):
 
         Sheet.assert_called_once_with(name)
 
-        instance._document.spreadsheet.addElement\
-                .assert_called_once_with(Sheet.return_value._table)
+        instance._document.spreadsheet.addElement.assert_called_once_with(Sheet.return_value._table)
 
     @given(st.text(), st.text(), st.integers(min_value=0, max_value=10),
            st.dictionaries(st.text(), st.text()))
@@ -181,16 +176,14 @@ class TestSpreadSheet(object):
         instance = ods.SpreadSheet()
         instance._document = mock.MagicMock(spec_set=instance._document)
 
-        with po(ods, 'Style') as Style:
+        with mock.patch.object(ods, 'Style', autospec=True) as Style:
             instance.add_style(name, family, styles, **kwargs)
 
         Style.assert_called_once_with(name=name, family=family, **kwargs)
 
-        Style.return_value.addElement\
-             .assert_has_calls([mock.call(style) for style in styles], True)
+        Style.return_value.addElement.assert_has_calls([mock.call(style) for style in styles], True)
 
-        instance._document.automaticstyles.addElement\
-                .assert_called_once_with(Style.return_value)
+        instance._document.automaticstyles.addElement.assert_called_once_with(Style.return_value)
 
     def test_add_font(self):
         instance = ods.SpreadSheet()
@@ -200,15 +193,14 @@ class TestSpreadSheet(object):
 
         instance.add_font(fontface)
 
-        instance._document.fontfacedecls.addElement\
-                .assert_called_once_with(fontface)
+        instance._document.fontfacedecls.addElement.assert_called_once_with(fontface)
 
-    def save(self):
+    def test_save(self):
         instance = ods.SpreadSheet()
         instance._document = mock.MagicMock(spec_set=instance._document)
 
         buf = mock.Mock()
 
-        instance.add_font(fontface)
+        instance.save(buf)
 
         instance._document.save.assert_called_once_with(buf)

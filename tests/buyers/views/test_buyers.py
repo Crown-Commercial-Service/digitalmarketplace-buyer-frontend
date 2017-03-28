@@ -1,25 +1,21 @@
 # coding: utf-8
 from __future__ import unicode_literals
 
-from ...helpers import BaseApplicationTest
+import sys
+
+import inflection
+import mock
+import pytest
+from lxml import html
+from werkzeug.exceptions import NotFound
+
+from dmapiclient import DataAPIClient
 from dmapiclient import api_stubs, HTTPError
 from dmcontent.content_loader import ContentLoader
 from dmcontent.questions import Question
-import mock
-from lxml import html
-import pytest
 
 from app.buyers.views import buyers
-from dmcontent.content_loader import ContentLoader
-from dmapiclient import DataAPIClient
-import functools
-import inflection
-import sys
-
-from werkzeug.exceptions import NotFound
-
-
-po = functools.partial(mock.patch.object, autospec=True)
+from ...helpers import BaseApplicationTest
 
 
 @mock.patch('app.buyers.views.buyers.data_api_client')
@@ -368,20 +364,11 @@ class TestEveryDamnPage(BaseApplicationTest):
             framework_status='expired'
         )
 
-    def test_expired_framework_post_edit_brief_question(self):
+    @pytest.mark.parametrize('lot', ('digital-outcomes', 'digital-specialists'))
+    def test_expired_framework_post_edit_brief_question_ds(self, lot):
         data = {"required1": True}
         self._load_page(
-            "/digital-outcomes/1234/edit/section-1/required1",
-            404,
-            method='post',
-            data=data,
-            framework_status='expired'
-        )
-
-    def test_expired_framework_post_edit_brief_question(self):
-        data = {"required1": True}
-        self._load_page(
-            "/digital-specialists/1234/edit/section-1/required1",
+            "/{}/1234/edit/section-1/required1".format(lot),
             404,
             method='post',
             data=data,
@@ -1280,7 +1267,6 @@ class TestPublishBrief(BaseApplicationTest):
         res = self.client.get("/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
                               "digital-specialists/1234/publish")
         page_html = res.get_data(as_text=True)
-        document = html.fromstring(page_html)
 
         assert res.status_code == 200
         assert "You still need to complete the following questions before your requirements " \
@@ -1324,7 +1310,6 @@ class TestDeleteBriefSubmission(BaseApplicationTest):
             res = self.client.post(
                 "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/delete",
             )
-            print(framework_status)
             assert res.status_code == 404
             assert not data_api_client.delete_brief.called
 
@@ -2255,10 +2240,8 @@ class TestDownloadBriefResponsesView(BaseApplicationTest):
     def test_get_responses(self):
         brief = mock.Mock()
 
-        with po(buyers, 'get_sorted_responses_for_brief') as m:
+        with mock.patch.object(buyers, 'get_sorted_responses_for_brief', autospec=True) as m:
             result = self.instance.get_responses(brief)
-
-        assert result == m.return_value
 
         m.assert_called_once_with(brief, self.instance.data_api_client)
 
@@ -2316,17 +2299,18 @@ class TestDownloadBriefResponsesView(BaseApplicationTest):
         expected['filename'] = 'supplier-responses-' + filename
 
         self.instance.data_api_client.get_brief.return_value = brief
+        with mock.patch.object(buyers, 'is_brief_correct', autospec=True) as is_brief_correct:
+            with mock.patch.object(buyers, 'get_framework_and_lot', autospec=True):
+                with mock.patch.object(buyers, 'current_user') as current_user:
 
-        with po(buyers, 'get_framework_and_lot') as get_framework_and_lot,\
-                po(buyers, 'is_brief_correct') as is_brief_correct,\
-                mock.patch.object(buyers, 'current_user') as current_user:
+                    result = self.instance.get_context_data(**kwargs)
 
-            result = self.instance.get_context_data(**kwargs)
-
-        is_brief_correct.assert_called_once_with(brief['briefs'],
-                                                 kwargs['framework_slug'],
-                                                 kwargs['lot_slug'],
-                                                 current_user.id)
+        is_brief_correct.assert_called_once_with(
+            brief['briefs'],
+            kwargs['framework_slug'],
+            kwargs['lot_slug'],
+            current_user.id
+        )
 
         self.instance.data_api_client.get_brief\
             .assert_called_once_with(kwargs['brief_id'])
@@ -2349,13 +2333,12 @@ class TestDownloadBriefResponsesView(BaseApplicationTest):
 
         self.instance.data_api_client.get_brief.return_value = brief
 
-        with po(buyers, 'get_framework_and_lot') as get_framework_and_lot,\
-                po(buyers, 'is_brief_correct') as is_brief_correct,\
-                mock.patch.object(buyers, 'current_user') as current_user:
-
-            is_brief_correct.return_value = False
-            with pytest.raises(NotFound):
-                self.instance.get_context_data(**kwargs)
+        with mock.patch.object(buyers, 'is_brief_correct', autospec=True) as is_brief_correct:
+            with mock.patch.object(buyers, 'get_framework_and_lot', autospec=True):
+                with mock.patch.object(buyers, 'current_user'):
+                    is_brief_correct.return_value = False
+                    with pytest.raises(NotFound):
+                        self.instance.get_context_data(**kwargs)
 
     def test_get_context_data_with_open_brief(self):
         self.instance.get_responses = mock.Mock()
@@ -2370,13 +2353,13 @@ class TestDownloadBriefResponsesView(BaseApplicationTest):
 
         self.instance.data_api_client.get_brief.return_value = brief
 
-        with po(buyers, 'get_framework_and_lot') as get_framework_and_lot,\
-                po(buyers, 'is_brief_correct') as is_brief_correct,\
-                mock.patch.object(buyers, 'current_user') as current_user:
+        with mock.patch.object(buyers, 'is_brief_correct', autospec=True) as is_brief_correct:
+            with mock.patch.object(buyers, 'get_framework_and_lot', autospec=True):
+                with mock.patch.object(buyers, 'current_user'):
 
-            is_brief_correct.return_value = True
-            with pytest.raises(NotFound):
-                self.instance.get_context_data(**kwargs)
+                    is_brief_correct.return_value = True
+                    with pytest.raises(NotFound):
+                        self.instance.get_context_data(**kwargs)
 
     def test_generate_ods(self):
         questions = [
@@ -2419,8 +2402,6 @@ class TestDownloadBriefResponsesView(BaseApplicationTest):
         k = 0
 
         for i, question in enumerate(questions):
-            length = len(self.brief[question['id']])
-            offset = 0
 
             for l, name in enumerate(self.brief[question['id']]):
                 k += 1
@@ -2452,8 +2433,6 @@ class TestDownloadBriefResponsesView(BaseApplicationTest):
         k = 0
 
         for i, question in enumerate(questions):
-            length = len(self.brief[question['id']])
-            offset = 0
 
             for l, name in enumerate(self.brief[question['id']]):
                 k += 1
@@ -2502,10 +2481,10 @@ class TestDownloadBriefResponsesView(BaseApplicationTest):
 
         self.instance.generate_ods = mock.Mock()
 
-        with po(buyers, 'BytesIO') as BytesIO,\
-                po(buyers, 'Response') as Response:
+        with mock.patch.object(buyers, 'BytesIO', autospec=True) as BytesIO:
+            with mock.patch.object(buyers, 'Response', autospec=True) as Response:
 
-            result = self.instance.create_ods_response(context)
+                result = self.instance.create_ods_response(context)
 
         assert result == (Response.return_value, 200)
 
@@ -2556,7 +2535,7 @@ class TestDownloadBriefResponsesView(BaseApplicationTest):
     def test_dispatch_request(self):
         kwargs = {'foo': 'bar', 'baz': 'abc'}
 
-        self.instance.get_context_data = get_context_data = mock.Mock()
+        self.instance.get_context_data = mock.Mock()
 
         self.instance.create_response = create_response = mock.Mock()
 

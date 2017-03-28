@@ -73,7 +73,6 @@ class SpreadSheet(object):
 
     def add_style(self, name, family, styles, **kwargs):
         style = Style(name=name, family=family, **kwargs)
-
         for v in styles:
             style.addElement(v)
 

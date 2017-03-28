@@ -1,5 +1,4 @@
 from flask import abort
-from datetime import datetime, timedelta
 
 
 def get_framework_and_lot(framework_slug, lot_slug, data_api_client, allowed_statuses=None, must_allow_brief=False):

@@ -7,11 +7,6 @@ from dmapiclient import APIError
 from ..helpers.shared_helpers import parse_link
 import re
 
-try:
-    from urlparse import urlparse, parse_qs
-except ImportError:
-    from urllib.parse import urlparse, parse_qs
-
 
 def process_prefix(prefix=None, format='view'):
     if prefix == u"other":  # special case

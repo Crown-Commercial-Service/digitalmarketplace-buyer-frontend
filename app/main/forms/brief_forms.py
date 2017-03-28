@@ -1,3 +1,5 @@
+from collections import OrderedDict
+
 from flask_wtf import Form
 from wtforms import IntegerField, SelectMultipleField
 from wtforms.validators import NumberRange
@@ -24,10 +26,11 @@ class BriefSearchForm(Form):
             # as a data field if there were a name collision
             frameworks = kwargs.pop("frameworks")
             self._framework_slug = ",".join(v["slug"] for v in frameworks)
-            seen = set()
-            self.lot.choices = tuple((v['slug'], v['name']) for f in frameworks
-                                     for v in f['lots'] if v['allowsBrief'] and
-                                     not (v['slug'] in seen or seen.add(v['slug'])))
+            lot_choices = OrderedDict()
+            for framework in frameworks:
+                for lot in filter(lambda i: i['allowsBrief'], framework['lots']):
+                    lot_choices[lot['slug']] = lot['name']
+            self.lot.choices = lot_choices.items()
         except KeyError:
             raise TypeError("Expected keyword argument 'frameworks' with framework information")
         try:
