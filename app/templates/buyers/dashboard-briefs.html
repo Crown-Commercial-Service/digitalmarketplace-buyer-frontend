@@ -46,7 +46,9 @@
 %}
 {% include 'toolkit/page-heading.html' %}
 {% endwith %}
-<a href="/buyers/overview">manage team</a>
+{% if 'TEAM_VIEW' is active_feature %}
+  <a href="/buyers/overview">manage team</a>
+{% endif %}
 
 {{ summary.heading("Drafts", id="unpublished_requirements") }}
 {% call(item) summary.list_table(
