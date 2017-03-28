@@ -162,28 +162,24 @@ def search_services():
     all_frameworks = data_api_client.find_frameworks().get('frameworks')
     framework = framework_helpers.get_latest_live_framework(all_frameworks, 'g-cloud')
 
-    current_lot_slug = get_lot_from_request(request)
-    current_lot = None
-    lots = framework['lots']
-    for lot in lots:
-        if lot['slug'] == current_lot_slug:
-            lot['selected'] = True
-            current_lot = lot
+    # TODO remove me after G-Cloud 9 goes live
+    is_g9_live = framework['slug'] != 'g-cloud-8'
 
+    current_lot_slug = get_lot_from_request(request)
     lots_by_slug = framework_helpers.get_lots_by_slug(framework)
 
     # the bulk of the possible filter parameters are defined through the content loader. they're all boolean and the
     # search api uses the same "question" labels as the content for its attributes, so we can really use those labels
     # verbatim. It also means we can use their human-readable names as defined in the content
     content_manifest = content_loader.get_manifest(framework['slug'], 'search_filters')
-    # filters - a seq of dicts describing each parameter group
+    # filters - an OrderedDictionary of dicts describing each parameter group
     filters = filters_for_lot(
         current_lot_slug,
         content_manifest
     )
 
     search_api_response = search_api_client.search_services(
-        **build_search_query(request, filters, content_manifest, lots_by_slug)
+        **build_search_query(request, filters.values(), content_manifest, lots_by_slug)
     )
 
     search_results_obj = SearchResults(search_api_response, lots_by_slug)
@@ -198,18 +194,32 @@ def search_services():
 
     search_summary = SearchSummary(
         search_api_response['meta']['total'],
-        clean_request_args(request.args, filters, lots_by_slug),
-        filters,
+        clean_request_args(request.args, filters.values(), lots_by_slug),
+        filters.values(),
         lots_by_slug
     )
 
     # annotate `filters` with their values as set in this request for re-rendering purposes.
-    set_filter_states(filters, request)
+    set_filter_states(filters.values(), request)
+
+    # for display purposes (but not for actual filtering purposes), we
+    # remove 'categories' from the list of filters, and process them into a single structure with the lots
+    # TODO G9 test
+    category_filter = filters.pop('categories') if 'categories' in filters else None
+
+    current_lot = None
+    lots = framework['lots']
+    for lot in lots:
+        if lot['slug'] == current_lot_slug:
+            lot['selected'] = True
+            current_lot = lot
+            # TODO G9 test
+            lot['categories'] = category_filter['filters'] if category_filter else []
 
     return render_template(
         'search/services.html',
         current_lot=current_lot,
-        filters=filters,
+        filters=filters.values(),
         lots=lots,
         pagination=pagination_config,
         search_keywords=get_keywords_from_request(request),

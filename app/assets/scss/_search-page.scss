@@ -29,6 +29,10 @@ em.search-result-highlighted-text {
       padding-left: 0;
       margin: 5px 0 $gutter;
     }
+
+    ul ul {
+      margin: 0 0 $gutter $gutter;
+    }
   }
 
   .govuk-option-select {

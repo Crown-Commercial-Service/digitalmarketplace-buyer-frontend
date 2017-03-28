@@ -12,9 +12,20 @@
   </li>
   {% for lot in lots %}
     <li>
-      {% if not lot.selected %}<a href="{{ url_for('.search_services', q=search_keywords, lot=lot.slug) }}">{% endif %}
+      {% if not lot.selected %}<a href="{{ url_for('.search_services', q=search_keywords, lot=lot.slug) }}">{% else %}<strong>{% endif %}
         {{ lot.name }}
-      {% if not lot.selected %}</a>{% endif %}
+      {% if not lot.selected %}</a>{% else %}</strong>{% endif %}
+      {% if lot.categories %}
+        <ul>
+          {% for category in lot.categories %}
+            <li>
+              {% if not category.checked %}<a href="{{ url_for('.search_services', q=search_keywords, lot=lot.slug, serviceTypes=category.value) }}">{% else %}<strong>{% endif %}
+                {{ category.label }}
+              {% if not category.checked %}</a>{% else %}</strong>{% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
     </li>
   {% endfor %}
   </ul>

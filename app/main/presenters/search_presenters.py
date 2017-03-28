@@ -1,3 +1,5 @@
+from collections import OrderedDict
+
 from ..helpers.search_helpers import get_filters_from_request
 
 
@@ -16,7 +18,7 @@ def sections_for_lot(lot, builder):
 
 def filters_for_lot(lot, builder):
     sections = sections_for_lot(lot, builder)
-    lot_filters = []
+    lot_filters = OrderedDict()
 
     for section in sections:
         section_filter = {
@@ -28,7 +30,7 @@ def filters_for_lot(lot, builder):
                 filters_for_question(question)
             )
 
-        lot_filters.append(section_filter)
+        lot_filters[section.slug] = section_filter
 
     return lot_filters
 
@@ -53,6 +55,7 @@ def filters_for_question(question):
                     option['label'].lower().replace(' ', '-')),
                 'value': option['label'].lower(),
             })
+    # TODO checkbox-tree
 
     return question_filters
 
