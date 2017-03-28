@@ -15,9 +15,9 @@ def get_keywords_from_request(request):
 
 
 def get_page_from_request(request):
-    if 'page' in request.args:
+    try:
         return int(request.args['page'])
-    else:
+    except (KeyError, ValueError, TypeError):
         return None
 
 
