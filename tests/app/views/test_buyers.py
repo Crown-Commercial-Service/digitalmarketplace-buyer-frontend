@@ -18,7 +18,9 @@ CSV_EXPECTED = """Supplier,Kev's Fried Noodles,Kev's Pies,Kev's Doughnuts,Kev's 
 Contact,test4@email.com,test2@email.com,test3@email.com,test1@email.com,test5@email.com
 Availability Date,After Christmas,A week Friday,As soon as the sugar is delivered,Next Tuesday,Within the hour
 Day rate,12.35,&euro;3.50,10,¥1.49,£350
-Attached Document URL,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN
+Attached Document URL 1,,,,,
+Attached Document URL 2,,,,,
+Attached Document URL 3,,,,,
 E1,False,True,True,True,False
 E2,True,True,False,True,False
 Nice1,True,False,True,True,False
@@ -1832,7 +1834,7 @@ class TestViewBriefResponsesPage(BaseApplicationTest):
 
         assert res.status_code == 200
         assert "2 responses" in page
-        assert "This spreadsheet contains the response from each seller to the brief’s" in page
+        assert "This spreadsheet contains the response" in page
 
     def test_page_does_not_pluralise_for_single_response(self, data_api_client):
         data_api_client.find_brief_responses.return_value = {
@@ -1854,7 +1856,7 @@ class TestViewBriefResponsesPage(BaseApplicationTest):
         page = res.get_data(as_text=True)
         assert res.status_code == 200
         assert "1 response" in page
-        assert "This spreadsheet contains the response from each seller to the brief’s" in page
+        assert "This spreadsheet contains the response" in page
 
     def test_page_shows_correct_message_if_no_eligible_suppliers(self, data_api_client):
         data_api_client.find_brief_responses.return_value = {
@@ -2063,7 +2065,7 @@ class TestDownloadBriefResponsesCsv(BaseApplicationTest):
 
         ws = wb['Responses']
 
-        rows = [','.join(unicode(c.value) for c in r)
+        rows = [','.join(unicode(c.value or '') for c in r)
                 for r in ws.rows]
 
         assert rows == CSV_EXPECTED.splitlines()
@@ -2117,7 +2119,9 @@ class TestDownloadBriefResponsesCsv(BaseApplicationTest):
             u'Contact,test1@email.com,"te,st2@email.com",SUM(1+1)*cmd|\' /C calc\'!A0',
             u"Availability Date,\u275dNext \u2014 Tuesday\u275e,&quot;A week Friday&rdquot;,cmd| '/c calc'!A0",
             u'Day rate,1.49,3.50,3.50',
-            u'Attached Document URL,UNKNOWN,UNKNOWN,UNKNOWN',
+            u'Attached Document URL 1,,,',
+            u'Attached Document URL 2,,,',
+            u'Attached Document URL 3,,,',
             u'E1,True,True,True',
             u'E2,True,True,True',
             u'Nice1,True,False,False',

@@ -22,7 +22,7 @@ setup(
         'newrelic',
         'cffi',
         'Flask-WeasyPrint',
-	'WeasyPrint<=0.35',
+        'WeasyPrint<=0.35',
         'pendulum',
         'csvx',
         'xlsxwriter',

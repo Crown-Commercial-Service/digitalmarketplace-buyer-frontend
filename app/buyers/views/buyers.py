@@ -349,15 +349,16 @@ def prepared_response_contents_for_brief(brief, responses):
         answers.update({'Contact': r.get('respondToEmailAddress', 'UNKNOWN')})
         answers.update({'Availability Date': r.get('availability', 'UNKNOWN')})
         answers.update({'Day rate': r.get('dayRate', '')})
-        answers.update({'Attached Document URL': url_for('.download_brief_response_attachment',
-                                                         framework_slug=brief['frameworkSlug'],
-                                                         lot_slug=brief['lotSlug'],
-                                                         brief_id=brief['id'],
-                                                         response_id=r.get('id'),
-                                                         _external=True
-                                                         )
-                        if r.get('attachedDocumentURL') else 'UNKNOWN'})
-
+        for i in range(0, 3):
+            answers.update({'Attached Document URL {}'.format(i+1): url_for('.download_brief_response_attachment',
+                                                                            framework_slug=brief['frameworkSlug'],
+                                                                            lot_slug=brief['lotSlug'],
+                                                                            brief_id=brief['id'],
+                                                                            response_id=r.get('id'),
+                                                                            attachment_id=i,
+                                                                            _external=True
+                                                                            )
+                            if i < len(r.get('attachedDocumentURL', [])) else ''})
         answers.update(zip(ess_req_names, ess_responses))
         answers.update(zip(nth_req_names, nth_responses))
 
@@ -371,9 +372,10 @@ def prepared_response_contents_for_brief(brief, responses):
 
 
 @buyers.route(
-    '/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/response/<response_id>/attachment',
+    '/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<int:brief_id>/'
+    'response/<int:response_id>/attachment/<int:attachment_id>',
     methods=['GET'])
-def download_brief_response_attachment(framework_slug, lot_slug, brief_id, response_id):
+def download_brief_response_attachment(framework_slug, lot_slug, brief_id, response_id, attachment_id):
     get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
     brief = data_api_client.get_brief(brief_id)["briefs"]
 
@@ -389,7 +391,7 @@ def download_brief_response_attachment(framework_slug, lot_slug, brief_id, respo
 
     bucket = s3.S3(current_app.config['S3_BUCKET_NAME'],
                    "s3-"+current_app.config['AWS_DEFAULT_REGION']+".amazonaws.com")
-    url = get_signed_url(bucket, response['briefResponses']['attachedDocumentURL'], None)
+    url = get_signed_url(bucket, response['briefResponses']['attachedDocumentURL'][attachment_id], None)
     if not url:
         abort(404)
     return redirect(url)
