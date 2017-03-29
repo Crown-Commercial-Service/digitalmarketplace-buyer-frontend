@@ -32,11 +32,22 @@ def get_filters_from_request(request):
 def allowed_request_lot_filters(lot_filters):
     """Create a set of (name, value) pairs for all form filters."""
 
-    return set(
-        (f['name'], f['value'])
-        for section in lot_filters
-        for f in section['filters']
-    )
+    filters = set()
+
+    def recursive_search(filters):
+        more_filters = set()
+        for f in filters:
+            more_filters.add((f['name'], f['value']))
+            children = f.get('children')
+            if children:
+                more_filters.update(recursive_search(children))
+        return more_filters
+    # recursive search to account for sub-filters (i.e. sub-categories)
+
+    for section in lot_filters:
+        filters.update(recursive_search(section['filters']))
+
+    return filters
 
 
 def clean_request_args(request_args, lot_filters, lots_by_slug):

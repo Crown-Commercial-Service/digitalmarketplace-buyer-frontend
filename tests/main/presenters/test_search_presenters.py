@@ -38,7 +38,7 @@ class TestSearchFilters(object):
 
     def _get_filter_group_by_label(self, lot, label):
         filter_groups = filters_for_lot(lot, questions_builder)
-        for filter_group in filter_groups:
+        for filter_group in filter_groups.values():
             if filter_group['label'] == label:
                 return filter_group
 
@@ -113,7 +113,7 @@ class TestSearchFilters(object):
         }
 
     def test_request_filters_are_set(self):
-        search_filters = filters_for_lot('saas', questions_builder)
+        search_filters = filters_for_lot('saas', questions_builder).values()
         request = self._get_request_for_params({
             'q': 'email',
             'booleanExample1': 'true'
@@ -131,7 +131,7 @@ class TestSearchFilters(object):
             'lot': 'paas'
         })
 
-        search_filters = filters_for_lot('paas', questions_builder)
+        search_filters = filters_for_lot('paas', questions_builder).values()
         set_filter_states(search_filters, request)
         assert search_filters[0] == {
             'label': 'Booleans example',
@@ -160,7 +160,7 @@ class TestSearchFilters(object):
             'booleanExample1': 'true'
         })
 
-        search_filters = filters_for_lot('paas', questions_builder)
+        search_filters = filters_for_lot('paas', questions_builder).values()
         set_filter_states(search_filters, request)
 
         assert search_filters[0] == {
@@ -195,7 +195,7 @@ class TestSearchFilters(object):
         assert all_filters == no_lot_filters
 
     def test_instance_has_correct_filter_groups_for_paas(self):
-        search_filters = filters_for_lot('paas', questions_builder)
+        search_filters = filters_for_lot('paas', questions_builder).values()
 
         filter_group_labels = [
             group['label'] for group in search_filters
@@ -206,7 +206,7 @@ class TestSearchFilters(object):
         assert 'Radios example' in filter_group_labels
 
     def test_instance_has_correct_filter_groups_for_iaas(self):
-        search_filters = filters_for_lot('iaas', questions_builder)
+        search_filters = filters_for_lot('iaas', questions_builder).values()
 
         filter_group_labels = [
             group['label'] for group in search_filters

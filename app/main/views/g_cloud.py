@@ -10,6 +10,7 @@ from ...main import main
 from ..presenters.search_presenters import (
     filters_for_lot,
     set_filter_states,
+    show_lots_and_categories_selection,
 )
 from ..presenters.search_results import SearchResults
 from ..presenters.search_summary import SearchSummary
@@ -199,22 +200,18 @@ def search_services():
         lots_by_slug
     )
 
-    # annotate `filters` with their values as set in this request for re-rendering purposes.
-    set_filter_states(filters.values(), request)
-
     # for display purposes (but not for actual filtering purposes), we
     # remove 'categories' from the list of filters, and process them into a single structure with the lots
     # TODO G9 test
-    category_filter = filters.pop('categories') if 'categories' in filters else None
+    category_filter_group = filters.pop('categories') if 'categories' in filters else None
 
-    current_lot = None
     lots = framework['lots']
-    for lot in lots:
-        if lot['slug'] == current_lot_slug:
-            lot['selected'] = True
-            current_lot = lot
-            # TODO G9 test
-            lot['categories'] = category_filter['filters'] if category_filter else []
+    show_lots_and_categories_selection(lots, category_filter_group, request)
+
+    current_lot = lots_by_slug.get(current_lot_slug)
+
+    # annotate `filters` with their values as set in this request for re-rendering purposes.
+    set_filter_states(filters.values(), request)
 
     return render_template(
         'search/services.html',

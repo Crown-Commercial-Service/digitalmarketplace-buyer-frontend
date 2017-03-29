@@ -1,0 +1,14 @@
+<ul>
+  {% for category in categories %}
+    <li>
+      {% if category.link %}<a href="{{ category.link }}">{% endif %}{% if category.selected %}<strong>{% endif %}
+        {{ category.label }}
+      {% if category.selected %}</strong>{% endif %}{% if category.link %}</a>{% endif %}
+      {% if category.children and category.selected %}
+        {% with categories=category.children %}
+          {% include 'search/_categories.html' %}
+        {% endwith %}
+      {% endif %}
+    </li>
+  {% endfor %}
+</ul>
