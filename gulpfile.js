@@ -451,7 +451,7 @@ gulp.task(
     'copy:images',
     'copy:svg',
     'copy:govuk_template',
-    'svg2png'
+    // 'svg2png'
   ]
 );
 

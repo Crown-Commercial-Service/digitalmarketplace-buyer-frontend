@@ -16,10 +16,10 @@
     <div class="banner-success-without-action">
   {% endif %}
     {% if message == 'no_account' %}
-      <p class="callout">
+      <div class="uikit-body uikit-page-alerts uikit-page-alerts--warning">
         Make sure you've entered the right email address and password.
         Accounts are locked after 5 failed attempts.
-      </p>
+      </div>
     {% elif message == 'password_updated' %}
       <p class="callout">
         You have successfully changed your password.
