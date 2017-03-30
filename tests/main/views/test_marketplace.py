@@ -76,7 +76,7 @@ class TestHomepageBrowseList(BaseApplicationTest):
 
             link_texts = [item.text_content().strip() for item in document.cssselect('.browse-list-item a')]
             assert link_texts[0] == "Find an individual specialist"
-            assert link_texts[-1] == "Buy physical datacentre space for legacy systems"
+            assert link_texts[-1] == "Buy physical datacentre space"
             assert "Find specialists to work on digital projects" not in link_texts
 
     def test_links_are_for_existing_dos_framework_when_a_new_dos_framework_in_standstill_exists(self, data_api_client):
@@ -172,7 +172,7 @@ class TestHomepageBrowseList(BaseApplicationTest):
 
             link_texts = [item.text_content().strip() for item in document.cssselect('.browse-list-item a')]
             assert link_texts[0] == "Find cloud technology and support"
-            assert link_texts[1] == "Buy physical datacentre space for legacy systems"
+            assert link_texts[1] == "Buy physical datacentre space"
             assert len(link_texts) == 2
 
 
