@@ -389,9 +389,8 @@ def download_brief_response_attachment(framework_slug, lot_slug, brief_id, respo
     if not response or not response.get('briefResponses', {}).get('attachedDocumentURL'):
         abort(404)
 
-    bucket = s3.S3(current_app.config['S3_BUCKET_NAME'],
-                   current_app.config['S3_ENDPOINT_URL'])
-    url = get_signed_url(bucket, response['briefResponses']['attachedDocumentURL'][attachment_id], None)
+    url = get_signed_url(current_app.config['S3_BUCKET_NAME'],
+                         response['briefResponses']['attachedDocumentURL'][attachment_id], None)
     if not url:
         abort(404)
     return redirect(url)
