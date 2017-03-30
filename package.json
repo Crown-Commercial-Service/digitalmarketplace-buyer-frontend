@@ -23,7 +23,7 @@
     "gulp-sass-lint": "^1.2.0",
     "gulp-shell": "0.2.9",
     "gulp-sourcemaps": "1.5.2",
-    "gulp-svg2png": "^1.0.2",
+    "gulp-svg2png": "^2.0.2",
     "gulp-uglify": "1.4.0",
     "phantomjs-prebuilt": "2.1.7",
     "run-sequence": "^1.2.2",
@@ -47,18 +47,6 @@
     "auto-save": true,
     "plugins": true,
     "ignore": [],
-    "css": {
-      "minified": true,
-      "modules": false,
-      "browsers": [
-        "last 2 versions",
-        "ie 8",
-        "ie 9",
-        "ie 10"
-      ],
-      "location": "uikit/vendor/something/css/",
-      "name": false
-    },
     "sass": {
       "modules": false,
       "location": "app/assets/scss/uikit2/",
