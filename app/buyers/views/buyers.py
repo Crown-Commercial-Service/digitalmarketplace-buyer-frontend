@@ -390,7 +390,7 @@ def download_brief_response_attachment(framework_slug, lot_slug, brief_id, respo
         abort(404)
 
     bucket = s3.S3(current_app.config['S3_BUCKET_NAME'],
-                   "s3-"+current_app.config['AWS_DEFAULT_REGION']+".amazonaws.com")
+                   current_app.config['S3_ENDPOINT_URL'])
     url = get_signed_url(bucket, response['briefResponses']['attachedDocumentURL'][attachment_id], None)
     if not url:
         abort(404)

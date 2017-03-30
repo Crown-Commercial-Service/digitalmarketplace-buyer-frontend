@@ -100,6 +100,7 @@ class Config(object):
 
     ROLLBAR_TOKEN = None
     S3_BUCKET_NAME = None
+    S3_ENDPOINT_URL = 's3-ap-southeast-2.amazonaws.com'
     AWS_DEFAULT_REGION = None
 
 
