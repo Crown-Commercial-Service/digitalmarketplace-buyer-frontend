@@ -77,6 +77,14 @@ items = [
   </div>
 </div>
 
+{% if show_pdf_link %}
+  <div class="m-t-1">
+    <a href="{{ url_for('.get_brief_pdf', framework_slug=brief.frameworkSlug, brief_id=brief.id) }}" target="_blank">
+      Download this brief as a PDF
+    </a>
+  </div>
+{% endif %}
+
 <div class="grid-row">
   <div class="column-one-whole">
     {% include '_brief_attributes.html' %}
@@ -116,7 +124,7 @@ items = [
 
     {% if not current_user.is_authenticated %}
       <p>
-        <strong>Already have a Marketplace account?</strong><br/>
+        <strong>Already have a seller account?</strong><br/>
         {% with
         url = application_url,
         role = "button",
@@ -127,13 +135,8 @@ items = [
       </p>
       <p>
         <strong>New to the Marketplace?</strong><br/>
-        {% with
-        url = "{}/become-a-seller".format(config['URL_PREFIX']),
-        role = "button",
-        label = "Sign up now"
-        %}
-        {% include "toolkit/link-button.html" %}
-        {% endwith %}
+        <a href="{config['URL_PREFIX']}/become-a-seller">Sign up now</a>
+
       </p>
       {% else %}
       <p>
@@ -150,11 +153,4 @@ items = [
   {% endif %}
 {% endif %}
 
-{% if show_pdf_link %}
-  <div class="m-t-1">
-    <a href="{{ url_for('.get_brief_pdf', framework_slug=brief.frameworkSlug, brief_id=brief.id) }}" target="_blank">
-      Download this brief as a PDF
-    </a>
-  </div>
-{% endif %}
 {% endblock %}
