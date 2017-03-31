@@ -184,6 +184,8 @@ def supplier_search():
                 'description': details['summary'],
                 'link': url_for('.get_supplier', code=details['code']),
                 'services': services,
+                'products': details['products'],
+                'recruiter_info': details['recruiter_info'],
                 'badges': details.get('seller_type', {})
             }
         else:
