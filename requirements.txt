@@ -7,7 +7,7 @@ werkzeug==0.10.4
 odfpy==1.3.3
 
 git+https://github.com/alphagov/digitalmarketplace-utils.git@24.0.4#egg=digitalmarketplace-utils==24.0.4
-git+https://github.com/alphagov/digitalmarketplace-content-loader.git@3.5.0#egg=digitalmarketplace-content-loader==3.5.0
+git+https://github.com/alphagov/digitalmarketplace-content-loader.git@3.7.0#egg=digitalmarketplace-content-loader==3.7.0
 git+https://github.com/alphagov/digitalmarketplace-apiclient.git@8.4.0#egg=digitalmarketplace-apiclient==8.4.0
 
 # For Cloud Foundry
