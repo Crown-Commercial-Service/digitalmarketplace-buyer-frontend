@@ -69,6 +69,7 @@ node_modules
 bower_components
 npm-debug.log
 app/assets/scss/toolkit
+app/assets/scss/uikit2
 app/templates/govuk
 app/templates/toolkit
 app/content
