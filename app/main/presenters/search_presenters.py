@@ -103,7 +103,6 @@ def show_lots_and_categories_selection(lots, category_filter_group, request):
         lot_selected = (lot['slug'] == current_lot_slug)
         if lot_selected:
             lot['selected'] = True
-            # TODO G9 test - don't want this for G7/8
             categories = category_filter_group['filters'] if category_filter_group else []
             category_was_selected = _show_category_selection(lot, categories, request)
             lot['categories'] = categories

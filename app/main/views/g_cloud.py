@@ -202,8 +202,10 @@ def search_services():
 
     # for display purposes (but not for actual filtering purposes), we
     # remove 'categories' from the list of filters, and process them into a single structure with the lots
-    # TODO G9 test
-    category_filter_group = filters.pop('categories') if 'categories' in filters else None
+    if is_g9_live:
+        category_filter_group = filters.pop('categories') if 'categories' in filters else None
+    else:
+        category_filter_group = None
 
     lots = framework['lots']
     show_lots_and_categories_selection(lots, category_filter_group, request)
@@ -224,5 +226,6 @@ def search_services():
         services=search_results_obj.search_results,
         summary=search_summary.markup(),
         title='Search results',
-        total=search_results_obj.total
+        total=search_results_obj.total,
+        show_all_categories=not is_g9_live,
     )

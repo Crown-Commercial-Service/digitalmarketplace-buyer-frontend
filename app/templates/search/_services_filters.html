@@ -2,14 +2,15 @@
   <h2>Choose a category</h2>
   {% from 'macros/_filters.html' import checkbox, lot_filters %}
   <ul>
-
-  <li>
-        {% if current_lot %}
-        <a href="{{ url_for('.search_services', q=search_keywords) }}">All categories</a>
-        {% else %}
-        All categories
-        {% endif %}
-  </li>
+  {% if show_all_categories %}
+    <li>
+          {% if current_lot %}
+          <a href="{{ url_for('.search_services', q=search_keywords) }}">All categories</a>
+          {% else %}
+          All categories
+          {% endif %}
+    </li>
+  {% endif %}
   {% for lot in lots %}
     <li>
       {% if lot.link %}<a href="{{ lot.link }}">{% endif %}{% if lot.selected %}<strong>{% endif %}
