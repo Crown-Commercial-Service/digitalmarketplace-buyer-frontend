@@ -8,7 +8,7 @@
     "@gov.au/body": "^0.1.0",
     "@gov.au/callout": "^0.1.0",
     "@gov.au/page-alerts": "^0.1.0",
-    "@gov.au/pancake-sass": "^1.0.8",
+    "@gov.au/pancake-sass": "^1.0.9",
     "bower": "1.5.2",
     "del": "1.1.1",
     "gulp": "^3.9.1",
