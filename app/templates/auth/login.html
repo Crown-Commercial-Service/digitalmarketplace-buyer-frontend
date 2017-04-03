@@ -21,25 +21,25 @@
         Accounts are locked after 5 failed attempts.
       </div>
     {% elif message == 'password_updated' %}
-      <p class="callout">
+      <div class="uikit-body uikit-page-alerts uikit-page-alerts--success">
         You have successfully changed your password.
-      </p>
+      </div>
     {% elif message == 'password_not_updated' %}
-      <p class="callout">
+      <div class="uikit-body uikit-page-alerts uikit-page-alerts--error">
         Could not update password due to an error.
-      </p>
+      </div>
     {% elif message == 'supplier-role-required' %}
-      <p class="callout">
+      <div class="uikit-body uikit-page-alerts uikit-page-alerts--error">
         You must sign in with a seller account to see this page.
-      </p>
+      </div>
     {% elif message == 'buyer-role-required' %}
-      <p class="callout">
+      <div class="uikit-body uikit-page-alerts uikit-page-alerts--error">
           You must sign in with a buyer account to see this page.
-      </p>
+      </div>
     {% elif message == 'applicant-role-required' %}
-      <p class="callout">
+      <div class="uikit-body uikit-page-alerts uikit-page-alerts--error">
         You must sign in with a applicant account to see this page.
-      </p>
+      </div>
     {% elif category != 'must_login' %}
       {{ message }}
     {% endif %}

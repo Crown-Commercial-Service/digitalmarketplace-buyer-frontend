@@ -26,7 +26,7 @@
 
   {% with messages = get_flashed_messages(with_categories=True) %}
     {% for category, message in messages %}
-      <div class="callout--success" aria-labelledby="callout--success__heading" aria-role="group" tabindex="-1" role="alert">
+      <div class="uikit-body uikit-page-alerts uikit-page-alerts--success" aria-labelledby="callout--success__heading" aria-role="group" tabindex="-1" role="alert">
         {% if category == 'casestudy_deleted' %}
           <p id="callout--success__heading">The case study <strong>{{message.casestudy_name}}</strong> has been deleted</p>
         {% endif %}
