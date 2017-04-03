@@ -36,11 +36,12 @@
       var titles = {
           "reject_application_count": "Rejected",
           "revert_application_count": "Reverted",
-          "create_application_count": "Created",
+          "create_application_count": "Started",
           "approve_application_count": "Approved",
-          "submit_application_count": "Submitted",
+          "submit_application_count": "Completed",
           "unassessed": "Unassessed",
-          "unsubmitted": "Not yet submitted",
+          "submitted": "Completed",
+          "unsubmitted": "Started",
           "assessed": "Assessed",
           "count": "Count",
           indigenous: 'Indigenous business',
@@ -121,7 +122,7 @@
 
               if (data[0].id == 'count') {
                   text += data[0].values[x].value;
-              } else if (id != "#domain_chart-legend") {
+              } else {
                   text += '<table class="c3-tooltip" width=100%>';
                   for (i = 0; i < data.length; i++) {
                       var value = data[i].values[x].value;
