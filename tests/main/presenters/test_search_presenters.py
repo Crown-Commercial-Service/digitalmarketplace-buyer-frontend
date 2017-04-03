@@ -3,13 +3,22 @@ import json
 from mock import Mock
 from dmcontent.content_loader import ContentLoader
 from werkzeug.datastructures import MultiDict
+import flask
 
-from app.main.presenters.search_presenters import filters_for_lot, set_filter_states
+from app.main.presenters.search_presenters import (
+    filters_for_lot,
+    set_filter_states,
+    show_lots_and_categories_selection,
+)
+
+from ...helpers import BaseApplicationTest
 
 
 content_loader = ContentLoader('tests/fixtures/content')
 content_loader.load_manifest('g6', 'data', 'manifest')
+content_loader.load_manifest('g9', 'data', 'manifest')
 questions_builder = content_loader.get_builder('g6', 'manifest')
+g9_builder = content_loader.get_builder('g9', 'manifest')
 
 
 def _get_fixture_data():
@@ -34,7 +43,7 @@ def _get_fixture_multiple_pages_data():
         return json.load(fixture_file)
 
 
-class TestSearchFilters(object):
+class TestSearchFilters(BaseApplicationTest):
 
     def _get_filter_group_by_label(self, lot, label):
         filter_groups = filters_for_lot(lot, questions_builder)
@@ -124,6 +133,30 @@ class TestSearchFilters(object):
         assert search_filters[0]['filters'][0]['checked'] is True
         assert search_filters[0]['filters'][1]['name'] == 'booleanExample2'
         assert search_filters[0]['filters'][1]['checked'] is False
+
+    def test_show_lots_and_categories_selection(self):
+        framework = self._get_framework_fixture_data('g-cloud-9')['frameworks']
+        lots = framework['lots']
+        lot_slug = 'cloud-software'
+
+        category_filter_group = filters_for_lot(lot_slug, g9_builder)['categories-example']
+
+        with self.app.test_request_context("/g-cloud/search?q=&lot={}".format(lot_slug)):
+            show_lots_and_categories_selection(lots, category_filter_group, flask.request)
+
+            assert lots[0].get('slug') == 'cloud-hosting'
+            assert not lots[0].get('selected')
+            assert not lots[0].get('categories')
+
+            assert lots[1].get('slug') == 'cloud-software'
+            assert lots[1].get('selected')
+            category_links = lots[1]['categories']
+            assert category_links[0]['link'] == '/g-cloud/search?q=&checkboxTreeExample=option+1&lot=cloud-software'
+            assert not category_links[0].get('children')
+            assert category_links[1]['link'] == '/g-cloud/search?q=&checkboxTreeExample=option+2&lot=cloud-software'
+            sub_categories = category_links[1]['children']
+            assert sub_categories[0]['link'] == '/g-cloud/search?q=&checkboxTreeExample=option+2.1&lot=cloud-software'
+            assert sub_categories[1]['link'] == '/g-cloud/search?q=&checkboxTreeExample=option+2.2&lot=cloud-software'
 
     def test_filter_groups_have_correct_default_state(self):
         request = self._get_request_for_params({
