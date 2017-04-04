@@ -1,22 +1,43 @@
-@include media ($tablet) {
-  .chart-legend {
-  position: absolute;
-  right: 2%;
-  width: 23%;
-  }
-}
-
 .chart {
-  width: 100%;
+  width: 95%;
   min-height: 450px;
 }
 
+@include media ($tablet) {
+  .chart-legend {
+  position: absolute;
+  right: 6%;
+  width: 23%;
+  }
+  .chart {
+    width:73%;
+  }
+}
+.chart-page {
+  width: 100% !important;
+  background-color: #f0f3f5;
+  .content-main:first-child {
+    width: 100% !important;
+  }
+}
+
+.chart-wrapper {
+  width: 100%;
+  background: white;
+  padding: 0 12px 0 12px;
+  margin-bottom: 24px;
+  h2 {
+    padding-top: 15px;
+  }
+}
 /*-- Chart --*/
 .c3 svg {
   font: 10px sans-serif;
   -webkit-tap-highlight-color: transparent;
 }
-
+.c3-axis-x {
+  font: 12px sans-serif;
+}
 .c3 path, .c3 line {
   fill: none;
   stroke: #000;
@@ -27,6 +48,7 @@
   -moz-user-select: none;
   user-select: none;
 }
+
 
 .c3-legend-item-tile,
 .c3-xgrid-focus,

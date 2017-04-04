@@ -2,32 +2,39 @@
 
 {% block page_title %}Seller applications dashboard{% endblock %}
 
-{% block body_classes %}buyers-guide secondary-page{% endblock %}
+{% block body_classes %}chart-page secondary-page{% endblock %}
+{% block main_class %}chart-page{% endblock %}
 
 {% block main_content %}
   <script type="text/javascript" src="{{ asset_fingerprinter.get_url('javascripts/charts.js') }}"></script>
-
   <h1>Seller applications dashboard</h1>
-  <h2>Applications</h2>
-  <p>Total number of applications being started and completed by new sellers over time. </p>
-  <div id="linechart-legend" class="chart-legend"></div>
-  <svg id="linechart" class="chart"></svg>
+  <div class="chart-wrapper">
+    <h2>Applications</h2>
+    <p>Total number of applications being started and completed by new sellers over time. </p>
+    <div id="linechart-legend" class="chart-legend"></div>
+    <svg id="linechart" class="chart"></svg>
+  </div>
 
-  <h2>Expertise</h2>
-  <p>Sellers are applying to offer these areas of expertise to government buyers.</p>
-  <div id="domain_chart-legend" class="chart-legend"></div>
-  <svg id="domain_chart" class="chart"></svg>
+  <div class="chart-wrapper">
+    <h2>Expertise</h2>
+    <p>Sellers are applying to offer these areas of expertise to government buyers.</p>
+    <div id="domain_chart-legend" class="chart-legend"></div>
+    <svg id="domain_chart" class="chart"></svg>
+  </div>
 
-  <h2>Classification</h2>
-  <p>Sellers have identified themselves as businesses of this size, type or as part of these diversity groups. </p>
-  <div id="seller_type_chart-legend" class="chart-legend"></div>
-  <svg id="seller_type_chart" class="chart"></svg>
+  <div class="chart-wrapper">
+    <h2>Classification</h2>
+    <p>Sellers have identified themselves as businesses of this size, type or as part of these diversity groups. </p>
+    <div id="seller_type_chart-legend" class="chart-legend"></div>
+    <svg id="seller_type_chart" class="chart"></svg>
+  </div>
 
-  <h2>Steps completed</h2>
-  <p>Some application steps are easy. Some take more time. This data helps us offer assistance and iterate.</p>
-  <div id="steps_chart-legend" class="chart-legend"></div>
-  <svg id="steps_chart" class="chart"></svg>
-
+  <div class="chart-wrapper">
+    <h2>Steps completed</h2>
+    <p>Some application steps are easy. Some take more time. This data helps us offer assistance and iterate.</p>
+    <div id="steps_chart-legend" class="chart-legend"></div>
+    <svg id="steps_chart" class="chart"></svg>
+  </div>
 
   <script>
       var monthShortNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -164,7 +171,7 @@
               axis: {
                   y: {
                       min: 0,
-                      padding: {top:10, bottom:0}
+                      padding: {top: 10, bottom: 0}
                   },
                   x: {
                       type: 'timeseries',
@@ -213,8 +220,8 @@
                           fit: true,
                           culling: false,
                           format: function (x) {
-                              if (domains[x].length >19) {
-                                  return domains[x].substr(0, 19) + '…';
+                              if (domains[x].length > (window.innerWidth < 768 ? 10:15)) {
+                                  return (" "+domains[x]).substr(0, (window.innerWidth < 768 ? 10:15)) + '…';
                               } else {
                                   return domains[x];
                               }
