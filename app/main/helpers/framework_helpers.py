@@ -7,3 +7,7 @@ def get_latest_live_framework(all_frameworks, framework_type):
         return latest
     except ValueError:  # max of empty iterable
         return None
+
+
+def get_lots_by_slug(framework_data):
+    return {lot['slug']: lot for lot in framework_data['lots']}

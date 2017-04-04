@@ -5,6 +5,9 @@ from app.main.presenters.service_presenters import (
     chunk_string
 )
 from app import content_loader
+from app.main.helpers import framework_helpers
+
+from ...helpers import BaseApplicationTest
 
 
 def _get_fixture_data():
@@ -25,36 +28,45 @@ def test_chunk_string():
     assert list(chunk_string("123456789101", 4)) == ["1234", "5678", "9101"]
 
 
-class TestService(object):
+class TestService(BaseApplicationTest):
     def setup_method(self, method):
+        super(TestService, self).setup_method(method)
+
         self.fixture = _get_fixture_data()
         self.fixture = self.fixture['services']
+        self._lots_by_slug = framework_helpers.get_lots_by_slug(
+            self._get_framework_fixture_data('g-cloud-6')['frameworks']
+        )
+
         self.service = Service(
-            self.fixture, content_loader.get_builder('g-cloud-6', 'display_service')
+            self.fixture, content_loader.get_builder('g-cloud-6', 'display_service'), self._lots_by_slug
         )
 
     def test_title_attribute_is_set(self):
         assert self.service.title == self.fixture['serviceName']
 
     def test_lot_attribute_is_set(self):
-        assert self.service.lot == self.fixture['lot']
+        assert self.service.lot['slug'] == self.fixture['lot'].lower()
 
     def test_framework_attribute_is_set(self):
         assert self.service.frameworkName == self.fixture['frameworkName']
 
     def test_Service_works_if_supplierName_is_not_set(self):
         del self.fixture['supplierName']
-        self.service = Service(self.fixture, content_loader.get_builder('g-cloud-6', 'display_service'))
+        self.service = Service(self.fixture, content_loader.get_builder('g-cloud-6', 'display_service'),
+                               self._lots_by_slug)
         assert not hasattr(self.service, 'supplierName')
 
     def test_Service_works_if_serviceFeatures_is_not_set(self):
         del self.fixture['serviceFeatures']
-        self.service = Service(self.fixture, content_loader.get_builder('g-cloud-6', 'display_service'))
+        self.service = Service(self.fixture, content_loader.get_builder('g-cloud-6', 'display_service'),
+                               self._lots_by_slug)
         assert not hasattr(self.service, 'features')
 
     def test_Service_works_if_serviceBenefits_is_not_set(self):
         del self.fixture['serviceBenefits']
-        self.service = Service(self.fixture, content_loader.get_builder('g-cloud-6', 'display_service'))
+        self.service = Service(self.fixture, content_loader.get_builder('g-cloud-6', 'display_service'),
+                               self._lots_by_slug)
         assert not hasattr(self.service, 'benefits')
 
     def test_features_attributes_are_correctly_set(self):
@@ -67,7 +79,9 @@ class TestService(object):
 
     def test_attributes_are_correctly_set(self):
         service = Service(
-            self.fixture, content_loader.get_builder('g-cloud-6', 'display_service').filter({'lot': 'iaas'})
+            self.fixture,
+            content_loader.get_builder('g-cloud-6', 'display_service').filter({'lot': 'iaas'}),
+            self._lots_by_slug
         )
         assert service.attributes[0]['name'] == 'Support'
         assert len(service.attributes) == 30
@@ -75,20 +89,23 @@ class TestService(object):
 
     def test_the_support_attribute_group_is_not_there_if_no_attributes(self):
         del self.fixture['openStandardsSupported']
-        service = Service(self.fixture, content_loader.get_builder('g-cloud-6', 'display_service'))
+        service = Service(self.fixture, content_loader.get_builder('g-cloud-6', 'display_service'),
+                          self._lots_by_slug)
         for group in service.attributes:
             assert group['name'] != 'Open standards', "Support group should not be found"
 
     def test_only_attributes_with_a_valid_type_are_added_to_groups(self):
         invalidValue = (u'Manuals provided', u'CMS training')
         self.fixture['onboardingGuidance'] = invalidValue
-        service = Service(self.fixture, content_loader.get_builder('g-cloud-6', 'display_service'))
+        service = Service(self.fixture, content_loader.get_builder('g-cloud-6', 'display_service'),
+                          self._lots_by_slug)
         for group in service.attributes:
             assert not (group['name'] == 'External interface protection' and 'onboardingGuidance' in group), \
                 "Attribute with tuple value should not be in group"
 
     def test_attributes_with_assurance_in_the_fields_add_it_correctly(self):
-        service = Service(self.fixture, content_loader.get_builder('g-cloud-6', 'display_service'))
+        service = Service(self.fixture, content_loader.get_builder('g-cloud-6', 'display_service'),
+                          self._lots_by_slug)
         for group in service.attributes:
             if group['name'] == 'Data-in-transit protection':
                 for row in group['rows']:
@@ -101,7 +118,8 @@ class TestService(object):
                         assert row.value == [u'No encryption']
 
     def test_attributes_with_assurance_for_a_list_value_has_a_caveat(self):
-        service = Service(self.fixture, content_loader.get_builder('g-cloud-6', 'display_service'))
+        service = Service(self.fixture, content_loader.get_builder('g-cloud-6', 'display_service'),
+                          self._lots_by_slug)
         for group in service.attributes:
             if group['name'] == 'Asset protection and resilience':
                 for row in group['rows']:

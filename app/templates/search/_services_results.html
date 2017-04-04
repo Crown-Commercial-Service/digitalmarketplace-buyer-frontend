@@ -13,17 +13,7 @@
     </p>
     <ul aria-label="tags" class="search-result-metadata">
         <li class="search-result-metadata-item">
-        {% if service.lot.lower() == 'saas' %}
-            Software as a Service
-        {% elif service.lot.lower() == 'paas' %}
-            Platform as a Service
-        {% elif service.lot.lower() == 'iaas' %}
-            Infrastructure as a Service
-        {% elif service.lot.lower() == 'scs' %}
-            Specialist Cloud Services
-        {% else %}
-            Lot: {{ service.lot }}
-        {% endif %}
+            {{ service.lot.name }}
         </li>
         <li class="search-result-metadata-item">
             {{ service.frameworkName }}
