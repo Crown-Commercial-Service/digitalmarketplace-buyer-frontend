@@ -28,6 +28,6 @@
   <input type="text" name="q" id="keywords" value="{{ search_keywords }}" maxlength="200">
 </div>
 {% if current_lot %}
-<input type="hidden" name="lot" value="{{ current_lot }}" />
+<input type="hidden" name="lot" value="{{ current_lot.slug }}" />
 {% endif %}
 {% include 'search/_filters.html' %}
