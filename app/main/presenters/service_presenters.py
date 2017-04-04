@@ -31,8 +31,7 @@ class Service(object):
         self.serviceSummary = service_data['serviceSummary']\
             if 'serviceSummary' in service_data else \
             service_data['serviceDescription']
-        # according to our test data, lot field in service_data may not be correct slug i.e. it may be mixed case
-        self.lot = lots_by_slug.get(service_data['lot'], lots_by_slug.get(service_data['lot'].lower()))
+        self.lot = lots_by_slug.get(service_data['lot'])
         self.frameworkName = service_data['frameworkName']
         # optional attributes directly mapped to service_data values
         for key in [

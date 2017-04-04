@@ -4,6 +4,8 @@ import re
 from lxml import html
 
 from app import data_api_client
+from app.main.helpers import framework_helpers
+
 from ...helpers import BaseApplicationTest
 
 
@@ -39,12 +41,9 @@ class TestServicePage(BaseApplicationTest):
         data_api_client.get_framework = mock.Mock()
         data_api_client.get_service = mock.Mock()
 
-        self.lots = {
-            'SaaS': 'Software as a Service',
-            'PaaS': 'Platform as a Service',
-            'IaaS': 'Infrastructure as a Service',
-            'SCS': 'Specialist Cloud Services'
-        }
+        self.lots = framework_helpers.get_lots_by_slug(
+            self._get_framework_fixture_data('g-cloud-6')['frameworks']
+        )
 
     def _assert_contact_details(self, document):
 
@@ -111,7 +110,7 @@ class TestServicePage(BaseApplicationTest):
         breadcrumbs_expected = {
             '/': 'Digital Marketplace',
             '/g-cloud': 'Cloud technology and support',
-            '/g-cloud/search?lot={}'.format(lot.lower()): self.lots[lot]
+            '/g-cloud/search?lot={}'.format(lot): self.lots[lot]['name']
         }
 
         breadcrumbs = document.xpath('//div[@id="global-breadcrumb"]//a')

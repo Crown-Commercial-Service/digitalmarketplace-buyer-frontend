@@ -13,7 +13,7 @@
     "frameworkSlug": "g-cloud-5",
     "frameworkStatus": "live",
     "status": "published",
-    "lot": "IaaS",
+    "lot": "iaas",
     "serviceTypes": [
       "Compute",
       "Storage"
