@@ -277,7 +277,9 @@ class TestBriefPage(BaseApplicationTest):
         brief_response_url = self.expand_path('/sellers/opportunities/{}/responses/create'.format(brief_id))
         apply_links = document.xpath('//a[@href="{}"]'.format(brief_response_url))
         assert len(apply_links) == 0
-        assert '25 February 2000' in document.xpath('//div[@class="uikit-body uikit-page-alerts uikit-page-alerts--info"]')[0][1].text_content()
+        assert '25 February 2000' in document.xpath(
+            '//div[@class="uikit-body uikit-page-alerts uikit-page-alerts--info"]'
+        )[0][1].text_content()
 
     def test_dos_brief_specialist_role_displays_label(self):
         brief_id = self.brief['briefs']['id']
