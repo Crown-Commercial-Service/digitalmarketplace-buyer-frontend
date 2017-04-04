@@ -138,9 +138,9 @@ def _show_category_selection(lot, category_filters, request):
         if any_child_selected:
             any_descendant_selected = True
 
-        # As with lots, we want a link to the category - but not if the category is directly selected
-        # (if we're showing it as 'selected' because one of its children is selected, then again as with
-        # lots we don't want the link).
+        # As with lots, we want a link to the category - but not if the category is directly selected.
+        # If we're showing it as 'selected' because one of its children is selected, then the link is
+        # useful as a kind of breadcrumb, to return to showing all services in that overall category.
         if not directly_selected:
             # The argument in the URL must reflect the 'name' of the filter (i.e. the particular question
             # name it was derived from - 'serviceTypes' for G7/G8, 'serviceCategories' for G9.
@@ -152,7 +152,7 @@ def _show_category_selection(lot, category_filters, request):
                                        **url_args)
 
     # Remove parent categories (except the selected one), when any subcategory is selected - we
-    # we think this may make navigation easier (and it's what Amazon does!)
+    # we think this may make navigation easier (and it's similar to what Amazon does)
     if any_descendant_selected:
         category_filters[:] = (c for c in category_filters if c['selected'])  # in-place filter(!)
     return any_category_selected

@@ -103,14 +103,17 @@ class SearchSummary(object):
         def _is_option(values):
             return (len(values) == 1) and (values[0] == u'true')
 
-        # TODO this is a bit mad
-        def _get_filter_recursive(key, option, filters):
+        def _get_filter_recursive(key, value, filters):
+            """
+            Search filters (and their children, in the case of checkbox_tree questions) for a one
+            where filter[key] == value.
+            """
             for filter in filters:
-                if filter[key] == option:
+                if filter[key] == value:
                     return filter
                 children = filter.get('children')
                 if children:
-                    search_children = _get_filter_recursive(key, option, children)
+                    search_children = _get_filter_recursive(key, value, children)
                     if search_children is not None:
                         return search_children
 
