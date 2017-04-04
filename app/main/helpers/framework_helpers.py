@@ -10,4 +10,4 @@ def get_latest_live_framework(all_frameworks, framework_type):
 
 
 def get_lots_by_slug(framework_data):
-    return dict((lot['slug'], lot) for lot in framework_data['lots'])
+    return {lot['slug']: lot for lot in framework_data['lots']}
