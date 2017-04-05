@@ -151,12 +151,12 @@ class TestSearchFilters(BaseApplicationTest):
             assert lots[1].get('slug') == 'cloud-software'
             assert lots[1].get('selected')
             category_links = lots[1]['categories']
-            assert '&checkboxTreeExample=option+1' in category_links[0]['link']
+            assert 'checkboxTreeExample=option+1' in category_links[0]['link']
             assert not category_links[0].get('children')
-            assert '&checkboxTreeExample=option+2' in category_links[1]['link']
+            assert 'checkboxTreeExample=option+2' in category_links[1]['link']
             sub_categories = category_links[1]['children']
-            assert '&checkboxTreeExample=option+2.1' in sub_categories[0]['link']
-            assert '&checkboxTreeExample=option+2.2' in sub_categories[1]['link']
+            assert 'checkboxTreeExample=option+2.1' in sub_categories[0]['link']
+            assert 'checkboxTreeExample=option+2.2' in sub_categories[1]['link']
 
     def test_filter_groups_have_correct_default_state(self):
         request = self._get_request_for_params({
