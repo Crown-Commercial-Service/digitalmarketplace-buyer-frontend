@@ -103,17 +103,31 @@ class SearchSummary(object):
         def _is_option(values):
             return (len(values) == 1) and (values[0] == u'true')
 
+        def _get_filter_recursive(key, value, filters):
+            """
+            Search filters (and their children, in the case of checkbox_tree questions) for a one
+            where filter[key] == value.
+            """
+            for filter in filters:
+                if filter[key] == value:
+                    return filter
+                children = filter.get('children')
+                if children:
+                    search_children = _get_filter_recursive(key, value, children)
+                    if search_children is not None:
+                        return search_children
+
         def _get_group_label_for_option(option):
             for group in filter_groups:
-                for filter in group['filters']:
-                    if filter['name'] == option:
-                        return group['label']
+                found_filter = _get_filter_recursive('name', option, group['filters'])
+                if found_filter is not None:
+                    return group['label']
 
         def _get_label_for_string_option(option):
             for group in filter_groups:
-                for filter in group['filters']:
-                    if filter['value'] == option:
-                        return filter['label']
+                found_filter = _get_filter_recursive('value', option, group['filters'])
+                if found_filter:
+                    return found_filter['label']
 
         def _get_label_for_boolean_option(option):
             for group in filter_groups:

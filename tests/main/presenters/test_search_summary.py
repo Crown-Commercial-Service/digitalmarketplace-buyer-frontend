@@ -22,7 +22,7 @@ def setup_module(module):
     module.filter_groups = filters_for_lot(
         "saas",
         content_loader.get_builder('g-cloud-6', 'search_filters')
-    )
+    ).values()
 
 
 def _get_fixture_data():
