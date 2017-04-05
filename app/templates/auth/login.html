@@ -16,30 +16,30 @@
     <div class="banner-success-without-action">
   {% endif %}
     {% if message == 'no_account' %}
-      <div class="uikit-body uikit-page-alerts uikit-page-alerts--warning">
+      <p class="callout">
         Make sure you've entered the right email address and password.
         Accounts are locked after 5 failed attempts.
-      </div>
+      </p>
     {% elif message == 'password_updated' %}
-      <div class="uikit-body uikit-page-alerts uikit-page-alerts--success">
+      <p class="callout">
         You have successfully changed your password.
-      </div>
+      </p>
     {% elif message == 'password_not_updated' %}
-      <div class="uikit-body uikit-page-alerts uikit-page-alerts--error">
+      <p class="callout">
         Could not update password due to an error.
-      </div>
+      </p>
     {% elif message == 'supplier-role-required' %}
-      <div class="uikit-body uikit-page-alerts uikit-page-alerts--error">
+      <p class="callout">
         You must sign in with a seller account to see this page.
-      </div>
+      </p>
     {% elif message == 'buyer-role-required' %}
-      <div class="uikit-body uikit-page-alerts uikit-page-alerts--error">
+      <p class="callout">
           You must sign in with a buyer account to see this page.
-      </div>
+      </p>
     {% elif message == 'applicant-role-required' %}
-      <div class="uikit-body uikit-page-alerts uikit-page-alerts--error">
+      <p class="callout">
         You must sign in with a applicant account to see this page.
-      </div>
+      </p>
     {% elif category != 'must_login' %}
       {{ message }}
     {% endif %}
