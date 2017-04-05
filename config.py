@@ -83,7 +83,7 @@ class Config(object):
         'SELLER_REGISTRATION': True,
         'DOMAINS_SEARCH': True,
         'NEW_SELLER_PROFILE': True,
-        'DM_FRAMEWORK': False,
+        'DM_FRAMEWORK': True,
         'SEARCH': True,
         'TEAM_VIEW': True
     }
