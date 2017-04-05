@@ -266,11 +266,6 @@ def get_brief_by_id(framework_slug, brief_id):
 
     application_url = "/sellers/opportunities/{}/responses/create".format(brief['id'])
     add_case_study_url = None
-    if 'areaOfExpertise' in brief:
-        current_supplier = data_api_client.req.suppliers(current_user.supplier_code).get()
-        current_domain = data_api_client.req.domain(brief['areaOfExpertise']).get()
-        if brief['areaOfExpertise'] not in current_supplier['supplier']['domains']['assessed']:
-            add_case_study_url = url_for('.new_supplier_case_study', domain_id=current_domain['domain']['id'])
 
     return render_template_with_csrf(
         'brief.html',

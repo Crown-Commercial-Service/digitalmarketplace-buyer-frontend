@@ -116,22 +116,23 @@ def get_supplier_case_study(casestudy_id):
     )
 
 
-@main.route('/case-study/create/<int:domain_id>', methods=['GET'])
+@main.route('/case-study/create/<int:domain_id>/brief/<int:brief_id>', methods=['GET'])
 @login_required
-def new_supplier_case_study(domain_id):
+def new_supplier_case_study(domain_id, brief_id):
     domain = data_api_client.req.domain(str(domain_id)).get()
     if not current_user.role == 'supplier':
         flash('buyer-role-required', 'error')
         return current_app.login_manager.unauthorized()
     form = DmForm()
-    basename = url_for('.create_new_supplier_case_study', domain_id=domain_id)
+    basename = url_for('.create_new_supplier_case_study', domain_id=domain_id, brief_id=brief_id)
     props = {
         'form_options': {
             'csrf_token': form.csrf_token.current_token
         },
         'casestudy': {
             'domain_id': domain_id,
-            'service': domain['domain']['name']
+            'service': domain['domain']['name'],
+            'brief_id': brief_id
         },
         'basename': basename
     }
@@ -173,9 +174,9 @@ def delete_supplier_case_study(casestudy_id):
     )
 
 
-@main.route('/case-study/create/<int:domain_id>', methods=['POST'])
+@main.route('/case-study/create/<int:domain_id>/brief/<int:brief_id>', methods=['POST'])
 @login_required
-def create_new_supplier_case_study(domain_id):
+def create_new_supplier_case_study(domain_id, brief_id):
     domain = data_api_client.req.domain(str(domain_id)).get()
     if not current_user.role == 'supplier':
         flash('buyer-role-required', 'error')
@@ -187,7 +188,7 @@ def create_new_supplier_case_study(domain_id):
 
     fields = ['opportunity', 'title', 'client', 'timeframe', 'outcome', 'approach']
 
-    basename = url_for('.new_supplier_case_study', domain_id=domain_id)
+    basename = url_for('.new_supplier_case_study', domain_id=domain_id, brief_id=brief_id)
     errors = validate_form_data(casestudy, fields)
     if errors:
         form = DmForm()
@@ -218,33 +219,8 @@ def create_new_supplier_case_study(domain_id):
         case_study = DataAPIClient().create_case_study(
             caseStudy=casestudy
         )['caseStudy']
-        framework_slug = 'digital-marketplace' if feature.is_active('DM_FRAMEWORK') else 'digital-service-professionals'
-        props = {
-            'form_options': {
-                'domain': domain['domain']['name'],
-                'opportunityUrl': url_for('.list_opportunities', framework_slug=framework_slug)
-            }
-        }
 
-        rendered_component = render_component('bundles/CaseStudy/CaseStudySubmitConfirmationWidget.js', props)
-
-        return render_template(
-            '_react.html',
-            breadcrumb_items=[
-                {
-                    "link": url_for("main.index"),
-                    "label": "Home"
-                },
-                {
-                    "link": url_for('.list_opportunities', framework_slug=framework_slug),
-                    "label": "Opportunities"
-                },
-                {
-                    "label": "Case Study submitted"
-                }
-            ],
-            component=rendered_component
-        )
+        return redirect('/sellers/opportunities/{}/assessment'.format(brief_id))
 
     except APIError as e:
         form = DmForm()
