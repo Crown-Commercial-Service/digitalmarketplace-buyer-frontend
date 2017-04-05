@@ -5,8 +5,7 @@
 
 @include media ($tablet) {
   .chart-legend {
-  position: absolute;
-  right: 6%;
+  float: right;
   width: 23%;
   }
   .chart {
@@ -160,7 +159,7 @@
 
 /*-- Tooltip --*/
 .c3-tooltip-container {
-  z-index: 10;
+  z-index: -10;
 }
 
 .c3-tooltip {
