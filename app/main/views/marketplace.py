@@ -51,7 +51,7 @@ def metrics():
     return jsonify(data)
 
 
-@main.route('/seller-applications')
+@main.route('/charts')
 def seller_applications_charts():
     def format_applications(metrics):
         output = []
