@@ -3,13 +3,22 @@ import json
 from mock import Mock
 from dmcontent.content_loader import ContentLoader
 from werkzeug.datastructures import MultiDict
+import flask
 
-from app.main.presenters.search_presenters import filters_for_lot, set_filter_states
+from app.main.presenters.search_presenters import (
+    filters_for_lot,
+    set_filter_states,
+    annotate_lots_with_categories_selection,
+)
+
+from ...helpers import BaseApplicationTest
 
 
 content_loader = ContentLoader('tests/fixtures/content')
 content_loader.load_manifest('g6', 'data', 'manifest')
+content_loader.load_manifest('g9', 'data', 'manifest')
 questions_builder = content_loader.get_builder('g6', 'manifest')
+g9_builder = content_loader.get_builder('g9', 'manifest')
 
 
 def _get_fixture_data():
@@ -34,11 +43,11 @@ def _get_fixture_multiple_pages_data():
         return json.load(fixture_file)
 
 
-class TestSearchFilters(object):
+class TestSearchFilters(BaseApplicationTest):
 
     def _get_filter_group_by_label(self, lot, label):
         filter_groups = filters_for_lot(lot, questions_builder)
-        for filter_group in filter_groups:
+        for filter_group in filter_groups.values():
             if filter_group['label'] == label:
                 return filter_group
 
@@ -113,7 +122,7 @@ class TestSearchFilters(object):
         }
 
     def test_request_filters_are_set(self):
-        search_filters = filters_for_lot('saas', questions_builder)
+        search_filters = list(filters_for_lot('saas', questions_builder).values())
         request = self._get_request_for_params({
             'q': 'email',
             'booleanExample1': 'true'
@@ -125,13 +134,37 @@ class TestSearchFilters(object):
         assert search_filters[0]['filters'][1]['name'] == 'booleanExample2'
         assert search_filters[0]['filters'][1]['checked'] is False
 
+    def test_show_lots_and_categories_selection(self):
+        framework = self._get_framework_fixture_data('g-cloud-9')['frameworks']
+        lots = framework['lots']
+        lot_slug = 'cloud-software'
+
+        category_filter_group = filters_for_lot(lot_slug, g9_builder)['categories-example']
+
+        with self.app.test_request_context("/g-cloud/search?q=&lot={}".format(lot_slug)):
+            annotate_lots_with_categories_selection(lots, category_filter_group, flask.request)
+
+            assert lots[0].get('slug') == 'cloud-hosting'
+            assert not lots[0].get('selected')
+            assert not lots[0].get('categories')
+
+            assert lots[1].get('slug') == 'cloud-software'
+            assert lots[1].get('selected')
+            category_links = lots[1]['categories']
+            assert '&checkboxTreeExample=option+1' in category_links[0]['link']
+            assert not category_links[0].get('children')
+            assert '&checkboxTreeExample=option+2' in category_links[1]['link']
+            sub_categories = category_links[1]['children']
+            assert '&checkboxTreeExample=option+2.1' in sub_categories[0]['link']
+            assert '&checkboxTreeExample=option+2.2' in sub_categories[1]['link']
+
     def test_filter_groups_have_correct_default_state(self):
         request = self._get_request_for_params({
             'q': 'email',
             'lot': 'paas'
         })
 
-        search_filters = filters_for_lot('paas', questions_builder)
+        search_filters = list(filters_for_lot('paas', questions_builder).values())
         set_filter_states(search_filters, request)
         assert search_filters[0] == {
             'label': 'Booleans example',
@@ -160,7 +193,7 @@ class TestSearchFilters(object):
             'booleanExample1': 'true'
         })
 
-        search_filters = filters_for_lot('paas', questions_builder)
+        search_filters = list(filters_for_lot('paas', questions_builder).values())
         set_filter_states(search_filters, request)
 
         assert search_filters[0] == {
@@ -195,7 +228,7 @@ class TestSearchFilters(object):
         assert all_filters == no_lot_filters
 
     def test_instance_has_correct_filter_groups_for_paas(self):
-        search_filters = filters_for_lot('paas', questions_builder)
+        search_filters = filters_for_lot('paas', questions_builder).values()
 
         filter_group_labels = [
             group['label'] for group in search_filters
@@ -206,7 +239,7 @@ class TestSearchFilters(object):
         assert 'Radios example' in filter_group_labels
 
     def test_instance_has_correct_filter_groups_for_iaas(self):
-        search_filters = filters_for_lot('iaas', questions_builder)
+        search_filters = filters_for_lot('iaas', questions_builder).values()
 
         filter_group_labels = [
             group['label'] for group in search_filters

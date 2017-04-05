@@ -1,0 +1,5 @@
+-
+  slug: categories-example
+  name: Checkbox tree example
+  questions:
+    - checkboxTreeExample

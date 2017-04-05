@@ -20,7 +20,7 @@ class BaseApplicationTest(object):
         # with a mock, because then the shared instance won't have been configured (done in create_app). Instead,
         # just mock the one function that would make an API call in this case.
         data_api_client.find_frameworks = mock.Mock()
-        data_api_client.find_frameworks.return_value = BaseApplicationTest._get_fixture_data('frameworks.json')
+        data_api_client.find_frameworks.return_value = self._get_frameworks_list_fixture_data()
         self.app = create_app('test')
         self.client = self.app.test_client()
         self.get_user_patch = None
@@ -81,6 +81,10 @@ class BaseApplicationTest(object):
         )
 
     @staticmethod
+    def _get_frameworks_list_fixture_data():
+        return BaseApplicationTest._get_fixture_data('frameworks.json')
+
+    @staticmethod
     def _get_g4_service_fixture_data():
         return BaseApplicationTest._get_fixture_data('g4_service_fixture.json')
 
@@ -91,6 +95,13 @@ class BaseApplicationTest(object):
     @staticmethod
     def _get_g6_service_fixture_data():
         return BaseApplicationTest._get_fixture_data('g6_service_fixture.json')
+
+    @staticmethod
+    def _get_framework_fixture_data(framework_slug):
+        return {
+            'frameworks': next(f for f in BaseApplicationTest._get_frameworks_list_fixture_data()['frameworks']
+                               if f['slug'] == framework_slug)
+        }
 
     @staticmethod
     def _get_dos_brief_fixture_data(multi=False):

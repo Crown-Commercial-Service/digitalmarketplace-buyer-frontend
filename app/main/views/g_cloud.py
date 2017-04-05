@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from flask import abort, render_template, request, redirect, current_app
+from flask import abort, render_template, request, redirect, current_app, url_for
 import flask_featureflags as feature
 
-from dmutils.formats import get_label_for_lot_param, dateformat
+from dmutils.formats import dateformat
 from dmapiclient import HTTPError
-from dmutils.formats import LOTS
 
 from ...main import main
 from ..presenters.search_presenters import (
     filters_for_lot,
     set_filter_states,
+    annotate_lots_with_categories_selection,
 )
 from ..presenters.search_results import SearchResults
 from ..presenters.search_summary import SearchSummary
@@ -32,8 +32,42 @@ from app import search_api_client, data_api_client, content_loader
 def index_g_cloud():
     show_search_box = not feature.is_active('GCLOUD9')
 
-    return render_template('index-g-cloud.html',
-                           show_search_box=show_search_box)
+    # if there are multiple live g-cloud frameworks, assume they all have the same lots
+    all_frameworks = data_api_client.find_frameworks().get('frameworks')
+    framework = framework_helpers.get_latest_live_framework(all_frameworks, 'g-cloud')
+
+    lot_browse_list_items = list()
+    for lot in framework['lots']:
+        lot_item = {
+            "link": url_for('.search_services', lot=lot['slug']),
+            "title": lot['name']
+        }
+
+        # TODO proper lot body/subtext for G9 - G7/G8 content moved here temporarily from template
+
+        if lot['slug'] == 'saas':
+            lot_item.update({
+                "body": "Find applications or services that are run over the internet or in the cloud",
+                "subtext": "eg accounting tools or email",
+            })
+        elif lot['slug'] == 'paas':
+            lot_item.update({
+                "body": "Find platforms that provide a basis for building other services and applications",
+            })
+        elif lot['slug'] == 'iaas':
+            lot_item.update({
+                "body": "Find networks, hosting facilities and servers on which platforms and software depend",
+                "subtext": "eg hosting or content delivery",
+            })
+        elif lot['slug'] == 'scs':
+            lot_item.update({
+                "body": "Find help with cloud management and deployment",
+                "subtext": "eg IT health checks or data migrations",
+            })
+
+        lot_browse_list_items.append(lot_item)
+
+    return render_template('index-g-cloud.html', lots=lot_browse_list_items, show_search_box=show_search_box)
 
 
 @main.route('/g-cloud/framework')
@@ -81,11 +115,13 @@ def get_service_by_id(service_id):
         if override_framework_slug:
             framework_slug = override_framework_slug
 
+        framework = data_api_client.get_framework(framework_slug)['frameworks']
         service_view_data = Service(
             service_data,
             content_loader.get_builder(framework_slug, 'display_service').filter(
                 service_data
-            )
+            ),
+            framework_helpers.get_lots_by_slug(framework)
         )
 
         try:
@@ -117,12 +153,9 @@ def get_service_by_id(service_id):
             'service.html',
             service=service_view_data,
             service_unavailability_information=service_unavailability_information,
-            lot=service_view_data.lot.lower(),
-            lot_label=get_label_for_lot_param(service_view_data.lot.lower())), status_code
+            lot=service_view_data.lot), status_code
     except AuthException:
         abort(500, "Application error")
-    except KeyError:
-        abort(404, "Service ID '%s' can not be found" % service_id)
     except HTTPError as e:
         abort(e.status_code)
 
@@ -133,21 +166,27 @@ def search_services():
     all_frameworks = data_api_client.find_frameworks().get('frameworks')
     framework = framework_helpers.get_latest_live_framework(all_frameworks, 'g-cloud')
 
+    # TODO remove me after G-Cloud 9 goes live
+    is_g9_live = framework['slug'] != 'g-cloud-8'
+
+    current_lot_slug = get_lot_from_request(request)
+    lots_by_slug = framework_helpers.get_lots_by_slug(framework)
+
     # the bulk of the possible filter parameters are defined through the content loader. they're all boolean and the
     # search api uses the same "question" labels as the content for its attributes, so we can really use those labels
     # verbatim. It also means we can use their human-readable names as defined in the content
     content_manifest = content_loader.get_manifest(framework['slug'], 'search_filters')
-    # filters - a seq of dicts describing each parameter group
+    # filters - an OrderedDictionary of dicts describing each parameter group
     filters = filters_for_lot(
-        get_lot_from_request(request),
+        current_lot_slug,
         content_manifest
     )
 
     search_api_response = search_api_client.search_services(
-        **build_search_query(request, filters, content_manifest)
+        **build_search_query(request, filters.values(), content_manifest, lots_by_slug)
     )
 
-    search_results_obj = SearchResults(search_api_response)
+    search_results_obj = SearchResults(search_api_response, lots_by_slug)
 
     # the search api doesn't supply its own pagination information: use this `pagination` function to figure out what
     # links to show
@@ -159,25 +198,37 @@ def search_services():
 
     search_summary = SearchSummary(
         search_api_response['meta']['total'],
-        clean_request_args(request.args, filters),
-        filters
+        clean_request_args(request.args, filters.values(), lots_by_slug),
+        filters.values(),
+        lots_by_slug
     )
 
+    # for display purposes (but not for actual filtering purposes), we
+    # remove 'categories' from the list of filters, and process them into a single structure with the lots
+    if is_g9_live:
+        category_filter_group = filters.pop('categories') if 'categories' in filters else None
+    else:
+        category_filter_group = None
+
+    lots = framework['lots']
+    annotate_lots_with_categories_selection(lots, category_filter_group, request)
+
+    current_lot = lots_by_slug.get(current_lot_slug)
+
     # annotate `filters` with their values as set in this request for re-rendering purposes.
-    set_filter_states(filters, request)
-    current_lot = get_lot_from_request(request)
+    set_filter_states(filters.values(), request)
 
     return render_template(
         'search/services.html',
         current_lot=current_lot,
-        current_lot_label=get_label_for_lot_param(current_lot) if current_lot else None,
-        filters=filters,
-        lots=LOTS,
+        filters=filters.values(),
+        lots=lots,
         pagination=pagination_config,
         search_keywords=get_keywords_from_request(request),
         search_query=query_args_for_pagination(request.args),
         services=search_results_obj.search_results,
         summary=search_summary.markup(),
         title='Search results',
-        total=search_results_obj.total
+        total=search_results_obj.total,
+        show_all_categories=not is_g9_live,
     )

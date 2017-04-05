@@ -29,6 +29,14 @@ em.search-result-highlighted-text {
       padding-left: 0;
       margin: 5px 0 $gutter;
     }
+
+    ul ul {
+      margin: 0 0 $gutter/2 $gutter/2;
+      li {
+        margin: 0.3em 0;
+        font-size: smaller;
+      }
+    }
   }
 
   .govuk-option-select {

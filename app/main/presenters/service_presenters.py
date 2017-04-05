@@ -24,14 +24,14 @@ class Service(object):
         if key[0] in service_data:
             setattr(self, key[1], service_data[key[0]])
 
-    def __init__(self, service_data, service_questions):
+    def __init__(self, service_data, service_questions, lots_by_slug):
         self.service_questions = service_questions
         # required attributes directly mapped to service_data values
         self.title = service_data['serviceName']
         self.serviceSummary = service_data['serviceSummary']\
             if 'serviceSummary' in service_data else \
             service_data['serviceDescription']
-        self.lot = service_data['lot']
+        self.lot = lots_by_slug.get(service_data['lot'])
         self.frameworkName = service_data['frameworkName']
         # optional attributes directly mapped to service_data values
         for key in [

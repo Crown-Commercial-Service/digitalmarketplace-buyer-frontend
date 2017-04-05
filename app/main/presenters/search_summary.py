@@ -1,7 +1,6 @@
 import os
 import yaml
 from flask import Markup, escape
-from dmutils.formats import get_label_for_lot_param
 
 
 class SearchSummary(object):
@@ -30,8 +29,10 @@ class SearchSummary(object):
             formatted_conjunction = " {} ".format(final_conjunction)
             return formatted_conjunction.join([u', '.join(start), end])
 
-    def __init__(self, results_total, request_args, filter_groups):
+    def __init__(self, results_total, request_args, filter_groups, lots_by_slug):
+        self._lots_by_slug = lots_by_slug
         self._set_initial_sentence(results_total, request_args)
+
         self.filter_groups = self._group_request_filters(
             request_args,
             filter_groups
@@ -52,8 +53,8 @@ class SearchSummary(object):
 
     def _set_initial_sentence(self, results_total, request_args):
         keywords = escape(request_args.get('q', ''))
-        lot_label = get_label_for_lot_param(
-            request_args.get('lot', 'all', type=str)) or 'All categories'
+        lot_label = (self._lots_by_slug.get(request_args.get('lot'), {}).get('name')
+                     or 'All categories')
         lot = u"{}{}{}".format(
             SearchSummary.LOT_PRE_TAG,
             lot_label,
@@ -102,17 +103,31 @@ class SearchSummary(object):
         def _is_option(values):
             return (len(values) == 1) and (values[0] == u'true')
 
+        def _get_filter_recursive(key, value, filters):
+            """
+            Search filters (and their children, in the case of checkbox_tree questions) for a one
+            where filter[key] == value.
+            """
+            for filter in filters:
+                if filter[key] == value:
+                    return filter
+                children = filter.get('children')
+                if children:
+                    search_children = _get_filter_recursive(key, value, children)
+                    if search_children is not None:
+                        return search_children
+
         def _get_group_label_for_option(option):
             for group in filter_groups:
-                for filter in group['filters']:
-                    if filter['name'] == option:
-                        return group['label']
+                found_filter = _get_filter_recursive('name', option, group['filters'])
+                if found_filter is not None:
+                    return group['label']
 
         def _get_label_for_string_option(option):
             for group in filter_groups:
-                for filter in group['filters']:
-                    if filter['value'] == option:
-                        return filter['label']
+                found_filter = _get_filter_recursive('value', option, group['filters'])
+                if found_filter:
+                    return found_filter['label']
 
         def _get_label_for_boolean_option(option):
             for group in filter_groups:

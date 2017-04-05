@@ -147,7 +147,7 @@
         "rel": "self"
       }
     ],
-    "lot": "IaaS",
+    "lot": "iaas",
     "managementInterfaceProtection": {
       "assurance": "Service provider assertion",
       "value": true
