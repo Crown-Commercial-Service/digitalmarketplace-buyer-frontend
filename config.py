@@ -64,7 +64,6 @@ class Config(object):
     # Feature Flags
     RAISE_ERROR_ON_MISSING_FEATURES = True
     FEATURE_FLAGS_NEW_SUPPLIER_FLOW = False
-    FEATURE_FLAGS_GCLOUD9 = False
 
     # LOGGING
     DM_LOG_LEVEL = 'DEBUG'
@@ -107,7 +106,6 @@ class Test(Config):
     SECRET_KEY = "KEY"
 
     FEATURE_FLAGS_NEW_SUPPLIER_FLOW = enabled_since('2016-11-29')
-    FEATURE_FLAGS_GCLOUD9 = enabled_since('2016-03-27')
 
 
 class Development(Config):
@@ -125,7 +123,6 @@ class Development(Config):
     SHARED_EMAIL_KEY = "very_secret"
 
     FEATURE_FLAGS_NEW_SUPPLIER_FLOW = enabled_since('2016-11-29')
-    FEATURE_FLAGS_GCLOUD9 = enabled_since('2016-03-27')
 
 
 class Live(Config):
@@ -137,7 +134,6 @@ class Live(Config):
 
 class Preview(Live):
     FEATURE_FLAGS_NEW_SUPPLIER_FLOW = enabled_since('2017-02-06')
-    FEATURE_FLAGS_GCLOUD9 = enabled_since('2016-03-27')
 
 
 class Staging(Live):

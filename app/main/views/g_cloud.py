@@ -2,7 +2,6 @@
 from __future__ import unicode_literals
 
 from flask import abort, render_template, request, redirect, current_app, url_for
-import flask_featureflags as feature
 
 from dmutils.formats import dateformat
 from dmapiclient import HTTPError
@@ -30,11 +29,12 @@ from app import search_api_client, data_api_client, content_loader
 
 @main.route('/g-cloud')
 def index_g_cloud():
-    show_search_box = not feature.is_active('GCLOUD9')
-
     # if there are multiple live g-cloud frameworks, assume they all have the same lots
     all_frameworks = data_api_client.find_frameworks().get('frameworks')
     framework = framework_helpers.get_latest_live_framework(all_frameworks, 'g-cloud')
+
+    # TODO remove me after G-Cloud 9 goes live
+    show_search_box = not framework_helpers.is_g9_live(all_frameworks)
 
     lot_browse_list_items = list()
     for lot in framework['lots']:
@@ -167,7 +167,7 @@ def search_services():
     framework = framework_helpers.get_latest_live_framework(all_frameworks, 'g-cloud')
 
     # TODO remove me after G-Cloud 9 goes live
-    is_g9_live = framework['slug'] != 'g-cloud-8'
+    is_g9_live = framework_helpers.is_g9_live(all_frameworks)
 
     current_lot_slug = get_lot_from_request(request)
     lots_by_slug = framework_helpers.get_lots_by_slug(framework)
