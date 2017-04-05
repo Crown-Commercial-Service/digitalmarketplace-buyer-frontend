@@ -10,7 +10,7 @@ from ...main import main
 from ..presenters.search_presenters import (
     filters_for_lot,
     set_filter_states,
-    show_lots_and_categories_selection,
+    annotate_lots_with_categories_selection,
 )
 from ..presenters.search_results import SearchResults
 from ..presenters.search_summary import SearchSummary
@@ -208,7 +208,7 @@ def search_services():
         category_filter_group = None
 
     lots = framework['lots']
-    show_lots_and_categories_selection(lots, category_filter_group, request)
+    annotate_lots_with_categories_selection(lots, category_filter_group, request)
 
     current_lot = lots_by_slug.get(current_lot_slug)
 

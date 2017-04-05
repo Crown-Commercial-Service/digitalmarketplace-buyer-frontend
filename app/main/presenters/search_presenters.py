@@ -91,7 +91,7 @@ def set_filter_states(filter_groups, request):
                 )
 
 
-def show_lots_and_categories_selection(lots, category_filter_group, request):
+def annotate_lots_with_categories_selection(lots, category_filter_group, request):
     """
     Equivalent of set_filter_states but for where we are creating a tree of links i.e. the
     lots/categories widget. Adds links (where necessary) and shows the currently-selected
@@ -107,7 +107,7 @@ def show_lots_and_categories_selection(lots, category_filter_group, request):
         if lot_selected:
             lot['selected'] = True
             categories = category_filter_group['filters'] if category_filter_group else []
-            category_was_selected = _show_category_selection(lot, categories, request)
+            category_was_selected = _annotate_categories_with_selection(lot, categories, request)
             lot['categories'] = categories
 
         if not lot_selected or category_was_selected:
@@ -115,11 +115,11 @@ def show_lots_and_categories_selection(lots, category_filter_group, request):
             lot['link'] = url_for('.search_services', q=get_keywords_from_request(request), lot=lot['slug'])
 
 
-def _show_category_selection(lot, category_filters, request):
+def _annotate_categories_with_selection(lot, category_filters, request):
     """
     Recursive setting of 'selected' state and adding of links to categories
     as part of building the lots/categories tree.
-    :param category_filters: set of category filters as previously produced by filters_for_question
+    :param category_filters: iterable of category filters as previously produced by filters_for_question
     :param request: request object from which to extract active filters
     :return: True iff a category from the list was selected
     """
@@ -134,7 +134,7 @@ def _show_category_selection(lot, category_filters, request):
             type=str
         )
         directly_selected = (category['value'] in param_values)
-        any_child_selected = _show_category_selection(lot, category.get('children', []), request)
+        any_child_selected = _annotate_categories_with_selection(lot, category.get('children', []), request)
         if directly_selected or any_child_selected:
             any_category_selected = True
             category['selected'] = True

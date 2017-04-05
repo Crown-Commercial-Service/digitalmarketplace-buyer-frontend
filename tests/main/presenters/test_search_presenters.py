@@ -8,7 +8,7 @@ import flask
 from app.main.presenters.search_presenters import (
     filters_for_lot,
     set_filter_states,
-    show_lots_and_categories_selection,
+    annotate_lots_with_categories_selection,
 )
 
 from ...helpers import BaseApplicationTest
@@ -142,7 +142,7 @@ class TestSearchFilters(BaseApplicationTest):
         category_filter_group = filters_for_lot(lot_slug, g9_builder)['categories-example']
 
         with self.app.test_request_context("/g-cloud/search?q=&lot={}".format(lot_slug)):
-            show_lots_and_categories_selection(lots, category_filter_group, flask.request)
+            annotate_lots_with_categories_selection(lots, category_filter_group, flask.request)
 
             assert lots[0].get('slug') == 'cloud-hosting'
             assert not lots[0].get('selected')
