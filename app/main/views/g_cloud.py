@@ -33,6 +33,9 @@ def index_g_cloud():
     all_frameworks = data_api_client.find_frameworks().get('frameworks')
     framework = framework_helpers.get_latest_live_framework(all_frameworks, 'g-cloud')
 
+    # TODO remove me after G-Cloud 9 goes live
+    show_search_box = not framework_helpers.is_g9_live(all_frameworks)
+
     lot_browse_list_items = list()
     for lot in framework['lots']:
         lot_item = {
@@ -64,7 +67,7 @@ def index_g_cloud():
 
         lot_browse_list_items.append(lot_item)
 
-    return render_template('index-g-cloud.html', lots=lot_browse_list_items)
+    return render_template('index-g-cloud.html', lots=lot_browse_list_items, show_search_box=show_search_box)
 
 
 @main.route('/g-cloud/framework')
@@ -164,7 +167,7 @@ def search_services():
     framework = framework_helpers.get_latest_live_framework(all_frameworks, 'g-cloud')
 
     # TODO remove me after G-Cloud 9 goes live
-    is_g9_live = framework['slug'] != 'g-cloud-8'
+    is_g9_live = framework_helpers.is_g9_live(all_frameworks)
 
     current_lot_slug = get_lot_from_request(request)
     lots_by_slug = framework_helpers.get_lots_by_slug(framework)
