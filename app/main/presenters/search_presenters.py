@@ -96,6 +96,9 @@ def show_lots_and_categories_selection(lots, category_filter_group, request):
     Equivalent of set_filter_states but for where we are creating a tree of links i.e. the
     lots/categories widget. Adds links (where necessary) and shows the currently-selected
     lot and/or categories.
+    :param lots: a sequence of lot dicts, which this function will annotate
+    :param category_filter_group: a single filter group loaded from the framework search_filters manifest
+    :param request: current request so that we can figure out what lots and categories are selected
     """
     current_lot_slug = get_lot_from_request(request)
 
