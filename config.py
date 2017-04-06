@@ -161,7 +161,7 @@ class Live(Config):
         'CASE_STUDY': False,
         'XLSX_EXPORT': False,
         'SELLER_REGISTRATION': True,
-        'NEW_SELLER_PROFILE': False,
+        'NEW_SELLER_PROFILE': True,
         'DM_FRAMEWORK': True,
         'DOMAINS_SEARCH': True,
         'SEARCH': True,
