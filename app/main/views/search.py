@@ -334,6 +334,16 @@ def supplier_search():
 
     num_casestudies_results = casestudies_response['hits']['total']
 
+    def get_pagination(result_count):
+        pages = get_page_list(SUPPLIER_RESULTS_PER_PAGE, result_count, page)
+
+        return {
+            'pages': pages,
+            'page': page,
+            'pageCount': pages[-1],
+            'total': result_count
+        }
+
     if feature.is_active('SEARCH'):
         props = {
             'form_options': {
@@ -350,12 +360,9 @@ def supplier_search():
                 'type': seller_type_filters
             },
             'pagination': {
-                'pages': pages,
-                'page': page,
-                'pageCount': pages[-1],
-                'total': num_results,
-                'total_products': num_products_results,
-                'total_casestudies': num_casestudies_results
+                'sellers': get_pagination(num_results),
+                'products': get_pagination(num_products_results),
+                'casestudies': get_pagination(num_casestudies_results)
             },
             'basename': url_for('.supplier_search')
         }
