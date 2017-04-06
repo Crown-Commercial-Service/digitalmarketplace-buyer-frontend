@@ -2160,6 +2160,7 @@ class TestDownloadBriefResponsesCsv(BaseApplicationTest):
 
 @mock.patch('app.buyers.views.buyers.data_api_client')
 class TestViewQuestionAndAnswerDates(BaseApplicationTest):
+    @pytest.mark.skip
     def test_show_question_and_answer_dates_for_published_brief(self, data_api_client):
         with self.app.app_context():
             self.login_as_buyer()

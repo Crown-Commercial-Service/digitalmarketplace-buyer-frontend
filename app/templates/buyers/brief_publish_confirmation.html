@@ -32,6 +32,18 @@
 
 <div class='grid-row'>
   <div class='column-two-thirds large-paragraph'>
+
+    {% with
+    heading = "Publishing briefs",
+    smaller = True,
+    with_breadcrumb = True
+    %}
+    {% include "toolkit/page-heading.html" %}
+    {% endwith %}
+  We are opening the marketplace up to more services and updating brief publishing on April 7th.<br/>
+  <b>If you urgently need to publish the brief, contact us at <a href="mailto:marketplace@digital.gov.au">marketplace@digital.gov.au</a></b><br/><br/>
+
+    <!-- disable publishing april 2017
     {% with
         heading = "Publish your requirements and evaluation criteria" if not published else "Question and answer dates",
         smaller = True,
@@ -147,6 +159,8 @@
       {% endif %}
     {% endif %}
     <br>
+
+   end disable publishing april 2017 -->
     {%
       with
       url = url_for(".view_brief_overview", framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id),
