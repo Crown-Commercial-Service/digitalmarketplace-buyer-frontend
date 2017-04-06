@@ -17,7 +17,8 @@
 
 .sidebar,
 main article:first-of-type,
-main section:first-of-type {
+main section:first-of-type,
+main header:first-of-type {
   @include link-colours($non-black, $light-aqua, $non-black);
 
   .button-secondary {

@@ -132,7 +132,7 @@ def new_supplier_case_study(domain_id, brief_id):
         'casestudy': {
             'domain_id': domain_id,
             'service': domain['domain']['name'],
-            'brief_id': brief_id
+            'is_assessment': True
         },
         'basename': basename
     }
@@ -146,7 +146,6 @@ def new_supplier_case_study(domain_id, brief_id):
         '_react.html',
         breadcrumb_items=[
             {'link': url_for('main.index'), 'label': 'Home'},
-            {'link': url_for('main.supplier_search'), 'label': 'Sellers catalogue'},
             {'link': url_for('main.get_supplier', code=current_user.supplier_code), 'label': 'Seller details'},
             {'label': 'Add case study'}
         ],
