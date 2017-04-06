@@ -162,9 +162,9 @@ class Live(Config):
         'XLSX_EXPORT': False,
         'SELLER_REGISTRATION': True,
         'NEW_SELLER_PROFILE': False,
-        'DM_FRAMEWORK': False,
-        'DOMAINS_SEARCH': False,
-        'SEARCH': False,
+        'DM_FRAMEWORK': True,
+        'DOMAINS_SEARCH': True,
+        'SEARCH': True,
         'TEAM_VIEW': False
     }
 
