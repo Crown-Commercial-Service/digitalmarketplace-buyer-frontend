@@ -48,8 +48,8 @@ class TestHomepageBrowseList(BaseApplicationTest):
         ]
 
         assert headers == [
-            'Government buyers',
-            'ICT sellers'
+            'Buyers',
+            'Sellers'
         ]
 
     @mock.patch('app.main.views.marketplace.data_api_client')
