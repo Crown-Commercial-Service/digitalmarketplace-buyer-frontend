@@ -300,7 +300,7 @@ def supplier_search():
         result = {
             'title': details['name'],
             'description': details['summary'],
-            'link': url_for('.get_supplier', code=details['supplier']['code']),
+            'link': details['website'],
             'services': services,
             'badges': details['supplier'].get('seller_type', {})
         }
@@ -325,7 +325,7 @@ def supplier_search():
         result = {
             'title': details['title'],
             'description': details.get('approach', ''),
-            'link': url_for('.get_supplier', code=details['supplier']['code']),
+            'link': url_for('.get_supplier_case_study', casestudy_id=details['id']),
             'services': services,
             'badges': details['supplier'].get('seller_type', {})
         }
