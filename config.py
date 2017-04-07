@@ -165,7 +165,7 @@ class Live(Config):
         'DM_FRAMEWORK': True,
         'DOMAINS_SEARCH': True,
         'SEARCH': True,
-        'TEAM_VIEW': True
+        'TEAM_VIEW': False
     }
 
     REACT_BUNDLE_URL = 'https://dm-frontend.apps.platform.digital.gov.au/bundle/'
