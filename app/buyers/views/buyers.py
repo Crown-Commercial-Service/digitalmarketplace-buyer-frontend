@@ -34,12 +34,6 @@ from react.render import render_component
 
 @buyers.route('/buyers')
 def buyer_dashboard():
-    def get_teamname():
-        email_domain = current_user.email_address.split('@')[-1]
-        teammembers_response = data_api_client.req.teammembers(email_domain).get()
-        teammembers = list(sorted(teammembers_response['teammembers'], key=lambda tm: tm['name']))
-        return teammembers_response['teamname']
-
     user_briefs = data_api_client.find_briefs(current_user.id).get('briefs', [])
     draft_briefs = add_unanswered_counts_to_briefs([brief for brief in user_briefs if brief['status'] == 'draft'],
                                                    content_loader)
@@ -50,8 +44,7 @@ def buyer_dashboard():
         'buyers/dashboard-briefs.html',
         draft_briefs=draft_briefs,
         live_briefs=live_briefs,
-        closed_briefs=closed_briefs,
-        teamname=get_teamname()
+        closed_briefs=closed_briefs
     )
 
 
