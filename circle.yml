@@ -2,9 +2,9 @@ machine:
   services:
     - docker  # For monitoring
   node:
-    version: 7.8.0
+    version: 6.1.0
   python:
-    version: 2.7.13
+    version: 2.7.12
   timezone:
     Australia/Sydney
   post:

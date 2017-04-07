@@ -13,9 +13,16 @@ from app.helpers.shared_helpers import request_wants_json
 from ...main import main
 from app import cache
 
+import dmapiclient
+
+# from ... import data_api_client as real_data_api_client
+from collections import OrderedDict as od
+
 
 # For prototyping
 from collections import namedtuple
+from concurrent.futures import ThreadPoolExecutor, as_completed
+
 
 Filter = namedtuple('Filter', 'name options')
 Option = namedtuple('Option', 'name value label checked')
@@ -24,7 +31,7 @@ Role = namedtuple('Role', 'label')
 ExtraDetail = namedtuple('ExtraDetail', 'key value')
 Result = namedtuple('Result', 'title description badges roles url')
 
-SUPPLIER_RESULTS_PER_PAGE = 50
+SUPPLIER_RESULTS_PER_PAGE = 10
 
 
 def normalise_role(role_name):
@@ -54,6 +61,26 @@ def get_all_domains(data_api_client):
     return [_['name'] for _ in data_api_client.req.get_domains()['domains']]
 
 
+SELLER_TYPES = od([
+    ('Start up', 'start_up'),
+    ('SME', 'sme'),
+    ('Not-for-profit / social enterprise', 'nfp_social_enterprise'),
+    ('Regional', 'regional'),
+    ('Australian disability enterprise', 'disability'),
+    ('Indigenous business', 'indigenous'),
+    ('Recruiter', 'recruiter')
+])
+
+
+def to_seller_type_key(s):
+    if s in SELLER_TYPES:
+        return SELLER_TYPES[s]
+    elif s in list(SELLER_TYPES.values()):
+        return s
+    else:
+        raise ValueError('bad param')
+
+
 @main.route('/search/sellers')
 def supplier_search():
     DOMAINS_SEARCH = feature.is_active('DOMAINS_SEARCH')
@@ -68,10 +95,18 @@ def supplier_search():
     selected_roles = set(request.args.getlist('role'))
     selected_seller_types = set(request.args.getlist('type'))
 
+    selected_seller_types_keys = [
+        to_seller_type_key(x)
+        for x
+        in selected_seller_types
+    ]
+
     if not sort_terms:  # Sort by A-Z for default
         sort_terms = ['name']
 
     data_api_client = DataAPIClient()
+    real_data_api_client = dmapiclient.DataAPIClient()
+    real_data_api_client.init_app(current_app)
 
     if DOMAINS_SEARCH:
         roles = get_all_domains(data_api_client)
@@ -103,6 +138,13 @@ def supplier_search():
     query_contents = {}
     filter_terms = {}
 
+    product_search_parameters = dict(
+        sort_dir=sort_order,
+        seller_types=selected_seller_types_keys,
+        search_term=keyword,
+        domains=list(selected_roles)
+    )
+
     if selected_roles:
         if DOMAINS_SEARCH:
             for each in selected_roles:
@@ -119,7 +161,7 @@ def supplier_search():
             filter_terms = {"prices.serviceRole.role": filters}
 
     if selected_seller_types:
-        filter_terms['seller_types'] = list(selected_seller_types)
+        filter_terms['seller_types'] = list(selected_seller_types_keys)
 
     if filter_terms:
         query_contents['filtered'] = {
@@ -149,12 +191,40 @@ def supplier_search():
         abort(400, 'Invalid page number: {}'.format(request.args['page']))
     results_from = (page - 1) * SUPPLIER_RESULTS_PER_PAGE
 
-    find_suppliers_params = {
+    page_params = {
         'from': results_from,
         'size': SUPPLIER_RESULTS_PER_PAGE
     }
 
-    response = data_api_client.find_suppliers(data=query, params=find_suppliers_params)
+    query.update(product_search_parameters)
+
+    products_requester = real_data_api_client.req.products().search()
+    casestudies_requester = real_data_api_client.req.casestudies().search()
+
+    with ThreadPoolExecutor(max_workers=16) as executor:
+        futures_to_result = {
+            executor.submit(
+                data_api_client.find_suppliers,
+                data=query,
+                params=page_params): 'suppliers',
+            executor.submit(
+                products_requester.get,
+                data=query,
+                params=page_params): 'products',
+            executor.submit(
+                casestudies_requester.get,
+                data=query,
+                params=page_params): 'casestudies'
+        }
+
+        results = {}
+
+        for future in as_completed(futures_to_result):
+            results[futures_to_result[future]] = future.result()
+
+    response = results['suppliers']
+    products_response = results['products']
+    casestudies_response = results['casestudies']
 
     results = []
 
@@ -175,15 +245,21 @@ def supplier_search():
             tags = supplier_roles
 
         if feature.is_active('SEARCH'):
+            domains = details['domains']
+
+            tags = domains['assessed'] + domains['unassessed']
+
             services = {}
             for tag in sorted(tags):
-                services[tag.label] = True
+                services[tag] = True
 
             result = {
                 'title': details['name'],
                 'description': details['summary'],
                 'link': url_for('.get_supplier', code=details['code']),
                 'services': services,
+                'products': details['products'],
+                'recruiter_info': details['recruiter_info'],
                 'badges': details.get('seller_type', {})
             }
         else:
@@ -201,20 +277,72 @@ def supplier_search():
 
     pages = get_page_list(SUPPLIER_RESULTS_PER_PAGE, num_results, page)
 
-    SELLER_TYPE_KEYS = [
-        'start_up',
-        'sme',
-        'nfp_social_enterprise',
-        'product',
-        'indigenous'
-    ]
-
-    seller_type_filters = {st: st in selected_seller_types for st in SELLER_TYPE_KEYS}
+    seller_type_filters = {st: to_seller_type_key(st) in selected_seller_types_keys for st in SELLER_TYPES.keys()}
 
     sidepanel_roles = [Option('role', role, role, role in selected_roles) for role in roles]
     sidepanel_filters = [
         Filter('Capabilities', sidepanel_roles),
     ]
+
+    products_results = []
+
+    for p in products_response['hits']['hits']:
+        details = p['_source']
+
+        domains = details['supplier']['domains']
+
+        tags = domains['assessed'] + domains['unassessed']
+
+        services = {}
+        for tag in sorted(tags):
+            services[tag] = True
+
+        result = {
+            'title': details['name'],
+            'description': details['summary'],
+            'link': url_for('.get_supplier', code=details['supplier']['code']),
+            'services': services,
+            'badges': details['supplier'].get('seller_type', {})
+        }
+
+        products_results.append(result)
+
+    num_products_results = products_response['hits']['total']
+
+    casestudies_results = []
+
+    for p in casestudies_response['hits']['hits']:
+        details = p['_source']
+
+        domains = details['supplier']['domains']
+
+        tags = domains['assessed'] + domains['unassessed']
+
+        services = {}
+        for tag in sorted(tags):
+            services[tag] = True
+
+        result = {
+            'title': details['title'],
+            'description': details.get('approach', ''),
+            'link': url_for('.get_supplier', code=details['supplier']['code']),
+            'services': services,
+            'badges': details['supplier'].get('seller_type', {})
+        }
+
+        casestudies_results.append(result)
+
+    num_casestudies_results = casestudies_response['hits']['total']
+
+    def get_pagination(result_count):
+        pages = get_page_list(SUPPLIER_RESULTS_PER_PAGE, result_count, page)
+
+        return {
+            'pages': pages,
+            'page': page,
+            'pageCount': pages[-1],
+            'total': result_count
+        }
 
     if feature.is_active('SEARCH'):
         props = {
@@ -222,8 +350,9 @@ def supplier_search():
                 'action': url_for('.supplier_search')
             },
             'search': {
-                'results': results,
-                'products': [],
+                'results': results[:SUPPLIER_RESULTS_PER_PAGE],
+                'products': products_results[:SUPPLIER_RESULTS_PER_PAGE],
+                'casestudies': casestudies_results[:SUPPLIER_RESULTS_PER_PAGE],
                 'keyword': keyword,
                 'sort_by': sort_by,
                 'view': request.args.get('view', 'sellers'),
@@ -231,11 +360,9 @@ def supplier_search():
                 'type': seller_type_filters
             },
             'pagination': {
-                'pages': pages,
-                'page': page,
-                'pageCount': pages[-1],
-                'total': num_results,
-                'total_products': 0
+                'sellers': get_pagination(num_results),
+                'products': get_pagination(num_products_results),
+                'casestudies': get_pagination(num_casestudies_results)
             },
             'basename': url_for('.supplier_search')
         }

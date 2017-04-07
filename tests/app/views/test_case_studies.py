@@ -94,7 +94,7 @@ class TestCaseStudyCreatePage(BaseApplicationTest):
             self.login_as_supplier(1)
 
             res = self.client.get(self.expand_path(
-                '/case-study/create/1'
+                '/case-study/create/1/brief/1'
                 )
             )
 
@@ -110,11 +110,12 @@ class TestCaseStudyCreatePage(BaseApplicationTest):
         data['csrf_token'] = FakeCsrf.valid_token
         res = self.client.post(
             self.expand_path(
-                '/case-study/create/1'
+                '/case-study/create/1/brief/1'
             ),
             data=data)
 
-        assert res.status_code == 200
+        assert res.status_code == 302
+        assert '/sellers/opportunities/1/assessment' in res.location
 
 
 @mock.patch('app.main.suppliers.DataAPIClient')

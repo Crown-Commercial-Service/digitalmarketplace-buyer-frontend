@@ -83,7 +83,7 @@ class Config(object):
         'SELLER_REGISTRATION': True,
         'DOMAINS_SEARCH': True,
         'NEW_SELLER_PROFILE': True,
-        'DM_FRAMEWORK': False,
+        'DM_FRAMEWORK': True,
         'SEARCH': True,
         'TEAM_VIEW': True
     }
@@ -161,11 +161,11 @@ class Live(Config):
         'CASE_STUDY': False,
         'XLSX_EXPORT': False,
         'SELLER_REGISTRATION': True,
-        'NEW_SELLER_PROFILE': False,
-        'DM_FRAMEWORK': False,
-        'DOMAINS_SEARCH': False,
-        'SEARCH': False,
-        'TEAM_VIEW': False
+        'NEW_SELLER_PROFILE': True,
+        'DM_FRAMEWORK': True,
+        'DOMAINS_SEARCH': True,
+        'SEARCH': True,
+        'TEAM_VIEW': True
     }
 
     REACT_BUNDLE_URL = 'https://dm-frontend.apps.platform.digital.gov.au/bundle/'
