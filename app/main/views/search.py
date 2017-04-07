@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+
+from __future__ import unicode_literals
+
 from collections import defaultdict
 import json
 from flask.helpers import url_for
@@ -32,6 +35,13 @@ ExtraDetail = namedtuple('ExtraDetail', 'key value')
 Result = namedtuple('Result', 'title description badges roles url')
 
 SUPPLIER_RESULTS_PER_PAGE = 10
+
+
+def smart_truncate(content, length=100, suffix='…'):
+    if len(content) <= length:
+        return content
+    else:
+        return ' '.join(content[:length+1].split(' ')[0:-1]) + suffix
 
 
 def normalise_role(role_name):
@@ -255,7 +265,7 @@ def supplier_search():
 
             result = {
                 'title': details['name'],
-                'description': details['summary'],
+                'description': smart_truncate(details['summary']),
                 'link': url_for('.get_supplier', code=details['code']),
                 'services': services,
                 'products': details['products'],
@@ -299,7 +309,7 @@ def supplier_search():
 
         result = {
             'title': details['name'],
-            'description': details['summary'],
+            'description': smart_truncate(details['summary']),
             'link': details['website'],
             'services': services,
             'badges': details['supplier'].get('seller_type', {})
@@ -324,7 +334,7 @@ def supplier_search():
 
         result = {
             'title': details['title'],
-            'description': details.get('approach', ''),
+            'description': smart_truncate(details.get('approach', '')),
             'link': url_for('.get_supplier_case_study', casestudy_id=details['id']),
             'services': services,
             'badges': details['supplier'].get('seller_type', {})
