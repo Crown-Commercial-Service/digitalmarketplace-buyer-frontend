@@ -41,13 +41,13 @@
 {% endwith %}
 
 {% with
-    context = current_user.email_address,
+    context = teamname,
     heading = current_user.name
 %}
 {% include 'toolkit/page-heading.html' %}
 {% endwith %}
 {% if 'TEAM_VIEW' is active_feature %}
-  <a href="/buyers/overview">manage team</a>
+  <div><br><a href="/buyers/overview">View team members</a><div>
 {% endif %}
 
 {{ summary.heading("Drafts", id="unpublished_requirements") }}
