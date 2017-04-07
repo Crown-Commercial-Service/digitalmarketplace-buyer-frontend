@@ -191,7 +191,7 @@ def supplier_search():
         abort(400, 'Invalid page number: {}'.format(request.args['page']))
     results_from = (page - 1) * SUPPLIER_RESULTS_PER_PAGE
 
-    find_suppliers_params = {
+    page_params = {
         'from': results_from,
         'size': SUPPLIER_RESULTS_PER_PAGE
     }
@@ -206,15 +206,15 @@ def supplier_search():
             executor.submit(
                 data_api_client.find_suppliers,
                 data=query,
-                params=find_suppliers_params): 'suppliers',
+                params=page_params): 'suppliers',
             executor.submit(
                 products_requester.get,
                 data=query,
-                params=product_search_parameters): 'products',
+                params=page_params): 'products',
             executor.submit(
                 casestudies_requester.get,
                 data=query,
-                params=product_search_parameters): 'casestudies'
+                params=page_params): 'casestudies'
         }
 
         results = {}
