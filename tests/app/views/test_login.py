@@ -1107,7 +1107,6 @@ class TestBuyerRoleRequired(BaseApplicationTest):
             page_text = res.get_data(as_text=True)
             assert res.status_code == 200
             assert 'private' in res.headers['Cache-Control']
-            assert 'buyer@email.com' in page_text
             assert 'Some Buyer' in page_text
 
 
