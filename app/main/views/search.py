@@ -37,7 +37,7 @@ Result = namedtuple('Result', 'title description badges roles url')
 SUPPLIER_RESULTS_PER_PAGE = 10
 
 
-def smart_truncate(content, length=100, suffix='…'):
+def smart_truncate(content, length=250, suffix='…'):
     if len(content) <= length:
         return content
     else:
@@ -265,7 +265,7 @@ def supplier_search():
 
             result = {
                 'title': details['name'],
-                'description': smart_truncate(details['summary']),
+                'description': details['summary'],
                 'link': url_for('.get_supplier', code=details['code']),
                 'services': services,
                 'products': details['products'],
@@ -309,7 +309,7 @@ def supplier_search():
 
         result = {
             'title': details['name'],
-            'description': smart_truncate(details['summary']),
+            'description': details['summary'],
             'link': details['website'],
             'services': services,
             'badges': details['supplier'].get('seller_type', {})
