@@ -54,9 +54,9 @@ def get_supplier(code):
     if feature.is_active('NEW_SELLER_PROFILE'):
         # add business/authorized representative contact details
         if len(supplier['contacts']) > 0:
-            supplier['email'] = supplier['contacts'][0]['email']
-            supplier['phone'] = supplier['contacts'][0]['phone']
-            supplier['representative'] = supplier['contacts'][0]['name']
+            supplier['contact_email'] = supplier['contacts'][0]['email']
+            supplier['contact_phone'] = supplier['contacts'][0]['phone']
+            supplier['contact_name'] = supplier['contacts'][0]['name']
         props = {"application": {key: supplier[key] for key in supplier if key not in ['disclosures']}}
         props['application']['case_study_url'] = '/case-study/'
         props['application']['public_profile'] = not owns_profile
@@ -116,23 +116,22 @@ def get_supplier_case_study(casestudy_id):
     )
 
 
-@main.route('/case-study/create/<int:domain_id>/brief/<int:brief_id>', methods=['GET'])
+@main.route('/case-study/create/<int:domain_id>', methods=['GET'])
 @login_required
-def new_supplier_case_study(domain_id, brief_id):
+def new_supplier_case_study(domain_id):
     domain = data_api_client.req.domain(str(domain_id)).get()
     if not current_user.role == 'supplier':
         flash('buyer-role-required', 'error')
         return current_app.login_manager.unauthorized()
     form = DmForm()
-    basename = url_for('.create_new_supplier_case_study', domain_id=domain_id, brief_id=brief_id)
+    basename = url_for('.create_new_supplier_case_study', domain_id=domain_id)
     props = {
         'form_options': {
             'csrf_token': form.csrf_token.current_token
         },
         'casestudy': {
             'domain_id': domain_id,
-            'service': domain['domain']['name'],
-            'is_assessment': True
+            'service': domain['domain']['name']
         },
         'basename': basename
     }
@@ -146,6 +145,7 @@ def new_supplier_case_study(domain_id, brief_id):
         '_react.html',
         breadcrumb_items=[
             {'link': url_for('main.index'), 'label': 'Home'},
+            {'link': url_for('main.supplier_search'), 'label': 'Sellers catalogue'},
             {'link': url_for('main.get_supplier', code=current_user.supplier_code), 'label': 'Seller details'},
             {'label': 'Add case study'}
         ],
@@ -173,9 +173,9 @@ def delete_supplier_case_study(casestudy_id):
     )
 
 
-@main.route('/case-study/create/<int:domain_id>/brief/<int:brief_id>', methods=['POST'])
+@main.route('/case-study/create/<int:domain_id>', methods=['POST'])
 @login_required
-def create_new_supplier_case_study(domain_id, brief_id):
+def create_new_supplier_case_study(domain_id):
     domain = data_api_client.req.domain(str(domain_id)).get()
     if not current_user.role == 'supplier':
         flash('buyer-role-required', 'error')
@@ -187,7 +187,7 @@ def create_new_supplier_case_study(domain_id, brief_id):
 
     fields = ['opportunity', 'title', 'client', 'timeframe', 'outcome', 'approach']
 
-    basename = url_for('.new_supplier_case_study', domain_id=domain_id, brief_id=brief_id)
+    basename = url_for('.new_supplier_case_study', domain_id=domain_id)
     errors = validate_form_data(casestudy, fields)
     if errors:
         form = DmForm()
@@ -218,8 +218,33 @@ def create_new_supplier_case_study(domain_id, brief_id):
         case_study = DataAPIClient().create_case_study(
             caseStudy=casestudy
         )['caseStudy']
+        framework_slug = 'digital-marketplace' if feature.is_active('DM_FRAMEWORK') else 'digital-service-professionals'
+        props = {
+            'form_options': {
+                'domain': domain['domain']['name'],
+                'opportunityUrl': url_for('.list_opportunities', framework_slug=framework_slug)
+            }
+        }
 
-        return redirect('/sellers/opportunities/{}/assessment'.format(brief_id))
+        rendered_component = render_component('bundles/CaseStudy/CaseStudySubmitConfirmationWidget.js', props)
+
+        return render_template(
+            '_react.html',
+            breadcrumb_items=[
+                {
+                    "link": url_for("main.index"),
+                    "label": "Home"
+                },
+                {
+                    "link": url_for('.list_opportunities', framework_slug=framework_slug),
+                    "label": "Opportunities"
+                },
+                {
+                    "label": "Case Study submitted"
+                }
+            ],
+            component=rendered_component
+        )
 
     except APIError as e:
         form = DmForm()
