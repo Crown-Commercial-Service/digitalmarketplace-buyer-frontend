@@ -215,8 +215,6 @@ def metrics_historical():
 
 @main.route('/<template_name>')
 def content(template_name):
-    if template_name == 'roles-and-services':
-        return redirect('/capabilities-and-rates', code=301)  # 301 Moved Permanently
     try:
         return render_template('content/{}.html'.format(template_name))
     except:
