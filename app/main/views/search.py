@@ -386,7 +386,7 @@ def supplier_search():
                 component=component,
                 breadcrumb_items=[
                     {'link': url_for('main.index'), 'label': 'Home'},
-                    {'label': 'Sellers catalogue'}
+                    {'label': 'Seller catalogue'}
                 ]
             )
 

@@ -74,7 +74,7 @@ def get_supplier(code):
             component=rendered_component,
             breadcrumb_items=[
               {'link': url_for('main.index'), 'label': 'Home'},
-              {'link': url_for('main.supplier_search'), 'label': 'Sellers catalogue'},
+              {'link': url_for('main.supplier_search'), 'label': 'Seller catalogue'},
               {'label': 'Seller details'}
             ],
             main_class='collapse' if not owns_profile else None
@@ -109,7 +109,7 @@ def get_supplier_case_study(casestudy_id):
         '_react.html',
         breadcrumb_items=[
             {'link': url_for('main.index'), 'label': 'Home'},
-            {'link': url_for('main.supplier_search'), 'label': 'Sellers catalogue'},
+            {'link': url_for('main.supplier_search'), 'label': 'Seller catalogue'},
             {'link': url_for('main.get_supplier', code=supplier_code), 'label': 'Seller details'},
             {'label': 'Case Study'}
         ],
