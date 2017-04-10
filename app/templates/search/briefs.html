@@ -74,7 +74,7 @@ Seller opportunities – {{ framework.name }} – Digital Marketplace
               {% endif %}
 
              <h2>
-              <a href="{{ url_for('.get_brief_by_id', framework_slug=framework.slug, brief_id=brief.id) }}">{{ brief.title }}</a>
+              <a href="{{ url_for('.get_brief_by_id', framework_slug=brief.frameworkSlug, brief_id=brief.id) }}">{{ brief.title }}</a>
             </h2>
 
             <ul class="organisation">
