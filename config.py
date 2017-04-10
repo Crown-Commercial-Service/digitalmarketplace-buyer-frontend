@@ -1,146 +1,150 @@
 import os
-import hashlib
 from dmutils.status import enabled_since, get_version_label
-
-basedir = os.path.abspath(os.path.dirname(__file__))
 
 
 class Config(object):
-
     VERSION = get_version_label(
         os.path.abspath(os.path.dirname(__file__))
     )
-    URL_PREFIX = ''
     SESSION_COOKIE_NAME = 'dm_session'
     SESSION_COOKIE_PATH = '/'
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_SECURE = True
 
-    PERMANENT_SESSION_LIFETIME = 36*3600
+    PERMANENT_SESSION_LIFETIME = 18*3600
+
+    BASE_PREFIX = ''
+    URL_PREFIX = BASE_PREFIX + '/sellers'
 
     CSRF_ENABLED = True
     CSRF_TIME_LIMIT = 8*3600
+
+    DM_DEFAULT_CACHE_MAX_AGE = 48*3600
 
     DM_TIMEZONE = 'Australia/Sydney'
 
     DM_DATA_API_URL = None
     DM_DATA_API_AUTH_TOKEN = None
+    DM_CLARIFICATION_QUESTION_EMAIL = 'no-reply@marketplace.digital.gov.au'
+    DM_FRAMEWORK_AGREEMENTS_EMAIL = 'enquiries@example.com'
+
+    DM_AGREEMENTS_BUCKET = None
+    DM_COMMUNICATIONS_BUCKET = None
+    DM_DOCUMENTS_BUCKET = None
+    DM_SUBMISSIONS_BUCKET = None
+    DM_ASSETS_URL = None
+
     DM_HTTP_PROTO = 'http'
-    DM_DEFAULT_CACHE_MAX_AGE = 24*3600
-    DM_EMAIL_RETURN_ADDRESS = None
     DM_SEND_EMAIL_TO_STDERR = False
     DM_CACHE_TYPE = 'dev'
 
-    # matches api(s)
-    DM_SEARCH_PAGE_SIZE = 100
-
-    DM_GA_CODE = 'UA-72722909-6'
-
-    # This is just a placeholder
-    ES_ENABLED = True
-
     DEBUG = False
 
-    DM_TEAM_EMAIL = None
-    DM_TEAM_SLACK_WEBHOOK = None
-
+    GENERIC_CONTACT_EMAIL = 'marketplace@digital.gov.au'
     DM_GENERIC_NOREPLY_EMAIL = 'no-reply@marketplace.digital.gov.au'
     DM_GENERIC_ADMIN_NAME = 'Digital Marketplace Admin'
-
-    DM_GENERIC_SUPPORT_EMAIL = 'marketplace@digital.gov.au'
     DM_GENERIC_SUPPORT_NAME = 'Digital Marketplace'
 
     RESET_PASSWORD_EMAIL_NAME = DM_GENERIC_ADMIN_NAME
-    RESET_PASSWORD_EMAIL_FROM = DM_GENERIC_NOREPLY_EMAIL
-    RESET_PASSWORD_EMAIL_SUBJECT = 'Reset your Digital Marketplace password [SEC=UNCLASSIFIED]'
+    RESET_PASSWORD_EMAIL_FROM = 'no-reply@marketplace.digital.gov.au'
+    RESET_PASSWORD_EMAIL_SUBJECT = 'Reset your Digital Marketplace password'
 
-    BUYER_INVITE_REQUEST_SUBJECT = 'Buyer Account Invite Request [SEC=UNCLASSIFIED]'
-    BUYER_INVITE_REQUEST_ADMIN_EMAIL = 'marketplace+buyer-request@digital.gov.au'
-    BUYER_INVITE_REQUEST_EMAIL_FROM = DM_GENERIC_NOREPLY_EMAIL
-    BUYER_INVITE_REQUEST_EMAIL_NAME = DM_GENERIC_ADMIN_NAME
-    BUYER_INVITE_MANAGER_CONFIRMATION_SUBJECT = 'Digital Marketplace buyer account request [SEC=UNCLASSIFIED]'
-    BUYER_INVITE_MANAGER_CONFIRMATION_NAME = DM_GENERIC_ADMIN_NAME
+    INVITE_EMAIL_NAME = DM_GENERIC_ADMIN_NAME
+    INVITE_EMAIL_FROM = 'no-reply@marketplace.digital.gov.au'
+    INVITE_EMAIL_SUBJECT = 'Activate your new Marketplace account'
 
-    SELLER_NEW_OPPORTUNITY_EMAIL_SUBJECT = 'Digital Marketplace - new business opportunity'
-    SELLER_NEW_OPPORTUNITY_EMAIL_FROM = DM_GENERIC_NOREPLY_EMAIL
+    NEW_SUPPLIER_INVITE_SUBJECT = 'Digital Marketplace - invitation to create seller account'
 
-    CREATE_USER_SUBJECT = 'Create your Digital Marketplace account [SEC=UNCLASSIFIED]'
+    CLARIFICATION_EMAIL_NAME = DM_GENERIC_ADMIN_NAME
+    CLARIFICATION_EMAIL_FROM = 'no-reply@marketplace.digital.gov.au'
+    CLARIFICATION_EMAIL_SUBJECT = 'Thanks for your clarification question'
+    DM_FOLLOW_UP_EMAIL_TO = 'digitalmarketplace@mailinator.com'
+
+    FRAMEWORK_AGREEMENT_RETURNED_NAME = DM_GENERIC_ADMIN_NAME
+
+    CREATE_USER_SUBJECT = 'Create your Digital Marketplace account'
     SECRET_KEY = None
     SHARED_EMAIL_KEY = None
     RESET_PASSWORD_SALT = 'ResetPasswordSalt'
-    INVITE_EMAIL_SALT = 'InviteEmailSalt'
-    BUYER_CREATION_TOKEN_SALT = 'BuyerCreation'
+    SUPPLIER_INVITE_TOKEN_SALT = 'SupplierInviteEmail'
 
     ASSET_PATH = URL_PREFIX + '/static'
 
-    # Throw an exception in dev when a feature flag is used in code but not defined.
-    RAISE_ERROR_ON_MISSING_FEATURES = True
-    # List all your feature flags below
     FEATURE_FLAGS = {
-        'BRIEF_FILTER': True,
-        'CASE_STUDY': True,
-        'XLSX_EXPORT': True,
+        'EDIT_SECTIONS': True,
         'SELLER_REGISTRATION': True,
-        'DOMAINS_SEARCH': True,
-        'NEW_SELLER_PROFILE': True,
-        'DM_FRAMEWORK': True,
-        'SEARCH': True,
-        'TEAM_VIEW': True
+        'SELLER_UPDATE': True,
+        'SELLER_EDIT': True,
+        'DM_FRAMEWORK': False,
+        'SUBMIT_REGISTRATION': True
     }
 
-    # LOGGING
+    # Logging
     DM_LOG_LEVEL = 'DEBUG'
     DM_LOG_PATH = None
-    DM_APP_NAME = 'buyer-frontend'
+    DM_APP_NAME = 'supplier-frontend'
     DM_DOWNSTREAM_REQUEST_ID_HEADER = 'X-Amz-Cf-Id'
 
-    REACT_BUNDLE_URL = 'https://dm-dev-frontend.apps.staging.digital.gov.au/bundle/'
-    REACT_RENDER_URL = 'https://dm-dev-frontend.apps.staging.digital.gov.au/render'
+    REACT_BUNDLE_URL = 'http://localhost:60000/bundle/'
+    REACT_RENDER_URL = 'http://localhost:60000/render'
+
+    # REACT_BUNDLE_URL = 'https://dm-dev-frontend.apps.staging.digital.gov.au/bundle/'
+    # REACT_RENDER_URL = 'https://dm-dev-frontend.apps.staging.digital.gov.au/render'
     REACT_RENDER = not DEBUG
 
-    ROLLBAR_TOKEN = None
-    S3_BUCKET_NAME = None
+    ALLOWED_EXTENSIONS = ['pdf', 'jpg', 'jpeg', 'png']
+    S3_BUCKET_NAME = ''
     S3_ENDPOINT_URL = 's3-ap-southeast-2.amazonaws.com'
-    AWS_DEFAULT_REGION = None
+    AWS_DEFAULT_REGION = ''
+
+    GENERIC_EMAIL_DOMAINS = ['gmail.com', 'bigpond.com', 'outlook.com', 'hotmail.com', 'yahoo.com']
+
+    ROLLBAR_TOKEN = None
+    DM_TEAM_SLACK_WEBHOOK = None
+    DM_GA_CODE = 'UA-72722909-6'
 
 
 class Test(Config):
     DEBUG = True
-    DM_LOG_LEVEL = 'CRITICAL'
     CSRF_ENABLED = False
     CSRF_FAKED = True
+    DM_LOG_LEVEL = 'CRITICAL'
+    SERVER_NAME = 'localhost'
 
-    DM_DATA_API_URL = "http://localhost:5000"
-    DM_DATA_API_AUTH_TOKEN = "myToken"
+    # Throw an exception in dev when a feature flag is used in code but not defined. Otherwise it is assumed False.
+    RAISE_ERROR_ON_MISSING_FEATURES = True
 
     # Used a fixed timezone for tests. Using Sydney timezone will catch more timezone bugs than London.
     DM_TIMEZONE = 'Australia/Sydney'
 
+    DM_DATA_API_AUTH_TOKEN = 'myToken'
+
     SECRET_KEY = 'TestKeyTestKeyTestKeyTestKeyTestKeyTestKeyX='
     SHARED_EMAIL_KEY = SECRET_KEY
-    SERVER_NAME = 'localhost'
 
-    FEATURE_FLAGS = {
-        'BRIEF_FILTER': True,
-        'CASE_STUDY': True,
-        'XLSX_EXPORT': True,
-        'SELLER_REGISTRATION': True,
-        'DOMAINS_SEARCH': False,
-        'NEW_SELLER_PROFILE': True,
-        'DM_FRAMEWORK': False,
-        'SEARCH': False,
-        'TEAM_VIEW': True
-    }
+    DM_SEND_EMAIL_TO_STDERR = True
+
+    DM_SUBMISSIONS_BUCKET = 'digitalmarketplace-submissions-dev-dev'
+    DM_COMMUNICATIONS_BUCKET = 'digitalmarketplace-communications-dev-dev'
+    DM_ASSETS_URL = 'http://asset-host'
 
 
 class Development(Config):
     DEBUG = True
     SESSION_COOKIE_SECURE = False
-    DM_SEARCH_PAGE_SIZE = 5
+
+    # Throw an exception in dev when a feature flag is used in code but not defined. Otherwise it is assumed False.
+    RAISE_ERROR_ON_MISSING_FEATURES = True
 
     DM_DATA_API_URL = "http://localhost:5000"
     DM_DATA_API_AUTH_TOKEN = "myToken"
-    DM_DEFAULT_CACHE_MAX_AGE = 60
+    DM_API_AUTH_TOKEN = "myToken"
+
+    DM_SUBMISSIONS_BUCKET = "digitalmarketplace-submissions-dev-dev"
+    DM_COMMUNICATIONS_BUCKET = "digitalmarketplace-communications-dev-dev"
+    DM_AGREEMENTS_BUCKET = "digitalmarketplace-agreements-dev-dev"
+    DM_DOCUMENTS_BUCKET = "digitalmarketplace-documents-dev-dev"
+    DM_ASSETS_URL = "https://{}.s3-eu-west-1.amazonaws.com".format(DM_SUBMISSIONS_BUCKET)
 
     SECRET_KEY = 'DevKeyDevKeyDevKeyDevKeyDevKeyDevKeyDevKeyX='
     SHARED_EMAIL_KEY = SECRET_KEY
@@ -152,24 +156,24 @@ class Live(Config):
     DM_HTTP_PROTO = 'https'
     DM_GA_CODE = 'UA-72722909-5'
     DM_CACHE_TYPE = 'prod'
+    SERVER_NAME = 'marketplace.service.gov.au'
 
-    # If a feature flag is used in code but not defined in prod, assume it is False.
-    RAISE_ERROR_ON_MISSING_FEATURES = False
-    # List all your feature flags below
+    DM_FRAMEWORK_AGREEMENTS_EMAIL = 'no-reply@marketplace.digital.gov.au'
+
     FEATURE_FLAGS = {
-        'BRIEF_FILTER': False,
-        'CASE_STUDY': False,
-        'XLSX_EXPORT': False,
+        'EDIT_SECTIONS': False,
         'SELLER_REGISTRATION': True,
-        'NEW_SELLER_PROFILE': True,
-        'DM_FRAMEWORK': True,
-        'DOMAINS_SEARCH': True,
-        'SEARCH': True,
-        'TEAM_VIEW': True
+        'SELLER_UPDATE': True,
+        'SELLER_EDIT': False,
+        'DM_FRAMEWORK': False,
+        'SUBMIT_REGISTRATION': True
     }
 
-    REACT_BUNDLE_URL = 'https://dm-frontend.apps.platform.digital.gov.au/bundle/'
-    REACT_RENDER_URL = 'https://dm-frontend.apps.platform.digital.gov.au/render'
+    REACT_BUNDLE_URL = 'http://localhost:60000/bundle/'
+    REACT_RENDER_URL = 'http://localhost:60000/render'
+
+    # REACT_BUNDLE_URL = 'https://dm-frontend.apps.platform.digital.gov.au/bundle/'
+    # REACT_RENDER_URL = 'https://dm-frontend.apps.platform.digital.gov.au/render'
     REACT_RENDER = True
 
 
@@ -177,19 +181,17 @@ class Preview(Live):
     pass
 
 
-class Staging(Live):
-    pass
-
-
 class Production(Live):
     pass
 
 
+class Staging(Production):
+    pass
+
 configs = {
     'development': Development,
-    'test': Test,
-
     'preview': Preview,
     'staging': Staging,
     'production': Production,
+    'test': Test,
 }
