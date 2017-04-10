@@ -54,8 +54,9 @@ def get_supplier(code):
     if feature.is_active('NEW_SELLER_PROFILE'):
         # add business/authorized representative contact details
         if len(supplier['contacts']) > 0:
-            supplier['email'] = supplier['contacts'][0]['email']
-            supplier['phone'] = supplier['contacts'][0]['phone']
+            supplier['contact_email'] = supplier['contacts'][0]['email']
+            supplier['contact_phone'] = supplier['contacts'][0]['phone']
+            supplier['contact_name'] = supplier['contacts'][0]['name']
             supplier['representative'] = supplier['contacts'][0]['name']
         props = {"application": {key: supplier[key] for key in supplier if key not in ['disclosures']}}
         props['application']['case_study_url'] = '/case-study/'
