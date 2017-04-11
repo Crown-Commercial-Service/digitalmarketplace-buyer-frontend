@@ -61,6 +61,12 @@ def get_supplier(code):
         props = {"application": {key: supplier[key] for key in supplier if key not in ['disclosures']}}
         props['application']['case_study_url'] = '/case-study/'
         props['application']['public_profile'] = not owns_profile
+        props['application']['digital_marketplace_panel'] = False
+        digital_marketplace_framework = data_api_client.req.frameworks('digital-marketplace').get()
+        for framework in supplier.get('frameworks', []):
+            if framework['framework_id'] == digital_marketplace_framework['frameworks']['id']:
+                props['application']['digital_marketplace_panel'] = True
+        props['application']['dsp_panel'] = len(supplier.get('domains', {'legacy': []})['legacy']) > 0
         props['basename'] = url_for('.get_supplier', code=code)
         props['form_options'] = {
             'action': "/sellers/edit",
@@ -74,7 +80,7 @@ def get_supplier(code):
             component=rendered_component,
             breadcrumb_items=[
               {'link': url_for('main.index'), 'label': 'Home'},
-              {'link': url_for('main.supplier_search'), 'label': 'Sellers catalogue'},
+              {'link': url_for('main.supplier_search'), 'label': 'Seller catalogue'},
               {'label': 'Seller details'}
             ],
             main_class='collapse' if not owns_profile else None
@@ -109,7 +115,7 @@ def get_supplier_case_study(casestudy_id):
         '_react.html',
         breadcrumb_items=[
             {'link': url_for('main.index'), 'label': 'Home'},
-            {'link': url_for('main.supplier_search'), 'label': 'Sellers catalogue'},
+            {'link': url_for('main.supplier_search'), 'label': 'Seller catalogue'},
             {'link': url_for('main.get_supplier', code=supplier_code), 'label': 'Seller details'},
             {'label': 'Case Study'}
         ],

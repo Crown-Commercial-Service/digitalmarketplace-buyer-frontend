@@ -31,7 +31,7 @@
 
   <div class="chart-wrapper">
     <h2>Steps completed</h2>
-    <p>Some application steps are easy. Some take more time. This data helps us offer assistance and iterate.</p>
+    <p>Sellers are required to provide information in the following areas to progress their application.</p>
     <div id="steps_chart-legend" class="chart-legend"></div>
     <div id="steps_chart" class="chart"></div>
   </div>
@@ -41,13 +41,11 @@
           "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
       ];
       var titles = {
-          "reject_application_count": "Rejected",
-          "revert_application_count": "Reverted",
-          "create_application_count": "Started",
-          "approve_application_count": "Approved",
-          "submit_application_count": "Completed",
+          "started_application_count": "Started",
+          "completed_application_count": "Completed",
           "unassessed": "Unassessed",
           "submitted": "Completed",
+          "completed": "Completed",
           "unsubmitted": "Started",
           "assessed": "Assessed",
           "count": "Count",
@@ -151,10 +149,6 @@
               data: {
                   x: 'x',
                   columns: {{ applications | safe }},
-                  order: null,
-                  groups: [
-                      {{ applications_groups | safe }}
-                  ],
                   onmouseover: function (d) {
                       makeLegend('#linechart-legend', d, this);
                   }
@@ -198,9 +192,8 @@
                   type: 'bar',
                   groups: [{{ domain_groups | safe }}],
                   colors: {
-                      unassessed: '#3e8b9c',
-                      unsubmitted: '#224a61',
-                      assessed: '#cae3e8'
+                      completed: '#224a61',
+                      unsubmitted: '#5BCBE3'
                   },
                   onmouseover: function (d) {
                       makeLegend('#domain_chart-legend', d, this);
@@ -214,6 +207,9 @@
               },
               axis: {
                   rotated: true,
+                  y: {
+                      show: false
+                  },
                   x: {
                       tick: {
                           width: 170,
@@ -256,6 +252,9 @@
               },
               axis: {
                   rotated: true,
+                  y: {
+                      show: false
+                  },
                   x: {
                       tick: {
                           width: 100,
@@ -293,6 +292,9 @@
               },
               axis: {
                   rotated: true,
+                  y: {
+                      show: false
+                  },
                   x: {
                       tick: {
                           fit: true,

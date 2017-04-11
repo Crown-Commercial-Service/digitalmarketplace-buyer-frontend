@@ -76,23 +76,6 @@ def seller_applications_charts():
 
         return [x for x in metrics], output
 
-    def fix_reverted(input):
-        (metrics, output) = input
-        submitted_k = None
-        reverted_k = None
-        for k, v in enumerate(output):
-            if v[0] == 'submit_application_count':
-                submitted_k = k
-            if v[0] == 'revert_application_count':
-                reverted_k = k
-        if reverted_k:
-            for k, v in enumerate(output[reverted_k]):
-                if k > 0:
-                    output[submitted_k][k] = int(output[submitted_k][k] or 0) + int(output[reverted_k][k] or 0)
-            del output[reverted_k]
-            del metrics[metrics.index('revert_application_count')]
-        return metrics, output
-
     def format_metrics(columns, column_name):
         column_names = []
         values = {}
@@ -125,8 +108,7 @@ def seller_applications_charts():
             values = new_values
 
         if column_name == 'domain':
-            metrics = values.keys()
-            new_values = {}
+
             domain_order = ['Strategy and Policy',
                             'User research and Design',
                             'Agile delivery and Governance',
@@ -149,13 +131,24 @@ def seller_applications_charts():
                             'Cyber security': 'Cyber security',
                             'Data science': 'Data science',
                             'Emerging technologies': 'Emerging technologies'}
-            for metric in metrics:
-                new_values[metric] = []
-                for domain in domain_order:
-                    if domain not in column_names:
-                        new_values[metric].append(0)
+            new_values = {'unsubmitted': [], 'completed': []}
+            for domain in domain_order:
+                if domain not in column_names:
+                    new_values['unsubmitted'].append(0)
+                    new_values['completed'].append(0)
+                else:
+                    if 'unsubmitted' in values:
+                        new_values['unsubmitted'].append(values['unsubmitted'][column_names.index(domain)])
                     else:
-                        new_values[metric].append(values[metric][column_names.index(domain)])
+                        new_values['unsubmitted'].append(0)
+                    total = 0
+                    if values.get('assessed') and values['assessed'][column_names.index(domain)]:
+                        total += values['assessed'][column_names.index(domain)]
+                    if values.get('submitted') and values['submitted'][column_names.index(domain)]:
+                        total += values['submitted'][column_names.index(domain)]
+                    if values.get('unassessed') and values['unassessed'][column_names.index(domain)]:
+                        total += values['unassessed'][column_names.index(domain)]
+                    new_values['completed'].append(total)
             column_names = [domain_names[x] for x in domain_order]
             values = new_values
 
@@ -175,7 +168,6 @@ def seller_applications_charts():
                           'candidates',
                           'products',
                           'review',
-                          'finish-profile',
                           ]
             for step in step_order:
                 if step not in column_names:
@@ -188,9 +180,10 @@ def seller_applications_charts():
         output = [[k] + values[k] for k in values.keys()]
         return column_names, metrics, output
     events = data_api_client.req.metrics().applications().history().get()
-    if 'unassessed_domain_count' in events:
-        del events['unassessed_domain_count']
-    (groups, applications) = fix_reverted(format_applications(events))
+
+    (groups, applications) = format_applications(dict((k, v) for k, v in events.items()
+                                                      if k in ['started_application_count',
+                                                               'completed_application_count']))
 
     (domain_columns, domain_groups, domains) \
         = format_metrics(data_api_client.req.metrics().domains().get(), "domain")
@@ -201,7 +194,6 @@ def seller_applications_charts():
 
     return render_template('charts.html',
                            applications=json.dumps(applications),
-                           applications_groups=json.dumps(groups),
                            domains=json.dumps(domains),
                            domain_groups=json.dumps(domain_groups),
                            domain_columns=json.dumps(domain_columns),
@@ -223,8 +215,6 @@ def metrics_historical():
 
 @main.route('/<template_name>')
 def content(template_name):
-    if template_name == 'roles-and-services':
-        return redirect('/capabilities-and-rates', code=301)  # 301 Moved Permanently
     try:
         return render_template('content/{}.html'.format(template_name))
     except:
