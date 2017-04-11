@@ -132,6 +132,13 @@ items = [
         %}
         {% include "toolkit/link-button.html" %}
         {% endwith %}
+        {% with
+        url = application_url,
+        role = "button",
+        label = "Express Interest"
+        %}
+        {% include "toolkit/link-button.html" %}
+        {% endwith %}
       </p>
       <p>
         <strong>New to the Marketplace?</strong><br/>
@@ -145,6 +152,13 @@ items = [
         url = application_url,
         role = "button",
         label = "Apply now"
+        %}
+        {% include "toolkit/link-button.html" %}
+        {% endwith %}
+        {% with
+        url = application_url,
+        role = "button",
+        label = "Express Interest"
         %}
         {% include "toolkit/link-button.html" %}
         {% endwith %}
