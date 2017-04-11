@@ -33,7 +33,13 @@
   </div>
   <input type="text" name="q" id="keywords" value="{{ search_keywords }}" maxlength="200">
 </div>
+
 {% if current_lot %}
 <input type="hidden" name="lot" value="{{ current_lot.slug }}" />
 {% endif %}
+
+{% if current_category_filter %}
+<input type="hidden" name="{{ current_category_filter.name }}" value="{{ current_category_filter.value }}" />
+{% endif %}
+
 {% include 'search/_filters.html' %}
