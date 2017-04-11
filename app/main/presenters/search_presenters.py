@@ -99,20 +99,24 @@ def annotate_lots_with_categories_selection(lots, category_filter_group, request
     :param lots: a sequence of lot dicts, which this function will annotate
     :param category_filter_group: a single filter group loaded from the framework search_filters manifest
     :param request: current request so that we can figure out what lots and categories are selected
+    :return: the category filter that was directly selected, if any
     """
     current_lot_slug = get_lot_from_request(request)
+    selected_category = None
 
     for lot in lots:
         lot_selected = (lot['slug'] == current_lot_slug)
         if lot_selected:
             lot['selected'] = True
             categories = category_filter_group['filters'] if category_filter_group else []
-            category_was_selected = _annotate_categories_with_selection(lot, categories, request)
+            selected_category = _annotate_categories_with_selection(lot, categories, request)
             lot['categories'] = categories
 
-        if not lot_selected or category_was_selected:
+        if not lot_selected or selected_category is not None:
             # we need a link back to the lot _without_ a category selected
             lot['link'] = url_for('.search_services', q=get_keywords_from_request(request), lot=lot['slug'])
+
+    return selected_category
 
 
 def _annotate_categories_with_selection(lot, category_filters, request):
@@ -121,11 +125,10 @@ def _annotate_categories_with_selection(lot, category_filters, request):
     as part of building the lots/categories tree.
     :param category_filters: iterable of category filters as previously produced by filters_for_question
     :param request: request object from which to extract active filters
-    :return: True iff a category from the list was selected
+    :return: the category filter that was directly selected, if any
     """
     request_filters = get_filters_from_request(request)
-    any_category_selected = False
-    any_descendant_selected = False
+    selected_category_filter = None
 
     for category in category_filters:
         category['selected'] = False
@@ -134,12 +137,15 @@ def _annotate_categories_with_selection(lot, category_filters, request):
             type=str
         )
         directly_selected = (category['value'] in param_values)
-        any_child_selected = _annotate_categories_with_selection(lot, category.get('children', []), request)
-        if directly_selected or any_child_selected:
-            any_category_selected = True
+
+        selected_descendant = _annotate_categories_with_selection(lot, category.get('children', []), request)
+        if selected_descendant is not None:
+            selected_category_filter = selected_descendant
+        elif directly_selected:
+            selected_category_filter = category
+
+        if directly_selected or selected_descendant is not None:
             category['selected'] = True
-        if any_child_selected:
-            any_descendant_selected = True
 
         # As with lots, we want a link to the category - but not if the category is directly selected.
         # If we're showing it as 'selected' because one of its children is selected, then the link is
@@ -154,8 +160,9 @@ def _annotate_categories_with_selection(lot, category_filters, request):
                                        lot=lot['slug'],
                                        **url_args)
 
-    # Remove parent categories (except the selected one), when any subcategory is selected - we
-    # we think this may make navigation easier (and it's similar to what Amazon does)
-    if any_descendant_selected:
+    # Remove categories (except the selected one), when any is selected - we
+    # think this may make navigation easier (and it's similar to what Amazon does)
+    if selected_category_filter is not None:
         category_filters[:] = (c for c in category_filters if c['selected'])  # in-place filter(!)
-    return any_category_selected
+
+    return selected_category_filter
