@@ -17,7 +17,7 @@ from ...helpers import BaseApplicationTest
 content_loader = ContentLoader('tests/fixtures/content')
 content_loader.load_manifest('g6', 'data', 'manifest')
 content_loader.load_manifest('g9', 'data', 'manifest')
-questions_builder = content_loader.get_builder('g6', 'manifest')
+g6_builder = content_loader.get_builder('g6', 'manifest')
 g9_builder = content_loader.get_builder('g9', 'manifest')
 
 
@@ -46,7 +46,7 @@ def _get_fixture_multiple_pages_data():
 class TestSearchFilters(BaseApplicationTest):
 
     def _get_filter_group_by_label(self, lot, label):
-        filter_groups = filters_for_lot(lot, questions_builder)
+        filter_groups = filters_for_lot(lot, g6_builder)
         for filter_group in filter_groups.values():
             if filter_group['label'] == label:
                 return filter_group
@@ -122,7 +122,7 @@ class TestSearchFilters(BaseApplicationTest):
         }
 
     def test_request_filters_are_set(self):
-        search_filters = list(filters_for_lot('saas', questions_builder).values())
+        search_filters = list(filters_for_lot('saas', g6_builder).values())
         request = self._get_request_for_params({
             'q': 'email',
             'booleanExample1': 'true'
@@ -164,7 +164,7 @@ class TestSearchFilters(BaseApplicationTest):
             'lot': 'paas'
         })
 
-        search_filters = list(filters_for_lot('paas', questions_builder).values())
+        search_filters = list(filters_for_lot('paas', g6_builder).values())
         set_filter_states(search_filters, request)
         assert search_filters[0] == {
             'label': 'Booleans example',
@@ -193,7 +193,7 @@ class TestSearchFilters(BaseApplicationTest):
             'booleanExample1': 'true'
         })
 
-        search_filters = list(filters_for_lot('paas', questions_builder).values())
+        search_filters = list(filters_for_lot('paas', g6_builder).values())
         set_filter_states(search_filters, request)
 
         assert search_filters[0] == {
@@ -228,7 +228,7 @@ class TestSearchFilters(BaseApplicationTest):
         assert all_filters == no_lot_filters
 
     def test_instance_has_correct_filter_groups_for_paas(self):
-        search_filters = filters_for_lot('paas', questions_builder).values()
+        search_filters = filters_for_lot('paas', g6_builder).values()
 
         filter_group_labels = [
             group['label'] for group in search_filters
@@ -239,7 +239,7 @@ class TestSearchFilters(BaseApplicationTest):
         assert 'Radios example' in filter_group_labels
 
     def test_instance_has_correct_filter_groups_for_iaas(self):
-        search_filters = filters_for_lot('iaas', questions_builder).values()
+        search_filters = filters_for_lot('iaas', g6_builder).values()
 
         filter_group_labels = [
             group['label'] for group in search_filters
