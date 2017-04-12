@@ -110,6 +110,17 @@ class TestSearchFilters(BaseApplicationTest):
         assert filter_with_comma['id'] == 'checkboxTreeExample-option-3-with-comma'
         assert filter_with_comma['value'] == 'option 3 with comma'
 
+    def test_filters_with_values(self):
+        checkboxes_filter_group = filters_for_lot('cloud-software', g9_builder)['categories-example']
+        filter_with_value = None
+        for some_filter in checkboxes_filter_group['filters']:
+            if some_filter['label'] == 'Option 4 has a value':
+                filter_with_value = some_filter
+                break
+        assert filter_with_value is not None
+        assert filter_with_value['id'] == 'checkboxTreeExample-option_4_value'
+        assert filter_with_value['value'] == 'option_4_value'
+
     def test_get_filter_groups_from_questions_with_boolean_filters(self):
         booleans_filter_group = self._get_filter_group_by_label(
             'saas', 'Booleans example'
