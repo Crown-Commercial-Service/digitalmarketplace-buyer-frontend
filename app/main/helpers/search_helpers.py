@@ -121,6 +121,20 @@ def replace_g5_search_dots(keywords_query):
     )
 
 
+def get_filter_value_from_question_option(option):
+    """
+    Processes `option` into a search term value suitable for the Search API.
+
+    The Search API does not allow commas in filter values, because they are used
+    to separate the terms in an 'OR' search - see `group_request_filters`. They
+    are removed from the field values by the indexer by the Search API itself,
+    see `dm-search-api:app.main.services.conversions.strip_and_lowercase`.
+
+    :return: normalized string value
+    """
+    return (option.get('value') or option.get('label', '')).lower().replace(',', '')
+
+
 def build_search_query(request, lot_filters, content_builder, lots_by_slug):
     """Match request args with known filters.
 
