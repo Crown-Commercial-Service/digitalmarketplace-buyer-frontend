@@ -45,7 +45,7 @@
 {% endif %}
 {% endwith %}
 
-{% if form.errors|length > 1 %}
+{% if form.errors|length >= 1 %}
     <div class="validation-masthead" aria-labelledby="validation-masthead-heading">
         <h3 class="validation-masthead-heading" id="validation-masthead-heading">
             There was a problem with the details you gave for:
