@@ -9,7 +9,7 @@
 
 {% block breadcrumb %}
   {% with %}
-    {% if current_lot_label %}
+    {% if current_lot %}
       {% set items = [
         {
             "link": url_for('.index'),
@@ -20,7 +20,7 @@
             "label": "Cloud technology and support"
         },
         {
-          "label": current_lot_label
+          "label": current_lot.name
         }
       ] %}
     {% else %}

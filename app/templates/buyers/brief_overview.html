@@ -23,7 +23,6 @@
 
 {% block main_content %}
   <div class="grid-row">
-
     {% block before_heading %}
       {% if delete_requested %}
         <div class="column-one-whole">
@@ -40,6 +39,8 @@
         </div>
       {% endif %}
    {% endblock %}
+  </div>
+  <div class="grid-row">
     <div class="column-two-thirds">
       {% with
         heading = brief.get('title', brief['lotName']),
@@ -47,9 +48,11 @@
       %}
         {% include "toolkit/page-heading.html" %}
       {% endwith %}
-
-    {% block before_sections %}{% endblock %}
-
+    </div>
+  </div>
+  <div class="grid-row">
+    <div class="column-two-thirds">
+      {% block before_sections %}{% endblock %}
       <ol class="instruction-list steps">
 
         {% with
@@ -89,7 +92,7 @@
                   'allowed_statuses': ['live']
                 },
                 {
-                  'href': url_for("main.get_brief_by_id", framework_slug=brief.frameworkSlug, brief_id=brief.id),
+                  'href': url_for("main.get_brief_by_id", framework_framework=brief.frameworkFramework, brief_id=brief.id),
                   'text': 'View your published requirements',
                   'allowed_statuses': ['live', 'closed']
                 }
@@ -161,8 +164,8 @@
                   'text': 'How to award a contract',
                 },
                 {
-                  'href': 'https://www.gov.uk/government/publications/digital-outcomes-and-specialists-call-off-contract',
-                  'text': 'View the Digital Outcomes and Specialists contract',
+                  'href': call_off_contract_url,
+                  'text': "View the " + brief.frameworkName + " contract",
                 },
               ]
             }
@@ -211,7 +214,11 @@
         {% endwith %}
       </ol>
     </div>
-
+    <div class="column-one-third">
+      {% if brief.publishedAt %}
+        {% include 'buyers/_requirements_meta.html' %}
+      {% endif %}
+    </div>
   </div>
   {% if not delete_requested %}
      <div class="grid-row">

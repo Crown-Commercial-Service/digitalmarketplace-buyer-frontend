@@ -1,0 +1,24 @@
+question: 'Choose a category'
+depends:
+  - "on": "lot"
+    being: ['cloud-software']
+hint: 'Choose all options that apply'
+type: checkbox_tree
+options:
+  -
+    label: 'Option 1'
+    filter_label: 'Option 1 filter label'
+  -
+    label: 'Option 2'
+    filter_label: 'Option 2 filter label'
+    options:
+      - label: 'Option 2.1'
+        filter_label: 'Option 2.1 filter label'
+      - label: 'Option 2.2'
+        filter_label: 'Option 2.2 filter label'
+
+validations:
+  -
+    name: answer_required
+    message: 'This question requires an answer.'
+

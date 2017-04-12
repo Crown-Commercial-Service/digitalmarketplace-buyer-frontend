@@ -343,10 +343,6 @@ class TestBriefPage(BaseApplicationTest):
 
         self.brief = self._get_dos_brief_fixture_data()
         self._data_api_client.get_brief.return_value = self.brief
-        self.application_path = 'start'
-        self.expected_message = "To apply, you must give evidence for all the essential and nice-to-have " \
-            "skills and experience you have."
-        self.expected_button_text = 'Apply'
 
     def teardown_method(self, method):
         self._data_api_client.stop()
@@ -373,6 +369,16 @@ class TestBriefPage(BaseApplicationTest):
         document = html.fromstring(res.get_data(as_text=True))
 
         self._assert_page_title(document)
+
+    def test_dos_brief_has_lot_analytics_string(self):
+        brief = self.brief['briefs']
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief['id']))
+        assert res.status_code == 200
+
+        data = res.get_data(as_text=True)
+        analytics_string = '<span data-lot="{lot_slug}"></span>'.format(lot_slug=brief['lotSlug'])
+
+        assert analytics_string in data
 
     def _convert_date_to_display_date_format(self, date_string):
         date_object = datetime.strptime(date_string, DATETIME_FORMAT)
@@ -491,11 +497,7 @@ class TestBriefPage(BaseApplicationTest):
         assert res.status_code == 200
         document = html.fromstring(res.get_data(as_text=True))
 
-        apply_links = document.xpath('//a[@href="/suppliers/opportunities/{}/responses/{}"]'.format(
-            brief_id, self.application_path)
-        )
-
-        assert len(apply_links) == 1
+        self._assert_start_application(document, brief_id)
 
     def test_cannot_apply_to_closed_brief(self):
         self.brief['briefs']['status'] = "closed"
@@ -505,10 +507,7 @@ class TestBriefPage(BaseApplicationTest):
         assert res.status_code == 200
         document = html.fromstring(res.get_data(as_text=True))
 
-        apply_links = document.xpath('//a[@href="/suppliers/opportunities/{}/responses/{}"]'.format(
-            brief_id, self.application_path
-            )
-        )
+        apply_links = document.xpath('//a[@href="/suppliers/opportunities/{}/responses/start"]'.format(brief_id))
         assert len(apply_links) == 0
         assert '15 December 2016' in document.xpath('//p[@class="banner-message"]')[0].text_content()
 
@@ -523,16 +522,16 @@ class TestBriefPage(BaseApplicationTest):
         message_list = document.xpath("//p[@class='dmspeak']/text()")
         message = message_list[0] if message_list else None
 
-        assert message == self.expected_message
+        assert message == "To apply, you must give evidence for all the essential and nice-to-have " \
+            "skills and experience you have."
         assert len(document.xpath(
             '//a[@href="{0}"][contains(normalize-space(text()), normalize-space("{1}"))]'.format(
-                "/suppliers/opportunities/{}/responses/{}".format(brief_id, self.application_path),
-                self.expected_button_text,
+                "/suppliers/opportunities/{}/responses/start".format(brief_id),
+                'Apply',
             )
         )) == 1
 
-    @staticmethod
-    def _assert_view_application(document, brief_id):
+    def _assert_view_application(self, document, brief_id):
         assert len(document.xpath(
             '//a[@href="{0}"][contains(normalize-space(text()), normalize-space("{1}"))]'.format(
                 "/suppliers/opportunities/{}/responses/result".format(brief_id),
@@ -598,33 +597,6 @@ class TestBriefPage(BaseApplicationTest):
         self._assert_view_application(document, brief_id)
 
 
-class TestBriefPageWithLegacyBrief(TestBriefPage):
-    # This set of tests is to check the behavior of the brief page with the new flow active, but with a brief published
-    # before the new flow was activated. It should exhibit the same behaviour as the legacy flow.
-    # This class just overwrites the specific data and re-runs all the same tests in the previous class with it.
-
-    def setup_method(self, method):
-        super(TestBriefPageWithLegacyBrief, self).setup_method(method)
-        self.brief['briefs']['publishedAt'] = "2016-11-01T11:09:28.054129Z"
-        self.application_path = 'create'
-        self.expected_message = None
-        self.expected_button_text = 'Start application'
-
-
-class TestBriefPageWithLegacyFlow(TestBriefPage):
-    # This set of tests is to check the behaviour of the brief page with the new flow not active. This is important as
-    # the production environment will not have the new flow turned on until all the work is in place and ready. These
-    # tests make sure we don't break anything in the mean time.
-    # This class just overwrites the specific data and re-runs all the same tests in the previous class with it.
-
-    def setup_method(self, method):
-        super(TestBriefPageWithLegacyFlow, self).setup_method(method)
-        self.app.config['FEATURE_FLAGS_NEW_SUPPLIER_FLOW'] = False
-        self.application_path = 'create'
-        self.expected_message = None
-        self.expected_button_text = 'Start application'
-
-
 class TestCatalogueOfBriefsPage(BaseApplicationTest):
     def setup_method(self, method):
         super(TestCatalogueOfBriefsPage, self).setup_method(method)
@@ -636,16 +608,44 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         self.briefs = self._get_dos_brief_fixture_data(multi=True)
         self._data_api_client.find_briefs.return_value = self.briefs
 
-        self._data_api_client.get_framework.return_value = {'frameworks': {
-            'name': "Digital Outcomes and Specialists",
-            'slug': "digital-outcomes-and-specialists",
-            'lots': [
-                {'name': 'Lot 1', 'slug': 'lot-one', 'allowsBrief': True},
-                {'name': 'Lot 2', 'slug': 'lot-two', 'allowsBrief': False},
-                {'name': 'Lot 3', 'slug': 'lot-three', 'allowsBrief': True},
-                {'name': 'Lot 4', 'slug': 'lot-four', 'allowsBrief': True},
-            ]
-        }}
+        self._data_api_client.find_frameworks.return_value = {'frameworks': [
+            {
+                'id': 3,
+                'name': "Digital Outcomes and Specialists 2",
+                'slug': "digital-outcomes-and-specialists-2",
+                'framework': "digital-outcomes-and-specialists",
+                'lots': [
+                    {'name': 'Lot 1', 'slug': 'lot-one', 'allowsBrief': True},
+                    {'name': 'Lot 2', 'slug': 'lot-two', 'allowsBrief': False},
+                    {'name': 'Lot 3', 'slug': 'lot-three', 'allowsBrief': True},
+                    {'name': 'Lot 4', 'slug': 'lot-four', 'allowsBrief': True},
+                ]
+            },
+            {
+                'id': 1,
+                'name': "Digital Outcomes and Specialists",
+                'slug': "digital-outcomes-and-specialists",
+                'framework': "digital-outcomes-and-specialists",
+                'lots': [
+                    {'name': 'Lot 1', 'slug': 'lot-one', 'allowsBrief': True},
+                    {'name': 'Lot 2', 'slug': 'lot-two', 'allowsBrief': False},
+                    {'name': 'Lot 3', 'slug': 'lot-three', 'allowsBrief': True},
+                    {'name': 'Lot 4', 'slug': 'lot-four', 'allowsBrief': True},
+                ]
+            },
+            {
+                'id': 2,
+                'name': "Foobar",
+                'slug': "foobar",
+                'framework': "foobar",
+                'lots': [
+                    {'name': 'Lot 1', 'slug': 'lot-one', 'allowsBrief': True},
+                    {'name': 'Lot 2', 'slug': 'lot-two', 'allowsBrief': False},
+                    {'name': 'Lot 3', 'slug': 'lot-three', 'allowsBrief': True},
+                    {'name': 'Lot 4', 'slug': 'lot-four', 'allowsBrief': True},
+                ]
+            },
+        ]}
 
     def teardown_method(self, method):
         self._data_api_client.stop()
@@ -655,12 +655,12 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         assert res.status_code == 200
         document = html.fromstring(res.get_data(as_text=True))
 
-        self._data_api_client.get_framework.assert_called_once_with("digital-outcomes-and-specialists")
+        self._data_api_client.find_frameworks.assert_called_once_with()
         regular_args = {
             k: v for k, v in iteritems(self._data_api_client.find_briefs.call_args[1]) if k not in ("status", "lot",)
         }
         assert regular_args == {
-            "framework": "digital-outcomes-and-specialists",
+            "framework": "digital-outcomes-and-specialists-2,digital-outcomes-and-specialists",
             "page": 1,
             "human": True,
         }
@@ -692,18 +692,23 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         ss_elem = document.xpath("//p[@class='search-summary']")[0]
         assert self._normalize_whitespace(self._squashed_element_text(ss_elem)) == "2 opportunities"
 
+        dos1_framework_label = document.xpath("//div[@class='search-result']/ul[2]/li[2]/text()")[0].strip()
+        dos2_framework_label = document.xpath("//div[@class='search-result']/ul[2]/li[2]/text()")[1].strip()
+        assert dos1_framework_label == "Digital Outcomes and Specialists"
+        assert dos2_framework_label == "Digital Outcomes and Specialists 2"
+
     def test_catalogue_of_briefs_page_filtered(self):
         original_url = "/digital-outcomes-and-specialists/opportunities?page=2&status=live&lot=lot-one&lot=lot-three"
         res = self.client.get(original_url)
         assert res.status_code == 200
         document = html.fromstring(res.get_data(as_text=True))
 
-        self._data_api_client.get_framework.assert_called_once_with("digital-outcomes-and-specialists")
+        self._data_api_client.find_frameworks.assert_called_once_with()
         regular_args = {
             k: v for k, v in iteritems(self._data_api_client.find_briefs.call_args[1]) if k not in ("status", "lot",)
         }
         assert regular_args == {
-            "framework": "digital-outcomes-and-specialists",
+            "framework": "digital-outcomes-and-specialists-2,digital-outcomes-and-specialists",
             "page": 2,
             "human": True,
         }
@@ -755,12 +760,12 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         assert res.status_code == 200
         document = html.fromstring(res.get_data(as_text=True))
 
-        self._data_api_client.get_framework.assert_called_once_with("digital-outcomes-and-specialists")
+        self._data_api_client.find_frameworks.assert_called_once_with()
         regular_args = {
             k: v for k, v in iteritems(self._data_api_client.find_briefs.call_args[1]) if k not in ("status", "lot",)
         }
         assert regular_args == {
-            "framework": "digital-outcomes-and-specialists",
+            "framework": "digital-outcomes-and-specialists-2,digital-outcomes-and-specialists",
             "page": 1,
             "human": True,
         }
@@ -834,8 +839,7 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         assert '<li class="next">' not in page
 
     def test_catalogue_of_briefs_page_404_for_framework_that_does_not_exist(self):
-        self._data_api_client.get_framework.return_value = {'frameworks': {}}
         res = self.client.get('/digital-giraffes-and-monkeys/opportunities')
 
         assert res.status_code == 404
-        self._data_api_client.get_framework.assert_called_once_with('digital-giraffes-and-monkeys')
+        self._data_api_client.find_frameworks.assert_called_once_with()

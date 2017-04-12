@@ -91,20 +91,21 @@ class TestStartNewBrief(BaseApplicationTest):
             assert res.status_code == 404
 
     def test_404_if_framework_status_is_not_live(self, data_api_client):
-        with self.app.app_context():
-            self.login_as_buyer()
-            data_api_client.get_framework.return_value = api_stubs.framework(
-                slug='digital-outcomes-and-specialists',
-                status='open',
-                lots=[
-                    api_stubs.lot(slug='digital-specialists', allows_brief=True),
-                ]
-            )
+        for framework_status in ['coming', 'open', 'pending', 'standstill', 'expired']:
+            with self.app.app_context():
+                self.login_as_buyer()
+                data_api_client.get_framework.return_value = api_stubs.framework(
+                    slug='digital-outcomes-and-specialists',
+                    status=framework_status,
+                    lots=[
+                        api_stubs.lot(slug='digital-specialists', allows_brief=True),
+                    ]
+                )
 
-            res = self.client.get(
-                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/create")
+                res = self.client.get(
+                    "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/create")
 
-            assert res.status_code == 404
+                assert res.status_code == 404
 
     def test_404_if_lot_does_not_exist(self, data_api_client):
         with self.app.app_context():
@@ -271,24 +272,26 @@ class TestCreateNewBrief(BaseApplicationTest):
 
 
 class TestEveryDamnPage(BaseApplicationTest):
-
-    # @mock.patch("app.buyers.views.buyers.content_loader")
-    def _load_page(self, url, status_code, method='get', data=None):
+    def _load_page(self, url, status_code, method='get', data=None, framework_status='live', brief_status='draft'):
         data = {} if data is None else data
         baseurl = "/buyers/frameworks/digital-outcomes-and-specialists/requirements"
-
         with mock.patch('app.buyers.views.buyers.content_loader') as content_loader, \
                 mock.patch('app.buyers.views.buyers.data_api_client') as data_api_client:
             self.login_as_buyer()
             data_api_client.get_framework.return_value = api_stubs.framework(
                 slug='digital-outcomes-and-specialists',
-                status='live',
+                status=framework_status,
                 lots=[
                     api_stubs.lot(slug='digital-specialists', allows_brief=True),
                     api_stubs.lot(slug='digital-outcomes', allows_brief=True)
                 ]
             )
-            data_api_client.get_brief.return_value = api_stubs.brief()
+            brief_stub = api_stubs.brief()
+            brief_stub['briefs'].update({'status': brief_status})
+            if brief_status != 'draft':
+                brief_stub['briefs'].update({'publishedAt': '2017-01-21T12:00:00.000000Z'})
+            data_api_client.get_brief.return_value = brief_stub
+
             content_fixture = ContentLoader('tests/fixtures/content')
             content_fixture.load_manifest('dos', 'data', 'edit_brief')
             content_loader.get_manifest.return_value = content_fixture.get_manifest('dos', 'edit_brief')
@@ -300,53 +303,90 @@ class TestEveryDamnPage(BaseApplicationTest):
 
     # These should all work as expected
 
-    def test_wrong_lot_get_view_brief_overview(self):
-        self._load_page("/digital-specialists/1234", 200)
+    def test_get_view_brief_overview(self):
+        for framework_status in ['live', 'expired']:
+            self._load_page("/digital-specialists/1234", 200, framework_status=framework_status)
 
-    def test_wrong_lot_get_view_section_summary(self):
+    def test_get_view_section_summary(self):
         self._load_page("/digital-specialists/1234/section-1", 200)
 
-    def test_wrong_lot_get_edit_brief_question(self):
+    def test_get_edit_brief_question(self):
         self._load_page("/digital-specialists/1234/edit/section-1/required1", 200)
 
-    def test_wrong_lot_post_edit_brief_question(self):
+    def test_post_edit_brief_question(self):
         data = {"required1": True}
         self._load_page("/digital-specialists/1234/edit/section-1/required1", 302, method='post', data=data)
 
-    def test_wrong_lot_get_view_brief_responses(self):
-        self._load_page("/digital-specialists/1234/responses", 200)
+    def test_get_view_brief_responses(self):
+        for framework_status in ['live', 'expired']:
+            self._load_page("/digital-specialists/1234/responses", 200, brief_status='closed')
 
     # get and post are the same for publishing
 
-    def test_wrong_lot_post_delete_a_brief(self):
+    def test_post_delete_a_brief(self):
         data = {"delete_confirmed": True}
         self._load_page("/digital-specialists/1234/delete", 302, method='post', data=data)
 
     # Wrong lots
 
-    def test_get_view_brief_overview(self):
+    def test_wrong_lot_get_view_brief_overview(self):
         self._load_page("/digital-outcomes/1234", 404)
 
-    def test_get_view_section_summary(self):
+    def test_wrong_lot_get_view_section_summary(self):
         self._load_page("/digital-outcomes/1234/section-1", 404)
 
-    def test_get_edit_brief_question(self):
+    def test_wrong_lot_get_edit_brief_question(self):
         self._load_page("/digital-outcomes/1234/edit/section-1/required1", 404)
 
-    def test_post_edit_brief_question(self):
+    def test_wrong_lot_post_edit_brief_question(self):
         data = {"required1": True}
         self._load_page("/digital-outcomes/1234/edit/section-1/required1", 404, method='post', data=data)
 
-    def test_get_view_brief_responses(self):
+    def test_wrong_lot_get_view_brief_responses(self):
         self._load_page("/digital-outcomes/1234/responses", 404)
 
     # get and post are the same for publishing
-    def test_publish_brief(self):
+    def test_wrong_lot_publish_brief(self):
         self._load_page("/digital-outcomes/1234/publish", 404)
 
-    def test_post_delete_a_brief(self):
+    def test_wrong_lot_post_delete_a_brief(self):
         data = {"delete_confirmed": True}
         self._load_page("/digital-outcomes/1234/delete", 404, method='post', data=data)
+
+    # not allowed for expired framework_slug
+
+    def test_expired_framework_get_edit_brief_question(self):
+        self._load_page("/digital-specialists/1234/edit/section-1/required1", 404, framework_status='expired')
+
+    def test_expired_framework_post_edit_brief_question(self):
+        data = {"required1": True}
+        self._load_page(
+            "/digital-outcomes/1234/edit/section-1/required1",
+            404,
+            method='post',
+            data=data,
+            framework_status='expired'
+        )
+
+    def test_expired_framework_post_edit_brief_question(self):
+        data = {"required1": True}
+        self._load_page(
+            "/digital-outcomes/1234/edit/section-1/required1",
+            404,
+            method='post',
+            data=data,
+            framework_status='expired'
+        )
+
+    def test_expired_framework_post_edit_brief_question(self):
+        data = {"required1": True}
+        self._load_page(
+            "/digital-specialists/1234/edit/section-1/required1",
+            404,
+            method='post',
+            data=data,
+            framework_status='expired'
+        )
 
 
 @mock.patch('app.buyers.views.buyers.data_api_client')
@@ -564,20 +604,21 @@ class TestEditBriefSubmission(BaseApplicationTest):
         assert res.status_code == 404
 
     def test_404_if_framework_status_is_not_live(self, data_api_client):
-        self.login_as_buyer()
-        data_api_client.get_framework.return_value = api_stubs.framework(
-            slug='digital-outcomes-and-specialists',
-            status='open',
-            lots=[
-                api_stubs.lot(slug='digital-specialists', allows_brief=True)
-            ]
-        )
+        for framework_status in ['coming', 'open', 'pending', 'standstill', 'expired']:
+            self.login_as_buyer()
+            data_api_client.get_framework.return_value = api_stubs.framework(
+                slug='digital-outcomes-and-specialists',
+                status=framework_status,
+                lots=[
+                    api_stubs.lot(slug='digital-specialists', allows_brief=True)
+                ]
+            )
 
-        res = self.client.get(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists"
-            "/1234/edit/description-of-work/organisation")
+            res = self.client.get(
+                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists"
+                "/1234/edit/description-of-work/organisation")
 
-        assert res.status_code == 404
+            assert res.status_code == 404
 
     def test_404_if_brief_has_published_status(self, data_api_client):
         self.login_as_buyer()
@@ -825,25 +866,26 @@ class TestUpdateBriefSubmission(BaseApplicationTest):
         assert not data_api_client.update_brief.called
 
     def test_404_if_framework_status_is_not_live(self, data_api_client):
-        self.login_as_buyer()
-        data_api_client.get_framework.return_value = api_stubs.framework(
-            slug='digital-outcomes-and-specialists',
-            status='open',
-            lots=[
-                api_stubs.lot(slug='digital-specialists', allows_brief=True)
-            ]
-        )
-        data_api_client.get_brief.return_value = api_stubs.brief()
+        for framework_status in ['coming', 'open', 'pending', 'standstill', 'expired']:
+            self.login_as_buyer()
+            data_api_client.get_framework.return_value = api_stubs.framework(
+                slug='digital-outcomes-and-specialists',
+                status='open',
+                lots=[
+                    api_stubs.lot(slug='digital-specialists', allows_brief=True)
+                ]
+            )
+            data_api_client.get_brief.return_value = api_stubs.brief()
 
-        res = self.client.post(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
-            "digital-specialists/1234/edit/description-of-work/organisation",
-            data={
-                "title": "A new title"
-            })
+            res = self.client.post(
+                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
+                "digital-specialists/1234/edit/description-of-work/organisation",
+                data={
+                    "title": "A new title"
+                })
 
-        assert res.status_code == 404
-        assert not data_api_client.update_brief.called
+            assert res.status_code == 404
+            assert not data_api_client.update_brief.called
 
     def test_404_if_brief_is_already_live(self, data_api_client):
         self.login_as_buyer()
@@ -970,6 +1012,48 @@ class TestPublishBrief(BaseApplicationTest):
 
         assert res.status_code == 404
         assert not data_api_client.update_brief.called
+
+    def test_404_if_framework_status_is_not_live(self, data_api_client):
+        for framework_status in ['coming', 'open', 'pending', 'standstill', 'expired']:
+            self.login_as_buyer()
+            data_api_client.get_framework.return_value = api_stubs.framework(
+                slug='digital-outcomes-and-specialists',
+                status=framework_status,
+                lots=[
+                    api_stubs.lot(slug='digital-specialists', allows_brief=True)
+                ]
+            )
+
+            brief_json = api_stubs.brief(status="draft")
+            brief_questions = brief_json['briefs']
+            brief_questions.update({
+                'backgroundInformation': 'test background info',
+                'contractLength': 'A very long time',
+                'culturalFitCriteria': ['CULTURAL', 'FIT'],
+                'culturalWeighting': 10,
+                'essentialRequirements': 'Everything',
+                'evaluationType': ['test evaluation type'],
+                'existingTeam': 'team team team',
+                'importantDates': 'Near future',
+                'numberOfSuppliers': 5,
+                'location': 'somewhere',
+                'organisation': 'test organisation',
+                'priceWeighting': 80,
+                'specialistRole': 'communicationsManager',
+                'specialistWork': 'work work work',
+                'startDate': 'startDate',
+                'summary': 'blah',
+                'technicalWeighting': 10,
+                'workingArrangements': 'arrangements',
+                'workplaceAddress': 'address',
+                'requirementsLength': '1 week'
+            })
+            data_api_client.get_brief.return_value = brief_json
+
+            res = self.client.post("/buyers/frameworks/digital-outcomes-and-specialists/requirements/"
+                                   "digital-specialists/1234/publish")
+            assert res.status_code == 404
+            assert not data_api_client.publish_brief.called
 
     def test_publish_button_available_if_questions_answered(self, data_api_client):
         self.login_as_buyer()
@@ -1206,41 +1290,43 @@ class TestPublishBrief(BaseApplicationTest):
 @mock.patch('app.buyers.views.buyers.data_api_client')
 class TestDeleteBriefSubmission(BaseApplicationTest):
     def test_delete_brief_submission(self, data_api_client):
-        self.login_as_buyer()
-        data_api_client.get_framework.return_value = api_stubs.framework(
-            slug='digital-outcomes-and-specialists',
-            status='live',
-            lots=[
-                api_stubs.lot(slug='digital-specialists', allows_brief=True)
-            ]
-        )
-        data_api_client.get_brief.return_value = api_stubs.brief()
+        for framework_status in ['live', 'expired']:
+            self.login_as_buyer()
+            data_api_client.get_framework.return_value = api_stubs.framework(
+                slug='digital-outcomes-and-specialists',
+                status=framework_status,
+                lots=[
+                    api_stubs.lot(slug='digital-specialists', allows_brief=True)
+                ]
+            )
+            data_api_client.get_brief.return_value = api_stubs.brief()
 
-        res = self.client.post(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/delete"
-        )
+            res = self.client.post(
+                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/delete"
+            )
 
-        assert res.status_code == 302
-        assert data_api_client.delete_brief.called
-        assert res.location == "http://localhost/buyers"
+            assert res.status_code == 302
+            assert data_api_client.delete_brief.called
+            assert res.location == "http://localhost/buyers"
 
-    def test_404_if_framework_is_not_live(self, data_api_client):
-        self.login_as_buyer()
-        data_api_client.get_framework.return_value = api_stubs.framework(
-            slug='digital-outcomes-and-specialists',
-            status='standstill',
-            lots=[
-                api_stubs.lot(slug='digital-specialists', allows_brief=True)
-            ]
-        )
-        data_api_client.get_brief.return_value = api_stubs.brief()
+    def test_404_if_framework_is_not_live_or_expired(self, data_api_client):
+        for framework_status in ['coming', 'open', 'pending', 'standstill']:
+            self.login_as_buyer()
+            data_api_client.get_framework.return_value = api_stubs.framework(
+                slug='digital-outcomes-and-specialists',
+                status=framework_status,
+                lots=[
+                    api_stubs.lot(slug='digital-specialists', allows_brief=True)
+                ]
+            )
+            data_api_client.get_brief.return_value = api_stubs.brief()
 
-        res = self.client.post(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/delete",
-        )
-
-        assert res.status_code == 404
-        assert not data_api_client.delete_brief.called
+            res = self.client.post(
+                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/delete",
+            )
+            print(framework_status)
+            assert res.status_code == 404
+            assert not data_api_client.delete_brief.called
 
     def test_cannot_delete_live_brief(self, data_api_client):
         self.login_as_buyer()
@@ -1322,135 +1408,143 @@ class TestBriefSummaryPage(BaseApplicationTest):
 
             assert document.xpath('//a[contains(text(), "Delete")]')
 
-    def test_show_live_brief_summary_page(self, data_api_client):
+    def test_show_live_brief_summary_page_for_live_and_expired_framework(self, data_api_client):
+        framework_statuses = ['live', 'expired']
         with self.app.app_context():
             self.login_as_buyer()
-            data_api_client.get_framework.return_value = api_stubs.framework(
-                slug='digital-outcomes-and-specialists',
-                status='live',
-                lots=[
-                    api_stubs.lot(slug='digital-specialists', allows_brief=True),
+            for framework_status in framework_statuses:
+                data_api_client.get_framework.return_value = api_stubs.framework(
+                    slug='digital-outcomes-and-specialists',
+                    status=framework_status,
+                    lots=[
+                        api_stubs.lot(slug='digital-specialists', allows_brief=True),
+                    ]
+                )
+                brief_json = api_stubs.brief(status="live")
+                brief_json['briefs']['publishedAt'] = "2016-04-02T20:10:00.00000Z"
+                brief_json['briefs']['specialistRole'] = 'communicationsManager'
+                brief_json['briefs']["clarificationQuestionsAreClosed"] = True
+                data_api_client.get_brief.return_value = brief_json
+
+                res = self.client.get(
+                    "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234"
+                )
+
+                assert res.status_code == 200
+                page_html = res.get_data(as_text=True)
+                document = html.fromstring(page_html)
+
+                assert (document.xpath('//h1')[0]).text_content().strip() == "I need a thing to do a thing"
+                assert [e.text_content() for e in document.xpath('//main[@id="content"]//ul/li/a')] == [
+                    'View question and answer dates',
+                    'View your published requirements',
+                    'Publish questions and answers',
+                    'How to answer supplier questions',
+                    'How to shortlist suppliers',
+                    'How to evaluate suppliers',
+                    'How to award a contract',
+                    'View the Digital Outcomes and Specialists contract',
                 ]
-            )
-            brief_json = api_stubs.brief(status="live")
-            brief_json['briefs']['publishedAt'] = "2016-04-02T20:10:00.00000Z"
-            brief_json['briefs']['specialistRole'] = 'communicationsManager'
-            brief_json['briefs']["clarificationQuestionsAreClosed"] = True
-            data_api_client.get_brief.return_value = brief_json
 
-            res = self.client.get(
-                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234"
-            )
+                assert not document.xpath('//a[contains(text(), "Delete")]')
 
-            assert res.status_code == 200
-            page_html = res.get_data(as_text=True)
-            document = html.fromstring(page_html)
-
-            assert (document.xpath('//h1')[0]).text_content().strip() == "I need a thing to do a thing"
-            assert [e.text_content() for e in document.xpath('//main[@id="content"]//ul/li/a')] == [
-                'View question and answer dates',
-                'View your published requirements',
-                'Publish questions and answers',
-                'How to answer supplier questions',
-                'How to shortlist suppliers',
-                'How to evaluate suppliers',
-                'How to award a contract',
-                'View the Digital Outcomes and Specialists contract',
-            ]
-
-            assert not document.xpath('//a[contains(text(), "Delete")]')
-
-    def test_show_closed_brief_summary_page(self, data_api_client):
+    def test_show_closed_brief_summary_page_for_live_and_expired_framework(self, data_api_client):
+        framework_statuses = ['live', 'expired']
         with self.app.app_context():
             self.login_as_buyer()
-            data_api_client.get_framework.return_value = api_stubs.framework(
-                slug='digital-outcomes-and-specialists',
-                status='live',
-                lots=[
-                    api_stubs.lot(slug='digital-specialists', allows_brief=True),
+            for framework_status in framework_statuses:
+                data_api_client.get_framework.return_value = api_stubs.framework(
+                    slug='digital-outcomes-and-specialists',
+                    status=framework_status,
+                    lots=[
+                        api_stubs.lot(slug='digital-specialists', allows_brief=True),
+                    ]
+                )
+                brief_json = api_stubs.brief(status="closed")
+                brief_json['briefs']['publishedAt'] = "2016-04-02T20:10:00.00000Z"
+                brief_json['briefs']['specialistRole'] = 'communicationsManager'
+                brief_json['briefs']["clarificationQuestionsAreClosed"] = True
+                data_api_client.get_brief.return_value = brief_json
+
+                res = self.client.get(
+                    "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234"
+                )
+
+                assert res.status_code == 200
+                page_html = res.get_data(as_text=True)
+                document = html.fromstring(page_html)
+
+                assert (document.xpath('//h1')[0]).text_content().strip() == "I need a thing to do a thing"
+                assert [e.text_content() for e in document.xpath('//main[@id="content"]//ul/li/a')] == [
+                    'View your published requirements',
+                    'View and shortlist suppliers',
+                    'How to shortlist suppliers',
+                    'How to evaluate suppliers',
+                    'How to award a contract',
+                    'View the Digital Outcomes and Specialists contract',
                 ]
-            )
-            brief_json = api_stubs.brief(status="closed")
-            brief_json['briefs']['publishedAt'] = "2016-04-02T20:10:00.00000Z"
-            brief_json['briefs']['specialistRole'] = 'communicationsManager'
-            brief_json['briefs']["clarificationQuestionsAreClosed"] = True
-            data_api_client.get_brief.return_value = brief_json
 
-            res = self.client.get(
-                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234"
-            )
-
-            assert res.status_code == 200
-            page_html = res.get_data(as_text=True)
-            document = html.fromstring(page_html)
-
-            assert (document.xpath('//h1')[0]).text_content().strip() == "I need a thing to do a thing"
-            assert [e.text_content() for e in document.xpath('//main[@id="content"]//ul/li/a')] == [
-                'View your published requirements',
-                'View and shortlist suppliers',
-                'How to shortlist suppliers',
-                'How to evaluate suppliers',
-                'How to award a contract',
-                'View the Digital Outcomes and Specialists contract',
-            ]
-
-            assert not document.xpath('//a[contains(text(), "Delete")]')
+                assert not document.xpath('//a[contains(text(), "Delete")]')
 
     def test_show_clarification_questions_page_for_live_brief_with_no_questions(self, data_api_client):
+        framework_statuses = ['live', 'expired']
         with self.app.app_context():
             self.login_as_buyer()
-            data_api_client.get_framework.return_value = api_stubs.framework(
-                slug='digital-outcomes-and-specialists',
-                status='live',
-                lots=[
-                    api_stubs.lot(slug='digital-specialists', allows_brief=True),
-                ]
-            )
-            brief_json = api_stubs.brief(status="live")
-            brief_json['briefs']['publishedAt'] = "2016-04-02T20:10:00.00000Z"
-            brief_json['briefs']["clarificationQuestionsAreClosed"] = False
-            data_api_client.get_brief.return_value = brief_json
+            for framework_status in framework_statuses:
+                data_api_client.get_framework.return_value = api_stubs.framework(
+                    slug='digital-outcomes-and-specialists',
+                    status=framework_status,
+                    lots=[
+                        api_stubs.lot(slug='digital-specialists', allows_brief=True),
+                    ]
+                )
+                brief_json = api_stubs.brief(status="live")
+                brief_json['briefs']['publishedAt'] = "2016-04-02T20:10:00.00000Z"
+                brief_json['briefs']["clarificationQuestionsAreClosed"] = False
+                data_api_client.get_brief.return_value = brief_json
 
-            res = self.client.get(
-                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/supplier-questions"  # noqa
-            )
+                res = self.client.get(
+                    "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/supplier-questions"  # noqa
+                )
 
-            assert res.status_code == 200
-            page_html = res.get_data(as_text=True)
-            assert "Supplier questions" in page_html
-            assert "No questions or answers have been published" in page_html
-            assert "Answer a supplier question" in page_html
+                assert res.status_code == 200
+                page_html = res.get_data(as_text=True)
+                assert "Supplier questions" in page_html
+                assert "No questions or answers have been published" in page_html
+                assert "Answer a supplier question" in page_html
 
     def test_show_clarification_questions_page_for_live_brief_with_one_question(self, data_api_client):
+        framework_statuses = ['live', 'expired']
         with self.app.app_context():
             self.login_as_buyer()
-            data_api_client.get_framework.return_value = api_stubs.framework(
-                slug='digital-outcomes-and-specialists',
-                status='live',
-                lots=[
-                    api_stubs.lot(slug='digital-specialists', allows_brief=True),
-                ]
-            )
-            brief_json = api_stubs.brief(status="live", clarification_questions=[
-                {"question": "Why is my question a question?",
-                 "answer": "Because",
-                 "publishedAt": "2016-01-01T00:00:00.000000Z"}
-            ])
-            brief_json['briefs']['publishedAt'] = "2016-04-02T20:10:00.00000Z"
-            brief_json['briefs']["clarificationQuestionsAreClosed"] = True
-            data_api_client.get_brief.return_value = brief_json
+            for framework_status in framework_statuses:
+                data_api_client.get_framework.return_value = api_stubs.framework(
+                    slug='digital-outcomes-and-specialists',
+                    status='live',
+                    lots=[
+                        api_stubs.lot(slug='digital-specialists', allows_brief=True),
+                    ]
+                )
+                brief_json = api_stubs.brief(status="live", clarification_questions=[
+                    {"question": "Why is my question a question?",
+                     "answer": "Because",
+                     "publishedAt": "2016-01-01T00:00:00.000000Z"}
+                ])
+                brief_json['briefs']['publishedAt'] = "2016-04-02T20:10:00.00000Z"
+                brief_json['briefs']["clarificationQuestionsAreClosed"] = True
+                data_api_client.get_brief.return_value = brief_json
 
-            res = self.client.get(
-                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/supplier-questions"  # noqa
-            )
+                res = self.client.get(
+                    "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/supplier-questions"  # noqa
+                )
 
-            assert res.status_code == 200
-            page_html = res.get_data(as_text=True)
-            assert "Supplier questions" in page_html
-            assert "Why is my question a question?" in page_html
-            assert "Because" in page_html
-            assert "Answer a supplier question" in page_html
-            assert "No questions or answers have been published" not in page_html
+                assert res.status_code == 200
+                page_html = res.get_data(as_text=True)
+                assert "Supplier questions" in page_html
+                assert "Why is my question a question?" in page_html
+                assert "Because" in page_html
+                assert "Answer a supplier question" in page_html
+                assert "No questions or answers have been published" not in page_html
 
     def test_404_if_framework_does_not_allow_brief(self, data_api_client):
         with self.app.app_context():
@@ -1528,79 +1622,195 @@ class TestBriefSummaryPage(BaseApplicationTest):
             assert section_4_link[0].get('href').strip() == \
                 '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/section-4'
 
+    def test_no_meta_data_is_shown_for_a_draft_brief(self, data_api_client):
+        with self.app.app_context():
+            self.login_as_buyer()
+            data_api_client.get_framework.return_value = api_stubs.framework(
+                slug="digital-outcomes-and-specialists-2",
+                status='live',
+                lots=[
+                    api_stubs.lot(slug='digital-specialists', allows_brief=True),
+                ]
+            )
+            data_api_client.get_brief.return_value = api_stubs.brief(
+                status="draft",
+                framework_slug="digital-outcomes-and-specialists-2",
+                framework_name="Digital Outcomes and Specialists 2",
+            )
+
+            res = self.client.get(
+                "/buyers/frameworks/digital-outcomes-and-specialists-2/requirements/digital-specialists/1234"
+            )
+            assert res.status_code == 200
+
+            document = html.fromstring(res.get_data(as_text=True))
+
+            meta_data_container = document.xpath('//*[@id="requirements-meta"]')
+
+            assert not meta_data_container
+
+    def test_shows_correct_content_for_draft_open_and_closed_dos_1_and_2_briefs(self, data_api_client):
+        framework_slugs = ["digital-outcomes-and-specialists", "digital-outcomes-and-specialists-2"]
+        framework_names = ["Digital Outcomes and Specialists", "Digital Outcomes and Specialists 2"]
+        sidebar_heading_content = ['Closing', 'Closed']
+        brief_statuses = ['live', 'closed']
+
+        for framework_slug, framework_name in zip(framework_slugs, framework_names):
+            with self.app.app_context():
+                self.login_as_buyer()
+                for heading, brief_status in zip(sidebar_heading_content, brief_statuses):
+                    data_api_client.get_framework.return_value = api_stubs.framework(
+                        slug=framework_slug,
+                        status='live',
+                        lots=[
+                            api_stubs.lot(slug='digital-specialists', allows_brief=True),
+                        ]
+                    )
+                    data_api_client.get_brief.return_value = api_stubs.brief(
+                        status=brief_status,
+                        framework_slug=framework_slug,
+                        framework_name=framework_name,
+                    )
+
+                    res = self.client.get(
+                        "/buyers/frameworks/{}/requirements/digital-specialists/1234".format(framework_slug)
+                    )
+                    assert res.status_code == 200
+
+                    document = html.fromstring(res.get_data(as_text=True))
+
+                    sidebar_headings = document.xpath('//*[@class="sidebar-heading"]/text()')
+                    sidebar_content = document.xpath('//*[@class="sidebar-content"]/text()')
+                    framework_name_content = document.xpath('//*[@class="framework-name"]/a/text()')[0]
+
+                    assert sidebar_headings == ['Published', heading, 'Framework']
+                    assert sidebar_content == ['Tuesday 29 March 2016', 'Thursday 7 April 2016']
+                    assert framework_name_content == framework_name
+
+    def test_links_to_correct_call_off_contract_and_framework_agreement_for_briefs_framework(self, data_api_client):
+        framework_slugs = ["digital-outcomes-and-specialists", "digital-outcomes-and-specialists-2"]
+        framework_names = ["Digital Outcomes and Specialists", "Digital Outcomes and Specialists 2"]
+        call_off_contract_urls = [
+            "https://www.gov.uk/government/publications/digital-outcomes-and-specialists-call-off-contract",
+            "https://www.gov.uk/government/publications/digital-outcomes-and-specialists-2-call-off-contract"
+        ]
+        framework_agreement_urls = [
+            "https://www.gov.uk/government/publications/digital-outcomes-and-specialists-framework-agreement",
+            "https://www.gov.uk/government/publications/digital-outcomes-and-specialists-2-framework-agreement"
+        ]
+
+        for framework_slug, framework_name, call_off_contract_url, framework_agreement_url in \
+                zip(framework_slugs, framework_names, call_off_contract_urls, framework_agreement_urls):
+                with self.app.app_context():
+                    self.login_as_buyer()
+                    data_api_client.get_framework.return_value = api_stubs.framework(
+                        slug=framework_slug,
+                        status='live',
+                        lots=[
+                            api_stubs.lot(slug='digital-specialists', allows_brief=True),
+                        ]
+                    )
+                    data_api_client.get_brief.return_value = api_stubs.brief(
+                        status='live',
+                        framework_slug=framework_slug,
+                        framework_name=framework_name,
+                    )
+
+                    res = self.client.get(
+                        "/buyers/frameworks/{}/requirements/digital-specialists/1234".format(framework_slug)
+                    )
+                    assert res.status_code == 200
+
+                    document = html.fromstring(res.get_data(as_text=True))
+
+                    call_off_contract_link_destination = \
+                        document.xpath('//main[@id="content"]//ul/li/a')[-1].values()[0]
+                    framework_agreement_link_destination = \
+                        document.xpath('//*[@class="framework-name"]/a')[0].values()[0]
+                    contract_link_text = document.xpath('//main[@id="content"]//ul/li/a/text()')[-1]
+
+                    assert call_off_contract_link_destination == call_off_contract_url
+                    assert framework_agreement_link_destination == framework_agreement_url
+                    assert contract_link_text == "View the {} contract".format(framework_name)
+
 
 @mock.patch("app.buyers.views.buyers.data_api_client")
 class TestAddBriefClarificationQuestion(BaseApplicationTest):
-    def test_show_brief_clarification_question_form(self, data_api_client):
+    def test_show_brief_clarification_question_form_for_live_and_expired_framework(self, data_api_client):
+        framework_statuses = ['live', 'expired']
         self.login_as_buyer()
-        data_api_client.get_framework.return_value = api_stubs.framework(
-            slug="digital-outcomes-and-specialists",
-            status="live",
-            lots=[
-                api_stubs.lot(slug="digital-specialists", allows_brief=True)
-            ])
-        brief_json = api_stubs.brief(status="live")
-        brief_json['briefs']["clarificationQuestionsAreClosed"] = False
-        data_api_client.get_brief.return_value = brief_json
+        for framework_status in framework_statuses:
+            data_api_client.get_framework.return_value = api_stubs.framework(
+                slug="digital-outcomes-and-specialists",
+                status=framework_status,
+                lots=[
+                    api_stubs.lot(slug="digital-specialists", allows_brief=True)
+                ])
+            brief_json = api_stubs.brief(status="live")
+            brief_json['briefs']["clarificationQuestionsAreClosed"] = False
+            data_api_client.get_brief.return_value = brief_json
 
-        res = self.client.get(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements"
-            "/digital-specialists/1234/supplier-questions/answer-question")
+            res = self.client.get(
+                "/buyers/frameworks/digital-outcomes-and-specialists/requirements"
+                "/digital-specialists/1234/supplier-questions/answer-question")
 
-        assert res.status_code == 200
+            assert res.status_code == 200
 
-    def test_add_brief_clarification_question(self, data_api_client):
+    def test_add_brief_clarification_question_for_live_and_expired_framework(self, data_api_client):
+        framework_statuses = ['live', 'expired']
         self.login_as_buyer()
-        data_api_client.get_framework.return_value = api_stubs.framework(
-            slug="digital-outcomes-and-specialists",
-            status="live",
-            lots=[
-                api_stubs.lot(slug="digital-specialists", allows_brief=True)
-            ])
-        brief_json = api_stubs.brief(status="live")
-        brief_json['briefs']["clarificationQuestionsAreClosed"] = False
-        data_api_client.get_brief.return_value = brief_json
+        for framework_status in framework_statuses:
+            data_api_client.get_framework.return_value = api_stubs.framework(
+                slug="digital-outcomes-and-specialists",
+                status=framework_status,
+                lots=[
+                    api_stubs.lot(slug="digital-specialists", allows_brief=True)
+                ])
+            brief_json = api_stubs.brief(status="live")
+            brief_json['briefs']["clarificationQuestionsAreClosed"] = False
+            data_api_client.get_brief.return_value = brief_json
 
-        res = self.client.post(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements"
-            "/digital-specialists/1234/supplier-questions/answer-question",
-            data={
-                "question": "Why?",
-                "answer": "Because",
-            })
+            res = self.client.post(
+                "/buyers/frameworks/digital-outcomes-and-specialists/requirements"
+                "/digital-specialists/1234/supplier-questions/answer-question",
+                data={
+                    "question": "Why?",
+                    "answer": "Because",
+                })
 
-        assert res.status_code == 302
-        data_api_client.add_brief_clarification_question.assert_called_with(
-            "1234", "Why?", "Because", "buyer@email.com")
+            assert res.status_code == 302
+            data_api_client.add_brief_clarification_question.assert_called_with(
+                "1234", "Why?", "Because", "buyer@email.com")
 
-        # test that the redirect ends up on the right page
-        assert res.headers['Location'].endswith(
-            '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/supplier-questions'  # noqa
-        ) is True
+            # test that the redirect ends up on the right page
+            assert res.headers['Location'].endswith(
+                '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/supplier-questions'  # noqa
+            ) is True
 
-    def test_404_if_framework_is_not_live(self, data_api_client):
-        self.login_as_buyer()
-        data_api_client.get_framework.return_value = api_stubs.framework(
-            slug='digital-outcomes-and-specialists',
-            status='pending',
-            lots=[
-                api_stubs.lot(slug='digital-specialists', allows_brief=True),
-            ]
-        )
-        brief_json = api_stubs.brief()
-        brief_json['briefs']["clarificationQuestionsAreClosed"] = False
-        data_api_client.get_brief.return_value = brief_json
+    def test_404_if_framework_is_not_live_or_expired(self, data_api_client):
+        for framework_status in ['coming', 'open', 'pending', 'standstill']:
+            self.login_as_buyer()
+            data_api_client.get_framework.return_value = api_stubs.framework(
+                slug='digital-outcomes-and-specialists',
+                status=framework_status,
+                lots=[
+                    api_stubs.lot(slug='digital-specialists', allows_brief=True),
+                ]
+            )
+            brief_json = api_stubs.brief()
+            brief_json['briefs']["clarificationQuestionsAreClosed"] = False
+            data_api_client.get_brief.return_value = brief_json
 
-        res = self.client.post(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements"
-            "/digital-specialists/1234/supplier-questions/answer-question",
-            data={
-                "question": "Why?",
-                "answer": "Because",
-            })
+            res = self.client.post(
+                "/buyers/frameworks/digital-outcomes-and-specialists/requirements"
+                "/digital-specialists/1234/supplier-questions/answer-question",
+                data={
+                    "question": "Why?",
+                    "answer": "Because",
+                })
 
-        assert res.status_code == 404
-        assert not data_api_client.add_brief_clarification_question.called
+            assert res.status_code == 404
+            assert not data_api_client.add_brief_clarification_question.called
 
     def test_404_if_framework_does_not_allow_brief(self, data_api_client):
         self.login_as_buyer()
@@ -1727,83 +1937,61 @@ class TestAddBriefClarificationQuestion(BaseApplicationTest):
 
 
 class AbstractViewBriefResponsesPage(BaseApplicationTest):
-    def test_page_shows_correct_count_of_eligible_suppliers(self, data_api_client):
-        data_api_client.find_brief_responses.return_value = self.two_good_three_bad_responses
-        data_api_client.get_framework.return_value = api_stubs.framework(
+    def setup_method(self, method):
+        super(AbstractViewBriefResponsesPage, self).setup_method(method)
+
+        self.data_api_client_patch = mock.patch('app.buyers.views.buyers.data_api_client')
+        self.data_api_client = self.data_api_client_patch.start()
+
+        self.data_api_client.get_framework.return_value = api_stubs.framework(
             slug='digital-outcomes-and-specialists',
             status='live',
             lots=[
                 api_stubs.lot(slug='digital-outcomes', allows_brief=True),
             ]
         )
-        data_api_client.get_brief.return_value = api_stubs.brief(lot_slug="digital-outcomes")
 
+        brief_stub = api_stubs.brief(lot_slug="digital-outcomes", status='closed')
+        brief_stub['briefs'].update({'publishedAt': self.brief_publishing_date})
+        self.data_api_client.get_brief.return_value = brief_stub
+
+        self.data_api_client.find_brief_responses.return_value = self.brief_responses
+
+    def teardown_method(self, method):
+        self.data_api_client_patch.stop()
+        super(AbstractViewBriefResponsesPage, self).teardown_method(method)
+
+    def test_page_shows_correct_content_when_eligible_responses(self):
         self.login_as_buyer()
         res = self.client.get(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1/responses"
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1234/responses"
         )
         page = res.get_data(as_text=True)
 
         assert res.status_code == 200
         assert "2 suppliers" in page
         assert "responded to your requirements and meet all your essential skills and experience." in page
+        assert (
+            "Any suppliers that did not meet all your essential requirements "
+            "have already been told they were unsuccessful."
+        ) in page
 
-    def test_page_does_not_pluralise_for_single_response(self, data_api_client):
-        data_api_client.find_brief_responses.return_value = {
-            "briefResponses": [self.two_good_three_bad_responses["briefResponses"][0]]
+    def test_page_does_not_pluralise_for_single_response(self):
+        self.data_api_client.find_brief_responses.return_value = {
+            "briefResponses": [self.brief_responses["briefResponses"][0]]
         }
-        data_api_client.get_framework.return_value = api_stubs.framework(
-            slug='digital-outcomes-and-specialists',
-            status='live',
-            lots=[
-                api_stubs.lot(slug='digital-outcomes', allows_brief=True),
-            ]
-        )
-        data_api_client.get_brief.return_value = api_stubs.brief(lot_slug="digital-outcomes")
 
         self.login_as_buyer()
         res = self.client.get(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1/responses"
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1234/responses"
         )
         page = res.get_data(as_text=True)
         assert res.status_code == 200
         assert "1 supplier" in page
         assert "responded to your requirements and meets all your essential skills and experience." in page
 
-    def test_page_does_not_show_csv_download_link_if_brief_open(self, data_api_client):
-        data_api_client.find_brief_responses.return_value = self.two_good_three_bad_responses
-        data_api_client.get_framework.return_value = api_stubs.framework(
-            slug='digital-outcomes-and-specialists',
-            status='live',
-            lots=[
-                api_stubs.lot(slug='digital-outcomes', allows_brief=True),
-            ]
-        )
-        data_api_client.get_brief.return_value = api_stubs.brief(lot_slug="digital-outcomes", status='live')
-
-        self.login_as_buyer()
-        res = self.client.get(
-            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1234/responses"
-        )
-        page = res.get_data(as_text=True)
-        document = html.fromstring(page)
-        csv_link = document.xpath(
-            '//a[@href="/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1234/responses/download"]'  # noqa
-        )
-
-        assert res.status_code == 200
-        assert len(csv_link) == 0
-        assert "The file will be available here once applications have closed." in page
-
-    def test_404_if_brief_does_not_belong_to_buyer(self, data_api_client):
-        data_api_client.get_framework.return_value = api_stubs.framework(
-            slug='digital-outcomes-and-specialists',
-            status='live',
-            lots=[
-                api_stubs.lot(slug='digital-outcomes', allows_brief=True),
-            ]
-        )
-        data_api_client.get_brief.return_value = api_stubs.brief(lot_slug="digital-outcomes", user_id=234)
+    def test_404_if_brief_does_not_belong_to_buyer(self):
+        self.data_api_client.get_brief.return_value = api_stubs.brief(lot_slug="digital-outcomes", user_id=234)
 
         self.login_as_buyer()
         res = self.client.get(
@@ -1812,15 +2000,24 @@ class AbstractViewBriefResponsesPage(BaseApplicationTest):
 
         assert res.status_code == 404
 
-    def test_404_if_lot_does_not_allow_brief(self, data_api_client):
-        data_api_client.get_framework.return_value = api_stubs.framework(
+    def test_404_if_brief_is_not_closed(self):
+        self.data_api_client.get_brief.return_value = api_stubs.brief(lot_slug="digital-outcomes", status='live')
+
+        self.login_as_buyer()
+        res = self.client.get(
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1234/responses"
+        )
+
+        assert res.status_code == 404
+
+    def test_404_if_lot_does_not_allow_brief(self):
+        self.data_api_client.get_framework.return_value = api_stubs.framework(
             slug='digital-outcomes-and-specialists',
             status='live',
             lots=[
                 api_stubs.lot(slug='digital-outcomes', allows_brief=False),
             ]
         )
-        data_api_client.get_brief.return_value = api_stubs.brief(lot_slug="digital-outcomes")
 
         self.login_as_buyer()
         res = self.client.get(
@@ -1830,9 +2027,8 @@ class AbstractViewBriefResponsesPage(BaseApplicationTest):
         assert res.status_code == 404
 
 
-@mock.patch("app.buyers.views.buyers.data_api_client")
-class TestViewBriefResponsesPage(AbstractViewBriefResponsesPage):
-    two_good_three_bad_responses = {
+class TestViewBriefResponsesPageForLegacyBrief(AbstractViewBriefResponsesPage):
+    brief_responses = {
         "briefResponses": [
             {"essentialRequirements": [True, True, True, True, True]},
             {"essentialRequirements": [True, False, True, True, True]},
@@ -1842,18 +2038,12 @@ class TestViewBriefResponsesPage(AbstractViewBriefResponsesPage):
         ]
     }
 
-    def test_page_shows_correct_message_if_no_eligible_suppliers(self, data_api_client):
-        data_api_client.find_brief_responses.return_value = {
-            "briefResponses": [self.two_good_three_bad_responses["briefResponses"][1]]
+    brief_publishing_date = '2016-01-21T12:00:00.000000Z'
+
+    def test_page_shows_correct_message_for_legacy_brief_if_no_eligible_responses(self):
+        self.data_api_client.find_brief_responses.return_value = {
+            "briefResponses": [self.brief_responses["briefResponses"][1]]
         }
-        data_api_client.get_framework.return_value = api_stubs.framework(
-            slug='digital-outcomes-and-specialists',
-            status='live',
-            lots=[
-                api_stubs.lot(slug='digital-outcomes', allows_brief=True),
-            ]
-        )
-        data_api_client.get_brief.return_value = api_stubs.brief(lot_slug="digital-outcomes")
 
         self.login_as_buyer()
         res = self.client.get(
@@ -1863,17 +2053,10 @@ class TestViewBriefResponsesPage(AbstractViewBriefResponsesPage):
 
         assert res.status_code == 200
         assert "No suppliers met your essential skills and experience requirements." in page
+        assert "All the suppliers who applied have already been told they were unsuccessful." in page
 
-    def test_page_shows_csv_download_link_if_brief_closed(self, data_api_client):
-        data_api_client.find_brief_responses.return_value = self.two_good_three_bad_responses
-        data_api_client.get_framework.return_value = api_stubs.framework(
-            slug='digital-outcomes-and-specialists',
-            status='live',
-            lots=[
-                api_stubs.lot(slug='digital-outcomes', allows_brief=True),
-            ]
-        )
-        data_api_client.get_brief.return_value = api_stubs.brief(lot_slug="digital-outcomes", status='closed')
+    def test_page_shows_csv_download_link(self):
+        self.data_api_client.get_brief.return_value = api_stubs.brief(lot_slug="digital-outcomes", status='closed')
 
         self.login_as_buyer()
         res = self.client.get(
@@ -1889,25 +2072,35 @@ class TestViewBriefResponsesPage(AbstractViewBriefResponsesPage):
             "CSVdocument:Downloadsupplierresponsesto‘Ineedathingtodoathing’"
 
 
-@mock.patch("app.buyers.views.buyers.data_api_client")
-class TestViewBriefResponsesPage2(AbstractViewBriefResponsesPage):
-    two_good_three_bad_responses = {
+class TestViewBriefResponsesPageForNewFlowBrief(AbstractViewBriefResponsesPage):
+    brief_responses = {
         "briefResponses": [
             {"essentialRequirementsMet": True, "essentialRequirements": [{"evidence": "blah"}]},
             {"essentialRequirementsMet": True, "essentialRequirements": [{"evidence": "blah"}]},
         ]
     }
 
-    def test_page_shows_ods_download_link_if_brief_closed(self, data_api_client):
-        data_api_client.find_brief_responses.return_value = self.two_good_three_bad_responses
-        data_api_client.get_framework.return_value = api_stubs.framework(
-            slug='digital-outcomes-and-specialists',
-            status='live',
-            lots=[
-                api_stubs.lot(slug='digital-outcomes', allows_brief=True),
-            ]
+    brief_publishing_date = '2017-01-21T12:00:00.000000Z'
+
+    def test_page_shows_correct_message_for_no_responses(self):
+        self.data_api_client.find_brief_responses.return_value = {
+            "briefResponses": []
+        }
+
+        self.login_as_buyer()
+        res = self.client.get(
+            "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1234/responses"
         )
-        data_api_client.get_brief.return_value = api_stubs.brief(lot_slug="digital-outcomes", status='closed')
+        page = res.get_data(as_text=True)
+
+        assert res.status_code == 200
+        assert "No suppliers met your essential skills and experience requirements." in page
+        assert "All the suppliers who applied have already been told they were unsuccessful." not in page
+
+    def test_page_shows_ods_download_link(self):
+        brief_stub = api_stubs.brief(lot_slug="digital-outcomes", status='closed')
+        brief_stub['briefs'].update({'publishedAt': self.brief_publishing_date})
+        self.data_api_client.get_brief.return_value = brief_stub
 
         self.login_as_buyer()
         res = self.client.get(
@@ -2012,28 +2205,52 @@ class TestDownloadBriefResponsesView(BaseApplicationTest):
         super(TestDownloadBriefResponsesView, self).teardown_method(method)
 
     def test_end_to_end(self):
-        self.data_api_client.find_brief_responses.return_value = {
-            'briefResponses': self.responses
-        }
-        self.data_api_client.get_framework.return_value = api_stubs.framework(
-            slug='digital-outcomes-and-specialists',
-            status='live',
-            lots=[
-                api_stubs.lot(slug='digital-specialists', allows_brief=True),
-            ]
-        )
-        self.data_api_client.get_brief.return_value = {'briefs': self.brief}
-
-        with mock.patch.object(buyers, 'data_api_client', self.data_api_client):
-            self.login_as_buyer()
-            res = self.client.get(
-                "/buyers/frameworks/digital-outcomes-and-specialists"
-                "/requirements/digital-specialists/1234/responses/download"
+        for framework_status in ['live', 'expired']:
+            self.data_api_client.find_brief_responses.return_value = {
+                'briefResponses': self.responses
+            }
+            self.data_api_client.get_framework.return_value = api_stubs.framework(
+                slug='digital-outcomes-and-specialists',
+                status=framework_status,
+                lots=[
+                    api_stubs.lot(slug='digital-specialists', allows_brief=True),
+                ]
             )
+            self.data_api_client.get_brief.return_value = {'briefs': self.brief}
 
-        assert res.status_code == 200
-        assert res.mimetype == 'application/vnd.oasis.opendocument.spreadsheet'
-        assert len(res.data) > 100
+            with mock.patch.object(buyers, 'data_api_client', self.data_api_client):
+                self.login_as_buyer()
+                res = self.client.get(
+                    "/buyers/frameworks/digital-outcomes-and-specialists"
+                    "/requirements/digital-specialists/1234/responses/download"
+                )
+
+            assert res.status_code == 200
+            assert res.mimetype == 'application/vnd.oasis.opendocument.spreadsheet'
+            assert len(res.data) > 100
+
+    def test_404_if_framework_is_not_live_or_expired(self):
+        for framework_status in ['coming', 'open', 'pending', 'standstill']:
+            self.data_api_client.find_brief_responses.return_value = {
+                'briefResponses': self.responses
+            }
+            self.data_api_client.get_framework.return_value = api_stubs.framework(
+                slug='digital-outcomes-and-specialists',
+                status=framework_status,
+                lots=[
+                    api_stubs.lot(slug='digital-specialists', allows_brief=True),
+                ]
+            )
+            self.data_api_client.get_brief.return_value = {'briefs': self.brief}
+
+            with mock.patch.object(buyers, 'data_api_client', self.data_api_client):
+                self.login_as_buyer()
+                res = self.client.get(
+                    "/buyers/frameworks/digital-outcomes-and-specialists"
+                    "/requirements/digital-specialists/1234/responses/download"
+                )
+
+            assert res.status_code == 404
 
     def test_get_responses(self):
         brief = mock.Mock()
@@ -2060,7 +2277,7 @@ class TestDownloadBriefResponsesView(BaseApplicationTest):
         self.content_loader.get_manifest\
             .assert_called_once_with(framework_slug, manifest)
 
-        obj.filter.assert_called_once_with({'lot': lot_slug})
+        obj.filter.assert_called_once_with({'lot': lot_slug}, dynamic=False)
 
         content.get_section\
                .assert_called_once_with('view-response-to-requirements')
@@ -2427,26 +2644,27 @@ class TestDownloadBriefResponsesCsv(BaseApplicationTest):
         }
 
     def test_csv_includes_all_eligible_responses_and_no_ineligible_responses(self, data_api_client):
-        data_api_client.find_brief_responses.return_value = self.brief_responses
-        data_api_client.get_framework.return_value = api_stubs.framework(
-            slug='digital-outcomes-and-specialists',
-            status='live',
-            lots=[
-                api_stubs.lot(slug='digital-specialists', allows_brief=True),
-            ]
-        )
-        data_api_client.get_brief.return_value = self.brief
+        for framework_status in ['live', 'expired']:
+            data_api_client.find_brief_responses.return_value = self.brief_responses
+            data_api_client.get_framework.return_value = api_stubs.framework(
+                slug='digital-outcomes-and-specialists',
+                status=framework_status,
+                lots=[
+                    api_stubs.lot(slug='digital-specialists', allows_brief=True),
+                ]
+            )
+            data_api_client.get_brief.return_value = self.brief
 
-        self.login_as_buyer()
-        res = self.client.get(self.url)
-        page = res.get_data(as_text=True)
-        lines = page.splitlines()
-        # There are only the two eligible responses included
-        assert len(lines) == 3
-        assert lines[0] == "Supplier,Date the specialist can start work,Day rate,Nice1,Nice2,Nice3,Email address"
-        # The response with two nice-to-haves is sorted to above the one with only one
-        assert lines[1] == "Kev's Pies,A week Friday,£3.50,False,True,True,test2@email.com"
-        assert lines[2] == "Kev's Butties,Next Tuesday,£1.49,True,False,False,test1@email.com"
+            self.login_as_buyer()
+            res = self.client.get(self.url)
+            page = res.get_data(as_text=True)
+            lines = page.splitlines()
+            # There are only the two eligible responses included
+            assert len(lines) == 3
+            assert lines[0] == "Supplier,Date the specialist can start work,Day rate,Nice1,Nice2,Nice3,Email address"
+            # The response with two nice-to-haves is sorted to above the one with only one
+            assert lines[1] == "Kev's Pies,A week Friday,£3.50,False,True,True,test2@email.com"
+            assert lines[2] == "Kev's Butties,Next Tuesday,£1.49,True,False,False,test1@email.com"
 
     def test_download_brief_responses_for_brief_without_nice_to_haves(self, data_api_client):
         data_api_client.get_framework.return_value = api_stubs.framework(
@@ -2523,43 +2741,79 @@ class TestDownloadBriefResponsesCsv(BaseApplicationTest):
         res = self.client.get(self.url)
         assert res.status_code == 404
 
-
-@mock.patch('app.buyers.views.buyers.data_api_client')
-class TestViewQuestionAndAnswerDates(BaseApplicationTest):
-    def test_show_question_and_answer_dates_for_published_brief(self, data_api_client):
-        with self.app.app_context():
-            self.login_as_buyer()
+    def test_404_if_framework_is_not_live_or_expired(self, data_api_client):
+        for framework_status in ['coming', 'open', 'pending', 'standstill']:
             data_api_client.get_framework.return_value = api_stubs.framework(
                 slug='digital-outcomes-and-specialists',
-                status='live',
+                status=framework_status,
                 lots=[
                     api_stubs.lot(slug='digital-specialists', allows_brief=True),
                 ]
             )
-            brief_json = api_stubs.brief(status="live")
-            brief_json['briefs']['requirementsLength'] = '2 weeks'
-            brief_json['briefs']['publishedAt'] = u"2016-04-02T20:10:00.00000Z"
-            brief_json['briefs']['clarificationQuestionsClosedAt'] = u"2016-04-12T23:59:00.00000Z"
-            brief_json['briefs']['clarificationQuestionsPublishedBy'] = u"2016-04-14T23:59:00.00000Z"
-            brief_json['briefs']['applicationsClosedAt'] = u"2016-04-16T23:59:00.00000Z"
-            brief_json['briefs']['specialistRole'] = 'communicationsManager'
-            brief_json['briefs']["clarificationQuestionsAreClosed"] = True
-            data_api_client.get_brief.return_value = brief_json
+            data_api_client.get_brief.return_value = api_stubs.brief(status='closed')
 
-            res = self.client.get(
-                "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/timeline"
-            )
+            self.login_as_buyer()
+            res = self.client.get(self.url)
+            assert res.status_code == 404
 
-            assert res.status_code == 200
-            page_html = res.get_data(as_text=True)
-            document = html.fromstring(page_html)
 
-            assert (document.xpath('//h1')[0]).text_content().strip() == "Question and answer dates"
-            assert all(
-                date in
-                [e.text_content() for e in document.xpath('//main[@id="content"]//th/span')]
-                for date in ['2 April', '8 April', '15 April', '16 April']
-            )
+@mock.patch('app.buyers.views.buyers.data_api_client')
+class TestViewQuestionAndAnswerDates(BaseApplicationTest):
+    def test_show_question_and_answer_dates_for_published_brief(self, data_api_client):
+        for framework_status in ['live', 'expired']:
+            with self.app.app_context():
+                self.login_as_buyer()
+                data_api_client.get_framework.return_value = api_stubs.framework(
+                    slug='digital-outcomes-and-specialists',
+                    status=framework_status,
+                    lots=[
+                        api_stubs.lot(slug='digital-specialists', allows_brief=True),
+                    ]
+                )
+                brief_json = api_stubs.brief(status="live")
+                brief_json['briefs']['requirementsLength'] = '2 weeks'
+                brief_json['briefs']['publishedAt'] = u"2016-04-02T20:10:00.00000Z"
+                brief_json['briefs']['clarificationQuestionsClosedAt'] = u"2016-04-12T23:59:00.00000Z"
+                brief_json['briefs']['clarificationQuestionsPublishedBy'] = u"2016-04-14T23:59:00.00000Z"
+                brief_json['briefs']['applicationsClosedAt'] = u"2016-04-16T23:59:00.00000Z"
+                brief_json['briefs']['specialistRole'] = 'communicationsManager'
+                brief_json['briefs']["clarificationQuestionsAreClosed"] = True
+                data_api_client.get_brief.return_value = brief_json
+
+                res = self.client.get(
+                    "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/timeline"
+                )
+
+                assert res.status_code == 200
+                page_html = res.get_data(as_text=True)
+                document = html.fromstring(page_html)
+
+                assert (document.xpath('//h1')[0]).text_content().strip() == "Question and answer dates"
+                assert all(
+                    date in
+                    [e.text_content() for e in document.xpath('//main[@id="content"]//th/span')]
+                    for date in ['2 April', '8 April', '15 April', '16 April']
+                )
+
+    def test_404_if_framework_is_not_live_or_expired(self, data_api_client):
+        for framework_status in ['coming', 'open', 'pending', 'standstill']:
+            with self.app.app_context():
+                self.login_as_buyer()
+                data_api_client.get_framework.return_value = api_stubs.framework(
+                    slug='digital-outcomes-and-specialists',
+                    status=framework_status,
+                    lots=[
+                        api_stubs.lot(slug='digital-specialists', allows_brief=True),
+                    ]
+                )
+                brief_json = api_stubs.brief(status="live")
+                data_api_client.get_brief.return_value = brief_json
+
+                res = self.client.get(
+                    "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/timeline"
+                )
+
+                assert res.status_code == 404
 
     def test_do_not_show_question_and_answer_dates_for_draft_brief(self, data_api_client):
         with self.app.app_context():

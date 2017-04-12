@@ -9,12 +9,20 @@ from app.main.presenters.search_results import SearchResults
 from app.main.presenters.search_summary import SearchSummary, \
     SummaryRules, SummaryFragment
 from app import content_loader
+from app.main.helpers import framework_helpers
+from ...helpers import BaseApplicationTest
+
+filter_groups = None
 
 
-filter_groups = filters_for_lot(
-    "saas",
-    content_loader.get_builder('g-cloud-6', 'search_filters')
-)
+def setup_module(module):
+    # for now the tests here are g-cloud-6 (==7/8) specific
+    content_loader.load_manifest('g-cloud-6', 'services', 'search_filters')
+
+    module.filter_groups = filters_for_lot(
+        "saas",
+        content_loader.get_builder('g-cloud-6', 'search_filters')
+    ).values()
 
 
 def _get_fixture_data():
@@ -39,10 +47,16 @@ def _get_fixture_multiple_pages_data():
         return json.load(fixture_file)
 
 
-class TestSearchSummary(object):
+class TestSearchSummary(BaseApplicationTest):
     def setup_method(self, method):
+        super(TestSearchSummary, self).setup_method(method)
+
+        self._lots_by_slug = framework_helpers.get_lots_by_slug(
+            self._get_framework_fixture_data('g-cloud-6')['frameworks']
+        )
+
         self.fixture = _get_fixture_data()
-        self.search_results = SearchResults(self.fixture)
+        self.search_results = SearchResults(self.fixture, self._lots_by_slug)
         self.request_args = MultiDict((
             ('lot', 'saas'),
             ('q', 'email'),
@@ -67,21 +81,21 @@ class TestSearchSummary(object):
         assert SearchSummary.write_parts_as_sentence([u"an", u"Hour"]) == u"an Hour"
 
     def test_search_summary_works_with_keywords(self):
-        search_summary = SearchSummary('1', self.request_args, filter_groups)
+        search_summary = SearchSummary('1', self.request_args, filter_groups, self._lots_by_slug)
         assert search_summary.count == '1'
         assert search_summary.sentence == u"result found containing <em>email</em> in <em>Software as a Service</em>"
         assert len(search_summary.filters_fragments) == 0
 
     def test_search_summary_works_with_blank_keywords(self):
         self.request_args.setlist('q', [''])
-        search_summary = SearchSummary('1', self.request_args, filter_groups)
+        search_summary = SearchSummary('1', self.request_args, filter_groups, self._lots_by_slug)
         assert search_summary.count == '1'
         assert search_summary.sentence == u"result found in <em>Software as a Service</em>"
         assert len(search_summary.filters_fragments) == 0
 
     def test_search_summary_works_with_a_different_lot(self):
         self.request_args.setlist('lot', ['iaas'])
-        search_summary = SearchSummary('1', self.request_args, filter_groups)
+        search_summary = SearchSummary('1', self.request_args, filter_groups, self._lots_by_slug)
         assert search_summary.count == '1'
         assert search_summary.sentence == (
             u"result found containing <em>email</em> in <em>Infrastructure as a Service</em>"
@@ -89,7 +103,7 @@ class TestSearchSummary(object):
         assert len(search_summary.filters_fragments) == 0
 
     def test_search_summary_works_with_no_results(self):
-        search_summary = SearchSummary('0', self.request_args, filter_groups)
+        search_summary = SearchSummary('0', self.request_args, filter_groups, self._lots_by_slug)
         assert search_summary.count == '0'
         assert search_summary.sentence == (
             u"results found containing <em>email</em> in <em>Software as a Service</em>"
@@ -97,7 +111,7 @@ class TestSearchSummary(object):
         assert len(search_summary.filters_fragments) == 0
 
     def test_search_summary_works_with_single_result(self):
-        search_summary = SearchSummary(1, self.request_args, filter_groups)
+        search_summary = SearchSummary(1, self.request_args, filter_groups, self._lots_by_slug)
         assert search_summary.count == '1'
         assert search_summary.sentence == (
             u"result found containing <em>email</em> in <em>Software as a Service</em>"
@@ -105,7 +119,7 @@ class TestSearchSummary(object):
         assert len(search_summary.filters_fragments) == 0
 
     def test_search_summary_works_with_multiple_results(self):
-        search_summary = SearchSummary('9', self.request_args, filter_groups)
+        search_summary = SearchSummary('9', self.request_args, filter_groups, self._lots_by_slug)
         assert search_summary.count == '9'
         assert search_summary.sentence == (
             u"results found containing <em>email</em> in <em>Software as a Service</em>"
@@ -114,7 +128,7 @@ class TestSearchSummary(object):
 
     def test_search_summary_with_a_single_filter_group(self):
         self.request_args.setlist('serviceTypes', ['collaboration'])
-        search_summary = SearchSummary('9', self.request_args, filter_groups)
+        search_summary = SearchSummary('9', self.request_args, filter_groups, self._lots_by_slug)
         assert search_summary.count == '9'
         assert search_summary.sentence == (
             u"results found containing <em>email</em> in <em>Software as a Service</em>"
@@ -130,7 +144,7 @@ class TestSearchSummary(object):
             'datacentreTier',
             ['tia-942 tier 1', 'uptime institute tier 1']
         )
-        search_summary = SearchSummary('9', self.request_args, filter_groups)
+        search_summary = SearchSummary('9', self.request_args, filter_groups, self._lots_by_slug)
         assert search_summary.count == '9'
         assert search_summary.sentence == (
             u"results found containing <em>email</em> in <em>Software as a Service</em>"
@@ -154,7 +168,7 @@ class TestSearchSummary(object):
             'trialOption',
             ['true']
         )
-        search_summary = SearchSummary('9', self.request_args, filter_groups)
+        search_summary = SearchSummary('9', self.request_args, filter_groups, self._lots_by_slug)
         assert search_summary.count == '9'
         assert search_summary.sentence == (
             u"results found containing <em>email</em> in <em>Software as a Service</em>"
@@ -178,7 +192,7 @@ class TestSearchSummary(object):
             'trialOption',
             ['true']
         )
-        search_summary = SearchSummary('9', self.request_args, filter_groups)
+        search_summary = SearchSummary('9', self.request_args, filter_groups, self._lots_by_slug)
         correct_order = [
             'Categories', 'Pricing', 'Datacentre tier'
         ]
@@ -187,7 +201,7 @@ class TestSearchSummary(object):
         assert order_of_groups_of_filters == correct_order
 
     def test_get_starting_sentence_works(self):
-        search_summary = SearchSummary('9', self.request_args, filter_groups)
+        search_summary = SearchSummary('9', self.request_args, filter_groups, self._lots_by_slug)
         search_summary.count = '9'
         search_summary.COUNT_PRE_TAG = '<em>'
         search_summary.COUNT_POST_TAG = '</em>'
@@ -202,7 +216,7 @@ class TestSearchSummary(object):
         def get_starting_sentence():
             return u"5 results found"
 
-        search_summary = SearchSummary(9, self.request_args, filter_groups)
+        search_summary = SearchSummary(9, self.request_args, filter_groups, self._lots_by_slug)
         search_summary.get_starting_sentence = get_starting_sentence
         search_summary.filters_fragments = []
         assert search_summary.markup() == Markup(u"5 results found")
@@ -212,7 +226,7 @@ class TestSearchSummary(object):
             return u"5 results found"
 
         fragment = Mock(**{"str.return_value": u"with option1 and option2"})
-        search_summary = SearchSummary(9, self.request_args, filter_groups)
+        search_summary = SearchSummary(9, self.request_args, filter_groups, self._lots_by_slug)
         search_summary.get_starting_sentence = get_starting_sentence
         search_summary.filters_fragments = [fragment]
         assert search_summary.markup() == Markup(u"5 results found with option1 and option2")

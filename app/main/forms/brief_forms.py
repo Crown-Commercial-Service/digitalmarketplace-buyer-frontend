@@ -22,11 +22,14 @@ class BriefSearchForm(Form):
         try:
             # popping this kwarg so we don't risk it getting fed to wtforms default implementation which might use it
             # as a data field if there were a name collision
-            framework = kwargs.pop("framework")
-            self._framework_slug = framework["slug"]
-            self.lot.choices = tuple((lot["slug"], lot["name"],) for lot in framework["lots"] if lot["allowsBrief"])
+            frameworks = kwargs.pop("frameworks")
+            self._framework_slug = ",".join(v["slug"] for v in frameworks)
+            seen = set()
+            self.lot.choices = tuple((v['slug'], v['name']) for f in frameworks
+                                     for v in f['lots'] if v['allowsBrief'] and
+                                     not (v['slug'] in seen or seen.add(v['slug'])))
         except KeyError:
-            raise TypeError("Expected keyword argument 'framework' with framework information")
+            raise TypeError("Expected keyword argument 'frameworks' with framework information")
         try:
             # data_api_client argument only needed so we can fit in with the current way the tests mock.patch the
             # the data_api_client directly on the view. would be nice to able to use the global reference to this

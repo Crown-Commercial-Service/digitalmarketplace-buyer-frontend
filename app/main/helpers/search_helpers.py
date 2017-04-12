@@ -3,8 +3,6 @@ from math import ceil
 
 from werkzeug.datastructures import MultiDict
 
-from dmutils.formats import lot_to_lot_case
-
 
 def get_lot_from_request(request):
     return request.args.get('lot', None)
@@ -15,9 +13,9 @@ def get_keywords_from_request(request):
 
 
 def get_page_from_request(request):
-    if 'page' in request.args:
+    try:
         return int(request.args['page'])
-    else:
+    except (KeyError, ValueError, TypeError):
         return None
 
 
@@ -34,14 +32,25 @@ def get_filters_from_request(request):
 def allowed_request_lot_filters(lot_filters):
     """Create a set of (name, value) pairs for all form filters."""
 
-    return set(
-        (f['name'], f['value'])
-        for section in lot_filters
-        for f in section['filters']
-    )
+    filters = set()
+
+    def recursive_search(filters):
+        more_filters = set()
+        for f in filters:
+            more_filters.add((f['name'], f['value']))
+            children = f.get('children')
+            if children:
+                more_filters.update(recursive_search(children))
+        return more_filters
+    # recursive search to account for sub-filters (i.e. sub-categories)
+
+    for section in lot_filters:
+        filters.update(recursive_search(section['filters']))
+
+    return filters
 
 
-def clean_request_args(request_args, lot_filters):
+def clean_request_args(request_args, lot_filters, lots_by_slug):
     """Removes any unknown args keys or values from request.
 
     Compares every key/value pair from request query parameters
@@ -63,7 +72,7 @@ def clean_request_args(request_args, lot_filters):
         if request_args.get(key):
             clean_args[key] = request_args[key]
 
-    if lot_to_lot_case(request_args.get('lot')):
+    if request_args.get('lot') in lots_by_slug.keys():
         clean_args['lot'] = request_args.get('lot')
 
     return clean_args
@@ -112,7 +121,7 @@ def replace_g5_search_dots(keywords_query):
     )
 
 
-def build_search_query(request, lot_filters, content_builder):
+def build_search_query(request, lot_filters, content_builder, lots_by_slug):
     """Match request args with known filters.
 
     Removes any unknown query parameters, and will only keep `page`, `q`
@@ -124,7 +133,8 @@ def build_search_query(request, lot_filters, content_builder):
     """
     query = clean_request_args(
         request.args,
-        lot_filters
+        lot_filters,
+        lots_by_slug
     )
 
     if 'q' in query:

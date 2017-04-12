@@ -16,8 +16,8 @@
           "label": "Cloud technology and support"
       },
       {
-          "link": url_for('.search_services', lot=lot),
-          "label": lot_label
+          "link": url_for('.search_services', lot=lot.slug),
+          "label": lot.name
       }
     ]
   %}

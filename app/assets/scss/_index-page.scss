@@ -73,7 +73,6 @@
   .supplier-messages {
 
     p {
-      margin: 0;
 
       &.hint {
         color: $grey-1;
@@ -142,9 +141,14 @@
     margin: -6px 0 10px;
     color: white;
 
+    .phase-tag {
+      color: $govuk-blue;
+      background-color: white;
+    }
+
     a, a:visited {
         color: $white;
-      }
+    }
 
     a:hover, a:active {
       color: $light-blue-50;

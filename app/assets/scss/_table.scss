@@ -23,10 +23,6 @@ table.content-table {
     @include core-16($tabular-numbers: true);
     vertical-align: top;
     padding: .75em .5em .75em 0;
-
-    a[rel="external"] {
-      @include external-link-16;
-    }
   }
 
   td {

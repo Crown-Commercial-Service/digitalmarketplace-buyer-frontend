@@ -27,44 +27,22 @@
       Cloud technology and support
     </h1>
   </header>
-  <div class="grid-row">
-    <form action="{{ url_for('.search_services') }}" method="get" class="search-box column-two-thirds">
-        <input type="text" class="text-box" name="q" maxlength="200">
-        <button type="submit" class="button-save">
-          Show services
-        </button>
-    </form>
-  </div>
+  {% if show_search_box %}
+    <div class="grid-row">
+      <form action="{{ url_for('.search_services') }}" method="get" class="search-box column-two-thirds">
+          <input type="text" class="text-box" name="q" maxlength="200">
+          <button type="submit" class="button-save">
+            Show services
+          </button>
+      </form>
+    </div>
+  {% endif %}
   <div class="grid-row">
     <div class="column-two-thirds">
-      {% with
-        items = [
-          {
-            "link": url_for('.search_services', lot='saas'),
-            "title": "Software as a Service",
-            "body": "Find applications or services that are run over the internet or in the cloud",
-            "subtext": "eg accounting tools or email"
-          },
-          {
-            "link": url_for('.search_services', lot='paas'),
-            "title": "Platform as a Service",
-            "body": "Find platforms that provide a basis for building other services and applications"
-          },
-          {
-            "link": url_for('.search_services', lot='iaas'),
-            "title": "Infrastructure as a Service",
-            "body": "Find networks, hosting facilities and servers on which platforms and software depend",
-            "subtext": "eg hosting or content delivery network"
-          },
-          {
-            "link": url_for('.search_services', lot='scs'),
-            "title": "Specialist Cloud Services",
-            "body": "Find help with cloud management and deployment",
-            "subtext": "eg IT health checks or data migrations"
-          }
-        ]
-      %}
+      {% with items = lots %}
         {% include "toolkit/browse-list.html" %}
       {% endwith %}
     </div>
+  </div>
+</div>
 {% endblock %}

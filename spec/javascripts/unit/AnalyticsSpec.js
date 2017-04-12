@@ -293,4 +293,32 @@ describe("GOVUK.Analytics", function () {
     });
 
   });
+
+  describe("Opportunity page", function() {
+    var lotData = $('<span data-lot="test-lot"></span>');
+
+    beforeEach(function () {
+      $(document.body).append(lotData);
+    });
+
+    afterEach(function () {
+      lotData.remove();
+    });
+
+    it('should send the lot as a custom dimension for any DOS lot', function() {
+      spyOn(GOVUK.GDM.analytics.location, "pathname")
+        .and
+        .returnValue('/digital-outcomes-and-specialists-3/opportunities/100');
+      window.GOVUK.GDM.analytics.pageViews.init();
+      expect(window.ga.calls.all().map(function (i) {return i.args})).toContain(['set', 'dimension26', 'test-lot']);
+    });
+
+    it('should not send the lot as a custom dimension for any non DOS lot', function() {
+      spyOn(GOVUK.GDM.analytics.location, "pathname")
+        .and
+        .returnValue('/not-digital-outcomes-and-specialists/opportunities/100');
+      window.GOVUK.GDM.analytics.pageViews.init();
+      expect(window.ga.calls.all().map(function (i) {return i.args})).not.toContain(['set', 'dimension26', 'test-lot']);
+    });
+  });
 });

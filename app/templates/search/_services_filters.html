@@ -2,22 +2,26 @@
   <h2>Choose a category</h2>
   {% from 'macros/_filters.html' import checkbox, lot_filters %}
   <ul>
-
-  <li>
-        {% if current_lot %}
-        <a href="{{ url_for('.search_services', q=search_keywords) }}">All categories</a>
-        {% else %}
-        All categories
-        {% endif %}
-  </li>
+  {% if show_all_categories %}
+    <li>
+          {% if current_lot %}
+          <a href="{{ url_for('.search_services', q=search_keywords) }}">All categories</a>
+          {% else %}
+          All categories
+          {% endif %}
+    </li>
+  {% endif %}
   {% for lot in lots %}
-    {% if current_lot == lot.lot %}
-      <li>{{ lot.label }}</li>
-    {% else %}
-      <li>
-        <a href="{{ url_for('.search_services', q=search_keywords, lot=lot.lot) }}">{{ lot.label }}</a>
-      </li>
-    {% endif %}
+    <li>
+      {% if lot.link %}<a href="{{ lot.link }}">{% endif %}{% if lot.selected %}<strong>{% endif %}
+        {{ lot.name }}
+      {% if lot.selected %}</strong>{% endif %}{% if lot.link %}</a>{% endif %}
+      {% if lot.categories and lot.selected %}
+        {% with categories=lot.categories %}
+          {% include 'search/_categories.html' %}
+        {% endwith %}
+      {% endif %}
+    </li>
   {% endfor %}
   </ul>
 </div>
@@ -30,6 +34,6 @@
   <input type="text" name="q" id="keywords" value="{{ search_keywords }}" maxlength="200">
 </div>
 {% if current_lot %}
-<input type="hidden" name="lot" value="{{ current_lot }}" />
+<input type="hidden" name="lot" value="{{ current_lot.slug }}" />
 {% endif %}
 {% include 'search/_filters.html' %}

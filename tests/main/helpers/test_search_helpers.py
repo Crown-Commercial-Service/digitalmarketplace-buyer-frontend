@@ -3,7 +3,8 @@ import mock
 import pytest
 from werkzeug.datastructures import MultiDict
 
-from app.main.helpers import search_helpers
+from ...helpers import BaseApplicationTest
+from app.main.helpers import search_helpers, framework_helpers
 
 
 def test_should_hide_both_next_and_prev_if_no_services():
@@ -93,7 +94,7 @@ def test_should_reject_invalid_page(test_input, expected):
     assert search_helpers.valid_page(test_input) == expected
 
 
-class TestBuildSearchQueryHelpers(object):
+class TestBuildSearchQueryHelpers(BaseApplicationTest):
     def setup(self):
         self.lot_filters = [
             {'label': 'section1', 'filters': [
@@ -111,6 +112,9 @@ class TestBuildSearchQueryHelpers(object):
                 {'name': 'question6', 'value': 'option3'},
             ]},
         ]
+        self._lots_by_slug = framework_helpers.get_lots_by_slug(
+            self._get_framework_fixture_data('g-cloud-6')['frameworks']
+        )
 
     def _request(self, params):
         return mock.Mock(args=MultiDict(params))
@@ -174,7 +178,7 @@ class TestBuildSearchQueryHelpers(object):
             'unknown': 'key',
         })
 
-        assert search_helpers.clean_request_args(filters, self.lot_filters) == MultiDict({
+        assert search_helpers.clean_request_args(filters, self.lot_filters, self._lots_by_slug) == MultiDict({
             'question1': 'true',
             'question2': 'true',
             'question3': ['option1', 'option2'],
@@ -189,7 +193,7 @@ class TestBuildSearchQueryHelpers(object):
             'lot': 'saaspaas',
         })
 
-        assert search_helpers.clean_request_args(filters, self.lot_filters) == MultiDict({})
+        assert search_helpers.clean_request_args(filters, self.lot_filters, self._lots_by_slug) == MultiDict({})
 
     def test_group_request_filters(self):
         filters = MultiDict({
@@ -225,7 +229,7 @@ class TestBuildSearchQueryHelpers(object):
             'question6': ['option1', 'option3'],
         })
 
-        assert search_helpers.build_search_query(request, self.lot_filters, self._loader()) == {
+        assert search_helpers.build_search_query(request, self.lot_filters, self._loader(), self._lots_by_slug) == {
             'page': 5,
             'q': 'email',
             'lot': 'saas',
@@ -240,34 +244,34 @@ class TestBuildSearchQueryHelpers(object):
             'lot': 'saasaas',
         })
 
-        assert search_helpers.build_search_query(request, self.lot_filters, self._loader()) == {}
+        assert search_helpers.build_search_query(request, self.lot_filters, self._loader(), self._lots_by_slug) == {}
 
     def test_build_search_query_multiple_lots(self):
         request = self._request({
             'lot': 'saas,paas',
         })
 
-        assert search_helpers.build_search_query(request, self.lot_filters, self._loader()) == {}
+        assert search_helpers.build_search_query(request, self.lot_filters, self._loader(), self._lots_by_slug) == {}
 
     def test_build_search_query_no_keywords(self):
         request = self._request({
             'q': '',
         })
 
-        assert search_helpers.build_search_query(request, self.lot_filters, self._loader()) == {}
+        assert search_helpers.build_search_query(request, self.lot_filters, self._loader(), self._lots_by_slug) == {}
 
     def test_build_search_query_no_page(self):
         request = self._request({
             'page': '',
         })
 
-        assert search_helpers.build_search_query(request, self.lot_filters, self._loader()) == {}
+        assert search_helpers.build_search_query(request, self.lot_filters, self._loader(), self._lots_by_slug) == {}
 
     def test_build_search_query_g5_dots_id_search(self):
         request = self._request({
             'q': 'some text 5.G4.1005.001',
         })
 
-        assert search_helpers.build_search_query(request, self.lot_filters, self._loader()) == {
+        assert search_helpers.build_search_query(request, self.lot_filters, self._loader(), self._lots_by_slug) == {
             'q': 'some text 5-G4-1005-001',
         }
