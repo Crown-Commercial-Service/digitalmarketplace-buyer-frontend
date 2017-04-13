@@ -49,6 +49,7 @@ class BriefSearchForm(DmForm):
             status=",".join(statuses),
             lot=",".join(lots),
             page=self.page.data,
+            per_page=500,
             human=True,
             **kwargs
         )

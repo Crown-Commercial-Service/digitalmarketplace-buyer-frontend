@@ -320,8 +320,9 @@ def supplier_search():
     num_products_results = products_response['hits']['total']
 
     casestudies_results = []
+    num_casestudies_results = 0
 
-    for p in casestudies_response['hits']['hits']:
+    '''for p in casestudies_response['hits']['hits']:
         details = p['_source']
 
         domains = details['supplier']['domains']
@@ -342,7 +343,7 @@ def supplier_search():
 
         casestudies_results.append(result)
 
-    num_casestudies_results = casestudies_response['hits']['total']
+    num_casestudies_results = casestudies_response['hits']['total']'''
 
     def get_pagination(result_count):
         pages = get_page_list(SUPPLIER_RESULTS_PER_PAGE, result_count, page)

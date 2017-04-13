@@ -393,7 +393,8 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         assert regular_args == {
             "framework": "digital-service-professionals",
             "page": 1,
-            "human": True
+            "human": True,
+            "per_page": 500
         }
         assert set(self._data_api_client.find_briefs.call_args[1]["status"].split(",")) == {"live", "closed"}
         assert set(self._data_api_client.find_briefs.call_args[1]["lot"].split(",")) == {
@@ -429,7 +430,8 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         assert regular_args == {
             "framework": "digital-service-professionals",
             "page": 2,
-            "human": True
+            "human": True,
+            "per_page": 500
         }
         assert set(self._data_api_client.find_briefs.call_args[1]["status"].split(",")) == {"live"}
         assert set(self._data_api_client.find_briefs.call_args[1]["lot"].split(",")) == {"lot-one", "lot-three"}
@@ -496,7 +498,8 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         assert regular_args == {
             "framework": "digital-service-professionals",
             "page": 2,
-            "human": True
+            "human": True,
+            "per_page": 500
         }
         assert set(self._data_api_client.find_briefs.call_args[1]["status"].split(",")) == {"live", "closed"}
         assert set(self._data_api_client.find_briefs.call_args[1]["lot"].split(",")) == {

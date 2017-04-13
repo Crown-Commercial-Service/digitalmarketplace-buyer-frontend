@@ -97,11 +97,14 @@ def get_supplier(code):
 @login_required
 def get_supplier_case_study(casestudy_id):
     casestudy = DataAPIClient().get_case_study(casestudy_id)['caseStudy']
+    supplier_code = casestudy.get('supplierCode') if casestudy else None
+    if supplier_code:
+        supplier = DataAPIClient().get_supplier(supplier_code)['supplier']
+        casestudy['supplier_name'] = supplier['name']
+        casestudy['supplier_url'] = url_for('main.get_supplier', code=supplier_code)
     if current_user.role == 'supplier':
         casestudy['meta'] = {'editLink': url_for('.update_supplier_case_study', casestudy_id=casestudy_id),
                              'deleteLink': url_for('.delete_supplier_case_study', casestudy_id=casestudy_id)}
-
-    supplier_code = casestudy.get('supplierCode') if casestudy else None
 
     if not can_view_supplier_page(supplier_code):
         flash('buyer-role-required', 'error')
