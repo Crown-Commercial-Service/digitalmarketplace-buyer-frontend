@@ -304,7 +304,7 @@ class TestBriefPage(BaseApplicationTest):
         assert len(document.xpath(
             '//a[@href="{0}"][contains(normalize-space(text()), normalize-space("{1}"))]'.format(
                 brief_response_url,
-                "Start application",
+                "Apply Now",
             )
         )) == 1
 
@@ -319,7 +319,7 @@ class TestBriefPage(BaseApplicationTest):
         assert len(document.xpath(
             '//a[@href="{0}"][contains(normalize-space(text()), normalize-space("{1}"))]'.format(
                 brief_response_url,
-                "Apply now",
+                "Apply Now",
             )
         )) == 1
 
@@ -338,7 +338,7 @@ class TestBriefPage(BaseApplicationTest):
         assert len(document.xpath(
             '//a[@href="{0}"][contains(normalize-space(text()), normalize-space("{1}"))]'.format(
                 brief_response_url,
-                "Apply now",
+                "Apply Now",
             )
         )) == 1
 
