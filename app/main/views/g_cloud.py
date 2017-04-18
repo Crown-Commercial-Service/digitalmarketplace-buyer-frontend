@@ -211,7 +211,7 @@ def search_services():
         category_filter_group = None
 
     lots = framework['lots']
-    annotate_lots_with_categories_selection(lots, category_filter_group, request)
+    current_category_filter = annotate_lots_with_categories_selection(lots, category_filter_group, request)
 
     current_lot = lots_by_slug.get(current_lot_slug)
 
@@ -221,6 +221,7 @@ def search_services():
     return render_template(
         'search/services.html',
         current_lot=current_lot,
+        current_category_filter=current_category_filter,
         filters=filters.values(),
         lots=lots,
         pagination=pagination_config,
