@@ -302,9 +302,11 @@ def supplier_search():
 
         domains = details['supplier']['domains']
 
-        supplier['name'] = details['supplier']['long_name'] or details['supplier']['longName'] or \
-                           details['supplier']['name']
-        supplier['profile_url'] = details['supplier']['links']['self']
+        supplier = {}
+        supplier['name'] = details['supplier'].get('name')
+
+        supplier['profile_url'] = details['links'].get('supplier')
+        supplier['support_url'] = details.get('support')
 
         tags = domains['assessed'] + domains['unassessed']
 
@@ -315,11 +317,11 @@ def supplier_search():
         result = {
             'title': details['name'],
             'description': details['summary'],
-            'pricing': details.get('pricing'),
             'link': details['website'],
             'services': services,
+            'badges': details['supplier'].get('seller_type', {}),
             'supplier': supplier,
-            'badges': details['supplier'].get('seller_type', {})
+            'pricing': details.get('pricing'),
         }
 
         products_results.append(result)
@@ -336,6 +338,10 @@ def supplier_search():
 
             domains = details['supplier']['domains']
 
+            supplier['name'] = details['supplier']['long_name'] or details['supplier']['longName'] or \
+                               details['supplier']['name']
+            supplier['profile_url'] = details['supplier']['links']['self']
+
             tags = domains['assessed'] + domains['unassessed']
 
             services = {}
@@ -347,7 +353,10 @@ def supplier_search():
                 'description': smart_truncate(details.get('approach', '')),
                 'link': url_for('.get_supplier_case_study', casestudy_id=details['id']),
                 'services': services,
-                'badges': details['supplier'].get('seller_type', {})
+                'badges': details['supplier'].get('seller_type', {}),
+                'supplier': supplier,
+                'pricing': details.get('pricing'),
+                'case_study_service': details.get('service')
             }
 
             casestudies_results.append(result)
