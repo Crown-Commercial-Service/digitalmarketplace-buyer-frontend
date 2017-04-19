@@ -263,7 +263,8 @@ def supplier_search():
             services = {}
             for tag in sorted(tags):
                 services[tag] = True
-
+            seller_type = details.get('seller_type', {})
+            seller_type.update({'recruitment': details['is_recruiter'] == 't'})
             result = {
                 'title': details['name'],
                 'description': details['summary'],
@@ -271,7 +272,7 @@ def supplier_search():
                 'services': services,
                 'products': details['products'],
                 'recruiter_info': details['recruiter_info'],
-                'badges': details.get('seller_type', {})
+                'badges': seller_type
             }
         else:
             result = Result(

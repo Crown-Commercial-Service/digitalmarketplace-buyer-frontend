@@ -61,6 +61,7 @@ def get_supplier(code):
         props = {"application": {key: supplier[key] for key in supplier if key not in ['disclosures']}}
         props['application']['case_study_url'] = '/case-study/'
         props['application']['public_profile'] = not owns_profile
+        props['application']['recruiter'] = 'yes' if supplier.get('is_recruiter') == 't' else 'no'
         props['application']['digital_marketplace_panel'] = False
         digital_marketplace_framework = data_api_client.req.frameworks('digital-marketplace').get()
         for framework in supplier.get('frameworks', []):
@@ -97,12 +98,7 @@ def get_supplier(code):
 @login_required
 def get_supplier_case_study(casestudy_id):
     casestudy = DataAPIClient().get_case_study(casestudy_id)['caseStudy']
-    if 'refereeEmail' in casestudy:
-        del casestudy['refereeEmail']
-    if 'refereeName' in casestudy:
-        del casestudy['refereeName']
-    if 'refereePosition' in casestudy:
-        del casestudy['refereePosition']
+
     supplier_code = casestudy.get('supplierCode') if casestudy else None
     if supplier_code:
         supplier = DataAPIClient().get_supplier(supplier_code)['supplier']
@@ -111,6 +107,14 @@ def get_supplier_case_study(casestudy_id):
     if current_user.role == 'supplier':
         casestudy['meta'] = {'editLink': url_for('.update_supplier_case_study', casestudy_id=casestudy_id),
                              'deleteLink': url_for('.delete_supplier_case_study', casestudy_id=casestudy_id)}
+    else:
+        # buyers do not get referee data
+        if 'refereeEmail' in casestudy:
+            del casestudy['refereeEmail']
+        if 'refereeName' in casestudy:
+            del casestudy['refereeName']
+        if 'refereePosition' in casestudy:
+            del casestudy['refereePosition']
 
     if not can_view_supplier_page(supplier_code):
         flash('buyer-role-required', 'error')
@@ -175,7 +179,7 @@ def delete_supplier_case_study(casestudy_id):
     casestudy = DataAPIClient().get_case_study(casestudy_id)['caseStudy']
     supplier_code = casestudy.get('supplierCode') if casestudy else None
 
-    if not can_view_supplier_page(supplier_code):
+    if not current_user.role == 'supplier' or not can_view_supplier_page(supplier_code):
         flash('buyer-role-required', 'error')
         return current_app.login_manager.unauthorized()
 
@@ -260,7 +264,7 @@ def edit_supplier_case_study(casestudy_id):
     casestudy = DataAPIClient().get_case_study(casestudy_id)['caseStudy']
     supplier_code = casestudy.get('supplierCode') if casestudy else None
 
-    if not can_view_supplier_page(supplier_code):
+    if not current_user.role == 'supplier' or not can_view_supplier_page(supplier_code):
         flash('buyer-role-required', 'error')
         return current_app.login_manager.unauthorized()
 
@@ -301,7 +305,7 @@ def update_supplier_case_study(casestudy_id, step=None):
     old_casestudy = DataAPIClient().get_case_study(casestudy_id)['caseStudy']
     supplier_code = old_casestudy.get('supplierCode') if old_casestudy else None
 
-    if not can_view_supplier_page(supplier_code):
+    if not current_user.role == 'supplier' or not can_view_supplier_page(supplier_code):
         flash('buyer-role-required', 'error')
         return current_app.login_manager.unauthorized()
 
