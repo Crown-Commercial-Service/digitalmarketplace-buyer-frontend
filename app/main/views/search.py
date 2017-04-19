@@ -339,8 +339,7 @@ def supplier_search():
 
             domains = details['supplier']['domains']
 
-            supplier['name'] = details['supplier']['long_name'] or details['supplier']['longName'] or \
-                               details['supplier']['name']
+            supplier['name'] = details['supplier'].get('name')
             supplier['profile_url'] = details['supplier']['links']['self']
 
             tags = domains['assessed'] + domains['unassessed']
