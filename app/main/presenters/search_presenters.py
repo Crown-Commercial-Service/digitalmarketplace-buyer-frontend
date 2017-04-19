@@ -6,6 +6,7 @@ from ..helpers.search_helpers import (
     get_filters_from_request,
     get_lot_from_request,
     get_keywords_from_request,
+    get_filter_value_from_question_option,
 )
 
 
@@ -59,13 +60,14 @@ def filters_for_question(question):
 
 def _recursive_add_option_filters(question, options_list, filters_list):
     for option in options_list:
+        value = get_filter_value_from_question_option(option)
         presented_filter = {
             'label': option['label'],
             'name': question['id'],
             'id': '{}-{}'.format(
                 question['id'],
-                option['label'].lower().replace(' ', '-')),
-            'value': option['label'].lower(),
+                value.replace(' ', '-')),
+            'value': value,
         }
         if option.get('options'):
             presented_filter['children'] = []

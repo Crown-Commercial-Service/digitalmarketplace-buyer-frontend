@@ -17,7 +17,7 @@ from ...helpers import BaseApplicationTest
 content_loader = ContentLoader('tests/fixtures/content')
 content_loader.load_manifest('g6', 'data', 'manifest')
 content_loader.load_manifest('g9', 'data', 'manifest')
-questions_builder = content_loader.get_builder('g6', 'manifest')
+g6_builder = content_loader.get_builder('g6', 'manifest')
 g9_builder = content_loader.get_builder('g9', 'manifest')
 
 
@@ -46,7 +46,7 @@ def _get_fixture_multiple_pages_data():
 class TestSearchFilters(BaseApplicationTest):
 
     def _get_filter_group_by_label(self, lot, label):
-        filter_groups = filters_for_lot(lot, questions_builder)
+        filter_groups = filters_for_lot(lot, g6_builder)
         for filter_group in filter_groups.values():
             if filter_group['label'] == label:
                 return filter_group
@@ -99,6 +99,28 @@ class TestSearchFilters(BaseApplicationTest):
             ],
         }
 
+    def test_filters_with_commas(self):
+        checkboxes_filter_group = filters_for_lot('cloud-software', g9_builder)['categories-example']
+        filter_with_comma = None
+        for some_filter in checkboxes_filter_group['filters']:
+            if some_filter['label'] == 'Option 3, with comma':
+                filter_with_comma = some_filter
+                break
+        assert filter_with_comma is not None
+        assert filter_with_comma['id'] == 'checkboxTreeExample-option-3-with-comma'
+        assert filter_with_comma['value'] == 'option 3 with comma'
+
+    def test_filters_with_values(self):
+        checkboxes_filter_group = filters_for_lot('cloud-software', g9_builder)['categories-example']
+        filter_with_value = None
+        for some_filter in checkboxes_filter_group['filters']:
+            if some_filter['label'] == 'Option 4 has a value':
+                filter_with_value = some_filter
+                break
+        assert filter_with_value is not None
+        assert filter_with_value['id'] == 'checkboxTreeExample-option_4_value'
+        assert filter_with_value['value'] == 'option_4_value'
+
     def test_get_filter_groups_from_questions_with_boolean_filters(self):
         booleans_filter_group = self._get_filter_group_by_label(
             'saas', 'Booleans example'
@@ -122,7 +144,7 @@ class TestSearchFilters(BaseApplicationTest):
         }
 
     def test_request_filters_are_set(self):
-        search_filters = list(filters_for_lot('saas', questions_builder).values())
+        search_filters = list(filters_for_lot('saas', g6_builder).values())
         request = self._get_request_for_params({
             'q': 'email',
             'booleanExample1': 'true'
@@ -164,7 +186,7 @@ class TestSearchFilters(BaseApplicationTest):
             'lot': 'paas'
         })
 
-        search_filters = list(filters_for_lot('paas', questions_builder).values())
+        search_filters = list(filters_for_lot('paas', g6_builder).values())
         set_filter_states(search_filters, request)
         assert search_filters[0] == {
             'label': 'Booleans example',
@@ -193,7 +215,7 @@ class TestSearchFilters(BaseApplicationTest):
             'booleanExample1': 'true'
         })
 
-        search_filters = list(filters_for_lot('paas', questions_builder).values())
+        search_filters = list(filters_for_lot('paas', g6_builder).values())
         set_filter_states(search_filters, request)
 
         assert search_filters[0] == {
@@ -228,7 +250,7 @@ class TestSearchFilters(BaseApplicationTest):
         assert all_filters == no_lot_filters
 
     def test_instance_has_correct_filter_groups_for_paas(self):
-        search_filters = filters_for_lot('paas', questions_builder).values()
+        search_filters = filters_for_lot('paas', g6_builder).values()
 
         filter_group_labels = [
             group['label'] for group in search_filters
@@ -239,7 +261,7 @@ class TestSearchFilters(BaseApplicationTest):
         assert 'Radios example' in filter_group_labels
 
     def test_instance_has_correct_filter_groups_for_iaas(self):
-        search_filters = filters_for_lot('iaas', questions_builder).values()
+        search_filters = filters_for_lot('iaas', g6_builder).values()
 
         filter_group_labels = [
             group['label'] for group in search_filters
