@@ -61,6 +61,7 @@ def get_supplier(code):
         props = {"application": {key: supplier[key] for key in supplier if key not in ['disclosures']}}
         props['application']['case_study_url'] = '/case-study/'
         props['application']['public_profile'] = not owns_profile
+        props['application']['recruiter'] = 'yes' if supplier.get('is_recruiter') == 't' else 'no'
         props['application']['digital_marketplace_panel'] = False
         digital_marketplace_framework = data_api_client.req.frameworks('digital-marketplace').get()
         for framework in supplier.get('frameworks', []):
