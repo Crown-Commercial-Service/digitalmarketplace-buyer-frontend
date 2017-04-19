@@ -6,6 +6,7 @@ from collections import defaultdict
 import json
 from flask.helpers import url_for
 import os
+from flask_login import current_user
 from flask import abort, render_template, request, redirect, current_app, jsonify
 import flask_featureflags as feature
 from app.api_client.data import DataAPIClient
@@ -325,31 +326,33 @@ def supplier_search():
 
     num_products_results = products_response['hits']['total']
 
-    casestudies_results = []
+    casestudies_results = None
     num_casestudies_results = 0
 
-    '''for p in casestudies_response['hits']['hits']:
-        details = p['_source']
+    if current_user.is_authenticated and current_user.role == 'buyer':
+        casestudies_results = []
+        for p in casestudies_response['hits']['hits']:
+            details = p['_source']
 
-        domains = details['supplier']['domains']
+            domains = details['supplier']['domains']
 
-        tags = domains['assessed'] + domains['unassessed']
+            tags = domains['assessed'] + domains['unassessed']
 
-        services = {}
-        for tag in sorted(tags):
-            services[tag] = True
+            services = {}
+            for tag in sorted(tags):
+                services[tag] = True
 
-        result = {
-            'title': details['title'],
-            'description': smart_truncate(details.get('approach', '')),
-            'link': url_for('.get_supplier_case_study', casestudy_id=details['id']),
-            'services': services,
-            'badges': details['supplier'].get('seller_type', {})
-        }
+            result = {
+                'title': details['title'],
+                'description': smart_truncate(details.get('approach', '')),
+                'link': url_for('.get_supplier_case_study', casestudy_id=details['id']),
+                'services': services,
+                'badges': details['supplier'].get('seller_type', {})
+            }
 
-        casestudies_results.append(result)
+            casestudies_results.append(result)
 
-    num_casestudies_results = casestudies_response['hits']['total']'''
+        num_casestudies_results = casestudies_response['hits']['total']
 
     def get_pagination(result_count):
         pages = get_page_list(SUPPLIER_RESULTS_PER_PAGE, result_count, page)
@@ -369,7 +372,7 @@ def supplier_search():
             'search': {
                 'results': results[:SUPPLIER_RESULTS_PER_PAGE],
                 'products': products_results[:SUPPLIER_RESULTS_PER_PAGE],
-                'casestudies': casestudies_results[:SUPPLIER_RESULTS_PER_PAGE],
+                'casestudies': casestudies_results[:SUPPLIER_RESULTS_PER_PAGE] if casestudies_results else None,
                 'keyword': keyword,
                 'sort_by': sort_by,
                 'view': request.args.get('view', 'sellers'),

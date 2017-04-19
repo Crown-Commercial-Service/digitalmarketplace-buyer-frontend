@@ -121,49 +121,37 @@ items = [
     {% else %}
     {% if is_restricted_brief %}<p>Only invited sellers can apply for 'Open to one' or 'Open to selected' briefs.</p>
     {% endif %}
+    <p>
 
+
+      {% with
+      url = application_url,
+      role = "button",
+      label = "Apply Now"
+      %}
+      {% include "toolkit/link-button.html" %}
+      {% endwith %}
+      <strong>I am approved to supply this area of expertise</strong>
+    </p>
+    <p>
+      {% with
+      url = application_url,
+      role = "button",
+      label = "Apply for Assessment"
+      %}
+      {% include "toolkit/link-button.html" %}
+      {% endwith %}
+      <strong>I want to be assessed to supply this area of expertise</strong>
+    </p>
     {% if not current_user.is_authenticated %}
-      <p>
-        <strong>Already have a seller account?</strong><br/>
-        {% with
-        url = application_url,
-        role = "button",
-        label = "Start application"
-        %}
-        {% include "toolkit/link-button.html" %}
-        {% endwith %}
-        {% with
-        url = application_url,
-        role = "button",
-        label = "Express Interest"
-        %}
-        {% include "toolkit/link-button.html" %}
-        {% endwith %}
-      </p>
+
       <p>
         <strong>New to the Marketplace?</strong><br/>
         <a href="{config['URL_PREFIX']}/become-a-seller">Sign up now</a>
 
       </p>
-      {% else %}
-      <p>
-        <strong>Already have a Marketplace account?</strong><br/>
-        {% with
-        url = application_url,
-        role = "button",
-        label = "Apply now"
-        %}
-        {% include "toolkit/link-button.html" %}
-        {% endwith %}
-        {% with
-        url = application_url,
-        role = "button",
-        label = "Express Interest"
-        %}
-        {% include "toolkit/link-button.html" %}
-        {% endwith %}
-      </p>
     {% endif %}
+
   {% endif %}
 {% endif %}
 

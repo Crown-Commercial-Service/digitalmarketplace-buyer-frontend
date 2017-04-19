@@ -97,6 +97,12 @@ def get_supplier(code):
 @login_required
 def get_supplier_case_study(casestudy_id):
     casestudy = DataAPIClient().get_case_study(casestudy_id)['caseStudy']
+    if 'refereeEmail' in casestudy:
+        del casestudy['refereeEmail']
+    if 'refereeName' in casestudy:
+        del casestudy['refereeName']
+    if 'refereePosition' in casestudy:
+        del casestudy['refereePosition']
     supplier_code = casestudy.get('supplierCode') if casestudy else None
     if supplier_code:
         supplier = DataAPIClient().get_supplier(supplier_code)['supplier']
