@@ -153,7 +153,7 @@ def view_brief_overview(framework_slug, lot_slug, brief_id):
         "buyers/brief_overview.html",
         framework=framework,
         confirm_remove=request.args.get("confirm_remove", None),
-        brief=brief,
+        brief=section.unformat_data(brief),
         sections=sections,
         completed_sections=completed_sections,
         step_sections=[section.step for section in sections if hasattr(section, 'step')],
@@ -211,10 +211,9 @@ def edit_brief_question(framework_slug, lot_slug, brief_id, section_slug, questi
     question = section.get_question(question_id)
     if not question:
         abort(404)
-
     return render_template(
         "buyers/edit_brief_question.html",
-        brief=brief,
+        brief=section.unformat_data(brief),
         section=section,
         question=question
     ), 200

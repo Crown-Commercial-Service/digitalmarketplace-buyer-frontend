@@ -127,6 +127,24 @@
   {% endwith %}
 {%- endmacro %}
 
+{% macro date(question_content, data, errors) -%}
+  {%
+    with
+    name=question_content.id,
+    question=question_content.question,
+    question_advice=question_content.question_advice,
+    hint=question_content.hint,
+    data=data,
+    optional=question_content.optional,
+    id=question_content.id,
+    error=errors.get(question_content.id)['message'],
+    question_number=kwargs.question_number,
+    message=kwargs.message
+  %}
+    {% include "toolkit/forms/date.html" %}
+  {% endwith %}
+{%- endmacro %}
+
 {% macro number(question_content, data, errors) -%}
   {%
     with
