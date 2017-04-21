@@ -322,7 +322,7 @@ def supplier_search():
             'services': services,
             'badges': details['supplier'].get('seller_type', {}),
             'supplier': supplier,
-            'pricing': details.get('pricing'),
+            'pricing': details['pricing']
         }
 
         products_results.append(result)
@@ -339,8 +339,8 @@ def supplier_search():
             domains = details['supplier']['domains']
 
             supplier = {}
-            supplier['name'] = details['supplier'].get('name')
-            supplier['profile_url'] = details['supplier']['links']['self']
+            supplier['name'] = details['supplier']['name']
+            supplier['profile_url'] = details['links'].get('supplier').replace('suppliers', 'supplier')
 
             tags = domains['assessed'] + domains['unassessed']
 
