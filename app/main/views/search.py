@@ -303,6 +303,12 @@ def supplier_search():
 
         domains = details['supplier']['domains']
 
+        supplier = {}
+        supplier['name'] = details['supplier'].get('name')
+
+        supplier['profile_url'] = details['links'].get('supplier')
+        supplier['support_url'] = details.get('support')
+
         tags = domains['assessed'] + domains['unassessed']
 
         services = {}
@@ -314,7 +320,9 @@ def supplier_search():
             'description': details['summary'],
             'link': details['website'],
             'services': services,
-            'badges': details['supplier'].get('seller_type', {})
+            'badges': details['supplier'].get('seller_type', {}),
+            'supplier': supplier,
+            'pricing': details.get('pricing'),
         }
 
         products_results.append(result)
@@ -322,7 +330,6 @@ def supplier_search():
     num_products_results = products_response['hits']['total']
 
     casestudies_results = None
-    num_casestudies_results = 0
 
     if current_user.is_authenticated and current_user.role == 'buyer':
         casestudies_results = []
@@ -330,6 +337,10 @@ def supplier_search():
             details = p['_source']
 
             domains = details['supplier']['domains']
+
+            supplier = {}
+            supplier['name'] = details['supplier'].get('name')
+            supplier['profile_url'] = details['supplier']['links']['self']
 
             tags = domains['assessed'] + domains['unassessed']
 
@@ -342,12 +353,16 @@ def supplier_search():
                 'description': smart_truncate(details.get('approach', '')),
                 'link': url_for('.get_supplier_case_study', casestudy_id=details['id']),
                 'services': services,
-                'badges': details['supplier'].get('seller_type', {})
+                'badges': details['supplier'].get('seller_type', {}),
+                'supplier': supplier,
+                'pricing': details.get('pricing'),
+                'case_study_service': details.get('service')
             }
-
+            details = {}
             casestudies_results.append(result)
 
         num_casestudies_results = casestudies_response['hits']['total']
+    num_casestudies_results = casestudies_response['hits']['total']
 
     def get_pagination(result_count):
         pages = get_page_list(SUPPLIER_RESULTS_PER_PAGE, result_count, page)
@@ -372,7 +387,8 @@ def supplier_search():
                 'sort_by': sort_by,
                 'view': request.args.get('view', 'sellers'),
                 'role': role_filters,
-                'type': seller_type_filters
+                'type': seller_type_filters,
+                'user_role': None if current_user.is_anonymous else current_user.role
             },
             'pagination': {
                 'sellers': get_pagination(num_results),
