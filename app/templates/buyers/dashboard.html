@@ -65,9 +65,9 @@
 
     {% call summary.row() %}
         {{ summary.service_link(item.title, url_for(".view_brief_overview", framework_slug=item.frameworkSlug, lot_slug=item.lot, brief_id=item.id)) }}
-        
-        {{ summary.text(item.createdAt|dateformat) }}
-        
+
+        {{ summary.text(item.createdAt|dateformat|widont) }}
+
         {% if item.unanswered_required > 0 and item.unanswered_optional > 0 %}
             {{ summary.text("{} required<br>{} optional".format(item.unanswered_required, item.unanswered_optional)|safe) }}
         {% elif item.unanswered_required > 0 %}
@@ -88,6 +88,7 @@
     empty_message="You don’t have any published requirements",
     field_headings=[
     "Brief name",
+    "Framework",
     "Published",
     "Closing",
     ],
@@ -96,11 +97,12 @@
 
     {% call summary.row() %}
         {{ summary.service_link(item.title, url_for(".view_brief_overview", framework_slug=item.frameworkSlug, lot_slug=item.lot, brief_id=item.id)) }}
-        {{ summary.text(item.publishedAt|dateformat) }}
-        {{ summary.text(item.applicationsClosedAt|dateformat) }}
+        {{ summary.text(item.frameworkName|widont) }}
+        {{ summary.text(item.publishedAt|dateformat|widont) }}
+        {{ summary.text(item.applicationsClosedAt|dateformat|widont) }}
     {% endcall %}
 {% endcall %}
-        
+
 {{ summary.heading("Closed requirements", id="closed_requirements") }}
 {% call(item) summary.list_table(
     closed_briefs,
@@ -108,6 +110,7 @@
     empty_message="You don’t have any requirements that are closed",
     field_headings=[
     "Brief name",
+    "Framework",
     "Closed",
     "Responses",
     ],
@@ -116,7 +119,8 @@
 
     {% call summary.row() %}
         {{ summary.service_link(item.title, url_for(".view_brief_overview", framework_slug=item.frameworkSlug, lot_slug=item.lot, brief_id=item.id)) }}
-        {{ summary.text(item.applicationsClosedAt|dateformat) }}
+        {{ summary.text(item.frameworkName|widont) }}
+        {{ summary.text(item.applicationsClosedAt|dateformat|widont) }}
         {{ summary.link("View responses", url_for(".view_brief_responses", framework_slug=item.frameworkSlug, lot_slug=item.lot, brief_id=item.id)) }}
     {% endcall %}
 {% endcall %}
