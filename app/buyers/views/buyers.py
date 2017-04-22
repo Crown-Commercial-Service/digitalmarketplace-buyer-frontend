@@ -456,6 +456,8 @@ class DownloadBriefResponsesView(View):
                                        brief['lotSlug'],
                                        'output_brief_response')
 
+        responses = [v for v in responses if v['essentialRequirementsMet']]
+
         # two intro columns for boolean and dynamic lists
         sheet.create_column(stylename="co1", defaultcellstylename="ce1")
         sheet.create_column(stylename="co1", defaultcellstylename="ce1")

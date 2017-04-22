@@ -2198,6 +2198,14 @@ class TestDownloadBriefResponsesView(BaseApplicationTest):
                 "blah": [False, True]
             }
         ]
+        self.bad_response = {
+            "supplierName": "Tea Boy Ltd.",
+            "respondToEmailAddress": "teaboy@example.com",
+            "availability": "Tomorrow",
+            "essentialRequirementsMet": False,
+            "dayRate": "1000",
+            "blah": [False, True]
+        }
 
     def teardown_method(self, method):
         self.instance = None
@@ -2390,7 +2398,9 @@ class TestDownloadBriefResponsesView(BaseApplicationTest):
             Question(question) for question in questions
         ])
 
-        doc = self.instance.generate_ods(self.brief, self.responses)
+        responses = [self.bad_response] + self.responses
+
+        doc = self.instance.generate_ods(self.brief, responses)
 
         sheet = doc.sheet("Supplier evidence")
 
@@ -2412,7 +2422,9 @@ class TestDownloadBriefResponsesView(BaseApplicationTest):
             Question(question) for question in questions
         ])
 
-        doc = self.instance.generate_ods(self.brief, self.responses)
+        responses = self.responses + [self.bad_response]
+
+        doc = self.instance.generate_ods(self.brief, responses)
 
         sheet = doc.sheet("Supplier evidence")
 
@@ -2445,7 +2457,9 @@ class TestDownloadBriefResponsesView(BaseApplicationTest):
             Question(question) for question in questions
         ])
 
-        doc = self.instance.generate_ods(self.brief, self.responses)
+        responses = self.responses + [self.bad_response]
+
+        doc = self.instance.generate_ods(self.brief, responses)
 
         sheet = doc.sheet("Supplier evidence")
 
