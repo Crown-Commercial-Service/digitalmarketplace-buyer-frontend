@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from datetime import datetime
-import flask_featureflags as feature
 import json
 
 from flask_login import current_user
-from flask import abort, current_app, config, make_response, redirect, render_template, request, url_for, jsonify
+from flask import abort, current_app, config, make_response, redirect, \
+    render_template, request, session, url_for, jsonify, flash
+import flask_featureflags as feature
 
-from dmapiclient import APIError
-from dmcontent.content_loader import ContentNotFoundError
-from dmutils.forms import render_template_with_csrf
+from dmutils.forms import DmForm, render_template_with_csrf
+from react.response import from_response, validate_form_data
+from react.render import render_component
 from app.main.utils import get_page_list
 
 from app import data_api_client, content_loader
@@ -20,6 +20,8 @@ from app.helpers.terms_helpers import check_terms_acceptance, get_current_terms_
 from ..forms.brief_forms import BriefSearchForm
 
 from flask_weasyprint import HTML, render_pdf
+from app.api_client.data import DataAPIClient
+from app.api_client.error import APIError
 
 
 @main.route('/')
@@ -315,3 +317,168 @@ def list_opportunities(framework_slug):
         # Buyers can create new briefs and want to see their updates more quickly.
         response.cache_control.max_age = min(300, current_app.config['DM_DEFAULT_CACHE_MAX_AGE'])
     return response
+
+
+@main.route('/collaborate')
+def collaborate():
+    if feature.is_active('COLLABORATE'):
+        rendered_component = render_component('bundles/Collaborate/CollaborateLandingWidget.js', {})
+        return render_template(
+            '_react.html',
+            breadcrumb_items=[
+                {'link': url_for('main.index'), 'label': 'Home'},
+                {'label': 'Collaborate'}
+            ],
+            component=rendered_component
+        )
+
+
+@main.route('/collaborate/project/new')
+def collaborate_create_project():
+    if feature.is_active('COLLABORATE'):
+        form = DmForm()
+        basename = url_for('.collaborate_create_project')
+        props = {
+            'form_options': {
+                'csrf_token': form.csrf_token.current_token
+            },
+            'project': {
+
+            },
+            'basename': basename
+        }
+
+        if 'project' in session:
+            props['projectForm'] = session['project']
+
+        rendered_component = render_component('bundles/Collaborate/ProjectFormWidget.js', props)
+
+        return render_template(
+            '_react.html',
+            breadcrumb_items=[
+                {'link': url_for('main.index'), 'label': 'Home'},
+                {'label': 'Collaborate'}
+            ],
+            component=rendered_component
+        )
+
+
+@main.route('/collaborate/project/new', methods=['POST'])
+def collaborate_create_project_submit():
+    if feature.is_active('COLLABORATE'):
+        casestudy = from_response(request)
+        casestudy['supplierCode'] = 0
+        casestudy['collaborateProject'] = True
+
+        fields = ['opportunity', 'title', 'client', 'timeframe', 'outcome', 'approach', 'stage', 'service']
+
+        basename = url_for('.collaborate_create_project')
+        errors = validate_form_data(casestudy, fields)
+        if errors:
+            form = DmForm()
+            rendered_component = render_component('bundles/Collaborate/ProjectFormWidget.js', {
+                'form_options': {
+                    'csrf_token': form.csrf_token.current_token,
+                    'errors': errors
+                },
+                'projectForm': casestudy,
+                'basename': basename
+            })
+
+            return render_template(
+                '_react.html',
+                component=rendered_component
+            )
+
+        try:
+            case_study = DataAPIClient().create_case_study(
+                caseStudy=casestudy
+            )['caseStudy']
+
+            return redirect(url_for('.collaborate_view_project', id=case_study['id']))
+
+        except APIError as e:
+            form = DmForm()
+            flash('', 'error')
+            rendered_component = render_component('bundles/Collaborate/ProjectFormWidget.js', {
+                'form_options': {
+                    'csrf_token': form.csrf_token.current_token
+                },
+                'projectForm': casestudy,
+                'basename': basename
+            })
+
+            return render_template(
+                '_react.html',
+                component=rendered_component
+            )
+
+
+@main.route('/collaborate/project/<int:id>')
+def collaborate_view_project(id):
+    if feature.is_active('COLLABORATE'):
+        if id != 1:
+            project = DataAPIClient().get_case_study(id)['caseStudy']
+        else:
+            project = {
+                "title": "My Whoville",
+                "opportunity": "The My Whoville site and campaign provides a way "
+                               "for whovillians and visitors to find out "
+                               "what’s happening in the CBD in terms of transport "
+                               "changes. Gather requirements and provide "
+                               "a solution to allow people to interact with the maps"
+                               " on the My Whoville site. We had to "
+                               "acheive this while working with a separate digital"
+                               " agency who delivered the main website, "
+                               "campaign material and design direction.",
+                "client": "Whoville City Council",
+                "referee_name": "Joe Bloggs",
+                "referee_contact": "joe.blogs@whoville.gov.au",
+                "service": "Roads and parking",
+                "stage": "Pilot",
+                "timeframe": "January 2016 — June 2016",
+                "approach": "We were not sure exactly what the requirements were at the beginning of the project. "
+                            "we worked with the client as well as other vendors "
+                            "to come to an agreement on scope together. "
+                            "As a result of the requirements, we realised that a "
+                            "bespoke CMS-based map editing tool had to be built. "
+                            "Even with changing requirements we was able to deliver "
+                            "all products. We did this by staying light "
+                            "and agile in our approach to design and development. Due "
+                            "to our multi-disciplinary background and approach,"
+                            " we were able to recommend solutions encompassing UX guidance"
+                            " and development constraints with efficiency of work "
+                            "and confidence in knowledge site. We were required to"
+                            " understand and analyse the first two in order to decide "
+                            "what was most appropriate to fit into the new maps. The "
+                            "final solution required us to develop a CMS that included "
+                            "a map editing tool, an API for both us and the other vendor to "
+                            "interface with the data, and a workflow for publishing "
+                            "CMS changes. Although challenging, we were able to deliver holistic"
+                            " solutions by having front-end developers, back-end "
+                            "developers and the CMS users to all work together to reach a model together.",
+                "outcome": [
+                    "We gathered all requirements for maps including what was to be shown, what data was available.",
+                    "We recommended solutions encompassing UX guidance and development constraints "
+                    "with efficiency of work and confidence in knowledge.",
+                    "We developed a CMS that included a map editing tool, an API for both us "
+                    "and the other vendor to interface "
+                    "with the data, and a workflow for publishing CMS changes."
+                ],
+                "projectLinks": [
+                    "http://gov.au/"
+                ],
+                "meta": {
+                    "deleteLink": "#",
+                    "editLink": "#"
+                }
+            }
+        rendered_component = render_component('bundles/Collaborate/ProjectViewWidget.js', {"project": project})
+        return render_template(
+            '_react.html',
+            breadcrumb_items=[
+                {'link': url_for('main.index'), 'label': 'Home'},
+                {'label': 'Collaborate'}
+            ],
+            component=rendered_component
+        )
