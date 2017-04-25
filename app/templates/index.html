@@ -16,7 +16,7 @@
 {% block main_content %}
 
 {% if 'account-created' in get_flashed_messages(category_filter=["flag"]) %}
-<div class="index-page grid-row" data-analytics="trackPageView" data-url="/vpv/?account-created=true">
+<div class="index-page grid-row" data-analytics="trackPageView" data-url="?account-created=true">
 {% else %}
 <div class="index-page grid-row">
 {% endif %}

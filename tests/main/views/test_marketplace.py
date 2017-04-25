@@ -35,13 +35,13 @@ class TestHomepageAccountCreationVirtualPageViews(BaseApplicationTest):
         res = self.client.get("/")
         data = res.get_data(as_text=True)
 
-        assert 'data-analytics="trackPageView" data-url="/vpv/?account-created=true"' in data
+        assert 'data-analytics="trackPageView" data-url="?account-created=true"' in data
 
     def test_data_analytics_track_page_view_not_shown_if_no_account_created_flag_flash_message(self, data_api_client):
         res = self.client.get("/")
         data = res.get_data(as_text=True)
 
-        assert 'data-analytics="trackPageView" data-url="/vpv/?account-created=true"' not in data
+        assert 'data-analytics="trackPageView" data-url="?account-created=true"' not in data
 
 
 @mock.patch('app.main.views.marketplace.data_api_client')
