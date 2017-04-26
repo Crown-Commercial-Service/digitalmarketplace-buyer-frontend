@@ -357,7 +357,8 @@ def collaborate_create_project():
             '_react.html',
             breadcrumb_items=[
                 {'link': url_for('main.index'), 'label': 'Home'},
-                {'label': 'Collaborate'}
+                {'link': url_for('main.collaborate'), 'label': 'Collaborate'},
+                {'label': 'Add project'}
             ],
             component=rendered_component
         )
@@ -387,6 +388,11 @@ def collaborate_create_project_submit():
 
             return render_template(
                 '_react.html',
+                breadcrumb_items=[
+                    {'link': url_for('main.index'), 'label': 'Home'},
+                    {'link': url_for('main.collaborate'), 'label': 'Collaborate'},
+                    {'label': 'Add project'}
+                ],
                 component=rendered_component
             )
 
@@ -410,6 +416,11 @@ def collaborate_create_project_submit():
 
             return render_template(
                 '_react.html',
+                breadcrumb_items=[
+                    {'link': url_for('main.index'), 'label': 'Home'},
+                    {'link': url_for('main.collaborate'), 'label': 'Collaborate'},
+                    {'label': 'Add project'}
+                ],
                 component=rendered_component
             )
 
@@ -478,7 +489,8 @@ def collaborate_view_project(id):
             '_react.html',
             breadcrumb_items=[
                 {'link': url_for('main.index'), 'label': 'Home'},
-                {'label': 'Collaborate'}
+                {'link': url_for('main.collaborate'), 'label': 'Collaborate'},
+                {'label': project['title']}
             ],
             component=rendered_component
         )
