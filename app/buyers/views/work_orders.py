@@ -26,7 +26,7 @@ def _create_work_order_from_brief(brief, seller):
     }
 
     data = {
-        'son': 'SON3364729',
+        'son': 'SON3413842',
         'seller': {
             'abn': seller.get('abn', ''),
             'name': seller.get('name', ''),

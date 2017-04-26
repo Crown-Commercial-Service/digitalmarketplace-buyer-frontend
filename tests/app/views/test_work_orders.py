@@ -127,7 +127,7 @@ class TestCreateNewWorkOrder(BaseApplicationTest):
                     'abn': u'123456'
                 },
                 'deliverables': u'test summary',
-                'son': 'SON3364729',
+                'son': 'SON3413842',
                 'additionalTerms': 'some terms',
                 'securityClearance': 'I have clearance'
             }
