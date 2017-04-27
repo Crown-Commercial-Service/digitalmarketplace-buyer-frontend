@@ -43,6 +43,7 @@ test_brief = {
         "contractLength": "6 months",
         "additionalTerms": "some terms",
         "securityClearance": "I have clearance",
+        "frameworkFramework": "dm"
     }
 }
 
