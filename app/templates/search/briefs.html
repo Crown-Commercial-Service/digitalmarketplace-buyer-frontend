@@ -92,6 +92,14 @@ Seller opportunities – {{ framework.name }} – Digital Marketplace
               </li>
             </ul>
 
+            {% if brief.areaOfExpertise %}
+              <ul class="category">
+                <li>
+                   <strong>Area of expertise:</strong> {{ brief.lotName }}
+                </li>
+              </ul>
+            {% endif %}
+
             <ul class="status">
               {% if brief.status == 'closed' %}
               <li class="status-closed">
