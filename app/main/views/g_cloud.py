@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from dmcontent.errors import ContentNotFoundError
 from flask import abort, render_template, request, redirect, current_app, url_for
 
 from dmutils.formats import dateformat
@@ -113,13 +114,17 @@ def get_service_by_id(service_id):
             framework_slug = override_framework_slug
 
         framework = data_api_client.get_framework(framework_slug)['frameworks']
-        service_view_data = Service(
-            service_data,
-            content_loader.get_builder(framework_slug, 'display_service').filter(
-                service_data
-            ),
-            framework_helpers.get_lots_by_slug(framework)
-        )
+        try:
+            service_view_data = Service(
+                service_data,
+                content_loader.get_builder(framework_slug, 'display_service').filter(
+                    service_data
+                ),
+                framework_helpers.get_lots_by_slug(framework)
+            )
+        except ContentNotFoundError as e:
+            # This will happen for service IDs from a DOS-style framework that doesn't display service pages
+            abort(404)
 
         try:
             # get supplier data and add contact info to service object
