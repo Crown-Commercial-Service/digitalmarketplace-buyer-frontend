@@ -7,11 +7,20 @@ from dmutils.status import get_flags
 
 @status.route('/_status')
 def status():
-
     if 'ignore-dependencies' in request.args:
         return jsonify(
             status="ok",
         ), 200
+
+    if 'X-Forwarded-For' in request.headers:
+        remote_addr = request.headers.getlist("X-Forwarded-For")[0].rpartition(' ')[-1]
+    else:
+        remote_addr = request.remote_addr or 'untrackable'
+
+    current_app.logger.info(
+        "_status.check: buyer app status page requested by {ip_address}",
+        extra={'ip_address': remote_addr}
+    )
 
     version = current_app.config['VERSION']
     apis = [
@@ -38,7 +47,8 @@ def status():
             {api['key']: api['status'] for api in apis},
             status="ok",
             version=version,
-            flags=get_flags(current_app)
+            flags=get_flags(current_app),
+            remote_address=remote_addr
         )
 
     message = "Error connecting to the {}.".format(
@@ -50,5 +60,6 @@ def status():
         status="error",
         version=version,
         message=message,
-        flags=get_flags(current_app)
+        flags=get_flags(current_app),
+        remote_address=remote_addr
     ), 500
