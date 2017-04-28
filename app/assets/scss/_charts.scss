@@ -2,6 +2,10 @@
   width: 95%;
   min-height: 450px;
 }
+.landing .c3-texts {
+ font-size: 18px;
+ text-decoration: underline;
+}
 
 @include media ($tablet) {
   .chart-legend {
