@@ -113,10 +113,27 @@ def create_new_brief(framework_slug, lot_slug):
                 brief_id=brief['id']))
 
 
-# COPY BRIEF
 @buyers.route('/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/copy', methods=['POST'])
 def copy_brief(framework_slug, lot_slug, brief_id):
-    return 'foooo', 200
+    # if is_brief_correct(brief_id):
+
+    new_brief = data_api_client.copy_brief(brief_id, current_user.email_address)['briefs']
+
+    # Get first question for 'edit_brief'
+    content = content_loader.get_manifest(framework_slug, 'edit_brief').filter(
+        {'lot': lot_slug}
+    )
+    section = content.get_section(content.get_next_editable_section_id())
+
+    # Redirect to first question with new (copy of) brief
+    return redirect(url_for(
+        '.edit_brief_question',
+        framework_slug=framework_slug,
+        lot_slug=lot_slug,
+        brief_id=new_brief['id'],
+        section_slug=section.slug,
+        question_id=section.questions[0].id
+    ))
 
 
 @buyers.route('/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>', methods=['GET'])
