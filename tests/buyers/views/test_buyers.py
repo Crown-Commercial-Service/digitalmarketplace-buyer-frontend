@@ -279,7 +279,10 @@ class TestCopyBrief(BaseApplicationTest):
         self.data_api_client_patch = mock.patch('app.buyers.views.buyers.data_api_client')
         self.data_api_client = self.data_api_client_patch.start()
 
-        self.data_api_client.get_brief.return_value = api_stubs.brief()
+        self.data_api_client.get_brief.return_value = api_stubs.brief(
+            framework_slug="digital-outcomes-and-specialists-2",
+            framework_name="Digital Outcomes and Specialists 2"
+        )
 
     def teardown_method(self, method):
         self.data_api_client_patch.stop()
@@ -287,7 +290,7 @@ class TestCopyBrief(BaseApplicationTest):
 
     def test_get_not_allowed(self):
         res = self.client.get(
-            '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/copy'
+            '/buyers/frameworks/digital-outcomes-and-specialists-2/requirements/digital-specialists/1234/copy'
         )
 
         assert res.status_code == 404
