@@ -1,4 +1,4 @@
-<p class="service-summary-lede">{{ service.serviceSummary }}</p>
+<p class="service-summary-lede">{{ service.serviceSummary or service.serviceDescription }}</p> ## G-Cloud 9 uses serviceDescription, not serviceSummary.
 {% if service.features %}
 <h2 class="service-summary-heading">Features</h2>
 <ul class="service-summary-features-and-benefits">
