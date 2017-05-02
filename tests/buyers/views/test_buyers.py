@@ -306,7 +306,7 @@ class TestCopyBrief(BaseApplicationTest):
             '/buyers/frameworks/digital-outcomes-and-specialists-2/requirements/digital-specialists/1234/copy'
         )
 
-        self.data_api_client.copy_brief.assert_called_once_with('1234', 123)
+        self.data_api_client.copy_brief.assert_called_once_with('1234', 'buyer@email.com')
 
         assert res.location == (
             "http://localhost/buyers/frameworks/digital-outcomes-and-specialists-2/requirements/digital-specialists/"

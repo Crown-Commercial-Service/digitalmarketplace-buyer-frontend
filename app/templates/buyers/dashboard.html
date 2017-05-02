@@ -78,9 +78,7 @@
         {% else %}
             {{ summary.text() }}
         {% endif %}
-
-        {{ summary.button(text="Copy requirement", action="#") }}
-        
+        {{ summary.button(text="Copy requirement", action=url_for(".copy_brief", framework_slug=item.frameworkSlug, lot_slug=item.lot, brief_id=item.id)) }}
     {% endcall %}
 {% endcall %}
 
@@ -90,9 +88,10 @@
     caption="Published requirements caption",
     empty_message="You don’t have any published requirements",
     field_headings=[
-    "Name",
-    "Published",
-    "Closing",
+        "Name",
+        "Published",
+        "Closing",
+        summary.hidden_field_heading("Copy requirements")
     ],
     field_headings_visible=True
 ) %}
@@ -101,6 +100,7 @@
         {{ summary.service_link(item.title, url_for(".view_brief_overview", framework_slug=item.frameworkSlug, lot_slug=item.lot, brief_id=item.id)) }}
         {{ summary.text(item.publishedAt|dateformat) }}
         {{ summary.text(item.applicationsClosedAt|dateformat) }}
+        {{ summary.button(text="Copy requirement", action=url_for(".copy_brief", framework_slug=item.frameworkSlug, lot_slug=item.lot, brief_id=item.id)) }}
     {% endcall %}
 {% endcall %}
         
@@ -110,9 +110,10 @@
     caption="Closed requirements caption",
     empty_message="You don’t have any requirements that are closed",
     field_headings=[
-    "Name",
-    "Closed",
-    "Responses",
+        "Name",
+        "Closed",
+        "Responses",
+        summary.hidden_field_heading("Copy requirements")
     ],
     field_headings_visible=True
 ) %}
@@ -121,6 +122,7 @@
         {{ summary.service_link(item.title, url_for(".view_brief_overview", framework_slug=item.frameworkSlug, lot_slug=item.lot, brief_id=item.id)) }}
         {{ summary.text(item.applicationsClosedAt|dateformat) }}
         {{ summary.link("View responses", url_for(".view_brief_responses", framework_slug=item.frameworkSlug, lot_slug=item.lot, brief_id=item.id)) }}
+        {{ summary.button(text="Copy requirement", action=url_for(".copy_brief", framework_slug=item.frameworkSlug, lot_slug=item.lot, brief_id=item.id)) }}
     {% endcall %}
 {% endcall %}
 {% endblock %}
