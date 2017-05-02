@@ -27,16 +27,14 @@
       Cloud technology and support
     </h1>
   </header>
-  {% if show_search_box %}
-    <div class="grid-row">
-      <form action="{{ url_for('.search_services') }}" method="get" class="search-box column-two-thirds">
-          <input type="text" class="text-box" name="q" maxlength="200">
-          <button type="submit" class="button-save">
-            Show services
-          </button>
-      </form>
-    </div>
-  {% endif %}
+  <div class="grid-row">
+    <form action="{{ url_for('.search_services') }}" method="get" class="search-box column-two-thirds">
+      <input type="text" class="text-box" name="q" maxlength="200">
+      <button type="submit" class="button-save">
+        Show services
+      </button>
+    </form>
+  </div>
   <div class="grid-row">
     <div class="column-two-thirds">
       {% with items = lots %}
