@@ -11,7 +11,7 @@
           "label": "Digital Marketplace"
       },
       {
-          "label": "Cloud technology and support"
+          "label": title|capitalize
       }
     ]
   %}
@@ -24,7 +24,7 @@
 <div class="index-page">
   <header class="page-heading">
     <h1>
-      Cloud technology and support
+      {{ title|capitalize }}
     </h1>
   </header>
   <div class="grid-row">
@@ -36,7 +36,7 @@
     </form>
   </div>
   <div class="grid-row">
-    <div class="column-two-thirds">
+    <div class="column-two-thirds framework-lots">
       {% with items = lots %}
         {% include "toolkit/browse-list.html" %}
       {% endwith %}

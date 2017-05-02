@@ -34,38 +34,25 @@ def index_g_cloud():
     all_frameworks = data_api_client.find_frameworks().get('frameworks')
     framework = framework_helpers.get_latest_live_framework(all_frameworks, 'g-cloud')
 
+    content_loader.load_messages(framework['slug'], ['advice', 'descriptions'])
+    gcloud_page_title = content_loader.get_message(framework['slug'], 'descriptions', 'framework')
+    gcloud_lot_messages = content_loader.get_message(framework['slug'], 'advice', 'lots')
+    gcloud_lot_messages = {x['slug']: x for x in gcloud_lot_messages}
+
     lot_browse_list_items = list()
     for lot in framework['lots']:
         lot_item = {
             "link": url_for('.search_services', lot=lot['slug']),
-            "title": lot['name']
+            "title": lot['name'],
+            "body": gcloud_lot_messages[lot['slug']]['body'],
+            "subtext": gcloud_lot_messages[lot['slug']].get('advice'),
         }
-
-        # TODO proper lot body/subtext for G9 - G7/G8 content moved here temporarily from template
-
-        if lot['slug'] == 'saas':
-            lot_item.update({
-                "body": "Find applications or services that are run over the internet or in the cloud",
-                "subtext": "eg accounting tools or email",
-            })
-        elif lot['slug'] == 'paas':
-            lot_item.update({
-                "body": "Find platforms that provide a basis for building other services and applications",
-            })
-        elif lot['slug'] == 'iaas':
-            lot_item.update({
-                "body": "Find networks, hosting facilities and servers on which platforms and software depend",
-                "subtext": "eg hosting or content delivery",
-            })
-        elif lot['slug'] == 'scs':
-            lot_item.update({
-                "body": "Find help with cloud management and deployment",
-                "subtext": "eg IT health checks or data migrations",
-            })
 
         lot_browse_list_items.append(lot_item)
 
-    return render_template('index-g-cloud.html', lots=lot_browse_list_items)
+    return render_template('index-g-cloud.html',
+                           title=gcloud_page_title,
+                           lots=lot_browse_list_items)
 
 
 @main.route('/g-cloud/framework')
