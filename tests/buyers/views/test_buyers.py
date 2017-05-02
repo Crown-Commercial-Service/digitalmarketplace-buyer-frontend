@@ -313,6 +313,18 @@ class TestCopyBrief(BaseApplicationTest):
             "1235/edit/title/title"
         )
 
+    @mock.patch("app.buyers.views.buyers.is_brief_correct", autospec=True)
+    def test_404_if_brief_is_not_correct(self, is_brief_correct):
+        is_brief_correct.return_value = False
+
+        res = self.client.post(
+            '/buyers/frameworks/digital-outcomes-and-specialists-2/requirements/digital-specialists/1234/copy'
+        )
+
+        assert res.status_code == 404
+        is_brief_correct.assert_called_once_with(
+            self.brief["briefs"], "digital-outcomes-and-specialists-2", "digital-specialists", 123)
+
 
 class TestEveryDamnPage(BaseApplicationTest):
     def _load_page(self, url, status_code, method='get', data=None, framework_status='live', brief_status='draft'):

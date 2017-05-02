@@ -115,7 +115,9 @@ def create_new_brief(framework_slug, lot_slug):
 
 @buyers.route('/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/copy', methods=['POST'])
 def copy_brief(framework_slug, lot_slug, brief_id):
-    # if is_brief_correct(brief_id):
+    brief = data_api_client.get_brief(brief_id)["briefs"]
+    if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id):
+        abort(404)
 
     new_brief = data_api_client.copy_brief(brief_id, current_user.email_address)['briefs']
 
