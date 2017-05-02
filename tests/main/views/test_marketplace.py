@@ -8,6 +8,7 @@ from datetime import datetime
 from ...helpers import BaseApplicationTest
 from dmapiclient import APIError
 from dmutils.formats import DATETIME_FORMAT, DISPLAY_DATE_FORMAT
+import pytest
 
 
 class TestApplication(BaseApplicationTest):
@@ -843,3 +844,35 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
 
         assert res.status_code == 404
         self._data_api_client.find_frameworks.assert_called_once_with()
+
+
+@mock.patch('app.main.views.marketplace.data_api_client')
+class TestGCloudHomepageLinks(BaseApplicationTest):
+
+    mock_live_g_cloud_framework = {
+        "framework": "g-cloud",
+        "slug": "g-cloud-x",
+        "status": "live",
+        "id": 5
+    }
+
+    @pytest.mark.parametrize('framework_slug, gcloud_content',
+                             (('g-cloud-8', 'Find cloud technology and support'),
+                              ('g-cloud-9', 'Find cloud hosting, software and support')))
+    def test_g_cloud_homepage_content_is_correct(self, data_api_client, framework_slug, gcloud_content):
+        with self.app.app_context():
+            data_api_client.find_frameworks.return_value = {
+                "frameworks": [
+                    self.mock_live_g_cloud_framework
+                ]
+            }
+            data_api_client.find_frameworks.return_value['frameworks'][0].update({'slug': framework_slug})
+
+            res = self.client.get("/")
+            document = html.fromstring(res.get_data(as_text=True))
+
+            assert res.status_code == 200
+
+            link_texts = [item.text_content().strip() for item in document.cssselect('.browse-list-item a')]
+            assert link_texts[-2] == gcloud_content
+            assert link_texts[-1] == 'Buy physical datacentre space'
