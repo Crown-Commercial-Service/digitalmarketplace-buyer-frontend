@@ -114,6 +114,12 @@ def create_new_brief(framework_slug, lot_slug):
                 brief_id=brief['id']))
 
 
+# COPY BRIEF
+@buyers.route('/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/copy', methods=['POST'])
+def copy_brief(framework_slug, lot_slug, brief_id):
+    return 'foooo', 200
+
+
 @buyers.route('/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>', methods=['GET'])
 def view_brief_overview(framework_slug, lot_slug, brief_id):
     framework, lot = get_framework_and_lot(

@@ -271,6 +271,28 @@ class TestCreateNewBrief(BaseApplicationTest):
         )
 
 
+class TestCopyBrief(BaseApplicationTest):
+
+    def setup_method(self, method):
+        super(TestCopyBrief, self).setup_method(method)
+        self.login_as_buyer()
+        self.data_api_client_patch = mock.patch('app.buyers.views.buyers.data_api_client')
+        self.data_api_client = self.data_api_client_patch.start()
+
+        self.data_api_client.get_brief.return_value = api_stubs.brief()
+
+    def teardown_method(self, method):
+        self.data_api_client_patch.stop()
+        super(TestCopyBrief, self).teardown_method(method)
+
+    def test_get_not_allowed(self):
+        res = self.client.get(
+            '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/copy'
+        )
+
+        assert res.status_code == 404
+
+
 class TestEveryDamnPage(BaseApplicationTest):
     def _load_page(self, url, status_code, method='get', data=None, framework_status='live', brief_status='draft'):
         data = {} if data is None else data
