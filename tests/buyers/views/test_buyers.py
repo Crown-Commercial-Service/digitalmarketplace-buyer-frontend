@@ -276,13 +276,15 @@ class TestCopyBrief(BaseApplicationTest):
     def setup_method(self, method):
         super(TestCopyBrief, self).setup_method(method)
         self.login_as_buyer()
-        self.data_api_client_patch = mock.patch('app.buyers.views.buyers.data_api_client')
+        self.data_api_client_patch = mock.patch('app.buyers.views.buyers.data_api_client', autospec=False)
         self.data_api_client = self.data_api_client_patch.start()
 
-        self.data_api_client.get_brief.return_value = api_stubs.brief(
+        self.brief = api_stubs.brief(
             framework_slug="digital-outcomes-and-specialists-2",
             framework_name="Digital Outcomes and Specialists 2"
         )
+
+        self.data_api_client.get_brief.return_value = self.brief
 
     def teardown_method(self, method):
         self.data_api_client_patch.stop()
@@ -294,6 +296,22 @@ class TestCopyBrief(BaseApplicationTest):
         )
 
         assert res.status_code == 404
+
+    def test_copy_brief_and_redirect_to_copied_brief_edit_title_page(self):
+        copied_brief = self.brief
+        copied_brief["briefs"]["id"] = 1235
+        self.data_api_client.copy_brief.return_value = copied_brief
+
+        res = self.client.post(
+            '/buyers/frameworks/digital-outcomes-and-specialists-2/requirements/digital-specialists/1234/copy'
+        )
+
+        self.data_api_client.copy_brief.assert_called_once_with(1234)
+
+        assert res.location == (
+            "http://localhost/buyers/frameworks/digital-outcomes-and-specialists-2/requirements/digital-specialists/"
+            "1235/edit/title/title"
+        )
 
 
 class TestEveryDamnPage(BaseApplicationTest):
