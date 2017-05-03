@@ -12,7 +12,7 @@ from dmcontent.content_loader import ContentNotFoundError
 
 from ...main import main
 from ..helpers.shared_helpers import get_one_framework_by_status_in_order_of_preference, parse_link
-from ..helpers.framework_helpers import get_latest_live_framework
+from ..helpers.framework_helpers import get_latest_live_framework, is_g9_live
 
 from ..forms.brief_forms import BriefSearchForm
 
@@ -51,12 +51,14 @@ def index():
     # Capture the slug for the most recent live framework. There will only be multiple if currently transitioning
     # between frameworks and more than one has a `live` status.
     dos_framework = get_latest_live_framework(frameworks, 'digital-outcomes-and-specialists')
+    show_new_g9_content = is_g9_live(frameworks)
 
     return render_template(
         'index.html',
         dos_slug=dos_framework['slug'] if dos_framework else None,
         frameworks={framework['slug']: framework for framework in frameworks},
-        temporary_message=temporary_message
+        temporary_message=temporary_message,
+        show_new_g9_content=show_new_g9_content,
     )
 
 
