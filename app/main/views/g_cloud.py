@@ -228,5 +228,4 @@ def search_services():
         summary=search_summary.markup(),
         title='Search results',
         total=search_results_obj.total,
-        show_all_categories=not is_g9_live,
     )
