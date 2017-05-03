@@ -5,22 +5,19 @@ depends:
 hint: 'Choose all options that apply'
 type: checkbox_tree
 options:
-  -
-    label: 'Option 1'
-    filter_label: 'Option 1 filter label'
-  -
-    label: 'Option 2'
-    filter_label: 'Option 2 filter label'
+  - label: 'Option 1'
+  - label: 'Option 2'
     options:
       - label: 'Option 2.1'
-        filter_label: 'Option 2.1 filter label'
       - label: 'Option 2.2'
-        filter_label: 'Option 2.2 filter label'
   - label: 'Option 3, with comma'
-    filter_label: 'Option 3 filter label'
   - label: 'Option 4 has a value'
-    filter_label: 'Option 4 filter label'
     value: 'option_4_value'
+  - label: 'Option 5'
+    filter_label: 'Option 5 filter label'
+    value: 'option_5_value'
+  - label: 'Option 6'
+    filter_label: 'Option 6 filter label'
 
 validations:
   -
