@@ -1,0 +1,37 @@
+{
+  "id": 3,
+  "title": "Smart city lighting",
+  "pilot_activities": "The trial was divided into two phases with each lasting for approximately 2.5 weeks.\n\nTrial 1: Movement-activated Light Dimming Function Trial\nSimilar to the conventional lighting previously operating at this location, the LED lights were programmed to switch ON and OFF 15 minutes before the Sunset and after Sunrise official times.\nLights were dimmed to a safe pre-determined lower ambient lighting level if movement sensors don’t detect any pedestrians and/or traffic movement on the road or footpath.\nAs soon as any movement from activity is detected, the system resumes its normal lighting levels for the duration of the activity, and a few minutes afterwards.\nThe dimming function resumes until movement and activity is again detected.\n\nTrial 2: Movement-activated Light Dimming and Harvesting Functions Trial\nIn addition to Trial 1 above, an additional feature was set which monitored any ambient lighting from other sources such as shop-front lighting and temporary festival lighting.\nWhen significant additional light was present in the vicinity of the LED light, the LED would automatically dim to reduce the light produced by the LED by an amount corresponding to the additional vicinity light to create additional energy savings.\nAfter the trial period, normal lighting operations has resumed without dimming the lights.\n\nTRIAL LOCATIONS\nSixty Smart LED lights have been installed across different locations in Pirie Street and Hindmarsh Square.",
+
+  "client": "Adelaide City Council",
+  "contact_name": "Beth Worrall",
+  "contact_email": "beth.worrall@sa.gov.au",
+  "partner_links": {
+    "iiNet": "http://www.iinet.net.au",
+    "Cisco": "http://www.cisco.com",
+    "Sensity": "http://www.sensity.com"
+  },
+  "service": "Planning, Smart Cities",
+  "summary": "Streetlights in the centre of Adelaide have been fitted with smart technology as it moves closer to its goal of becoming the world’s first carbon neutral city. ",
+  "stage": "Discovery",
+  "timeframe": "January 2016 — June 2016",
+  "aim": "The Smart LED lighting pilot provided an opportunity to trial new and innovate smart technologies to enable more convenient greater efficiencies in on-demand smart lighting and energy conservation. Effective lighting is critical to all modern cities as they provide the ability to find key points of interest, including events, retail opportunities, etc., within a safe and inviting setting. The lighting trial was expected to increase energy efficiency and provide insights into maintenance. \n\nThe project aims were to:\n - Smart LED lights will allow us to monitor on a light-by-light basis the energy consumption of each of the street lights.\n - Ensure a safe environment for the public through real-time monitoring of street lights with automated fault detection alerts and programmable remote controls. It will manage the brightness of the street lights, and can automatically adjust based on periods of inactivity.",
+  "outcome": [
+    "The LED lights produce significant energy saving compared to the conventional lighting.",
+    "The LEDs are virtually maintenance-free, requiring only minimal monitoring by maintenance staff, producing additional financial and labour savings.",
+    "It will manage the brightness of the street lights, and can automatically adjust based on periods of inactivity.",
+    "The energy savings due to the dimming function accumulate over the full operating period to produce additional energy savings.",
+    "Smart LED lighting has the potential to provide the benefits of traditional lighting whilst reducing operating costs, energy usage and carbon emissions that will help ACC achieve the outcomes of its carbon neutral strategy.",
+    "It also has the potential to provide different lighting textures that caters to different events on a needs basis.",
+    "The Real-time monitoring of street lights with automated fault detection alerts and programmable remote controls will enable quick turnaround times in terms of maintenance."
+  ],
+  "lessons": [
+
+    "Results are still being analysed and will be updated once ready.",
+    "If the trial is a success, the council will consider rolling the lights out in more areas across the City."
+  ],
+  "meta": {
+    "deleteLink": "#",
+    "editLink": "#"
+  }
+}

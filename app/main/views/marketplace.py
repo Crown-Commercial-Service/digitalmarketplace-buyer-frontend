@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import os
 import json
 
 from flask_login import current_user
@@ -428,62 +429,20 @@ def collaborate_create_project_submit():
 @main.route('/collaborate/project/<int:id>')
 def collaborate_view_project(id):
     if feature.is_active('COLLABORATE'):
-        if id != 1:
-            project = DataAPIClient().get_case_study(id)['caseStudy']
+        def _get_fixture_data(id):
+            root = os.path.abspath(
+                os.path.join(os.path.dirname(__file__), "..", '..', '..')
+            )
+            fixture_path = os.path.join(
+                root, 'tests', 'fixtures', 'project_{}_fixture.json'.format(id)
+            )
+            with open(fixture_path) as fixture_file:
+                return json.load(fixture_file)
+        if id < 5:
+            project = _get_fixture_data(id)
         else:
-            project = {
-                "title": "My Whoville",
-                "opportunity": "The My Whoville site and campaign provides a way "
-                               "for whovillians and visitors to find out "
-                               "what’s happening in the CBD in terms of transport "
-                               "changes. Gather requirements and provide "
-                               "a solution to allow people to interact with the maps"
-                               " on the My Whoville site. We had to "
-                               "acheive this while working with a separate digital"
-                               " agency who delivered the main website, "
-                               "campaign material and design direction.",
-                "client": "Whoville City Council",
-                "referee_name": "Joe Bloggs",
-                "referee_contact": "joe.blogs@whoville.gov.au",
-                "service": "Roads and parking",
-                "stage": "Pilot",
-                "timeframe": "January 2016 — June 2016",
-                "approach": "We were not sure exactly what the requirements were at the beginning of the project. "
-                            "we worked with the client as well as other vendors "
-                            "to come to an agreement on scope together. "
-                            "As a result of the requirements, we realised that a "
-                            "bespoke CMS-based map editing tool had to be built. "
-                            "Even with changing requirements we was able to deliver "
-                            "all products. We did this by staying light "
-                            "and agile in our approach to design and development. Due "
-                            "to our multi-disciplinary background and approach,"
-                            " we were able to recommend solutions encompassing UX guidance"
-                            " and development constraints with efficiency of work "
-                            "and confidence in knowledge site. We were required to"
-                            " understand and analyse the first two in order to decide "
-                            "what was most appropriate to fit into the new maps. The "
-                            "final solution required us to develop a CMS that included "
-                            "a map editing tool, an API for both us and the other vendor to "
-                            "interface with the data, and a workflow for publishing "
-                            "CMS changes. Although challenging, we were able to deliver holistic"
-                            " solutions by having front-end developers, back-end "
-                            "developers and the CMS users to all work together to reach a model together.",
-                "outcome": [
-                    "We gathered all requirements for maps including what was to be shown, what data was available.",
-                    "We recommended solutions encompassing UX guidance and development constraints "
-                    "with efficiency of work and confidence in knowledge.",
-                    "We developed a CMS that included a map editing tool, an API for both us "
-                    "and the other vendor to interface "
-                    "with the data, and a workflow for publishing CMS changes."
-                ],
-                "projectLinks": [
-                    "http://gov.au/"
-                ],
-                "meta": {
-                    "deleteLink": "#",
-                    "editLink": "#"
-                }
-            }
+            project = DataAPIClient().get_case_study(id)['caseStudy']
+
         rendered_component = render_component('bundles/Collaborate/ProjectViewWidget.js', {"project": project})
         return render_template(
             '_react.html',
@@ -492,5 +451,6 @@ def collaborate_view_project(id):
                 {'link': url_for('main.collaborate'), 'label': 'Collaborate'},
                 {'label': project['title']}
             ],
-            component=rendered_component
+            component=rendered_component,
+            main_class='collapse'
         )

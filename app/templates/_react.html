@@ -23,6 +23,7 @@
 {% endblock %}
 
 {% block content %}
+  <a id="content"></a>
     <div id="react-bundle-{{component.get_slug()}}-state" style="display:none;">{{component.get_props()|tojson|forceescape}}</div>
     <div id="react-bundle-{{component.get_slug()}}">{{component|safe}}</div>
     <noscript><img src="/nojs" alt=""/></noscript>

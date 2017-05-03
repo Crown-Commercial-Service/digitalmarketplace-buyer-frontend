@@ -1,0 +1,22 @@
+{
+  "id": 1,
+  "title": "Automated underground waste collection",
+  "client": "Sunshine Coast Council",
+  "contact_name": "Michael Whereat",
+  "contact_email": "Michael.Whereat@sunshinecoast.qld.gov.au",
+  "partner_links": {"Envac": "http://www.envac.com.au"},
+  "service": "Planning, Smart Cities",
+  "summary": "The Sunshine Coast is unveiling Australia’s first, high-tech, automated waste collection system for a CBD, to be installed in the new Maroochydore City Centre",
+  "stage": "In build",
+ "aim": "Rather than using wheelie bins, waste will be transported from commercial buildings and apartments at up to 70kmh through a 6.5km system of underground vacuum pipes located beneath Australia’s newest city centre.",
+  "about": "Sunshine Coast Mayor Mark Jamieson said the waste system would be installed in stages over the coming decade and would make the 53-hectare Maroochydore City Centre one of the cleanest and greenest cities in the country.\n\nThe waste system will cost $21 million, which will be fully recovered from occupants of the CBD over the life of the system.\n\nEach building in the new CBD will include at least three waste inlets – for organic, recyclable and general waste. Waste dropped into each inlet will be stored in a sealed compartment below ground until the vacuum pump is activated at the central waste facility, usually twice each day.\n\nThe vacuum system will then consecutively collect each type of waste, sucking the waste through a system of underground pipes to the central facility, where they will be stored in sealed compactors for collection by council’s contractor",
+  "outcome": [
+    "City workers and residents will never have to walk past rows of wheelie bins or be woken early by noisy garbage trucks in the Maroochydore City Centre.",
+    "Common aspects of waste collection such as odours and vermin will be avoided, and the costs of daily street cleaning will be reduced.",
+    "By building on an undeveloped, greenfield site within an existing urban area, a high-speed fibre optic network can be installed at the same time which will enable us to provide ‘smart’ signage, free Wi-Fi hotspots, real-time transport information, movement sensors and smart lighting."
+  ],
+  "meta": {
+    "deleteLink": "#",
+    "editLink": "#"
+  }
+}
