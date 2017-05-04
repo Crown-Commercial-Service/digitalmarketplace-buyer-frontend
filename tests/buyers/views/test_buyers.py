@@ -283,7 +283,6 @@ class TestCopyBrief(BaseApplicationTest):
             framework_slug="digital-outcomes-and-specialists-2",
             framework_name="Digital Outcomes and Specialists 2"
         )
-
         self.data_api_client.get_brief.return_value = self.brief
 
     def teardown_method(self, method):
@@ -307,6 +306,22 @@ class TestCopyBrief(BaseApplicationTest):
         )
 
         self.data_api_client.copy_brief.assert_called_once_with('1234', 'buyer@email.com')
+
+        assert res.location == (
+            "http://localhost/buyers/frameworks/digital-outcomes-and-specialists-2/requirements/digital-specialists/"
+            "1235/edit/title/title"
+        )
+
+    def test_copy_brief_for_expired_framework_redirects_to_edit_page_for_new_framework(self):
+        self.data_api_client.get_brief.return_value = api_stubs.brief()  # dos1 brief
+
+        new_brief = self.brief  # dos2 brief
+        new_brief["briefs"]["id"] = 1235
+        self.data_api_client.copy_brief.return_value = new_brief
+
+        res = self.client.post(
+            '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/copy'
+        )
 
         assert res.location == (
             "http://localhost/buyers/frameworks/digital-outcomes-and-specialists-2/requirements/digital-specialists/"

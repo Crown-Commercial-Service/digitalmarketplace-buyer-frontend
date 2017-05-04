@@ -130,9 +130,9 @@ def copy_brief(framework_slug, lot_slug, brief_id):
     # Redirect to first question with new (copy of) brief
     return redirect(url_for(
         '.edit_brief_question',
-        framework_slug=framework_slug,
-        lot_slug=lot_slug,
-        brief_id=new_brief['id'],
+        framework_slug=new_brief["frameworkSlug"],
+        lot_slug=new_brief["lotSlug"],
+        brief_id=new_brief["id"],
         section_slug=section.slug,
         question_id=section.questions[0].id
     ))
