@@ -59,7 +59,7 @@
         "Name",
         "Created",
         "Unanswered questions",
-        summary.hidden_field_heading("Copy requirements")
+        summary.hidden_field_heading("Make a copy")
     ],
     field_headings_visible=True
 ) %}
@@ -78,7 +78,7 @@
         {% else %}
             {{ summary.text() }}
         {% endif %}
-        {{ summary.button(text="Copy requirement", action=url_for(".copy_brief", framework_slug=item.frameworkSlug, lot_slug=item.lot, brief_id=item.id)) }}
+        {{ summary.button(text="Make a copy", action=url_for(".copy_brief", framework_slug=item.frameworkSlug, lot_slug=item.lot, brief_id=item.id)) }}
     {% endcall %}
 {% endcall %}
 
@@ -91,7 +91,7 @@
         "Name",
         "Published",
         "Closing",
-        summary.hidden_field_heading("Copy requirements")
+        summary.hidden_field_heading("Make a copy")
     ],
     field_headings_visible=True
 ) %}
@@ -100,7 +100,7 @@
         {{ summary.service_link(item.title, url_for(".view_brief_overview", framework_slug=item.frameworkSlug, lot_slug=item.lot, brief_id=item.id)) }}
         {{ summary.text(item.publishedAt|dateformat) }}
         {{ summary.text(item.applicationsClosedAt|dateformat) }}
-        {{ summary.button(text="Copy requirement", action=url_for(".copy_brief", framework_slug=item.frameworkSlug, lot_slug=item.lot, brief_id=item.id)) }}
+        {{ summary.button(text="Make a copy", action=url_for(".copy_brief", framework_slug=item.frameworkSlug, lot_slug=item.lot, brief_id=item.id)) }}
     {% endcall %}
 {% endcall %}
         
@@ -113,7 +113,7 @@
         "Name",
         "Closed",
         "Responses",
-        summary.hidden_field_heading("Copy requirements")
+        summary.hidden_field_heading("Make a copy")
     ],
     field_headings_visible=True
 ) %}
@@ -122,7 +122,7 @@
         {{ summary.service_link(item.title, url_for(".view_brief_overview", framework_slug=item.frameworkSlug, lot_slug=item.lot, brief_id=item.id)) }}
         {{ summary.text(item.applicationsClosedAt|dateformat) }}
         {{ summary.link("View responses", url_for(".view_brief_responses", framework_slug=item.frameworkSlug, lot_slug=item.lot, brief_id=item.id)) }}
-        {{ summary.button(text="Copy requirement", action=url_for(".copy_brief", framework_slug=item.frameworkSlug, lot_slug=item.lot, brief_id=item.id)) }}
+        {{ summary.button(text="Make a copy", action=url_for(".copy_brief", framework_slug=item.frameworkSlug, lot_slug=item.lot, brief_id=item.id)) }}
     {% endcall %}
 {% endcall %}
 {% endblock %}
