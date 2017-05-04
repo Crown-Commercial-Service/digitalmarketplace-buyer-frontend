@@ -167,7 +167,7 @@ class Live(Config):
         'DOMAINS_SEARCH': True,
         'SEARCH': True,
         'TEAM_VIEW': True,
-        'COLLABORATE': False
+        'COLLABORATE': True,
     }
 
     REACT_BUNDLE_URL = 'https://dm-frontend.apps.platform.digital.gov.au/bundle/'

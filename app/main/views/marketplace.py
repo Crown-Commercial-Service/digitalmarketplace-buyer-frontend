@@ -344,7 +344,6 @@ def collaborate_create_project():
                 'csrf_token': form.csrf_token.current_token
             },
             'project': {
-
             },
             'basename': basename
         }
@@ -368,14 +367,12 @@ def collaborate_create_project():
 @main.route('/collaborate/project/new', methods=['POST'])
 def collaborate_create_project_submit():
     if feature.is_active('COLLABORATE'):
-        casestudy = from_response(request)
-        casestudy['supplierCode'] = 0
-        casestudy['collaborateProject'] = True
+        project = from_response(request)
 
-        fields = ['opportunity', 'title', 'client', 'timeframe', 'outcome', 'approach', 'stage', 'service']
+        fields = ['title', 'client', 'stage']
 
         basename = url_for('.collaborate_create_project')
-        errors = validate_form_data(casestudy, fields)
+        errors = validate_form_data(project, fields)
         if errors:
             form = DmForm()
             rendered_component = render_component('bundles/Collaborate/ProjectFormWidget.js', {
@@ -383,7 +380,7 @@ def collaborate_create_project_submit():
                     'csrf_token': form.csrf_token.current_token,
                     'errors': errors
                 },
-                'projectForm': casestudy,
+                'projectForm': project,
                 'basename': basename
             })
 
@@ -398,11 +395,19 @@ def collaborate_create_project_submit():
             )
 
         try:
-            case_study = DataAPIClient().create_case_study(
-                caseStudy=casestudy
-            )['caseStudy']
+            project = data_api_client.req.projects().post(data={'project': project})['project']
 
-            return redirect(url_for('.collaborate_view_project', id=case_study['id']))
+            rendered_component = render_component('bundles/Collaborate/ProjectSubmitConfirmationWidget.js', {})
+
+            return render_template(
+                '_react.html',
+                breadcrumb_items=[
+                    {'link': url_for('main.index'), 'label': 'Home'},
+                    {'link': url_for('main.collaborate'), 'label': 'Collaborate'},
+                    {'label': 'Add project'}
+                ],
+                component=rendered_component
+            )
 
         except APIError as e:
             form = DmForm()
@@ -411,7 +416,7 @@ def collaborate_create_project_submit():
                 'form_options': {
                     'csrf_token': form.csrf_token.current_token
                 },
-                'projectForm': casestudy,
+                'projectForm': project,
                 'basename': basename
             })
 
@@ -429,21 +434,10 @@ def collaborate_create_project_submit():
 @main.route('/collaborate/project/<int:id>')
 def collaborate_view_project(id):
     if feature.is_active('COLLABORATE'):
-        def _get_fixture_data(id):
-            root = os.path.abspath(
-                os.path.join(os.path.dirname(__file__), "..", '..', '..')
-            )
-            fixture_path = os.path.join(
-                root, 'tests', 'fixtures', 'project_{}_fixture.json'.format(id)
-            )
-            with open(fixture_path) as fixture_file:
-                return json.load(fixture_file)
-        if id < 5:
-            project = _get_fixture_data(id)
-        else:
-            project = DataAPIClient().get_case_study(id)['caseStudy']
-
-        rendered_component = render_component('bundles/Collaborate/ProjectViewWidget.js', {"project": project})
+        project = data_api_client.req.projects(id).get()['project']
+        if project.get('status', '') != 'published':
+            abort(404)
+        rendered_component = render_component('bundles/Collaborate/ProjectViewWidget.js', {'project': project})
         return render_template(
             '_react.html',
             breadcrumb_items=[
