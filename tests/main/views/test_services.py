@@ -305,6 +305,21 @@ class TestServicePage(BaseApplicationTest):
 
         assert res.status_code == 404
 
+    def test_service_not_a_g_cloud_service_causes_404(self):
+        self.service = self._get_g6_service_fixture_data()
+        self.service['services']['frameworkSlug'] = 'digital-outcomes-and-specialists'
+        data_api_client.get_service.return_value = self.service
+        data_api_client.get_framework.return_value = self._get_framework_fixture_data(
+            'digital-outcomes-and-specialists'
+        )
+
+        service_id = self.service['services']['id']
+        # This is the "Display service" page, generally for G-Cloud services, but in this case it now has a valid
+        # digital-outcomes-and-specialists service ID.
+        res = self.client.get('/g-cloud/services/{}'.format(service_id))
+
+        assert res.status_code == 404
+
     def test_certifications_section_not_displayed_if_service_has_none(self):
         self.service = self._get_g6_service_fixture_data()
         self.service['services']['vendorCertifications'] = []
