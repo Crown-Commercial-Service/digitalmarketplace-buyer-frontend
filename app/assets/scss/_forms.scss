@@ -23,7 +23,16 @@
     }
   }
 }
-
+.link-entry {
+  label {
+    display: inline-block;
+    min-width: 60px;
+  }
+  input {
+    display: inline-block;
+    width: 85%;
+  }
+}
 .content-main {
 
   .list-entry {
