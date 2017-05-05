@@ -61,7 +61,7 @@ main {
           @include span-columns(12 of 12);
         }
         @include media($desktop) {
-          @include span-columns(12 of 16);
+          @include span-columns(16 of 16);
         }
       }
 
