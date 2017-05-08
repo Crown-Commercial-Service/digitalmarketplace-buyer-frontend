@@ -17,6 +17,7 @@ from flask_weasyprint import HTML, render_pdf
 def _create_work_order_from_brief(brief, seller):
     contacts = seller.get('contacts')
     contact = contacts[0] if contacts else {}
+    son = 'frameworkFramework' in brief and brief['frameworkFramework'] == 'dm' and 'SON3413842' or 'SON3364729'
 
     mapping = {
         'summary': 'deliverables',
@@ -26,7 +27,7 @@ def _create_work_order_from_brief(brief, seller):
     }
 
     data = {
-        'son': 'SON3364729',
+        'son': son,
         'seller': {
             'abn': seller.get('abn', ''),
             'name': seller.get('name', ''),

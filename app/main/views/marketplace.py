@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from datetime import datetime
-import flask_featureflags as feature
+import os
 import json
 
 from flask_login import current_user
-from flask import abort, current_app, config, make_response, redirect, render_template, request, url_for, jsonify
+from flask import abort, current_app, config, make_response, redirect, \
+    render_template, request, session, url_for, jsonify, flash
+import flask_featureflags as feature
 
-from dmapiclient import APIError
-from dmcontent.content_loader import ContentNotFoundError
-from dmutils.forms import render_template_with_csrf
+from dmutils.forms import DmForm, render_template_with_csrf
+from react.response import from_response, validate_form_data
+from react.render import render_component
 from app.main.utils import get_page_list
 
 from app import data_api_client, content_loader
@@ -20,6 +21,8 @@ from app.helpers.terms_helpers import check_terms_acceptance, get_current_terms_
 from ..forms.brief_forms import BriefSearchForm
 
 from flask_weasyprint import HTML, render_pdf
+from app.api_client.data import DataAPIClient
+from app.api_client.error import APIError
 
 
 @main.route('/')
@@ -315,3 +318,133 @@ def list_opportunities(framework_slug):
         # Buyers can create new briefs and want to see their updates more quickly.
         response.cache_control.max_age = min(300, current_app.config['DM_DEFAULT_CACHE_MAX_AGE'])
     return response
+
+
+@main.route('/collaborate')
+def collaborate():
+    if feature.is_active('COLLABORATE'):
+        rendered_component = render_component('bundles/Collaborate/CollaborateLandingWidget.js', {})
+        return render_template(
+            '_react.html',
+            breadcrumb_items=[
+                {'link': url_for('main.index'), 'label': 'Home'},
+                {'label': 'Collaborate'}
+            ],
+            component=rendered_component
+        )
+
+
+@main.route('/collaborate/project/new')
+def collaborate_create_project():
+    if feature.is_active('COLLABORATE'):
+        form = DmForm()
+        basename = url_for('.collaborate_create_project')
+        props = {
+            'form_options': {
+                'csrf_token': form.csrf_token.current_token
+            },
+            'project': {
+            },
+            'basename': basename
+        }
+
+        if 'project' in session:
+            props['projectForm'] = session['project']
+
+        rendered_component = render_component('bundles/Collaborate/ProjectFormWidget.js', props)
+
+        return render_template(
+            '_react.html',
+            breadcrumb_items=[
+                {'link': url_for('main.index'), 'label': 'Home'},
+                {'link': url_for('main.collaborate'), 'label': 'Collaborate'},
+                {'label': 'Add project'}
+            ],
+            component=rendered_component
+        )
+
+
+@main.route('/collaborate/project/new', methods=['POST'])
+def collaborate_create_project_submit():
+    if feature.is_active('COLLABORATE'):
+        project = from_response(request)
+
+        fields = ['title', 'client', 'stage']
+
+        basename = url_for('.collaborate_create_project')
+        errors = validate_form_data(project, fields)
+        if errors:
+            form = DmForm()
+            rendered_component = render_component('bundles/Collaborate/ProjectFormWidget.js', {
+                'form_options': {
+                    'csrf_token': form.csrf_token.current_token,
+                    'errors': errors
+                },
+                'projectForm': project,
+                'basename': basename
+            })
+
+            return render_template(
+                '_react.html',
+                breadcrumb_items=[
+                    {'link': url_for('main.index'), 'label': 'Home'},
+                    {'link': url_for('main.collaborate'), 'label': 'Collaborate'},
+                    {'label': 'Add project'}
+                ],
+                component=rendered_component
+            )
+
+        try:
+            project = data_api_client.req.projects().post(data={'project': project})['project']
+
+            rendered_component = render_component('bundles/Collaborate/ProjectSubmitConfirmationWidget.js', {})
+
+            return render_template(
+                '_react.html',
+                breadcrumb_items=[
+                    {'link': url_for('main.index'), 'label': 'Home'},
+                    {'link': url_for('main.collaborate'), 'label': 'Collaborate'},
+                    {'label': 'Add project'}
+                ],
+                component=rendered_component
+            )
+
+        except APIError as e:
+            form = DmForm()
+            flash('', 'error')
+            rendered_component = render_component('bundles/Collaborate/ProjectFormWidget.js', {
+                'form_options': {
+                    'csrf_token': form.csrf_token.current_token
+                },
+                'projectForm': project,
+                'basename': basename
+            })
+
+            return render_template(
+                '_react.html',
+                breadcrumb_items=[
+                    {'link': url_for('main.index'), 'label': 'Home'},
+                    {'link': url_for('main.collaborate'), 'label': 'Collaborate'},
+                    {'label': 'Add project'}
+                ],
+                component=rendered_component
+            )
+
+
+@main.route('/collaborate/project/<int:id>')
+def collaborate_view_project(id):
+    if feature.is_active('COLLABORATE'):
+        project = data_api_client.req.projects(id).get()['project']
+        if project.get('status', '') != 'published':
+            abort(404)
+        rendered_component = render_component('bundles/Collaborate/ProjectViewWidget.js', {'project': project})
+        return render_template(
+            '_react.html',
+            breadcrumb_items=[
+                {'link': url_for('main.index'), 'label': 'Home'},
+                {'link': url_for('main.collaborate'), 'label': 'Collaborate'},
+                {'label': project['title']}
+            ],
+            component=rendered_component,
+            main_class='collapse'
+        )

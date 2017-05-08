@@ -264,7 +264,7 @@ def supplier_search():
             for tag in sorted(tags):
                 services[tag] = True
             seller_type = details.get('seller_type', {})
-            seller_type.update({'recruitment': details['is_recruiter'] == 't'})
+            seller_type.update({'recruitment': details['is_recruiter'] == 'true'})
             result = {
                 'title': details['name'],
                 'description': details['summary'],
@@ -306,7 +306,7 @@ def supplier_search():
         supplier = {}
         supplier['name'] = details['supplier'].get('name')
 
-        supplier['profile_url'] = details['links'].get('supplier')
+        supplier['profile_url'] = '/supplier/%s' % details['supplier']['code']
         supplier['support_url'] = details.get('support')
 
         tags = domains['assessed'] + domains['unassessed']
@@ -340,7 +340,7 @@ def supplier_search():
 
             supplier = {}
             supplier['name'] = details['supplier']['name']
-            supplier['profile_url'] = details['links'].get('supplier').replace('suppliers', 'supplier')
+            supplier['profile_url'] = '/supplier/%s' % details['supplier']['code']
 
             tags = domains['assessed'] + domains['unassessed']
 

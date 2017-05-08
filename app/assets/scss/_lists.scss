@@ -106,7 +106,14 @@
 
     }
   }
-
+  .list-vertical--thirds {
+    > li {
+      @include media($tablet) {
+        flex-basis: 33%;
+        width: 33%;
+      }
+    }
+  }
   .sub {
 
     li {
