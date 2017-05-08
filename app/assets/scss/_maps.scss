@@ -2,8 +2,13 @@
 .leaflet-container {
   height: 400px;
   width: 100%;
+  @include media($mobile) {
+    height: 250px;
+  }
+  @include media($tablet) {
+    height: 350px;
+  }
 }
-
 .leaflet-pane,
 .leaflet-tile,
 .leaflet-marker-icon,
@@ -276,7 +281,7 @@
   display: block;
   text-align: center;
   text-decoration: none;
-  color: black;
+  color: #224a61;
 }
 .leaflet-bar a,
 .leaflet-control-layers-toggle {
