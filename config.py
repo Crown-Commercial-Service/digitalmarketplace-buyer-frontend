@@ -85,7 +85,8 @@ class Config(object):
         'NEW_SELLER_PROFILE': True,
         'DM_FRAMEWORK': True,
         'SEARCH': True,
-        'TEAM_VIEW': True
+        'TEAM_VIEW': True,
+        'COLLABORATE': True
     }
 
     # LOGGING
@@ -165,7 +166,8 @@ class Live(Config):
         'DM_FRAMEWORK': True,
         'DOMAINS_SEARCH': True,
         'SEARCH': True,
-        'TEAM_VIEW': True
+        'TEAM_VIEW': True,
+        'COLLABORATE': True,
     }
 
     REACT_BUNDLE_URL = 'https://dm-frontend.apps.platform.digital.gov.au/bundle/'

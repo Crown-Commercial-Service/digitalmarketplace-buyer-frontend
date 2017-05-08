@@ -22,7 +22,7 @@ from app.helpers.buyers_helpers import (
     all_essentials_are_true, counts_for_failed_and_eligible_brief_responses,
     get_framework_and_lot, get_sorted_responses_for_brief, count_unanswered_questions,
     brief_can_be_edited, add_unanswered_counts_to_briefs, is_brief_correct,
-    section_has_at_least_one_required_question
+    section_has_at_least_one_required_question, allowed_email_domain
 )
 from dmutils.forms import render_template_with_csrf
 from dmutils.logging import notify_team
@@ -33,25 +33,55 @@ from react.render import render_component
 
 
 @buyers.route('/buyers')
-def buyer_dashboard():
-    def get_teamname():
-        email_domain = current_user.email_address.split('@')[-1]
-        teammembers_response = data_api_client.req.teammembers(email_domain).get()
-        teammembers = list(sorted(teammembers_response['teammembers'], key=lambda tm: tm['name']))
-        return teammembers_response['teamname']
+@buyers.route('/buyers/<view>')
+def buyer_dashboard(view=None):
+    current_user_name = current_user.name
+    email_domain = current_user.email_address.split('@')[-1]
+    teammembers_response = data_api_client.req.teammembers(email_domain).get()
+    teamname = teammembers_response['teamname']
+    teammembers = list(sorted(teammembers_response['teammembers'], key=lambda tm: tm['name']))
+
+    team_briefs = data_api_client.req.briefs().teammembers(email_domain).get()
+
+    team_draft_briefs = add_unanswered_counts_to_briefs(
+        [brief for brief in team_briefs if brief['status'] == 'draft'], content_loader)
+    live_draft_briefs = [brief for brief in team_briefs if brief['status'] == 'live']
+    team_closed_briefs = [brief for brief in team_briefs if brief['status'] == 'closed']
 
     user_briefs = data_api_client.find_briefs(current_user.id).get('briefs', [])
-    draft_briefs = add_unanswered_counts_to_briefs([brief for brief in user_briefs if brief['status'] == 'draft'],
-                                                   content_loader)
+    draft_briefs = add_unanswered_counts_to_briefs(
+        [brief for brief in user_briefs if brief['status'] == 'draft'], content_loader)
     live_briefs = [brief for brief in user_briefs if brief['status'] == 'live']
     closed_briefs = [brief for brief in user_briefs if brief['status'] == 'closed']
 
+    props = {
+        "team": {
+            "currentUserName": current_user_name,
+            "teamName": teamname,
+            "members": teammembers,
+            "teamBriefs": {
+                "all": team_briefs,
+                "draft": team_draft_briefs,
+                "live": live_draft_briefs,
+                "closed": team_closed_briefs
+            },
+            "briefs": {
+                "all": user_briefs,
+                "draft": draft_briefs,
+                "live": live_briefs,
+                "closed": closed_briefs
+            }
+        }
+    }
+
+    rendered_component = render_component(
+        'bundles/BuyerDashboard/BuyerDashboardWidget.js',
+        props
+    )
+
     return render_template(
-        'buyers/dashboard-briefs.html',
-        draft_briefs=draft_briefs,
-        live_briefs=live_briefs,
-        closed_briefs=closed_briefs,
-        teamname=get_teamname()
+        '_react.html',
+        component=rendered_component,
     )
 
 
@@ -154,7 +184,9 @@ def view_brief_overview(framework_slug, lot_slug, brief_id):
         framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
     brief = data_api_client.get_brief(brief_id)["briefs"]
 
-    if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id):
+    if not is_brief_correct(
+            brief, framework_slug, lot_slug, current_user.id
+    ) and not allowed_email_domain(current_user.id, brief, data_api_client):
         abort(404)
 
     content = content_loader.get_manifest(brief['frameworkSlug'], 'edit_brief').filter({'lot': brief['lotSlug']})
@@ -191,7 +223,11 @@ def view_brief_section_summary(framework_slug, lot_slug, brief_id, section_slug)
     get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
     brief = data_api_client.get_brief(brief_id)["briefs"]
 
-    if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id) or not brief_can_be_edited(brief):
+    if not is_brief_correct(
+            brief, framework_slug, lot_slug, current_user.id
+    ) and not allowed_email_domain(
+        current_user.id, brief, data_api_client
+    ) or not brief_can_be_edited(brief):
         abort(404)
 
     content = content_loader.get_manifest(brief['frameworkSlug'], 'edit_brief').filter({'lot': brief['lotSlug']})
@@ -212,10 +248,15 @@ def view_brief_section_summary(framework_slug, lot_slug, brief_id, section_slug)
     '/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/edit/<section_slug>/<question_id>',
     methods=['GET'])
 def edit_brief_question(framework_slug, lot_slug, brief_id, section_slug, question_id):
+
     get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
     brief = data_api_client.get_brief(brief_id)["briefs"]
 
-    if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id) or not brief_can_be_edited(brief):
+    if not is_brief_correct(
+            brief, framework_slug, lot_slug, current_user.id
+    ) and not allowed_email_domain(
+        current_user.id, brief, data_api_client
+    ) or not brief_can_be_edited(brief):
         abort(404)
 
     content = content_loader.get_manifest(brief['frameworkSlug'], 'edit_brief').filter(
@@ -244,7 +285,11 @@ def update_brief_submission(framework_slug, lot_slug, brief_id, section_id, ques
     get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
     brief = data_api_client.get_brief(brief_id)["briefs"]
 
-    if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id) or not brief_can_be_edited(brief):
+    if not is_brief_correct(
+            brief, framework_slug, lot_slug, current_user.id
+    ) and not allowed_email_domain(
+        current_user.id, brief, data_api_client
+    ) or not brief_can_be_edited(brief):
         abort(404)
 
     content = content_loader.get_manifest(brief['frameworkSlug'], 'edit_brief').filter({'lot': brief['lotSlug']})
@@ -324,7 +369,9 @@ def view_brief_responses(framework_slug, lot_slug, brief_id):
     get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
     brief = data_api_client.get_brief(brief_id)["briefs"]
 
-    if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id):
+    if not is_brief_correct(
+            brief, framework_slug, lot_slug, current_user.id
+    ) and not allowed_email_domain(current_user.id, brief, data_api_client):
         abort(404)
 
     failed_count, eligible_count = counts_for_failed_and_eligible_brief_responses(brief["id"], data_api_client)
@@ -386,7 +433,9 @@ def download_brief_response_attachment(framework_slug, lot_slug, brief_id, respo
     get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
     brief = data_api_client.get_brief(brief_id)["briefs"]
 
-    if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id):
+    if not is_brief_correct(
+            brief, framework_slug, lot_slug, current_user.id
+    ) and not allowed_email_domain(current_user.id, brief, data_api_client):
         abort(404)
 
     if brief['status'] != "closed":
@@ -409,7 +458,9 @@ def download_brief_responses(framework_slug, lot_slug, brief_id):
     get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
     brief = data_api_client.get_brief(brief_id)["briefs"]
 
-    if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id):
+    if not is_brief_correct(
+            brief, framework_slug, lot_slug, current_user.id
+    ) and not allowed_email_domain(current_user.id, brief, data_api_client):
         abort(404)
 
     if brief['status'] != "closed":
@@ -444,7 +495,9 @@ def download_brief_responses_xlsx(framework_slug, lot_slug, brief_id):
     get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
     brief = data_api_client.get_brief(brief_id)["briefs"]
 
-    if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id):
+    if not is_brief_correct(
+            brief, framework_slug, lot_slug, current_user.id
+    ) and not allowed_email_domain(current_user.id, brief, data_api_client):
         abort(404)
 
     if brief['status'] != "closed":
@@ -495,7 +548,11 @@ def publish_brief(framework_slug, lot_slug, brief_id):
     get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
     brief = data_api_client.get_brief(brief_id)["briefs"]
 
-    if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id) or not brief_can_be_edited(brief):
+    if not is_brief_correct(
+            brief, framework_slug, lot_slug, current_user.id
+    ) and not allowed_email_domain(
+        current_user.id, brief, data_api_client
+    ) or not brief_can_be_edited(brief):
         abort(404)
 
     content = content_loader.get_manifest(brief['frameworkSlug'], 'edit_brief').filter({'lot': brief['lotSlug']})
@@ -557,7 +614,11 @@ def view_brief_timeline(framework_slug, lot_slug, brief_id):
 
     get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
     brief = data_api_client.get_brief(brief_id)["briefs"]
-    if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id) or brief.get('status') != 'live':
+    if not is_brief_correct(
+            brief, framework_slug, lot_slug, current_user.id
+    ) and not allowed_email_domain(
+        current_user.id, brief, data_api_client
+    ) or brief.get('status') != 'live':
         abort(404)
 
     return render_template(
@@ -574,7 +635,11 @@ def delete_a_brief(framework_slug, lot_slug, brief_id):
     get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
     brief = data_api_client.get_brief(brief_id)["briefs"]
 
-    if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id) or not brief_can_be_edited(brief):
+    if not is_brief_correct(
+            brief, framework_slug, lot_slug, current_user.id
+    ) and not allowed_email_domain(
+        current_user.id, brief, data_api_client
+    ) or not brief_can_be_edited(brief):
         abort(404)
 
     data_api_client.delete_brief(brief_id, current_user.email_address)
@@ -589,7 +654,9 @@ def supplier_questions(framework_slug, lot_slug, brief_id):
     get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
     brief = data_api_client.get_brief(brief_id)["briefs"]
 
-    if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id):
+    if not is_brief_correct(
+            brief, framework_slug, lot_slug, current_user.id
+    ) and not allowed_email_domain(current_user.id, brief, data_api_client):
         abort(404)
 
     if brief["status"] != "live":
@@ -613,7 +680,9 @@ def add_supplier_question(framework_slug, lot_slug, brief_id):
     get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
     brief = data_api_client.get_brief(brief_id)["briefs"]
 
-    if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id):
+    if not is_brief_correct(
+            brief, framework_slug, lot_slug, current_user.id
+    ) and not allowed_email_domain(current_user.id, brief, data_api_client):
         abort(404)
 
     if brief["status"] != "live":
