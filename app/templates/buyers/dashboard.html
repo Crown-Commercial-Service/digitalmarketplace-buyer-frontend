@@ -56,9 +56,10 @@
     caption="Unpublished requirements caption",
     empty_message="You don’t have any unpublished requirements",
     field_headings=[
-    "Brief name",
-    "Created",
-    "Unanswered questions",
+        "Name",
+        "Created",
+        "Unanswered questions",
+        summary.hidden_field_heading("Make a copy")
     ],
     field_headings_visible=True
 ) %}
@@ -77,7 +78,7 @@
         {% else %}
             {{ summary.text() }}
         {% endif %}
-        
+        {{ summary.button(text="Make a copy", action=url_for(".copy_brief", framework_slug=item.frameworkSlug, lot_slug=item.lot, brief_id=item.id)) }}
     {% endcall %}
 {% endcall %}
 
@@ -87,9 +88,10 @@
     caption="Published requirements caption",
     empty_message="You don’t have any published requirements",
     field_headings=[
-    "Brief name",
-    "Published",
-    "Closing",
+        "Name",
+        "Published",
+        "Closing",
+        summary.hidden_field_heading("Make a copy")
     ],
     field_headings_visible=True
 ) %}
@@ -98,6 +100,7 @@
         {{ summary.service_link(item.title, url_for(".view_brief_overview", framework_slug=item.frameworkSlug, lot_slug=item.lot, brief_id=item.id)) }}
         {{ summary.text(item.publishedAt|dateformat) }}
         {{ summary.text(item.applicationsClosedAt|dateformat) }}
+        {{ summary.button(text="Make a copy", action=url_for(".copy_brief", framework_slug=item.frameworkSlug, lot_slug=item.lot, brief_id=item.id)) }}
     {% endcall %}
 {% endcall %}
         
@@ -107,9 +110,10 @@
     caption="Closed requirements caption",
     empty_message="You don’t have any requirements that are closed",
     field_headings=[
-    "Brief name",
-    "Closed",
-    "Responses",
+        "Name",
+        "Closed",
+        "Responses",
+        summary.hidden_field_heading("Make a copy")
     ],
     field_headings_visible=True
 ) %}
@@ -118,6 +122,7 @@
         {{ summary.service_link(item.title, url_for(".view_brief_overview", framework_slug=item.frameworkSlug, lot_slug=item.lot, brief_id=item.id)) }}
         {{ summary.text(item.applicationsClosedAt|dateformat) }}
         {{ summary.link("View responses", url_for(".view_brief_responses", framework_slug=item.frameworkSlug, lot_slug=item.lot, brief_id=item.id)) }}
+        {{ summary.button(text="Make a copy", action=url_for(".copy_brief", framework_slug=item.frameworkSlug, lot_slug=item.lot, brief_id=item.id)) }}
     {% endcall %}
 {% endcall %}
 {% endblock %}

@@ -271,6 +271,76 @@ class TestCreateNewBrief(BaseApplicationTest):
         )
 
 
+class TestCopyBrief(BaseApplicationTest):
+
+    def setup_method(self, method):
+        super(TestCopyBrief, self).setup_method(method)
+        self.login_as_buyer()
+        self.data_api_client_patch = mock.patch('app.buyers.views.buyers.data_api_client', autospec=True)
+        self.data_api_client = self.data_api_client_patch.start()
+
+        self.brief = api_stubs.brief(
+            framework_slug="digital-outcomes-and-specialists-2",
+            framework_name="Digital Outcomes and Specialists 2"
+        )
+        self.data_api_client.get_brief.return_value = self.brief
+
+    def teardown_method(self, method):
+        self.data_api_client_patch.stop()
+        super(TestCopyBrief, self).teardown_method(method)
+
+    def test_get_not_allowed(self):
+        res = self.client.get(
+            '/buyers/frameworks/digital-outcomes-and-specialists-2/requirements/digital-specialists/1234/copy'
+        )
+
+        assert res.status_code == 404
+
+    def test_copy_brief_and_redirect_to_copied_brief_edit_title_page(self):
+        new_brief = self.brief
+        new_brief["briefs"]["id"] = 1235
+        self.data_api_client.copy_brief.return_value = new_brief
+
+        res = self.client.post(
+            '/buyers/frameworks/digital-outcomes-and-specialists-2/requirements/digital-specialists/1234/copy'
+        )
+
+        self.data_api_client.copy_brief.assert_called_once_with('1234', 'buyer@email.com')
+
+        assert res.location == (
+            "http://localhost/buyers/frameworks/digital-outcomes-and-specialists-2/requirements/digital-specialists/"
+            "1235/edit/title/title"
+        )
+
+    def test_copy_brief_for_expired_framework_redirects_to_edit_page_for_new_framework(self):
+        self.data_api_client.get_brief.return_value = api_stubs.brief()  # dos1 brief
+
+        new_brief = self.brief  # dos2 brief
+        new_brief["briefs"]["id"] = 1235
+        self.data_api_client.copy_brief.return_value = new_brief
+
+        res = self.client.post(
+            '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/copy'
+        )
+
+        assert res.location == (
+            "http://localhost/buyers/frameworks/digital-outcomes-and-specialists-2/requirements/digital-specialists/"
+            "1235/edit/title/title"
+        )
+
+    @mock.patch("app.buyers.views.buyers.is_brief_correct", autospec=True)
+    def test_404_if_brief_is_not_correct(self, is_brief_correct):
+        is_brief_correct.return_value = False
+
+        res = self.client.post(
+            '/buyers/frameworks/digital-outcomes-and-specialists-2/requirements/digital-specialists/1234/copy'
+        )
+
+        assert res.status_code == 404
+        is_brief_correct.assert_called_once_with(
+            self.brief["briefs"], "digital-outcomes-and-specialists-2", "digital-specialists", 123)
+
+
 class TestEveryDamnPage(BaseApplicationTest):
     def _load_page(self, url, status_code, method='get', data=None, framework_status='live', brief_status='draft'):
         data = {} if data is None else data
