@@ -46,7 +46,7 @@ def filters_for_question(question):
     question_filters = []
     if question['type'] == 'boolean':
         question_filters.append({
-            'label': question['question'],
+            'label': question.get('filter_label') or question.get('name') or question['question'],
             'name': question['id'],
             'id': question['id'],
             'value': 'true',
@@ -60,20 +60,21 @@ def filters_for_question(question):
 
 def _recursive_add_option_filters(question, options_list, filters_list):
     for option in options_list:
-        value = get_filter_value_from_question_option(option)
-        presented_filter = {
-            'label': option['label'],
-            'name': question['id'],
-            'id': '{}-{}'.format(
-                question['id'],
-                value.replace(' ', '-')),
-            'value': value,
-        }
-        if option.get('options'):
-            presented_filter['children'] = []
-            _recursive_add_option_filters(question, option.get('options', []), presented_filter['children'])
+        if not option.get('filter_ignore'):
+            value = get_filter_value_from_question_option(option)
+            presented_filter = {
+                'label': option.get('filter_label') or option['label'],
+                'name': question['id'],
+                'id': '{}-{}'.format(
+                    question['id'],
+                    value.replace(' ', '-')),
+                'value': value,
+            }
+            if option.get('options'):
+                presented_filter['children'] = []
+                _recursive_add_option_filters(question, option.get('options', []), presented_filter['children'])
 
-        filters_list.append(presented_filter)
+            filters_list.append(presented_filter)
 
 
 def set_filter_states(filter_groups, request):
