@@ -85,3 +85,22 @@
   filtersPreposition:
   filterRules:
   conjunction: and
+-
+  id: User support
+  labelPreposition: with
+  filtersPreposition:
+  filterRules:
+  conjunction: and
+-
+  id: Government security clearances
+  labelPreposition: where
+  filtersPreposition: the supplier's staff will undergo
+  filterRules:
+  conjunction: and
+-
+  id: Security certification
+  labelPreposition: covering the service includes
+  label:
+  filtersPreposition:
+  filterRules:
+  conjunction: and
