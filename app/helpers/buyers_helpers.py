@@ -93,3 +93,14 @@ def get_sorted_responses_for_brief(brief, data_api_client):
         )
     else:
         return brief_responses
+
+
+def allowed_email_domain(current_user_id, brief, data_api_client=None):
+    if not all([current_user_id, brief, data_api_client]):
+        return False
+    if not brief.get('users') or brief.get('users')[0] is None:
+        return False
+    current_user = data_api_client.get_user(current_user_id).get('users')
+    email_domain = current_user.get('email_address').split('@')[-1]
+    brief_user_email = brief.get('users')[0].get('emailAddress').split('@')[-1]
+    return email_domain == brief_user_email
