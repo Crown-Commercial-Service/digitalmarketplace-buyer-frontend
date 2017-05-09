@@ -177,7 +177,7 @@ describe("GOVUK.Analytics", function () {
     });
   });
 
-  describe("Virtual Page Views", function () {
+  describe("Virtual Page DashboardBriefs", function () {
     var $analyticsString;
 
     afterEach(function () {
