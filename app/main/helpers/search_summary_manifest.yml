@@ -85,6 +85,28 @@
   filtersPreposition:
   filterRules:
   conjunction: and
+
+
+-
+  id: Supplier type
+  labelPreposition: of type
+  conjunction: or
+-
+  id: Staff security clearance
+  labelPreposition:
+  filtersPreposition: with
+  conjunction: or
+  filterRules:
+  -
+    preposition: staff security clearance that
+    id: Conforms to BS7858:2012
+  -
+    preposition: staff having
+    id: Other security clearance
+-
+  id: Pricing options
+  labelPreposition: with a
+
 -
   id: User support
   labelPreposition: with
