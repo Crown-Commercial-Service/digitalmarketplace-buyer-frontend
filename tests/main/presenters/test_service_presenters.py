@@ -1,5 +1,6 @@
-import os
 import json
+import os
+import pytest
 from app.main.presenters.service_presenters import (
     Service, Meta,
     chunk_string
@@ -168,62 +169,71 @@ class TestMeta(object):
     def test_vat_status_is_correct(self):
         # if VAT is not included
         price_caveats = self.meta.get_price_caveats(self.fixture)
-        assert 'Excluding VAT' in price_caveats
+        assert 'Excluding VAT' in [x['text'] for x in price_caveats]
         # if VAT is included
         self.fixture['vatIncluded'] = True
         price_caveats = self.meta.get_price_caveats(self.fixture)
-        assert 'Including VAT' in price_caveats
+        assert 'Including VAT' in [x['text'] for x in price_caveats]
 
     def test_education_pricing_status_is_correct(self):
         # if Education pricing is included
         price_caveats = self.meta.get_price_caveats(self.fixture)
-        assert 'Education pricing available' in price_caveats
+        assert 'Education pricing available' in [x['text'] for x in price_caveats]
         # if Education pricing is excluded
         self.fixture['educationPricing'] = False
         price_caveats = self.meta.get_price_caveats(self.fixture)
-        assert 'Education pricing available' not in price_caveats
+        assert 'Education pricing available' not in [x['text'] for x in price_caveats]
 
     def test_termination_costs_status_is_correct(self):
         # if Termination costs are excluded
         price_caveats = self.meta.get_price_caveats(self.fixture)
-        assert 'Termination costs apply' not in price_caveats
+        assert 'Termination costs apply' not in [x['text'] for x in price_caveats]
         # if Termination costs are included
         self.fixture['terminationCost'] = True
         price_caveats = self.meta.get_price_caveats(self.fixture)
-        assert 'Termination costs apply' in price_caveats
+        assert 'Termination costs apply' in [x['text'] for x in price_caveats]
         # if the question wasn't asked
         del self.fixture['terminationCost']
         price_caveats = self.meta.get_price_caveats(self.fixture)
-        assert 'Termination costs apply' not in price_caveats
+        assert 'Termination costs apply' not in [x['text'] for x in price_caveats]
 
     def test_minimum_contract_status_is_correct(self):
         price_caveats = self.meta.get_price_caveats(self.fixture)
-        assert 'Minimum contract period: Month' in price_caveats
+        assert 'Minimum contract period: Month' in [x['text'] for x in price_caveats]
 
     def test_options_are_correct_if_both_false(self):
         price_caveats = self.meta.get_price_caveats(self.fixture)
-        assert 'Trial and free options available' not in price_caveats
-        assert 'Trial option available' not in price_caveats
-        assert 'Free option available' not in price_caveats
+        assert 'Trial and free options available' not in [x['text'] for x in price_caveats]
+        assert 'Trial option available' not in [x['text'] for x in price_caveats]
+        assert 'Free option available' not in [x['text'] for x in price_caveats]
 
     def test_options_are_correct_if_free_is_false_and_trial_true(self):
         self.fixture['trialOption'] = True
         price_caveats = self.meta.get_price_caveats(self.fixture)
-        assert 'Trial and free options available' not in price_caveats
-        assert 'Free option available' not in price_caveats
-        assert 'Trial option available' in price_caveats
+        assert 'Trial and free options available' not in [x['text'] for x in price_caveats]
+        assert 'Free option available' not in [x['text'] for x in price_caveats]
+        assert 'Trial option available' in [x['text'] for x in price_caveats]
 
     def test_options_are_correct_if_free_is_true_and_trial_false(self):
         self.fixture['freeOption'] = True
         price_caveats = self.meta.get_price_caveats(self.fixture)
-        assert 'Trial and free options available' not in price_caveats
-        assert 'Trial option available' not in price_caveats
-        assert 'Free option available' in price_caveats
+        assert 'Trial and free options available' not in [x['text'] for x in price_caveats]
+        assert 'Trial option available' not in [x['text'] for x in price_caveats]
+        assert 'Free option available' in [x['text'] for x in price_caveats]
 
     def test_options_are_correct_if_both_are_not_set(self):
         del self.fixture['freeOption']
         del self.fixture['trialOption']
         price_caveats = self.meta.get_price_caveats(self.fixture)
-        assert 'Trial and free options available' not in price_caveats
-        assert 'Trial option available' not in price_caveats
-        assert 'Free option available' not in price_caveats
+        assert 'Trial and free options available' not in [x['text'] for x in price_caveats]
+        assert 'Trial option available' not in [x['text'] for x in price_caveats]
+        assert 'Free option available' not in [x['text'] for x in price_caveats]
+
+    def test_caveats_for_free_trial(self):
+        self.fixture['freeVersionTrialOption'] = True
+        self.fixture['freeVersionLink'] = 'https://www.digitalmarketplace.service.gov.uk'
+        price_caveats = self.meta.get_price_caveats(self.fixture)
+
+        free_trial_caveat = list(filter(lambda x: x['text'] == 'Free trial available', price_caveats))
+        assert len(free_trial_caveat) == 1
+        assert free_trial_caveat[0]['link'] == 'https://www.digitalmarketplace.service.gov.uk'

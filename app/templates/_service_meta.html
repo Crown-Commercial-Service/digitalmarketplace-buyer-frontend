@@ -3,7 +3,18 @@
   <p class="price">{{ service.meta.price }}</p>
   <ul class="price-caveats">
   {% for caveat in service.meta.priceCaveats %}
-    <li>{{ caveat }}</li>
+    <li>
+      {% if caveat['link'] %}
+        {% with text = caveat['text'],
+                link = caveat['link'],
+                target = "_blank"
+        %}
+          {% include "toolkit/external-link.html" %}
+        {% endwith %}
+      {% else %}
+        {{ caveat['text'] }}
+      {% endif %}
+    </li>
   {% endfor %}
   </ul>
   <h2 class="visuallyhidden">Service documents</h2>

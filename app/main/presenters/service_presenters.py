@@ -123,6 +123,9 @@ class Meta(object):
         return documents
 
     def get_price_caveats(self, service_data):
+        def make_caveat(text, link=None):
+            return {'text': text, 'link': link} if link else {'text': text}
+
         caveats = []
         main_caveats = [
             {
@@ -143,10 +146,11 @@ class Meta(object):
         ]
 
         if 'minimumContractPeriod' in service_data:
-            caveats.append('Minimum contract period: {}'.format(service_data['minimumContractPeriod']))
+            caveats.append(make_caveat('Minimum contract period: {}'.format(service_data['minimumContractPeriod'])))
 
-        if 'freeVersionTrialOption' in service_data:
-            options = 'Free trial option available'
+        if service_data.get('freeVersionTrialOption') is True:
+            options = make_caveat('Free trial available', service_data.get('freeVersionLink'))
+
         else:
             options = self._if_both_keys_or_either(
                 service_data,
@@ -158,16 +162,19 @@ class Meta(object):
                     'if_neither': False
                 }
             )
+            options = make_caveat(options) if options else options
+
         for item in main_caveats:
             if item['key'] in service_data:
                 if service_data[item['key']]:
-                    caveats.append(item['if_exists'])
+                    caveats.append(make_caveat(item['if_exists']))
                 else:
                     if item['if_absent']:
-                        caveats.append(item['if_absent'])
+                        caveats.append(make_caveat(item['if_absent']))
 
         if options:
             caveats.append(options)
+
         return caveats
 
     def _get_pretty_document_name_without_extension(self, document_url):
