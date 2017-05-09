@@ -177,9 +177,10 @@ def _annotate_categories_with_selection(lot, category_filters, request, parent_c
                                        lot=lot['slug'],
                                        **url_args)
 
-    # Remove categories (except the selected one), when any is selected - we
-    # think this may make navigation easier (and it's similar to what Amazon does)
+    # When there's a selection, remove parent categories (i.e. preserve the selection, plus
+    # sub-categories, which is those without children).
     if selected_category_filter is not None:
-        category_filters[:] = (c for c in category_filters if c['selected'])  # in-place filter(!)
+        category_filters[:] = (c for c in category_filters
+                               if c['selected'] or not c.get('children', []))  # in-place filter(!)
 
     return selected_category_filter
