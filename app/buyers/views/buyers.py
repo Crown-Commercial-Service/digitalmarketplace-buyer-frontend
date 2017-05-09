@@ -60,13 +60,11 @@ def buyer_dashboard(view=None):
             "teamName": teamname,
             "members": teammembers,
             "teamBriefs": {
-                "all": team_briefs,
                 "draft": team_draft_briefs,
                 "live": live_draft_briefs,
                 "closed": team_closed_briefs
             },
             "briefs": {
-                "all": user_briefs,
                 "draft": draft_briefs,
                 "live": live_briefs,
                 "closed": closed_briefs
