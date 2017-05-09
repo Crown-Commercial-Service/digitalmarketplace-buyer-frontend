@@ -1,7 +1,7 @@
 import os
 import json
 from app.main.presenters.service_presenters import (
-    Service, Meta, lowercase_first_character_unless_part_of_acronym,
+    Service, Meta,
     chunk_string
 )
 from app import content_loader
@@ -267,15 +267,3 @@ class TestMeta(object):
         assert 'Trial and free options available' not in price_caveats
         assert 'Trial option available' not in price_caveats
         assert 'Free option available' not in price_caveats
-
-
-class TestHelpers(object):
-    def test_normal_string_can_be_lowercased(self):
-        assert lowercase_first_character_unless_part_of_acronym(
-            "Independent validation of assertion"
-        ) == "independent validation of assertion"
-
-    def test_string_starting_with_acronym_can_be_lowercased(self):
-        assert lowercase_first_character_unless_part_of_acronym(
-            "CESG-assured components"
-        ) == "CESG-assured components"
