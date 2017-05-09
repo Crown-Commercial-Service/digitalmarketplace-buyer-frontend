@@ -122,12 +122,13 @@ def annotate_lots_with_categories_selection(lots, category_filter_group, request
     return selected_category
 
 
-def _annotate_categories_with_selection(lot, category_filters, request):
+def _annotate_categories_with_selection(lot, category_filters, request, parent_category=None):
     """
     Recursive setting of 'selected' state and adding of links to categories
     as part of building the lots/categories tree.
     :param category_filters: iterable of category filters as previously produced by filters_for_question
     :param request: request object from which to extract active filters
+    :param parent_category: The name of the parent category; only set internally for recursion.
     :return: the category filter that was directly selected, if any
     """
     request_filters = get_filters_from_request(request)
@@ -141,9 +142,18 @@ def _annotate_categories_with_selection(lot, category_filters, request):
         )
         directly_selected = (category['value'] in param_values)
 
-        selected_descendant = _annotate_categories_with_selection(lot, category.get('children', []), request)
+        selected_descendant = _annotate_categories_with_selection(lot, category.get('children', []), request,
+                                                                  parent_category=category['value'])
+
         if selected_descendant is not None:
-            selected_category_filter = selected_descendant
+            # If a parentCategory has been sent as a url query param, de-select all other parent categories.
+            if request.values.get('parentCategory', category['value']) != category['value']:
+                category['selected'] = False
+                selected_descendant = None
+
+            else:
+                selected_category_filter = selected_descendant
+
         elif directly_selected:
             selected_category_filter = category
 
@@ -157,6 +167,10 @@ def _annotate_categories_with_selection(lot, category_filters, request):
             # The argument in the URL must reflect the 'name' of the filter (i.e. the particular question
             # name it was derived from - 'serviceTypes' for G7/G8, 'serviceCategories' for G9.
             url_args = {category['name']: category['value']}
+
+            # If this category has a parent, add it as a query param to the link generated.
+            if parent_category:
+                url_args['parentCategory'] = parent_category
 
             category['link'] = url_for('.search_services',
                                        q=get_keywords_from_request(request),
