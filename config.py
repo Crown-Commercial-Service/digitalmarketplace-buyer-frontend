@@ -67,6 +67,7 @@ class Config(object):
 
     # LOGGING
     DM_LOG_LEVEL = 'DEBUG'
+    DM_PLAIN_TEXT_LOGS = False
     DM_LOG_PATH = None
     DM_APP_NAME = 'buyer-frontend'
     DM_DOWNSTREAM_REQUEST_ID_HEADER = 'X-Amz-Cf-Id'
@@ -93,6 +94,7 @@ class Config(object):
 
 class Test(Config):
     DEBUG = True
+    DM_PLAIN_TEXT_LOGS = True
     DM_LOG_LEVEL = 'CRITICAL'
     WTF_CSRF_ENABLED = False
 
@@ -110,6 +112,7 @@ class Test(Config):
 
 class Development(Config):
     DEBUG = True
+    DM_PLAIN_TEXT_LOGS = True
     SESSION_COOKIE_SECURE = False
     DM_SEARCH_PAGE_SIZE = 5
 
