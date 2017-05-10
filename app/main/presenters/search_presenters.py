@@ -178,7 +178,8 @@ def _annotate_categories_with_selection(lot, category_filters, request, parent_c
                                        **url_args)
 
     # When there's a selection, remove parent categories (i.e. preserve the selection, plus
-    # sub-categories, which is those without children).
+    # sub-categories, which is those without children). The effect is that siblings of any
+    # selected category or sub-category are shown, if that selection has no children.
     if selected_category_filter is not None:
         category_filters[:] = (c for c in category_filters
                                if c['selected'] or not c.get('children', []))  # in-place filter(!)
