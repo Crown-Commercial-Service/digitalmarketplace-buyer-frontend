@@ -86,7 +86,7 @@ class Config(object):
         'DM_FRAMEWORK': True,
         'SEARCH': True,
         'COLLABORATE': True,
-        'TEAM_VIEW': False
+        'TEAM_VIEW': True
     }
 
     # LOGGING
@@ -131,7 +131,7 @@ class Test(Config):
         'DM_FRAMEWORK': False,
         'SEARCH': False,
         'COLLABORATE': True,
-        'TEAM_VIEW': False
+        'TEAM_VIEW': True
     }
 
 
