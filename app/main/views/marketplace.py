@@ -17,6 +17,7 @@ from app.main.utils import get_page_list
 from app import data_api_client, content_loader
 from app.main import main
 from app.helpers.terms_helpers import check_terms_acceptance, get_current_terms_version
+from app.helpers.buyers_helpers import allowed_email_domain
 
 from ..forms.brief_forms import BriefSearchForm
 
@@ -238,7 +239,11 @@ def get_brief_by_id(framework_slug, brief_id):
     briefs = data_api_client.get_brief(brief_id)
     brief = briefs.get('briefs')
     if brief['status'] not in ['live', 'closed']:
-        if not current_user.is_authenticated or brief['users'][0]['id'] != current_user.id:
+        if not current_user.is_authenticated or (
+                        brief['users'][0]['id'] != current_user.id and not allowed_email_domain(
+                            current_user.id, brief, data_api_client
+                )
+        ):
             abort(404, "Opportunity '{}' can not be found".format(brief_id))
 
     if current_user.is_authenticated and current_user.role == 'supplier':
@@ -255,6 +260,10 @@ def get_brief_by_id(framework_slug, brief_id):
         brief
     )
 
+    brief_of_current_user = False
+    if not current_user.is_anonymous:
+        brief_of_current_user = brief['users'][0]['id'] == current_user.id
+
     is_restricted_brief = brief.get('sellerSelector', '') in ('someSellers', 'oneSeller')
 
     application_url = "/sellers/opportunities/{}/responses/create".format(brief['id'])
@@ -268,7 +277,8 @@ def get_brief_by_id(framework_slug, brief_id):
         show_pdf_link=brief['status'] in ['live', 'closed'],
         is_restricted_brief=is_restricted_brief,
         application_url=application_url,
-        add_case_study_url=add_case_study_url
+        add_case_study_url=add_case_study_url,
+        brief_of_current_user=brief_of_current_user
     )
 
 

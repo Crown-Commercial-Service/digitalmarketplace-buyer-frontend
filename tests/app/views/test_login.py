@@ -11,6 +11,7 @@ from lxml import html
 import mock
 import pytest
 from flask import session
+import flask_featureflags as feature
 
 EMAIL_SENT_MESSAGE = "send a link"
 
@@ -1128,8 +1129,9 @@ class TestBuyerRoleRequired(BaseApplicationTest):
             page_text = res.get_data(as_text=True)
             assert res.status_code == 200
             assert 'private' in res.headers['Cache-Control']
-            assert 'My Team' in page_text
-            assert 'My Team name' in page_text
+            if feature.is_active('TEAM_VIEW'):
+                assert 'My Team' in page_text
+                assert 'My Team name' in page_text
 
 
 class TestTermsUpdate(BaseApplicationTest):

@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 from dmutils.email import send_email, EmailError, hash_email
 from flask.globals import current_app
+import flask_featureflags as feature
 import six
 import csvx
 import pendulum
@@ -35,52 +36,75 @@ from react.render import render_component
 @buyers.route('/buyers')
 @buyers.route('/buyers/<view>')
 def buyer_dashboard(view=None):
-    current_user_name = current_user.name
-    email_domain = current_user.email_address.split('@')[-1]
-    teammembers_response = data_api_client.req.teammembers(email_domain).get()
-    teamname = teammembers_response['teamname']
-    teammembers = list(sorted(teammembers_response['teammembers'], key=lambda tm: tm['name']))
+    if feature.is_active('TEAM_VIEW'):
+        current_user_name = current_user.name
+        email_domain = current_user.email_address.split('@')[-1]
+        teammembers_response = data_api_client.req.teammembers(email_domain).get()
+        teamname = teammembers_response['teamname']
+        teammembers = list(sorted(teammembers_response['teammembers'], key=lambda tm: tm['name']))
 
-    team_briefs = data_api_client.req.briefs().teammembers(email_domain).get()
+        team_briefs = data_api_client.req.briefs().teammembers(email_domain).get()
 
-    team_draft_briefs = add_unanswered_counts_to_briefs(
-        [brief for brief in team_briefs if brief['status'] == 'draft'], content_loader)
-    live_draft_briefs = [brief for brief in team_briefs if brief['status'] == 'live']
-    team_closed_briefs = [brief for brief in team_briefs if brief['status'] == 'closed']
+        team_draft_briefs = add_unanswered_counts_to_briefs(
+            [brief for brief in team_briefs if brief['status'] == 'draft'], content_loader)
+        live_draft_briefs = [brief for brief in team_briefs if brief['status'] == 'live']
+        team_closed_briefs = [brief for brief in team_briefs if brief['status'] == 'closed']
 
-    user_briefs = data_api_client.find_briefs(current_user.id).get('briefs', [])
-    draft_briefs = add_unanswered_counts_to_briefs(
-        [brief for brief in user_briefs if brief['status'] == 'draft'], content_loader)
-    live_briefs = [brief for brief in user_briefs if brief['status'] == 'live']
-    closed_briefs = [brief for brief in user_briefs if brief['status'] == 'closed']
+        user_briefs = data_api_client.find_briefs(current_user.id).get('briefs', [])
+        draft_briefs = add_unanswered_counts_to_briefs(
+            [brief for brief in user_briefs if brief['status'] == 'draft'], content_loader)
+        live_briefs = [brief for brief in user_briefs if brief['status'] == 'live']
+        closed_briefs = [brief for brief in user_briefs if brief['status'] == 'closed']
 
-    props = {
-        "team": {
-            "currentUserName": current_user_name,
-            "teamName": teamname,
-            "members": teammembers,
-            "teamBriefs": {
-                "draft": team_draft_briefs,
-                "live": live_draft_briefs,
-                "closed": team_closed_briefs
-            },
-            "briefs": {
-                "draft": draft_briefs,
-                "live": live_briefs,
-                "closed": closed_briefs
+        props = {
+            "flag": feature.is_active('TEAM_VIEW'),
+            "team": {
+                "currentUserName": current_user_name,
+                "teamName": teamname,
+                "members": teammembers,
+                "teamBriefs": {
+                    "draft": team_draft_briefs,
+                    "live": live_draft_briefs,
+                    "closed": team_closed_briefs
+                },
+                "briefs": {
+                    "draft": draft_briefs,
+                    "live": live_briefs,
+                    "closed": closed_briefs
+                }
             }
         }
-    }
 
-    rendered_component = render_component(
-        'bundles/BuyerDashboard/BuyerDashboardWidget.js',
-        props
-    )
+        rendered_component = render_component(
+            'bundles/BuyerDashboard/BuyerDashboardWidget.js',
+            props
+        )
 
-    return render_template(
-        '_react.html',
-        component=rendered_component,
-    )
+        return render_template(
+            '_react.html',
+            component=rendered_component,
+        )
+
+    else:
+        def get_teamname():
+            email_domain = current_user.email_address.split('@')[-1]
+            teammembers_response = data_api_client.req.teammembers(email_domain).get()
+            teammembers = list(sorted(teammembers_response['teammembers'], key=lambda tm: tm['name']))
+            return teammembers_response['teamname']
+
+        user_briefs = data_api_client.find_briefs(current_user.id).get('briefs', [])
+        draft_briefs = add_unanswered_counts_to_briefs([brief for brief in user_briefs if brief['status'] == 'draft'],
+                                                       content_loader)
+        live_briefs = [brief for brief in user_briefs if brief['status'] == 'live']
+        closed_briefs = [brief for brief in user_briefs if brief['status'] == 'closed']
+
+        return render_template(
+            'buyers/dashboard-briefs.html',
+            draft_briefs=draft_briefs,
+            live_briefs=live_briefs,
+            closed_briefs=closed_briefs,
+            teamname=get_teamname()
+        )
 
 
 @buyers.route('/buyers/overview')
@@ -98,7 +122,8 @@ def buyer_overview():
             'meta': {
                 'domain': email_domain,
                 'teamname': teammembers_response['teamname']
-            }
+            },
+            'flag': feature.is_active('TEAM_VIEW')
         }
     )
 
