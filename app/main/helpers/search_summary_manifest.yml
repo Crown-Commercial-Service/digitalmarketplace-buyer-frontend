@@ -8,16 +8,13 @@
   filterRules:
   conjunction: and
 -
-  id: Cloud deployment model
-  labelPreposition: deployable to a
-  conjunction: and
--
   id: Pricing
   labelPreposition:
   label:
   filtersPreposition: with a
   filterRules:
   conjunction: and
+
 -
   id: Minimum contract period
   labelPreposition: with a
@@ -90,7 +87,10 @@
   filterRules:
   conjunction: and
 
-
+-
+  id: Cloud deployment model
+  labelPreposition: deployable to a
+  conjunction: and
 
 -
   id: Supplier type
@@ -206,7 +206,15 @@
   conjunction: and
 -
   id: Pricing options
-  labelPreposition: with a
+  filtersPreposition: with
+  conjunction: and
+  filterRules:
+  -
+    preposition: a
+    id: discount for educational organisations
+  -
+    preposition: a
+    id: free trial
 
 -
   id: User support
