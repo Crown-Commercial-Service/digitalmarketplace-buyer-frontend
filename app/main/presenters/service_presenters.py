@@ -24,8 +24,8 @@ class Service(object):
         if key[0] in service_data:
             setattr(self, key[1], service_data[key[0]])
 
-    def __init__(self, service_data, builder, lots_by_slug):
-        self.summary_manifest = builder.summary(service_data)
+    def __init__(self, service_data, manifest, lots_by_slug):
+        self.summary_manifest = manifest.summary(service_data)
         # required attributes directly mapped to service_data values
         self.title = service_data['serviceName']
         self.serviceSummary = service_data['serviceSummary']\
