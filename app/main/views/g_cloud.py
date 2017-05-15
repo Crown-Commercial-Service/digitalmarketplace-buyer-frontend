@@ -141,7 +141,9 @@ def get_service_by_id(service_id):
             'service.html',
             service=service_view_data,
             service_unavailability_information=service_unavailability_information,
-            lot=service_view_data.lot), status_code
+            lot=service_view_data.lot,
+            gcloud_framework_description=framework_helpers.get_framework_description(data_api_client, 'g-cloud'),
+        ), status_code
     except AuthException:
         abort(500, "Application error")
     except HTTPError as e:
@@ -219,4 +221,5 @@ def search_services():
         summary=search_summary.markup(),
         title='Search results',
         total=search_results_obj.total,
+        gcloud_framework_description=framework_helpers.get_framework_description(data_api_client, 'g-cloud'),
     )
