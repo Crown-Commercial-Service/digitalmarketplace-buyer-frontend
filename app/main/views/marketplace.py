@@ -261,7 +261,7 @@ def get_brief_by_id(framework_slug, brief_id):
     )
 
     brief_of_current_user = False
-    if not current_user.is_anonymous:
+    if not current_user.is_anonymous and len(brief.get('users')) > 0:
         brief_of_current_user = brief['users'][0]['id'] == current_user.id
 
     is_restricted_brief = brief.get('sellerSelector', '') in ('someSellers', 'oneSeller')
