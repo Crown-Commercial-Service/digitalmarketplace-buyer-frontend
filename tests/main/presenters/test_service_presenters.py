@@ -1,3 +1,5 @@
+# coding: UTF-8
+
 import os
 import json
 from app.main.presenters.service_presenters import (
@@ -11,14 +13,16 @@ from ...helpers import BaseApplicationTest
 
 
 def _get_fixture_data():
-    test_root = os.path.abspath(
-        os.path.join(os.path.dirname(__file__), "../..")
-    )
-    fixture_path = os.path.join(
-        test_root, 'fixtures', 'g6_service_fixture.json'
-    )
-    with open(fixture_path) as fixture_file:
-        return json.load(fixture_file)
+    test_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
+
+    fixtures = {}
+    for framework in ['g6', 'g9']:
+        fixture_path = os.path.join(test_root, 'fixtures', '{}_service_fixture.json'.format(framework))
+
+        with open(fixture_path) as fixture_file:
+            fixtures[framework] = json.load(fixture_file)['services']
+
+    return fixtures
 
 
 def test_chunk_string():
@@ -32,40 +36,41 @@ class TestService(BaseApplicationTest):
     def setup_method(self, method):
         super(TestService, self).setup_method(method)
 
-        self.fixture = _get_fixture_data()
-        self.fixture = self.fixture['services']
+        self._service_fixtures = _get_fixture_data()
+        self.g6_service_fixture = self._service_fixtures['g6']
+        self.g9_service_fixture = self._service_fixtures['g9']
         self._lots_by_slug = framework_helpers.get_lots_by_slug(
             self._get_framework_fixture_data('g-cloud-6')['frameworks']
         )
 
         self.service = Service(
-            self.fixture, content_loader.get_builder('g-cloud-6', 'display_service'), self._lots_by_slug
+            self.g6_service_fixture, content_loader.get_builder('g-cloud-6', 'display_service'), self._lots_by_slug
         )
 
     def test_title_attribute_is_set(self):
-        assert self.service.title == self.fixture['serviceName']
+        assert self.service.title == self.g6_service_fixture['serviceName']
 
     def test_lot_attribute_is_set(self):
-        assert self.service.lot['slug'] == self.fixture['lot'].lower()
+        assert self.service.lot['slug'] == self.g6_service_fixture['lot'].lower()
 
     def test_framework_attribute_is_set(self):
-        assert self.service.frameworkName == self.fixture['frameworkName']
+        assert self.service.frameworkName == self.g6_service_fixture['frameworkName']
 
     def test_Service_works_if_supplierName_is_not_set(self):
-        del self.fixture['supplierName']
-        self.service = Service(self.fixture, content_loader.get_builder('g-cloud-6', 'display_service'),
+        del self.g6_service_fixture['supplierName']
+        self.service = Service(self.g6_service_fixture, content_loader.get_builder('g-cloud-6', 'display_service'),
                                self._lots_by_slug)
         assert not hasattr(self.service, 'supplierName')
 
     def test_Service_works_if_serviceFeatures_is_not_set(self):
-        del self.fixture['serviceFeatures']
-        self.service = Service(self.fixture, content_loader.get_builder('g-cloud-6', 'display_service'),
+        del self.g6_service_fixture['serviceFeatures']
+        self.service = Service(self.g6_service_fixture, content_loader.get_builder('g-cloud-6', 'display_service'),
                                self._lots_by_slug)
         assert not hasattr(self.service, 'features')
 
     def test_Service_works_if_serviceBenefits_is_not_set(self):
-        del self.fixture['serviceBenefits']
-        self.service = Service(self.fixture, content_loader.get_builder('g-cloud-6', 'display_service'),
+        del self.g6_service_fixture['serviceBenefits']
+        self.service = Service(self.g6_service_fixture, content_loader.get_builder('g-cloud-6', 'display_service'),
                                self._lots_by_slug)
         assert not hasattr(self.service, 'benefits')
 
@@ -79,32 +84,45 @@ class TestService(BaseApplicationTest):
 
     def test_attributes_are_correctly_set(self):
         service = Service(
-            self.fixture,
-            content_loader.get_builder('g-cloud-6', 'display_service').filter({'lot': 'iaas'}),
+            self.g6_service_fixture,
+            content_loader.get_builder('g-cloud-6', 'display_service').filter({'lot': 'iaas'}).summary(
+                self.g6_service_fixture
+            ),
             self._lots_by_slug
         )
         assert service.attributes[0]['name'] == 'Support'
         assert len(service.attributes) == 30
         assert len(list(service.attributes[0]['rows'])) == 5
 
+    def test_values_are_converted_to_labels(self):
+        service = Service(
+            self.g9_service_fixture,
+            content_loader.get_builder('g-cloud-9', 'display_service').filter({'lot': 'cloud-hosting'}).summary(
+                self.g9_service_fixture),
+            self._lots_by_slug
+        )
+        assert service.attributes[1]['name'] == 'Reselling'
+        assert self.g9_service_fixture['resellingType'] == 'reseller_extra_support'
+        assert service.attributes[1]['rows'][0].value == u'I’m a reseller providing extra support'
+
     def test_the_support_attribute_group_is_not_there_if_no_attributes(self):
-        del self.fixture['openStandardsSupported']
-        service = Service(self.fixture, content_loader.get_builder('g-cloud-6', 'display_service'),
+        del self.g6_service_fixture['openStandardsSupported']
+        service = Service(self.g6_service_fixture, content_loader.get_builder('g-cloud-6', 'display_service'),
                           self._lots_by_slug)
         for group in service.attributes:
             assert group['name'] != 'Open standards', "Support group should not be found"
 
     def test_only_attributes_with_a_valid_type_are_added_to_groups(self):
         invalidValue = (u'Manuals provided', u'CMS training')
-        self.fixture['onboardingGuidance'] = invalidValue
-        service = Service(self.fixture, content_loader.get_builder('g-cloud-6', 'display_service'),
+        self.g6_service_fixture['onboardingGuidance'] = invalidValue
+        service = Service(self.g6_service_fixture, content_loader.get_builder('g-cloud-6', 'display_service'),
                           self._lots_by_slug)
         for group in service.attributes:
             assert not (group['name'] == 'External interface protection' and 'onboardingGuidance' in group), \
                 "Attribute with tuple value should not be in group"
 
     def test_attributes_with_assurance_in_the_fields_add_it_correctly(self):
-        service = Service(self.fixture, content_loader.get_builder('g-cloud-6', 'display_service'),
+        service = Service(self.g6_service_fixture, content_loader.get_builder('g-cloud-6', 'display_service'),
                           self._lots_by_slug)
         for group in service.attributes:
             if group['name'] == 'Data-in-transit protection':
@@ -118,7 +136,7 @@ class TestService(BaseApplicationTest):
                         assert row.value == [u'No encryption']
 
     def test_attributes_with_assurance_for_a_list_value_has_a_caveat(self):
-        service = Service(self.fixture, content_loader.get_builder('g-cloud-6', 'display_service'),
+        service = Service(self.g6_service_fixture, content_loader.get_builder('g-cloud-6', 'display_service'),
                           self._lots_by_slug)
         for group in service.attributes:
             if group['name'] == 'Asset protection and resilience':
@@ -130,8 +148,10 @@ class TestService(BaseApplicationTest):
 
 class TestMeta(object):
     def setup_method(self, method):
-        self.fixture = _get_fixture_data()['services']
-        self.meta = Meta(self.fixture)
+        self._service_fixtures = _get_fixture_data()
+        self.g6_service_fixture = self._service_fixtures['g6']
+        self.g9_service_fixture = self._service_fixtures['g9']
+        self.meta = Meta(self.g6_service_fixture)
 
     def test_Meta_instance_has_the_correct_attributes(self):
         assert hasattr(self.meta, 'price')
@@ -199,7 +219,7 @@ class TestMeta(object):
                 )
             }
         ]
-        documents = self.meta.get_documents(self.fixture)
+        documents = self.meta.get_documents(self.g6_service_fixture)
         for idx, document in enumerate(documents):
             assert documents[idx]['name'] == expected_information[idx]['name']
             assert documents[idx]['url'] == expected_information[idx]['url']
@@ -207,63 +227,63 @@ class TestMeta(object):
 
     def test_vat_status_is_correct(self):
         # if VAT is not included
-        price_caveats = self.meta.get_price_caveats(self.fixture)
+        price_caveats = self.meta.get_price_caveats(self.g6_service_fixture)
         assert 'Excluding VAT' in price_caveats
         # if VAT is included
-        self.fixture['vatIncluded'] = True
-        price_caveats = self.meta.get_price_caveats(self.fixture)
+        self.g6_service_fixture['vatIncluded'] = True
+        price_caveats = self.meta.get_price_caveats(self.g6_service_fixture)
         assert 'Including VAT' in price_caveats
 
     def test_education_pricing_status_is_correct(self):
         # if Education pricing is included
-        price_caveats = self.meta.get_price_caveats(self.fixture)
+        price_caveats = self.meta.get_price_caveats(self.g6_service_fixture)
         assert 'Education pricing available' in price_caveats
         # if Education pricing is excluded
-        self.fixture['educationPricing'] = False
-        price_caveats = self.meta.get_price_caveats(self.fixture)
+        self.g6_service_fixture['educationPricing'] = False
+        price_caveats = self.meta.get_price_caveats(self.g6_service_fixture)
         assert 'Education pricing available' not in price_caveats
 
     def test_termination_costs_status_is_correct(self):
         # if Termination costs are excluded
-        price_caveats = self.meta.get_price_caveats(self.fixture)
+        price_caveats = self.meta.get_price_caveats(self.g6_service_fixture)
         assert 'Termination costs apply' not in price_caveats
         # if Termination costs are included
-        self.fixture['terminationCost'] = True
-        price_caveats = self.meta.get_price_caveats(self.fixture)
+        self.g6_service_fixture['terminationCost'] = True
+        price_caveats = self.meta.get_price_caveats(self.g6_service_fixture)
         assert 'Termination costs apply' in price_caveats
         # if the question wasn't asked
-        del self.fixture['terminationCost']
-        price_caveats = self.meta.get_price_caveats(self.fixture)
+        del self.g6_service_fixture['terminationCost']
+        price_caveats = self.meta.get_price_caveats(self.g6_service_fixture)
         assert 'Termination costs apply' not in price_caveats
 
     def test_minimum_contract_status_is_correct(self):
-        price_caveats = self.meta.get_price_caveats(self.fixture)
+        price_caveats = self.meta.get_price_caveats(self.g6_service_fixture)
         assert 'Minimum contract period: Month' in price_caveats
 
     def test_options_are_correct_if_both_false(self):
-        price_caveats = self.meta.get_price_caveats(self.fixture)
+        price_caveats = self.meta.get_price_caveats(self.g6_service_fixture)
         assert 'Trial and free options available' not in price_caveats
         assert 'Trial option available' not in price_caveats
         assert 'Free option available' not in price_caveats
 
     def test_options_are_correct_if_free_is_false_and_trial_true(self):
-        self.fixture['trialOption'] = True
-        price_caveats = self.meta.get_price_caveats(self.fixture)
+        self.g6_service_fixture['trialOption'] = True
+        price_caveats = self.meta.get_price_caveats(self.g6_service_fixture)
         assert 'Trial and free options available' not in price_caveats
         assert 'Free option available' not in price_caveats
         assert 'Trial option available' in price_caveats
 
     def test_options_are_correct_if_free_is_true_and_trial_false(self):
-        self.fixture['freeOption'] = True
-        price_caveats = self.meta.get_price_caveats(self.fixture)
+        self.g6_service_fixture['freeOption'] = True
+        price_caveats = self.meta.get_price_caveats(self.g6_service_fixture)
         assert 'Trial and free options available' not in price_caveats
         assert 'Trial option available' not in price_caveats
         assert 'Free option available' in price_caveats
 
     def test_options_are_correct_if_both_are_not_set(self):
-        del self.fixture['freeOption']
-        del self.fixture['trialOption']
-        price_caveats = self.meta.get_price_caveats(self.fixture)
+        del self.g6_service_fixture['freeOption']
+        del self.g6_service_fixture['trialOption']
+        price_caveats = self.meta.get_price_caveats(self.g6_service_fixture)
         assert 'Trial and free options available' not in price_caveats
         assert 'Trial option available' not in price_caveats
         assert 'Free option available' not in price_caveats

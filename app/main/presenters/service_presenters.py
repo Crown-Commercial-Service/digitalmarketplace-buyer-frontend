@@ -63,7 +63,7 @@ class Service(object):
         return list(filter(
             not_empty, map(
                 lambda question: Attribute(
-                    value=service_data.get(question['id'], None),
+                    value=question.get('value', service_data.get(question['id'], None)),
                     question_type=question['type'],
                     label=question['question']
                 ),
