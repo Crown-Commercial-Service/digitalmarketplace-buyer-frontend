@@ -62,6 +62,13 @@ class TestHomepageBrowseList(BaseApplicationTest):
         "id": 7
     }
 
+    mock_live_g_cloud_9_framework = {
+        "framework": "g-cloud",
+        "slug": "g-cloud-9",
+        "status": "live",
+        "id": 8
+    }
+
     def test_dos_links_are_shown(self, data_api_client):
         with self.app.app_context():
             data_api_client.find_frameworks.return_value = {
@@ -158,11 +165,13 @@ class TestHomepageBrowseList(BaseApplicationTest):
             mock_expired_dos_1_framework.update({"status": "expired"})
             mock_expired_dos_2_framework = self.mock_live_dos_2_framework.copy()
             mock_expired_dos_2_framework.update({"status": "expired"})
+            mock_g_cloud_9_framework = self.mock_live_g_cloud_9_framework.copy()
 
             data_api_client.find_frameworks.return_value = {
                 "frameworks": [
                     mock_expired_dos_1_framework,
                     mock_expired_dos_2_framework,
+                    mock_g_cloud_9_framework,
                 ]
             }
 
@@ -172,7 +181,7 @@ class TestHomepageBrowseList(BaseApplicationTest):
             assert res.status_code == 200
 
             link_texts = [item.text_content().strip() for item in document.cssselect('.browse-list-item a')]
-            assert link_texts[0] == "Find cloud technology and support"
+            assert link_texts[0] == "Find cloud hosting, software and support"
             assert link_texts[1] == "Buy physical datacentre space"
             assert len(link_texts) == 2
 
@@ -862,9 +871,7 @@ class TestGCloudHomepageLinks(BaseApplicationTest):
     def test_g_cloud_homepage_content_is_correct(self, data_api_client, framework_slug, gcloud_content):
         with self.app.app_context():
             data_api_client.find_frameworks.return_value = {
-                "frameworks": [
-                    self.mock_live_g_cloud_framework
-                ]
+                "frameworks": [self.mock_live_g_cloud_framework.copy()]
             }
             data_api_client.find_frameworks.return_value['frameworks'][0].update({'slug': framework_slug})
 

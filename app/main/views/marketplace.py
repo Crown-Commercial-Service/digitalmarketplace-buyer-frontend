@@ -12,7 +12,7 @@ from dmcontent.content_loader import ContentNotFoundError
 
 from ...main import main
 from ..helpers.shared_helpers import get_one_framework_by_status_in_order_of_preference, parse_link
-from ..helpers.framework_helpers import get_latest_live_framework, is_g9_live
+from ..helpers.framework_helpers import get_latest_live_framework, is_g9_live, get_framework_description
 
 from ..forms.brief_forms import BriefSearchForm
 
@@ -59,6 +59,7 @@ def index():
         frameworks={framework['slug']: framework for framework in frameworks},
         temporary_message=temporary_message,
         show_new_g9_content=show_new_g9_content,
+        gcloud_framework_description=get_framework_description(data_api_client, 'g-cloud'),
     )
 
 
