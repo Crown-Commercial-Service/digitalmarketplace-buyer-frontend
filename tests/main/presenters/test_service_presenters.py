@@ -1,7 +1,7 @@
 import os
 import json
 from app.main.presenters.service_presenters import (
-    Service, Meta, lowercase_first_character_unless_part_of_acronym,
+    Service, Meta,
     chunk_string
 )
 from app import content_loader
@@ -77,55 +77,15 @@ class TestService(BaseApplicationTest):
         assert hasattr(self.service, 'benefits')
         assert len(self.service.benefits) == 6
 
-    def test_attributes_are_correctly_set(self):
+    def test_service_properties_available_via_summary_manifest(self):
         service = Service(
             self.fixture,
             content_loader.get_builder('g-cloud-6', 'display_service').filter({'lot': 'iaas'}),
             self._lots_by_slug
         )
-        assert service.attributes[0]['name'] == 'Support'
-        assert len(service.attributes) == 30
-        assert len(list(service.attributes[0]['rows'])) == 5
-
-    def test_the_support_attribute_group_is_not_there_if_no_attributes(self):
-        del self.fixture['openStandardsSupported']
-        service = Service(self.fixture, content_loader.get_builder('g-cloud-6', 'display_service'),
-                          self._lots_by_slug)
-        for group in service.attributes:
-            assert group['name'] != 'Open standards', "Support group should not be found"
-
-    def test_only_attributes_with_a_valid_type_are_added_to_groups(self):
-        invalidValue = (u'Manuals provided', u'CMS training')
-        self.fixture['onboardingGuidance'] = invalidValue
-        service = Service(self.fixture, content_loader.get_builder('g-cloud-6', 'display_service'),
-                          self._lots_by_slug)
-        for group in service.attributes:
-            assert not (group['name'] == 'External interface protection' and 'onboardingGuidance' in group), \
-                "Attribute with tuple value should not be in group"
-
-    def test_attributes_with_assurance_in_the_fields_add_it_correctly(self):
-        service = Service(self.fixture, content_loader.get_builder('g-cloud-6', 'display_service'),
-                          self._lots_by_slug)
-        for group in service.attributes:
-            if group['name'] == 'Data-in-transit protection':
-                for row in group['rows']:
-                    # string with bespoke assurance caveat
-                    if row.label == 'Data protection between services':
-                        assert row.value == [u'No encryption']
-                        assert row.assurance == u'independent validation of assertion'
-                    # string with standard assurance caveat
-                    if row.label == 'Data protection within service':
-                        assert row.value == [u'No encryption']
-
-    def test_attributes_with_assurance_for_a_list_value_has_a_caveat(self):
-        service = Service(self.fixture, content_loader.get_builder('g-cloud-6', 'display_service'),
-                          self._lots_by_slug)
-        for group in service.attributes:
-            if group['name'] == 'Asset protection and resilience':
-                for row in group['rows']:
-                    # list with bespoke assurance caveat
-                    if row.label == 'Data management location':
-                        assert u'independent validation of assertion' in row.assurance
+        assert service.summary_manifest.sections[0].name == 'Support'
+        assert len(service.summary_manifest.sections) == 30
+        assert len(service.summary_manifest.sections[0].questions) == 5
 
 
 class TestMeta(object):
@@ -267,15 +227,3 @@ class TestMeta(object):
         assert 'Trial and free options available' not in price_caveats
         assert 'Trial option available' not in price_caveats
         assert 'Free option available' not in price_caveats
-
-
-class TestHelpers(object):
-    def test_normal_string_can_be_lowercased(self):
-        assert lowercase_first_character_unless_part_of_acronym(
-            "Independent validation of assertion"
-        ) == "independent validation of assertion"
-
-    def test_string_starting_with_acronym_can_be_lowercased(self):
-        assert lowercase_first_character_unless_part_of_acronym(
-            "CESG-assured components"
-        ) == "CESG-assured components"
