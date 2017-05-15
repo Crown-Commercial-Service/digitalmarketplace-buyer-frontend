@@ -24,8 +24,8 @@ class Service(object):
         if key[0] in service_data:
             setattr(self, key[1], service_data[key[0]])
 
-    def __init__(self, service_data, service_questions, lots_by_slug):
-        self.service_questions = service_questions
+    def __init__(self, service_data, manifest, lots_by_slug):
+        self.summary_manifest = manifest.summary(service_data)
         # required attributes directly mapped to service_data values
         self.title = service_data['serviceName']
         self.serviceSummary = service_data['serviceSummary']\
@@ -40,36 +40,10 @@ class Service(object):
             ('serviceBenefits', 'benefits')
         ]:
             self._add_as_attribute_if_key_exists(key, service_data)
-        self.attributes = self._get_service_attributes(service_data)
         self.meta = self._get_service_meta(service_data)
-
-    def _get_service_attributes(self, service_data):
-        sections = map(
-            lambda section: {
-                'name': section['name'],
-                'rows': self._get_rows(section, service_data)
-            },
-            self.service_questions
-        )
-        return list(filter(
-            lambda section: len(list(section['rows'])) > 0,
-            list(sections)
-        ))
 
     def _get_service_meta(self, service_data):
         return Meta(service_data)
-
-    def _get_rows(self, section, service_data):
-        return list(filter(
-            not_empty, map(
-                lambda question: Attribute(
-                    value=service_data.get(question['id'], None),
-                    question_type=question['type'],
-                    label=question['question']
-                ),
-                section['questions']
-            )
-        ))
 
 
 class Meta(object):
@@ -227,15 +201,3 @@ class Meta(object):
             return values['if_exists']
         else:
             return values['if_absent']
-
-
-def lowercase_first_character_unless_part_of_acronym(string):
-    if not string:
-        return ''
-    if string[1:2] == string[1:2].upper():
-        return string
-    return string[:1].lower() + string[1:]
-
-
-def not_empty(item):
-    return item.value is not ''
