@@ -101,3 +101,85 @@ class TestStatus(BaseApplicationTest):
         assert "{}".format(json_data['status']) == "error"
         assert "{}".format(json_data['api_status']['status']) == "error"
         assert "{}".format(json_data['search_api_status']['status']) == "error"
+
+    @mock.patch('app.status.views.current_app')
+    def test_status_ip_logged_if_x_forwarded_for_header_present(self, current_app):
+        self._data_api_client.get_status.return_value = {
+            'status': 'ok'
+        }
+
+        self._search_api_client.get_status.return_value = {
+            'status': 'ok'
+        }
+
+        current_app.config = {'VERSION': '1'}
+
+        status_response = self.client.get(
+            '/_status',
+            headers={'X-Forwarded-For': '0.0.0.0, 0.0.0.0, 0.0.0.0, 127.0.0.23'}
+        )
+        assert status_response.status_code == 200
+
+        current_app.logger.info.assert_called_once_with(
+            "_status.check: buyer app status page requested by {ip_address}",
+            extra={'ip_address': '127.0.0.23'}
+        )
+
+        json_data = json.loads(status_response.get_data().decode('utf-8'))
+        assert json_data['remote_address'] == "127.0.0.23"
+
+    @mock.patch('app.status.views.current_app')
+    @mock.patch('app.status.views.request')
+    def test_status_remote_addr_logged_if_x_forwarded_for_header_not_present(self, request, current_app):
+        self._data_api_client.get_status.return_value = {
+            'status': 'ok'
+        }
+
+        self._search_api_client.get_status.return_value = {
+            'status': 'ok'
+        }
+
+        current_app.config = {'VERSION': '1'}
+
+        request.remote_addr = '127.0.0.24'
+        status_response = self.client.get(
+            '/_status',
+            headers={}
+        )
+        assert status_response.status_code == 200
+
+        current_app.logger.info.assert_called_once_with(
+            "_status.check: buyer app status page requested by {ip_address}",
+            extra={'ip_address': '127.0.0.24'}
+        )
+
+        json_data = json.loads(status_response.get_data().decode('utf-8'))
+        assert json_data['remote_address'] == "127.0.0.24"
+
+    @mock.patch('app.status.views.current_app')
+    @mock.patch('app.status.views.request')
+    def test_status_untrackable_logged_if_x_forwarded_for_and_remote_addr_not_present(self, request, current_app):
+        self._data_api_client.get_status.return_value = {
+            'status': 'ok'
+        }
+
+        self._search_api_client.get_status.return_value = {
+            'status': 'ok'
+        }
+
+        current_app.config = {'VERSION': '1'}
+
+        request.remote_addr = None
+        status_response = self.client.get(
+            '/_status',
+            headers={}
+        )
+        assert status_response.status_code == 200
+
+        current_app.logger.info.assert_called_once_with(
+            "_status.check: buyer app status page requested by {ip_address}",
+            extra={'ip_address': 'untrackable'}
+        )
+
+        json_data = json.loads(status_response.get_data().decode('utf-8'))
+        assert json_data['remote_address'] == "untrackable"
