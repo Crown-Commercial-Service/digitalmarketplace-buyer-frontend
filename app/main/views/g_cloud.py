@@ -208,6 +208,12 @@ def search_services():
     # annotate `filters` with their values as set in this request for re-rendering purposes.
     set_filter_states(filters.values(), request)
 
+    # Uppercase first character of filter labels for display
+    for filter_groups in filters.values():
+        for _, filter_instance in enumerate(filter_groups['filters']):
+            if 'label' in filter_instance:
+                filter_instance['label'] = filter_instance['label'][:1].upper() + filter_instance['label'][1:]
+
     return render_template(
         'search/services.html',
         current_lot=current_lot,
