@@ -18,12 +18,17 @@
   }
   .lot-filters__top-level-link {
     padding-left: 15px; /* gutter */
-    /* if we used a 'content' pseudo element, the color wouldn't be a problem */
-    /* either that or we overwrite the link colour */
-    /* dash 2 x or @ 2 x */
-    background: url(/static/images/back_chevron.png) 0% 45% no-repeat;
     display: inline-block;
     margin-top: 5px;
+    position: relative;
+  }
+  .lot-filters__top-level-link:before {
+    position: absolute;
+    left: 0;
+    top: 0;
+    line-height: .85;
+    content: "\2039";
+    font-size: 22px;
   }
   .lot-filters li:first-child .lot-filters__top-level-link {
     margin-top: 0;
