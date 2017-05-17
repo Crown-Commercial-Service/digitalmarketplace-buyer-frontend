@@ -167,6 +167,7 @@ class Live(Config):
         'DM_FRAMEWORK': True,
         'DOMAINS_SEARCH': True,
         'SEARCH': True,
+        'COLLABORATE': True,
         'TEAM_VIEW': False
     }
 
