@@ -614,6 +614,56 @@ class TestBriefPage(BaseApplicationTest):
 
         assert res.status_code == 200
 
+    def test_apply_button_not_visible_for_withdrawn_briefs(self):
+        self.login_as_supplier()
+        self.brief['briefs']['status'] = "withdrawn"
+        brief_id = self.brief['briefs']['id']
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
+        document = html.fromstring(res.get_data(as_text=True))
+        apply_links = document.xpath('//a[@href="/suppliers/opportunities/{}/responses/start"]'.format(brief_id))
+
+        assert len(apply_links) == 0
+
+    def test_apply_button_not_visible_for_withdrawn_briefs(self):
+        self.login_as_supplier()
+        self.brief['briefs']['status'] = "withdrawn"
+        brief_id = self.brief['briefs']['id']
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
+        page = res.get_data(as_text=True)
+
+        assert 'The deadline for asking questions about this opportunity was ' not in page
+
+    def test_withdrawn_banner_shown_on_withdrawn_brief(self):
+        self.login_as_supplier()
+        self.brief['briefs']['status'] = "withdrawn"
+        brief_id = self.brief['briefs']['id']
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
+        page = res.get_data(as_text=True)
+
+        assert 'This opportunity was withdrawn on' in page
+        assert 'The buyer may publish an updated version of this opportunity on the Digital Marketplace.' in page
+
+    @pytest.mark.parametrize(('status'), ['live', 'closed'])
+    def test_withdrawn_banner_not_shown_on_live_and_closed_brief(self, status):
+        self.login_as_supplier()
+        self.brief['briefs']['status'] = status
+        brief_id = self.brief['briefs']['id']
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
+        page = res.get_data(as_text=True)
+
+        assert 'This opportunity was withdrawn on' not in page
+
+    def test_dateformat_in_withdrawn_banner_displayed_correctly(self):
+        self.login_as_supplier()
+        self.brief['briefs']['status'] = "withdrawn"
+        self.brief['briefs']['withdrawnAt'] = "2016-11-25T10:47:23.126761Z"
+        brief_id = self.brief['briefs']['id']
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
+        page = res.get_data(as_text=True)
+
+        assert 'This opportunity was withdrawn on Friday 25 November 2016' in page
+
+
 class TestCatalogueOfBriefsPage(BaseApplicationTest):
     def setup_method(self, method):
         super(TestCatalogueOfBriefsPage, self).setup_method(method)
