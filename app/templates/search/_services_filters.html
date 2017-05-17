@@ -32,21 +32,15 @@
 
 <div class="lot-filters">
   <h2>Choose a category</h2>
-  {% from 'search/_categories.html' import top_level_link, list_item__unselected, list_item__selected, nested_category_list %}
+  {% from 'search/_categories.html' import top_level_link, category_list %}
+  {% set lots = lots|selectattr("selected")|list or lots %}
   <ul>
     {% if current_lot %}
       <li>{{ top_level_link( text='All categories', url=url_for('.search_services', q=search_keywords)) }}</li>
     {% else %}
       <li>All categories</li>
     {% endif %}
-    {% set lots = lots|selectattr("selected")|list or lots %}
-    {% for lot in lots %}
-      {% if lot.selected %}
-        {{ list_item__selected(text=lot.name, url=lot.link, nested_items=lot.categories) }}
-      {% else %}
-        {{ list_item__unselected(url=lot.link, text=lot.name) }}
-      {% endif %}
-    {% endfor %}
+    {{ category_list(lots, keys={'text': 'name', 'nested_items': 'categories'}) }}
   </ul>
 </div>
 

@@ -7,27 +7,33 @@
 {%- endmacro -%}
 
 {%- macro list_item__selected(text, url=None, nested_items=None) -%}
-  {% set has_children_selected = nested_items and (nested_items|selectattr("selected")|list|length) > 0 %}
+  {% set has_children_selected = nested_items and ((nested_items|selectattr("selected")|list|length) > 0) %}
   {% if has_children_selected %}
     <li>{{ top_level_link(text, url) }}
   {% else %}
     <li aria-current="page"><strong>{{ text }}</strong>
   {% endif %}
-  {% if nested_items %}{{ nested_category_list(nested_items) }}{% endif %}
+  {% if nested_items %}
+    <ul>{{ category_list(nested_items, keys={'text': 'label', 'nested_items': 'children'}) }}</ul>
+  {% endif %}
   </li>
 {%- endmacro -%}
 
-{%- macro nested_category_list(items, keys=None) -%}
-<ul>
-  {% for item in items %}
-    {% if item.selected %}
-       {{ list_item__selected(text=item.label, url=item.link, nested_items=item.children) }}
-    {% elif item.link %}
-      {{ list_item__unselected(text=item.label, url=item.link) }}
-    {% endif %}
-    {% if item.children and item.selected %}
-      {{ nested_category_list(item.children) }}
-    {% endif %}
-  {% endfor %}
-</ul>
+{%- macro category_list(items=[], keys=None) -%}
+  {% set
+      _keys = {
+        'text': 'text',
+        'url': 'link',
+        'selected': 'selected',
+        'nested_items': 'nested_items'
+      }
+  %}
+  {% set _ = _keys.update(keys or {}) %}
+    {% for item in items %}
+      {% if item.get(_keys['selected']) %}
+         {{ list_item__selected(text=item.get(_keys['text']), url=item.get(_keys['url']), nested_items=item.get(_keys['nested_items'])) }}
+      {% elif item.get(_keys['url']) %}
+        {{ list_item__unselected(text=item.get(_keys['text']), url=item.get(_keys['url'])) }}
+      {% endif %}
+    {% endfor %}
 {%- endmacro -%}
