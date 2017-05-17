@@ -77,7 +77,7 @@ def terms_and_conditions():
 def get_brief_by_id(framework_framework, brief_id):
     briefs = data_api_client.get_brief(brief_id)
     brief = briefs.get('briefs')
-    if brief['status'] not in ['live', 'closed'] or brief['frameworkFramework'] != framework_framework:
+    if brief['status'] not in ['live', 'closed', 'withdrawn'] or brief['frameworkFramework'] != framework_framework:
         abort(404, "Opportunity '{}' can not be found".format(brief_id))
 
     if getattr(current_user, "supplier_id", None) is None:

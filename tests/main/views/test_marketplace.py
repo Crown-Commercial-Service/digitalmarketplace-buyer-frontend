@@ -606,6 +606,13 @@ class TestBriefPage(BaseApplicationTest):
 
         self._assert_view_application(document, brief_id)
 
+    def test_dos_brief_visible_when_withdrawn(self):
+        self.login_as_supplier()
+        self.brief['briefs']['status'] = "withdrawn"
+        brief_id = self.brief['briefs']['id']
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
+
+        assert res.status_code == 200
 
 class TestCatalogueOfBriefsPage(BaseApplicationTest):
     def setup_method(self, method):
