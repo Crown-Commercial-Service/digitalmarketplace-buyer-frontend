@@ -8,31 +8,47 @@
   {% include "toolkit/forms/keyword-search.html" %}
 {% endwith %}
 
+<style>
+  .lot-filters li[aria-current] {
+    /* except we don't want this to happen in the very last row */
+    margin-top: 10px;
+  }
+  .lot-filters a {
+    text-decoration: none;
+  }
+  .lot-filters__top-level-link {
+    padding-left: 15px; /* gutter */
+    /* if we used a 'content' pseudo element, the color wouldn't be a problem */
+    /* either that or we overwrite the link colour */
+    /* dash 2 x or @ 2 x */
+    background: url(/static/images/back_chevron.png) 0% 45% no-repeat;
+    display: inline-block;
+    margin-top: 5px;
+  }
+  .lot-filters li:first-child .lot-filters__top-level-link {
+    margin-top: 0;
+  }
+</style>
+
 <div class="lot-filters">
   <h2>Choose a category</h2>
+  {% from 'search/_categories.html' import top_level_link, list_item__unselected, list_item__selected, nested_category_list %}
   <ul>
-    <li>
-      {% if current_lot %}
-        <a href="{{ url_for('.search_services', q=search_keywords) }}">All categories</a>
+    {% if current_lot %}
+      <li>{{ top_level_link( text='All categories', url=url_for('.search_services', q=search_keywords)) }}</li>
+    {% else %}
+      <li>All categories</li>
+    {% endif %}
+    {% set lots = lots|selectattr("selected")|list or lots %}
+    {% for lot in lots %}
+      {% if lot.selected %}
+        {{ list_item__selected(text=lot.name, url=lot.link, nested_items=lot.categories) }}
       {% else %}
-        All categories
+        {{ list_item__unselected(url=lot.link, text=lot.name) }}
       {% endif %}
-    </li>
-  {% for lot in lots %}
-    <li>
-      {% if lot.link %}<a href="{{ lot.link }}">{% endif %}{% if lot.selected %}<strong>{% endif %}
-        {{ lot.name }}
-      {% if lot.selected %}</strong>{% endif %}{% if lot.link %}</a>{% endif %}
-      {% if lot.categories and lot.selected %}
-        {% with categories=lot.categories %}
-          {% include 'search/_categories.html' %}
-        {% endwith %}
-      {% endif %}
-    </li>
-  {% endfor %}
+    {% endfor %}
   </ul>
 </div>
-
 
 {% if current_lot %}
 <input type="hidden" name="lot" value="{{ current_lot.slug }}" />

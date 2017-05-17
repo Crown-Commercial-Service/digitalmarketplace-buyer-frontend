@@ -1,14 +1,33 @@
+{%- macro top_level_link(text, url) -%}
+  <a href="{{ url }}" class="lot-filters__top-level-link">{{ text }}</a>
+{%- endmacro -%}
+
+{%- macro list_item__unselected(text, url) -%}
+  <li><a href="{{ url }}">{{ text }}</a></li>
+{%- endmacro -%}
+
+{%- macro list_item__selected(text, url=None, nested_items=None) -%}
+  {% set has_children_selected = nested_items and (nested_items|selectattr("selected")|list|length) > 0 %}
+  {% if has_children_selected %}
+    <li>{{ top_level_link(text, url) }}
+  {% else %}
+    <li aria-current="page"><strong>{{ text }}</strong>
+  {% endif %}
+  {% if nested_items %}{{ nested_category_list(nested_items) }}{% endif %}
+  </li>
+{%- endmacro -%}
+
+{%- macro nested_category_list(items, keys=None) -%}
 <ul>
-  {% for category in categories %}
-    <li>
-      {% if category.link %}<a href="{{ category.link }}">{% endif %}{% if category.selected %}<strong>{% endif %}
-        {{ category.label }}
-      {% if category.selected %}</strong>{% endif %}{% if category.link %}</a>{% endif %}
-      {% if category.children and category.selected %}
-        {% with categories=category.children %}
-          {% include 'search/_categories.html' %}
-        {% endwith %}
-      {% endif %}
-    </li>
+  {% for item in items %}
+    {% if item.selected %}
+       {{ list_item__selected(text=item.label, url=item.link, nested_items=item.children) }}
+    {% elif item.link %}
+      {{ list_item__unselected(text=item.label, url=item.link) }}
+    {% endif %}
+    {% if item.children and item.selected %}
+      {{ nested_category_list(item.children) }}
+    {% endif %}
   {% endfor %}
 </ul>
+{%- endmacro -%}
