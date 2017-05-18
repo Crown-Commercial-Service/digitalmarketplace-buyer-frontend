@@ -14,6 +14,7 @@
   filtersPreposition: with a
   filterRules:
   conjunction: and
+
 -
   id: Minimum contract period
   labelPreposition: with a
@@ -85,6 +86,136 @@
   filtersPreposition:
   filterRules:
   conjunction: and
+
+-
+  id: Cloud deployment model
+  labelPreposition: deployable to a
+  conjunction: and
+
+-
+  id: Supplier type
+  labelPreposition: where the supplier is
+  conjunction: or
+  filterRules:
+  -
+    preposition:
+    id: not a reseller
+  -
+    preposition: a
+    id: reseller providing extra features and support
+  -
+    preposition: a
+    id: reseller providing extra support
+  -
+    preposition: a
+    id: reseller (no extras)
+
+-
+  id: Using the service
+  labelPreposition: where users can access the service through
+  conjunction: and
+  filterRules:
+  -
+    preposition: a
+    id: web browser interface
+  -
+    preposition: an
+    id: application to install
+  -
+    preposition:
+    id: mobile devices
+  -
+    preposition: an
+    id: API
+-
+  id: Service usage metrics
+  labelPreposition: where usage metrics are provided through
+  conjunction: and
+
+-
+  id: Connected public sector networks
+  labelPreposition: where the service is connected to the
+  conjunction: and
+-
+  id: Data protection between buyer and supplier networks
+  labelPreposition: where data protection between buyer and supplier networks includes
+  conjunction: and
+  filterRules:
+  -
+    preposition: a
+    id: private network or public sector network
+  -
+    preposition:
+    id: TLS (version 1.2 or above)
+  -
+    preposition:
+    id: IPsec or TLS VPN gateway
+  -
+    preposition:
+    id: legacy SSL and TLS (under version 1.2)
+
+-
+  id: Data protection within supplier network
+  labelPreposition: where data protection within supplier network includes
+  filtersPreposition: the
+  conjunction: and
+
+-
+  id: Data storage and processing locations
+  labelPreposition: where data storage and processing locations include
+  conjunction: and
+  conjunction: and
+  filterRules:
+  -
+    preposition: the
+    id: United Kingdom
+  -
+    preposition: the
+    id: European Economic Area (EEA)
+  -
+    preposition:
+    id: EU-US Privacy Shield agreement locations
+
+-
+  id: User authentication
+  labelPreposition: where users authenticate with
+  filtersPreposition:
+  conjunction: and
+-
+  id: Management access authentication
+  labelPreposition: where service managers and administrators authenticate with
+  filtersPreposition:
+  conjunction: and
+
+-
+  id: Security certification
+  labelPreposition: where security certificates held include
+  filtersPreposition:
+  conjunction: and
+
+-
+  id: Security governance standards
+  labelPreposition: where suppliers comply with security governance standard
+  filtersPreposition:
+  conjunction: and
+
+-
+  id: Datacentre security standard
+  labelPreposition: where datacentre security
+  filtersPreposition:
+  conjunction: and
+-
+  id: Pricing options
+  filtersPreposition: with
+  conjunction: and
+  filterRules:
+  -
+    preposition: a
+    id: discount for educational organisations
+  -
+    preposition: a
+    id: free trial
+
 -
   id: User support
   labelPreposition: with
@@ -97,10 +228,16 @@
   filtersPreposition: the supplier's staff will undergo
   filterRules:
   conjunction: and
+
 -
-  id: Security certification
-  labelPreposition: covering the service includes
-  label:
-  filtersPreposition:
+  id: Staff security clearance
+  labelPreposition:
+  filtersPreposition: with
+  conjunction: or
   filterRules:
-  conjunction: and
+  -
+    preposition: staff security clearance that
+    id: conforms to BS7858:2012
+  -
+    preposition: staff having
+    id: other security clearance
