@@ -8,33 +8,6 @@
   {% include "toolkit/forms/keyword-search.html" %}
 {% endwith %}
 
-<style>
-  .lot-filters li[aria-current] {
-    /* except we don't want this to happen in the very last row */
-    margin-top: 10px;
-  }
-  .lot-filters a {
-    text-decoration: none;
-  }
-  .lot-filters__top-level-link {
-    padding-left: 15px; /* gutter */
-    display: inline-block;
-    margin-top: 5px;
-    position: relative;
-  }
-  .lot-filters__top-level-link:before {
-    position: absolute;
-    left: 0;
-    top: 0;
-    line-height: .85;
-    content: "\2039";
-    font-size: 22px;
-  }
-  .lot-filters li:first-child .lot-filters__top-level-link {
-    margin-top: 0;
-  }
-</style>
-
 <div class="lot-filters">
   <h2>Choose a category</h2>
   {% from 'search/_categories.html' import top_level_link, category_list %}
