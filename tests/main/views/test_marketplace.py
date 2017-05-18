@@ -612,7 +612,6 @@ class TestBriefPage(BaseBriefPageTest):
 class TestWithdrawnBriefPage(BaseBriefPageTest):
     def setup_method(self, method):
         super(TestWithdrawnBriefPage, self).setup_method(method)
-        self.login_as_supplier()
         self.brief['briefs']['status'] = "withdrawn"
         self.brief['briefs']['withdrawnAt'] = "2016-11-25T10:47:23.126761Z"
         self.brief_id = self.brief['briefs']['id']
@@ -629,7 +628,7 @@ class TestWithdrawnBriefPage(BaseBriefPageTest):
 
         assert len(apply_links) == 0
 
-    def test_apply_button_not_visible_for_withdrawn_briefs(self):
+    def test_deadline_text_not_shown(self):
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(self.brief_id))
         page = res.get_data(as_text=True)
 
@@ -642,7 +641,7 @@ class TestWithdrawnBriefPage(BaseBriefPageTest):
         assert 'This opportunity was withdrawn on' in page
         assert (
             "You can&#39;t apply for this opportunity now. "
-            "The buyer may publish an updated version on the Digital Marketplace."
+            "The buyer may publish an updated&nbsp;version on the Digital&nbsp;Marketplace."
         ) in page
 
     @pytest.mark.parametrize(('status'), ['live', 'closed'])
@@ -658,7 +657,7 @@ class TestWithdrawnBriefPage(BaseBriefPageTest):
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(self.brief_id))
         page = res.get_data(as_text=True)
 
-        assert 'This opportunity was withdrawn on Friday 25 November 2016' in page
+        assert 'This opportunity was withdrawn on Friday&nbsp;25&nbsp;November&nbsp;2016' in page
 
 
 class TestCatalogueOfBriefsPage(BaseApplicationTest):

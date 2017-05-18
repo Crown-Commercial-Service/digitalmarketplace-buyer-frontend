@@ -42,8 +42,8 @@
     {%
       with
       type = "temporary-message",
-      heading = "This opportunity was withdrawn on {}".format(brief.withdrawnAt|dateformat),
-      message = "You can't apply for this opportunity now. The buyer may publish an updated version on the Digital Marketplace."
+      heading = "This opportunity was withdrawn on " + "{}".format(brief.withdrawnAt|dateformat)|nbsp,
+      message = "You can't apply for this opportunity now. The buyer may publish an " + "updated version"|nbsp + " on the " + "Digital Marketplace."|nbsp
     %}
       {% include "toolkit/notification-banner.html" %}
     {% endwith %}
