@@ -48,6 +48,7 @@ class TestBuyerDashboard(BaseApplicationTest):
                         "applicationsClosedAt": "2016-02-18T12:00:00.000000Z",
                         "frameworkSlug": "digital-outcomes-and-specialists"
                     }, {
+                        "id": 23,
                         "status": "withdrawn",
                         "title": "A withdrawn brief",
                         "createdAt": "2016-02-01T00:00:00.000000Z",
@@ -78,6 +79,8 @@ class TestBuyerDashboard(BaseApplicationTest):
 
             withdrawn_row = [cell.text_content().strip() for cell in tables[2].xpath('.//tbody/tr')[1].xpath('.//td')]
             assert withdrawn_row[0] == "A withdrawn brief"
+            public_link = '/digital-outcomes-and-specialists/opportunities/23'
+            assert tables[2].xpath('.//tbody/tr')[1].xpath('.//td')[0].xpath('.//a/@href')[0] == public_link
             assert withdrawn_row[1] == "Withdrawn"
 
 
