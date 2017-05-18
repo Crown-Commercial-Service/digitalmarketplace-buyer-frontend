@@ -46,18 +46,6 @@ em.search-result-highlighted-text {
   .option-select-label {
     display: block;
   }
-
-  .filter-field-text {
-    padding: 5px;
-
-    input {
-      @include core-16;
-      @include box-sizing(border-box);
-      width: 100%;
-      padding: 5px;
-      border: 1px solid $border-colour;
-    }
-  }
 }
 
 .search-result-important-metadata {

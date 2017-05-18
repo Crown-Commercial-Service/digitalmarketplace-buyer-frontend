@@ -1,3 +1,13 @@
+{%
+  with
+  id = "keywords",
+  name = "q",
+  label = "Keywords",
+  value = search_keywords
+%}
+  {% include "toolkit/forms/keyword-search.html" %}
+{% endwith %}
+
 <div class="lot-filters">
   <h2>Choose a category</h2>
   {% from 'macros/_filters.html' import checkbox, lot_filters %}
@@ -23,14 +33,7 @@
   {% endfor %}
   </ul>
 </div>
-<div class="govuk-option-select filter-field-text">
-  <div class="container-head">
-    <label class="option-select-label" for="keywords">
-      Keywords
-    </label>
-  </div>
-  <input type="text" name="q" id="keywords" value="{{ search_keywords }}" maxlength="200">
-</div>
+
 
 {% if current_lot %}
 <input type="hidden" name="lot" value="{{ current_lot.slug }}" />
