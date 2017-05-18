@@ -30,23 +30,29 @@ class TestBuyerDashboard(BaseApplicationTest):
             data_api_client.find_briefs.return_value = {
                 "briefs": [
                     {
+                        "id": 20,
                         "status": "draft",
                         "title": "A draft brief",
                         "createdAt": "2016-02-02T00:00:00.000000Z",
-                        "frameworkSlug": "digital-outcomes-and-specialists"
+                        "frameworkSlug": "digital-outcomes-and-specialists",
+                        "lot": "digital-specialists"
                     }, {
+                        "id": 21,
                         "status": "live",
                         "title": "A live brief",
                         "createdAt": "2016-02-01T00:00:00.000000Z",
                         "publishedAt": "2016-02-04T12:00:00.000000Z",
-                        "frameworkSlug": "digital-outcomes-and-specialists"
+                        "frameworkSlug": "digital-outcomes-and-specialists",
+                        "lot": "digital-specialists"
                     }, {
+                        "id": 22,
                         "status": "closed",
                         "title": "A closed brief",
                         "createdAt": "2016-02-01T00:00:00.000000Z",
                         "publishedAt": "2016-02-04T12:00:00.000000Z",
                         "applicationsClosedAt": "2016-02-18T12:00:00.000000Z",
-                        "frameworkSlug": "digital-outcomes-and-specialists"
+                        "frameworkSlug": "digital-outcomes-and-specialists",
+                        "lot": "digital-specialists"
                     }, {
                         "id": 23,
                         "status": "withdrawn",
@@ -67,14 +73,20 @@ class TestBuyerDashboard(BaseApplicationTest):
             tables = document.xpath('//table')
             draft_row = [cell.text_content().strip() for cell in tables[0].xpath('.//tbody/tr/td')]
             assert draft_row[0] == "A draft brief"
+            req_link = '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/20'
+            assert tables[0].xpath('.//tbody/tr')[0].xpath('.//td')[0].xpath('.//a/@href')[0] == req_link
             assert draft_row[1] == "Tuesday 2 February 2016"
 
             live_row = [cell.text_content().strip() for cell in tables[1].xpath('.//tbody/tr/td')]
             assert live_row[0] == "A live brief"
+            req_link = '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/21'
+            assert tables[1].xpath('.//tbody/tr')[0].xpath('.//td')[0].xpath('.//a/@href')[0] == req_link
             assert live_row[1] == "Thursday 4 February 2016"
 
             closed_row = [cell.text_content().strip() for cell in tables[2].xpath('.//tbody/tr/td')]
             assert closed_row[0] == "A closed brief"
+            req_link = '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/22'
+            assert tables[2].xpath('.//tbody/tr')[0].xpath('.//td')[0].xpath('.//a/@href')[0] == req_link
             assert closed_row[1] == "Thursday 18 February 2016"
 
             withdrawn_row = [cell.text_content().strip() for cell in tables[2].xpath('.//tbody/tr')[1].xpath('.//td')]
