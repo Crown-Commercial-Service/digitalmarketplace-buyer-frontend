@@ -33,10 +33,13 @@ from collections import Counter
 @buyers.route('')
 def buyer_dashboard():
     user_briefs = data_api_client.find_briefs(current_user.id).get('briefs', [])
-    draft_briefs = add_unanswered_counts_to_briefs([brief for brief in user_briefs if brief['status'] == 'draft'],
-                                                   content_loader)
+
+    draft_briefs = add_unanswered_counts_to_briefs(
+        [brief for brief in user_briefs if brief['status'] == 'draft'],
+        content_loader
+    )
     live_briefs = [brief for brief in user_briefs if brief['status'] == 'live']
-    closed_briefs = [brief for brief in user_briefs if brief['status'] == 'closed']
+    closed_briefs = [brief for brief in user_briefs if brief['status'] in ['closed', 'withdrawn']]
 
     return render_template(
         'buyers/dashboard.html',

@@ -29,15 +29,32 @@ class TestBuyerDashboard(BaseApplicationTest):
             self.login_as_buyer()
             data_api_client.find_briefs.return_value = {
                 "briefs": [
-                    {"status": "draft",
-                     "title": "A draft brief",
-                     "createdAt": "2016-02-02T00:00:00.000000Z",
-                     "frameworkSlug": "digital-outcomes-and-specialists"},
-                    {"status": "live",
-                     "title": "A live brief",
-                     "createdAt": "2016-02-01T00:00:00.000000Z",
-                     "publishedAt": "2016-02-04T12:00:00.000000Z",
-                     "frameworkSlug": "digital-outcomes-and-specialists"},
+                    {
+                        "status": "draft",
+                        "title": "A draft brief",
+                        "createdAt": "2016-02-02T00:00:00.000000Z",
+                        "frameworkSlug": "digital-outcomes-and-specialists"
+                    }, {
+                        "status": "live",
+                        "title": "A live brief",
+                        "createdAt": "2016-02-01T00:00:00.000000Z",
+                        "publishedAt": "2016-02-04T12:00:00.000000Z",
+                        "frameworkSlug": "digital-outcomes-and-specialists"
+                    }, {
+                        "status": "closed",
+                        "title": "A closed brief",
+                        "createdAt": "2016-02-01T00:00:00.000000Z",
+                        "publishedAt": "2016-02-04T12:00:00.000000Z",
+                        "applicationsClosedAt": "2016-02-18T12:00:00.000000Z",
+                        "frameworkSlug": "digital-outcomes-and-specialists"
+                    }, {
+                        "status": "withdrawn",
+                        "title": "A withdrawn brief",
+                        "createdAt": "2016-02-01T00:00:00.000000Z",
+                        "publishedAt": "2016-02-04T12:00:00.000000Z",
+                        "withdrawnAt": "2016-02-05T12:00:00.000000Z",
+                        "frameworkSlug": "digital-outcomes-and-specialists"
+                    }
                 ]
             }
 
@@ -54,6 +71,14 @@ class TestBuyerDashboard(BaseApplicationTest):
             live_row = [cell.text_content().strip() for cell in tables[1].xpath('.//tbody/tr/td')]
             assert live_row[0] == "A live brief"
             assert live_row[1] == "Thursday 4 February 2016"
+
+            closed_row = [cell.text_content().strip() for cell in tables[2].xpath('.//tbody/tr/td')]
+            assert closed_row[0] == "A closed brief"
+            assert closed_row[1] == "Thursday 18 February 2016"
+
+            withdrawn_row = [cell.text_content().strip() for cell in tables[2].xpath('.//tbody/tr')[1].xpath('.//td')]
+            assert withdrawn_row[0] == "A withdrawn brief"
+            assert withdrawn_row[1] == "Withdrawn"
 
 
 @mock.patch('app.buyers.views.buyers.data_api_client')

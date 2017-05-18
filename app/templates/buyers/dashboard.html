@@ -38,7 +38,7 @@
                 {% endfor %}
             {% endif %}
         {% endwith %}
-        
+
         <div class="column-two-thirds">
             {% with
                 context = current_user.email_address,
@@ -66,9 +66,9 @@
 
     {% call summary.row() %}
         {{ summary.service_link(item.title, url_for(".view_brief_overview", framework_slug=item.frameworkSlug, lot_slug=item.lot, brief_id=item.id)) }}
-        
+
         {{ summary.text(item.createdAt|dateformat) }}
-        
+
         {% if item.unanswered_required > 0 and item.unanswered_optional > 0 %}
             {{ summary.text("{} required<br>{} optional".format(item.unanswered_required, item.unanswered_optional)|safe) }}
         {% elif item.unanswered_required > 0 %}
@@ -103,7 +103,7 @@
         {{ summary.button(text="Make a copy", action=url_for(".copy_brief", framework_slug=item.frameworkSlug, lot_slug=item.lot, brief_id=item.id)) }}
     {% endcall %}
 {% endcall %}
-        
+
 {{ summary.heading("Closed requirements", id="closed_requirements") }}
 {% call(item) summary.list_table(
     closed_briefs,
@@ -120,7 +120,11 @@
 
     {% call summary.row() %}
         {{ summary.service_link(item.title, url_for(".view_brief_overview", framework_slug=item.frameworkSlug, lot_slug=item.lot, brief_id=item.id)) }}
-        {{ summary.text(item.applicationsClosedAt|dateformat) }}
+        {% if item.status == "closed" %}
+          {{ summary.text(item.applicationsClosedAt|dateformat) }}
+        {% elif item.status == "withdrawn" %}
+          {{ summary.text("Withdrawn") }}
+        {% endif %}
         {{ summary.link("View responses", url_for(".view_brief_responses", framework_slug=item.frameworkSlug, lot_slug=item.lot, brief_id=item.id)) }}
         {{ summary.button(text="Make a copy", action=url_for(".copy_brief", framework_slug=item.frameworkSlug, lot_slug=item.lot, brief_id=item.id)) }}
     {% endcall %}
