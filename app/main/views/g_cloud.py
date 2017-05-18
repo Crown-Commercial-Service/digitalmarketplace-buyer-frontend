@@ -210,7 +210,7 @@ def search_services():
 
     # Uppercase first character of filter labels for display
     for filter_groups in filters.values():
-        for _, filter_instance in enumerate(filter_groups['filters']):
+        for filter_instance in filter_groups['filters']:
             if 'label' in filter_instance:
                 filter_instance['label'] = filter_instance['label'][:1].upper() + filter_instance['label'][1:]
 
