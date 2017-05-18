@@ -40,12 +40,14 @@
   {% from 'search/_categories.html' import top_level_link, category_list %}
   {% set lots = lots|selectattr("selected")|list or lots %}
   <ul>
+    <li>
     {% if current_lot %}
-      <li>{{ top_level_link( text='All categories', url=url_for('.search_services', q=search_keywords)) }}</li>
+      {{ top_level_link( text='All categories', url=url_for('.search_services', q=search_keywords)) }}
     {% else %}
-      <li>All categories</li>
+      All categories
     {% endif %}
-    {{ category_list(lots, keys={'text': 'name', 'nested_items': 'categories'}) }}
+      {{ category_list(lots, keys={'text': 'name', 'nested_items': 'categories'}) }}
+    </li>
   </ul>
 </div>
 
