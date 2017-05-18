@@ -114,6 +114,7 @@ class TestBuyerDashboard(BaseApplicationTest):
         assert closed_row[0] == "A closed brief"
         assert tables[2].xpath('.//tbody/tr')[0].xpath('.//td')[0].xpath('.//a/@href')[0] == expected_link
         assert closed_row[1] == "Thursday 18 February 2016"
+        assert closed_row[2] == "View responses"
 
     def test_withdrawn_briefs_section(self, data_api_client, find_briefs_mock):
         data_api_client.find_briefs.return_value = find_briefs_mock
@@ -129,6 +130,7 @@ class TestBuyerDashboard(BaseApplicationTest):
         assert withdrawn_row[0] == "A withdrawn brief"
         assert tables[2].xpath('.//tbody/tr')[1].xpath('.//td')[0].xpath('.//a/@href')[0] == expected_link
         assert withdrawn_row[1] == "Withdrawn"
+        assert "View responses" not in withdrawn_row[2]
 
 
 @mock.patch('app.buyers.views.buyers.data_api_client')
