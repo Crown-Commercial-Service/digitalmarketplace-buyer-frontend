@@ -65,9 +65,13 @@ em.search-result-highlighted-text {
         position: absolute;
         left: 0;
         top: 0;
-        line-height: .85;
+        line-height: .70;
         content: "\2039"; /* left-pointing chevron */
-        font-size: 22px;
+        font-size: 1.333em;
+
+        @include media(tablet) {
+          line-height: .85;
+        }
       }
     }
   }
