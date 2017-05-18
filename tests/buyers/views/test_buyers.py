@@ -18,6 +18,10 @@ import sys
 
 from werkzeug.exceptions import NotFound
 
+
+po = functools.partial(mock.patch.object, autospec=True)
+
+
 @pytest.fixture()
 def find_briefs_mock():
     base_brief_values = {
@@ -58,6 +62,7 @@ def find_briefs_mock():
 
     return find_briefs_response
 
+
 @mock.patch('app.buyers.views.buyers.data_api_client')
 class TestBuyerDashboard(BaseApplicationTest):
 
@@ -69,63 +74,60 @@ class TestBuyerDashboard(BaseApplicationTest):
         data_api_client.find_briefs.return_value = find_briefs_mock
 
         res = self.client.get("/buyers")
-        document = html.fromstring(res.get_data(as_text=True))
+        tables = html.fromstring(res.get_data(as_text=True)).xpath('//table')
 
         assert res.status_code == 200
 
-        tables = document.xpath('//table')
         draft_row = [cell.text_content().strip() for cell in tables[0].xpath('.//tbody/tr/td')]
+        expected_link = '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/20'
+
         assert draft_row[0] == "A draft brief"
-        req_link = '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/20'
-        assert tables[0].xpath('.//tbody/tr')[0].xpath('.//td')[0].xpath('.//a/@href')[0] == req_link
+        assert tables[0].xpath('.//tbody/tr')[0].xpath('.//td')[0].xpath('.//a/@href')[0] == expected_link
         assert draft_row[1] == "Monday 1 February 2016"
 
     def test_live_briefs_section(self, data_api_client, find_briefs_mock):
         data_api_client.find_briefs.return_value = find_briefs_mock
 
         res = self.client.get("/buyers")
-        document = html.fromstring(res.get_data(as_text=True))
+        tables = html.fromstring(res.get_data(as_text=True)).xpath('//table')
 
         assert res.status_code == 200
 
-        tables = document.xpath('//table')
-
         live_row = [cell.text_content().strip() for cell in tables[1].xpath('.//tbody/tr/td')]
+        expected_link = '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/21'
+
         assert live_row[0] == "A live brief"
-        req_link = '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/21'
-        assert tables[1].xpath('.//tbody/tr')[0].xpath('.//td')[0].xpath('.//a/@href')[0] == req_link
+        assert tables[1].xpath('.//tbody/tr')[0].xpath('.//td')[0].xpath('.//a/@href')[0] == expected_link
         assert live_row[1] == "Thursday 4 February 2016"
 
     def test_closed_briefs_section(self, data_api_client, find_briefs_mock):
         data_api_client.find_briefs.return_value = find_briefs_mock
 
         res = self.client.get("/buyers")
-        document = html.fromstring(res.get_data(as_text=True))
+        tables = html.fromstring(res.get_data(as_text=True)).xpath('//table')
 
         assert res.status_code == 200
 
-        tables = document.xpath('//table')
-
         closed_row = [cell.text_content().strip() for cell in tables[2].xpath('.//tbody/tr/td')]
+        expected_link = '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/22'
+
         assert closed_row[0] == "A closed brief"
-        req_link = '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/22'
-        assert tables[2].xpath('.//tbody/tr')[0].xpath('.//td')[0].xpath('.//a/@href')[0] == req_link
+        assert tables[2].xpath('.//tbody/tr')[0].xpath('.//td')[0].xpath('.//a/@href')[0] == expected_link
         assert closed_row[1] == "Thursday 18 February 2016"
 
     def test_withdrawn_briefs_section(self, data_api_client, find_briefs_mock):
         data_api_client.find_briefs.return_value = find_briefs_mock
 
         res = self.client.get("/buyers")
-        document = html.fromstring(res.get_data(as_text=True))
+        tables = html.fromstring(res.get_data(as_text=True)).xpath('//table')
 
         assert res.status_code == 200
 
-        tables = document.xpath('//table')
-
         withdrawn_row = [cell.text_content().strip() for cell in tables[2].xpath('.//tbody/tr')[1].xpath('.//td')]
+        expected_link = '/digital-outcomes-and-specialists/opportunities/23'
+
         assert withdrawn_row[0] == "A withdrawn brief"
-        public_link = '/digital-outcomes-and-specialists/opportunities/23'
-        assert tables[2].xpath('.//tbody/tr')[1].xpath('.//td')[0].xpath('.//a/@href')[0] == public_link
+        assert tables[2].xpath('.//tbody/tr')[1].xpath('.//td')[0].xpath('.//a/@href')[0] == expected_link
         assert withdrawn_row[1] == "Withdrawn"
 
 
