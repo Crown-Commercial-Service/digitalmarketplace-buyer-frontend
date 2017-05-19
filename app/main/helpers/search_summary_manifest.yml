@@ -173,8 +173,8 @@
     id: free trial
 
 - id: User support
-  labelPreposition: with
-  filtersPreposition: where user support is available
+  labelPreposition: where
+  filtersPreposition: user support is available
   conjunction: and
   filterRules:
   - preposition: through
