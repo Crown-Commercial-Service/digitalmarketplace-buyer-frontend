@@ -10,30 +10,19 @@
 
 <div class="lot-filters">
   <h2>Choose a category</h2>
-  {% from 'macros/_filters.html' import checkbox, lot_filters %}
+  {% from 'search/_categories.html' import top_level_link, category_list %}
+  {% set lots = lots|selectattr("selected")|list or lots %}
   <ul>
     <li>
-      {% if current_lot %}
-        <a href="{{ url_for('.search_services', q=search_keywords) }}">All categories</a>
-      {% else %}
-        All categories
-      {% endif %}
+    {% if current_lot %}
+      {{ top_level_link( text='All categories', url=url_for('.search_services', q=search_keywords)) }}
+    {% else %}
+      All categories
+    {% endif %}
+      {{ category_list(lots, keys={'text': 'name', 'nested_items': 'categories'}) }}
     </li>
-  {% for lot in lots %}
-    <li>
-      {% if lot.link %}<a href="{{ lot.link }}">{% endif %}{% if lot.selected %}<strong>{% endif %}
-        {{ lot.name }}
-      {% if lot.selected %}</strong>{% endif %}{% if lot.link %}</a>{% endif %}
-      {% if lot.categories and lot.selected %}
-        {% with categories=lot.categories %}
-          {% include 'search/_categories.html' %}
-        {% endwith %}
-      {% endif %}
-    </li>
-  {% endfor %}
   </ul>
 </div>
-
 
 {% if current_lot %}
 <input type="hidden" name="lot" value="{{ current_lot.slug }}" />

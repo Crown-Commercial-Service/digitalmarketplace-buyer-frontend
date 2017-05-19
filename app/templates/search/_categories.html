@@ -1,14 +1,47 @@
-<ul>
-  {% for category in categories %}
-    <li>
-      {% if category.link %}<a href="{{ category.link }}">{% endif %}{% if category.selected %}<strong>{% endif %}
-        {{ category.label }}
-      {% if category.selected %}</strong>{% endif %}{% if category.link %}</a>{% endif %}
-      {% if category.children and category.selected %}
-        {% with categories=category.children %}
-          {% include 'search/_categories.html' %}
-        {% endwith %}
+{%- macro top_level_link(text, url) -%}
+  <a href="{{ url }}" class="lot-filters__top-level-link">{{ text }}</a>
+{%- endmacro -%}
+
+{%- macro list_item__unselected(text, url) -%}
+  <li><a href="{{ url }}">{{ text }}</a></li>
+{%- endmacro -%}
+
+{%- macro list_item__selected(text, url=None, nested_items=None) -%}
+  {% set has_children_selected = nested_items and ((nested_items|selectattr("selected")|list|length) > 0) %}
+  {% if has_children_selected %}
+    <li>{{ top_level_link(text, url) }}
+  {% else %}
+    <li aria-current="page"><strong>{{ text }}</strong>
+  {% endif %}
+
+  {% if nested_items %}
+    {{ category_list(nested_items, keys={'text': 'label', 'nested_items': 'children'}) }}
+  {% endif %}
+  </li>
+{%- endmacro -%}
+
+{%- macro category_list(items, keys=None) -%}
+  {% set
+      _keys = {
+        'text': 'text',
+        'url': 'link',
+        'selected': 'selected',
+        'nested_items': 'nested_items'
+      }
+  %}
+  {% set _ = _keys.update(keys or {}) %}
+
+  {# we are trying to make sure this is the deepest list in the hierarchy #}
+  {# check that none of these items contain nested items that are "selected" #}
+  {% set last_list = items|selectattr(_keys['nested_items'])|list|selectattr(_keys['selected'])|list|length == 0 %}
+
+  <ul {% if last_list %}class="lot-filters--last-list"{% endif %}>
+    {% for item in items %}
+      {% if item.get(_keys['selected']) %}
+         {{ list_item__selected(text=item.get(_keys['text']), url=item.get(_keys['url']), nested_items=item.get(_keys['nested_items'])) }}
+      {% elif item.get(_keys['url']) %}
+        {{ list_item__unselected(text=item.get(_keys['text']), url=item.get(_keys['url'])) }}
       {% endif %}
-    </li>
-  {% endfor %}
-</ul>
+    {% endfor %}
+  </ul>
+{%- endmacro -%}

@@ -18,23 +18,60 @@ em.search-result-highlighted-text {
 }
 
 .search-page-filters {
+
+  $lot-filters__gutter: 24px;
+
   .lot-filters {
+
+    @include core-16;
+    margin-bottom: $gutter;
+
     h2 {
       @include bold-19;
     }
 
-    ul {
-      @include core-16;
-      list-style: none;
-      padding-left: 0;
-      margin: 5px 0 $gutter;
+    .lot-filters--last-list {
+      margin-left: $lot-filters__gutter / 2;
+
+      li[aria-current] strong {
+        margin: 0;
+      }
     }
 
-    ul ul {
-      margin: 0 0 $gutter/2 $gutter/2;
-      li {
-        margin: 0.3em 0;
-        font-size: smaller;
+    /* if there's no <strong> tag before the deepest list, we need some top spacing */
+    a ~ .lot-filters--last-list {
+      margin-top: $lot-filters__gutter / 2;
+    }
+
+    li {
+      margin-top: $lot-filters__gutter / 8;
+
+      &[aria-current] strong {
+        display: inline-block;
+        margin: ($lot-filters__gutter / 3) 0;
+      }
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    .lot-filters__top-level-link {
+      padding-left: $lot-filters__gutter / 2;
+      display: inline-block;
+      position: relative;
+
+      &:before {
+        position: absolute;
+        left: 0;
+        top: 0;
+        line-height: .70;
+        content: "\2039"; /* left-pointing chevron */
+        font-size: 1.333em;
+
+        @include media(tablet) {
+          line-height: .85;
+        }
       }
     }
   }
