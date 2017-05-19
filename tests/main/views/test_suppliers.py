@@ -8,20 +8,19 @@ class TestSuppliersPage(BaseApplicationTest):
     def setup_method(self, method):
         super(TestSuppliersPage, self).setup_method(method)
 
-        self._data_api_client = mock.patch(
-            'app.main.suppliers.data_api_client'
-        ).start()
+        self._data_api_client_patch = mock.patch('app.main.suppliers.data_api_client', autospec=True)
+        self._data_api_client = self._data_api_client_patch.start()
 
-        self.suppliers_by_prefix = self._get_suppliers_by_prefix_fixture_data()  # noqa
-        self.suppliers_by_prefix_page_2 = self._get_suppliers_by_prefix_fixture_data_page_2()  # noqa
-        self.suppliers_by_prefix_next_and_prev = self._get_suppliers_by_prefix_fixture_with_next_and_prev()  # noqa
-        self.supplier = self._get_supplier_fixture_data()  # noqa
-        self.supplier_with_minimum_data = self._get_supplier_with_minimum_fixture_data()  # noqa
-        self._data_api_client.find_suppliers.return_value = self.suppliers_by_prefix  # noqa
-        self._data_api_client.get_supplier.return_value = self.supplier  # noqa
+        self.suppliers_by_prefix = self._get_suppliers_by_prefix_fixture_data()
+        self.suppliers_by_prefix_page_2 = self._get_suppliers_by_prefix_fixture_data_page_2()
+        self.suppliers_by_prefix_next_and_prev = self._get_suppliers_by_prefix_fixture_with_next_and_prev()
+        self.supplier = self._get_supplier_fixture_data()
+        self.supplier_with_minimum_data = self._get_supplier_with_minimum_fixture_data()
+        self._data_api_client.find_suppliers.return_value = self.suppliers_by_prefix
+        self._data_api_client.get_supplier.return_value = self.supplier
 
     def teardown_method(self, method):
-        self._data_api_client.stop()
+        self._data_api_client_patch.stop()
 
     def test_should_call_api_with_correct_params(self):
         self.client.get('/g-cloud/suppliers')

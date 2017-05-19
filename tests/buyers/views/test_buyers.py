@@ -64,7 +64,7 @@ def find_briefs_mock():
     return find_briefs_response
 
 
-@mock.patch('app.buyers.views.buyers.data_api_client')
+@mock.patch('app.buyers.views.buyers.data_api_client', autospec=True)
 class TestBuyerDashboard(BaseApplicationTest):
 
     def setup_method(self, method):
@@ -134,7 +134,7 @@ class TestBuyerDashboard(BaseApplicationTest):
         assert "View responses" not in withdrawn_row[2]
 
 
-@mock.patch('app.buyers.views.buyers.data_api_client')
+@mock.patch('app.buyers.views.buyers.data_api_client', autospec=True)
 class TestStartNewBrief(BaseApplicationTest):
     def test_show_start_brief_page(self, data_api_client):
         with self.app.app_context():
@@ -203,7 +203,7 @@ class TestStartNewBrief(BaseApplicationTest):
                 assert res.status_code == 404
 
 
-@mock.patch('app.buyers.views.buyers.data_api_client')
+@mock.patch('app.buyers.views.buyers.data_api_client', autospec=True)
 class TestCreateNewBrief(BaseApplicationTest):
     def test_create_new_digital_specialists_brief(self, data_api_client):
         self.login_as_buyer()
@@ -447,8 +447,8 @@ class TestEveryDamnPage(BaseApplicationTest):
     def _load_page(self, url, status_code, method='get', data=None, framework_status='live', brief_status='draft'):
         data = {} if data is None else data
         baseurl = "/buyers/frameworks/digital-outcomes-and-specialists/requirements"
-        with mock.patch('app.buyers.views.buyers.content_loader') as content_loader, \
-                mock.patch('app.buyers.views.buyers.data_api_client') as data_api_client:
+        with mock.patch('app.buyers.views.buyers.content_loader', autospec=True) as content_loader, \
+                mock.patch('app.buyers.views.buyers.data_api_client', autospec=True) as data_api_client:
             self.login_as_buyer()
             data_api_client.get_framework.return_value = api_stubs.framework(
                 slug='digital-outcomes-and-specialists',
@@ -561,7 +561,7 @@ class TestEveryDamnPage(BaseApplicationTest):
         )
 
 
-@mock.patch('app.buyers.views.buyers.data_api_client')
+@mock.patch('app.buyers.views.buyers.data_api_client', autospec=True)
 class TestEditBriefSubmission(BaseApplicationTest):
 
     def _test_breadcrumbs_on_question_page(self, response, has_summary_page=False, section_name=None):
@@ -608,7 +608,7 @@ class TestEditBriefSubmission(BaseApplicationTest):
         document = html.fromstring(res.get_data(as_text=True))
         assert document.xpath('//h1')[0].text_content().strip() == "Organisation the work is for"
 
-    @mock.patch("app.buyers.views.buyers.content_loader")
+    @mock.patch("app.buyers.views.buyers.content_loader", autospec=True)
     def test_edit_brief_submission_return_link_to_section_summary_if_section_has_description(
             self, content_loader, data_api_client
     ):
@@ -638,7 +638,7 @@ class TestEditBriefSubmission(BaseApplicationTest):
         assert secondary_action_link.text_content().strip() == "Return to section 4"
         self._test_breadcrumbs_on_question_page(response=res, has_summary_page=True, section_name='Section 4')
 
-    @mock.patch("app.buyers.views.buyers.content_loader")
+    @mock.patch("app.buyers.views.buyers.content_loader", autospec=True)
     def test_edit_brief_submission_return_link_to_section_summary_if_other_questions(self, content_loader,
     data_api_client):  # noqa
         self.login_as_buyer()
@@ -667,7 +667,7 @@ class TestEditBriefSubmission(BaseApplicationTest):
         assert secondary_action_link.text_content().strip() == "Return to section 1"
         self._test_breadcrumbs_on_question_page(response=res, has_summary_page=True, section_name='Section 1')
 
-    @mock.patch("app.buyers.views.buyers.content_loader")
+    @mock.patch("app.buyers.views.buyers.content_loader", autospec=True)
     def test_edit_brief_submission_return_link_to_brief_overview_if_single_question(self, content_loader,
     data_api_client):  # noqa
         self.login_as_buyer()
@@ -696,7 +696,7 @@ class TestEditBriefSubmission(BaseApplicationTest):
         assert secondary_action_link.text_content().strip() == "Return to overview"
         self._test_breadcrumbs_on_question_page(response=res, has_summary_page=False)
 
-    @mock.patch("app.buyers.views.buyers.content_loader")
+    @mock.patch("app.buyers.views.buyers.content_loader", autospec=True)
     def test_edit_brief_submission_multiquestion(self, content_loader, data_api_client):
         self.login_as_buyer()
         data_api_client.get_framework.return_value = api_stubs.framework(
@@ -844,7 +844,7 @@ class TestEditBriefSubmission(BaseApplicationTest):
         assert res.status_code == 404
 
 
-@mock.patch('app.buyers.views.buyers.data_api_client')
+@mock.patch('app.buyers.views.buyers.data_api_client', autospec=True)
 class TestUpdateBriefSubmission(BaseApplicationTest):
     def test_update_brief_submission(self, data_api_client):
         self.login_as_buyer()
@@ -872,7 +872,7 @@ class TestUpdateBriefSubmission(BaseApplicationTest):
             updated_by='buyer@email.com'
         )
 
-    @mock.patch("app.buyers.views.buyers.content_loader")
+    @mock.patch("app.buyers.views.buyers.content_loader", autospec=True)
     def test_post_update_if_multiple_questions_redirects_to_section_summary(self, content_loader, data_api_client):
         self.login_as_buyer()
         data_api_client.get_framework.return_value = api_stubs.framework(
@@ -906,7 +906,7 @@ class TestUpdateBriefSubmission(BaseApplicationTest):
             'buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/section-1'
         ) is True
 
-    @mock.patch("app.buyers.views.buyers.content_loader")
+    @mock.patch("app.buyers.views.buyers.content_loader", autospec=True)
     def test_post_update_if_section_description_redirects_to_section_summary(self, content_loader, data_api_client):
         self.login_as_buyer()
         data_api_client.get_framework.return_value = api_stubs.framework(
@@ -940,7 +940,7 @@ class TestUpdateBriefSubmission(BaseApplicationTest):
             'buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/section-4'
         ) is True
 
-    @mock.patch("app.buyers.views.buyers.content_loader")
+    @mock.patch("app.buyers.views.buyers.content_loader", autospec=True)
     def test_post_update_if_single_question_no_description_redirects_to_overview(self, content_loader, data_api_client):
         self.login_as_buyer()
         data_api_client.get_framework.return_value = api_stubs.framework(
@@ -1102,7 +1102,7 @@ class TestUpdateBriefSubmission(BaseApplicationTest):
         assert not data_api_client.update_brief.called
 
 
-@mock.patch('app.buyers.views.buyers.data_api_client')
+@mock.patch('app.buyers.views.buyers.data_api_client', autospec=True)
 class TestPublishBrief(BaseApplicationTest):
     def test_publish_brief(self, data_api_client):
         self.login_as_buyer()
@@ -1459,7 +1459,7 @@ class TestPublishBrief(BaseApplicationTest):
             "can be published:" not in page_html
 
 
-@mock.patch('app.buyers.views.buyers.data_api_client')
+@mock.patch('app.buyers.views.buyers.data_api_client', autospec=True)
 class TestDeleteBriefSubmission(BaseApplicationTest):
     def test_delete_brief_submission(self, data_api_client):
         for framework_status in ['live', 'expired']:
@@ -1537,7 +1537,7 @@ class TestDeleteBriefSubmission(BaseApplicationTest):
         assert res.status_code == 404
 
 
-@mock.patch('app.buyers.views.buyers.data_api_client')
+@mock.patch('app.buyers.views.buyers.data_api_client', autospec=True)
 class TestBriefSummaryPage(BaseApplicationTest):
     def test_show_draft_brief_summary_page(self, data_api_client):
         with self.app.app_context():
@@ -1754,7 +1754,7 @@ class TestBriefSummaryPage(BaseApplicationTest):
 
             assert res.status_code == 404
 
-    @mock.patch("app.buyers.views.buyers.content_loader")
+    @mock.patch("app.buyers.views.buyers.content_loader", autospec=True)
     def test_links_to_sections_go_to_the_correct_pages_whether_they_be_sections_or_questions(self, content_loader, data_api_client):  # noqa
         with self.app.app_context():
             self.login_as_buyer()
@@ -1906,7 +1906,7 @@ class TestBriefSummaryPage(BaseApplicationTest):
                     assert contract_link_text == "View the {} contract".format(framework_name)
 
 
-@mock.patch("app.buyers.views.buyers.data_api_client")
+@mock.patch("app.buyers.views.buyers.data_api_client", autospec=True)
 class TestAddBriefClarificationQuestion(BaseApplicationTest):
     def test_show_brief_clarification_question_form_for_live_and_expired_framework(self, data_api_client):
         framework_statuses = ['live', 'expired']
@@ -2112,7 +2112,7 @@ class AbstractViewBriefResponsesPage(BaseApplicationTest):
     def setup_method(self, method):
         super(AbstractViewBriefResponsesPage, self).setup_method(method)
 
-        self.data_api_client_patch = mock.patch('app.buyers.views.buyers.data_api_client')
+        self.data_api_client_patch = mock.patch('app.buyers.views.buyers.data_api_client', autospec=True)
         self.data_api_client = self.data_api_client_patch.start()
 
         self.data_api_client.get_framework.return_value = api_stubs.framework(
@@ -2688,8 +2688,7 @@ class TestDownloadBriefResponsesView(BaseApplicationTest):
         self.instance.generate_ods.assert_called_once_with(context['brief'],
                                                            context['responses'])
 
-        self.instance.generate_ods.return_value.save\
-            .assert_called_once_with(buf)
+        self.instance.generate_ods.return_value.save.assert_called_once_with(buf)
 
         Response.assert_called_once_with(
             buf.getvalue.return_value,
@@ -2739,7 +2738,7 @@ class TestDownloadBriefResponsesView(BaseApplicationTest):
         self.instance.get_context_data.assert_called_once_with(**kwargs)
 
 
-@mock.patch("app.buyers.views.buyers.data_api_client")
+@mock.patch("app.buyers.views.buyers.data_api_client", autospec=True)
 class TestDownloadBriefResponsesCsv(BaseApplicationTest):
     url = "/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/responses/download"
 
@@ -2929,7 +2928,7 @@ class TestDownloadBriefResponsesCsv(BaseApplicationTest):
             assert res.status_code == 404
 
 
-@mock.patch('app.buyers.views.buyers.data_api_client')
+@mock.patch('app.buyers.views.buyers.data_api_client', autospec=True)
 class TestViewQuestionAndAnswerDates(BaseApplicationTest):
     def test_show_question_and_answer_dates_for_published_brief(self, data_api_client):
         for framework_status in ['live', 'expired']:

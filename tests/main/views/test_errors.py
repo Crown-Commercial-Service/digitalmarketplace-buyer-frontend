@@ -5,7 +5,7 @@ from dmapiclient import HTTPError
 from ...helpers import BaseApplicationTest
 
 
-@mock.patch('app.main.views.g_cloud.search_api_client')
+@mock.patch('app.main.views.g_cloud.search_api_client', autospec=True)
 class TestErrors(BaseApplicationTest):
     def test_404(self, search_api_mock):
         res = self.client.get('/g-cloud/service/1234')
