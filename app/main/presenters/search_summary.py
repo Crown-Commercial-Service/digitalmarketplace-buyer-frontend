@@ -1,5 +1,7 @@
 import os
 import yaml
+from collections import defaultdict
+
 from flask import Markup, escape
 
 
@@ -100,47 +102,12 @@ class SearchSummary(object):
     def _group_request_filters(self, request_args, filter_groups):
         """arranges the filters from the request into filter groups"""
 
-        def _is_option(values):
-            return (len(values) == 1) and (values[0] == u'true')
-
-        def _get_filter_recursive(key, value, filters):
-            """
-            Search filters (and their children, in the case of checkbox_tree questions) for a one
-            where filter[key] == value.
-            """
-            for filter in filters:
-                if filter[key] == value:
-                    return filter
-                children = filter.get('children')
-                if children:
-                    search_children = _get_filter_recursive(key, value, children)
-                    if search_children is not None:
-                        return search_children
-
-        def _get_group_label_for_option(option):
-            for group in filter_groups:
-                found_filter = _get_filter_recursive('name', option, group['filters'])
-                if found_filter is not None:
-                    return group['label']
-
-        def _get_label_for_string_option(option):
-            for group in filter_groups:
-                found_filter = _get_filter_recursive('value', option, group['filters'])
-                if found_filter:
-                    return found_filter['label']
-
-        def _get_label_for_boolean_option(option):
-            for group in filter_groups:
-                for filter in group['filters']:
-                    if filter['name'] == option:
-                        return filter['label']
-
-        def _add_filter_to_group(group_name, filter):
-            option_label = _get_label_for_boolean_option(filter)
-            if group_name not in groups:
-                groups[group_name] = [option_label]
-            else:
-                groups[group_name].append(option_label)
+        # build map from key/value pair to the relevant filter
+        # ideally this would be in the filter_groups data structure already, but it isn't
+        all_filters_by_kv = dict()
+        for filter_group in filter_groups:
+            for f in filter_group['filters']:
+                all_filters_by_kv[(f['name'], f['value'])] = (f, filter_group['label'])
 
         def _sort_groups(groups):
             sorted_groups = []
@@ -150,18 +117,14 @@ class SearchSummary(object):
                     sorted_groups.append((group, groups[group]))
             return sorted_groups
 
-        groups = {}
-        for filter_mapping in request_args.lists():
-            filter, values = filter_mapping
-            if filter == 'lot' or filter == 'q':
+        groups = defaultdict(list)
+        for filter_name, filter_values in request_args.lists():
+            if filter_name in ('lot', 'q', 'page'):
                 continue
-            if _is_option(values):
-                group_name = _get_group_label_for_option(filter)
-                _add_filter_to_group(group_name, filter)
-            else:  # filter is a group whose values are the options
-                group_name = _get_group_label_for_option(filter)
-                groups[group_name] = [
-                    _get_label_for_string_option(value) for value in values]
+            for filter_value in filter_values:
+                filter_instance, filter_group_label = all_filters_by_kv[(filter_name, filter_value)]
+                groups[filter_group_label].append(filter_instance['label'])
+
         return _sort_groups(groups)
 
 
