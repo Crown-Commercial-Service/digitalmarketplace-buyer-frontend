@@ -104,13 +104,35 @@
     id: mobile devices
   - preposition: an
     id: API
+
 - id: Service usage metrics
   labelPreposition: where usage metrics are provided through
   conjunction: and
 
-- id: Connected public sector networks
+- id: Infrastructure or application metrics
+  labelPreposition: where infrastructure or application metrics are provided for
+  conjunction: and
+
+- id: Scaling
+  labelPreposition: where scaling is
+  conjunction: and
+
+- id: Usage notifications
+  labelPreposition: where the service
+  conjunction: and
+
+- id: Backup and recovery
+  labelPreposition: where
+  conjunction: and
+
+- id: Datacentre setup
+  labelPreposition: where data is stored in
+  conjunction: and
+
+- id: Public sector networks the service is connected to
   labelPreposition: where the service is connected to the
   conjunction: and
+
 - id: Data protection between buyer and supplier networks
   labelPreposition: where data protection between buyer and supplier networks includes
   conjunction: and
@@ -188,7 +210,7 @@
   - preposition: and
     id: support is available to third parties
 
-- id: Minimum government security clearances
+- id: Minimum government security clearance
   labelPreposition:
   filtersPreposition: where suppliers are prepared to make sure their staff have
   conjunction: or
@@ -207,3 +229,4 @@
   filterRules:
   - preposition: staff security clearance that
     id: conforms to BS7858:2012
+
