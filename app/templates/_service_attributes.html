@@ -12,7 +12,7 @@
       {% if not question.is_empty %}
         {% call summary.row() %}
           {{ summary.field_name(question.label) }}
-          {{ summary[question.type](question.value, question.assurance) }}
+          {{ summary[question.type](question.filter_value, question.assurance) }}
 
         {% endcall %}
       {% endif %}
