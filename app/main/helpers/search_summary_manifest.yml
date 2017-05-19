@@ -1,5 +1,4 @@
--
-  id: Categories
+- id: Categories
   labelPreposition: in the
   label:
     singular: category
@@ -7,237 +6,204 @@
   filtersPreposition:
   filterRules:
   conjunction: and
--
-  id: Pricing
+
+- id: Pricing
   labelPreposition:
   label:
   filtersPreposition: with a
   filterRules:
   conjunction: and
 
--
-  id: Minimum contract period
+- id: Minimum contract period
   labelPreposition: with a
   label:
     singular: minimum contract period
     plural: minimum contract period
   filtersPreposition: of
-  filterRules:
-  -
-    preposition: an
-    id: Hour
-  -
-    preposition: a
-    id: Day
-  -
-    preposition: a
-    id: Month
-  -
-    preposition: a
-    id: Year
-  -
-    preposition:
-    id: Other
   conjunction: or
--
-  id: Service management
+  filterRules:
+  - preposition: an
+    id: Hour
+  - preposition: a
+    id: Day
+  - preposition: a
+    id: Month
+  - preposition: a
+    id: Year
+  - preposition:
+    id: Other
+
+- id: Service management
   labelPreposition:
   label:
   filtersPreposition: where
-  filterRules:
-  -
-    preposition: there is a
-    id: Data extraction/removal plan in place
-  -
-    preposition: the
-    id: Datacentres adhere to the EU code of conduct for energy-efficient datacentres
-  -
-    preposition: there is a
-    id: Backup, disaster recovery and resilience plan in place
-  -
-    preposition: there is
-    id: Self-service provisioning supported
-  -
-    preposition: there is
-    id: Support accessible to any third-party suppliers
   conjunction: and
--
-  id: Datacentre tier
+  filterRules:
+  - preposition: there is a
+    id: Data extraction/removal plan in place
+  - preposition: the
+    id: Datacentres adhere to the EU code of conduct for energy-efficient datacentres
+  - preposition: there is a
+    id: Backup, disaster recovery and resilience plan in place
+  - preposition: there is
+    id: Self-service provisioning supported
+  - preposition: there is
+    id: Support accessible to any third-party suppliers
+
+- id: Datacentre tier
   labelPreposition: with a
   label:
     singular: datacentre tier
     plural: datacentre tier
   filtersPreposition: of
-  filterRules:
   conjunction: or
--
-  id: Networks the service is directly connected to
+  filterRules:
+
+- id: Networks the service is directly connected to
   labelPreposition:
   label:
     singular: directly connected to the network
     plural: directly connected to the networks
   filtersPreposition:
-  filterRules:
   conjunction: and
--
-  id: Interoperability
+  filterRules:
+
+- id: Interoperability
   labelPreposition: which have
   label:
   filtersPreposition:
-  filterRules:
   conjunction: and
+  filterRules:
 
--
-  id: Cloud deployment model
+- id: Cloud deployment model
   labelPreposition: deployable to a
   conjunction: and
 
--
-  id: Supplier type
+- id: Supplier type
   labelPreposition: where the supplier is
   conjunction: or
   filterRules:
-  -
-    preposition:
+  - preposition:
     id: not a reseller
-  -
-    preposition: a
+  - preposition: a
     id: reseller providing extra features and support
-  -
-    preposition: a
+  - preposition: a
     id: reseller providing extra support
-  -
-    preposition: a
+  - preposition: a
     id: reseller (no extras)
 
--
-  id: Using the service
+- id: Using the service
   labelPreposition: where users can access the service through
   conjunction: and
   filterRules:
-  -
-    preposition: a
+  - preposition: a
     id: web browser interface
-  -
-    preposition: an
+  - preposition: an
     id: application to install
-  -
-    preposition:
+  - preposition:
     id: mobile devices
-  -
-    preposition: an
+  - preposition: an
     id: API
--
-  id: Service usage metrics
+- id: Service usage metrics
   labelPreposition: where usage metrics are provided through
   conjunction: and
 
--
-  id: Connected public sector networks
+- id: Connected public sector networks
   labelPreposition: where the service is connected to the
   conjunction: and
--
-  id: Data protection between buyer and supplier networks
+- id: Data protection between buyer and supplier networks
   labelPreposition: where data protection between buyer and supplier networks includes
   conjunction: and
   filterRules:
-  -
-    preposition: a
+  - preposition: a
     id: private network or public sector network
-  -
-    preposition:
+  - preposition:
     id: TLS (version 1.2 or above)
-  -
-    preposition:
+  - preposition:
     id: IPsec or TLS VPN gateway
-  -
-    preposition:
-    id: legacy SSL and TLS (under version 1.2)
 
--
-  id: Data protection within supplier network
+- id: Data protection within supplier network
   labelPreposition: where data protection within supplier network includes
-  filtersPreposition: the
   conjunction: and
+  filtersPreposition: the
 
--
-  id: Data storage and processing locations
+- id: Data storage and processing locations
   labelPreposition: where data storage and processing locations include
   conjunction: and
-  conjunction: and
   filterRules:
-  -
-    preposition: the
+  - preposition: the
     id: United Kingdom
-  -
-    preposition: the
+  - preposition: the
     id: European Economic Area (EEA)
-  -
-    preposition:
+  - preposition:
     id: EU-US Privacy Shield agreement locations
 
--
-  id: User authentication
+- id: User authentication
   labelPreposition: where users authenticate with
-  filtersPreposition:
   conjunction: and
--
-  id: Management access authentication
+  filtersPreposition:
+
+- id: Management access authentication
   labelPreposition: where service managers and administrators authenticate with
-  filtersPreposition:
   conjunction: and
+  filtersPreposition:
 
--
-  id: Security certification
+- id: Security certification
   labelPreposition: where security certificates held include
-  filtersPreposition:
   conjunction: and
+  filtersPreposition:
 
--
-  id: Security governance standards
+- id: Security governance standards
   labelPreposition: where suppliers comply with security governance standard
-  filtersPreposition:
   conjunction: and
+  filtersPreposition:
 
--
-  id: Datacentre security standard
+- id: Datacentre security standard
   labelPreposition: where datacentre security
-  filtersPreposition:
   conjunction: and
--
-  id: Pricing options
+  filtersPreposition:
+
+- id: Pricing options
   filtersPreposition: with
   conjunction: and
   filterRules:
-  -
-    preposition: a
+  - preposition: a
     id: discount for educational organisations
-  -
-    preposition: a
+  - preposition: a
     id: free trial
 
--
-  id: User support
+- id: User support
   labelPreposition: with
-  filtersPreposition:
-  filterRules:
+  filtersPreposition: where user support is available
   conjunction: and
--
-  id: Government security clearances
-  labelPreposition: where
-  filtersPreposition: the supplier's staff will undergo
   filterRules:
-  conjunction: and
+  - preposition: through
+    id: email or online ticketing
+  - preposition: by
+    id: phone
+  - preposition: through
+    id: web chat
+  - preposition: through
+    id: onsite support
+  - preposition: and
+    id: support is available to third parties
 
--
-  id: Staff security clearance
+- id: Minimum government security clearances
+  labelPreposition:
+  filtersPreposition: where suppliers are prepared to make sure their staff have
+  conjunction: or
+  filterRules:
+  - preposition:
+    id: Developed Vetting (DV)
+  - preposition:
+    id: Security Clearance (SC)
+  - preposition:
+    id: Baseline Personnel Security Standard (BPSS)
+
+- id: Staff security clearance
   labelPreposition:
   filtersPreposition: with
   conjunction: or
   filterRules:
-  -
-    preposition: staff security clearance that
+  - preposition: staff security clearance that
     id: conforms to BS7858:2012
-  -
-    preposition: staff having
-    id: other security clearance
