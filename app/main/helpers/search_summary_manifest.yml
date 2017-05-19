@@ -129,7 +129,7 @@
   labelPreposition: where data is stored in
   conjunction: and
 
-- id: Public sector networks the service is connected to
+- id: Connected public sector networks
   labelPreposition: where the service is connected to the
   conjunction: and
 
