@@ -392,7 +392,7 @@ class TestCopyBrief(BaseApplicationTest):
     def test_copy_brief_for_expired_framework_redirects_to_edit_page_for_new_framework(self):
         self.data_api_client.get_brief.return_value = api_stubs.brief()  # dos1 brief
 
-        new_brief = self.brief  # dos2 brief
+        new_brief = self.brief.copy()  # dos2 brief
         new_brief["briefs"]["id"] = 1235
         self.data_api_client.copy_brief.return_value = new_brief
 
@@ -415,7 +415,31 @@ class TestCopyBrief(BaseApplicationTest):
 
         assert res.status_code == 404
         is_brief_correct.assert_called_once_with(
-            self.brief["briefs"], "digital-outcomes-and-specialists-2", "digital-specialists", 123)
+            self.brief["briefs"],
+            "digital-outcomes-and-specialists-2",
+            "digital-specialists",
+            123,
+            allow_withdrawn=True
+        )
+
+    def test_can_copy_withdrawn_brief(self):
+        # Make our original brief withdrawn
+        withdrawn_brief = self.brief.copy()
+        withdrawn_brief["briefs"].update({'status': 'withdrawn'})
+        self.data_api_client.get_brief.return_value = withdrawn_brief
+
+        # Set copied brief return
+        new_brief = self.brief.copy()  # dos2 brief
+        new_brief["briefs"]["id"] = 1235
+        self.data_api_client.copy_brief.return_value = new_brief
+
+        res = self.client.post(
+            '/buyers/frameworks/digital-outcomes-and-specialists-2/requirements/digital-specialists/1234/copy'
+        )
+
+        # Assert redirect and copy_brief call
+        assert res.status_code == 302
+        self.data_api_client.copy_brief.assert_called_once_with('1234', 'buyer@email.com')
 
 
 class TestEveryDamnPage(BaseApplicationTest):

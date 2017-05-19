@@ -101,6 +101,13 @@ class TestBuyersHelpers(object):
             'digital-specialists',
             123
         ) is False
+        assert helpers.buyers_helpers.is_brief_correct(
+            api_stubs.brief(user_id=123, status='withdrawn')['briefs'],
+            'digital-outcomes-and-specialists',
+            'digital-specialists',
+            123,
+            allow_withdrawn=True
+        ) is True
 
     def test_is_brief_associated_with_user(self):
         brief = api_stubs.brief(user_id=123)['briefs']
