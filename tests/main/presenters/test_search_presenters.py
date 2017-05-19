@@ -13,7 +13,6 @@ from app.main.presenters.search_presenters import (
 
 from ...helpers import BaseApplicationTest
 
-
 content_loader = ContentLoader('tests/fixtures/content')
 content_loader.load_manifest('g6', 'data', 'manifest')
 content_loader.load_manifest('g9', 'data', 'manifest')
@@ -43,10 +42,24 @@ def _get_fixture_multiple_pages_data():
         return json.load(fixture_file)
 
 
+def _get_framework_lots(framework_slug):
+    test_root = os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "../..")
+    )
+    fixture_path = os.path.join(
+        test_root, 'fixtures', 'frameworks.json'
+    )
+    with open(fixture_path) as fixture_file:
+        frameworks = json.load(fixture_file)['frameworks']
+        framework = list(filter(lambda x: x['slug'] == framework_slug, frameworks))[0]
+
+        return framework['lots']
+
+
 class TestSearchFilters(BaseApplicationTest):
 
     def _get_filter_group_by_label(self, lot, label):
-        filter_groups = filters_for_lot(lot, g6_builder)
+        filter_groups = filters_for_lot(lot, g6_builder, all_lots=_get_framework_lots('g-cloud-6'))
         for filter_group in filter_groups.values():
             if filter_group['label'] == label:
                 return filter_group
