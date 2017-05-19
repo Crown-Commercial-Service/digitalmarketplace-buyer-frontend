@@ -13,15 +13,22 @@ from app.main.helpers import framework_helpers
 from ...helpers import BaseApplicationTest
 
 filter_groups = None
+g9_filter_groups = None
 
 
 def setup_module(module):
-    # for now the tests here are g-cloud-6 (==7/8) specific
+    # TODO we should have example subset search_filter manifests as fixtures
     content_loader.load_manifest('g-cloud-6', 'services', 'search_filters')
+    content_loader.load_manifest('g-cloud-9', 'services', 'search_filters')
 
     module.filter_groups = filters_for_lot(
         "saas",
         content_loader.get_builder('g-cloud-6', 'search_filters')
+    ).values()
+
+    module.g9_filter_groups = filters_for_lot(
+        'cloud-software',
+        content_loader.get_builder('g-cloud-9', 'search_filters')
     ).values()
 
 
@@ -53,6 +60,10 @@ class TestSearchSummary(BaseApplicationTest):
 
         self._lots_by_slug = framework_helpers.get_lots_by_slug(
             self._get_framework_fixture_data('g-cloud-6')['frameworks']
+        )
+
+        self._g9_lots_by_slug = framework_helpers.get_lots_by_slug(
+            self._get_framework_fixture_data('g-cloud-9')['frameworks']
         )
 
         self.fixture = _get_fixture_data()
@@ -199,6 +210,43 @@ class TestSearchSummary(BaseApplicationTest):
         order_of_groups_of_filters = [
             fragment.id for fragment in search_summary.filters_fragments]
         assert order_of_groups_of_filters == correct_order
+
+    def test_mix_boolean_and_radio_filters(self):
+        """
+        Test for a bug where a radio button's filter summary would replace (rather than add
+        to) the summary for a boolean, in the same filter group.
+        """
+        self.request_args.setlist(
+            'phoneSupport',
+            ['true']
+        )
+        self.request_args.setlist(
+            'emailOrTicketingSupport',
+            ['yes']
+        )
+        search_summary = SearchSummary('9', self.request_args, g9_filter_groups, self._g9_lots_by_slug)
+        summary_markup = search_summary.markup()
+        assert "email or online ticketing" in summary_markup
+        assert "phone" in summary_markup
+
+    def test_mixed_radios_with_identical_values(self):
+        """
+        Test for a bug where two radio buttons (from different questions, but in the same filter
+        group) with the same value would overwrite each other's summary, rather than combine
+        together correctly.
+        """
+        self.request_args.setlist(
+            'webChatSupport',
+            ['yes']
+        )
+        self.request_args.setlist(
+            'emailOrTicketingSupport',
+            ['yes']
+        )
+        search_summary = SearchSummary('9', self.request_args, g9_filter_groups, self._g9_lots_by_slug)
+        summary_markup = search_summary.markup()
+        assert "web chat" in summary_markup
+        assert "email or online ticketing" in summary_markup
 
     def test_get_starting_sentence_works(self):
         search_summary = SearchSummary('9', self.request_args, filter_groups, self._lots_by_slug)
