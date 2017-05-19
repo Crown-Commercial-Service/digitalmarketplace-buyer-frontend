@@ -169,7 +169,8 @@ def search_services():
     # filters - an OrderedDictionary of dicts describing each parameter group
     filters = filters_for_lot(
         current_lot_slug,
-        content_manifest
+        content_manifest,
+        all_lots=framework['lots']
     )
 
     search_api_response = search_api_client.search_services(

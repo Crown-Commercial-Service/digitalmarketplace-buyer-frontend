@@ -10,21 +10,18 @@ from ..helpers.search_helpers import (
 )
 
 
-def sections_for_lot(lot, builder):
+def sections_for_lot(lot, builder, all_lots=[]):
     if lot is None or lot == 'all':
-        sections = builder.filter(
-            {'lot': 'iaas'}).filter(
-            {'lot': 'paas'}).filter(
-            {'lot': 'saas'}).filter(
-            {'lot': 'scs'}).sections
+        for lot_slug in [x['slug'] for x in all_lots]:
+            builder = builder.filter({'lot': lot_slug})
     else:
-        sections = builder.filter({'lot': lot}).sections
+        builder = builder.filter({'lot': lot})
 
-    return sections
+    return builder.sections
 
 
-def filters_for_lot(lot, builder):
-    sections = sections_for_lot(lot, builder)
+def filters_for_lot(lot, builder, all_lots=[]):
+    sections = sections_for_lot(lot, builder, all_lots=all_lots)
     lot_filters = OrderedDict()
 
     for section in sections:
