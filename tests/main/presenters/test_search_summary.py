@@ -248,6 +248,24 @@ class TestSearchSummary(BaseApplicationTest):
         assert "web chat" in summary_markup
         assert "email or online ticketing" in summary_markup
 
+    def test_category_filters_are_available(self):
+        self.request_args.setlist(
+            'serviceCategories',
+            ['accounting and finance']
+        )
+        search_summary = SearchSummary('9', self.request_args, g9_filter_groups, self._g9_lots_by_slug)
+        summary_markup = search_summary.markup()
+        assert "category <em>Accounting and finance</em>" in summary_markup
+
+    def test_subcategory_filters_are_available(self):
+        self.request_args.setlist(
+            'serviceCategories',
+            ['analytics']
+        )
+        search_summary = SearchSummary('9', self.request_args, g9_filter_groups, self._g9_lots_by_slug)
+        summary_markup = search_summary.markup()
+        assert "category <em>Analytics</em>" in summary_markup
+
     def test_get_starting_sentence_works(self):
         search_summary = SearchSummary('9', self.request_args, filter_groups, self._lots_by_slug)
         search_summary.count = '9'
