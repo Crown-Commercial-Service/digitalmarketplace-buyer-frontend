@@ -116,7 +116,7 @@
   - preposition: through
     id: reports on request
   - preposition:
-    id: through an API
+    id: API access
 
 - id: Infrastructure or application metrics
   labelPreposition: where infrastructure or application metrics are provided for
