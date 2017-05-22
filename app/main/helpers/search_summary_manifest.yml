@@ -106,8 +106,17 @@
     id: API
 
 - id: Service usage metrics
-  labelPreposition: where usage metrics are provided through
+  labelPreposition: where usage metrics are provided
   conjunction: and
+  filterRules:
+  - preposition: through
+    id: real-time dashboards
+  - preposition: through
+    id: regular reports
+  - preposition: through
+    id: reports on request
+  - preposition:
+    id: through an API
 
 - id: Infrastructure or application metrics
   labelPreposition: where infrastructure or application metrics are provided for
