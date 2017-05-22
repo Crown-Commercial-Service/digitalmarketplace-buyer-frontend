@@ -102,12 +102,12 @@ class SearchSummary(object):
     def _group_request_filters(self, request_args, filter_groups):
         """arranges the filters from the request into filter groups"""
 
-        # build map from key/value pair to the relevant filter
-        # ideally this would be in the filter_groups data structure already, but it isn't
-        all_filters_by_kv = dict()
-        for filter_group in filter_groups:
-            for f in filter_group['filters']:
-                all_filters_by_kv[(f['name'], f['value'])] = (f, filter_group['label'])
+        def _insert_filters(target_dict, filters, label):
+            for f in filters:
+                if f.get('children'):
+                    _insert_filters(target_dict, f.get('children'), label)
+
+                target_dict[(f['name'], f['value'])] = (f, label)
 
         def _sort_groups(groups):
             sorted_groups = []
@@ -117,10 +117,18 @@ class SearchSummary(object):
                     sorted_groups.append((group, groups[group]))
             return sorted_groups
 
+        # build map from key/value pair to the relevant filter
+        # ideally this would be in the filter_groups data structure already, but it isn't
+        all_filters_by_kv = dict()
+
+        for filter_group in filter_groups:
+            _insert_filters(all_filters_by_kv, filter_group['filters'], filter_group['label'])
+
         groups = defaultdict(list)
         for filter_name, filter_values in request_args.lists():
             if filter_name in ('lot', 'q', 'page'):
                 continue
+
             for filter_value in filter_values:
                 filter_instance, filter_group_label = all_filters_by_kv[(filter_name, filter_value)]
                 groups[filter_group_label].append(filter_instance['label'])
