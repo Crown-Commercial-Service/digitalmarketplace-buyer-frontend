@@ -216,8 +216,8 @@
     id: web chat
   - preposition: through
     id: onsite support
-  - preposition: and
-    id: support is available to third parties
+  - preposition: that
+    id: can be used by third parties
 
 - id: Minimum government security clearance
   labelPreposition:
