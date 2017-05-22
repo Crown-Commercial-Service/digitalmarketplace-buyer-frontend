@@ -51,46 +51,40 @@ def get_supplier(code):
 
     if request_wants_json():
         return jsonify(dict(supplier))
-    if feature.is_active('NEW_SELLER_PROFILE'):
-        # add business/authorized representative contact details
-        if len(supplier['contacts']) > 0:
-            supplier['contact_email'] = supplier['contacts'][0]['email']
-            supplier['contact_phone'] = supplier['contacts'][0]['phone']
-            supplier['contact_name'] = supplier['contacts'][0]['name']
-            supplier['representative'] = supplier['contacts'][0]['name']
-        props = {"application": {key: supplier[key] for key in supplier if key not in ['disclosures']}}
-        props['application']['case_study_url'] = '/case-study/'
-        props['application']['public_profile'] = not owns_profile
-        props['application']['recruiter'] = 'yes' if supplier.get('is_recruiter') == 'true' else 'no'
-        props['application']['digital_marketplace_panel'] = False
-        digital_marketplace_framework = data_api_client.req.frameworks('digital-marketplace').get()
-        for framework in supplier.get('frameworks', []):
-            if framework['framework_id'] == digital_marketplace_framework['frameworks']['id']:
-                props['application']['digital_marketplace_panel'] = True
-        props['application']['dsp_panel'] = len(supplier.get('domains', {'legacy': []})['legacy']) > 0
-        props['basename'] = url_for('.get_supplier', code=code)
-        props['form_options'] = {
-            'action': "/sellers/edit",
-            'submit_url': "/sellers/edit"
-        }
 
-        rendered_component = render_component('bundles/SellerRegistration/ApplicationPreviewWidget.js', props)
+    # add business/authorized representative contact details
+    if len(supplier['contacts']) > 0:
+        supplier['contact_email'] = supplier.get('contact_email') or supplier['contacts'][0]['email']
+        supplier['contact_phone'] = supplier.get('contact_phone') or supplier['contacts'][0]['phone']
+        supplier['contact_name'] = supplier.get('contact_name') or supplier['contacts'][0]['name']
+        supplier['representative'] = supplier.get('representative') or supplier['contacts'][0]['name']
+    props = {"application": {key: supplier[key] for key in supplier if key not in ['disclosures']}}
+    props['application']['case_study_url'] = '/case-study/'
+    props['application']['public_profile'] = not owns_profile
+    props['application']['recruiter'] = 'yes' if supplier.get('is_recruiter') == 'true' else 'no'
+    props['application']['digital_marketplace_panel'] = False
+    digital_marketplace_framework = data_api_client.req.frameworks('digital-marketplace').get()
+    for framework in supplier.get('frameworks', []):
+        if framework['framework_id'] == digital_marketplace_framework['frameworks']['id']:
+            props['application']['digital_marketplace_panel'] = True
+    props['application']['dsp_panel'] = len(supplier.get('domains', {'legacy': []})['legacy']) > 0
+    props['basename'] = url_for('.get_supplier', code=code)
+    props['form_options'] = {
+        'action': "/sellers/edit",
+        'submit_url': "/sellers/edit"
+    }
 
-        return render_template(
-            '_react.html',
-            component=rendered_component,
-            breadcrumb_items=[
-              {'link': url_for('main.index'), 'label': 'Home'},
-              {'link': url_for('main.supplier_search'), 'label': 'Seller catalogue'},
-              {'label': 'Seller details'}
-            ],
-            main_class='collapse' if not owns_profile else None
-        )
+    rendered_component = render_component('bundles/SellerRegistration/ApplicationPreviewWidget.js', props)
+
     return render_template(
-        'suppliers_details.html',
-        supplier=supplier,
-        user_owns_page=owns_profile,
-        render_component=render_component
+        '_react.html',
+        component=rendered_component,
+        breadcrumb_items=[
+          {'link': url_for('main.index'), 'label': 'Home'},
+          {'link': url_for('main.supplier_search'), 'label': 'Seller catalogue'},
+          {'label': 'Seller details'}
+        ],
+        main_class='collapse' if not owns_profile else None
     )
 
 
