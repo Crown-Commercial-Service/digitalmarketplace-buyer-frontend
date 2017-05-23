@@ -16,14 +16,6 @@ def get_lots_by_slug(framework_data):
     return {lot['slug']: lot for lot in framework_data['lots']}
 
 
-def is_g9_live(all_frameworks):
-    """
-    :return: True iff G8 is no longer the latest live G-Cloud framework.
-    """
-    framework = get_latest_live_framework(all_frameworks, 'g-cloud')
-    return (framework['slug'] != 'g-cloud-8') if framework else False
-
-
 def get_framework_description(data_api_client, framework_family):
     frameworks = data_api_client.find_frameworks().get('frameworks')
     framework = get_latest_live_framework(frameworks, framework_family)

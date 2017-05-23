@@ -28,9 +28,7 @@ class Service(object):
         self.summary_manifest = manifest.summary(service_data)
         # required attributes directly mapped to service_data values
         self.title = service_data['serviceName']
-        self.serviceSummary = service_data['serviceSummary']\
-            if 'serviceSummary' in service_data else \
-            service_data['serviceDescription']
+        self.serviceSummary = service_data.get('serviceSummary', service_data.get('serviceDescription'))
         self.lot = lots_by_slug.get(service_data['lot'])
         self.frameworkName = service_data['frameworkName']
         # optional attributes directly mapped to service_data values

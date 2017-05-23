@@ -156,9 +156,6 @@ def search_services():
     all_frameworks = data_api_client.find_frameworks().get('frameworks')
     framework = framework_helpers.get_latest_live_framework(all_frameworks, 'g-cloud')
 
-    # TODO remove me after G-Cloud 9 goes live
-    is_g9_live = framework_helpers.is_g9_live(all_frameworks)
-
     current_lot_slug = get_lot_from_request(request)
     lots_by_slug = framework_helpers.get_lots_by_slug(framework)
 
@@ -196,10 +193,7 @@ def search_services():
 
     # for display purposes (but not for actual filtering purposes), we
     # remove 'categories' from the list of filters, and process them into a single structure with the lots
-    if is_g9_live:
-        category_filter_group = filters.pop('categories') if 'categories' in filters else None
-    else:
-        category_filter_group = None
+    category_filter_group = filters.pop('categories') if 'categories' in filters else None
 
     lots = framework['lots']
     current_category_filter = annotate_lots_with_categories_selection(lots, category_filter_group, request)
