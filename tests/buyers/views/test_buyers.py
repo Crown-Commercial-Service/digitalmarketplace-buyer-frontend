@@ -26,7 +26,8 @@ po = functools.partial(mock.patch.object, autospec=True)
 def find_briefs_mock():
     base_brief_values = {
         "createdAt": "2016-02-01T00:00:00.000000Z",
-        "frameworkSlug": "digital-outcomes-and-specialists",
+        "frameworkSlug": "digital-outcomes-and-specialists-2",
+        "frameworkFramework": "digital-outcomes-and-specialists",
         "lot": "digital-specialists"
     }
 
@@ -79,7 +80,7 @@ class TestBuyerDashboard(BaseApplicationTest):
         assert res.status_code == 200
 
         draft_row = [cell.text_content().strip() for cell in tables[0].xpath('.//tbody/tr/td')]
-        expected_link = '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/20'
+        expected_link = '/buyers/frameworks/digital-outcomes-and-specialists-2/requirements/digital-specialists/20'
 
         assert draft_row[0] == "A draft brief"
         assert tables[0].xpath('.//tbody/tr')[0].xpath('.//td')[0].xpath('.//a/@href')[0] == expected_link
@@ -94,7 +95,7 @@ class TestBuyerDashboard(BaseApplicationTest):
         assert res.status_code == 200
 
         live_row = [cell.text_content().strip() for cell in tables[1].xpath('.//tbody/tr/td')]
-        expected_link = '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/21'
+        expected_link = '/buyers/frameworks/digital-outcomes-and-specialists-2/requirements/digital-specialists/21'
 
         assert live_row[0] == "A live brief"
         assert tables[1].xpath('.//tbody/tr')[0].xpath('.//td')[0].xpath('.//a/@href')[0] == expected_link
@@ -109,7 +110,7 @@ class TestBuyerDashboard(BaseApplicationTest):
         assert res.status_code == 200
 
         closed_row = [cell.text_content().strip() for cell in tables[2].xpath('.//tbody/tr/td')]
-        expected_link = '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/22'
+        expected_link = '/buyers/frameworks/digital-outcomes-and-specialists-2/requirements/digital-specialists/22'
 
         assert closed_row[0] == "A closed brief"
         assert tables[2].xpath('.//tbody/tr')[0].xpath('.//td')[0].xpath('.//a/@href')[0] == expected_link
@@ -374,7 +375,7 @@ class TestCopyBrief(BaseApplicationTest):
         assert res.status_code == 404
 
     def test_copy_brief_and_redirect_to_copied_brief_edit_title_page(self):
-        new_brief = self.brief
+        new_brief = self.brief.copy()
         new_brief["briefs"]["id"] = 1235
         self.data_api_client.copy_brief.return_value = new_brief
 
