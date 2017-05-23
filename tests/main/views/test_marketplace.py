@@ -445,31 +445,6 @@ class TestBriefPage(BaseBriefPageTest):
         assert contract_length_key[0] == 'Expected contract length'
         assert contract_length_value[0] == '4 weeks'
 
-    def test_dos_brief_has_question_and_answer_session_details_link(self):
-        brief_id = self.brief['briefs']['id']
-        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
-
-        document = html.fromstring(res.get_data(as_text=True))
-        qa_session_link_text = document.xpath(
-            '//a[@href="/suppliers/opportunities/{}/question-and-answer-session"]/text()'.format(brief_id)
-        )[0].strip()
-
-        assert qa_session_link_text == "Log in to view question and answer session details"
-
-    def test_dos_brief_question_and_answer_session_details_hidden_when_questions_closed(self):
-        self.brief['briefs']['clarificationQuestionsAreClosed'] = True
-        brief_id = self.brief['briefs']['id']
-        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
-
-        assert "/question-and-answer-session" not in res.get_data(as_text=True)
-
-    def test_dos_brief_question_and_answer_session_details_hidden_when_empty(self):
-        del self.brief['briefs']['questionAndAnswerSessionDetails']
-        brief_id = self.brief['briefs']['id']
-        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
-
-        assert "/question-and-answer-session" not in res.get_data(as_text=True)
-
     def test_dos_brief_has_questions_and_answers(self):
         brief_id = self.brief['briefs']['id']
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
@@ -483,26 +458,10 @@ class TestBriefPage(BaseBriefPageTest):
         number = clarification_questions[0].xpath('td[1]/span/span/text()')[0].strip()
         question = clarification_questions[0].xpath('td[1]/span/text()')[0].strip()
         answer = clarification_questions[0].xpath('td[2]/span/text()')[0].strip()
-        qa_link_text = document.xpath('//a[@href="/suppliers/opportunities/{}/ask-a-question"]/text()'
-                                      .format(brief_id))[0].strip()
 
         assert number == "1."
         assert question == "Why?"
         assert answer == "Because"
-        assert qa_link_text == "Log in to ask a question"
-
-    def test_dos_brief_has_different_link_text_for_logged_in_supplier(self):
-        self.login_as_supplier()
-        brief_id = self.brief['briefs']['id']
-        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
-        assert res.status_code == 200
-
-        document = html.fromstring(res.get_data(as_text=True))
-
-        qa_link_text = document.xpath('//a[@href="/suppliers/opportunities/{}/ask-a-question"]/text()'
-                                      .format(brief_id))[0]
-
-        assert qa_link_text.strip() == "Ask a question"
 
     def test_can_apply_to_live_brief(self):
         brief_id = self.brief['briefs']['id']
@@ -669,7 +628,7 @@ class TestBriefPageQandASectionViewQandASessionDetails(BaseBriefPageTest):
             {'clarificationQuestionsAreClosed': True}
         ]
     )
-    def test_brief_q_and_a_session_fails(self, brief_data):
+    def test_brief_q_and_a_session_link_not_shown(self, brief_data):
         """
         On viewing briefs with data like the above the page should load but we should not get the link.
         """
@@ -700,7 +659,6 @@ class TestBriefPageQandASectionAskAQuestion(BaseBriefPageTest):
             A user is not logged in
             The brief is live
             Clarification questions are open
-            The brief has Q and A session details
         We should show the:
             link to login and ask a question
         """
@@ -721,7 +679,6 @@ class TestBriefPageQandASectionAskAQuestion(BaseBriefPageTest):
             Supplier user is logged in
             The brief is live
             Clarification questions are open
-            The brief has Q and A session details
         We should show the:
             Link to ask a question
         """
@@ -745,7 +702,7 @@ class TestBriefPageQandASectionAskAQuestion(BaseBriefPageTest):
             {'clarificationQuestionsAreClosed': True}
         ]
     )
-    def test_brief_ask_a_question_fails(self, brief_data):
+    def test_brief_ask_a_question_link_not_shown(self, brief_data):
         """
         On viewing briefs with data like the above the page should load but we should not get either the
         log in to ask a question or ask a question links.
