@@ -4,7 +4,7 @@
 
 -e .
 
-pytest
+pytest==3.0.7
 pytest_bdd
 pep8
 nose
