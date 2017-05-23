@@ -50,7 +50,7 @@
           Brief published
         </h2>
         <p class="banner-message">
-          Your brief has been successfully published. It will be open until {{ brief.applicationsClosedAt | dateformat }}
+          Your brief has been successfully published. It will be open until {{ brief.applicationsClosedAt | dateformat }} at 6PM (in Canberra)
         </p>
         <a href="{{ url_for("main.get_brief_by_id", framework_slug=framework.slug, brief_id=brief.id) }}" role="button">View Live Brief</a>
       </div>
@@ -90,8 +90,8 @@
               'title': 'Publish your brief',
               'description': {
                 'draft': '',
-                'live': 'Your requirements are open for applications until {}.'.format(brief.applicationsClosedAt | dateformat if brief.applicationsClosedAt),
-                'closed': 'Your requirements closed for applications on {}.'.format(brief.applicationsClosedAt | dateformat if brief.applicationsClosedAt),
+                'live': 'Your requirements are open for applications until {} at 6PM (in Canberra).'.format(brief.applicationsClosedAt | dateformat if brief.applicationsClosedAt),
+                'closed': 'Your requirements closed for applications on {} at 6PM (in Canberra).'.format(brief.applicationsClosedAt | dateformat if brief.applicationsClosedAt),
               },
               'links': [
                 {

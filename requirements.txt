@@ -20,7 +20,7 @@ csvx==0.1.1459403998
 docutils==0.13.1
 -e git+https://github.com/AusDTO/dto-digitalmarketplace-apiclient.git@274ef3d6e24d7fb78e0a80bd7fd34769adf2e306#egg=dto_digitalmarketplace_apiclient==whatever
 -e git+https://github.com/AusDTO/dto-digitalmarketplace-content-loader.git@3145d4f0e9d39d411f26643f663cf574afcab1b5#egg=dto_digitalmarketplace_content_loader==whatever
--e git+https://github.com/AusDTO/dto-digitalmarketplace-utils.git@51c6d178c67d22f6476d87652d4192be02277eda#egg=dto_digitalmarketplace_utils==whatever
+-e git+https://github.com/AusDTO/dto-digitalmarketplace-utils.git@a1c81b952adbc449256fd548c93749aa08c193b6#egg=dto_digitalmarketplace_utils==whatever
 enum34==1.1.6
 et-xmlfile==1.0.1
 Flask==0.12.1
