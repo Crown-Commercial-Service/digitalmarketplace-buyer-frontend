@@ -1,70 +1,49 @@
 {
   "briefs":[
     {
+      "applicationsClosedAt":"2016-03-24T00:00:00.000000Z",
+      "backgroundInformation":"Here is the first requirements summary.",
+      "clarificationQuestions":[],
       "clarificationQuestionsAreClosed":true,
-      "status":"live",
+      "clarificationQuestionsClosedAt":"2016-03-17T00:00:00.000000Z",
+      "clarificationQuestionsPublishedBy": "2016-03-20T00:00:00.000000Z",
+      "createdAt":"2016-03-09T15:23:48.328413Z",
+      "culturalWeighting": 30,
+      "essentialRequirements": [
+        "Proven experience in recruiting niche business users"
+      ],
+      "evaluationType": [
+        "Interview"
+      ],
       "frameworkFramework":"digital-outcomes-and-specialists",
+      "frameworkName":"Digital Outcomes and Specialists",
+      "frameworkSlug":"digital-outcomes-and-specialists",
+      "frameworkStatus":"live",
+      "id":17,
       "links":{
         "framework":"http://localhost:5000/frameworks/digital-outcomes-and-specialists",
         "self":"http://localhost:5000/briefs/17"
       },
-      "clarificationQuestionsClosedAt":"2016-03-17T00:00:00.000000Z",
-      "frameworkStatus":"live",
-      "title":"I need Research Participants",
-      "organisation":"GDS",
-      "lotSlug":"user-research-participants",
-      "frameworkSlug":"digital-outcomes-and-specialists",
-      "applicationsClosedAt":"2016-03-24T00:00:00.000000Z",
-      "lotName":"User research participants",
-      "clarificationQuestions":[
-
-      ],
-      "backgroundInformation":"Here is the first requirements summary.",
-      "frameworkName":"Digital Outcomes and Specialists",
       "location":"International (outside the UK)",
       "lot":"user-research-participants",
-      "updatedAt":"2016-03-09T15:56:32.487141Z",
+      "lotName":"User research participants",
+      "lotSlug":"user-research-participants",
+      "niceToHaveRequirements": [],
+      "numberOfSuppliers": 5,
+      "organisation":"GDS",
+      "priceWeighting": 20,
       "publishedAt":"2016-03-09T16:02:51.591567Z",
-      "id":17,
-      "createdAt":"2016-03-09T15:23:48.328413Z"
+      "researchDates": "1 year contract with option to extend for one additional year commencing approx mid/end June",
+      "status":"live",
+      "summary": "Find out those user needs!",
+      "technicalWeighting": 50,
+      "title":"I need Research Participants",
+      "updatedAt":"2016-03-09T15:56:32.487141Z"
     },
     {
-      "startDate":"29th March",
-      "links":{
-        "framework":"http://localhost:5000/frameworks/digital-outcomes-and-specialists-2",
-        "self":"http://localhost:5000/briefs/4"
-      },
-      "evaluationType":[
-        "provide a case study or evidence of previous work",
-        "presentation"
-      ],
-      "niceToHaveRequirements":[
-        "Nice people"
-      ],
+      "additionalTerms":"You'll never work in this town again.",
       "applicationsClosedAt":"2016-03-22T00:00:00.000000Z",
-      "essentialRequirements":[
-        "Can provide an outcome",
-        "Available from 29h March"
-      ],
       "backgroundInformation":"We'd like to build a thing to do athing.",
-      "updatedAt":"2016-02-16T14:04:22.617017Z",
-      "id":4,
-      "createdAt":"2016-02-12T16:30:55.808730Z",
-      "clarificationQuestionsAreClosed":true,
-      "frameworkFramework":"digital-outcomes-and-specialists",
-      "clarificationQuestionsClosedAt":"2016-03-15T00:00:00.000000Z",
-      "lotSlug":"digital-specialists",
-      "workingArrangements":"Work",
-      "organisation":"GDS",
-      "frameworkStatus":"live",
-      "lotName":"Digital specialists",
-      "location":"East of England",
-      "lot":"digital-specialists",
-      "status":"live",
-      "specialistRole":"businessAnalyst",
-      "importantDates":"29th March",
-      "contractLength":"3 Months",
-      "currentTechnologies":"Business Focus Plus",
       "clarificationQuestions":[
         {
           "answer":"Because",
@@ -72,11 +51,56 @@
           "publishedAt":"2016-03-04T09:19:42.138442Z"
         }
       ],
-      "title":"Another requirement",
-      "frameworkSlug":"digital-outcomes-and-specialists-2",
-      "additionalTerms":"You'll never work in this town again.",
+      "clarificationQuestionsAreClosed":true,
+      "clarificationQuestionsClosedAt":"2016-03-15T00:00:00.000000Z",
+      "clarificationQuestionsPublishedBy": "2016-03-18T23:59:59.000000Z",
+      "contractLength":"3 Months",
+      "createdAt":"2016-02-12T16:30:55.808730Z",
+      "currentTechnologies":"Business Focus Plus",
+      "culturalFitCriteria": [
+        "Ability to work with clients with limited technical knowledge"
+      ],
+      "culturalWeighting": 10,
+      "earlyMarketEngagement": "N/A",
+      "essentialRequirements":[
+        "Can provide an outcome",
+        "Available from 29h March"
+      ],
+      "evaluationType":[
+        "provide a case study or evidence of previous work",
+        "presentation"
+      ],
+      "frameworkFramework":"digital-outcomes-and-specialists",
       "frameworkName":"Digital Outcomes and Specialists 2",
-      "publishedAt":"2016-03-07T16:02:51.591567Z"
+      "frameworkSlug":"digital-outcomes-and-specialists-2",
+      "frameworkStatus":"live",
+      "id": 4,
+      "importantDates":"29th March",
+      "links":{
+        "framework":"http://localhost:5000/frameworks/digital-outcomes-and-specialists-2",
+        "self":"http://localhost:5000/briefs/4"
+      },
+      "location":"East of England",
+      "lot":"digital-specialists",
+      "lotName":"Digital specialists",
+      "lotSlug":"digital-specialists",
+      "niceToHaveRequirements":[
+        "Nice people"
+      ],
+      "numberOfSuppliers": 4,
+      "organisation":"GDS",
+      "phase": "discovery",
+      "priceCriteria": "Fixed price",
+      "priceWeighting": 30,
+      "publishedAt":"2016-03-07T16:02:51.591567Z",
+      "specialistRole":"businessAnalyst",
+      "startDate":"2017-5-6",
+      "status":"live",
+      "summary": "Build a portal",
+      "technicalWeighting": 60,
+      "title":"Another requirement",
+      "updatedAt":"2016-02-16T14:04:22.617017Z",
+      "workingArrangements":"Work"
     }
   ],
   "links":{
