@@ -441,7 +441,7 @@ class TestBriefPage(BaseBriefPageTest):
         assert section_heading.get('id') == 'opportunity-attributes-1'
         assert section_heading.text.strip() == 'Overview'
         assert start_date_key[0] == 'Latest start date'
-        assert start_date_value[0] == '01/03/2017'
+        assert start_date_value[0] == 'Wednesday 1 March 2017'
         assert contract_length_key[0] == 'Expected contract length'
         assert contract_length_value[0] == '4 weeks'
 
