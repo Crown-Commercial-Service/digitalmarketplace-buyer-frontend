@@ -342,20 +342,23 @@ class TestStaticMarketplacePages(BaseApplicationTest):
         assert '<h1>Termsandconditions</h1>' in self._strip_whitespace(res.get_data(as_text=True))
 
 
-class TestBriefPage(BaseApplicationTest):
-
+class BaseBriefPageTest(BaseApplicationTest):
     def setup_method(self, method):
-        super(TestBriefPage, self).setup_method(method)
+        super(BaseBriefPageTest, self).setup_method(method)
 
         self._data_api_client = mock.patch(
             'app.main.views.marketplace.data_api_client'
         ).start()
 
         self.brief = self._get_dos_brief_fixture_data()
+        self.brief_id = self.brief['briefs']['id']
         self._data_api_client.get_brief.return_value = self.brief
 
     def teardown_method(self, method):
         self._data_api_client.stop()
+
+
+class TestBriefPage(BaseBriefPageTest):
 
     def _assert_page_title(self, document):
         brief_title = self.brief['briefs']['title']
@@ -442,31 +445,6 @@ class TestBriefPage(BaseApplicationTest):
         assert contract_length_key[0] == 'Expected contract length'
         assert contract_length_value[0] == '4 weeks'
 
-    def test_dos_brief_has_question_and_answer_session_details_link(self):
-        brief_id = self.brief['briefs']['id']
-        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
-
-        document = html.fromstring(res.get_data(as_text=True))
-        qa_session_link_text = document.xpath(
-            '//a[@href="/suppliers/opportunities/{}/question-and-answer-session"]/text()'.format(brief_id)
-        )[0].strip()
-
-        assert qa_session_link_text == "Log in to view question and answer session details"
-
-    def test_dos_brief_question_and_answer_session_details_hidden_when_questions_closed(self):
-        self.brief['briefs']['clarificationQuestionsAreClosed'] = True
-        brief_id = self.brief['briefs']['id']
-        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
-
-        assert "/question-and-answer-session" not in res.get_data(as_text=True)
-
-    def test_dos_brief_question_and_answer_session_details_hidden_when_empty(self):
-        del self.brief['briefs']['questionAndAnswerSessionDetails']
-        brief_id = self.brief['briefs']['id']
-        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
-
-        assert "/question-and-answer-session" not in res.get_data(as_text=True)
-
     def test_dos_brief_has_questions_and_answers(self):
         brief_id = self.brief['briefs']['id']
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
@@ -480,26 +458,10 @@ class TestBriefPage(BaseApplicationTest):
         number = clarification_questions[0].xpath('td[1]/span/span/text()')[0].strip()
         question = clarification_questions[0].xpath('td[1]/span/text()')[0].strip()
         answer = clarification_questions[0].xpath('td[2]/span/text()')[0].strip()
-        qa_link_text = document.xpath('//a[@href="/suppliers/opportunities/{}/ask-a-question"]/text()'
-                                      .format(brief_id))[0].strip()
 
         assert number == "1."
         assert question == "Why?"
         assert answer == "Because"
-        assert qa_link_text == "Log in to ask a question"
-
-    def test_dos_brief_has_different_link_text_for_logged_in_supplier(self):
-        self.login_as_supplier()
-        brief_id = self.brief['briefs']['id']
-        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
-        assert res.status_code == 200
-
-        document = html.fromstring(res.get_data(as_text=True))
-
-        qa_link_text = document.xpath('//a[@href="/suppliers/opportunities/{}/ask-a-question"]/text()'
-                                      .format(brief_id))[0]
-
-        assert qa_link_text.strip() == "Ask a question"
 
     def test_can_apply_to_live_brief(self):
         brief_id = self.brief['briefs']['id']
@@ -605,6 +567,206 @@ class TestBriefPage(BaseApplicationTest):
         document = html.fromstring(res.get_data(as_text=True))
 
         self._assert_view_application(document, brief_id)
+
+
+class TestBriefPageQandASectionViewQandASessionDetails(BaseBriefPageTest):
+
+    def setup_method(self, method):
+        super(TestBriefPageQandASectionViewQandASessionDetails, self).setup_method(method)
+        self.brief['briefs']['questionAndAnswerSessionDetails'] = {'many': 'details'}
+        self.brief['briefs']['clarificationQuestionsAreClosed'] = False
+
+    def test_live_brief_q_and_a_session(self):
+        """
+        As long as a:
+            A user is not logged in
+            The brief is live
+            Clarification questions are open
+            The brief has Q and A session details
+        We should show the:
+            link to login and view the QAS details
+        """
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(self.brief_id))
+        document = html.fromstring(res.get_data(as_text=True))
+
+        assert res.status_code == 200
+
+        expected_text = "Log in to view question and answer session details"
+        expected_link = '/suppliers/opportunities/{}/question-and-answer-session'.format(self.brief_id)
+
+        assert expected_text in document.xpath('.//a[contains(text(),"{}")]'.format(expected_text))[0].text
+        assert document.xpath('.//a[contains(text(),"{}")]'.format(expected_text))[0].attrib['href'] == expected_link
+
+    def test_live_brief_q_and_a_session_logged_in(self):
+        """
+        As long as a:
+            Supplier user is logged in
+            The brief is live
+            Clarification questions are open
+            The brief has Q and A session details
+        We should show the:
+            Link to view the QAS details
+        """
+        self.login_as_supplier()
+
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(self.brief_id))
+        document = html.fromstring(res.get_data(as_text=True))
+
+        assert res.status_code == 200
+
+        expected_text = "View question and answer session details"
+        expected_link = '/suppliers/opportunities/{}/question-and-answer-session'.format(self.brief_id)
+
+        assert expected_text in document.xpath('.//a[contains(text(),"{}")]'.format(expected_text))[0].text
+        assert document.xpath('.//a[contains(text(),"{}")]'.format(expected_text))[0].attrib['href'] == expected_link
+
+    @pytest.mark.parametrize(
+        'brief_data', [
+            {'status': 'withdrawn'},
+            {'status': 'closed'},
+            {'questionAndAnswerSessionDetails': None},
+            {'clarificationQuestionsAreClosed': True}
+        ]
+    )
+    def test_brief_q_and_a_session_link_not_shown(self, brief_data):
+        """
+        On viewing briefs with data like the above the page should load but we should not get the link.
+        """
+        self.brief['briefs'].update(brief_data)
+
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(self.brief_id))
+        document = html.fromstring(res.get_data(as_text=True))
+
+        assert res.status_code == 200
+
+        unexpected_texts = [
+            "Log in to view question and answer session details",
+            "View question and answer session details"
+        ]
+        for unexpected_text in unexpected_texts:
+            assert len(document.xpath('.//a[contains(text(),"{}")]'.format(unexpected_text))) == 0
+
+
+class TestBriefPageQandASectionAskAQuestion(BaseBriefPageTest):
+
+    def setup_method(self, method):
+        super(TestBriefPageQandASectionAskAQuestion, self).setup_method(method)
+        self.brief['briefs']['clarificationQuestionsAreClosed'] = False
+
+    def test_live_brief_ask_a_question(self):
+        """
+        As long as a:
+            A user is not logged in
+            The brief is live
+            Clarification questions are open
+        We should show the:
+            link to login and ask a question
+        """
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(self.brief_id))
+        document = html.fromstring(res.get_data(as_text=True))
+
+        assert res.status_code == 200
+
+        expected_text = "Log in to ask a question"
+        expected_link = '/suppliers/opportunities/{}/ask-a-question'.format(self.brief_id)
+
+        assert expected_text in document.xpath('.//a[contains(text(),"{}")]'.format(expected_text))[0].text
+        assert document.xpath('.//a[contains(text(),"{}")]'.format(expected_text))[0].attrib['href'] == expected_link
+
+    def test_live_brief_ask_a_question_logged_in(self):
+        """
+        As long as a:
+            Supplier user is logged in
+            The brief is live
+            Clarification questions are open
+        We should show the:
+            Link to ask a question
+        """
+        self.login_as_supplier()
+
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(self.brief_id))
+        document = html.fromstring(res.get_data(as_text=True))
+
+        assert res.status_code == 200
+
+        expected_text = "Ask a question"
+        expected_link = '/suppliers/opportunities/{}/ask-a-question'.format(self.brief_id)
+
+        assert expected_text in document.xpath('.//a[contains(text(),"{}")]'.format(expected_text))[0].text
+        assert document.xpath('.//a[contains(text(),"{}")]'.format(expected_text))[0].attrib['href'] == expected_link
+
+    @pytest.mark.parametrize(
+        'brief_data', [
+            {'status': 'withdrawn'},
+            {'status': 'closed'},
+            {'clarificationQuestionsAreClosed': True}
+        ]
+    )
+    def test_brief_ask_a_question_link_not_shown(self, brief_data):
+        """
+        On viewing briefs with data like the above the page should load but we should not get either the
+        log in to ask a question or ask a question links.
+        """
+        self.brief['briefs'].update(brief_data)
+
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(self.brief_id))
+        document = html.fromstring(res.get_data(as_text=True))
+
+        assert res.status_code == 200
+
+        unexpected_texts = ["Log in to ask a question", "Ask a question"]
+        for unexpected_text in unexpected_texts:
+            assert len(document.xpath('.//a[contains(text(),"{}")]'.format(unexpected_text))) == 0
+
+
+class TestWithdrawnSpecificBriefPage(BaseBriefPageTest):
+    def setup_method(self, method):
+        super(TestWithdrawnSpecificBriefPage, self).setup_method(method)
+        self.brief['briefs']['status'] = "withdrawn"
+        self.brief['briefs']['withdrawnAt'] = "2016-11-25T10:47:23.126761Z"
+
+    def test_dos_brief_visible_when_withdrawn(self):
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(self.brief_id))
+
+        assert res.status_code == 200
+
+    def test_apply_button_not_visible_for_withdrawn_briefs(self):
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(self.brief_id))
+        document = html.fromstring(res.get_data(as_text=True))
+        apply_links = document.xpath('//a[@href="/suppliers/opportunities/{}/responses/start"]'.format(self.brief_id))
+
+        assert len(apply_links) == 0
+
+    def test_deadline_text_not_shown(self):
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(self.brief_id))
+        page = res.get_data(as_text=True)
+
+        assert 'The deadline for asking questions about this opportunity was ' not in page
+
+    def test_withdrawn_banner_shown_on_withdrawn_brief(self):
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(self.brief_id))
+        page = res.get_data(as_text=True)
+
+        assert 'This opportunity was withdrawn on' in page
+        assert (
+            "You can&#39;t apply for this opportunity now. "
+            "The buyer may publish an updated&nbsp;version on the Digital&nbsp;Marketplace."
+        ) in page
+
+    @pytest.mark.parametrize(('status'), ['live', 'closed'])
+    def test_withdrawn_banner_not_shown_on_live_and_closed_brief(self, status):
+        self.brief['briefs']['status'] = status
+        del self.brief['briefs']['withdrawnAt']
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(self.brief_id))
+        page = res.get_data(as_text=True)
+
+        assert 'This opportunity was withdrawn on' not in page
+
+    def test_dateformat_in_withdrawn_banner_displayed_correctly(self):
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(self.brief_id))
+        page = res.get_data(as_text=True)
+
+        assert 'This opportunity was withdrawn on Friday&nbsp;25&nbsp;November&nbsp;2016' in page
 
 
 class TestCatalogueOfBriefsPage(BaseApplicationTest):

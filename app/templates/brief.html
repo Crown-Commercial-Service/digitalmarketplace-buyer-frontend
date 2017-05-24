@@ -36,6 +36,19 @@
     {% endwith %}
   </div>
 </div>
+{% elif brief.status == 'withdrawn' %}
+<div class="grid-row">
+  <div class="column-one-whole">
+    {%
+      with
+      type = "temporary-message",
+      heading = "This opportunity was withdrawn on " + "{}".format(brief.withdrawnAt|dateformat)|nbsp,
+      message = "You can't apply for this opportunity now. The buyer may publish an " + "updated version"|nbsp + " on the " + "Digital Marketplace."|nbsp
+    %}
+      {% include "toolkit/notification-banner.html" %}
+    {% endwith %}
+  </div>
+</div>
 {% endif %}
 
 <div class="grid-row">
