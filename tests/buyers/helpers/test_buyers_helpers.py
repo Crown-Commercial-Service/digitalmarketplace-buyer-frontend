@@ -76,31 +76,34 @@ class TestBuyersHelpers(object):
                 must_allow_brief=True,
             )
 
-    def test_is_brief_correct(self):
+    @pytest.mark.parametrize(
+        ['framework', 'lot', 'user', 'result'],
+        [
+            ('digital-outcomes-and-specialists', 'digital-specialists', 123, True),
+            ('not-digital-outcomes-and-specialists', 'digital-specialists', 123, False),
+            ('digital-outcomes-and-specialists', 'not-digital-specialists', 123, False),
+            ('digital-outcomes-and-specialists', 'digital-specialists', 124, False),
+        ]
+    )
+    def test_is_brief_correct(self, framework, lot, user, result):
         brief = api_stubs.brief(user_id=123, status='live')['briefs']
 
-        assert helpers.buyers_helpers.is_brief_correct(
-            brief, 'digital-outcomes-and-specialists', 'digital-specialists', 123
-        ) is True
+        assert helpers.buyers_helpers.is_brief_correct(brief, framework, lot, user) is result
 
+    @pytest.mark.parametrize(
+        ['status', 'allow_withdrawn', 'result'],
+        [
+            ('withdrawn', True, True),
+            ('withdrawn', False, False),
+            ('live', True, True),
+            ('live', False, True),
+        ]
+    )
+    def test_if_brief_correct_allow_withdrawn(self, status, allow_withdrawn, result):
+        brief = api_stubs.brief(user_id=123, status=status)['briefs']
         assert helpers.buyers_helpers.is_brief_correct(
-            brief, 'not-digital-outcomes-and-specialists', 'digital-specialists', 123
-        ) is False
-
-        assert helpers.buyers_helpers.is_brief_correct(
-            brief, 'digital-outcomes-and-specialists', 'not-digital-specialists', 123
-        ) is False
-
-        assert helpers.buyers_helpers.is_brief_correct(
-            brief, 'digital-outcomes-and-specialists', 'not-digital-specialists', 124
-        ) is False
-
-        assert helpers.buyers_helpers.is_brief_correct(
-            api_stubs.brief(user_id=123, status='withdrawn')['briefs'],
-            'digital-outcomes-and-specialists',
-            'digital-specialists',
-            123
-        ) is False
+            brief, 'digital-outcomes-and-specialists', 'digital-specialists', 123, allow_withdrawn=allow_withdrawn
+        ) is result
 
     def test_is_brief_associated_with_user(self):
         brief = api_stubs.brief(user_id=123)['briefs']

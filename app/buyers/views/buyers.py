@@ -33,10 +33,13 @@ from collections import Counter
 @buyers.route('')
 def buyer_dashboard():
     user_briefs = data_api_client.find_briefs(current_user.id).get('briefs', [])
-    draft_briefs = add_unanswered_counts_to_briefs([brief for brief in user_briefs if brief['status'] == 'draft'],
-                                                   content_loader)
+
+    draft_briefs = add_unanswered_counts_to_briefs(
+        [brief for brief in user_briefs if brief['status'] == 'draft'],
+        content_loader
+    )
     live_briefs = [brief for brief in user_briefs if brief['status'] == 'live']
-    closed_briefs = [brief for brief in user_briefs if brief['status'] == 'closed']
+    closed_briefs = [brief for brief in user_briefs if brief['status'] in ['closed', 'withdrawn']]
 
     return render_template(
         'buyers/dashboard.html',
@@ -116,7 +119,7 @@ def create_new_brief(framework_slug, lot_slug):
 @buyers.route('/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/copy', methods=['POST'])
 def copy_brief(framework_slug, lot_slug, brief_id):
     brief = data_api_client.get_brief(brief_id)["briefs"]
-    if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id):
+    if not is_brief_correct(brief, framework_slug, lot_slug, current_user.id, allow_withdrawn=True):
         abort(404)
 
     new_brief = data_api_client.copy_brief(brief_id, current_user.email_address)['briefs']

@@ -22,38 +22,116 @@ from werkzeug.exceptions import NotFound
 po = functools.partial(mock.patch.object, autospec=True)
 
 
+@pytest.fixture()
+def find_briefs_mock():
+    base_brief_values = {
+        "createdAt": "2016-02-01T00:00:00.000000Z",
+        "frameworkSlug": "digital-outcomes-and-specialists-2",
+        "frameworkFramework": "digital-outcomes-and-specialists",
+        "lot": "digital-specialists"
+    }
+
+    find_briefs_response = {
+        "briefs": [
+            {
+                "id": 20,
+                "status": "draft",
+                "title": "A draft brief",
+            }, {
+                "id": 21,
+                "status": "live",
+                "title": "A live brief",
+                "publishedAt": "2016-02-04T12:00:00.000000Z",
+            }, {
+                "id": 22,
+                "status": "closed",
+                "title": "A closed brief",
+                "publishedAt": "2016-02-04T12:00:00.000000Z",
+                "applicationsClosedAt": "2016-02-18T12:00:00.000000Z",
+            }, {
+                "id": 23,
+                "status": "withdrawn",
+                "title": "A withdrawn brief",
+                "publishedAt": "2016-02-04T12:00:00.000000Z",
+                "withdrawnAt": "2016-02-05T12:00:00.000000Z",
+            }
+        ]
+    }
+
+    for brief in find_briefs_response['briefs']:
+        brief.update(base_brief_values)
+
+    return find_briefs_response
+
+
 @mock.patch('app.buyers.views.buyers.data_api_client')
 class TestBuyerDashboard(BaseApplicationTest):
-    def test_buyer_dashboard(self, data_api_client):
-        with self.app.app_context():
-            self.login_as_buyer()
-            data_api_client.find_briefs.return_value = {
-                "briefs": [
-                    {"status": "draft",
-                     "title": "A draft brief",
-                     "createdAt": "2016-02-02T00:00:00.000000Z",
-                     "frameworkSlug": "digital-outcomes-and-specialists"},
-                    {"status": "live",
-                     "title": "A live brief",
-                     "createdAt": "2016-02-01T00:00:00.000000Z",
-                     "publishedAt": "2016-02-04T12:00:00.000000Z",
-                     "frameworkSlug": "digital-outcomes-and-specialists"},
-                ]
-            }
 
-            res = self.client.get("/buyers")
-            document = html.fromstring(res.get_data(as_text=True))
+    def setup_method(self, method):
+        super(TestBuyerDashboard, self).setup_method(method)
+        self.login_as_buyer()
 
-            assert res.status_code == 200
+    def test_draft_briefs_section(self, data_api_client, find_briefs_mock):
+        data_api_client.find_briefs.return_value = find_briefs_mock
 
-            tables = document.xpath('//table')
-            draft_row = [cell.text_content().strip() for cell in tables[0].xpath('.//tbody/tr/td')]
-            assert draft_row[0] == "A draft brief"
-            assert draft_row[1] == "Tuesday 2 February 2016"
+        res = self.client.get("/buyers")
+        tables = html.fromstring(res.get_data(as_text=True)).xpath('//table')
 
-            live_row = [cell.text_content().strip() for cell in tables[1].xpath('.//tbody/tr/td')]
-            assert live_row[0] == "A live brief"
-            assert live_row[1] == "Thursday 4 February 2016"
+        assert res.status_code == 200
+
+        draft_row = [cell.text_content().strip() for cell in tables[0].xpath('.//tbody/tr/td')]
+        expected_link = '/buyers/frameworks/digital-outcomes-and-specialists-2/requirements/digital-specialists/20'
+
+        assert draft_row[0] == "A draft brief"
+        assert tables[0].xpath('.//tbody/tr')[0].xpath('.//td')[0].xpath('.//a/@href')[0] == expected_link
+        assert draft_row[1] == "Monday 1 February 2016"
+
+    def test_live_briefs_section(self, data_api_client, find_briefs_mock):
+        data_api_client.find_briefs.return_value = find_briefs_mock
+
+        res = self.client.get("/buyers")
+        tables = html.fromstring(res.get_data(as_text=True)).xpath('//table')
+
+        assert res.status_code == 200
+
+        live_row = [cell.text_content().strip() for cell in tables[1].xpath('.//tbody/tr/td')]
+        expected_link = '/buyers/frameworks/digital-outcomes-and-specialists-2/requirements/digital-specialists/21'
+
+        assert live_row[0] == "A live brief"
+        assert tables[1].xpath('.//tbody/tr')[0].xpath('.//td')[0].xpath('.//a/@href')[0] == expected_link
+        assert live_row[1] == "Thursday 4 February 2016"
+
+    def test_closed_briefs_section(self, data_api_client, find_briefs_mock):
+        data_api_client.find_briefs.return_value = find_briefs_mock
+
+        res = self.client.get("/buyers")
+        tables = html.fromstring(res.get_data(as_text=True)).xpath('//table')
+
+        assert res.status_code == 200
+
+        closed_row = [cell.text_content().strip() for cell in tables[2].xpath('.//tbody/tr/td')]
+        expected_link = '/buyers/frameworks/digital-outcomes-and-specialists-2/requirements/digital-specialists/22'
+
+        assert closed_row[0] == "A closed brief"
+        assert tables[2].xpath('.//tbody/tr')[0].xpath('.//td')[0].xpath('.//a/@href')[0] == expected_link
+        assert closed_row[1] == "Thursday 18 February 2016"
+        assert closed_row[2] == "View responses"
+
+    def test_withdrawn_briefs_section(self, data_api_client, find_briefs_mock):
+        data_api_client.find_briefs.return_value = find_briefs_mock
+
+        res = self.client.get("/buyers")
+        tables = html.fromstring(res.get_data(as_text=True)).xpath('//table')
+
+        assert res.status_code == 200
+
+        withdrawn_row = [cell.text_content().strip() for cell in tables[2].xpath('.//tbody/tr')[1].xpath('.//td')]
+        expected_link = '/digital-outcomes-and-specialists/opportunities/23'
+
+        assert withdrawn_row[0] == "A withdrawn brief"
+        assert tables[2].xpath('.//tbody/tr')[1].xpath('.//td')[0].xpath('.//a/@href')[0] == expected_link
+        assert withdrawn_row[1] == "Withdrawn"
+        assert "View responses" not in withdrawn_row[2]
 
 
 @mock.patch('app.buyers.views.buyers.data_api_client')
@@ -297,7 +375,7 @@ class TestCopyBrief(BaseApplicationTest):
         assert res.status_code == 404
 
     def test_copy_brief_and_redirect_to_copied_brief_edit_title_page(self):
-        new_brief = self.brief
+        new_brief = self.brief.copy()
         new_brief["briefs"]["id"] = 1235
         self.data_api_client.copy_brief.return_value = new_brief
 
@@ -315,7 +393,7 @@ class TestCopyBrief(BaseApplicationTest):
     def test_copy_brief_for_expired_framework_redirects_to_edit_page_for_new_framework(self):
         self.data_api_client.get_brief.return_value = api_stubs.brief()  # dos1 brief
 
-        new_brief = self.brief  # dos2 brief
+        new_brief = self.brief.copy()  # dos2 brief
         new_brief["briefs"]["id"] = 1235
         self.data_api_client.copy_brief.return_value = new_brief
 
@@ -338,7 +416,31 @@ class TestCopyBrief(BaseApplicationTest):
 
         assert res.status_code == 404
         is_brief_correct.assert_called_once_with(
-            self.brief["briefs"], "digital-outcomes-and-specialists-2", "digital-specialists", 123)
+            self.brief["briefs"],
+            "digital-outcomes-and-specialists-2",
+            "digital-specialists",
+            123,
+            allow_withdrawn=True
+        )
+
+    def test_can_copy_withdrawn_brief(self):
+        # Make our original brief withdrawn
+        withdrawn_brief = self.brief.copy()
+        withdrawn_brief["briefs"].update({'status': 'withdrawn'})
+        self.data_api_client.get_brief.return_value = withdrawn_brief
+
+        # Set copied brief return
+        new_brief = self.brief.copy()  # dos2 brief
+        new_brief["briefs"]["id"] = 1235
+        self.data_api_client.copy_brief.return_value = new_brief
+
+        res = self.client.post(
+            '/buyers/frameworks/digital-outcomes-and-specialists-2/requirements/digital-specialists/1234/copy'
+        )
+
+        # Assert redirect and copy_brief call
+        assert res.status_code == 302
+        self.data_api_client.copy_brief.assert_called_once_with('1234', 'buyer@email.com')
 
 
 class TestEveryDamnPage(BaseApplicationTest):
