@@ -1,5 +1,5 @@
 // styles specific to service pages
-@import "shared_placeholders/_visuallyhidden.scss";
+@import "shared_placeholders/_visually-hidden.scss";
 
 %sub-heading {
   @include core-24;
@@ -57,19 +57,19 @@
   %meta-item {
     margin-bottom: $gutter;
   }
-  
+
   .document-link-with-icon {
     font-size: 16px;
   }
 
   .contact-details-organisation {
-    @extend %visuallyhidden;
+    @extend %visually-hidden;
   }
 
   .framework-name {
     @extend %meta-item;
   }
-  
+
   .service-id {
     @extend %meta-item;
   }
