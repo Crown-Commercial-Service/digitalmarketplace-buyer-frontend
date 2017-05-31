@@ -202,7 +202,8 @@ class TestSearchFilters(BaseApplicationTest):
         # first test with a top-level category selected
         url = "/g-cloud/search?q=&lot=cloud-software&otherfilter=somevalue&checkboxTreeExample=option+1&page=2"
         with self.app.test_request_context(url):
-            selection = build_lots_and_categories_link_tree(lots, category_filter_group, flask.request)
+            selection = build_lots_and_categories_link_tree(framework, lots, category_filter_group, flask.request,
+                                                            g9_builder)
             assert len(selection) == 3  # all -> software -> option1
 
             tree_root = selection[0]
@@ -234,7 +235,8 @@ class TestSearchFilters(BaseApplicationTest):
         # now test with a sub-category selected
         url = "/g-cloud/search?q=&lot=cloud-software&otherfilter=somevalue&checkboxTreeExample=option+2.2"
         with self.app.test_request_context(url):
-            selection = build_lots_and_categories_link_tree(lots, category_filter_group, flask.request)
+            selection = build_lots_and_categories_link_tree(framework, lots, category_filter_group, flask.request,
+                                                            g9_builder)
             assert len(selection) == 4  # all -> software -> option2 -> option2.2
 
             tree_root = selection[0]

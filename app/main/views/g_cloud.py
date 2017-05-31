@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from dmcontent.errors import ContentNotFoundError
 from flask import abort, render_template, request, redirect, current_app, url_for
 
 from dmutils.formats import dateformat
+from dmutils.filters import capitalize_first
 from dmapiclient import HTTPError
 
 from ...main import main
@@ -177,9 +177,8 @@ def search_services():
         abort(404)
 
     search_api_response = search_api_client.search_services(
-        **build_search_query(request, filters.values(), content_manifest, lots_by_slug)
+        **build_search_query(request.args, filters.values(), content_manifest, lots_by_slug)
     )
-
     search_results_obj = SearchResults(search_api_response, lots_by_slug)
 
     # the search api doesn't supply its own pagination information: use this `pagination` function to figure out what
@@ -202,7 +201,8 @@ def search_services():
     category_filter_group = filters.pop('categories') if 'categories' in filters else None
 
     lots = framework['lots']
-    selected_category_tree_filters = build_lots_and_categories_link_tree(lots, category_filter_group, request)
+    selected_category_tree_filters = build_lots_and_categories_link_tree(framework, lots, category_filter_group,
+                                                                         request, content_manifest)
 
     # Filter form should also filter by lot, and by category, when any of those are selected.
     # (But if a sub-category is selected, there is no need to filter by the parent category as,
@@ -218,7 +218,7 @@ def search_services():
     for filter_groups in filters.values():
         for filter_instance in filter_groups['filters']:
             if 'label' in filter_instance:
-                filter_instance['label'] = filter_instance['label'][:1].upper() + filter_instance['label'][1:]
+                filter_instance['label'] = capitalize_first(filter_instance['label'])
 
     return render_template(
         'search/services.html',

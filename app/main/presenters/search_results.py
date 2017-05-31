@@ -27,3 +27,13 @@ class SearchResults(object):
                 service['serviceSummary'] = Markup(
                     ''.join(service['highlight']['serviceSummary'])
                 )
+
+
+class AggregationResults(object):
+    """Provides access to the aggregation results information"""
+
+    def __init__(self, response):
+        self.results = response['aggregations']
+        self.total = response['meta']['total']
+        if 'page' in response['meta']['query']:
+            self.page = response['meta']['query']['page']
