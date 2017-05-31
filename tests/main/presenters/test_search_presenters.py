@@ -1,5 +1,6 @@
 import os
 import json
+import itertools
 from mock import Mock
 from dmcontent.content_loader import ContentLoader
 from werkzeug.datastructures import MultiDict
@@ -8,7 +9,7 @@ import flask
 from app.main.presenters.search_presenters import (
     filters_for_lot,
     set_filter_states,
-    annotate_lots_with_categories_selection,
+    get_lots_and_categories_selection,
 )
 
 from ...helpers import BaseApplicationTest
@@ -198,22 +199,26 @@ class TestSearchFilters(BaseApplicationTest):
 
         category_filter_group = filters_for_lot(lot_slug, g9_builder)['categories-example']
 
-        with self.app.test_request_context("/g-cloud/search?q=&lot={}".format(lot_slug)):
-            annotate_lots_with_categories_selection(lots, category_filter_group, flask.request)
+        with self.app.test_request_context("/g-cloud/search?q=&lot={}&otherfilter=somevalue".format(lot_slug)):
+            selection = get_lots_and_categories_selection(lots, category_filter_group, flask.request)
+            assert len(selection) == 2
 
-            assert lots[0].get('slug') == 'cloud-hosting'
-            assert not lots[0].get('selected')
-            assert not lots[0].get('categories')
+            assert selection[0].get('name') == 'All categories'
 
-            assert lots[1].get('slug') == 'cloud-software'
-            assert lots[1].get('selected')
-            category_links = lots[1]['categories']
-            assert 'checkboxTreeExample=option+1' in category_links[0]['link']
-            assert not category_links[0].get('children')
-            assert 'checkboxTreeExample=option+2' in category_links[1]['link']
-            sub_categories = category_links[1]['children']
-            assert 'checkboxTreeExample=option+2.1' in sub_categories[0]['link']
-            assert 'checkboxTreeExample=option+2.2' in sub_categories[1]['link']
+            assert selection[1].get('name') == 'Cloud software'
+            lot_filters = selection[0]['children']
+            assert selection[1] in lot_filters
+
+            category_filters = selection[1]['children']
+            assert 'checkboxTreeExample=option+1' in category_filters[0]['link']
+            assert not category_filters[0].get('children')
+            assert 'checkboxTreeExample=option+2' in category_filters[1]['link']
+            sub_category_filters = category_filters[1]['children']
+            assert 'checkboxTreeExample=option+2.1' in sub_category_filters[0]['link']
+            assert 'checkboxTreeExample=option+2.2' in sub_category_filters[1]['link']
+
+            for f in itertools.chain(category_filters, sub_category_filters):
+                assert 'otherfilter=somevalue' in f['link']
 
     def test_filter_groups_have_correct_default_state(self):
         request = self._get_request_for_params({

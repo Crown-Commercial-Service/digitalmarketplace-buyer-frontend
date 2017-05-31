@@ -11,7 +11,7 @@ from ...main import main
 from ..presenters.search_presenters import (
     filters_for_lot,
     set_filter_states,
-    annotate_lots_with_categories_selection,
+    get_lots_and_categories_selection,
 )
 from ..presenters.search_results import SearchResults
 from ..presenters.search_summary import SearchSummary
@@ -196,7 +196,7 @@ def search_services():
     category_filter_group = filters.pop('categories') if 'categories' in filters else None
 
     lots = framework['lots']
-    current_category_filter = annotate_lots_with_categories_selection(lots, category_filter_group, request)
+    category_tree_selection = get_lots_and_categories_selection(lots, category_filter_group, request)
 
     current_lot = lots_by_slug.get(current_lot_slug)
 
@@ -212,7 +212,7 @@ def search_services():
     return render_template(
         'search/services.html',
         current_lot=current_lot,
-        current_category_filter=current_category_filter,
+        category_tree_root=category_tree_selection[0],
         filters=filters.values(),
         lots=lots,
         pagination=pagination_config,

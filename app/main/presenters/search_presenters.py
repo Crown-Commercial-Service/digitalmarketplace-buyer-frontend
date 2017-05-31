@@ -100,43 +100,70 @@ def _get_category_filter_key_set(category_filter_group):
     {'serviceCategories'} .
     :return: set[string]
     """
-    return {f['name'] for f in category_filter_group['filters']}
+    if category_filter_group is not None and category_filter_group['filters']:
+        return {f['name'] for f in category_filter_group['filters']}
+    else:
+        return set()
 
 
-def annotate_lots_with_categories_selection(lots, category_filter_group, request):
+def get_lots_and_categories_selection(lots, category_filter_group, request):
     """
     Equivalent of set_filter_states but for where we are creating a tree of links i.e. the
     lots/categories widget. Adds links (where necessary) and shows the currently-selected
     lot and/or categories.
-    :param lots: a sequence of lot dicts, which this function will annotate
+
+    Returns a list of selected filter nodes, always starting with the root level 'all categories' node,
+    followed by a selected lot (if any), then by any selected categories and sub-category filters that
+    were selected by the user.
+
+    :param lots: a sequence of lot dicts applicable to the live framework(s)
     :param category_filter_group: a single filter group loaded from the framework search_filters manifest
     :param request: current request so that we can figure out what lots and categories are selected
-    :return: the category filter that was directly selected, if any
+    :return: list[dict] selected filter nodes, always starting with a root level 'all categories' node
     """
+    selection = list()
     current_lot_slug = get_lot_from_request(request)
-    selected_category = None
-    
+
+    # Links in the tree should preserve all the filters, except those relating to this tree (i.e. lot
+    # and category).
     search_link_builder = Href(url_for('.search_services'))
-    category_filter_keys = _get_category_filter_key_set(category_filter_group)
+    keys_to_remove = _get_category_filter_key_set(category_filter_group)
+    keys_to_remove.add('lot')
+    clean_url_args = MultiDict((k, v) for (k, v) in request.args.items(multi=True) if k not in keys_to_remove)
+
+    # Create root node for the tree, always selected, which is the parent of the various lots.
+    root_node = dict()
+    root_node['name'] = 'All categories'
+    root_node['selected'] = True  # for consistency with lower levels
+    root_node['link'] = search_link_builder(clean_url_args)
+    root_node['children'] = list()
+
+    selection.append(root_node)
 
     for lot in lots:
+        selected_categories = []
         lot_selected = (lot['slug'] == current_lot_slug)
+        lot_filter = dict(lot)
         if lot_selected:
-            lot['selected'] = True
+            lot_filter['selected'] = True
             categories = category_filter_group['filters'] if category_filter_group else []
-            selected_category = _annotate_categories_with_selection(lot, categories, request)
-            lot['categories'] = categories
+            selected_categories = _annotate_categories_with_selection(lot, categories, request)
+            selection.extend(selected_categories)
+            lot_filter['children'] = categories
+            selection.append(lot_filter)
 
-        if not lot_selected or selected_category is not None:
-            # we need a link back to the lot _without_ a category selected
-            url_args = MultiDict(request.args)
+        if not lot_selected or selected_categories:
+            # we need a link to the lot _without_ a category selected
+            url_args = MultiDict(clean_url_args)
             url_args['lot'] = lot['slug']
-            for category_filter_key in category_filter_keys.intersection(request.args.keys()):
-                del url_args[category_filter_key]
 
-            lot['link'] = search_link_builder(url_args)
+            lot_filter['link'] = search_link_builder(url_args)
 
-    return selected_category
+        if lot_selected or current_lot_slug is None:
+            # only place this lot into the tree if it is selected (or if no lot is selected at all)
+            root_node['children'].append(lot_filter)
+
+    return selection
 
 
 def _annotate_categories_with_selection(lot, category_filters, request, parent_category=None):
@@ -146,10 +173,10 @@ def _annotate_categories_with_selection(lot, category_filters, request, parent_c
     :param category_filters: iterable of category filters as previously produced by filters_for_question
     :param request: request object from which to extract active filters
     :param parent_category: The name of the parent category; only set internally for recursion.
-    :return: the category filter that was directly selected, if any
+    :return: list of filters that were selected, if any; the last of which was directly selected
     """
     request_filters = get_filters_from_request(request)
-    selected_category_filter = None
+    selected_category_filters = []
     search_link_builder = Href(url_for('.search_services'))
 
     for category in category_filters:
@@ -160,22 +187,22 @@ def _annotate_categories_with_selection(lot, category_filters, request, parent_c
         )
         directly_selected = (category['value'] in param_values)
 
-        selected_descendant = _annotate_categories_with_selection(lot, category.get('children', []), request,
-                                                                  parent_category=category['value'])
+        selected_descendants = _annotate_categories_with_selection(lot, category.get('children', []), request,
+                                                                   parent_category=category['value'])
 
-        if selected_descendant is not None:
+        if selected_descendants:
             # If a parentCategory has been sent as a url query param, de-select all other parent categories.
             if request.values.get('parentCategory', category['value']) != category['value']:
                 category['selected'] = False
-                selected_descendant = None
+                selected_descendants = None
 
             else:
-                selected_category_filter = selected_descendant
+                selected_category_filters.extend(selected_descendants)
 
         elif directly_selected:
-            selected_category_filter = category
+            selected_category_filters.append(category)
 
-        if directly_selected or selected_descendant is not None:
+        if directly_selected or selected_descendants:
             category['selected'] = True
 
         # As with lots, we want a link to the category - but not if the category is directly selected.
@@ -199,8 +226,8 @@ def _annotate_categories_with_selection(lot, category_filters, request, parent_c
     # When there's a selection, remove parent categories (i.e. preserve the selection, plus
     # sub-categories, which is those without children). The effect is that siblings of any
     # selected category or sub-category are shown, if that selection has no children.
-    if selected_category_filter is not None:
+    if selected_category_filters:
         category_filters[:] = (c for c in category_filters
                                if c['selected'] or not c.get('children', []))  # in-place filter(!)
 
-    return selected_category_filter
+    return selected_category_filters
