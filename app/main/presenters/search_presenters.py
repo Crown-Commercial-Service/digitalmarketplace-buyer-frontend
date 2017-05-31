@@ -1,11 +1,12 @@
 from collections import OrderedDict
 
 from flask import url_for
+from werkzeug.datastructures import MultiDict
+from werkzeug.urls import Href
 
 from ..helpers.search_helpers import (
     get_filters_from_request,
     get_lot_from_request,
-    get_keywords_from_request,
     get_filter_value_from_question_option,
 )
 
@@ -91,6 +92,17 @@ def set_filter_states(filter_groups, request):
                 )
 
 
+def _get_category_filter_key_set(category_filter_group):
+    """
+    Returns the set of keys used in the category filter group. In practice
+    there should only be one, but for completeness we allow for the possibility
+    of their being several. In G6/7/8, this was {'serviceTypes'}, in G9 it's
+    {'serviceCategories'} .
+    :return: set[string]
+    """
+    return {f['name'] for f in category_filter_group['filters']}
+
+
 def annotate_lots_with_categories_selection(lots, category_filter_group, request):
     """
     Equivalent of set_filter_states but for where we are creating a tree of links i.e. the
@@ -103,6 +115,9 @@ def annotate_lots_with_categories_selection(lots, category_filter_group, request
     """
     current_lot_slug = get_lot_from_request(request)
     selected_category = None
+    
+    search_link_builder = Href(url_for('.search_services'))
+    category_filter_keys = _get_category_filter_key_set(category_filter_group)
 
     for lot in lots:
         lot_selected = (lot['slug'] == current_lot_slug)
@@ -114,7 +129,12 @@ def annotate_lots_with_categories_selection(lots, category_filter_group, request
 
         if not lot_selected or selected_category is not None:
             # we need a link back to the lot _without_ a category selected
-            lot['link'] = url_for('.search_services', q=get_keywords_from_request(request), lot=lot['slug'])
+            url_args = MultiDict(request.args)
+            url_args['lot'] = lot['slug']
+            for category_filter_key in category_filter_keys.intersection(request.args.keys()):
+                del url_args[category_filter_key]
+
+            lot['link'] = search_link_builder(url_args)
 
     return selected_category
 
@@ -130,6 +150,7 @@ def _annotate_categories_with_selection(lot, category_filters, request, parent_c
     """
     request_filters = get_filters_from_request(request)
     selected_category_filter = None
+    search_link_builder = Href(url_for('.search_services'))
 
     for category in category_filters:
         category['selected'] = False
@@ -161,18 +182,19 @@ def _annotate_categories_with_selection(lot, category_filters, request, parent_c
         # If we're showing it as 'selected' because one of its children is selected, then the link is
         # useful as a kind of breadcrumb, to return to showing all services in that overall category.
         if not directly_selected:
+            url_args = MultiDict(request.args)
             # The argument in the URL must reflect the 'name' of the filter (i.e. the particular question
             # name it was derived from - 'serviceTypes' for G7/G8, 'serviceCategories' for G9.
-            url_args = {category['name']: category['value']}
+            url_args[category['name']] = category['value']
+            url_args['lot'] = lot['slug']
 
             # If this category has a parent, add it as a query param to the link generated.
             if parent_category:
                 url_args['parentCategory'] = parent_category
+            elif 'parentCategory' in url_args:
+                del url_args['parentCategory']
 
-            category['link'] = url_for('.search_services',
-                                       q=get_keywords_from_request(request),
-                                       lot=lot['slug'],
-                                       **url_args)
+            category['link'] = search_link_builder(url_args)
 
     # When there's a selection, remove parent categories (i.e. preserve the selection, plus
     # sub-categories, which is those without children). The effect is that siblings of any
