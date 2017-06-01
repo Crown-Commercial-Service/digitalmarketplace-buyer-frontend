@@ -143,6 +143,8 @@
     id: TLS (version 1.2 or above)
   - preposition:
     id: IPsec or TLS VPN gateway
+  - preposition:
+    id: bonded fibre optic connections
 
 - id: Data protection within supplier network
   labelPreposition: where data protection within supplier network includes
