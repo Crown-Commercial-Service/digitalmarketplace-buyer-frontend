@@ -128,6 +128,12 @@ class TestBriefPage(BaseApplicationTest):
         res = self.client.get(self.expand_path('/digital-service-professionals/opportunities/{}').format(brief_id))
         assert_equal(404, res.status_code)
 
+    def test_dos_brief_has_response_preview(self):
+        brief_id = self.brief['briefs']['id']
+        res = self.client.get(self.expand_path('/digital-service-professionals/opportunities/{}/response')
+                              .format(brief_id))
+        assert_equal(200, res.status_code)
+
     def test_dos_brief_has_correct_title(self):
         brief_id = self.brief['briefs']['id']
         res = self.client.get(self.expand_path('/digital-service-professionals/opportunities/{}').format(brief_id))

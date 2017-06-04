@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import os
+import io
 import json
+import xlsxwriter
 
 from flask_login import current_user
 from flask import abort, current_app, config, make_response, redirect, \
-    render_template, request, session, url_for, jsonify, flash
+    render_template, request, session, url_for, jsonify, flash, Response
 import flask_featureflags as feature
 
 from dmutils.forms import DmForm, render_template_with_csrf
@@ -280,6 +281,79 @@ def get_brief_by_id(framework_slug, brief_id):
         add_case_study_url=add_case_study_url,
         brief_of_current_user=brief_of_current_user
     )
+
+
+@main.route('/<framework_slug>/opportunities/<brief_id>/response')
+def get_brief_response_preview_by_id(framework_slug, brief_id):
+    briefs = data_api_client.get_brief(brief_id)
+    brief = briefs.get('briefs')
+    if brief['status'] not in ['live', 'closed']:
+        if not current_user.is_authenticated \
+                or (
+                    brief['users'][0]['id'] != current_user.id and
+                    not allowed_email_domain(current_user.id, brief, data_api_client)
+                ):
+            abort(404, "Opportunity '{}' can not be found".format(brief_id))
+
+    outdata = io.BytesIO()
+
+    workbook = xlsxwriter.Workbook(outdata)
+    bold = workbook.add_format({'bold': True})
+    heading = workbook.add_format({'bold': True, 'font_size': '14'})
+    header = workbook.add_format({'bg_color': '#e8f5fa'})
+    question = workbook.add_format({'bg_color': '#f3f3f3', 'valign': 'top', 'text_wrap':  True,
+                                    'border': 1, 'border_color': "#AAAAAA"})
+
+    sheet = workbook.add_worksheet('Response')
+
+    sheet.set_column('C:C', 70)
+    sheet.set_column('B:B', 50, question)
+    sheet.set_column('A:A', 50, question)
+    sheet.set_row(0, 140, header)
+
+    sheet.write_rich_string('A1',  heading, 'Apply for this opportunity', header,
+                            '\nThe buyer will compare your response with other seller responses to create a shortlist '
+                            'for the evaluation stage. To progress, consider each answer carefully.\n\n'
+                            'As a guide, you could explain:\n\n'
+                            '- What the situation was\n'
+                            '- The work the specialist or team completed\n'
+                            '- What the results were\n'
+                            '\n'
+                            'You can reuse examples if you wish.')
+
+    e_start = 2
+    e = 2
+    for essential in brief['essentialRequirements']:
+        sheet.write_rich_string('B'+str(e), bold, essential,  question, '\n\n150 words')
+        e += 1
+    sheet.merge_range(e_start-1, 0, e-2, 0, '', question)
+    sheet.write_rich_string('A'+str(e_start), bold, 'Do you have the essential skills and experience?', question,
+                            "\n\nYou must have all essential skills and experience to apply for this opportunity."
+                            )
+    n_start = e
+    n = e
+    for nice in brief['niceToHaveRequirements']:
+        sheet.write_rich_string('B'+str(n), bold, nice, question, '\n\n150 words')
+        n += 1
+    sheet.merge_range(n_start-1, 0, n-2, 0, '', question)
+    sheet.write_rich_string('A'+str(n_start), bold, 'Nice to have skills and experience...', question,
+                            "\n\nYou must have all essential skills and experience to apply for this opportunity."
+                            )
+
+    sheet.write_rich_string('B'+str(n), bold, "When can you start?")
+    sheet.write_rich_string('B'+str(n+1), bold, "Contact email:", question,
+                            "\n\nAll communication about your application will be sent to this address")
+
+    workbook.close()
+
+    return Response(
+        outdata.getvalue(),
+        mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        headers={
+            "Content-Disposition": "attachment;filename=brief-response-template-{}.xlsx".format(brief['id']),
+            "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        }
+    ), 200
 
 
 @main.route('/<framework_slug>/opportunities/opportunity_<brief_id>.pdf')
