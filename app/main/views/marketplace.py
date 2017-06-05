@@ -273,11 +273,14 @@ def get_brief_by_id(framework_slug, brief_id):
     profile_application_status = None
     if current_user.is_authenticated:
         profile_application_id = current_user.application_id
-        profile_application = data_api_client.req.applications(profile_application_id).get()
-        if profile_application.type == 'edit':
-            profile_application_status = 'approved'
+        if profile_application_id is None:
+            profile_application_status = None
         else:
-            profile_application_status = profile_application.get('application').get('status', None)
+            profile_application = data_api_client.req.applications(profile_application_id).get()
+            if profile_application.get('application').get('type') == 'edit':
+                profile_application_status = 'approved'
+            else:
+                profile_application_status = profile_application.get('application').get('status', None)
 
     return render_template_with_csrf(
         'brief.html',
