@@ -123,36 +123,64 @@ items = [
     {% else %}
     {% if is_restricted_brief %}<p>Only invited sellers can apply for 'Open to one' or 'Open to selected' briefs.</p>
     {% endif %}
-    <p>
 
 
-      {% with
+     {% if profile_application_status == 'approved' %}
+      <h3>Interested in this opportunity?</h3>
+      <div class="brief-button-group">
+        <span>
+        {% with
       url = application_url,
       role = "button",
-      label = "Apply Now"
-      %}
-      {% include "toolkit/link-button.html" %}
-      {% endwith %}
-      <strong>I am approved to supply this area of expertise</strong>
-    </p>
-    <p>
-      {% with
-      url = application_url,
-      role = "button",
-      label = "Apply for Assessment"
-      %}
-      {% include "toolkit/link-button.html" %}
-      {% endwith %}
-      <strong>I want to be assessed to supply this area of expertise</strong>
-    </p>
-    {% if not current_user.is_authenticated %}
-
-      <p>
-        <strong>New to the Marketplace?</strong><br/>
-        <a href="/become-a-seller">Sign up now</a>
-
-      </p>
+      label = "Apply Now" %}
+          {% include "toolkit/link-button.html" %}
+        {% endwith %}
+      </span>
+      </div>
     {% endif %}
+
+
+    {% if profile_application_status == 'submitted' %}
+      <h3>Interested in this opportunity?</h3>
+      <div>
+        As you're not active on the Marketplace you will need to pass assessment before you can respond to this
+        opportunity.
+      </div>
+      <div class="brief-button-group">
+        <span>
+        {% with
+      url = application_url,
+      role = "button",
+      label = "Request an assessment" %}
+          {% include "toolkit/link-button.html" %}
+        {% endwith %}
+      </span>
+      </div>
+    {% endif %}
+
+
+    {% if not current_user.is_authenticated %}
+      <strong>Interested in this opportunity?</strong>
+      <div class="brief-button-group">
+        <span>
+        {% with
+      url = application_url,
+      role = "button",
+      label = "Sign in to continue" %}
+          {% include "toolkit/link-button.html" %}
+        {% endwith %}
+      </span>
+        <span>
+        {% with
+      url = application_url,
+      role = "button",
+      label = "Create an account" %}
+          {% include "toolkit/link-button.html" %}
+        {% endwith %}
+      </span>
+      </div>
+    {% endif %}
+
 
   {% endif %}
 {% endif %}

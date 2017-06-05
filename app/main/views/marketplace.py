@@ -270,6 +270,15 @@ def get_brief_by_id(framework_slug, brief_id):
     application_url = "/sellers/opportunities/{}/responses/create".format(brief['id'])
     add_case_study_url = None
 
+    profile_application_status = None
+    if current_user.is_authenticated:
+        profile_application_id = current_user.application_id
+        profile_application = data_api_client.req.applications(profile_application_id).get()
+        if profile_application.type == 'edit':
+            profile_application_status = 'approved'
+        else:
+            profile_application_status = profile_application.get('application').get('status', None)
+
     return render_template_with_csrf(
         'brief.html',
         brief=brief,
@@ -279,7 +288,8 @@ def get_brief_by_id(framework_slug, brief_id):
         is_restricted_brief=is_restricted_brief,
         application_url=application_url,
         add_case_study_url=add_case_study_url,
-        brief_of_current_user=brief_of_current_user
+        brief_of_current_user=brief_of_current_user,
+        profile_application_status=profile_application_status
     )
 
 

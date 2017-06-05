@@ -5,7 +5,7 @@ from datetime import datetime
 from lxml import html
 import pytest
 import mock
-from nose.tools import assert_equal, assert_true, assert_in
+from nose.tools import assert_equal, assert_true, assert_in, assert_not_equals
 from six import iteritems
 from six.moves.urllib.parse import urlparse, parse_qs
 
@@ -311,7 +311,7 @@ class TestBriefPage(BaseApplicationTest):
         assert len(document.xpath(
             '//a[@href="{0}"][contains(normalize-space(text()), normalize-space("{1}"))]'.format(
                 brief_response_url,
-                "Apply Now",
+                "Sign in to continue",
             )
         )) == 1
 
@@ -320,15 +320,7 @@ class TestBriefPage(BaseApplicationTest):
         brief_id = self.brief['briefs']['id']
         res = self.client.get(self.expand_path('/digital-service-professionals/opportunities/{}'.format(brief_id)))
         assert_equal(200, res.status_code)
-        document = html.fromstring(res.get_data(as_text=True))
-
-        brief_response_url = self.expand_path('/sellers/opportunities/{}/responses/create'.format(brief_id))
-        assert len(document.xpath(
-            '//a[@href="{0}"][contains(normalize-space(text()), normalize-space("{1}"))]'.format(
-                brief_response_url,
-                "Apply Now",
-            )
-        )) == 1
+        assert_not_equals(res.data.title().strip().find("/Sellers/Opportunities/1/Ask-A-Question"), -1)
 
     def test_supplier_start_application(self):
         self.login_as_supplier()
@@ -336,18 +328,12 @@ class TestBriefPage(BaseApplicationTest):
         self._data_api_client.find_brief_responses.return_value = {
             "briefResponses": [],
         }
+
         brief_id = self.brief['briefs']['id']
         res = self.client.get(self.expand_path('/digital-service-professionals/opportunities/{}'.format(brief_id)))
         assert_equal(200, res.status_code)
-        document = html.fromstring(res.get_data(as_text=True))
 
-        brief_response_url = self.expand_path('/sellers/opportunities/{}/responses/create'.format(brief_id))
-        assert len(document.xpath(
-            '//a[@href="{0}"][contains(normalize-space(text()), normalize-space("{1}"))]'.format(
-                brief_response_url,
-                "Apply Now",
-            )
-        )) == 1
+        assert_not_equals(res.data.title().strip().find("/Sellers/Opportunities/1/Ask-A-Question"), -1)
 
     def test_supplier_applied_view_application(self):
         self.login_as_supplier()
