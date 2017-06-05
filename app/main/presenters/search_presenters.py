@@ -96,7 +96,7 @@ def _get_category_filter_key_set(category_filter_group):
     """
     Returns the set of keys used in the category filter group. In practice
     there should only be one, but for completeness we allow for the possibility
-    of their being several. In G6/7/8, this was {'serviceTypes'}, in G9 it's
+    of there being several. In G6/7/8, this was {'serviceTypes'}, in G9 it's
     {'serviceCategories'} .
     :return: set[string]
     """
@@ -143,7 +143,7 @@ def get_lots_and_categories_selection(lots, category_filter_group, request):
     for lot in lots:
         selected_categories = []
         lot_selected = (lot['slug'] == current_lot_slug)
-        lot_filter = dict(lot)
+        lot_filter = lot.copy()
         if lot_selected:
             lot_filter['selected'] = True
             categories = category_filter_group['filters'] if category_filter_group else []
@@ -160,7 +160,6 @@ def get_lots_and_categories_selection(lots, category_filter_group, request):
             lot_filter['link'] = search_link_builder(url_args)
 
         if lot_selected or current_lot_slug is None:
-            # only place this lot into the tree if it is selected (or if no lot is selected at all)
             root_node['children'].append(lot_filter)
 
     return selection
