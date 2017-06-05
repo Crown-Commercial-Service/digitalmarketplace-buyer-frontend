@@ -89,7 +89,7 @@ def get_brief_by_id(framework_framework, brief_id):
         for index, question in enumerate(brief['clarificationQuestions'])
     ]
 
-    brief_content = content_loader.get_builder(brief['frameworkSlug'], 'display_brief').filter(brief)
+    brief_content = content_loader.get_manifest(brief['frameworkSlug'], 'display_brief').filter(brief)
 
     return render_template(
         'brief.html',
@@ -118,7 +118,7 @@ def list_opportunities(framework_framework):
 
     briefs = [{
         "data": brief,
-        "content": content_loader.get_builder(brief['frameworkSlug'], 'display_brief').filter(brief)
+        "content": content_loader.get_manifest(brief['frameworkSlug'], 'display_brief').filter(brief)
     } for brief in api_result["briefs"]]
 
     links = api_result["links"]
