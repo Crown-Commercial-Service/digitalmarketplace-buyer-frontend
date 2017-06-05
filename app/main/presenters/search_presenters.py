@@ -106,22 +106,17 @@ def _get_category_filter_key_set(category_filter_group):
         return set()
 
 
-def get_lots_and_categories_selection(lots, category_filter_group, request):
+def build_lots_and_categories_link_tree(lots, category_filter_group, request):
     """
     Equivalent of set_filter_states but for where we are creating a tree of links i.e. the
     lots/categories widget. Adds links (where necessary) and shows the currently-selected
     lot and/or categories.
 
-    Returns a list of selected filter nodes, always starting with the root level 'all categories' node,
-    followed by a selected lot (if any), then by any selected categories and sub-category filters that
-    were selected by the user.
-
     :param lots: a sequence of lot dicts applicable to the live framework(s)
     :param category_filter_group: a single filter group loaded from the framework search_filters manifest
     :param request: current request so that we can figure out what lots and categories are selected
-    :return: list[dict] selected filter nodes, always starting with a root level 'all categories' node
+    :return: the 'all categories' node which is the root of the tree
     """
-    selection = list()
     current_lot_slug = get_lot_from_request(request)
 
     # Links in the tree should preserve all the filters, except those relating to this tree (i.e. lot
@@ -138,8 +133,6 @@ def get_lots_and_categories_selection(lots, category_filter_group, request):
     root_node['link'] = search_link_builder(clean_url_args)
     root_node['children'] = list()
 
-    selection.append(root_node)
-
     for lot in lots:
         selected_categories = []
         lot_selected = (lot['slug'] == current_lot_slug)
@@ -147,10 +140,11 @@ def get_lots_and_categories_selection(lots, category_filter_group, request):
         if lot_selected:
             lot_filter['selected'] = True
             categories = category_filter_group['filters'] if category_filter_group else []
-            selected_categories = _annotate_categories_with_selection(lot, categories, request)
-            selection.extend(selected_categories)
+            # We could preserve the returned list of selected categories along with the selected lot, if we
+            # wanted to build a breadcrumb trail.
+            _annotate_categories_with_selection(lot['slug'], categories, request)
+
             lot_filter['children'] = categories
-            selection.append(lot_filter)
 
         if not lot_selected or selected_categories:
             # we need a link to the lot _without_ a category selected
@@ -162,13 +156,14 @@ def get_lots_and_categories_selection(lots, category_filter_group, request):
         if lot_selected or current_lot_slug is None:
             root_node['children'].append(lot_filter)
 
-    return selection
+    return root_node
 
 
-def _annotate_categories_with_selection(lot, category_filters, request, parent_category=None):
+def _annotate_categories_with_selection(lot_slug, category_filters, request, parent_category=None):
     """
     Recursive setting of 'selected' state and adding of links to categories
     as part of building the lots/categories tree.
+    :param lot_slug for the lot that owns this set of categories
     :param category_filters: iterable of category filters as previously produced by filters_for_question
     :param request: request object from which to extract active filters
     :param parent_category: The name of the parent category; only set internally for recursion.
@@ -186,7 +181,7 @@ def _annotate_categories_with_selection(lot, category_filters, request, parent_c
         )
         directly_selected = (category['value'] in param_values)
 
-        selected_descendants = _annotate_categories_with_selection(lot, category.get('children', []), request,
+        selected_descendants = _annotate_categories_with_selection(lot_slug, category.get('children', []), request,
                                                                    parent_category=category['value'])
 
         if selected_descendants:
@@ -212,7 +207,7 @@ def _annotate_categories_with_selection(lot, category_filters, request, parent_c
             # The argument in the URL must reflect the 'name' of the filter (i.e. the particular question
             # name it was derived from - 'serviceTypes' for G7/G8, 'serviceCategories' for G9.
             url_args[category['name']] = category['value']
-            url_args['lot'] = lot['slug']
+            url_args['lot'] = lot_slug
 
             # If this category has a parent, add it as a query param to the link generated.
             if parent_category:

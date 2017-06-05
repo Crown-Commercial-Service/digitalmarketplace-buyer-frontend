@@ -9,7 +9,7 @@ import flask
 from app.main.presenters.search_presenters import (
     filters_for_lot,
     set_filter_states,
-    get_lots_and_categories_selection,
+    build_lots_and_categories_link_tree,
 )
 
 from ...helpers import BaseApplicationTest
@@ -200,16 +200,16 @@ class TestSearchFilters(BaseApplicationTest):
         category_filter_group = filters_for_lot(lot_slug, g9_builder)['categories-example']
 
         with self.app.test_request_context("/g-cloud/search?q=&lot={}&otherfilter=somevalue".format(lot_slug)):
-            selection = get_lots_and_categories_selection(lots, category_filter_group, flask.request)
-            assert len(selection) == 2
+            tree_root = build_lots_and_categories_link_tree(lots, category_filter_group, flask.request)
 
-            assert selection[0].get('name') == 'All categories'
+            assert tree_root.get('name') == 'All categories'
 
-            assert selection[1].get('name') == 'Cloud software'
-            lot_filters = selection[0]['children']
-            assert selection[1] in lot_filters
+            lot_filters = tree_root['children']
+            selected_lot = next(f for f in lot_filters if f['selected'])
+            assert selected_lot.get('name') == 'Cloud software'
 
-            category_filters = selection[1]['children']
+            # check that we have links in place to a search with the relevant category filter applied...
+            category_filters = selected_lot['children']
             assert 'checkboxTreeExample=option+1' in category_filters[0]['link']
             assert not category_filters[0].get('children')
             assert 'checkboxTreeExample=option+2' in category_filters[1]['link']
@@ -217,6 +217,7 @@ class TestSearchFilters(BaseApplicationTest):
             assert 'checkboxTreeExample=option+2.1' in sub_category_filters[0]['link']
             assert 'checkboxTreeExample=option+2.2' in sub_category_filters[1]['link']
 
+            # ...and also that each link preserves the value of any other filters that were present...
             for f in itertools.chain(category_filters, sub_category_filters):
                 assert 'otherfilter=somevalue' in f['link']
 
