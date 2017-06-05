@@ -864,8 +864,9 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         ss_elem = document.xpath("//p[@class='search-summary']")[0]
         assert self._normalize_whitespace(self._squashed_element_text(ss_elem)) == "2 opportunities"
 
-        first_brief_specialist_role = document.xpath("//div[@class='search-result']/ul[2]/li[2]/text()")[0].strip()
-        assert first_brief_specialist_role == "Business analyst"
+        specialist_role_labels = document.xpath("//div[@class='search-result']/ul[2]/li[2]/text()")
+        assert len(specialist_role_labels) == 1  # only one brief has a specialist role so only one label should exist
+        assert specialist_role_labels[0].strip() == "Business analyst"
 
     def test_catalogue_of_briefs_page_filtered(self):
         original_url = "/digital-outcomes-and-specialists/opportunities?page=2&status=live&lot=lot-one&lot=lot-three"
