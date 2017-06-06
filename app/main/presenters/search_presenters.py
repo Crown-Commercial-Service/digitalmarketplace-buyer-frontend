@@ -138,13 +138,13 @@ def build_lots_and_categories_link_tree(lots, category_filter_group, request):
         lot_selected = (lot['slug'] == current_lot_slug)
         lot_filter = lot.copy()
         if lot_selected:
-            lot_filter['selected'] = True
             categories = category_filter_group['filters'] if category_filter_group else []
             # We could preserve the returned list of selected categories along with the selected lot, if we
             # wanted to build a breadcrumb trail.
-            _annotate_categories_with_selection(lot['slug'], categories, request)
+            selected_categories = _annotate_categories_with_selection(lot['slug'], categories, request)
 
             lot_filter['children'] = categories
+            lot_filter['selected'] = True
 
         if not lot_selected or selected_categories:
             # we need a link to the lot _without_ a category selected
@@ -172,6 +172,7 @@ def _annotate_categories_with_selection(lot_slug, category_filters, request, par
     request_filters = get_filters_from_request(request)
     selected_category_filters = []
     search_link_builder = Href(url_for('.search_services'))
+    selected_category_at_this_level = None
 
     for category in category_filters:
         category['selected'] = False
@@ -187,16 +188,12 @@ def _annotate_categories_with_selection(lot_slug, category_filters, request, par
         if selected_descendants:
             # If a parentCategory has been sent as a url query param, de-select all other parent categories.
             if request.values.get('parentCategory', category['value']) != category['value']:
-                category['selected'] = False
-                selected_descendants = None
-
-            else:
-                selected_category_filters.extend(selected_descendants)
-
-        elif directly_selected:
-            selected_category_filters.append(category)
+                selected_descendants = []
 
         if directly_selected or selected_descendants:
+            selected_category_at_this_level = category
+            selected_category_filters.append(category)
+            selected_category_filters.extend(selected_descendants)
             category['selected'] = True
 
         # As with lots, we want a link to the category - but not if the category is directly selected.
@@ -217,11 +214,10 @@ def _annotate_categories_with_selection(lot_slug, category_filters, request, par
 
             category['link'] = search_link_builder(url_args)
 
-    # When there's a selection, remove parent categories (i.e. preserve the selection, plus
-    # sub-categories, which is those without children). The effect is that siblings of any
-    # selected category or sub-category are shown, if that selection has no children.
-    if selected_category_filters:
-        category_filters[:] = (c for c in category_filters
-                               if c['selected'] or not c.get('children', []))  # in-place filter(!)
+    # When there's a selection, and the selected category has children, remove sibling subcategories,
+    # as they are confusing. Siblings are still shown at the bottom level (i.e. where there are
+    # no child categories.)
+    if selected_category_at_this_level and selected_category_at_this_level.get('children', []):
+        category_filters[:] = (c for c in category_filters if c['selected'])  # in-place filter(!)
 
     return selected_category_filters
