@@ -23,12 +23,12 @@ def setup_module(module):
 
     module.filter_groups = filters_for_lot(
         "saas",
-        content_loader.get_builder('g-cloud-6', 'search_filters')
+        content_loader.get_manifest('g-cloud-6', 'search_filters')
     ).values()
 
     module.g9_filter_groups = filters_for_lot(
         'cloud-software',
-        content_loader.get_builder('g-cloud-9', 'search_filters')
+        content_loader.get_manifest('g-cloud-9', 'search_filters')
     ).values()
 
 

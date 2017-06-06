@@ -40,7 +40,7 @@ class TestService(BaseApplicationTest):
         )
 
         self.service = Service(
-            self.fixture, content_loader.get_builder('g-cloud-6', 'display_service'), self._lots_by_slug
+            self.fixture, content_loader.get_manifest('g-cloud-6', 'display_service'), self._lots_by_slug
         )
 
     def test_title_attribute_is_set(self):
@@ -54,19 +54,19 @@ class TestService(BaseApplicationTest):
 
     def test_Service_works_if_supplierName_is_not_set(self):
         del self.fixture['supplierName']
-        self.service = Service(self.fixture, content_loader.get_builder('g-cloud-6', 'display_service'),
+        self.service = Service(self.fixture, content_loader.get_manifest('g-cloud-6', 'display_service'),
                                self._lots_by_slug)
         assert not hasattr(self.service, 'supplierName')
 
     def test_Service_works_if_serviceFeatures_is_not_set(self):
         del self.fixture['serviceFeatures']
-        self.service = Service(self.fixture, content_loader.get_builder('g-cloud-6', 'display_service'),
+        self.service = Service(self.fixture, content_loader.get_manifest('g-cloud-6', 'display_service'),
                                self._lots_by_slug)
         assert not hasattr(self.service, 'features')
 
     def test_Service_works_if_serviceBenefits_is_not_set(self):
         del self.fixture['serviceBenefits']
-        self.service = Service(self.fixture, content_loader.get_builder('g-cloud-6', 'display_service'),
+        self.service = Service(self.fixture, content_loader.get_manifest('g-cloud-6', 'display_service'),
                                self._lots_by_slug)
         assert not hasattr(self.service, 'benefits')
 
@@ -81,7 +81,7 @@ class TestService(BaseApplicationTest):
     def test_service_properties_available_via_summary_manifest(self):
         service = Service(
             self.fixture,
-            content_loader.get_builder('g-cloud-6', 'display_service').filter({'lot': 'iaas'}),
+            content_loader.get_manifest('g-cloud-6', 'display_service').filter({'lot': 'iaas'}),
             self._lots_by_slug
         )
         assert service.summary_manifest.sections[0].name == 'Support'

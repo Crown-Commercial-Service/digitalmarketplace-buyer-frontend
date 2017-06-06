@@ -1,44 +1,46 @@
 {% for brief in briefs %}
 <div class="search-result">
     <h2 class="search-result-title">
-        <a href="{{ url_for('.get_brief_by_id', framework_framework=framework.framework, brief_id=brief.id) }}">{{ brief.title }}</a>
+        <a href="{{ url_for('.get_brief_by_id', framework_framework=framework.framework, brief_id=brief.data.id) }}">{{ brief.data.title }}</a>
     </h2>
 
     <ul class="search-result-important-metadata">
         <li class="search-result-metadata-item">
-            {{ brief.organisation }}
+            {{ brief.data.organisation }}
         </li>
         <li class="search-result-metadata-item">
-            {{ brief.location }}
+            {{ brief.data.location }}
         </li>
     </ul>
 
     <ul class="search-result-metadata">
         <li class="search-result-metadata-item">
-            {{ brief.lotName }}
+            {{ brief.data.lotName }}
         </li>
+        {% if 'specialistRole' in brief.data %}
         <li class="search-result-metadata-item">
-            {{ brief.frameworkName }}
+            {{ brief.content.summary(brief.data).get_question("specialistRole").value }}
         </li>
+        {% endif %}
     </ul>
 
     <ul class="search-result-metadata">
-        {% if brief.status == 'closed' %}
+        {% if brief.data.status == 'closed' %}
             <li class="search-result-metadata-item">
                 Closed
             </li>
         {% else %}
             <li class="search-result-metadata-item">
-                Published: {{ brief.publishedAt|dateformat }}
+                Published: {{ brief.data.publishedAt|dateformat }}
             </li>
             <li class="search-result-metadata-item">
-                Closing: {{ brief.applicationsClosedAt|dateformat }}
+                Closing: {{ brief.data.applicationsClosedAt|dateformat }}
             </li>
         {% endif %}
     </ul>
 
     <p class="search-result-excerpt">
-        {{ brief.summary }}
+        {{ brief.data.summary }}
     </p>
 </div>
 

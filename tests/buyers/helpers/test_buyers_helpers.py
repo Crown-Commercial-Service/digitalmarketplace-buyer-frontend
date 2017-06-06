@@ -11,7 +11,7 @@ from dmapiclient import api_stubs
 
 content_loader = ContentLoader('tests/fixtures/content')
 content_loader.load_manifest('dos', 'data', 'edit_brief')
-questions_builder = content_loader.get_builder('dos', 'edit_brief')
+questions_builder = content_loader.get_manifest('dos', 'edit_brief')
 
 
 class TestBuyersHelpers(object):

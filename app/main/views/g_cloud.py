@@ -106,7 +106,7 @@ def get_service_by_id(service_id):
 
         service_view_data = Service(
             service_data,
-            content_loader.get_builder(framework_slug, 'display_service').filter(
+            content_loader.get_manifest(framework_slug, 'display_service').filter(
                 service_data
             ),
             framework_helpers.get_lots_by_slug(framework)

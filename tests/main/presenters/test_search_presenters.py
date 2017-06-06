@@ -16,8 +16,8 @@ from ...helpers import BaseApplicationTest
 content_loader = ContentLoader('tests/fixtures/content')
 content_loader.load_manifest('g6', 'data', 'manifest')
 content_loader.load_manifest('g9', 'data', 'manifest')
-g6_builder = content_loader.get_builder('g6', 'manifest')
-g9_builder = content_loader.get_builder('g9', 'manifest')
+g6_builder = content_loader.get_manifest('g6', 'manifest')
+g9_builder = content_loader.get_manifest('g9', 'manifest')
 
 
 def _get_fixture_data():
