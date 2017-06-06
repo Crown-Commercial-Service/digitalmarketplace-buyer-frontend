@@ -127,14 +127,15 @@ def build_lots_and_categories_link_tree(lots, category_filter_group, request):
     search_link_builder = Href(url_for('.search_services'))
     keys_to_remove = _get_category_filter_key_set(category_filter_group)
     keys_to_remove.add('lot')
-    clean_url_args = MultiDict((k, v) for (k, v) in request.args.items(multi=True) if k not in keys_to_remove)
+    keys_to_remove.add('page')
+    preserved_request_args = MultiDict((k, v) for (k, v) in request.args.items(multi=True) if k not in keys_to_remove)
 
     selected_filters = list()
     # Create root node for the tree, always selected, which is the parent of the various lots.
     root_node = dict()
     root_node['label'] = 'All categories'
     root_node['selected'] = True  # for consistency with lower levels
-    root_node['link'] = search_link_builder(clean_url_args)
+    root_node['link'] = search_link_builder(preserved_request_args)
     root_node['children'] = list()
     selected_filters.append(root_node)
 
@@ -147,7 +148,8 @@ def build_lots_and_categories_link_tree(lots, category_filter_group, request):
         lot_filter['value'] = lot['slug']
         if lot_selected:
             categories = category_filter_group['filters'] if category_filter_group else []
-            selected_categories = _annotate_categories_with_selection(lot['slug'], categories, request)
+            selected_categories = _annotate_categories_with_selection(
+                lot['slug'], categories, request, preserved_request_args)
             selected_filters.append(lot_filter)
             selected_filters.extend(selected_categories)
 
@@ -156,7 +158,7 @@ def build_lots_and_categories_link_tree(lots, category_filter_group, request):
 
         if not lot_selected or selected_categories:
             # we need a link to the lot _without_ a category selected
-            url_args = MultiDict(clean_url_args)
+            url_args = MultiDict(preserved_request_args)
             url_args['lot'] = lot['slug']
 
             lot_filter['link'] = search_link_builder(url_args)
@@ -167,13 +169,15 @@ def build_lots_and_categories_link_tree(lots, category_filter_group, request):
     return selected_filters
 
 
-def _annotate_categories_with_selection(lot_slug, category_filters, request, parent_category=None):
+def _annotate_categories_with_selection(lot_slug, category_filters, request, preserved_request_args,
+                                        parent_category=None):
     """
     Recursive setting of 'selected' state and adding of links to categories
     as part of building the lots/categories tree.
     :param lot_slug for the lot that owns this set of categories
     :param category_filters: iterable of category filters as previously produced by filters_for_question
     :param request: request object from which to extract active filters
+    :param preserved_request_args: MultiDict of arguments to be preserved when generating links
     :param parent_category: The name of the parent category; only set internally for recursion.
     :return: list of filters that were selected, if any; the last of which was directly selected
     """
@@ -190,8 +194,9 @@ def _annotate_categories_with_selection(lot_slug, category_filters, request, par
         )
         directly_selected = (category['value'] in param_values)
 
-        selected_descendants = _annotate_categories_with_selection(lot_slug, category.get('children', []), request,
-                                                                   parent_category=category['value'])
+        selected_descendants = _annotate_categories_with_selection(
+            lot_slug, category.get('children', []), request, preserved_request_args,
+            parent_category=category['value'])
 
         if selected_descendants:
             # If a parentCategory has been sent as a url query param, de-select all other parent categories.
@@ -208,7 +213,7 @@ def _annotate_categories_with_selection(lot_slug, category_filters, request, par
         # If we're showing it as 'selected' because one of its children is selected, then the link is
         # useful as a kind of breadcrumb, to return to showing all services in that overall category.
         if not directly_selected:
-            url_args = MultiDict(request.args)
+            url_args = MultiDict(preserved_request_args)
             # The argument in the URL must reflect the 'name' of the filter (i.e. the particular question
             # name it was derived from - 'serviceTypes' for G7/G8, 'serviceCategories' for G9.
             url_args[category['name']] = category['value']
