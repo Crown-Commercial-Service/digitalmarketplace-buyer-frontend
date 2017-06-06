@@ -14,12 +14,8 @@
   {{ category_list([category_tree_root]) }}
 </div>
 
-{% if current_lot %}
-<input type="hidden" name="lot" value="{{ current_lot.slug }}" />
-{% endif %}
-
-{% if current_category_filter %}
-<input type="hidden" name="{{ current_category_filter.name }}" value="{{ current_category_filter.value }}" />
-{% endif %}
+{% for f in filter_form_hidden_fields %}
+  <input type="hidden" name="{{ f.name }}" value="{{ f.value }}" />
+{% endfor %}
 
 {% include 'search/_filters.html' %}

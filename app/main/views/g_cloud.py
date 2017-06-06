@@ -196,7 +196,12 @@ def search_services():
     category_filter_group = filters.pop('categories') if 'categories' in filters else None
 
     lots = framework['lots']
-    category_tree_root = build_lots_and_categories_link_tree(lots, category_filter_group, request)
+    selected_category_tree_filters = build_lots_and_categories_link_tree(lots, category_filter_group, request)
+
+    # Filter form should also filter by lot, and by category, when any of those are selected.
+    # (But if a sub-category is selected, there is no need to filter by the parent category as,
+    # well, so we can just take one hidden field per key - sub-cat will be last.)
+    filter_form_hidden_fields_by_name = {f['name']: f for f in selected_category_tree_filters[1:]}
 
     current_lot = lots_by_slug.get(current_lot_slug)
 
@@ -212,7 +217,8 @@ def search_services():
     return render_template(
         'search/services.html',
         current_lot=current_lot,
-        category_tree_root=category_tree_root,
+        category_tree_root=selected_category_tree_filters[0],
+        filter_form_hidden_fields=filter_form_hidden_fields_by_name.values(),
         filters=filters.values(),
         lots=lots,
         pagination=pagination_config,

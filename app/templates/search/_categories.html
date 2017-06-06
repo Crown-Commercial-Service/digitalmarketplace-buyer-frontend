@@ -38,9 +38,9 @@
   <ul {% if last_list %}class="lot-filters--last-list"{% endif %}>
     {% for item in items %}
       {% if item.get(_keys['selected']) %}
-         {{ list_item__selected(text=item.label or item.name, url=item.get(_keys['url']), nested_items=item.get(_keys['nested_items'])) }}
+         {{ list_item__selected(text=item.label, url=item.get(_keys['url']), nested_items=item.get(_keys['nested_items'])) }}
       {% elif item.get(_keys['url']) %}
-        {{ list_item__unselected(text=item.label or item.name, url=item.get(_keys['url'])) }}
+        {{ list_item__unselected(text=item.label, url=item.get(_keys['url'])) }}
       {% endif %}
     {% endfor %}
   </ul>

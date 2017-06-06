@@ -112,10 +112,13 @@ def build_lots_and_categories_link_tree(lots, category_filter_group, request):
     lots/categories widget. Adds links (where necessary) and shows the currently-selected
     lot and/or categories.
 
+    Returns a list of selected filters: there will always be at least one element, which is
+    the root of the tree; there may then be a category; there may then follow a sub-category.
+
     :param lots: a sequence of lot dicts applicable to the live framework(s)
     :param category_filter_group: a single filter group loaded from the framework search_filters manifest
     :param request: current request so that we can figure out what lots and categories are selected
-    :return: the 'all categories' node which is the root of the tree
+    :return: list of selected category and lot filters, starting with the 'all categories' root node node
     """
     current_lot_slug = get_lot_from_request(request)
 
@@ -126,22 +129,27 @@ def build_lots_and_categories_link_tree(lots, category_filter_group, request):
     keys_to_remove.add('lot')
     clean_url_args = MultiDict((k, v) for (k, v) in request.args.items(multi=True) if k not in keys_to_remove)
 
+    selected_filters = list()
     # Create root node for the tree, always selected, which is the parent of the various lots.
     root_node = dict()
-    root_node['name'] = 'All categories'
+    root_node['label'] = 'All categories'
     root_node['selected'] = True  # for consistency with lower levels
     root_node['link'] = search_link_builder(clean_url_args)
     root_node['children'] = list()
+    selected_filters.append(root_node)
 
     for lot in lots:
         selected_categories = []
         lot_selected = (lot['slug'] == current_lot_slug)
-        lot_filter = lot.copy()
+        lot_filter = dict()
+        lot_filter['label'] = lot['name']
+        lot_filter['name'] = 'lot'  # a filter's "name" is its key for form submission purposes
+        lot_filter['value'] = lot['slug']
         if lot_selected:
             categories = category_filter_group['filters'] if category_filter_group else []
-            # We could preserve the returned list of selected categories along with the selected lot, if we
-            # wanted to build a breadcrumb trail.
             selected_categories = _annotate_categories_with_selection(lot['slug'], categories, request)
+            selected_filters.append(lot_filter)
+            selected_filters.extend(selected_categories)
 
             lot_filter['children'] = categories
             lot_filter['selected'] = True
@@ -156,7 +164,7 @@ def build_lots_and_categories_link_tree(lots, category_filter_group, request):
         if lot_selected or current_lot_slug is None:
             root_node['children'].append(lot_filter)
 
-    return root_node
+    return selected_filters
 
 
 def _annotate_categories_with_selection(lot_slug, category_filters, request, parent_category=None):

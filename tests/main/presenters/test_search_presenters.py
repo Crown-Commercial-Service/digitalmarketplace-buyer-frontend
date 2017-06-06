@@ -202,15 +202,17 @@ class TestSearchFilters(BaseApplicationTest):
         # first test with a top-level category selected
         url = "/g-cloud/search?q=&lot=cloud-software&otherfilter=somevalue&checkboxTreeExample=option+1"
         with self.app.test_request_context(url):
-            tree_root = build_lots_and_categories_link_tree(lots, category_filter_group, flask.request)
+            selection = build_lots_and_categories_link_tree(lots, category_filter_group, flask.request)
+            assert len(selection) == 3  # all -> software -> option1
 
-            assert tree_root.get('name') == 'All categories'
+            tree_root = selection[0]
+            assert tree_root.get('label') == 'All categories'
 
             lot_filters = tree_root['children']
             selected_lot = next(f for f in lot_filters if f['selected'])
-            assert selected_lot.get('name') == 'Cloud software'
+            assert selected_lot.get('label') == 'Cloud software'
             # there should be a link to the lot without a category, as a category has been selected within it
-            assert 'lot={}'.format('cloud-software') in selected_lot['link']
+            assert 'lot=cloud-software' in selected_lot['link']
             assert 'checkboxTreeExample' not in selected_lot['link']
 
             # check that we have links in place to a search with the relevant category filter applied,
@@ -231,7 +233,10 @@ class TestSearchFilters(BaseApplicationTest):
         # now test with a sub-category selected
         url = "/g-cloud/search?q=&lot=cloud-software&otherfilter=somevalue&checkboxTreeExample=option+2.2"
         with self.app.test_request_context(url):
-            tree_root = build_lots_and_categories_link_tree(lots, category_filter_group, flask.request)
+            selection = build_lots_and_categories_link_tree(lots, category_filter_group, flask.request)
+            assert len(selection) == 4  # all -> software -> option2 -> option2.2
+
+            tree_root = selection[0]
             # check that only siblings of the selected sub-category are shown, and other categories
             # have been removed
             lot_filters = tree_root['children']
