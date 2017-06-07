@@ -170,6 +170,12 @@ def search_services():
         all_lots=framework['lots']
     )
 
+    try:
+        if int(request.args.get('page', 1)) <= 0:
+            abort(404)
+    except ValueError:
+        abort(404)
+
     search_api_response = search_api_client.search_services(
         **build_search_query(request, filters.values(), content_manifest, lots_by_slug)
     )

@@ -315,3 +315,16 @@ class TestSearchResults(BaseApplicationTest):
         assert u'<span class="search-summary-count">1</span> result found' \
             u' containing <em>email \U0001f47e</em> in' \
             u' <em>Software as a Service</em>' in summary
+
+    def test_should_404_on_invalid_page_param(self):
+        self._search_api_client.search_services.return_value = \
+            self.search_results_multiple_page
+
+        res = self.client.get('/g-cloud/search?lot=cloud-hosting&page=1')
+        assert res.status_code == 200
+
+        res = self.client.get('/g-cloud/search?lot=cloud-hosting&page=-1')
+        assert res.status_code == 404
+
+        res = self.client.get('/g-cloud/search?lot=cloud-hosting&page=potato')
+        assert res.status_code == 404
