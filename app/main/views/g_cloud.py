@@ -11,7 +11,7 @@ from ...main import main
 from ..presenters.search_presenters import (
     filters_for_lot,
     set_filter_states,
-    annotate_lots_with_categories_selection,
+    build_lots_and_categories_link_tree,
 )
 from ..presenters.search_results import SearchResults
 from ..presenters.search_summary import SearchSummary
@@ -196,7 +196,12 @@ def search_services():
     category_filter_group = filters.pop('categories') if 'categories' in filters else None
 
     lots = framework['lots']
-    current_category_filter = annotate_lots_with_categories_selection(lots, category_filter_group, request)
+    selected_category_tree_filters = build_lots_and_categories_link_tree(lots, category_filter_group, request)
+
+    # Filter form should also filter by lot, and by category, when any of those are selected.
+    # (But if a sub-category is selected, there is no need to filter by the parent category as,
+    # well, so we can just take one hidden field per key - sub-cat will be last.)
+    filter_form_hidden_fields_by_name = {f['name']: f for f in selected_category_tree_filters[1:]}
 
     current_lot = lots_by_slug.get(current_lot_slug)
 
@@ -212,7 +217,8 @@ def search_services():
     return render_template(
         'search/services.html',
         current_lot=current_lot,
-        current_category_filter=current_category_filter,
+        category_tree_root=selected_category_tree_filters[0],
+        filter_form_hidden_fields=filter_form_hidden_fields_by_name.values(),
         filters=filters.values(),
         lots=lots,
         pagination=pagination_config,

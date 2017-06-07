@@ -1,5 +1,6 @@
 import os
 import json
+import itertools
 from mock import Mock
 from dmcontent.content_loader import ContentLoader
 from werkzeug.datastructures import MultiDict
@@ -8,7 +9,7 @@ import flask
 from app.main.presenters.search_presenters import (
     filters_for_lot,
     set_filter_states,
-    annotate_lots_with_categories_selection,
+    build_lots_and_categories_link_tree,
 )
 
 from ...helpers import BaseApplicationTest
@@ -194,26 +195,58 @@ class TestSearchFilters(BaseApplicationTest):
     def test_show_lots_and_categories_selection(self):
         framework = self._get_framework_fixture_data('g-cloud-9')['frameworks']
         lots = framework['lots']
-        lot_slug = 'cloud-software'
 
-        category_filter_group = filters_for_lot(lot_slug, g9_builder)['categories-example']
+        category_filter_group = filters_for_lot('cloud-software', g9_builder)['categories-example']
+        # in this test, the key 'category' key is 'checkboxTreeExample'
 
-        with self.app.test_request_context("/g-cloud/search?q=&lot={}".format(lot_slug)):
-            annotate_lots_with_categories_selection(lots, category_filter_group, flask.request)
+        # first test with a top-level category selected
+        url = "/g-cloud/search?q=&lot=cloud-software&otherfilter=somevalue&checkboxTreeExample=option+1&page=2"
+        with self.app.test_request_context(url):
+            selection = build_lots_and_categories_link_tree(lots, category_filter_group, flask.request)
+            assert len(selection) == 3  # all -> software -> option1
 
-            assert lots[0].get('slug') == 'cloud-hosting'
-            assert not lots[0].get('selected')
-            assert not lots[0].get('categories')
+            tree_root = selection[0]
+            assert tree_root.get('label') == 'All categories'
 
-            assert lots[1].get('slug') == 'cloud-software'
-            assert lots[1].get('selected')
-            category_links = lots[1]['categories']
-            assert 'checkboxTreeExample=option+1' in category_links[0]['link']
-            assert not category_links[0].get('children')
-            assert 'checkboxTreeExample=option+2' in category_links[1]['link']
-            sub_categories = category_links[1]['children']
-            assert 'checkboxTreeExample=option+2.1' in sub_categories[0]['link']
-            assert 'checkboxTreeExample=option+2.2' in sub_categories[1]['link']
+            lot_filters = tree_root['children']
+            selected_lot = next(f for f in lot_filters if f['selected'])
+            assert selected_lot.get('label') == 'Cloud software'
+            # there should be a link to the lot without a category, as a category has been selected within it
+            assert 'lot=cloud-software' in selected_lot['link']
+            assert 'checkboxTreeExample' not in selected_lot['link']
+
+            # check that we have links in place to a search with the relevant category filter applied,
+            # except to the currently-selected category
+            category_filters = selected_lot['children']
+            assert 'link' not in category_filters[0]
+            assert not category_filters[0].get('children')
+            assert 'checkboxTreeExample=option+2' in category_filters[1]['link']
+            sub_category_filters = category_filters[1]['children']
+            assert 'checkboxTreeExample=option+2.1' in sub_category_filters[0]['link']
+            assert 'checkboxTreeExample=option+2.2' in sub_category_filters[1]['link']
+
+            # ...and also that each link preserves the value of any other filters that were present...
+            for f in itertools.chain(category_filters, sub_category_filters):
+                if f.get('link'):
+                    assert 'otherfilter=somevalue' in f['link']
+                    assert 'page=' not in f['link']
+
+        # now test with a sub-category selected
+        url = "/g-cloud/search?q=&lot=cloud-software&otherfilter=somevalue&checkboxTreeExample=option+2.2"
+        with self.app.test_request_context(url):
+            selection = build_lots_and_categories_link_tree(lots, category_filter_group, flask.request)
+            assert len(selection) == 4  # all -> software -> option2 -> option2.2
+
+            tree_root = selection[0]
+            # check that only siblings of the selected sub-category are shown, and other categories
+            # have been removed
+            lot_filters = tree_root['children']
+            selected_lot = next(f for f in lot_filters if f['selected'])
+            category_filters = selected_lot['children']
+            assert len(category_filters) == 1
+            assert category_filters[0]['selected']
+            sub_category_filters = category_filters[0]['children']
+            assert len(sub_category_filters) == 2
 
     def test_filter_groups_have_correct_default_state(self):
         request = self._get_request_for_params({
