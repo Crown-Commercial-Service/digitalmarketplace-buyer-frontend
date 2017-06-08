@@ -268,7 +268,10 @@ class TestBriefPage(BaseApplicationTest):
 
         brief_response_url = self.expand_path('/sellers/opportunities/{}/responses/create'.format(brief_id))
         apply_links = document.xpath('//a[@href="{}"]'.format(brief_response_url))
-        assert len(apply_links) == 2
+        assert len(apply_links) == 1
+
+        sign_up_links = document.xpath('//a[@href="{}"]'.format('/signup'))
+        assert len(sign_up_links) == 2
 
     def test_cannot_apply_to_closed_brief(self):
         brief = self.brief.copy()
