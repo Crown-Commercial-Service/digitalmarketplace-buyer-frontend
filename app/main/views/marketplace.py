@@ -10,6 +10,7 @@ from flask import abort, current_app, config, make_response, redirect, \
     render_template, request, session, url_for, jsonify, flash, Response
 import flask_featureflags as feature
 
+from dmutils.formats import DateFormatter
 from dmutils.forms import DmForm, render_template_with_csrf
 from react.response import from_response, validate_form_data
 from react.render import render_component
@@ -300,6 +301,8 @@ def get_brief_by_id(framework_slug, brief_id):
 def get_brief_response_preview_by_id(framework_slug, brief_id):
     briefs = data_api_client.get_brief(brief_id)
     brief = briefs.get('briefs')
+    application_url = url_for('main.index', _external=True) + "sellers/opportunities/{}/responses/create"\
+        .format(brief['id'])
     if brief['status'] not in ['live', 'closed']:
         if not current_user.is_authenticated \
                 or (
@@ -311,52 +314,109 @@ def get_brief_response_preview_by_id(framework_slug, brief_id):
     outdata = io.BytesIO()
 
     workbook = xlsxwriter.Workbook(outdata)
-    bold = workbook.add_format({'bold': True})
-    heading = workbook.add_format({'bold': True, 'font_size': '14'})
+    bold_header = workbook.add_format({'bg_color': '#e8f5fa', 'bold': True, 'text_wrap':  True})
+    bold_question = workbook.add_format({'bg_color': '#f3f3f3', 'valign': 'top', 'text_wrap':  True,
+                                         'border': 1, 'border_color': "#AAAAAA", 'bold': True})
+    bold_red = workbook.add_format({'bold': True, 'font_color': '#fc0d1b', 'text_wrap':  True})
+    italic_header = workbook.add_format({'bg_color': '#e8f5fa', 'italic': True})
+    italic_lightgrey = workbook.add_format({'italic': True, 'font_color': '#999999'})
+    italic_darkgrey_question = workbook.add_format({'italic': True, 'font_color': '#666666', 'bg_color': '#f3f3f3',
+                                                    'valign': 'top', 'text_wrap':  True,
+                                                    'border': 1, 'border_color': "#AAAAAA"})
+    darkgrey = workbook.add_format({'font_color': '#666666', 'text_wrap':  True})
+    heading = workbook.add_format({'bold': True, 'font_size': '14', 'text_wrap':  True})
     header = workbook.add_format({'bg_color': '#e8f5fa'})
+    cta = workbook.add_format({'bg_color': 'd9ead4', 'align': 'center',
+                               'color': 'blue', 'underline': 1, 'text_wrap':  True})
+    bold_cta = workbook.add_format({'bg_color': 'd9ead4', 'bold': True, 'align': 'center'})
     question = workbook.add_format({'bg_color': '#f3f3f3', 'valign': 'top', 'text_wrap':  True,
                                     'border': 1, 'border_color': "#AAAAAA"})
-
+    link = workbook.add_format({'bg_color': '#e8f5fa', 'color': 'blue', 'underline': 1})
+    right_border_question = workbook.add_format({'right': 1, 'right_color': 'black', 'bg_color': '#f3f3f3',
+                                                 'valign': 'top', 'text_wrap':  True, 'border': 1,
+                                                 'border_color': "#AAAAAA"})
     sheet = workbook.add_worksheet('Response')
 
-    sheet.set_column('C:C', 70)
-    sheet.set_column('B:B', 50, question)
-    sheet.set_column('A:A', 50, question)
-    sheet.set_row(0, 140, header)
+    sheet.set_column('E:E', 50)
+    sheet.set_column('D:D', 5)
+    sheet.set_column('C:C', 50)
+    sheet.set_column('B:B', 30)
+    sheet.set_column('A:A', 30)
 
-    sheet.write_rich_string('A1',  heading, 'Apply for this opportunity', header,
-                            '\nThe buyer will compare your response with other seller responses to create a shortlist '
-                            'for the evaluation stage. To progress, consider each answer carefully.\n\n'
-                            'As a guide, you could explain:\n\n'
-                            '- What the situation was\n'
-                            '- The work the specialist or team completed\n'
-                            '- What the results were\n'
-                            '\n'
-                            'You can reuse examples if you wish.')
+    sheet.merge_range(0, 0, 0, 2, '',  italic_header)
+    sheet.write_url('A1', application_url)
+    sheet.write_rich_string('A1',  italic_header,
+                            'Use this template if you are waiting to be assessed, or want to collaborate '
+                            'with others, before submitting your response to this brief.\n'
+                            'If you have been assessed and are ready to submit, you will need to '
+                            'copy and paste your answers from this template into \n', link, application_url)
+    sheet.write_string('D1', '', right_border_question)
 
-    e_start = 2
-    e = 2
+    df = DateFormatter()
+    sheet.write_string('E1', brief['title'], heading)
+    sheet.write_string('E2', brief['summary'], darkgrey)
+    sheet.write_string('E3', 'For: '+brief['organisation'], darkgrey)
+    sheet.write_string('E4', 'Published: '+df.dateformat(brief['dates']['hypothetical']['published_date']), darkgrey)
+    sheet.write_string('E5', 'Closing date for application: ' +
+                       df.datetimeformat(brief['dates']['hypothetical']['closing_time']), bold_red)
+
+    sheet.write_string('A2', 'Guidance', bold_question)
+    sheet.write_string('B2', 'Question', bold_question)
+    sheet.write_string('C2', 'Answer', bold_question)
+    sheet.write_string('D2', '', right_border_question)
+    sheet.write_string('A3', '', header)
+    sheet.write_string('B3', 'Essential skills and experience', bold_header)
+    sheet.write_string('D3', '', right_border_question)
+
+    e_start = 4
+    e = 4
     for essential in brief['essentialRequirements']:
-        sheet.write_rich_string('B'+str(e), bold, essential,  question, '\n\n150 words')
+        sheet.write_string('B'+str(e),  essential,  question)
+        sheet.write_string('C'+str(e),  '150 words', italic_lightgrey)
+        sheet.write_string('D'+str(e), '', right_border_question)
         e += 1
-    sheet.merge_range(e_start-1, 0, e-2, 0, '', question)
-    sheet.write_rich_string('A'+str(e_start), bold, 'Do you have the essential skills and experience?', question,
-                            "\n\nYou must have all essential skills and experience to apply for this opportunity."
-                            )
-    n_start = e
-    n = e
+    sheet.merge_range(e_start-1, 0, e-2, 0, 'Essential skills and experience\n'
+                                            'As a guide to answering the skills and experience criteria, '
+                                            'you could explain:\n'
+                                            '- What the situation was\n'
+                                            '- The work the specialist or team completed\n'
+                                            '- What the results were \n'
+                                            'You can reuse examples if you wish. \n'
+                                            '\n'
+                                            'You must have all essential skills and experience '
+                                            'to apply for this opportunity.\n'
+                                            '150 words max ', italic_darkgrey_question)
+    sheet.write_string('A'+str(e), '', header)
+    sheet.write_string('B'+str(e), 'Nice to have skills and experience', bold_header)
+    sheet.write_string('D'+str(e), '', right_border_question)
+    n_start = e+1
+    n = e+1
     for nice in brief['niceToHaveRequirements']:
-        sheet.write_rich_string('B'+str(n), bold, nice, question, '\n\n150 words')
+        sheet.write_string('B'+str(n),  nice,  question)
+        sheet.write_string('C'+str(n),  '150 words', italic_lightgrey)
+        sheet.write_string('D'+str(n), '', right_border_question)
         n += 1
     sheet.merge_range(n_start-1, 0, n-2, 0, '', question)
-    sheet.write_rich_string('A'+str(n_start), bold, 'Nice to have skills and experience...', question,
-                            "\n\nYou must have all essential skills and experience to apply for this opportunity."
-                            )
 
-    sheet.write_rich_string('B'+str(n), bold, "When can you start?")
-    sheet.write_rich_string('B'+str(n+1), bold, "Contact email:", question,
-                            "\n\nAll communication about your application will be sent to this address")
-
+    sheet.write_string('A'+str(n), '', question)
+    sheet.write_string('B'+str(n), '', question)
+    sheet.write_string('D'+str(n), '',  right_border_question)
+    sheet.write_string('A'+str(n+1), '', question)
+    sheet.write_string('B'+str(n+1), "When can you start?", bold_question)
+    sheet.write_string('D'+str(n+1), '', right_border_question)
+    sheet.write_string('A'+str(n+2), '', question)
+    sheet.write_string('B'+str(n+2), '', question)
+    sheet.write_string('D'+str(n+2), '', right_border_question)
+    sheet.write_string('A'+str(n+3), "All communication about your application will be sent to this address",
+                       italic_darkgrey_question)
+    sheet.write_string('B'+str(n+3), "Contact email:", bold_question)
+    sheet.write_string('D'+str(n+3), '', right_border_question)
+    sheet.write_string('A'+str(n+4), '', question)
+    sheet.write_string('B'+str(n+4), '', question)
+    sheet.write_string('C'+str(n+4), '', question)
+    sheet.write_string('D'+str(n+4), '', right_border_question)
+    sheet.write_string('C'+str(n+5), 'Ready to apply?', bold_cta)
+    sheet.write_url('C'+str(n+6), application_url, cta, application_url)
     workbook.close()
 
     return Response(

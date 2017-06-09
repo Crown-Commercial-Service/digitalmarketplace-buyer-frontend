@@ -3,6 +3,16 @@
     "backgroundInformation": "Testing the new platform.",
     "contractLength": "4 weeks",
     "createdAt": "2016-02-25T10:47:23.126761Z",
+    "dates": {
+      "hypothetical": {
+        "closing_date": "2017-06-16",
+        "application_open_weeks": "1 week",
+        "published_date": "2017-06-09",
+        "answers_close": "2017-06-15T08:00:00+00:00",
+        "questions_close": "2017-06-13T08:00:00+00:00",
+        "closing_time": "2017-06-16T08:00:00+00:00"
+      }
+    },
     "essentialRequirements": [
       "Can write Capybara tests",
       "Is competent with Linux, Ruby and JavaScript"
@@ -34,6 +44,7 @@
     "specialistRole": "agileCoach",
     "startDate": "01/03/2016",
     "status": "live",
+    "summary": "QA tester for next-gen web project summary",
     "title": "QA tester for next-gen web project",
     "updatedAt": "2016-02-25T11:08:28.061327Z",
     "users": [
@@ -46,7 +57,11 @@
       }
     ],
     "clarificationQuestions": [
-      {"question": "Why?", "answer": "Because", "publishedAt": "2016-02-26T00:00:00.000000Z"}
+      {
+        "question": "Why?",
+        "answer": "Because",
+        "publishedAt": "2016-02-26T00:00:00.000000Z"
+      }
     ]
   }
 }
