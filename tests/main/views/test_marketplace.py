@@ -27,7 +27,7 @@ class TestApplication(BaseApplicationTest):
             'Find out more about cookies</a></p>' in res.get_data(as_text=True)
 
 
-@mock.patch('app.main.views.marketplace.data_api_client')
+@mock.patch('app.main.views.marketplace.data_api_client', autospec=True)
 class TestHomepageAccountCreationVirtualPageViews(BaseApplicationTest):
     def test_data_analytics_track_page_view_is_shown_if_account_created_flag_flash_message(self, data_api_client):
         with self.client.session_transaction() as session:
@@ -45,7 +45,7 @@ class TestHomepageAccountCreationVirtualPageViews(BaseApplicationTest):
         assert 'data-analytics="trackPageView" data-url="buyers?account-created=true"' not in data
 
 
-@mock.patch('app.main.views.marketplace.data_api_client')
+@mock.patch('app.main.views.marketplace.data_api_client', autospec=True)
 class TestHomepageBrowseList(BaseApplicationTest):
 
     mock_live_dos_1_framework = {
@@ -222,7 +222,7 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
         assert len(message_container_contents) > 0
         assert message_container_contents[0].xpath('text()')[0].strip() == "Sell services"
 
-    @mock.patch('app.main.views.marketplace.data_api_client')
+    @mock.patch('app.main.views.marketplace.data_api_client', autospec=True)
     def _load_homepage(self, framework_slugs_and_statuses, framework_messages, data_api_client):
         data_api_client.find_frameworks.return_value = self._find_frameworks(framework_slugs_and_statuses)
         res = self.client.get('/')
@@ -275,7 +275,7 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
 
         self._load_homepage(framework_slugs_and_statuses, framework_messages)
 
-    @mock.patch('app.main.views.marketplace.data_api_client')
+    @mock.patch('app.main.views.marketplace.data_api_client', autospec=True)
     def test_homepage_sidebar_messages_when_logged_out(self, data_api_client):
         data_api_client.find_frameworks.return_value = self._find_frameworks([
             ('digital-outcomes-and-specialists', 'live')
@@ -294,7 +294,7 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
         assert 'View Digital Outcomes and Specialists opportunities' in sidebar_link_texts
         assert 'Create a supplier account' in sidebar_link_texts
 
-    @mock.patch('app.main.views.marketplace.data_api_client')
+    @mock.patch('app.main.views.marketplace.data_api_client', autospec=True)
     def test_homepage_sidebar_messages_when_logged_in(self, data_api_client):
         data_api_client.find_frameworks.return_value = self._find_frameworks([
             ('digital-outcomes-and-specialists', 'live')
@@ -316,7 +316,7 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
         assert 'Create a supplier account' not in sidebar_link_texts
 
     # here we've given an valid framework with a valid status but there is no message.yml file to read from
-    @mock.patch('app.main.views.marketplace.data_api_client')
+    @mock.patch('app.main.views.marketplace.data_api_client', autospec=True)
     def test_g_cloud_6_open_blows_up(self, data_api_client):
         framework_slugs_and_statuses = [
             ('g-cloud-6', 'open')
@@ -346,16 +346,15 @@ class BaseBriefPageTest(BaseApplicationTest):
     def setup_method(self, method):
         super(BaseBriefPageTest, self).setup_method(method)
 
-        self._data_api_client = mock.patch(
-            'app.main.views.marketplace.data_api_client'
-        ).start()
+        self._data_api_client_patch = mock.patch('app.main.views.marketplace.data_api_client', autospec=True)
+        self._data_api_client = self._data_api_client_patch.start()
 
         self.brief = self._get_dos_brief_fixture_data()
         self.brief_id = self.brief['briefs']['id']
         self._data_api_client.get_brief.return_value = self.brief
 
     def teardown_method(self, method):
-        self._data_api_client.stop()
+        self._data_api_client_patch.stop()
 
 
 class TestBriefPage(BaseBriefPageTest):
@@ -773,9 +772,8 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
     def setup_method(self, method):
         super(TestCatalogueOfBriefsPage, self).setup_method(method)
 
-        self._data_api_client = mock.patch(
-            'app.main.views.marketplace.data_api_client'
-        ).start()
+        self._data_api_client_patch = mock.patch('app.main.views.marketplace.data_api_client', autospec=True)
+        self._data_api_client = self._data_api_client_patch.start()
 
         self.briefs = self._get_dos_brief_fixture_data(multi=True)
         self._data_api_client.find_briefs.return_value = self.briefs
@@ -820,7 +818,7 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         ]}
 
     def teardown_method(self, method):
-        self._data_api_client.stop()
+        self._data_api_client_patch.stop()
 
     def test_catalogue_of_briefs_page(self):
         res = self.client.get('/digital-outcomes-and-specialists/opportunities')
@@ -1016,7 +1014,7 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         self._data_api_client.find_frameworks.assert_called_once_with()
 
 
-@mock.patch('app.main.views.marketplace.data_api_client')
+@mock.patch('app.main.views.marketplace.data_api_client', autospec=True)
 class TestGCloudHomepageLinks(BaseApplicationTest):
 
     mock_live_g_cloud_framework = {

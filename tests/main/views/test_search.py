@@ -20,16 +20,15 @@ class TestSearchResults(BaseApplicationTest):
     def setup_method(self, method):
         super(TestSearchResults, self).setup_method(method)
 
-        self._search_api_client = mock.patch(
-            'app.main.views.g_cloud.search_api_client'
-        ).start()
+        self._search_api_client_patch = mock.patch('app.main.views.g_cloud.search_api_client', autospec=True)
+        self._search_api_client = self._search_api_client_patch.start()
 
         self.search_results = self._get_search_results_fixture_data()
         self.search_results_multiple_page = \
             self._get_search_results_multiple_page_fixture_data()
 
     def teardown_method(self, method):
-        self._search_api_client.stop()
+        self._search_api_client_patch.stop()
 
     def test_search_page_results_service_links(self):
         self._search_api_client.search_services.return_value = \
