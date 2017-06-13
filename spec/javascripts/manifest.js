@@ -8,6 +8,7 @@ var manifest = {
     '../../../app/assets/javascripts/analytics/_pageViews.js',
     '../../../app/assets/javascripts/analytics/_events.js',
     '../../../app/assets/javascripts/analytics/_virtualPageViews.js',
+    '../../../app/assets/javascripts/analytics/_googleTagManager.js',
     '../../../app/assets/javascripts/analytics/_init.js'
   ],
   test : [

@@ -82,6 +82,15 @@ class Config(object):
         'g-cloud-5': 'g-cloud-6',
     }
 
+    # Note that because our GTM auth token is rendered into the client environment (see
+    # _javascripts.html), there isn't any point in encrypting it, as we would with other
+    # similar tokens.
+    GOOGLE_TAG_MANAGER = {
+        'containerID': 'GTM-TQ36ZK2',
+        'environmentID': 'gtmEnvironmentIDShouldBeOverriddenByLocalConfig',
+        'authToken': 'gtmAuthTokenShouldBeOverridenByLocalConfig'
+    }
+
     @staticmethod
     def init_app(app):
         repo_root = os.path.abspath(os.path.dirname(__file__))
@@ -126,6 +135,7 @@ class Development(Config):
     SHARED_EMAIL_KEY = "very_secret"
 
     FEATURE_FLAGS_NEW_SUPPLIER_FLOW = enabled_since('2016-11-29')
+    GOOGLE_TAG_MANAGER = dict(Config.GOOGLE_TAG_MANAGER, environmentID='env-3', authToken='zwX1O_FnNfpKVbBx8U3_OA')
 
 
 class Live(Config):
@@ -137,14 +147,17 @@ class Live(Config):
 
 class Preview(Live):
     FEATURE_FLAGS_NEW_SUPPLIER_FLOW = enabled_since('2017-02-06')
+    GOOGLE_TAG_MANAGER = dict(Config.GOOGLE_TAG_MANAGER, environmentID='env-7', authToken='Kpjle7g00efQOB2j1o3fVQ')
 
 
 class Staging(Live):
     FEATURE_FLAGS_NEW_SUPPLIER_FLOW = enabled_since('2017-02-07')
+    GOOGLE_TAG_MANAGER = dict(Config.GOOGLE_TAG_MANAGER, environmentID='env-5', authToken='FgjCFX0Y9Limsv47-KqUUQ')
 
 
 class Production(Live):
     FEATURE_FLAGS_NEW_SUPPLIER_FLOW = enabled_since('2017-02-08')
+    GOOGLE_TAG_MANAGER = dict(Config.GOOGLE_TAG_MANAGER, environmentID='env-2', authToken='vZzh_M8pDMmJOu_RD3UghQ')
 
 
 configs = {
