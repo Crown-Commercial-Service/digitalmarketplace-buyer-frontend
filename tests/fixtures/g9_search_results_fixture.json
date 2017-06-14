@@ -1,0 +1,445 @@
+{
+  "links":{
+    "next":"http://localhost:5001/g-cloud/services/search?filter_webChatSupport=yes&filter_lot=cloud-software&filter_resellingType=not_reseller&page=2"
+  },
+  "meta":{
+    "query":{
+      "filter_lot":"cloud-software",
+      "filter_resellingType":"not_reseller",
+      "filter_webChatSupport":"yes"
+    },
+    "took":8,
+    "total":1150
+  },
+  "services":[
+    {
+      "frameworkName":"G-Cloud 9",
+      "highlight":{
+        "frameworkName":[
+          "G-Cloud 9"
+        ],
+        "id":[
+          "248934591832577"
+        ],
+        "lot":[
+          "cloud-software"
+        ],
+        "lotName":[
+          "Cloud software"
+        ],
+        "serviceBenefits":[
+          "Flexible support for wide a range of devices and applications"
+        ],
+        "serviceCategories":[
+          "Applications"
+        ],
+        "serviceDescription":[
+          "Atos Digital Workplace has been developed with user experience as the number 1 priority.  The service will provide you with a secure, flexible, monthly subscription based End User Compute environment that is designed to meet the needs of UK Public Sector customers for agile and reliable services."
+        ],
+        "serviceFeatures":[
+          "Access and Identity service"
+        ],
+        "serviceName":[
+          "Digital Workplace"
+        ],
+        "supplierName":[
+          "Atos IT Services UK Ltd"
+        ]
+      },
+      "id":"248934591832577",
+      "lot":"cloud-software",
+      "lotName":"Cloud software",
+      "serviceBenefits":[
+        "Flexible support for wide a range of devices and applications",
+        "Option of UK based, 24/7 Cleared staff",
+        "Always up-to-date devices and services allow new working scenarios",
+        "Tailorable to reflect your own familiar standards",
+        "Monthly subscription based service with no capital investment needed",
+        "Per-user fee, not per-device, makes costs more predictable for IT",
+        "We do the complex setup, so you don\u2019t have to",
+        "Data protection at rest and in transit",
+        "Supports digital end-user and customer scenarios",
+        "Supports Accessibility solutions"
+      ],
+      "serviceCategories":[
+        "Applications",
+        "Business process management (BPM)",
+        "IT asset management",
+        "Other operations management services",
+        "Information and communications technology (ICT)",
+        "Operations management"
+      ],
+      "serviceDescription":"Atos Digital Workplace has been developed with user experience as the number 1 priority.  The service will provide you with a secure, flexible, monthly subscription based End User Compute environment that is designed to meet the needs of UK Public Sector customers for agile and reliable services.",
+      "serviceFeatures":[
+        "Access and Identity service",
+        "Data Loss Protection",
+        "Application Management",
+        "Device Provisioning and Enrolment",
+        "Device Policies and Protection",
+        "Per-user fee, not per-device, makes costs more predictable for IT",
+        "We do the complex setup, so you don\u2019t have to",
+        "Data protection at rest and in transit",
+        "End to End Service Management adopting ITILv3 Methodology",
+        "Agile & Iterative delivery model"
+      ],
+      "serviceName":"Digital Workplace",
+      "supplierName":"Atos IT Services UK Ltd"
+    },
+    {
+      "frameworkName":"G-Cloud 9",
+      "highlight":{
+        "frameworkName":[
+          "G-Cloud 9"
+        ],
+        "id":[
+          "174848875779390"
+        ],
+        "lot":[
+          "cloud-software"
+        ],
+        "lotName":[
+          "Cloud software"
+        ],
+        "serviceBenefits":[
+          "Improve efficiency, reduce costs and waste"
+        ],
+        "serviceCategories":[
+          "Digital publishing"
+        ],
+        "serviceDescription":[
+          "Collect, connect, and manage your enterprise information all in one centralised location. Create perfect GOV forms with all the functionality you need to streamline your data-driven operations. With flexibility at the core of its design, you can configure the workflow and integration to map to your specific business process needs."
+        ],
+        "serviceFeatures":[
+          "Hosted and centralised"
+        ],
+        "serviceName":[
+          "GOV.UK Online Forms"
+        ],
+        "supplierName":[
+          "Axis12 Limited"
+        ]
+      },
+      "id":"174848875779390",
+      "lot":"cloud-software",
+      "lotName":"Cloud software",
+      "serviceBenefits":[
+        "Improve efficiency, reduce costs and waste",
+        "Collect, connect and manage your information all in one location",
+        "Setup complex forms and workflows with ease",
+        "Fully responsive",
+        "Engaging and interactive"
+      ],
+      "serviceCategories":[
+        "Digital publishing",
+        "Forms and surveys",
+        "Creative, design and publishing",
+        "Customer relationship management (CRM)",
+        "Information and communications technology (ICT)",
+        "Marketing"
+      ],
+      "serviceDescription":"Collect, connect, and manage your enterprise information all in one centralised location. Create perfect GOV forms with all the functionality you need to streamline your data-driven operations. With flexibility at the core of its design, you can configure the workflow and integration to map to your specific business process needs.",
+      "serviceFeatures":[
+        "Hosted and centralised",
+        "Flexible workflow",
+        "Secure - ISO27001 certified",
+        "Digital by default",
+        "Pull data automatically from data models to pre-populate a form",
+        "Automate follow up tasks/events/additional forms based on response data",
+        "Integrate directly via API with any database, ERP or CRM",
+        "Synchronise submitted forms data with external business systems",
+        "Route information intelligently based on rules applied to submitted data",
+        "Configure access levels/permissions to get forms to the right people"
+      ],
+      "serviceName":"GOV.UK Online Forms",
+      "supplierName":"Axis12 Limited"
+    },
+    {
+      "frameworkName":"G-Cloud 9",
+      "highlight":{
+        "frameworkName":[
+          "G-Cloud 9"
+        ],
+        "id":[
+          "963057953669744"
+        ],
+        "lot":[
+          "cloud-software"
+        ],
+        "lotName":[
+          "Cloud software"
+        ],
+        "serviceBenefits":[
+          "Produces applications which are innovative and cost saving"
+        ],
+        "serviceCategories":[
+          "Academic"
+        ],
+        "serviceDescription":[
+          "247lib.com is a complete web library asset and resource management system for organisations and departments of any size. 247lib.com empowers you to manage information in diverse formats including books, eBooks, reports, periodicals, eJournals, internal documents, web page content, news, events, people, room bookings, social media. 247lib.com search facilities are unrivalled."
+        ],
+        "serviceFeatures":[
+          "Delivers an easy to use fully integrated library management system"
+        ],
+        "serviceName":[
+          "Bramble Hub Amlib UK - 247lib.com for Library Asset and Resource Management"
+        ],
+        "supplierName":[
+          "Bramble Hub Limited"
+        ]
+      },
+      "id":"963057953669744",
+      "lot":"cloud-software",
+      "lotName":"Cloud software",
+      "serviceBenefits":[
+        "Produces applications which are innovative and cost saving",
+        "Allows you to offer new products and services",
+        "Raises profile of organisation through eye-catching web designs",
+        "Use technology to introduce new more efficient working practices",
+        "Allows you to take advantage of fast low-cost cloud services",
+        "Reduces operational costs associated with maintaining applications on workstations",
+        "Allows staff to access information on-the-move using mobile devices",
+        "Facilitates better decision taking by offering responsive access to information",
+        "Supports flexible working and sustainability through remote working",
+        "Reduces dependency on expensive IT resources"
+      ],
+      "serviceCategories":[
+        "Academic",
+        "Analytics",
+        "Bug tracking",
+        "CRM system",
+        "Configure, price and quote (CPQ)",
+        "Content management system (CMS)",
+        "Customer helpdesk (service desk)",
+        "Document management",
+        "Enterprise social networking",
+        "IT asset management",
+        "Inventory management",
+        "Library automation",
+        "Library management",
+        "Order management",
+        "Student management",
+        "Website builder",
+        "eLearning",
+        "Analytics and business intelligence",
+        "Collaborative working",
+        "Creative, design and publishing",
+        "Customer relationship management (CRM)",
+        "Electronic document and records management (EDRM)",
+        "Human resources and employee management",
+        "Information and communications technology (ICT)",
+        "Operations management",
+        "Sales",
+        "Schools, education and libraries",
+        "Software development tools",
+        "Transport and logistics"
+      ],
+      "serviceDescription":"247lib.com is a complete web library asset and resource management system for organisations and departments of any size. 247lib.com empowers you to manage information in diverse formats including books, eBooks, reports, periodicals, eJournals, internal documents, web page content, news, events, people, room bookings, social media. 247lib.com search facilities are unrivalled.",
+      "serviceFeatures":[
+        "Delivers an easy to use fully integrated library management system",
+        "Provides colourful tailored OPAC websites which engage your clients",
+        "Manages any type of resource including books journals and documents",
+        "Easy circulation and flexible borrower management",
+        "Complies with International Standards \u2013 MARC 21 and Z39.50",
+        "Provides offline circulation and stock rotation capabilities",
+        "Based on easy to manage Microsoft technology",
+        "Skilled trainers and applications consultants",
+        "Skilled in migrations from legacy solutions to cloud technologies",
+        "Delivery on many devices including kiosks tablets and mobile phones"
+      ],
+      "serviceName":"Bramble Hub Amlib UK - 247lib.com for Library Asset and Resource Management",
+      "supplierName":"Bramble Hub Limited"
+    },
+    {
+      "frameworkName":"G-Cloud 9",
+      "highlight":{
+        "frameworkName":[
+          "G-Cloud 9"
+        ],
+        "id":[
+          "559911876201509"
+        ],
+        "lot":[
+          "cloud-software"
+        ],
+        "lotName":[
+          "Cloud software"
+        ],
+        "serviceBenefits":[
+          "Produces applications which are innovative and cost saving"
+        ],
+        "serviceCategories":[
+          "Academic"
+        ],
+        "serviceDescription":[
+          "247lib.com is a complete web library asset and online resource management system. 247lib.com allows you to implement dynamic content websites, discovery OPACs, enquiry management, social media management, acquisitions management, mobile library and public library management systems. All applications are backed by full training, migration, implementation and support services."
+        ],
+        "serviceFeatures":[
+          "Delivers an easy to use fully integrated library management system"
+        ],
+        "serviceName":[
+          "Bramble Hub Amlib UK - 247lib.com for Health Libraries"
+        ],
+        "supplierName":[
+          "Bramble Hub Limited"
+        ]
+      },
+      "id":"559911876201509",
+      "lot":"cloud-software",
+      "lotName":"Cloud software",
+      "serviceBenefits":[
+        "Produces applications which are innovative and cost saving",
+        "Allows you to offer new products and services",
+        "Raises profile of organisation through eye-catching web designs",
+        "Use technology to introduce new more efficient working practices",
+        "Allows you to take advantage of fast low-cost cloud services",
+        "Reduces operational costs associated with maintaining applications on workstations",
+        "Allows staff to access information on-the-move using mobile devices",
+        "Facilitates better decision taking by offering responsive access to information",
+        "Supports flexible working and sustainability through remote working",
+        "Reduces dependency on expensive IT resources"
+      ],
+      "serviceCategories":[
+        "Academic",
+        "Analytics",
+        "Bug tracking",
+        "CRM system",
+        "Configure, price and quote (CPQ)",
+        "Content management system (CMS)",
+        "Customer helpdesk (service desk)",
+        "Document management",
+        "Enterprise social networking",
+        "IT asset management",
+        "Inventory management",
+        "Library automation",
+        "Library management",
+        "Order management",
+        "Student management",
+        "Website builder",
+        "eLearning",
+        "Analytics and business intelligence",
+        "Collaborative working",
+        "Creative, design and publishing",
+        "Customer relationship management (CRM)",
+        "Electronic document and records management (EDRM)",
+        "Human resources and employee management",
+        "Information and communications technology (ICT)",
+        "Operations management",
+        "Sales",
+        "Schools, education and libraries",
+        "Software development tools",
+        "Transport and logistics"
+      ],
+      "serviceDescription":"247lib.com is a complete web library asset and online resource management system. 247lib.com allows you to implement dynamic content websites, discovery OPACs, enquiry management, social media management, acquisitions management, mobile library and public library management systems. All applications are backed by full training, migration, implementation and support services.",
+      "serviceFeatures":[
+        "Delivers an easy to use fully integrated library management system",
+        "Provides colourful tailored OPAC websites which engage your clients",
+        "Manages any type of resource including books journals and documents",
+        "Easy circulation and flexible borrower management",
+        "Complies with International Standards \u2013 MARC 21 and Z39.50",
+        "Provides offline circulation and stock rotation capabilities",
+        "Based on easy to manage Microsoft technology",
+        "Skilled trainers and applications consultants",
+        "Skilled in migrations from legacy solutions to cloud technologies",
+        "Delivery on many devices including kiosks tablets and mobile phones"
+      ],
+      "serviceName":"Bramble Hub Amlib UK - 247lib.com for Health Libraries",
+      "supplierName":"Bramble Hub Limited"
+    },
+    {
+      "frameworkName":"G-Cloud 9",
+      "highlight":{
+        "frameworkName":[
+          "G-Cloud 9"
+        ],
+        "id":[
+          "448507175866307"
+        ],
+        "lot":[
+          "cloud-software"
+        ],
+        "lotName":[
+          "Cloud software"
+        ],
+        "serviceBenefits":[
+          "Produces applications which are innovative and cost saving"
+        ],
+        "serviceCategories":[
+          "Academic"
+        ],
+        "serviceDescription":[
+          "247lib.com is a complete web library asset and online resource management system. 247lib.com allows you to implement dynamic content websites, discovery OPACs, enquiry management, social media management, acquisitions management, mobile library and public library management systems. All applications are backed by full training, migration, implementation and support services."
+        ],
+        "serviceFeatures":[
+          "Delivers an easy to use fully integrated library management system"
+        ],
+        "serviceName":[
+          "Bramble Hub Amlib UK - 247lib.com for Prison Libraries"
+        ],
+        "supplierName":[
+          "Bramble Hub Limited"
+        ]
+      },
+      "id":"448507175866307",
+      "lot":"cloud-software",
+      "lotName":"Cloud software",
+      "serviceBenefits":[
+        "Produces applications which are innovative and cost saving",
+        "Allows you to offer new products and services",
+        "Raises profile of organisation through eye-catching web designs",
+        "Use technology to introduce new more efficient working practices",
+        "Allows you to take advantage of fast low-cost cloud services",
+        "Reduces operational costs associated with maintaining applications on workstations",
+        "Allows staff to access information on-the-move using mobile devices",
+        "Facilitates better decision taking by offering responsive access to information",
+        "Supports flexible working and sustainability through remote working",
+        "Reduces dependency on expensive IT resources"
+      ],
+      "serviceCategories":[
+        "Academic",
+        "Analytics",
+        "Bug tracking",
+        "CRM system",
+        "Configure, price and quote (CPQ)",
+        "Content management system (CMS)",
+        "Customer helpdesk (service desk)",
+        "Document management",
+        "Enterprise social networking",
+        "IT asset management",
+        "Inventory management",
+        "Library automation",
+        "Library management",
+        "Order management",
+        "Student management",
+        "Website builder",
+        "eLearning",
+        "Analytics and business intelligence",
+        "Collaborative working",
+        "Creative, design and publishing",
+        "Customer relationship management (CRM)",
+        "Electronic document and records management (EDRM)",
+        "Human resources and employee management",
+        "Information and communications technology (ICT)",
+        "Operations management",
+        "Sales",
+        "Schools, education and libraries",
+        "Software development tools",
+        "Transport and logistics"
+      ],
+      "serviceDescription":"247lib.com is a complete web library asset and online resource management system. 247lib.com allows you to implement dynamic content websites, discovery OPACs, enquiry management, social media management, acquisitions management, mobile library and public library management systems. All applications are backed by full training, migration, implementation and support services.",
+      "serviceFeatures":[
+        "Delivers an easy to use fully integrated library management system",
+        "Provides colourful tailored OPAC websites which engage your clients",
+        "Manages any type of resource including books journals and documents",
+        "Easy circulation and flexible borrower management",
+        "Complies with International Standards \u2013 MARC 21 and Z39.50",
+        "Provides offline circulation and stock rotation capabilities",
+        "Based on easy to manage Microsoft technology",
+        "Skilled trainers and applications consultants",
+        "Skilled in migrations from legacy solutions to cloud technologies",
+        "Delivery on many devices including kiosks tablets and mobile phones"
+      ],
+      "serviceName":"Bramble Hub Amlib UK - 247lib.com for Prison Libraries",
+      "supplierName":"Bramble Hub Limited"
+    }
+  ]
+}
