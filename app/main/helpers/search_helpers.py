@@ -135,7 +135,7 @@ def get_filter_value_from_question_option(option):
     return (option.get('value') or option.get('label', '')).lower().replace(',', '')
 
 
-def build_search_query(request, lot_filters, content_builder, lots_by_slug):
+def build_search_query(request_args, lot_filters, content_builder, lots_by_slug):
     """Match request args with known filters.
 
     Removes any unknown query parameters, and will only keep `page`, `q`
@@ -146,7 +146,7 @@ def build_search_query(request, lot_filters, content_builder, lots_by_slug):
 
     """
     query = clean_request_args(
-        request.args,
+        request_args,
         lot_filters,
         lots_by_slug
     )

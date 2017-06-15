@@ -109,7 +109,7 @@ class TestServicePage(BaseApplicationTest):
         # Hardcoded stuff found in 'views.py'
         breadcrumbs_expected = {
             '/': 'Digital Marketplace',
-            '/g-cloud': 'Cloud technology and support',
+            '/g-cloud': 'Cloud hosting, software and support',
             '/g-cloud/search?lot={}'.format(lot): self.lots[lot]['name']
         }
 
