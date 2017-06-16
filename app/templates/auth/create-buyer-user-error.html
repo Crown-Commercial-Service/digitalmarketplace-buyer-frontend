@@ -19,7 +19,7 @@
       </p>
       <div class="explanation-list">
         <p class="lead">
-          <a href="{{ url_for('.create_buyer_account') }}">Create an account using a different email address</a> or email
+          <a href="{{ url_for('external.create_buyer_account') }}">Create an account using a different email address</a> or email
           <a href="mailto:enquiries@digitalmarketplace.service.gov.uk">enquiries@digitalmarketplace.service.gov.uk</a> if:
         </p>
         <ul class="list-bullet">
@@ -31,7 +31,7 @@
           </li>
         </ul>
       </div>
-      
+
     </div>
   </div>
 
@@ -42,23 +42,23 @@
   </header>
   <p>
     The link you used to create an account may have expired.<br/>
-    Check you’ve entered the correct link or <a href="{{ url_for('.create_buyer_account') }}">send a new one</a>.<br/>
+    Check you’ve entered the correct link or <a href="{{ url_for('external.create_buyer_account') }}">send a new one</a>.<br/>
     If you still can’t create an account, email <a href="mailto:enquiries@digitalmarketplace.service.gov.uk">enquiries@digitalmarketplace.service.gov.uk</a>
   </p>
 
 {% elif user %}
 
   {% if not user.active %}
-  
+
     <header class="page-heading-smaller">
       <h1>Your account has been deactivated.</h1>
     </header>
     <p>
       Email <a href="mailto:enquiries@digitalmarketplace.service.gov.uk">enquiries@digitalmarketplace.service.gov.uk</a> to reactivate your account.
     </p>
-  
+
   {% elif user.locked %}
-  
+
     <header class="page-heading-smaller">
       <h1>Your account has been locked.</h1>
     </header>
@@ -67,28 +67,28 @@
     </p>
 
   {% elif user.role == 'supplier' %}
-  
+
     <header class="page-heading-smaller">
       <h1>The details you provided are registered with a supplier.</h1>
     </header>
     <p>Your email address is already registered as an account with ‘{{ user.supplier_name }}’.</p>
-    <p>You can <a href="{{ url_for('.create_buyer_account') }}">create a buyer account using a different email address</a>, or email
+    <p>You can <a href="{{ url_for('external.create_buyer_account') }}">create a buyer account using a different email address</a>, or email
       <a href="mailto:enquiries@digitalmarketplace.service.gov.uk">enquiries@digitalmarketplace.service.gov.uk</a> to have your account
       converted to a buyer account.</p>
     <p>
       Alternatively, <a href="{{ url_for('.render_login') }}">Log in</a> to your {{ user.supplier_name }} account.
     </p>
-  
+
   {% else %}
-  
+
     <header class="page-heading-smaller">
       <h1>Account already exists</h1>
     </header>
-  
+
     <p>
       <a href="{{ url_for('.render_login') }}">Log in</a> to your account.
     </p>
-  
+
   {% endif %}
 {% endif %}
 {% endblock %}

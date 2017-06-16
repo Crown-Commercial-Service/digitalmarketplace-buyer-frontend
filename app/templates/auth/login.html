@@ -106,7 +106,7 @@
             {% if form.password.errors %}
                 </div>
             {% endif %}
-            
+
             {%
               with
               url = url_for('.request_password_reset'),
@@ -114,7 +114,7 @@
             %}
               {% include "toolkit/secondary-action-link.html" %}
             {% endwith %}
-            
+
             {%
               with
               type = "save",
@@ -125,13 +125,13 @@
 
             {%
               with
-              url = url_for('.create_buyer_account'),
+              url = url_for('external.create_buyer_account'),
               text = "Create a buyer account",
               bigger = true
             %}
               {% include "toolkit/secondary-action-link.html" %}
             {% endwith %}
-            
+
         </div>
     </div>
 </form>
