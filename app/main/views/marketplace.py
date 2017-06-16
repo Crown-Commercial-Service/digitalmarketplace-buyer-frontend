@@ -479,36 +479,115 @@ def list_opportunities(framework_slug):
 
 @main.route('/collaborate')
 def collaborate():
-    if feature.is_active('COLLABORATE'):
-        rendered_component = render_component('bundles/Collaborate/CollaborateLandingWidget.js', {})
-        return render_template(
-            '_react.html',
-            breadcrumb_items=[
-                {'link': url_for('main.index'), 'label': 'Home'},
-                {'label': 'Collaborate'}
-            ],
-            component=rendered_component
-        )
+    rendered_component = render_component('bundles/Collaborate/CollaborateLandingWidget.js', {})
+    return render_template(
+        '_react.html',
+        breadcrumb_items=[
+            {'link': url_for('main.index'), 'label': 'Home'},
+            {'label': 'Collaborate'}
+        ],
+        component=rendered_component
+    )
+
+
+@main.route('/collaborate/code')
+def collaborate_code():
+    rendered_component = render_component('bundles/Collaborate/CollaborateCodeWidget.js', {})
+    return render_template(
+        '_react.html',
+        breadcrumb_items=[
+            {'link': url_for('main.index'), 'label': 'Home'},
+            {'link': url_for('main.collaborate'), 'label': 'Collaborate'},
+            {'label': 'Code'}
+        ],
+        component=rendered_component,
+        main_class='collapse'
+    )
 
 
 @main.route('/collaborate/project/new')
 def collaborate_create_project():
-    if feature.is_active('COLLABORATE'):
+    form = DmForm()
+    basename = url_for('.collaborate_create_project')
+    props = {
+        'form_options': {
+            'csrf_token': form.csrf_token.current_token
+        },
+        'project': {
+        },
+        'basename': basename
+    }
+
+    if 'project' in session:
+        props['projectForm'] = session['project']
+
+    rendered_component = render_component('bundles/Collaborate/ProjectFormWidget.js', props)
+
+    return render_template(
+        '_react.html',
+        breadcrumb_items=[
+            {'link': url_for('main.index'), 'label': 'Home'},
+            {'link': url_for('main.collaborate'), 'label': 'Collaborate'},
+            {'label': 'Add project'}
+        ],
+        component=rendered_component
+    )
+
+
+@main.route('/collaborate/project/new', methods=['POST'])
+def collaborate_create_project_submit():
+    project = from_response(request)
+
+    fields = ['title', 'client', 'stage']
+
+    basename = url_for('.collaborate_create_project')
+    errors = validate_form_data(project, fields)
+    if errors:
         form = DmForm()
-        basename = url_for('.collaborate_create_project')
-        props = {
+        rendered_component = render_component('bundles/Collaborate/ProjectFormWidget.js', {
+            'form_options': {
+                'csrf_token': form.csrf_token.current_token,
+                'errors': errors
+            },
+            'projectForm': project,
+            'basename': basename
+        })
+
+        return render_template(
+            '_react.html',
+            breadcrumb_items=[
+                {'link': url_for('main.index'), 'label': 'Home'},
+                {'link': url_for('main.collaborate'), 'label': 'Collaborate'},
+                {'label': 'Add project'}
+            ],
+            component=rendered_component
+        )
+
+    try:
+        project = data_api_client.req.projects().post(data={'project': project})['project']
+
+        rendered_component = render_component('bundles/Collaborate/ProjectSubmitConfirmationWidget.js', {})
+
+        return render_template(
+            '_react.html',
+            breadcrumb_items=[
+                {'link': url_for('main.index'), 'label': 'Home'},
+                {'link': url_for('main.collaborate'), 'label': 'Collaborate'},
+                {'label': 'Add project'}
+            ],
+            component=rendered_component
+        )
+
+    except APIError as e:
+        form = DmForm()
+        flash('', 'error')
+        rendered_component = render_component('bundles/Collaborate/ProjectFormWidget.js', {
             'form_options': {
                 'csrf_token': form.csrf_token.current_token
             },
-            'project': {
-            },
+            'projectForm': project,
             'basename': basename
-        }
-
-        if 'project' in session:
-            props['projectForm'] = session['project']
-
-        rendered_component = render_component('bundles/Collaborate/ProjectFormWidget.js', props)
+        })
 
         return render_template(
             '_react.html',
@@ -521,87 +600,19 @@ def collaborate_create_project():
         )
 
 
-@main.route('/collaborate/project/new', methods=['POST'])
-def collaborate_create_project_submit():
-    if feature.is_active('COLLABORATE'):
-        project = from_response(request)
-
-        fields = ['title', 'client', 'stage']
-
-        basename = url_for('.collaborate_create_project')
-        errors = validate_form_data(project, fields)
-        if errors:
-            form = DmForm()
-            rendered_component = render_component('bundles/Collaborate/ProjectFormWidget.js', {
-                'form_options': {
-                    'csrf_token': form.csrf_token.current_token,
-                    'errors': errors
-                },
-                'projectForm': project,
-                'basename': basename
-            })
-
-            return render_template(
-                '_react.html',
-                breadcrumb_items=[
-                    {'link': url_for('main.index'), 'label': 'Home'},
-                    {'link': url_for('main.collaborate'), 'label': 'Collaborate'},
-                    {'label': 'Add project'}
-                ],
-                component=rendered_component
-            )
-
-        try:
-            project = data_api_client.req.projects().post(data={'project': project})['project']
-
-            rendered_component = render_component('bundles/Collaborate/ProjectSubmitConfirmationWidget.js', {})
-
-            return render_template(
-                '_react.html',
-                breadcrumb_items=[
-                    {'link': url_for('main.index'), 'label': 'Home'},
-                    {'link': url_for('main.collaborate'), 'label': 'Collaborate'},
-                    {'label': 'Add project'}
-                ],
-                component=rendered_component
-            )
-
-        except APIError as e:
-            form = DmForm()
-            flash('', 'error')
-            rendered_component = render_component('bundles/Collaborate/ProjectFormWidget.js', {
-                'form_options': {
-                    'csrf_token': form.csrf_token.current_token
-                },
-                'projectForm': project,
-                'basename': basename
-            })
-
-            return render_template(
-                '_react.html',
-                breadcrumb_items=[
-                    {'link': url_for('main.index'), 'label': 'Home'},
-                    {'link': url_for('main.collaborate'), 'label': 'Collaborate'},
-                    {'label': 'Add project'}
-                ],
-                component=rendered_component
-            )
-
-
 @main.route('/collaborate/project/<int:id>')
 def collaborate_view_project(id):
-    if feature.is_active('COLLABORATE'):
-        project = data_api_client.req.projects(id).get()['project']
-        if project.get('status', '') != 'published':
-            abort(404)
-        rendered_component = render_component('bundles/Collaborate/ProjectViewWidget.js', {'project': project})
-        return render_template(
-            '_react.html',
-            breadcrumb_items=[
-                {'link': url_for('main.index'), 'label': 'Home'},
-                {'link': url_for('main.collaborate'), 'label': 'Collaborate'},
-                {'label': project['title']}
-            ],
-            component=rendered_component,
-            main_class='collapse'
-        )
+    project = data_api_client.req.projects(id).get()['project']
+    if project.get('status', '') != 'published':
+        abort(404)
+    rendered_component = render_component('bundles/Collaborate/ProjectViewWidget.js', {'project': project})
+    return render_template(
+        '_react.html',
+        breadcrumb_items=[
+            {'link': url_for('main.index'), 'label': 'Home'},
+            {'link': url_for('main.collaborate'), 'label': 'Collaborate'},
+            {'label': project['title']}
+        ],
+        component=rendered_component,
+        main_class='collapse'
+    )
