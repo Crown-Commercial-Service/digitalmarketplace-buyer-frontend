@@ -44,14 +44,10 @@ def create_app(config_name):
     from .main import main as main_blueprint
     from .main import external as external_blueprint
     from .status import status as status_blueprint
-    from .buyers import buyers as buyers_blueprint
-    from .buyers import dos as dos_blueprint
 
     application.register_blueprint(status_blueprint)
     application.register_blueprint(main_blueprint)
     application.register_blueprint(external_blueprint)
-    application.register_blueprint(buyers_blueprint, url_prefix='/buyers')
-    application.register_blueprint(dos_blueprint, url_prefix='/buyers')
 
     login_manager.login_view = 'main.render_login'
     login_manager.login_message_category = "must_login"
