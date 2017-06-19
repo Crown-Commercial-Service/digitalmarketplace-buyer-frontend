@@ -136,7 +136,7 @@ def copy_brief(framework_slug, lot_slug, brief_id):
         framework_slug=new_brief["frameworkSlug"],
         lot_slug=new_brief["lotSlug"],
         brief_id=new_brief["id"],
-        section_slug=section.slug,
+        section_id=section.slug,
         question_id=section.questions[0].id
     ))
 
@@ -190,8 +190,8 @@ def view_brief_overview(framework_slug, lot_slug, brief_id):
     ), 200
 
 
-@buyers.route('/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/<section_slug>', methods=['GET'])
-def view_brief_section_summary(framework_slug, lot_slug, brief_id, section_slug):
+@buyers.route('/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/<section_id>', methods=['GET'])
+def view_brief_section_summary(framework_slug, lot_slug, brief_id, section_id):
     get_framework_and_lot(
         framework_slug,
         lot_slug,
@@ -206,7 +206,7 @@ def view_brief_section_summary(framework_slug, lot_slug, brief_id, section_slug)
 
     content = content_loader.get_manifest(brief['frameworkSlug'], 'edit_brief').filter({'lot': brief['lotSlug']})
     sections = content.summary(brief)
-    section = sections.get_section(section_slug)
+    section = sections.get_section(section_id)
 
     if not section:
         abort(404)
@@ -219,9 +219,9 @@ def view_brief_section_summary(framework_slug, lot_slug, brief_id, section_slug)
 
 
 @buyers.route(
-    '/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/edit/<section_slug>/<question_id>',
+    '/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/edit/<section_id>/<question_id>',
     methods=['GET'])
-def edit_brief_question(framework_slug, lot_slug, brief_id, section_slug, question_id):
+def edit_brief_question(framework_slug, lot_slug, brief_id, section_id, question_id):
     get_framework_and_lot(framework_slug, lot_slug, data_api_client, allowed_statuses=['live'], must_allow_brief=True)
     brief = data_api_client.get_brief(brief_id)["briefs"]
 
@@ -231,7 +231,7 @@ def edit_brief_question(framework_slug, lot_slug, brief_id, section_slug, questi
     content = content_loader.get_manifest(brief['frameworkSlug'], 'edit_brief').filter(
         {'lot': brief['lotSlug']}
     )
-    section = content.get_section(section_slug)
+    section = content.get_section(section_id)
     if section is None or not section.editable:
         abort(404)
 
@@ -295,7 +295,7 @@ def update_brief_submission(framework_slug, lot_slug, brief_id, section_id, ques
                 framework_slug=brief['frameworkSlug'],
                 lot_slug=brief['lotSlug'],
                 brief_id=brief['id'],
-                section_slug=section.slug)
+                section_id=section.slug)
         )
 
     return redirect(
