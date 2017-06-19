@@ -915,29 +915,3 @@ class TestCreateUser(BaseApplicationTest):
                 }
             )
             assert res.status_code == 503
-
-
-class TestBuyerRoleRequired(BaseApplicationTest):
-    def test_login_required_for_buyer_pages(self):
-        with self.app.app_context():
-            res = self.client.get('/buyers')
-            assert res.status_code == 302
-            assert res.location == 'http://localhost/login?next=%2Fbuyers'
-
-    def test_supplier_cannot_access_buyer_pages(self):
-        with self.app.app_context():
-            self.login_as_supplier()
-            res = self.client.get('/buyers')
-            assert res.status_code == 302
-            assert res.location == 'http://localhost/login?next=%2Fbuyers'
-            self.assert_flashes('buyer-role-required', expected_category='error')
-
-    @mock.patch('app.buyers.views.buyers.data_api_client')
-    def test_buyer_pages_ok_if_logged_in_as_buyer(self, data_api_client):
-        with self.app.app_context():
-            self.login_as_buyer()
-            res = self.client.get('/buyers')
-            page_text = res.get_data(as_text=True)
-            assert res.status_code == 200
-            assert 'buyer@email.com' in page_text
-            assert 'Some Buyer' in page_text
