@@ -40,7 +40,7 @@
         <p>All requirements are published on the Digital Marketplace where anyone can see them.</p>
       </div>
         {% if brief.lotSlug == 'digital-specialists' and not brief.requirementsLength %}
-          <p><a href="{{ url_for('.edit_brief_question', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id, section_slug='set-how-long-your-requirements-will-be-open-for', question_id='requirementsLength') }}">Set how long your requirements will be open for</a></p>
+          <p><a href="{{ url_for('.edit_brief_question', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id, section_id='set-how-long-your-requirements-will-be-open-for', question_id='requirementsLength') }}">Set how long your requirements will be open for</a></p>
           <div class="dmspeak">
             <p>This will show you what the supplier application deadline will be if you publish your requirements today.</p>
           </div>
@@ -69,7 +69,7 @@
           {% if question.answer_required and not question.id == 'requirementsLength' %}
             <ol>
               <li>
-                <a href="{{ url_for('.edit_brief_question', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id, section_slug=section.slug, question_id=question.id) }}">{{ question.question }}</a>
+                <a href="{{ url_for('.edit_brief_question', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id, section_id=section.slug, question_id=question.id) }}">{{ question.question }}</a>
               </li>
             </ol>
           {% endif %}
@@ -98,7 +98,7 @@
             {{ summary.field_heading_date("Before {}".format(dates.questions_close | shortdateformat), rowspan='3', scope='row') }}
             {{ summary.text_bold("Details of your question and answer session") }}
             {% if not published %}
-              {{ summary.edit_link("Edit", url_for('.edit_brief_question', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id, section_slug=question_and_answers.slug, question_id=question_and_answers.id)) }}
+              {{ summary.edit_link("Edit", url_for('.edit_brief_question', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id, section_id=question_and_answers.slug, question_id=question_and_answers.id)) }}
             {% endif %}
           {% endcall %}
           {% call summary.row(no_border=True) %}

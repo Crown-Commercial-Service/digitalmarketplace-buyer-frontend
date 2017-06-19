@@ -19,7 +19,7 @@
     ]
   %}
   {% set section_breadcrumb = [{
-        "link": url_for(".view_brief_section_summary", framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id, section_slug=section.slug),
+        "link": url_for(".view_brief_section_summary", framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id, section_id=section.slug),
         "label": section.name
       }] if section.has_summary_page else []
   %}
