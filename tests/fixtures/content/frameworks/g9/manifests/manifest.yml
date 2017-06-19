@@ -3,3 +3,8 @@
   name: Checkbox tree example
   questions:
     - checkboxTreeExample
+-
+  slug: filters-example
+  name: Filters example
+  questions:
+    - filterExample

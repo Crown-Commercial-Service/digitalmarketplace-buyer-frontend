@@ -1,7 +1,7 @@
 import os
 import json
 import itertools
-from mock import Mock
+import mock
 from dmcontent.content_loader import ContentLoader
 from werkzeug.datastructures import MultiDict
 import flask
@@ -27,6 +27,17 @@ def _get_fixture_data():
     )
     fixture_path = os.path.join(
         test_root, 'fixtures', 'search_results_fixture.json'
+    )
+    with open(fixture_path) as fixture_file:
+        return json.load(fixture_file)
+
+
+def _get_g9_aggregations_fixture_data():
+    test_root = os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "../..")
+    )
+    fixture_path = os.path.join(
+        test_root, 'fixtures', 'g9_aggregations_fixture.json'
     )
     with open(fixture_path) as fixture_file:
         return json.load(fixture_file)
@@ -66,7 +77,7 @@ class TestSearchFilters(BaseApplicationTest):
                 return filter_group
 
     def _get_request_for_params(self, params):
-        return Mock(args=MultiDict(params))
+        return mock.Mock(args=MultiDict(params))
 
     def test_get_filter_groups_from_questions_with_radio_filters(self):
         radios_filter_group = self._get_filter_group_by_label(
@@ -192,7 +203,10 @@ class TestSearchFilters(BaseApplicationTest):
         assert search_filters[0]['filters'][1]['name'] == 'booleanExample2'
         assert search_filters[0]['filters'][1]['checked'] is False
 
-    def test_show_lots_and_categories_selection(self):
+    @mock.patch('app.main.presenters.search_presenters.search_api_client', autospec=True)
+    def test_show_lots_and_categories_selection(self, search_api_client):
+        search_api_client.aggregate_services.return_value = _get_g9_aggregations_fixture_data()
+
         framework = self._get_framework_fixture_data('g-cloud-9')['frameworks']
         lots = framework['lots']
 
@@ -200,9 +214,11 @@ class TestSearchFilters(BaseApplicationTest):
         # in this test, the key 'category' key is 'checkboxTreeExample'
 
         # first test with a top-level category selected
-        url = "/g-cloud/search?q=&lot=cloud-software&otherfilter=somevalue&checkboxTreeExample=option+1&page=2"
+        url = "/g-cloud/search?q=&lot=cloud-software&otherfilter=somevalue&filterExample=option+1" \
+              "&checkboxTreeExample=option+1&page=2"
         with self.app.test_request_context(url):
-            selection = build_lots_and_categories_link_tree(lots, category_filter_group, flask.request)
+            selection = build_lots_and_categories_link_tree(framework, lots, category_filter_group, flask.request,
+                                                            g9_builder)
             assert len(selection) == 3  # all -> software -> option1
 
             tree_root = selection[0]
@@ -225,16 +241,18 @@ class TestSearchFilters(BaseApplicationTest):
             assert 'checkboxTreeExample=option+2.1' in sub_category_filters[0]['link']
             assert 'checkboxTreeExample=option+2.2' in sub_category_filters[1]['link']
 
-            # ...and also that each link preserves the value of any other filters that were present...
+            # ...and also that each link preserves only the values of filters that are valid for the target...
             for f in itertools.chain(category_filters, sub_category_filters):
                 if f.get('link'):
-                    assert 'otherfilter=somevalue' in f['link']
+                    assert 'filterExample=option+1' in f['link']
+                    assert 'otherfilter=somevalue' not in f['link']
                     assert 'page=' not in f['link']
 
         # now test with a sub-category selected
         url = "/g-cloud/search?q=&lot=cloud-software&otherfilter=somevalue&checkboxTreeExample=option+2.2"
         with self.app.test_request_context(url):
-            selection = build_lots_and_categories_link_tree(lots, category_filter_group, flask.request)
+            selection = build_lots_and_categories_link_tree(framework, lots, category_filter_group, flask.request,
+                                                            g9_builder)
             assert len(selection) == 4  # all -> software -> option2 -> option2.2
 
             tree_root = selection[0]

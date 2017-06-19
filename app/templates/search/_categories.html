@@ -1,17 +1,17 @@
-{%- macro top_level_link(text, url) -%}
+{%- macro top_level_link(text, count, url) -%}
   <a href="{{ url }}" class="lot-filters__top-level-link">{{ text }}</a>
 {%- endmacro -%}
 
-{%- macro list_item__unselected(text, url) -%}
-  <li><a href="{{ url }}">{{ text }}</a></li>
+{%- macro list_item__unselected(text, count, url) -%}
+  <li>{% if count > 0 %}<a href="{{ url }}">{% endif %}{{ text }} ({{ count }}){% if count > 0 %}</a>{% endif %}</li>
 {%- endmacro -%}
 
-{%- macro list_item__selected(text, url=None, nested_items=None) -%}
+{%- macro list_item__selected(text, count, url=None, nested_items=None) -%}
   {% set has_children_selected = nested_items and ((nested_items|selectattr("selected")|list|length) > 0) %}
   {% if has_children_selected %}
-    <li>{{ top_level_link(text, url) }}
+    <li>{{ top_level_link(text, count=count, url=url) }}
   {% else %}
-    <li aria-current="page"><strong>{{ text }}</strong>
+    <li aria-current="page"><strong>{{ text }}{% if not nested_items %} ({{ count }}){% endif %}</strong>
   {% endif %}
 
   {% if nested_items %}
@@ -38,9 +38,9 @@
   <ul {% if last_list %}class="lot-filters--last-list"{% endif %}>
     {% for item in items %}
       {% if item.get(_keys['selected']) %}
-         {{ list_item__selected(text=item.label, url=item.get(_keys['url']), nested_items=item.get(_keys['nested_items'])) }}
+         {{ list_item__selected(text=item.label, count=item.service_count, url=item.get(_keys['url']), nested_items=item.get(_keys['nested_items'])) }}
       {% elif item.get(_keys['url']) %}
-        {{ list_item__unselected(text=item.label, url=item.get(_keys['url'])) }}
+        {{ list_item__unselected(text=item.label, count=item.service_count, url=item.get(_keys['url'])) }}
       {% endif %}
     {% endfor %}
   </ul>

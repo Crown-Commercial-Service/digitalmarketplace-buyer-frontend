@@ -229,7 +229,8 @@ class TestBuildSearchQueryHelpers(BaseApplicationTest):
             'question6': ['option1', 'option3'],
         })
 
-        assert search_helpers.build_search_query(request, self.lot_filters, self._loader(), self._lots_by_slug) == {
+        assert search_helpers.build_search_query(request.args, self.lot_filters, self._loader(),
+                                                 self._lots_by_slug) == {
             'page': 5,
             'q': 'email',
             'lot': 'saas',
@@ -244,34 +245,39 @@ class TestBuildSearchQueryHelpers(BaseApplicationTest):
             'lot': 'saasaas',
         })
 
-        assert search_helpers.build_search_query(request, self.lot_filters, self._loader(), self._lots_by_slug) == {}
+        assert search_helpers.build_search_query(request.args, self.lot_filters, self._loader(),
+                                                 self._lots_by_slug) == {}
 
     def test_build_search_query_multiple_lots(self):
         request = self._request({
             'lot': 'saas,paas',
         })
 
-        assert search_helpers.build_search_query(request, self.lot_filters, self._loader(), self._lots_by_slug) == {}
+        assert search_helpers.build_search_query(request.args, self.lot_filters, self._loader(),
+                                                 self._lots_by_slug) == {}
 
     def test_build_search_query_no_keywords(self):
         request = self._request({
             'q': '',
         })
 
-        assert search_helpers.build_search_query(request, self.lot_filters, self._loader(), self._lots_by_slug) == {}
+        assert search_helpers.build_search_query(request.args, self.lot_filters, self._loader(),
+                                                 self._lots_by_slug) == {}
 
     def test_build_search_query_no_page(self):
         request = self._request({
             'page': '',
         })
 
-        assert search_helpers.build_search_query(request, self.lot_filters, self._loader(), self._lots_by_slug) == {}
+        assert search_helpers.build_search_query(request.args, self.lot_filters, self._loader(),
+                                                 self._lots_by_slug) == {}
 
     def test_build_search_query_g5_dots_id_search(self):
         request = self._request({
             'q': 'some text 5.G4.1005.001',
         })
 
-        assert search_helpers.build_search_query(request, self.lot_filters, self._loader(), self._lots_by_slug) == {
+        assert search_helpers.build_search_query(request.args, self.lot_filters, self._loader(),
+                                                 self._lots_by_slug) == {
             'q': 'some text 5-G4-1005-001',
         }
