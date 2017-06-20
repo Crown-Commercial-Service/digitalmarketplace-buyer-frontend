@@ -50,7 +50,7 @@ show_environment:
 docker-build:
 	$(if ${RELEASE_NAME},,$(eval export RELEASE_NAME=$(shell git describe)))
 	@echo "Building a docker image for ${RELEASE_NAME}..."
-	docker build --pull -t digitalmarketplace/buyer-frontend --build-arg release_name=${RELEASE_NAME} .
+	docker build -t digitalmarketplace/buyer-frontend --build-arg release_name=${RELEASE_NAME} .
 	docker tag digitalmarketplace/buyer-frontend digitalmarketplace/buyer-frontend:${RELEASE_NAME}
 
 docker-push:
