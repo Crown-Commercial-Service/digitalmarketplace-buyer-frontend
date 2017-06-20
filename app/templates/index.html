@@ -110,19 +110,14 @@
       <ul class="list-horizontal">
         <li>
           <article>
-            <h3><a href="{{ url_for('.collaborate') }}"> View smart city initiatives</a></h3>
-            <p>    Connect and learn from teams building smart communities and digital services.</p>
+              <h3><a href="{{ url_for('.collaborate_code') }}">Browse library</a></h3>
+              <p>Browse open source projects that you can reuse or contribute to.</p>
           </article>
         </li>
         <li>
           <article>
-            {% if 'COLLABORATE_CODE' is active_feature %}
-            <h3><a href="{{ url_for('.collaborate_code') }}">Explore Code</a></h3>
-            <p>Browse open source projects that you can reuse or contribute to.</p>
-            {% else %}
-            <h3><a href="{{ url_for('.collaborate_create_project') }}">Share ideas, pilots and projects</a></h3>
-            <p>Find partners to collaboratively turn concepts into outcomes.</p>
-            {% endif %}
+            <h3><a href="{{ url_for('.collaborate') }}"> View smart city initiatives</a></h3>
+            <p>    Connect and learn from teams building smart communities and digital services.</p>
           </article>
         </li>
       </ul>

@@ -84,7 +84,6 @@ class Config(object):
         'DOMAINS_SEARCH': True,
         'DM_FRAMEWORK': True,
         'SEARCH': True,
-        'COLLABORATE_CODE': True,
         'TEAM_VIEW': True
     }
 
@@ -128,7 +127,6 @@ class Test(Config):
         'DOMAINS_SEARCH': False,
         'DM_FRAMEWORK': False,
         'SEARCH': False,
-        'COLLABORATE_CODE': True,
         'TEAM_VIEW': True
     }
 
@@ -164,7 +162,6 @@ class Live(Config):
         'DM_FRAMEWORK': True,
         'DOMAINS_SEARCH': True,
         'SEARCH': True,
-        'COLLABORATE_CODE': False,
         'TEAM_VIEW': False
     }
 
