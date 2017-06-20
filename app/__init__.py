@@ -42,7 +42,7 @@ def create_app(config_name):
                 content_loader.load_manifest(framework_data['slug'], 'briefs', 'display_brief')
 
     from .main import main as main_blueprint
-    from .main import external as external_blueprint
+    from .external.views.external import external as external_blueprint
     from .status import status as status_blueprint
 
     application.register_blueprint(status_blueprint)
