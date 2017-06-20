@@ -266,6 +266,38 @@ class TestSearchSummary(BaseApplicationTest):
         summary_markup = search_summary.markup()
         assert "category <em>Analytics</em>" in summary_markup
 
+    def test_each_filter(self):
+        """
+        Test each filter individually adds a single text string to the summary text
+        """
+        for lot in self._g9_lots_by_slug:
+            self.request_args['lot'] = lot
+            for filter_group in g9_filter_groups:
+                for f in filter_group['filters']:
+                    request_args = self.request_args.copy()
+                    request_args[f['name']] = f['value']
+                    search_summary = SearchSummary('9', request_args, g9_filter_groups, self._g9_lots_by_slug)
+                    summary_markup = search_summary.markup()
+                    assert summary_markup.count("<em>") == 3  # the keyword, the lot, and one filter
+
+    def test_all_filters(self):
+        """
+        Incrementally add filters, so if there's one that doesn't seem to work in conjunction with the
+        others, we find it.
+        """
+        for lot in self._g9_lots_by_slug:
+            self.request_args['lot'] = lot
+            filter_count = 0
+            request_args = self.request_args.copy()  # reset all filters for a new lot
+            for filter_group in g9_filter_groups:
+                for f in filter_group['filters']:
+                    request_args.add(f['name'], f['value'])
+                    filter_count += 1
+
+                    search_summary = SearchSummary('9', request_args, g9_filter_groups, self._g9_lots_by_slug)
+                    summary_markup = search_summary.markup()
+                    assert summary_markup.count("<em>") == 2 + filter_count
+
     def test_get_starting_sentence_works(self):
         search_summary = SearchSummary('9', self.request_args, filter_groups, self._lots_by_slug)
         search_summary.count = '9'
