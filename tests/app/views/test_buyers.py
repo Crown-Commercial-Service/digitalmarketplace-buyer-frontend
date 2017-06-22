@@ -1910,7 +1910,7 @@ class TestViewBriefResponsesPage(BaseApplicationTest):
 
 @mock.patch("app.buyers.views.buyers.data_api_client")
 class TestDownloadBriefResponsesCsv(BaseApplicationTest):
-    brief = api_stubs.brief(status='closed')
+    brief = api_stubs.brief(status='closed', lot_slug="digital-professionals", framework_slug="digital-marketplace")
     brief['briefs']['essentialRequirements'] = ["E1", "E2"]
     brief['briefs']['niceToHaveRequirements'] = ["Nice1", "Nice2", "Nice3"]
 
@@ -1991,17 +1991,17 @@ class TestDownloadBriefResponsesCsv(BaseApplicationTest):
     def setup(self):
         super(TestDownloadBriefResponsesCsv, self).setup()
         self.url = self.expand_path(
-            '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234/responses'
+            '/buyers/frameworks/digital-marketplace/requirements/digital-professionals/1234/responses'
             '/download'
         )
 
     def test_csv_includes_all_eligible_responses_and_no_ineligible_responses(self, data_api_client):
         data_api_client.find_brief_responses.return_value = self.brief_responses
         data_api_client.get_framework.return_value = api_stubs.framework(
-            slug='digital-outcomes-and-specialists',
+            slug='digital-marketplace',
             status='live',
             lots=[
-                api_stubs.lot(slug='digital-specialists', allows_brief=True),
+                api_stubs.lot(slug='digital-professionals', allows_brief=True),
             ]
         )
         data_api_client.get_brief.return_value = self.brief
@@ -2014,10 +2014,10 @@ class TestDownloadBriefResponsesCsv(BaseApplicationTest):
     def test_xlsx_includes_all_eligible_responses_and_no_ineligible_responses(self, data_api_client):
         data_api_client.find_brief_responses.return_value = self.brief_responses
         data_api_client.get_framework.return_value = api_stubs.framework(
-            slug='digital-outcomes-and-specialists',
+            slug='digital-marketplace',
             status='live',
             lots=[
-                api_stubs.lot(slug='digital-specialists', allows_brief=True),
+                api_stubs.lot(slug='digital-professionals', allows_brief=True),
             ]
         )
         data_api_client.get_brief.return_value = self.brief
@@ -2040,10 +2040,10 @@ class TestDownloadBriefResponsesCsv(BaseApplicationTest):
 
     def test_download_brief_responses_for_brief_without_nice_to_haves(self, data_api_client):
         data_api_client.get_framework.return_value = api_stubs.framework(
-            slug='digital-outcomes-and-specialists',
+            slug='digital-marketplace',
             status='live',
             lots=[
-                api_stubs.lot(slug='digital-specialists', allows_brief=True),
+                api_stubs.lot(slug='digital-professionals', allows_brief=True),
             ]
         )
 
@@ -2069,16 +2069,18 @@ class TestDownloadBriefResponsesCsv(BaseApplicationTest):
     def test_csv_handles_tricky_characters(self, data_api_client):
         data_api_client.find_brief_responses.return_value = self.tricky_character_responses
         data_api_client.get_framework.return_value = api_stubs.framework(
-            slug='digital-outcomes-and-specialists',
+            slug='digital-marketplace',
             status='live',
             lots=[
-                api_stubs.lot(slug='digital-specialists', allows_brief=True),
+                api_stubs.lot(slug='digital-outcome', allows_brief=True),
             ]
         )
-        data_api_client.get_brief.return_value = self.brief
+        outcomes_brief = self.brief
+        outcomes_brief['briefs']['lotSlug'] = 'digital-outcome'
+        data_api_client.get_brief.return_value = outcomes_brief
 
         self.login_as_buyer()
-        res = self.client.get(self.url)
+        res = self.client.get(self.url.replace('digital-professionals', 'digital-outcome'))
         page = res.get_data(as_text=True)
         lines = page.splitlines()
 
@@ -2087,9 +2089,6 @@ class TestDownloadBriefResponsesCsv(BaseApplicationTest):
             u'Contact,test1@email.com,"te,st2@email.com",SUM(1+1)*cmd|\' /C calc\'!A0',
             u"Availability Date,\u275dNext \u2014 Tuesday\u275e,&quot;A week Friday&rdquot;,cmd| '/c calc'!A0",
             u'Day rate,1.49,3.50,3.50',
-            u'Attached Document URL 1,,,',
-            u'Attached Document URL 2,,,',
-            u'Attached Document URL 3,,,',
             u'E1,True,True,True',
             u'E2,True,True,True',
             u'Nice1,True,False,False',
@@ -2099,10 +2098,10 @@ class TestDownloadBriefResponsesCsv(BaseApplicationTest):
 
     def test_404_if_brief_does_not_belong_to_buyer(self, data_api_client):
         data_api_client.get_framework.return_value = api_stubs.framework(
-            slug='digital-outcomes-and-specialists',
+            slug='digital-marketplace',
             status='live',
             lots=[
-                api_stubs.lot(slug='digital-specialists', allows_brief=True),
+                api_stubs.lot(slug='digital-professionals', allows_brief=True),
             ]
         )
         data_api_client.get_brief.return_value = api_stubs.brief(user_id=234, status='closed')
@@ -2113,10 +2112,10 @@ class TestDownloadBriefResponsesCsv(BaseApplicationTest):
 
     def test_404_if_brief_is_not_closed(self, data_api_client):
         data_api_client.get_framework.return_value = api_stubs.framework(
-            slug='digital-outcomes-and-specialists',
+            slug='digital-marketplace',
             status='live',
             lots=[
-                api_stubs.lot(slug='digital-specialists', allows_brief=True),
+                api_stubs.lot(slug='digital-professionals', allows_brief=True),
             ]
         )
         data_api_client.get_brief.return_value = api_stubs.brief(status='live')

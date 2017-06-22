@@ -426,16 +426,17 @@ def prepared_response_contents_for_brief(brief, responses):
         answers.update({'Contact': r.get('respondToEmailAddress', 'UNKNOWN')})
         answers.update({'Availability Date': r.get('availability', 'UNKNOWN')})
         answers.update({'Day rate': r.get('dayRate', '')})
-        for i in range(0, 3):
-            answers.update({'Attached Document URL {}'.format(i+1): url_for('.download_brief_response_attachment',
-                                                                            framework_slug=brief['frameworkSlug'],
-                                                                            lot_slug=brief['lotSlug'],
-                                                                            brief_id=brief['id'],
-                                                                            response_id=r.get('id'),
-                                                                            attachment_id=i,
-                                                                            _external=True
-                                                                            )
-                            if i < len(r.get('attachedDocumentURL', [])) else ''})
+        if brief['lotSlug'] == 'digital-professionals':
+            for i in range(0, 3):
+                answers.update({'Attached Document URL {}'.format(i+1): url_for('.download_brief_response_attachment',
+                                                                                framework_slug=brief['frameworkSlug'],
+                                                                                lot_slug=brief['lotSlug'],
+                                                                                brief_id=brief['id'],
+                                                                                response_id=r.get('id'),
+                                                                                attachment_id=i,
+                                                                                _external=True
+                                                                                )
+                                if i < len(r.get('attachedDocumentURL', [])) else ''})
         answers.update(zip(ess_req_names, ess_responses))
         answers.update(zip(nth_req_names, nth_responses))
 
