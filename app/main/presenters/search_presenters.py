@@ -204,9 +204,13 @@ def build_lots_and_categories_link_tree(framework, lots, category_filter_group, 
     root_node['children'] = list()
     selected_filters.append(root_node)
 
+    # If we're searching against a specific lot, we should only build the tree for that lot.
+    if current_lot_slug:
+        lots = list(filter(lambda lot: lot['slug'] == current_lot_slug, lots))
+
     aggregations_by_lot = {lot['slug']: _get_aggregations_for_lot_with_filters(lot['slug'], content_manifest,
                                                                                framework, request)
-                           for lot in framework['lots']}
+                           for lot in lots}
 
     for lot in lots:
         selected_categories = []

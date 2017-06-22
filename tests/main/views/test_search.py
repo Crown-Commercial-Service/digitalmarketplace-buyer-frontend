@@ -1,6 +1,7 @@
 from lxml import html
 import mock
 import re
+import pytest
 from ...helpers import BaseApplicationTest
 
 
@@ -388,6 +389,17 @@ class TestSearchResults(BaseApplicationTest):
         for category in categories:
             category_name, number_of_services = category_matcher.match(category.text_content()).groups()
             assert expected_lot_counts[category_name] == int(number_of_services)
+
+    @pytest.mark.parametrize('query_params, call_count',
+                             (('', 3),
+                              ('lot=cloud-hosting', 1)))
+    def test_search_results_hit_aggregations_only_for_lots_displayed(self, query_params, call_count):
+        self._search_api_client.search_services.return_value = self.g9_search_results
+
+        res = self.client.get('/g-cloud/search{}'.format('?{}'.format(query_params) if query_params else ''))
+        assert res.status_code == 200
+
+        assert self._search_api_client_presenters.aggregate_services.call_count == call_count
 
     def test_search_results_does_not_show_aggregation_for_lot_or_parent_category_if_child_selected(self):
         self._search_api_client.search_services.return_value = self.g9_search_results
