@@ -131,7 +131,8 @@ def _get_aggregations_for_lot_with_filters(lot, content_manifest, framework, req
                                                                   **build_search_query(aggregate_request_args,
                                                                                        filters.values(),
                                                                                        content_manifest,
-                                                                                       lots_by_slug))
+                                                                                       lots_by_slug,
+                                                                                       for_aggregation=True))
 
     return AggregationResults(aggregate_api_response)
 
@@ -185,7 +186,7 @@ def build_lots_and_categories_link_tree(framework, lots, category_filter_group, 
     :param content_manifest: a ContentManifest instance for G-Cloud search_filters.
     :return: list of selected category and lot filters, starting with the 'all categories' root node node
     """
-    current_lot_slug = get_lot_from_request(request)
+    current_lot_slug = get_lot_from_request(request, [lot['slug'] for lot in lots])
 
     # Links in the tree should preserve all the filters, except those relating to this tree (i.e. lot
     # and category).
@@ -204,9 +205,13 @@ def build_lots_and_categories_link_tree(framework, lots, category_filter_group, 
     root_node['children'] = list()
     selected_filters.append(root_node)
 
+    # If we're searching against a specific lot, we should only build the tree for that lot.
+    if current_lot_slug:
+        lots = list(filter(lambda lot: lot['slug'] == current_lot_slug, lots))
+
     aggregations_by_lot = {lot['slug']: _get_aggregations_for_lot_with_filters(lot['slug'], content_manifest,
                                                                                framework, request)
-                           for lot in framework['lots']}
+                           for lot in lots}
 
     for lot in lots:
         selected_categories = []
@@ -298,7 +303,7 @@ def _annotate_categories_with_selection(lot_slug, category_filters, request, url
                                                                   keys_to_remove,
                                                                   lot_slug=lot_slug,
                                                                   category=category,
-                                                                  parent_category=request.values.get('parentCategory'))
+                                                                  parent_category=parent_category)
             category['link'] = search_link_builder(url_args)
 
     # When there's a selection, and the selected category has children, remove sibling subcategories,

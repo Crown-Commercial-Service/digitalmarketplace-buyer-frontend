@@ -4,8 +4,9 @@ from math import ceil
 from werkzeug.datastructures import MultiDict
 
 
-def get_lot_from_request(request):
-    return request.args.get('lot', None)
+def get_lot_from_request(request, all_lots):
+    lot = request.args.get('lot', None)
+    return lot if (not lot or lot in all_lots) else None
 
 
 def get_keywords_from_request(request):
@@ -50,7 +51,7 @@ def allowed_request_lot_filters(lot_filters):
     return filters
 
 
-def clean_request_args(request_args, lot_filters, lots_by_slug):
+def clean_request_args(request_args, lot_filters, lots_by_slug, for_aggregation=False):
     """Removes any unknown args keys or values from request.
 
     Compares every key/value pair from request query parameters
@@ -68,12 +69,17 @@ def clean_request_args(request_args, lot_filters, lots_by_slug):
         if f in allowed_filters
     ])
 
-    for key in ['q', 'page']:
-        if request_args.get(key):
-            clean_args[key] = request_args[key]
+    restore_keys = ['q']
 
-    if request_args.get('lot') in lots_by_slug.keys():
-        clean_args['lot'] = request_args.get('lot')
+    if not for_aggregation:
+        restore_keys.append('page')
+
+    if request_args.get('lot') in lots_by_slug:
+        restore_keys.append('lot')
+
+    for key in restore_keys:
+        if request_args.get(key):
+            clean_args[key] = request_args.get(key)
 
     return clean_args
 
@@ -135,7 +141,7 @@ def get_filter_value_from_question_option(option):
     return (option.get('value') or option.get('label', '')).lower().replace(',', '')
 
 
-def build_search_query(request_args, lot_filters, content_builder, lots_by_slug):
+def build_search_query(request_args, lot_filters, content_builder, lots_by_slug, for_aggregation=False):
     """Match request args with known filters.
 
     Removes any unknown query parameters, and will only keep `page`, `q`
@@ -148,7 +154,8 @@ def build_search_query(request_args, lot_filters, content_builder, lots_by_slug)
     query = clean_request_args(
         request_args,
         lot_filters,
-        lots_by_slug
+        lots_by_slug,
+        for_aggregation=for_aggregation
     )
 
     if 'q' in query:
