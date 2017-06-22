@@ -401,6 +401,17 @@ class TestSearchResults(BaseApplicationTest):
 
         assert self._search_api_client_presenters.aggregate_services.call_count == call_count
 
+    def test_search_results_sends_aggregation_request_without_page_filter(self):
+        self._search_api_client.search_services.return_value = self.g9_search_results
+
+        res = self.client.get('/g-cloud/search?page=2')
+        assert res.status_code == 200
+
+        self._search_api_client_presenters.aggregate_services.assert_called_with(
+            lot='cloud-support',
+            aggregations={'serviceCategories', 'lot'}
+        )
+
     def test_search_results_does_not_show_aggregation_for_lot_or_parent_category_if_child_selected(self):
         self._search_api_client.search_services.return_value = self.g9_search_results
 

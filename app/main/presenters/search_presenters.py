@@ -131,7 +131,8 @@ def _get_aggregations_for_lot_with_filters(lot, content_manifest, framework, req
                                                                   **build_search_query(aggregate_request_args,
                                                                                        filters.values(),
                                                                                        content_manifest,
-                                                                                       lots_by_slug))
+                                                                                       lots_by_slug,
+                                                                                       for_aggregation=True))
 
     return AggregationResults(aggregate_api_response)
 
