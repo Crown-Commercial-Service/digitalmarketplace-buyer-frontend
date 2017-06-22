@@ -436,6 +436,19 @@ class TestSearchResults(BaseApplicationTest):
             category_name, number_of_services = category_matcher.match(category.text_content()).groups()
             assert expected_lot_counts[category_name] == int(number_of_services)
 
+    def test_search_results_subcategory_links_include_parent_category_param(self):
+        self._search_api_client.search_services.return_value = self.g9_search_results
+
+        res = self.client.get('/g-cloud/search?lot=cloud-software&serviceCategories=accounting+and+finance')
+        assert res.status_code == 200
+
+        document = html.fromstring(res.get_data(as_text=True))
+
+        categories_anchors = document.xpath('//div[@class="lot-filters"]//ul[@class="lot-filters--last-list"]//li/a')
+
+        for category_anchor in categories_anchors:
+            assert 'parentCategory=accounting+and+finance' in category_anchor.get('href')
+
     def test_lot_links_retain_all_category_filters(self):
         self._search_api_client.search_services.return_value = self.g9_search_results
 

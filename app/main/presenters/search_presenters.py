@@ -302,7 +302,7 @@ def _annotate_categories_with_selection(lot_slug, category_filters, request, url
                                                                   keys_to_remove,
                                                                   lot_slug=lot_slug,
                                                                   category=category,
-                                                                  parent_category=request.values.get('parentCategory'))
+                                                                  parent_category=parent_category)
             category['link'] = search_link_builder(url_args)
 
     # When there's a selection, and the selected category has children, remove sibling subcategories,
