@@ -349,6 +349,19 @@ class TestSearchResults(BaseApplicationTest):
         res = self.client.get('/g-cloud/search?lot=cloud-hosting&page=potato')
         assert res.status_code == 404
 
+    def test_search_results_with_invalid_lot_fall_back_to_all_categories(self):
+        self._search_api_client.search_services.return_value = self.g9_search_results
+
+        res = self.client.get('/g-cloud/search?lot=bad-lot-slug')
+        assert res.status_code == 200
+
+        document = html.fromstring(res.get_data(as_text=True))
+
+        lots = document.xpath('//div[@class="lot-filters"]//ul[@class="lot-filters--last-list"]//li/a')
+        assert lots[0].text_content().startswith('Cloud hosting')
+        assert lots[1].text_content().startswith('Cloud software')
+        assert lots[2].text_content().startswith('Cloud support')
+
     def test_search_results_show_aggregations_by_lot(self):
         self._search_api_client.search_services.return_value = self.g9_search_results
 

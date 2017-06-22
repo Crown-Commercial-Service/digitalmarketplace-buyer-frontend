@@ -4,8 +4,9 @@ from math import ceil
 from werkzeug.datastructures import MultiDict
 
 
-def get_lot_from_request(request):
-    return request.args.get('lot', None)
+def get_lot_from_request(request, all_lots):
+    lot = request.args.get('lot', None)
+    return lot if (not lot or lot in all_lots) else None
 
 
 def get_keywords_from_request(request):

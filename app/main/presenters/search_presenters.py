@@ -186,7 +186,7 @@ def build_lots_and_categories_link_tree(framework, lots, category_filter_group, 
     :param content_manifest: a ContentManifest instance for G-Cloud search_filters.
     :return: list of selected category and lot filters, starting with the 'all categories' root node node
     """
-    current_lot_slug = get_lot_from_request(request)
+    current_lot_slug = get_lot_from_request(request, [lot['slug'] for lot in lots])
 
     # Links in the tree should preserve all the filters, except those relating to this tree (i.e. lot
     # and category).
