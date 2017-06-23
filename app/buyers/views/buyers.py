@@ -45,9 +45,10 @@ def buyer_dashboard(view=None):
 
         team_briefs = data_api_client.req.briefs().teammembers(email_domain).get()
 
-        team_draft_briefs = add_unanswered_counts_to_briefs(
-            [brief for brief in team_briefs if brief['status'] == 'draft'], content_loader)
-        live_draft_briefs = [brief for brief in team_briefs if brief['status'] == 'live']
+        # team_draft_briefs = add_unanswered_counts_to_briefs(
+        #     [brief for brief in team_briefs if brief['status'] == 'draft'], content_loader)
+        team_draft_briefs = []
+        team_live_briefs = [brief for brief in team_briefs if brief['status'] == 'live']
         team_closed_briefs = [brief for brief in team_briefs if brief['status'] == 'closed']
 
         user_briefs = data_api_client.find_briefs(current_user.id).get('briefs', [])
@@ -64,7 +65,7 @@ def buyer_dashboard(view=None):
                 "members": teammembers,
                 "teamBriefs": {
                     "draft": team_draft_briefs,
-                    "live": live_draft_briefs,
+                    "live": team_live_briefs,
                     "closed": team_closed_briefs
                 },
                 "briefs": {
