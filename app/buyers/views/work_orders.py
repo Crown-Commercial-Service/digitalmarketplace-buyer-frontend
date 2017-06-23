@@ -49,7 +49,7 @@ def select_seller_for_work_order(framework_slug, lot_slug, brief_id):
 
     if not is_brief_correct(
             brief, framework_slug, lot_slug, current_user.id
-    ) and not allowed_email_domain(current_user.id, brief, data_api_client):
+    ):
         abort(404)
 
     form = WorkOrderSellerForm(data_api_client=data_api_client, brief_id=brief_id)
@@ -66,7 +66,7 @@ def create_new_work_order(framework_slug, lot_slug, brief_id):
 
     if not is_brief_correct(
             brief, framework_slug, lot_slug, current_user.id
-    ) and not allowed_email_domain(current_user.id, brief, data_api_client):
+    ):
         abort(404)
 
     form = WorkOrderSellerForm(formdata=request.form, data_api_client=data_api_client, brief_id=brief_id)
@@ -115,7 +115,7 @@ def get_work_order(work_order_id):
     brief = data_api_client.get_brief(work_order['briefId'])["briefs"]
     if not is_brief_associated_with_user(
             brief, current_user.id
-    ) and not allowed_email_domain(current_user.id, brief, data_api_client):
+    ):
         abort(404)
 
     return render_template_with_csrf('workorder/work-order-instruction-list.html',
@@ -133,7 +133,7 @@ def get_work_order_question(work_order_id, question_slug):
     brief = data_api_client.get_brief(work_order['briefId'])["briefs"]
     if not is_brief_associated_with_user(
             brief, current_user.id
-    ) and not allowed_email_domain(current_user.id, brief, data_api_client):
+    ):
         abort(404)
 
     if questions.get(question_slug, None) is None:

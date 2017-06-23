@@ -209,7 +209,7 @@ def view_brief_overview(framework_slug, lot_slug, brief_id):
 
     if not is_brief_correct(
             brief, framework_slug, lot_slug, current_user.id
-    ) and not allowed_email_domain(current_user.id, brief, data_api_client):
+    ):
         abort(404)
 
     content = content_loader.get_manifest(brief['frameworkSlug'], 'edit_brief').filter({'lot': brief['lotSlug']})
@@ -248,8 +248,6 @@ def view_brief_section_summary(framework_slug, lot_slug, brief_id, section_slug)
 
     if not is_brief_correct(
             brief, framework_slug, lot_slug, current_user.id
-    ) and not allowed_email_domain(
-        current_user.id, brief, data_api_client
     ) or not brief_can_be_edited(brief):
         abort(404)
 
@@ -277,8 +275,6 @@ def edit_brief_question(framework_slug, lot_slug, brief_id, section_slug, questi
 
     if not is_brief_correct(
             brief, framework_slug, lot_slug, current_user.id
-    ) and not allowed_email_domain(
-        current_user.id, brief, data_api_client
     ) or not brief_can_be_edited(brief):
         abort(404)
 
@@ -310,8 +306,6 @@ def update_brief_submission(framework_slug, lot_slug, brief_id, section_id, ques
 
     if not is_brief_correct(
             brief, framework_slug, lot_slug, current_user.id
-    ) and not allowed_email_domain(
-        current_user.id, brief, data_api_client
     ) or not brief_can_be_edited(brief):
         abort(404)
 
@@ -394,7 +388,7 @@ def view_brief_responses(framework_slug, lot_slug, brief_id):
 
     if not is_brief_correct(
             brief, framework_slug, lot_slug, current_user.id
-    ) and not allowed_email_domain(current_user.id, brief, data_api_client):
+    ):
         abort(404)
 
     failed_count, eligible_count = counts_for_failed_and_eligible_brief_responses(brief["id"], data_api_client)
@@ -459,7 +453,7 @@ def download_brief_response_attachment(framework_slug, lot_slug, brief_id, respo
 
     if not is_brief_correct(
             brief, framework_slug, lot_slug, current_user.id
-    ) and not allowed_email_domain(current_user.id, brief, data_api_client):
+    ):
         abort(404)
 
     if brief['status'] != "closed":
@@ -484,7 +478,7 @@ def download_brief_responses(framework_slug, lot_slug, brief_id):
 
     if not is_brief_correct(
             brief, framework_slug, lot_slug, current_user.id
-    ) and not allowed_email_domain(current_user.id, brief, data_api_client):
+    ):
         abort(404)
 
     if brief['status'] != "closed":
@@ -521,7 +515,7 @@ def download_brief_responses_xlsx(framework_slug, lot_slug, brief_id):
 
     if not is_brief_correct(
             brief, framework_slug, lot_slug, current_user.id
-    ) and not allowed_email_domain(current_user.id, brief, data_api_client):
+    ):
         abort(404)
 
     if brief['status'] != "closed":
@@ -574,8 +568,6 @@ def publish_brief(framework_slug, lot_slug, brief_id):
 
     if not is_brief_correct(
             brief, framework_slug, lot_slug, current_user.id
-    ) and not allowed_email_domain(
-        current_user.id, brief, data_api_client
     ) or not brief_can_be_edited(brief):
         abort(404)
 
@@ -640,8 +632,6 @@ def view_brief_timeline(framework_slug, lot_slug, brief_id):
     brief = data_api_client.get_brief(brief_id)["briefs"]
     if not is_brief_correct(
             brief, framework_slug, lot_slug, current_user.id
-    ) and not allowed_email_domain(
-        current_user.id, brief, data_api_client
     ) or brief.get('status') != 'live':
         abort(404)
 
@@ -661,8 +651,6 @@ def delete_a_brief(framework_slug, lot_slug, brief_id):
 
     if not is_brief_correct(
             brief, framework_slug, lot_slug, current_user.id
-    ) and not allowed_email_domain(
-        current_user.id, brief, data_api_client
     ) or not brief_can_be_edited(brief):
         abort(404)
 
