@@ -241,11 +241,7 @@ def get_brief_by_id(framework_slug, brief_id):
     briefs = data_api_client.get_brief(brief_id)
     brief = briefs.get('briefs')
     if brief['status'] not in ['live', 'closed']:
-        if not current_user.is_authenticated or (
-                        brief['users'][0]['id'] != current_user.id and not allowed_email_domain(
-                            current_user.id, brief, data_api_client
-                )
-        ):
+        if not current_user.is_authenticated or brief['users'][0]['id'] != current_user.id:
             abort(404, "Opportunity '{}' can not be found".format(brief_id))
 
     if current_user.is_authenticated and current_user.role == 'supplier':
@@ -304,11 +300,7 @@ def get_brief_response_preview_by_id(framework_slug, brief_id):
     application_url = url_for('main.index', _external=True) + "sellers/opportunities/{}/responses/create"\
         .format(brief['id'])
     if brief['status'] not in ['live', 'closed']:
-        if not current_user.is_authenticated \
-                or (
-                    brief['users'][0]['id'] != current_user.id and
-                    not allowed_email_domain(current_user.id, brief, data_api_client)
-                ):
+        if not current_user.is_authenticated or brief['users'][0]['id'] != current_user.id:
             abort(404, "Opportunity '{}' can not be found".format(brief_id))
 
     outdata = io.BytesIO()
