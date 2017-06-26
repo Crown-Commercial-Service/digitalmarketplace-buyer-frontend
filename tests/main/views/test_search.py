@@ -1,6 +1,7 @@
 from lxml import html
 import mock
 import re
+import pytest
 from ...helpers import BaseApplicationTest
 
 
@@ -348,6 +349,19 @@ class TestSearchResults(BaseApplicationTest):
         res = self.client.get('/g-cloud/search?lot=cloud-hosting&page=potato')
         assert res.status_code == 404
 
+    def test_search_results_with_invalid_lot_fall_back_to_all_categories(self):
+        self._search_api_client.search_services.return_value = self.g9_search_results
+
+        res = self.client.get('/g-cloud/search?lot=bad-lot-slug')
+        assert res.status_code == 200
+
+        document = html.fromstring(res.get_data(as_text=True))
+
+        lots = document.xpath('//div[@class="lot-filters"]//ul[@class="lot-filters--last-list"]//li/a')
+        assert lots[0].text_content().startswith('Cloud hosting')
+        assert lots[1].text_content().startswith('Cloud software')
+        assert lots[2].text_content().startswith('Cloud support')
+
     def test_search_results_show_aggregations_by_lot(self):
         self._search_api_client.search_services.return_value = self.g9_search_results
 
@@ -389,6 +403,28 @@ class TestSearchResults(BaseApplicationTest):
             category_name, number_of_services = category_matcher.match(category.text_content()).groups()
             assert expected_lot_counts[category_name] == int(number_of_services)
 
+    @pytest.mark.parametrize('query_params, call_count',
+                             (('', 3),
+                              ('lot=cloud-hosting', 1)))
+    def test_search_results_hit_aggregations_only_for_lots_displayed(self, query_params, call_count):
+        self._search_api_client.search_services.return_value = self.g9_search_results
+
+        res = self.client.get('/g-cloud/search{}'.format('?{}'.format(query_params) if query_params else ''))
+        assert res.status_code == 200
+
+        assert self._search_api_client_presenters.aggregate_services.call_count == call_count
+
+    def test_search_results_sends_aggregation_request_without_page_filter(self):
+        self._search_api_client.search_services.return_value = self.g9_search_results
+
+        res = self.client.get('/g-cloud/search?page=2')
+        assert res.status_code == 200
+
+        self._search_api_client_presenters.aggregate_services.assert_called_with(
+            lot='cloud-support',
+            aggregations={'serviceCategories', 'lot'}
+        )
+
     def test_search_results_does_not_show_aggregation_for_lot_or_parent_category_if_child_selected(self):
         self._search_api_client.search_services.return_value = self.g9_search_results
 
@@ -423,6 +459,19 @@ class TestSearchResults(BaseApplicationTest):
         for category in categories:
             category_name, number_of_services = category_matcher.match(category.text_content()).groups()
             assert expected_lot_counts[category_name] == int(number_of_services)
+
+    def test_search_results_subcategory_links_include_parent_category_param(self):
+        self._search_api_client.search_services.return_value = self.g9_search_results
+
+        res = self.client.get('/g-cloud/search?lot=cloud-software&serviceCategories=accounting+and+finance')
+        assert res.status_code == 200
+
+        document = html.fromstring(res.get_data(as_text=True))
+
+        categories_anchors = document.xpath('//div[@class="lot-filters"]//ul[@class="lot-filters--last-list"]//li/a')
+
+        for category_anchor in categories_anchors:
+            assert 'parentCategory=accounting+and+finance' in category_anchor.get('href')
 
     def test_lot_links_retain_all_category_filters(self):
         self._search_api_client.search_services.return_value = self.g9_search_results

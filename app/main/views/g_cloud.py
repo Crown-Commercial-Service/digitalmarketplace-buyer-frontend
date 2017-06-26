@@ -156,8 +156,9 @@ def search_services():
     all_frameworks = data_api_client.find_frameworks().get('frameworks')
     framework = framework_helpers.get_latest_live_framework(all_frameworks, 'g-cloud')
 
-    current_lot_slug = get_lot_from_request(request)
     lots_by_slug = framework_helpers.get_lots_by_slug(framework)
+
+    current_lot_slug = get_lot_from_request(request, lots_by_slug)
 
     # the bulk of the possible filter parameters are defined through the content loader. they're all boolean and the
     # search api uses the same "question" labels as the content for its attributes, so we can really use those labels
