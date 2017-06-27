@@ -23,10 +23,11 @@ class SearchResults(object):
 
     def _add_highlighting(self, service):
         if 'highlight' in service:
-            if 'serviceSummary' in service['highlight']:
-                service['serviceSummary'] = Markup(
-                    ''.join(service['highlight']['serviceSummary'])
-                )
+            for highlighted_field in ['serviceSummary', 'serviceDescription']:
+                if highlighted_field in service['highlight']:
+                    service[highlighted_field] = Markup(
+                        ''.join(service['highlight'][highlighted_field])
+                    )
 
 
 class AggregationResults(object):
