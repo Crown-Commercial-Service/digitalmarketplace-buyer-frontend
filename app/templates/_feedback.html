@@ -1,0 +1,5 @@
+<form method="post" action="{{ url_for('main.send_feedback') }}" id="feedbackForm">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token_value or csrf_token() }}">
+  <input type="hidden" value="{{ request.url }}" name="uri">
+  <input type="submit" value="Love this page">
+</form>
