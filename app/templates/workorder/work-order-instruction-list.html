@@ -54,7 +54,13 @@
 
   <section class="signatures-section">
     <p class="intro">
-      Signing this Order means a contract is created between the buyer (Agency) and the seller (You) as described in the <a href="{{ asset_path }}media/documents/DSPP_Deed_of_Standing_Offer.pdf" target="_blank">Deed of Standing Offer</a>.
+      {%  if work_order.get('son','') == 'SON3413842' %}
+        Signing this Order means a contract is created between the buyer (Agency) and the seller (You) as described in the <a href="{{ asset_path }}media/documents/digital-marketplace-master-agreement.pdf" target="_blank">Master Agreement</a>.
+      {%  elif work_order.get('son','') == 'SON3364729' %}
+        Signing this Order means a contract is created between the buyer (Agency) and the seller (You) as described in the <a href="{{ asset_path }}media/documents/DSPP_Deed_of_Standing_Offer.pdf" target="_blank">Deed of Standing Offer</a>.
+      {%  else %}
+        Invalid SON, please correct
+      {%  endif %}
     </p>
     <p class="section-title">Agency signatures</p>
     <p>
