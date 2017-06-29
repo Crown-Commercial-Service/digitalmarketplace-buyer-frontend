@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 import io
 import json
 import xlsxwriter
+import ast
 
 from flask_login import current_user
 from flask import abort, current_app, config, make_response, redirect, \
@@ -245,7 +246,8 @@ def get_brief_by_id(framework_slug, brief_id):
             abort(404, "Opportunity '{}' can not be found".format(brief_id))
 
     if current_user.is_authenticated and current_user.role == 'supplier':
-        brief_responses = data_api_client.find_brief_responses(brief_id, current_user.supplier_code)["briefResponses"]
+        brief_responses = data_api_client.find_brief_responses(
+            brief_id, current_user.supplier_code)["briefResponses"]
     else:
         brief_responses = None
 
@@ -267,29 +269,100 @@ def get_brief_by_id(framework_slug, brief_id):
     application_url = "/sellers/opportunities/{}/responses/create".format(brief['id'])
     add_case_study_url = None
 
+    profile_application_id = None
     profile_application_status = None
+    profile_application = None
+    supplier = None
+    unassessed_domains = {}
+    assessed_domains = {}
+    is_recruiter = False
+    product_seller = False
+    profile_url = None
+    recruiter_domain_list = []
+    supplier_assessments = {}
+    supplier_framework = None
+
     if current_user.is_authenticated:
+        if current_user.supplier_code is not None:
+            supplier = data_api_client.get_supplier(
+                current_user.supplier_code
+            ).get('supplier', None)
+
         profile_application_id = current_user.application_id
-        if profile_application_id is None:
-            profile_application_status = None
-        else:
+
+        if supplier is not None:
+            profile_url = '/supplier/{}'.format(supplier.get('code'))
+            assessed_domains = supplier.get('domains').get('assessed', None)
+            unassessed_domains = supplier.get('domains').get('unassessed', None)
+            legacy_domains = supplier.get('domains').get('legacy', None)
+
+            if profile_application_id is None:
+                profile_application_id = supplier.get('application_id')
+            is_recruiter = supplier.get('is_recruiter', False)
+            if is_recruiter == 'true':
+                is_recruiter = True
+            else:
+                is_recruiter = False
+            if is_recruiter:
+                for domain in supplier.get('recruiter_info').items():
+                    if int(domain[1].get('active_candidates')) > 0:
+                        recruiter_domain_list.append(domain[0])
+
+            products = supplier.get('products', None)
+            if products is not None:
+                product_seller = any(products)
+            supplier_code = supplier.get('code')
+            supplier_assessments = data_api_client.req.assessments().supplier(supplier_code).get()
+
+            if len(legacy_domains) != 0:
+                for i in range(len(legacy_domains)):
+                    supplier_assessments['assessed'].append(legacy_domains[i])
+
+            supplier_framework_ids = supplier.get('frameworks')
+            for i in range(len(supplier_framework_ids)):
+                if supplier.get('frameworks')[i].get('framework_id') == 7:
+                    supplier_framework = 'digital-marketplace'
+            if supplier_framework is None:
+                supplier_framework = 'digital-service-professionals'
+
+        if profile_application_id is not None:
             profile_application = data_api_client.req.applications(profile_application_id).get()
+            if unassessed_domains is None:
+                unassessed_domains = profile_application.get(
+                    'application').get('supplier').get('domains', None).get('unassessed', None)
+            if assessed_domains is None:
+                assessed_domains = profile_application.get(
+                    'application').get('supplier').get('domains', None).get('assessed', None)
+
+            profile_application = data_api_client.req.applications(profile_application_id).get()
+            profile_application_status = profile_application.get('application').get('status', None)
             if profile_application.get('application').get('type') == 'edit':
                 profile_application_status = 'approved'
-            else:
-                profile_application_status = profile_application.get('application').get('status', None)
+
+    aoe_seller = False
+    if not product_seller and not is_recruiter:
+        aoe_seller = True
 
     return render_template_with_csrf(
         'brief.html',
+        aoe_seller=aoe_seller,
+        add_case_study_url=add_case_study_url,
+        application_url=application_url,
+        assessed_domains=assessed_domains,
         brief=brief,
         brief_responses=brief_responses,
-        content=brief_content,
-        show_pdf_link=brief['status'] in ['live', 'closed'],
-        is_restricted_brief=is_restricted_brief,
-        application_url=application_url,
-        add_case_study_url=add_case_study_url,
         brief_of_current_user=brief_of_current_user,
-        profile_application_status=profile_application_status
+        content=brief_content,
+        is_recruiter=is_recruiter,
+        is_restricted_brief=is_restricted_brief,
+        product_seller=product_seller,
+        profile_application_status=profile_application_status,
+        profile_url=profile_url,
+        recruiter_domain_list=recruiter_domain_list,
+        show_pdf_link=brief['status'] in ['live', 'closed'],
+        unassessed_domains=unassessed_domains,
+        supplier_assessments=supplier_assessments,
+        supplier_framework=supplier_framework
     )
 
 
@@ -302,6 +375,14 @@ def get_brief_response_preview_by_id(framework_slug, brief_id):
     if brief['status'] not in ['live', 'closed']:
         if not current_user.is_authenticated or brief['users'][0]['id'] != current_user.id:
             abort(404, "Opportunity '{}' can not be found".format(brief_id))
+
+    hypothetical_dates = brief['dates'].get('hypothetical', None)
+    if hypothetical_dates is None:
+        published_date = brief['dates'].get('published_date', None)
+        closing_date = brief['dates'].get('closing_date', None)
+    else:
+        published_date = hypothetical_dates.get('published_date', None)
+        closing_date = hypothetical_dates.get('closing_date', None)
 
     outdata = io.BytesIO()
 
@@ -348,9 +429,9 @@ def get_brief_response_preview_by_id(framework_slug, brief_id):
     sheet.write_string('E1', brief['title'], heading)
     sheet.write_string('E2', brief['summary'], darkgrey)
     sheet.write_string('E3', 'For: '+brief['organisation'], darkgrey)
-    sheet.write_string('E4', 'Published: '+df.dateformat(brief['dates']['hypothetical']['published_date']), darkgrey)
+    sheet.write_string('E4', 'Published: '+df.dateformat(published_date), darkgrey)
     sheet.write_string('E5', 'Closing date for application: ' +
-                       df.datetimeformat(brief['dates']['hypothetical']['closing_time']), bold_red)
+                       df.datetimeformat(closing_date), bold_red)
 
     sheet.write_string('A2', 'Guidance', bold_question)
     sheet.write_string('B2', 'Question', bold_question)

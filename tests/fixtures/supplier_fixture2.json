@@ -1,0 +1,399 @@
+{
+    "supplier": {
+        "abn": "22 135 333 444",
+        "acn": null,
+        "address": {
+            "address_line": "70 Old Blah Rd",
+            "country": "Australia",
+            "postal_code": "2007",
+            "state": "NSW",
+            "suburb": "Nice Beach"
+        },
+        "addresses": [
+            {
+                "address_line": "70 Old Blah Rd",
+                "country": "Australia",
+                "id": 20,
+                "links": {
+                    "self": "https://dm-api.apps.platform.digital.gov.au/addresses/20",
+                    "supplier": "https://dm-api.apps.platform.digital.gov.au/suppliers/20"
+                },
+                "postal_code": "2007",
+                "state": "NSW",
+                "suburb": "Nice Beach",
+                "supplier_code": 20
+            }
+        ],
+        "agreed_to_master_agreement": true,
+        "application_id": 391,
+        "awards": [],
+        "boards": [
+            "Drupal Association",
+            "Linux Australia"
+        ],
+        "case_studies": [
+            {
+                "approach": "GreatSupplier led the project delivery by adhering to Scrum Agile framework principles in close collaboration with the BCC project team. This involved working quickly towards an initial “Minimum Viable Product” to get the site onto Drupal, followed by a series of Sprints to enhance the user experience design and functionality. This involved creating a backlog of user stories based on BCC’s requirements, prioritising them against user need and budget constraints and delivering iterative enhancements to the core platform. All of this was managed through our Agile toolset, including Redmine for project tracking and reporting and a Continuous Integration platform for managing and deploying code updates.",
+                "client": "Atlantis City Council",
+                "created_at": "2017-04-07T06:01:16.762608+00:00",
+                "id": 89,
+                "links": {
+                    "self": "https://dm-api.apps.platform.digital.gov.au/case-studies/89",
+                    "supplier": "https://dm-api.apps.platform.digital.gov.au/suppliers/20"
+                },
+                "opportunity": "BCC were seeking to move their website off their legacy Oracle WCMS platform to Drupal as quickly as possible to reduce operating costs and improve flexibility to adapt the website to rapidly changing user needs.",
+                "outcome": [
+                    "Fast to market project delivery",
+                    "Significant budget savings for a Minimum Viable Product",
+                    "Closely integrated project teams between GreatSupplier and BCC",
+                    "Iterative user experience and functional improvements",
+                    "Transparent communication around project progress"
+                ],
+                "project_links": [
+                    "https://www.Atlantis.qld.gov.au",
+                    "https://www.GreatSupplier.com.au/projects/Atlantis-city-council"
+                ],
+                "referee_contact": true,
+                "referee_email": "07 3403 6753",
+                "referee_name": "Nicholas O'Donnell",
+                "referee_position": "Principal Officer, Digital Strategy & Innovation",
+                "roles": "GreatSupplier was engaged in 2013 to rebuild the Atlantis City Council (BCC) website using the Drupal content management system. Our team provided Agile project delivery leadership and mentoring throughout the initial website build and has provided continuous improvement and support since the initial launch.",
+                "service": "Agile delivery and Governance",
+                "supplier_code": 20,
+                "timeframe": "September 2013 to Present",
+                "title": "Atlantis City Council Agile Project Delivery"
+            },
+            {
+                "approach": "Since the initial launch of the Service NSW website in July 2013, GreatSupplier has been engaged to manage all support, enhancements and hosting under a long term retainer based contract. This includes: Monitoring site performance and undertaking pre-emptive steps to alleviate issues; Providing a phone hotline and online ticketing system for 24/7/365 support queries from the Service NSW website management team; Undertaking continuous improvement of the platform, managed via a prioritised product backlog; Providing reporting and feedback to the Service NSW team to help prioritise future enhancements as part of their product roadmap.",
+                "client": "Service NSW",
+                "created_at": "2017-04-07T06:01:16.759525+00:00",
+                "id": 86,
+                "links": {
+                    "self": "https://dm-api.apps.platform.digital.gov.au/case-studies/86",
+                    "supplier": "https://dm-api.apps.platform.digital.gov.au/suppliers/20"
+                },
+                "opportunity": "In late 2012, GreatSupplier was engaged by Service NSW to provide the Drupal design, development, support and managed cloud hosting for a new customer-focused portal to facilitate access to 700+ government services and transactions. The portal now serves as the digital channel to complement Service NSW’s physical service centres.",
+                "outcome": [
+                    "Dedicated client service manager and support team",
+                    "Ongoing improvement of the platform’s user experience and functionality",
+                    "High availability cloud hosting infrastructure with very low downtime"
+                ],
+                "project_links": [
+                    "https://www.service.nsw.gov.au",
+                    "https://www.GreatSupplier.com.au/projects/service-nsw"
+                ],
+                "referee_contact": true,
+                "referee_email": "02 8000 2200",
+                "referee_name": "Mr T",
+                "referee_position": "Digital Operations Manager",
+                "roles": "GreatSupplier manages all aspects of website design, development, hosting and support for Service NSW.",
+                "service": "Support and Operations",
+                "supplier_code": 20,
+                "timeframe": "December 2012 to Present",
+                "title": "Service NSW Support & Operations"
+            },
+            {
+                "approach": "Our team undertook a user centred design approach with the City of Casey team, encompassing the following activities and deliverables: Design Research; Co-design workshops; User Experience Strategy & Recommendations; Conceptual Designs & Paper Prototypes; User Validation; Detailed Design.\n\nOnce the detailed design was approved, the user experience team worked closely with the website development team through a series of Agile Sprints. This included providing additional design assets as they were required and quality assurance of all design implementation.",
+                "client": "City of Schlep",
+                "created_at": "2017-04-07T06:01:16.760672+00:00",
+                "id": 87,
+                "links": {
+                    "self": "https://dm-api.apps.platform.digital.gov.au/case-studies/87",
+                    "supplier": "https://dm-api.apps.platform.digital.gov.au/suppliers/20"
+                },
+                "opportunity": "Blah Place is a new $125m arts, cultural, leisure and entertainment precinct being built by the City of Casey. The project will incorporate a community plaza, theatre, multipurpose studio, function centre, library, gallery and customer service centre. The website was designed to showcase the project for the local community, providing an engaging online tour alongside updates and related information as the construction takes place. Once complete, the website will serve as a hub for publishing event information.",
+                "outcome": [
+                    "Fast to market project delivery",
+                    "Highly engaging content and design approach",
+                    "WCAG 2.0 AA compliant design",
+                    "Responsive mobile layouts"
+                ],
+                "project_links": [
+                    "https://www.blah.com.au"
+                ],
+                "referee_contact": true,
+                "referee_email": "03 9000 5000",
+                "referee_name": "Sister Sledge",
+                "referee_position": "Product Owner",
+                "roles": "GreatSupplier was engaged to research, design and develop all aspects of the new Bunjil Place Website.",
+                "service": "User research and Design",
+                "supplier_code": 20,
+                "timeframe": "October 2016 to Present",
+                "title": "Blah Place User Experience Design"
+            }
+        ],
+        "case_study_ids": [
+            89,
+            86,
+            87
+        ],
+        "certifications": [
+            "Acquia Drupal Developer Certification",
+            "Scrum Master Certification",
+            "Professional Web Accessibility Certification"
+        ],
+        "code": 20,
+        "contact_email": "info@GreatSupplier.com.au",
+        "contact_name": "Jeff Labowski",
+        "contact_phone": "1300 700 500",
+        "contacts": [
+            {
+                "contactFor": null,
+                "contact_for": null,
+                "email": "jeff@GreatSupplier.com.au",
+                "fax": null,
+                "id": 1945,
+                "links": {
+                    "self": "https://dm-api.apps.platform.digital.gov.au/contacts/1945"
+                },
+                "name": "Jeff Labowski",
+                "phone": "0400000000",
+                "role": null
+            }
+        ],
+        "creationTime": "2016-08-03T22:23:56.879769+00:00",
+        "creation_time": "2016-08-03T22:23:56.879769+00:00",
+        "description": null,
+        "disclosures": {
+            "conflicts_of_interest": "no",
+            "conflicts_of_interest_details": "",
+            "insurance_claims": "no",
+            "insurance_claims_details": "",
+            "investigations": "no",
+            "investigations_details": "",
+            "legal_proceedings": "no",
+            "legal_proceedings_details": "",
+            "other_circumstances": "no",
+            "other_circumstances_details": "",
+            "structual_changes": "no",
+            "structual_changes_details": ""
+        },
+        "documents": {
+            "financial": {
+                "application_id": 391,
+                "filename": "PRE101_-_2016_FYA_-_Notes.pdf"
+            },
+            "liability": {
+                "application_id": 391,
+                "expiry": "2018-03-01",
+                "filename": "170301_Previous_Next_Pty_Ltd_QBE_ICT_Schedule_2017-2018.pdf"
+            },
+            "workers": {
+                "application_id": 391,
+                "expiry": "2017-04-30",
+                "filename": "160430_NSW_Workers_Comp_Certificate.pdf"
+            }
+        },
+        "domains": {
+            "assessed": [
+                "Software engineering and Development"
+            ],
+            "legacy": [
+                "Software engineering and Development"
+            ],
+            "unassessed": [
+                "Agile delivery and Governance",
+                "Cyber security",
+                "Support and Operations",
+                "User research and Design"
+            ]
+        },
+        "email": "owen@GreatSupplier.com.au",
+        "extraLinks": [
+            {
+                "label": "LinkedIn",
+                "url": "https://www.linkedin.com/company/-GreatSupplier-"
+            }
+        ],
+        "extra_links": [
+            {
+                "id": 1550,
+                "label": "LinkedIn",
+                "links": {
+                    "self": "https://dm-api.apps.platform.digital.gov.au/website_links/1550"
+                },
+                "url": "https://www.linkedin.com/company/-GreatSupplier-"
+            }
+        ],
+        "frameworks": [
+            {
+                "agreement_details": null,
+                "agreement_returned_at": null,
+                "countersigned_at": null,
+                "declaration": {},
+                "framework_id": 7,
+                "links": {},
+                "on_framework": null,
+                "supplier_code": 20
+            }
+        ],
+        "government_experience": {
+            "federal": true,
+            "local": true,
+            "state": true
+        },
+        "id": 213,
+        "is_recruiter": "false",
+        "lastUpdateTime": "2017-05-18T05:13:14.529397+00:00",
+        "last_update_time": "2017-05-18T05:13:14.529397+00:00",
+        "linkedin": "",
+        "links": {
+            "self": "https://dm-api.apps.platform.digital.gov.au/suppliers/213"
+        },
+        "longName": "GreatSupplier Pty Ltd",
+        "long_name": "GreatSupplier Pty Ltd",
+        "methodologies": "GreatSupplier has always employed Scrum, a pragmatic and highly collaborative Agile framework, to which Drupal development is perfectly suited. Our entire team are Certified Scrum Masters demonstrating our commitment and belief that it is the best approach for delivering successful projects. ",
+        "name": "GreatSupplier",
+        "number_of_employees": "20-49",
+        "other_panels": "",
+        "phone": "0405626542",
+        "prices": [
+            {
+                "dailyRate": "1430",
+                "daily_rate": "1430",
+                "gstIncluded": true,
+                "gst_included": true,
+                "hourlyRate": "179",
+                "hourly_rate": "179",
+                "id": 13123,
+                "links": {
+                    "self": "https://dm-api.apps.platform.digital.gov.au/price_schedules/13123",
+                    "service_role": "https://dm-api.apps.platform.digital.gov.au/service_roles/63"
+                },
+                "serviceRole": {
+                    "abbreviation": "dev-s",
+                    "category": "Technical Architecture, Development, Ethical Hacking and Web Operations",
+                    "category_id": 6,
+                    "id": 63,
+                    "links": {
+                        "category": "https://dm-api.apps.platform.digital.gov.au/categorys/6",
+                        "self": "https://dm-api.apps.platform.digital.gov.au/service_roles/63"
+                    },
+                    "name": "Senior Developer",
+                    "role": "Senior Developer"
+                },
+                "service_role": {
+                    "abbreviation": "dev-s",
+                    "category": "Technical Architecture, Development, Ethical Hacking and Web Operations",
+                    "category_id": 6,
+                    "id": 63,
+                    "links": {
+                        "category": "https://dm-api.apps.platform.digital.gov.au/categorys/6",
+                        "self": "https://dm-api.apps.platform.digital.gov.au/service_roles/63"
+                    },
+                    "name": "Senior Developer",
+                    "role": "Senior Developer"
+                },
+                "service_role_id": 63,
+                "supplier_id": 213
+            },
+            {
+                "dailyRate": "1980",
+                "daily_rate": "1980",
+                "gstIncluded": true,
+                "gst_included": true,
+                "hourlyRate": "248",
+                "hourly_rate": "248",
+                "id": 13124,
+                "links": {
+                    "self": "https://dm-api.apps.platform.digital.gov.au/price_schedules/13124",
+                    "service_role": "https://dm-api.apps.platform.digital.gov.au/service_roles/61"
+                },
+                "serviceRole": {
+                    "abbreviation": "tl-s",
+                    "category": "Technical Architecture, Development, Ethical Hacking and Web Operations",
+                    "category_id": 6,
+                    "id": 61,
+                    "links": {
+                        "category": "https://dm-api.apps.platform.digital.gov.au/categorys/6",
+                        "self": "https://dm-api.apps.platform.digital.gov.au/service_roles/61"
+                    },
+                    "name": "Senior Technical Lead",
+                    "role": "Senior Technical Lead"
+                },
+                "service_role": {
+                    "abbreviation": "tl-s",
+                    "category": "Technical Architecture, Development, Ethical Hacking and Web Operations",
+                    "category_id": 6,
+                    "id": 61,
+                    "links": {
+                        "category": "https://dm-api.apps.platform.digital.gov.au/categorys/6",
+                        "self": "https://dm-api.apps.platform.digital.gov.au/service_roles/61"
+                    },
+                    "name": "Senior Technical Lead",
+                    "role": "Senior Technical Lead"
+                },
+                "service_role_id": 61,
+                "supplier_id": 213
+            }
+        ],
+        "products": [
+            {
+                "id": 8,
+                "links": {
+                    "self": "https://dm-api.apps.platform.digital.gov.au/products/8",
+                    "supplier": "https://dm-api.apps.platform.digital.gov.au/suppliers/20"
+                },
+                "name": "aGov",
+                "pricing": "https://agov.com.au/services",
+                "summary": "A Drupal distribution developed specifically to meet Australian Government website guidelines and adhering to the new Digital Service Standard, aGov is ideal for any federal, state or local government agency wanting to move to Drupal whilst retaining full control of their codebase and choice of hosting provider.",
+                "supplier_code": 20,
+                "support": "https://agov.com.au/managed-cloud-hosting-for-government-drupal-websites",
+                "website": "https://agov.com.au"
+            },
+            {
+                "id": 9,
+                "links": {
+                    "self": "https://dm-api.apps.platform.digital.gov.au/products/9",
+                    "supplier": "https://dm-api.apps.platform.digital.gov.au/suppliers/20"
+                },
+                "name": "Continous Drupal Integration As A Service",
+                "pricing": "https://www.GreatSupplier.com.au/contact",
+                "summary": "Our Jenkins-based platform has evolved into a dedicated \"CI As A Service\", as either a fully managed SaaS offering or as a one-time setup. As a fully managed service, organisations get all the benefits of the system without any maintenance burden. ",
+                "supplier_code": 20,
+                "support": "https://www.GreatSupplier.com.au/contact",
+                "website": "https://www.GreatSupplier.com.au/blog/continuous-integration-service"
+            }
+        ],
+        "recruiter_info": {},
+        "references": [],
+        "representative": "Jeff Labowski",
+        "seller_type": {
+            "sme": true
+        },
+        "seller_types": {
+            "recruitment": "false"
+        },
+        "services": {
+            "Agile delivery and Governance": true,
+            "Cyber security": true,
+            "Software engineering and Development": true,
+            "Support and Operations": true,
+            "User research and Design": true
+        },
+        "status": "complete",
+        "steps": {
+            "awards": "complete",
+            "business": "complete",
+            "casestudy": "complete",
+            "digital": "complete",
+            "disclosures": "complete",
+            "documents": "complete",
+            "info": "complete",
+            "products": "complete",
+            "profile": "complete",
+            "recruiter": "complete",
+            "review": "complete",
+            "start": "complete",
+            "submit": "complete",
+            "tools": "complete"
+        },
+        "submitted_at": "2017-03-16T06:07:01.409357+00:00",
+        "summary": "GreatSupplier specialises in website strategy, design and development. They build large-scale Drupal and govCMS websites for government, media, education and enterprise clients around Australia and provide full lifecycle services, support and hosting for complex Drupal websites.",
+        "supplierCode": 20,
+        "technologies": "Content Management: Drupal version 7 and 8, govCMS\nProgramming language: PHP\nDevelopment framework: Silex or Symfony\nJavascript framework: React JS\n\n",
+        "tools": "Project tracking: Redmine or Jira\nCode source control: Github\nText chat: Slack\nDocument authoring & collaboration: Google Drive\nVideo chat: Google Hangouts or GoToMeeting",
+        "travel": true,
+        "website": "http://www.GreatSupplier.com.au"
+    }
+}

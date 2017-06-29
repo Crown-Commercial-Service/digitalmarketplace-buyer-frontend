@@ -122,6 +122,14 @@ class BaseApplicationTest(object):
         return BaseApplicationTest._get_fixture_data('supplier_fixture.json')
 
     @staticmethod
+    def _get_supplier_fixture2_data():
+        return BaseApplicationTest._get_fixture_data('supplier_fixture2.json')
+
+    @staticmethod
+    def _get_supplier_application_data():
+        return BaseApplicationTest._get_fixture_data('supplier_application.json')
+
+    @staticmethod
     def _get_supplier_with_minimum_fixture_data():
         return BaseApplicationTest._get_fixture_data('supplier_fixture_with_minium_data.json')
 

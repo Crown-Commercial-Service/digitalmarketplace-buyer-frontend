@@ -5,6 +5,7 @@ from datetime import datetime
 from lxml import html
 import pytest
 import mock
+import json
 from nose.tools import assert_equal, assert_true, assert_in, assert_not_equals
 from six import iteritems
 from six.moves.urllib.parse import urlparse, parse_qs
@@ -274,6 +275,7 @@ class TestBriefPage(BaseApplicationTest):
         assert len(sign_up_links) == 2
 
     def test_cannot_apply_to_closed_brief(self):
+        self.login_as_supplier()
         brief = self.brief.copy()
         brief['briefs']['status'] = "closed"
         brief['briefs']['publishedAt'] = "2000-01-25T12:00:00.000000Z"
@@ -350,6 +352,627 @@ class TestBriefPage(BaseApplicationTest):
         document = html.fromstring(res.get_data(as_text=True))
 
         self._assert_view_application(document, brief_id)
+
+
+class TestBriefApplicationScenarios(BaseApplicationTest):
+    def setup(self):
+        super(TestBriefApplicationScenarios, self).setup()
+
+        self._data_api_client = mock.patch(
+            'app.main.views.marketplace.data_api_client'
+        ).start()
+
+        self.application = self._get_supplier_application_data()
+        self.application['application']['supplier']['domains']['unassessed'] = []
+        self.application['application']['supplier']['domains']['assessed'] = []
+        self._data_api_client.get_application_by_id.return_value = self.application
+        self._data_api_client.req.applications().get.return_value = self.application
+
+        self.supplier = self._get_supplier_fixture2_data()
+        self._data_api_client.get_supplier.return_value = self.supplier
+        self.supplier['supplier']['products'] = []
+        self.supplier['supplier']['is_recruiter'] = 'false'
+        self.supplier['supplier']['domains']['legacy'] = []
+
+        self._data_api_client.find_brief_responses.return_value = {'briefResponses': []}
+        self.briefs = self._get_dos_brief_fixture_data()
+        self._data_api_client.get_brief.return_value = self.briefs
+        self.domain_name = {
+            'domain': {
+                'name': 'A Brief Domain'
+            }
+        }
+        self.brief = self.briefs.get('briefs')
+        self.brief['id'] = '1'
+        self.brief['areaOfExpertise'] = 'User research and design'
+        self.brief["frameworkName"] = "Digital Marketplace"
+        self.brief["frameworkSlug"] = "digital-marketplace"
+        self.brief["links"] = {
+            "framework": "http://localhost:5000/frameworks/digital-marketplace",
+        }
+        self.brief['status'] = 'live'
+        self.brief['lot'] = 'digital-professional'
+
+    def teardown(self):
+        self._data_api_client.stop()
+
+    def test_no_account_no_application(self):
+        self.login_as_supplier()
+
+        self.supplier['supplier'] = None
+        self._data_api_client.get_supplier.return_value = self.supplier
+        self.application['application'] = None
+        self._data_api_client.req.applications().get.return_value = self.application
+
+        res = self.client.get(
+            self.expand_path('/digital-marketplace/opportunities/{}')
+                .format(self.brief['id'])
+        )
+        document = html.fromstring(res.get_data(as_text=True))
+
+        brief_scenario_button_text = document.xpath('//a')[12].text
+        assert_equal(brief_scenario_button_text, 'Become a seller')
+
+        choose_domain_url = document.xpath('//a')[12].get('href')
+        assert_equal(choose_domain_url, "/become-a-seller")
+
+        brief_scenario_id = document.xpath('//div')[18].get('id')
+        assert_equal(brief_scenario_id, 'scen_2')
+
+    def test_submitted_app_outcome(self):
+        self.login_as_supplier()
+
+        self.supplier['supplier']['application_id'] = 391
+        self.supplier['supplier']['domains']['assessed'] = []
+        self.supplier['supplier']['domains']['unassessed'] = []
+        self.supplier['supplier']['products'] = []
+
+        self.application['application']['supplier'] = self.supplier['supplier']
+        self.application['application']['status'] = 'submitted'
+
+        self.brief['lot'] = 'digital-outcome'
+
+        self._data_api_client.req.applications().get.return_value = self.application
+
+        res = self.client.get(
+            self.expand_path('/digital-marketplace/opportunities/{}')
+                .format(self.brief['id'])
+        )
+        document = html.fromstring(res.get_data(as_text=True))
+
+        brief_scenario_button_text = document.xpath('//a')[12].text
+        assert_equal(brief_scenario_button_text, 'Request an assessment')
+
+        choose_domain_url = document.xpath('//a')[12].get('href')
+        assert_equal(choose_domain_url, "/sellers/opportunities/{}/assessment/choose".format(
+            self.brief['id']
+            )
+        )
+        brief_scenario_id = document.xpath('//div')[18].get('id')
+        assert_equal(brief_scenario_id, 'scen_5')
+
+    def test_submitted_app_dp(self):
+        self.login_as_supplier()
+
+        self.supplier['supplier']['domains']['assessed'] = []
+        self.supplier['supplier']['domains']['unassessed'] = []
+        self.supplier['supplier']['products'] = []
+
+        self.application['application']['supplier'] = self.supplier['supplier']
+        self.application['application']['status'] = 'submitted'
+
+        self.brief['lot'] = 'digital-professional'
+
+        self._data_api_client.req.applications().get.return_value = self.application
+
+        res = self.client.get(
+            self.expand_path('/digital-marketplace/opportunities/{}')
+                .format(self.brief['id'])
+        )
+        document = html.fromstring(res.get_data(as_text=True))
+
+        brief_scenario_button_text = document.xpath('//a')[12].text
+        assert_equal(brief_scenario_button_text, 'Request an assessment')
+
+        choose_domain_url = document.xpath('//a')[12].get('href')
+        assert_equal(choose_domain_url, "/sellers/opportunities/{}/assessment/status".format(
+            self.brief['id']
+            )
+        )
+        brief_scenario_id = document.xpath('//div')[18].get('id')
+        assert_equal(brief_scenario_id, 'scen_6')
+
+    def test_existing_seller_submitted_app_outcome(self):
+        self.login_as_supplier()
+
+        self.supplier['supplier']['application_id'] = 391
+        self.supplier['supplier']['domains']['assessed'] = []
+        self.supplier['supplier']['domains']['unassessed'] = []
+        self.supplier['supplier']['products'] = []
+        self.supplier['supplier']['frameworks'] = [{'framework_id': 6}, ]
+
+        self.application['application']['supplier'] = self.supplier['supplier']
+        self.application['application']['status'] = 'submitted'
+
+        self.brief['lot'] = 'digital-outcome'
+
+        self._data_api_client.req.applications().get.return_value = self.application
+
+        res = self.client.get(
+            self.expand_path('/digital-marketplace/opportunities/{}')
+                .format(self.brief['id'])
+        )
+        document = html.fromstring(res.get_data(as_text=True))
+
+        brief_scenario_button_text = document.xpath('//a')[12].text
+        assert_equal(brief_scenario_button_text, 'Update your profile')
+
+        choose_domain_url = document.xpath('//a')[12].get('href')
+        assert_equal(choose_domain_url, "/sellers/application")
+        brief_scenario_id = document.xpath('//div')[18].get('id')
+        assert_equal(brief_scenario_id, 'scen_7')
+
+    def test_existing_seller_submitted_app_dp(self):
+        self.login_as_supplier()
+
+        self.supplier['supplier']['application_id'] = 391
+        self.supplier['supplier']['domains']['assessed'] = []
+        self.supplier['supplier']['domains']['unassessed'] = []
+        self.supplier['supplier']['products'] = []
+        self.supplier['supplier']['frameworks'] = [{'framework_id': 6}, ]
+
+        self.application['application']['supplier'] = self.supplier['supplier']
+        self.application['application']['status'] = 'submitted'
+
+        self.brief['lot'] = 'digital-professional'
+
+        self._data_api_client.req.applications().get.return_value = self.application
+
+        res = self.client.get(
+            self.expand_path('/digital-marketplace/opportunities/{}')
+                .format(self.brief['id'])
+        )
+        document = html.fromstring(res.get_data(as_text=True))
+
+        brief_scenario_button_text = document.xpath('//a')[12].text
+        assert_equal(brief_scenario_button_text, 'Update your profile')
+
+        choose_domain_url = document.xpath('//a')[12].get('href')
+        assert_equal(choose_domain_url, "/sellers/application")
+        brief_scenario_id = document.xpath('//div')[18].get('id')
+        assert_equal(brief_scenario_id, 'scen_8')
+
+    def test_has_brief_responses(self):
+        self.login_as_supplier()
+
+        self._data_api_client.find_brief_responses.return_value = {
+            'briefResponses': ['firstResponse']
+        }
+
+        res = self.client.get(
+            self.expand_path('/digital-marketplace/opportunities/{}')
+                .format(self.brief['id'])
+        )
+
+        document = html.fromstring(res.get_data(as_text=True))
+
+        assert_equal(
+            document.xpath('//a')[12].text, 'View your application'
+        )
+
+    def test_aoe_dp_no_casestudies(self):
+        self.login_as_supplier()
+
+        self.supplier['supplier']['domains']['assessed'] = []
+        self.supplier['supplier']['domains']['unassessed'] = []
+        self.supplier['supplier']['products'] = []
+
+        self._data_api_client.get_domain.return_value = self.domain_name
+        self._data_api_client.req.assessments().supplier().get.return_value = {
+            'unassessed': [],
+            'assessed': []
+        }
+
+        res = self.client.get(
+            self.expand_path('/digital-marketplace/opportunities/{}')
+                .format(self.brief['id'])
+        )
+        document = html.fromstring(res.get_data(as_text=True))
+        assert_equal(
+            document.xpath('//h3')[0].text, 'Have you got expertise in {}?'.format(
+                self.brief['areaOfExpertise']
+            )
+        )
+
+        brief_scenario_button_text = document.xpath('//a')[13].text
+        assert_equal(brief_scenario_button_text, 'Update your profile')
+
+        choose_domain_url = document.xpath('//a')[13].get('href')
+        assert_equal(choose_domain_url, '/supplier/{}'.format(
+            self.supplier['supplier']['code']
+        ))
+
+        brief_scenario_id = document.xpath('//div')[18].get('id')
+        assert_equal(brief_scenario_id, 'scen_11')
+
+    def test_products_dp_no_casestudies(self):
+        self.login_as_supplier()
+
+        self.supplier['supplier']['domains']['assessed'] = []
+        self.supplier['supplier']['domains']['unassessed'] = []
+        self.supplier['supplier']['products'] = ['fxx', '458', 'f40' 'California']
+
+        self._data_api_client.get_domain.return_value = self.domain_name
+        self._data_api_client.req.assessments().supplier().get.return_value = {
+            'unassessed': [],
+            'assessed': []
+        }
+
+        res = self.client.get(
+            self.expand_path('/digital-marketplace/opportunities/{}')
+                .format(self.brief['id'])
+        )
+        document = html.fromstring(res.get_data(as_text=True))
+
+        assert_equal(
+            document.xpath('//h3')[0].text, 'Have you got expertise in {}?'.format(
+                self.brief['areaOfExpertise']
+            )
+        )
+
+        brief_scenario_button_text = document.xpath('//a')[13].text
+        assert_equal(brief_scenario_button_text, 'Update your profile')
+
+        choose_domain_url = document.xpath('//a')[13].get('href')
+        assert_equal(choose_domain_url, '/supplier/{}'.format(
+            self.supplier['supplier']['code']
+        ))
+
+        brief_scenario_id = document.xpath('//div')[18].get('id')
+        assert_equal(brief_scenario_id, 'scen_12')
+
+    def test_recruiter_dp_no_casestudies(self):
+        self.login_as_supplier()
+
+        self.supplier['supplier']['domains']['assessed'] = []
+        self.supplier['supplier']['domains']['unassessed'] = []
+        self.supplier['supplier']['is_recruiter'] = 'true'
+        self.supplier['supplier']['recruiter_info'] = {
+            "User research and design": {
+                "active_candidates": "0",
+                "database_size": "400",
+                "margin": "20",
+                "markup": "20",
+                "placed_candidates": "2"
+            },
+        }
+        self._data_api_client.get_domain.return_value = self.domain_name
+        self._data_api_client.req.assessments().supplier().get.return_value = {
+            'unassessed': [],
+            'assessed': []
+        }
+
+        res = self.client.get(
+            self.expand_path('/digital-marketplace/opportunities/{}')
+                .format(self.brief['id'])
+        )
+        document = html.fromstring(res.get_data(as_text=True))
+
+        assert_equal(
+            document.xpath('//h3')[0].text, 'Have you got expertise in {}?'.format(
+                self.brief['areaOfExpertise']
+            )
+        )
+
+        brief_scenario_button_text = document.xpath('//a')[13].text
+        assert_equal(brief_scenario_button_text, 'Add a candidate')
+
+        choose_domain_url = document.xpath('//a')[13].get('href')
+        assert_equal(choose_domain_url, '/supplier/{}'.format(
+            self.supplier['supplier']['code']
+        ))
+
+        brief_scenario_id = document.xpath('//div')[18].get('id')
+        assert_equal(brief_scenario_id, 'scen_13')
+
+    def test_products_outcome_no_casestudies(self):
+        self.login_as_supplier()
+
+        self.supplier['supplier']['products'] = ['shift', 'seven', 'axo']
+        self.supplier['supplier']['domains']['unassessed'] = []
+        self.supplier['supplier']['domains']['assessed'] = []
+        self.brief['lot'] = 'digital-outcome'
+
+        self._data_api_client.req.assessments().supplier().get.return_value = {
+            'unassessed': [],
+            'assessed': []
+        }
+
+        res = self.client.get(
+            self.expand_path('/digital-marketplace/opportunities/{}')
+                .format(self.brief['id'])
+        )
+        document = html.fromstring(res.get_data(as_text=True))
+
+        assert_equal(document.xpath('//h3')[0].text, 'What services do you offer?')
+
+        brief_scenario_button_text = document.xpath('//a')[13].text
+        assert_equal(brief_scenario_button_text, 'Update your profile')
+
+        choose_domain_url = document.xpath('//a')[13].get('href')
+        assert_equal(choose_domain_url, '/supplier/{}'.format(self.supplier['supplier']['code']))
+
+        brief_scenario_id = document.xpath('//div')[18].get('id')
+        assert_equal(brief_scenario_id, 'scen_14')
+
+    def test_aoe_dp_inreview(self):
+        self.login_as_supplier()
+
+        # aoe_seller
+        self.supplier['supplier']['domains']['unassessed'] = [self.brief['areaOfExpertise'], ]
+        self._data_api_client.get_domain.return_value = self.domain_name
+        self._data_api_client.req.assessments().supplier().get.return_value = {
+            'unassessed': [self.brief['areaOfExpertise'], ],
+            'assessed': []
+        }
+
+        res = self.client.get(
+            self.expand_path('/digital-marketplace/opportunities/{}')
+                .format(self.brief['id'])
+        )
+        document = html.fromstring(res.get_data(as_text=True))
+
+        brief_scenario_button_text = document.xpath('//a')[12].text
+        assert_equal(brief_scenario_button_text, 'Request an assessment')
+
+        choose_domain_url = document.xpath('//a')[12].get('href')
+        assert_equal(choose_domain_url, '/sellers/opportunities/1/assessment/status')
+
+        brief_scenario_id = document.xpath('//div')[18].get('id')
+        assert_equal(brief_scenario_id, 'scen_15')
+
+    def test_recruiter_dp_inreview(self):
+        self.login_as_supplier()
+
+        self.supplier['supplier']['domains']['unassessed'] = [self.brief['areaOfExpertise'], ]
+        self.supplier['supplier']['is_recruiter'] = 'true'
+        self.supplier['supplier']['recruiter_info'] = {
+            "User research and design": {
+                "active_candidates": "10",
+                "database_size": "400",
+                "margin": "20",
+                "markup": "20",
+                "placed_candidates": "2"
+            },
+        }
+        self._data_api_client.get_domain.return_value = self.domain_name
+        self._data_api_client.req.assessments().supplier().get.return_value = {
+            'unassessed': [self.brief['areaOfExpertise'], ],
+            'assessed': []
+        }
+
+        res = self.client.get(
+            self.expand_path('/digital-marketplace/opportunities/{}')
+                .format(self.brief['id'])
+        )
+        document = html.fromstring(res.get_data(as_text=True))
+
+        brief_scenario_button_text = document.xpath('//a')[12].text
+        assert_equal(brief_scenario_button_text, 'Request an assessment')
+
+        choose_domain_url = document.xpath('//a')[12].get('href')
+        assert_equal(choose_domain_url, '/sellers/opportunities/{}/assessment/status'.format(
+            self.brief['id']
+        ))
+
+        brief_scenario_id = document.xpath('//div')[18].get('id')
+        assert_equal(brief_scenario_id, 'scen_16')
+
+    def test_all_outcome_inreview(self):
+        self.login_as_supplier()
+
+        self.brief['lot'] = 'digital-outcome'
+        self.supplier['supplier']['products'] = ['this', 'and', 'the other thing']
+        self.supplier['supplier']['is_recruiter'] = 'true'
+        self._data_api_client.req.assessments().supplier().get.return_value = {
+            'unassessed': ["Nunchuk skills", ],
+            'assessed': []
+        }
+
+        res = self.client.get(
+            self.expand_path('/digital-marketplace/opportunities/{}')
+                .format(self.brief['id'])
+        )
+        document = html.fromstring(res.get_data(as_text=True))
+
+        brief_scenario_button_text = document.xpath('//a')[12].text
+        assert_equal(brief_scenario_button_text, 'Request an assessment')
+
+        choose_domain_url = document.xpath('//a')[12].get('href')
+        assert_equal(choose_domain_url, "/sellers/opportunities/{}/assessment/status".format(
+            self.brief['id']
+            )
+        )
+
+        brief_scenario_id = document.xpath('//div')[18].get('id')
+        assert_equal(brief_scenario_id, 'scen_17')
+
+    def test_aeo_professional_not_assessed(self):
+        self.login_as_supplier()
+
+        self.supplier['supplier']['domains']['unassessed'] = [self.brief['areaOfExpertise'], ]
+        self.supplier['supplier']['domains']['assessed'] = []
+        self._data_api_client.req.assessments().supplier().get.return_value = {
+            'unassessed': [],
+            'assessed': []
+        }
+
+        res = self.client.get(
+            self.expand_path('/digital-marketplace/opportunities/{}')
+                .format(self.brief['id'])
+        )
+        document = html.fromstring(res.get_data(as_text=True))
+
+        brief_scenario_button_text = document.xpath('//a')[12].text
+        assert_equal(brief_scenario_button_text, 'Request an assessment')
+
+        choose_domain_url = document.xpath('//a')[12].get('href')
+        assert_equal(choose_domain_url, "/sellers/opportunities/{}/assessment/initial".format(
+            self.brief['id']
+            )
+        )
+
+        brief_scenario_id = document.xpath('//div')[18].get('id')
+        assert_equal(brief_scenario_id, 'scen_18')
+
+    def test_recruiter_dp_not_assessed(self):
+        self.login_as_supplier()
+        self.supplier['supplier']['domains']['assessed'] = []
+        self.supplier['supplier']['domains']['unassessed'] = []
+        self.supplier['supplier']['is_recruiter'] = 'true'
+        self.supplier['supplier']['recruiter_info'] = {
+            "User research and design": {
+                "active_candidates": "10",
+                "database_size": "400",
+                "margin": "20",
+                "markup": "20",
+                "placed_candidates": "2"
+            },
+        }
+        self._data_api_client.get_domain.return_value = self.domain_name
+        self._data_api_client.req.assessments().supplier().get.return_value = {
+            'unassessed': [],
+            'assessed': []
+        }
+
+        res = self.client.get(
+            self.expand_path('/digital-marketplace/opportunities/{}')
+                .format(self.brief['id'])
+        )
+        document = html.fromstring(res.get_data(as_text=True))
+
+        brief_scenario_button_text = document.xpath('//a')[12].text
+        assert_equal(brief_scenario_button_text, 'Request an assessment')
+
+        choose_domain_url = document.xpath('//a')[12].get('href')
+        assert_equal(choose_domain_url, '/sellers/opportunities/1/assessment/initial')
+
+        brief_scenario_id = document.xpath('//div')[18].get('id')
+        assert_equal(brief_scenario_id, 'scen_19')
+
+    def test_all_outcome_all_unassessed(self):
+        self.login_as_supplier()
+
+        self.supplier['supplier']['domains']['unassessed'] = [self.brief['areaOfExpertise'], ]
+        self.supplier['supplier']['products'] = ['burgers', 'pizza', 'crumpets']
+        self.supplier['supplier']['is_recruiter'] = 'true'
+        self.brief['lot'] = 'digital-outcome'
+        self._data_api_client.req.assessments().supplier().get.return_value = {
+            'unassessed': [],
+            'assessed': []
+        }
+
+        res = self.client.get(
+            self.expand_path('/digital-marketplace/opportunities/{}')
+                .format(self.brief['id'])
+        )
+        document = html.fromstring(res.get_data(as_text=True))
+
+        brief_scenario_button_text = document.xpath('//a')[12].text
+        assert_equal(brief_scenario_button_text, 'Request an assessment')
+
+        choose_domain_url = document.xpath('//a')[12].get('href')
+        assert_equal(choose_domain_url, "/sellers/opportunities/{}/assessment/choose".format(
+            self.brief['id']
+            )
+        )
+
+        brief_scenario_id = document.xpath('//div')[18].get('id')
+        assert_equal(brief_scenario_id, 'scen_20')
+
+    def test_approved_and_assessed_outcome(self):
+        self.login_as_supplier()
+
+        self.supplier['supplier']['domains']['unassessed'] = [self.brief['areaOfExpertise'], ]
+        self.supplier['supplier']['products'] = ['burgers', 'pizza', 'crumpets']
+        self.supplier['supplier']['is_recruiter'] = 'true'
+        self.brief['lot'] = 'digital-outcome'
+        self.brief['areaOfExpertise'] = 'User research and design'
+        self._data_api_client.req.assessments().supplier().get.return_value = {
+            'unassessed': [],
+            'assessed': ['Anything', ]
+        }
+
+        res = self.client.get(
+            self.expand_path('/digital-marketplace/opportunities/{}')
+                .format(self.brief['id'])
+        )
+        document = html.fromstring(res.get_data(as_text=True))
+
+        brief_scenario_button_text = document.xpath('//a')[12].text
+        assert_equal(brief_scenario_button_text, 'Apply Now')
+
+        choose_domain_url = document.xpath('//a')[12].get('href')
+        assert_equal(choose_domain_url, '/sellers/opportunities/{}/responses/create'.format(self.brief['id']))
+
+        brief_scenario_id = document.xpath('//div')[18].get('id')
+        assert_equal(brief_scenario_id, 'scen_23')
+
+    def test_approved_and_assessed_dp(self):
+        self.login_as_supplier()
+
+        self.supplier['supplier']['domains']['unassessed'] = [self.brief['areaOfExpertise'], ]
+        self.supplier['supplier']['products'] = ['burgers', 'pizza', 'crumpets']
+        self.supplier['supplier']['is_recruiter'] = 'true'
+        self.brief['lot'] = 'digital-professional'
+        self.brief['areaOfExpertise'] = 'User research and design'
+        self._data_api_client.req.assessments().supplier().get.return_value = {
+            'unassessed': [],
+            'assessed': [self.brief['areaOfExpertise'], ]
+        }
+
+        res = self.client.get(
+            self.expand_path('/digital-marketplace/opportunities/{}')
+                .format(self.brief['id'])
+        )
+        document = html.fromstring(res.get_data(as_text=True))
+
+        brief_scenario_button_text = document.xpath('//a')[12].text
+        assert_equal(brief_scenario_button_text, 'Apply Now')
+
+        choose_domain_url = document.xpath('//a')[12].get('href')
+        assert_equal(choose_domain_url, '/sellers/opportunities/{}/responses/create'.format(self.brief['id']))
+
+        brief_scenario_id = document.xpath('//div')[18].get('id')
+        assert_equal(brief_scenario_id, 'scen_24')
+
+    def test_one_seller_restricted_brief(self):
+        self.login_as_supplier()
+        self.brief['sellerSelector'] = 'oneSeller'
+
+        res = self.client.get(
+            self.expand_path('/digital-marketplace/opportunities/{}')
+                .format(self.brief['id'])
+        )
+        document = html.fromstring(res.get_data(as_text=True))
+
+        assert_equal(document.xpath(
+            '//p')[3].text, "Only invited sellers can apply for 'Open to one' or 'Open to selected' opportunity."
+            )
+
+    def test_some_sellers_restricted_brief(self):
+        self.login_as_supplier()
+        self.brief['sellerSelector'] = 'someSellers'
+
+        res = self.client.get(
+            self.expand_path('/digital-marketplace/opportunities/{}')
+                .format(self.brief['id'])
+        )
+        document = html.fromstring(res.get_data(as_text=True))
+
+        assert_equal(document.xpath(
+            '//p')[3].text, "Only invited sellers can apply for 'Open to one' or 'Open to selected' opportunity."
+            )
 
 
 class TestCatalogueOfBriefsPage(BaseApplicationTest):
