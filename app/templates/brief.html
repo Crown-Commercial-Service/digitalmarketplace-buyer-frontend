@@ -165,7 +165,7 @@
 
         {% if profile_application_status == 'submitted' and brief.lot == 'digital-outcome' and
         supplier_framework == 'digital-service-professionals' %}
-        <h3>You need to update your profile to apply?</h3>
+        <h3>You need to update your profile to apply.</h3>
         <div class="brief-button-group" id="scen_7">
           <span>
             {% with
@@ -180,7 +180,7 @@
 
         {% if profile_application_status == 'submitted' and brief.lot == 'digital-professional' and
           supplier_framework == 'digital-service-professionals' %}
-        <h3>You need to update your profile to apply?</h3>
+        <h3>You need to update your profile to apply.</h3>
         <div class="brief-button-group" id="scen_8">
           <span>
             {% with
@@ -386,7 +386,9 @@
           
       {% if profile_application_status == 'approved' and brief.lot == 'digital-outcome' and
         unassessed_domains|length > 0 and
-        supplier_assessments.assessed|length == 0 %}
+        supplier_assessments.assessed|length == 0 and 
+        supplier_assessments.unassessed|length == 0 
+        %}
         <h3>Interested in this opportunity?</h3>
         <div class="brief-button-group" id="scen_20">
           <span>
