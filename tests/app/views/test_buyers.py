@@ -531,8 +531,8 @@ class TestEditBriefSubmission(BaseApplicationTest):
             '//*[@id="required3_2"]//span[contains(@class, "question-heading")]'
         )[0].text_content().strip() == "Required 3_2"
 
-    @pytest.mark.skip
     def test_404_if_brief_does_not_belong_to_user(self, data_api_client):
+        self.login_as_buyer()
         data_api_client.get_framework.return_value = api_stubs.framework(
             slug='digital-outcomes-and-specialists',
             status='live',
@@ -541,8 +541,17 @@ class TestEditBriefSubmission(BaseApplicationTest):
             ]
         )
 
-        data_api_client.get_brief.return_value = api_stubs.brief(user_id=234)
+        # sanity check
+        # test brief created by user_id 123
+        data_api_client.get_brief.return_value = api_stubs.brief(user_id=123)
+        res = self.client.get(self.expand_path(
+            '/buyers/frameworks/%s/requirements/%s/1234/edit/description-of-work/organisation'
+            % ('digital-outcomes-and-specialists', 'digital-specialists')
+        ))
 
+        assert res.status_code == 200
+
+        data_api_client.get_brief.return_value = api_stubs.brief(user_id=999)
         res = self.client.get(self.expand_path(
             '/buyers/frameworks/%s/requirements/%s/1234/edit/description-of-work/organisation'
             % ('digital-outcomes-and-specialists', 'digital-specialists')

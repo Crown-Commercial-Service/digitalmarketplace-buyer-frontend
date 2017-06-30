@@ -210,7 +210,7 @@ def view_brief_overview(framework_slug, lot_slug, brief_id):
 
     if not is_brief_correct(
             brief, framework_slug, lot_slug, current_user.id
-    ):
+    ) and not allowed_email_domain(current_user.id, brief, data_api_client):
         abort(404)
 
     content = content_loader.get_manifest(brief['frameworkSlug'], 'edit_brief').filter({'lot': brief['lotSlug']})
