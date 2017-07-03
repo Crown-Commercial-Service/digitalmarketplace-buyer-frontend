@@ -8,8 +8,9 @@ let
     localOverridesPath = ./local.nix;
   } // argsOuter;
 in (with args; {
-  digitalMarketplaceBuyerFrontendEnv = (pkgs.stdenv.mkDerivation {
+  digitalMarketplaceBuyerFrontendEnv = (pkgs.stdenv.mkDerivation rec {
     name = "digitalmarketplace-buyer-frontend-env";
+    shortName = "dm-byr-fe";
     buildInputs = [
       pythonPackages.virtualenv
       pkgs.nodejs
@@ -42,6 +43,8 @@ in (with args; {
     LANG="en_GB.UTF-8";
 
     shellHook = ''
+      export PS1="\[\e[0;34m\](nix-shell\[\e[0m\]:\[\e[0;34m\]${shortName})\[\e[0;32m\]\u@\h\[\e[0m\]:\[\e[0m\]\[\e[0;34m\]\w\[\e[0m\]\$ "
+
       if [ ! -e $VIRTUALENV_ROOT ]; then
         ${pythonPackages.virtualenv}/bin/virtualenv $VIRTUALENV_ROOT
       fi
