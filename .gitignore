@@ -75,3 +75,6 @@ app/content
 # Front end generated assets
 app/static
 .hypothesis
+
+# local environment customizations
+local.nix
