@@ -75,9 +75,11 @@ class Config(object):
     }
 
     DM_FEEDBACK_FORM = {
-        'uri': 'https://docs.google.com/a/digital.cabinet-office.gov.uk/forms/d/e/1FAIpQLSc-uXv-4VqGBipDwPhJFDpET5UrHnJpsJ5FFTn4-MBAfKeOPg/formResponse',
+        'uri': 'https://docs.google.com/a/digital.cabinet-office.gov.uk/forms/d/e/1FAIpQLSc-uXv-4VqGBipDwPhJFDpET5UrHnJpsJ5FFTn4-MBAfKeOPg/formResponse',  # noqa
         'fields': {
-            'uri': 'entry.1048271701'
+            'uri': 'entry.1048271701',
+            'what_doing': 'entry.1348335665',
+            'what_happened': 'entry.869819225',
         }
     }
 
