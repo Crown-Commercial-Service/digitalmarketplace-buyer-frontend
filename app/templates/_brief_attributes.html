@@ -6,12 +6,7 @@
     {"label": "Deadline for asking questions", "value": brief.clarificationQuestionsClosedAt|datetimeformat if brief.clarificationQuestionsClosedAt is defined},
     {"label": "Closing date for applications", "value": brief.applicationsClosedAt|datetimeformat if brief.applicationsClosedAt is defined}
   ],
-  caption="Important dates",
-  field_headings=[
-    "Opportunity attribute name",
-    "Opportunity attribute value"
-  ],
-  field_headings_visible=False
+  caption="Important dates"
 ) %}
 
   {% call summary.row() %}
@@ -27,12 +22,7 @@
         {% endif %}
     {% call(item) summary.list_table(
       section.questions,
-      caption=section.name,
-      field_headings=[
-        "Opportunity attribute name",
-        "Opportunity attribute value"
-      ],
-      field_headings_visible=False
+      caption=section.name
     ) %}
       {% call summary.row() %}
         {{ summary.field_name(item.label) }}
