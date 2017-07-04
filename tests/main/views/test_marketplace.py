@@ -1,14 +1,14 @@
 # coding=utf-8
-
 import mock
+import pytest
+from datetime import datetime
+from lxml import html
 from six import iteritems
 from six.moves.urllib.parse import urlparse, parse_qs
-from lxml import html
-from datetime import datetime
-from ...helpers import BaseApplicationTest
-from dmapiclient import APIError
+
 from dmutils.formats import DATETIME_FORMAT, DISPLAY_DATE_FORMAT
-import pytest
+
+from ...helpers import BaseApplicationTest
 
 
 class TestApplication(BaseApplicationTest):
@@ -336,7 +336,7 @@ class TestStaticMarketplacePages(BaseApplicationTest):
         assert res.status_code == 200
         assert '<h1>Cookies</h1>' in self._strip_whitespace(res.get_data(as_text=True))
 
-    def test_cookie_page(self):
+    def test_terms_and_conditions_page(self):
         res = self.client.get('/terms-and-conditions')
         assert res.status_code == 200
         assert '<h1>Termsandconditions</h1>' in self._strip_whitespace(res.get_data(as_text=True))
@@ -359,14 +359,6 @@ class BaseBriefPageTest(BaseApplicationTest):
 
 class TestBriefPage(BaseBriefPageTest):
 
-    def _assert_page_title(self, document):
-        brief_title = self.brief['briefs']['title']
-        brief_organisation = self.brief['briefs']['organisation']
-
-        page_heading = document.xpath('//header[@class="page-heading-smaller"]')[0]
-        page_heading_h1 = page_heading.xpath('h1/text()')[0]
-        page_heading_context = page_heading.xpath('p[@class="context"]/text()')[0]
-
     def test_dos_brief_404s_if_brief_is_draft(self):
         self.brief['briefs']['status'] = 'draft'
         brief_id = self.brief['briefs']['id']
@@ -374,13 +366,17 @@ class TestBriefPage(BaseBriefPageTest):
         assert res.status_code == 404
 
     def test_dos_brief_has_correct_title(self):
-        brief_id = self.brief['briefs']['id']
-        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(self.brief['briefs']['id']))
         assert res.status_code == 200
 
         document = html.fromstring(res.get_data(as_text=True))
+        page_heading = document.xpath('//header[@class="page-heading-smaller"]')[0]
 
-        self._assert_page_title(document)
+        page_heading_h1 = page_heading.xpath('h1/text()')[0]
+        page_heading_context = page_heading.xpath('p[@class="context"]/text()')[0]
+
+        assert page_heading_h1 == self.brief['briefs']['title']
+        assert page_heading_context == self.brief['briefs']['organisation']
 
     def test_dos_brief_has_lot_analytics_string(self):
         brief = self.brief['briefs']
@@ -769,6 +765,11 @@ class TestWithdrawnSpecificBriefPage(BaseBriefPageTest):
 
 
 class TestCatalogueOfBriefsPage(BaseApplicationTest):
+
+    @staticmethod
+    def normalize_qs(queryset):
+        return {k: set(v) for k, v in iteritems(parse_qs(queryset)) if k != "page"}
+
     def setup_method(self, method):
         super(TestCatalogueOfBriefsPage, self).setup_method(method)
 
@@ -914,10 +915,11 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         parsed_next_url = urlparse(document.xpath("//li[@class='next']/a/@href")[0])
         assert parsed_original_url.path == parsed_prev_url.path == parsed_next_url.path
 
-        normalize_qs = lambda qs: {k: set(v) for k, v in iteritems(parse_qs(qs)) if k != "page"}
-        assert normalize_qs(parsed_original_url.query) == \
-            normalize_qs(parsed_next_url.query) == \
-            normalize_qs(parsed_prev_url.query)
+        assert (
+            self.normalize_qs(parsed_original_url.query) ==
+            self.normalize_qs(parsed_next_url.query) ==
+            self.normalize_qs(parsed_prev_url.query)
+        )
 
         ss_elem = document.xpath("//p[@class='search-summary']")[0]
         assert self._normalize_whitespace(self._squashed_element_text(ss_elem)) == "2 results"
@@ -972,10 +974,9 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
 
         parsed_original_url = urlparse(original_url)
         parsed_next_url = urlparse(document.xpath("//li[@class='next']/a/@href")[0])
-        assert parsed_original_url.path == parsed_next_url.path
 
-        normalize_qs = lambda qs: {k: set(v) for k, v in iteritems(parse_qs(qs)) if k != "page"}
-        assert normalize_qs(parsed_original_url.query) == normalize_qs(parsed_next_url.query)
+        assert parsed_original_url.path == parsed_next_url.path
+        assert self.normalize_qs(parsed_original_url.query) == self.normalize_qs(parsed_next_url.query)
 
         ss_elem = document.xpath("//p[@class='search-summary']")[0]
         assert self._normalize_whitespace(self._squashed_element_text(ss_elem)) == "2 results"

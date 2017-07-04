@@ -229,7 +229,7 @@ def pagination(num_services, page_size, page=None):
         "show_next": show_next,
         "next_page": next_page,
         "prev_page": prev_page,
-        }
+    }
 
 
 def valid_page(page):

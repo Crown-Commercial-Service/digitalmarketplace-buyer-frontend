@@ -1,8 +1,6 @@
 import mock
-import pytest
-from ...helpers import BaseApplicationTest
 
-from app import data_api_client
+from ...helpers import BaseApplicationTest
 
 
 class TestGCloudIndexResults(BaseApplicationTest):
