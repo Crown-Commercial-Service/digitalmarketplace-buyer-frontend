@@ -15,6 +15,8 @@ EMAIL_SENT_MESSAGE = "If the email address you've entered belongs to a Digital M
 PASSWORD_EMPTY_ERROR = "You must provide your password"
 PASSWORD_INVALID_ERROR = "Passwords must be between 10 and 50 characters"
 PASSWORD_MISMATCH_ERROR = "The passwords you entered do not match"
+NEW_PASSWORD_SUCCESS = "You have successfully changed your password"
+NEW_PASSWORD_FAIL = "Could not update password due to an error"
 NEW_PASSWORD_EMPTY_ERROR = "You must enter a new password"
 NEW_PASSWORD_CONFIRM_EMPTY_ERROR = "Please confirm your new password"
 
@@ -358,6 +360,29 @@ class TestResetPassword(BaseApplicationTest):
             })
             assert res.status_code == 302
             assert res.location == 'http://localhost/login'
+            res = self.client.get(res.location)
+
+            assert NEW_PASSWORD_SUCCESS in res.get_data(as_text=True)
+
+    def test_password_change_unknown_failure(self):
+        self.data_api_client_mock.update_user_password.return_value = False
+        with self.app.app_context():
+            token = generate_token(
+                self._user,
+                self.app.config['SECRET_KEY'],
+                self.app.config['RESET_PASSWORD_SALT'])
+            url = '/reset-password/{}'.format(token)
+
+            res = self.client.post(url, data={
+                'password': '1234567890',
+                'confirm_password': '1234567890'
+            })
+            assert res.status_code == 302
+            assert res.location == 'http://localhost/login'
+            res = self.client.get(res.location)
+
+            assert NEW_PASSWORD_FAIL in res.get_data(as_text=True)
+        self.data_api_client_mock.update_user_password.return_value = True
 
     def test_should_not_strip_whitespace_surrounding_reset_password_password_field(self):
         with self.app.app_context():
