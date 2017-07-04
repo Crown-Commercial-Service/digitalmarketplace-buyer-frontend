@@ -76,3 +76,25 @@ def send_buyer_account_activation_email(name, email_address, token):
                 'error': six.text_type(e),
                 'email_hash': hash_email(email_address)})
         abort(503, response='Failed to send user creation email.')
+
+
+def send_buyer_onboarding_email(name, email_address):
+    email_body = render_template('emails/buyer_onboarding.html', name=name)
+    try:
+        send_email(
+            email_address,
+            email_body,
+            'Welcome to the Digital Marketplace',
+            current_app.config['RESET_PASSWORD_EMAIL_FROM'],
+            current_app.config['RESET_PASSWORD_EMAIL_NAME'],
+        )
+        session['email_sent_to'] = email_address
+    except EmailError as e:
+        rollbar.report_exc_info()
+        current_app.logger.error(
+            'buyeronboarding.fail: Buyer onboarding email failed to send. '
+            'error {error} email_hash {email_hash}',
+            extra={
+                'error': six.text_type(e),
+                'email_hash': hash_email(email_address)})
+        abort(503, response='Failed to send buyer onboarding email.')

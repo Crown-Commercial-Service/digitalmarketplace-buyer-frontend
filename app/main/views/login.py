@@ -21,7 +21,7 @@ from app import data_api_client
 from app.main import main
 from app.helpers.login_helpers import (
     decode_buyer_creation_token, generate_buyer_creation_token, redirect_logged_in_user,
-    send_buyer_account_activation_email
+    send_buyer_account_activation_email, send_buyer_onboarding_email
 )
 from app.helpers.terms_helpers import check_terms_acceptance
 from app.main.forms import auth_forms
@@ -404,6 +404,8 @@ def submit_create_buyer_account(token):
 
         user = User.from_json(user)
         login_user(user)
+
+        send_buyer_onboarding_email(form.name.data, data['emailAddress'])
 
     except HTTPError as e:
         if e.status_code != 409:

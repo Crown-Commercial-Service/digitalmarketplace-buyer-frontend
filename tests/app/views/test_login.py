@@ -973,7 +973,8 @@ class TestCreateBuyer(BaseApplicationTest):
         assert 'private' in res.headers['Cache-Control']
 
     @mock.patch('app.main.views.login.data_api_client')
-    def test_should_create_user_if_user_does_not_exist(self, data_api_client):
+    @mock.patch('app.helpers.login_helpers.send_email')
+    def test_should_create_user_if_user_does_not_exist(self, send_email, data_api_client):
         data_api_client.get_user.return_value = None
         self.create_user_setup(data_api_client)
 
@@ -1023,7 +1024,8 @@ class TestCreateBuyer(BaseApplicationTest):
         })
 
     @mock.patch('app.main.views.login.data_api_client')
-    def test_should_strip_whitespace_surrounding_create_user_name_field(self, data_api_client):
+    @mock.patch('app.helpers.login_helpers.send_email')
+    def test_should_strip_whitespace_surrounding_create_user_name_field(self, send_email, data_api_client):
         data_api_client.get_user.return_value = None
         self.create_user_setup(data_api_client)
         token = self._generate_token()
@@ -1045,7 +1047,8 @@ class TestCreateBuyer(BaseApplicationTest):
         })
 
     @mock.patch('app.main.views.login.data_api_client')
-    def test_should_not_strip_whitespace_surrounding_create_user_password_field(self, data_api_client):
+    @mock.patch('app.helpers.login_helpers.send_email')
+    def test_should_not_strip_whitespace_surrounding_create_user_password_field(self, send_email, data_api_client):
         data_api_client.get_user.return_value = None
         self.create_user_setup(data_api_client)
         token = self._generate_token()
@@ -1067,7 +1070,8 @@ class TestCreateBuyer(BaseApplicationTest):
         })
 
     @mock.patch('app.main.views.login.data_api_client')
-    def test_should_be_a_503_if_api_fails(self, data_api_client):
+    @mock.patch('app.helpers.login_helpers.send_email')
+    def test_should_be_a_503_if_api_fails(self, send_email, data_api_client):
         with self.app.app_context():
 
             data_api_client.create_user.side_effect = HTTPError("bad email")
