@@ -221,10 +221,10 @@
           </span>
         </div>
         {% endif %} 
-  
+
         {% if profile_application_status == 'approved' and product_seller and brief.lot == 'digital-professionals' 
-        and unassessed_domains|length == 0
-        and assessed_domains|length == 0 %}
+        and (brief.areaOfExpertise not in supplier_assessments.unassessed or
+        brief.areaOfExpertise not in supplier_assessments.assessed) %}
         <h2>Have you got expertise in {{ brief.areaOfExpertise }}?</h2>
         <p>
           Before you can apply for this opportunity you need to provide a case 
@@ -351,7 +351,9 @@
       {% endif %}
   
       {% if profile_application_status == 'approved' and brief.lot == 'digital-outcome' and 
-      supplier_assessments.assessed|length == 0 and supplier_assessments.unassessed|length > 0 %}
+      unassessed_domains|length > 0 and
+      supplier_assessments.assessed|length == 0 and 
+      supplier_assessments.unassessed|length > 0 %}
         <h2>Interested in this opportunity?</h2>
         <div class="brief-button-group" id="scen_17">
           <span>
@@ -420,6 +422,7 @@
           
       {% if profile_application_status == 'approved' and brief.lot == 'digital-outcome' and
         unassessed_domains|length > 0 and
+        supplier_assessments.unassessed|length == 0 and
         supplier_assessments.assessed|length == 0 %}
         <h2>Interested in this opportunity?</h2>
         <div class="brief-button-group" id="scen_20">
