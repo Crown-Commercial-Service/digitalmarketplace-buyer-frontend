@@ -4,7 +4,7 @@ from werkzeug.exceptions import ServiceUnavailable
 from werkzeug.datastructures import MultiDict
 from werkzeug.urls import url_parse
 
-from flask import current_app, request, redirect
+from flask import current_app, request, redirect, flash, Markup
 
 from .. import main
 
@@ -22,5 +22,11 @@ def send_feedback():
     came_from = url_parse(request.form['uri'])
     # strip netloc and scheme as we should ignore attempts to make us redirect elsewhere
     replaced = came_from._replace(scheme='', netloc='')
+
+    flash(Markup(
+        """Thank you for your message. If you have more extensive feedback, please
+        <a href="mailto:enquiries@digitalmarketplace.service.gov.uk">email us</a> or
+        <a href="https://airtable.com/shrkFM8L6Wfenzn5Q">take part in our research</a>.
+        """))
 
     return redirect(replaced, code=303)
