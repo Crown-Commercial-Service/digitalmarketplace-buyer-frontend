@@ -261,19 +261,6 @@ class TestBriefPage(BaseApplicationTest):
 
         assert_equal(qa_link_text.strip(), "Ask a question")
 
-    def test_can_apply_to_live_brief(self):
-        brief_id = self.brief['briefs']['id']
-        res = self.client.get(self.expand_path('/digital-service-professionals/opportunities/{}'.format(brief_id)))
-        assert_equal(200, res.status_code)
-        document = html.fromstring(res.get_data(as_text=True))
-
-        brief_response_url = self.expand_path('/sellers/opportunities/{}/responses/create'.format(brief_id))
-        apply_links = document.xpath('//a[@href="{}"]'.format(brief_response_url))
-        assert len(apply_links) == 1
-
-        sign_up_links = document.xpath('//a[@href="{}"]'.format('/signup'))
-        assert len(sign_up_links) == 2
-
     def test_cannot_apply_to_closed_brief(self):
         self.login_as_supplier()
         brief = self.brief.copy()
@@ -285,11 +272,10 @@ class TestBriefPage(BaseApplicationTest):
         res = self.client.get(self.expand_path('/digital-service-professionals/opportunities/{}'.format(brief_id)))
         assert_equal(200, res.status_code)
         document = html.fromstring(res.get_data(as_text=True))
-
         brief_response_url = self.expand_path('/sellers/opportunities/{}/responses/create'.format(brief_id))
         apply_links = document.xpath('//a[@href="{}"]'.format(brief_response_url))
         assert len(apply_links) == 0
-        assert '25 February 2000' in document.xpath('//div[@class="callout--info"]')[0][1].text_content()
+        assert '25 February 2000' in document.xpath('//div[@class="callout--info"]//p')[1].text
 
     def test_dos_brief_specialist_role_displays_label(self):
         brief_id = self.brief['briefs']['id']
@@ -313,12 +299,11 @@ class TestBriefPage(BaseApplicationTest):
         document = html.fromstring(res.get_data(as_text=True))
 
         brief_response_url = self.expand_path('/sellers/opportunities/{}/responses/create'.format(brief_id))
-        assert len(document.xpath(
-            '//a[@href="{0}"][contains(normalize-space(text()), normalize-space("{1}"))]'.format(
-                brief_response_url,
-                "Sign in to continue",
-            )
-        )) == 1
+        assert_equal(document.xpath('//a')[12].text, "Sign in to continue")
+        assert_equal(
+            document.xpath('//a')[12].values()[1],
+            "/login?next=/digital-service-professionals/opportunities/{}".format(brief_id)
+        )
 
     def test_buyer_start_application(self):
         self.login_as_buyer()
@@ -339,19 +324,6 @@ class TestBriefPage(BaseApplicationTest):
         assert_equal(200, res.status_code)
 
         assert_not_equals(res.data.title().strip().find("/Sellers/Opportunities/1/Ask-A-Question"), -1)
-
-    def test_supplier_applied_view_application(self):
-        self.login_as_supplier()
-        # mocking that we have applied
-        self._data_api_client.find_brief_responses.return_value = {
-            "briefResponses": [{"lazy": "mock"}],
-        }
-        brief_id = self.brief['briefs']['id']
-        res = self.client.get(self.expand_path('/digital-service-professionals/opportunities/{}'.format(brief_id)))
-        assert_equal(200, res.status_code)
-        document = html.fromstring(res.get_data(as_text=True))
-
-        self._assert_view_application(document, brief_id)
 
 
 class TestBriefApplicationScenarios(BaseApplicationTest):
@@ -391,7 +363,7 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
             "framework": "http://localhost:5000/frameworks/digital-marketplace",
         }
         self.brief['status'] = 'live'
-        self.brief['lot'] = 'digital-professional'
+        self.brief['lot'] = 'digital-professionals'
 
     def teardown(self):
         self._data_api_client.stop()
@@ -411,10 +383,18 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
         document = html.fromstring(res.get_data(as_text=True))
 
         brief_scenario_button_text = document.xpath('//a')[12].text
-        assert_equal(brief_scenario_button_text, 'Become a seller')
+        assert_equal(brief_scenario_button_text, 'Sign in to continue')
 
         choose_domain_url = document.xpath('//a')[12].get('href')
-        assert_equal(choose_domain_url, "/become-a-seller")
+        assert_equal(choose_domain_url, '/login?next=/{}/opportunities/{}'.format(
+            self.brief['frameworkSlug'], self.brief['id'])
+        )
+
+        brief_scenario_button_text = document.xpath('//a')[13].text
+        assert_equal(brief_scenario_button_text, 'Create an account')
+
+        choose_domain_url = document.xpath('//a')[13].get('href')
+        assert_equal(choose_domain_url, '/signup')
 
         brief_scenario_id = document.xpath('//div')[18].get('id')
         assert_equal(brief_scenario_id, 'scen_2')
@@ -461,7 +441,7 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
         self.application['application']['supplier'] = self.supplier['supplier']
         self.application['application']['status'] = 'submitted'
 
-        self.brief['lot'] = 'digital-professional'
+        self.brief['lot'] = 'digital-professionals'
 
         self._data_api_client.req.applications().get.return_value = self.application
 
@@ -524,7 +504,7 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
         self.application['application']['supplier'] = self.supplier['supplier']
         self.application['application']['status'] = 'submitted'
 
-        self.brief['lot'] = 'digital-professional'
+        self.brief['lot'] = 'digital-professionals'
 
         self._data_api_client.req.applications().get.return_value = self.application
 
@@ -548,6 +528,8 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
         self._data_api_client.find_brief_responses.return_value = {
             'briefResponses': ['firstResponse']
         }
+        self.brief['status'] = 'live'
+        self.brief['sellerSelector'] = 'not a restricted brief'
 
         res = self.client.get(
             self.expand_path('/digital-marketplace/opportunities/{}')
@@ -555,7 +537,6 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
         )
 
         document = html.fromstring(res.get_data(as_text=True))
-
         assert_equal(
             document.xpath('//a')[12].text, 'View your application'
         )
@@ -579,7 +560,7 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
         )
         document = html.fromstring(res.get_data(as_text=True))
         assert_equal(
-            document.xpath('//h3')[0].text, 'Have you got expertise in {}?'.format(
+            document.xpath('//h2')[8].text, 'Have you got expertise in {}?'.format(
                 self.brief['areaOfExpertise']
             )
         )
@@ -601,6 +582,7 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
         self.supplier['supplier']['domains']['assessed'] = []
         self.supplier['supplier']['domains']['unassessed'] = []
         self.supplier['supplier']['products'] = ['fxx', '458', 'f40' 'California']
+        self.supplier['supplier']['services'] = []
 
         self._data_api_client.get_domain.return_value = self.domain_name
         self._data_api_client.req.assessments().supplier().get.return_value = {
@@ -615,7 +597,7 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
         document = html.fromstring(res.get_data(as_text=True))
 
         assert_equal(
-            document.xpath('//h3')[0].text, 'Have you got expertise in {}?'.format(
+            document.xpath('//h2')[8].text, 'Have you got expertise in {}?'.format(
                 self.brief['areaOfExpertise']
             )
         )
@@ -659,7 +641,7 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
         document = html.fromstring(res.get_data(as_text=True))
 
         assert_equal(
-            document.xpath('//h3')[0].text, 'Have you got expertise in {}?'.format(
+            document.xpath('//h2')[8].text, 'Have you got expertise in {}?'.format(
                 self.brief['areaOfExpertise']
             )
         )
@@ -681,6 +663,7 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
         self.supplier['supplier']['products'] = ['shift', 'seven', 'axo']
         self.supplier['supplier']['domains']['unassessed'] = []
         self.supplier['supplier']['domains']['assessed'] = []
+        self.supplier['supplier']['services'] = []
         self.brief['lot'] = 'digital-outcome'
 
         self._data_api_client.req.assessments().supplier().get.return_value = {
@@ -693,8 +676,7 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
                 .format(self.brief['id'])
         )
         document = html.fromstring(res.get_data(as_text=True))
-
-        assert_equal(document.xpath('//h3')[0].text, 'What services do you offer?')
+        assert_equal(document.xpath('//h2')[8].text, 'What services do you offer?')
 
         brief_scenario_button_text = document.xpath('//a')[13].text
         assert_equal(brief_scenario_button_text, 'Update your profile')
@@ -924,7 +906,7 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
         self.supplier['supplier']['domains']['unassessed'] = [self.brief['areaOfExpertise'], ]
         self.supplier['supplier']['products'] = ['burgers', 'pizza', 'crumpets']
         self.supplier['supplier']['is_recruiter'] = 'true'
-        self.brief['lot'] = 'digital-professional'
+        self.brief['lot'] = 'digital-professionals'
         self.brief['areaOfExpertise'] = 'User research and design'
         self._data_api_client.req.assessments().supplier().get.return_value = {
             'unassessed': [],
@@ -955,9 +937,8 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
                 .format(self.brief['id'])
         )
         document = html.fromstring(res.get_data(as_text=True))
-
         assert_equal(document.xpath(
-            '//p')[3].text, "Only invited sellers can apply for 'Open to one' or 'Open to selected' opportunity."
+            '//p')[4].text, "Only invited sellers can apply for 'Open to one' or 'Open to selected' opportunity."
             )
 
     def test_some_sellers_restricted_brief(self):
@@ -969,9 +950,8 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
                 .format(self.brief['id'])
         )
         document = html.fromstring(res.get_data(as_text=True))
-
         assert_equal(document.xpath(
-            '//p')[3].text, "Only invited sellers can apply for 'Open to one' or 'Open to selected' opportunity."
+            '//p')[4].text, "Only invited sellers can apply for 'Open to one' or 'Open to selected' opportunity."
             )
 
 

@@ -5,7 +5,7 @@
   {% if brief.status == 'closed' %}
   
   <div class="callout--info" role="alert">
-    <p><strong>This opportunity is closed for applications.</strong></p>
+    <p><h2>This opportunity is closed for applications.</h2></p>
     <p>The deadline was {{ brief.applicationsClosedAt|datetimeformat }}</p>
     {{ action }}
   </div>
@@ -65,14 +65,15 @@
   </div>
   {% endif %}
   
-  {% if not current_user.is_authenticated %}
-  <strong>Interested in this opportunity?</strong>
-  <div class="brief-button-group">
+  {% if not current_user.is_authenticated or
+    (profile_application_status is none and profile_url is none) %}
+  <h2>Interested in this opportunity?</h2>
+  <div class="brief-button-group" id="scen_2">
     <span>
     {% with
-  url = application_url,
-  role = "button",
-  label = "Sign in to continue" %}
+      url = "/login?next=/{}/opportunities/{}".format(brief.frameworkSlug, brief.id),
+      role = "button",
+      label = "Sign in to continue" %}
       {% include "toolkit/link-button.html" %}
     {% endwith %}
   </span>
@@ -96,17 +97,16 @@
       {% if brief_responses %} 
         {% with 
           url = "{}/sellers/opportunities/{}/responses/result".format(config['URL_PREFIX'],
-        brief.id), 
-        text = "View your application", 
-        bigger = True 
-        %} 
-          {% include "toolkit/secondary-action-link.html" %} 
+          brief.id),
+          role = "button",
+          label = "View your application" %} 
+          {% include "toolkit/link-button.html" %} 
       {% endwith%} 
     {% endif %}
   
   <p>
-    {% if profile_application_status is none and profile_url is none %}
-    <h3>You must create a seller account to apply for this opportunity.</h3>
+    {% if current_user.is_authenticated and profile_application_status is none and profile_url is none %}
+    <h2>You must create a seller account to apply for this opportunity.</h2>
     <div class="brief-button-group" id="scen_2">
       <span>
         {% with
@@ -120,7 +120,7 @@
       {% endif %} 
 
     {% if profile_application_status == 'saved' %}
-    <h3>Complete your application to apply for this opportunity.</h3>
+    <h2>Complete your application to apply for this opportunity.</h2>
     <div class="brief-button-group" id="scen_4">
       <span>
         {% with
@@ -135,7 +135,7 @@
 
       {% if profile_application_status == 'submitted' and brief.lot == 'digital-outcome'and
       supplier_framework == 'digital-marketplace'%}
-    <h3>Interested in this opportunity?</h3>
+    <h2>Interested in this opportunity?</h2>
     <div class="brief-button-group" id="scen_5">
       <span>
         {% with
@@ -148,9 +148,9 @@
       </div>
       {% endif %} 
       
-      {% if profile_application_status == 'submitted' and brief.lot == 'digital-professional' and
+      {% if profile_application_status == 'submitted' and brief.lot == 'digital-professionals' and
       supplier_framework == 'digital-marketplace'%}
-      <h3>Interested in this opportunity?</h3>
+      <h2>Interested in this opportunity?</h2>
       <div class="brief-button-group" id="scen_6">
         <span>
           {% with
@@ -165,7 +165,7 @@
 
         {% if profile_application_status == 'submitted' and brief.lot == 'digital-outcome' and
         supplier_framework == 'digital-service-professionals' %}
-        <h3>You need to update your profile to apply.</h3>
+        <h2>You need to update your profile to apply.</h2>
         <div class="brief-button-group" id="scen_7">
           <span>
             {% with
@@ -178,9 +178,9 @@
           </div>
           {% endif %}
 
-        {% if profile_application_status == 'submitted' and brief.lot == 'digital-professional' and
+        {% if profile_application_status == 'submitted' and brief.lot == 'digital-professionals' and
           supplier_framework == 'digital-service-professionals' %}
-        <h3>You need to update your profile to apply.</h3>
+        <h2>You need to update your profile to apply.</h2>
         <div class="brief-button-group" id="scen_8">
           <span>
             {% with
@@ -193,10 +193,10 @@
           </div>
         {% endif %}
   
-        {% if profile_application_status == 'approved' and aoe_seller and brief.lot == 'digital-professional' 
+        {% if profile_application_status == 'approved' and aoe_seller and brief.lot == 'digital-professionals' 
         and unassessed_domains|length == 0
         and assessed_domains|length == 0 %}
-        <h3>Have you got expertise in {{ brief.areaOfExpertise }}?</h3>
+        <h2>Have you got expertise in {{ brief.areaOfExpertise }}?</h2>
           <p>
             Before you can apply for this opportunity you need to provide a case 
             study and reference that meets our <a href="/assessment-criteria">
@@ -222,10 +222,10 @@
         </div>
         {% endif %} 
   
-        {% if profile_application_status == 'approved' and product_seller and brief.lot == 'digital-professional' 
+        {% if profile_application_status == 'approved' and product_seller and brief.lot == 'digital-professionals' 
         and unassessed_domains|length == 0
         and assessed_domains|length == 0 %}
-        <h3>Have you got expertise in {{ brief.areaOfExpertise }}?</h3>
+        <h2>Have you got expertise in {{ brief.areaOfExpertise }}?</h2>
         <p>
           Before you can apply for this opportunity you need to provide a case 
           study and reference that meets our <a href="/assessment-criteria">
@@ -251,11 +251,11 @@
         </div>
         {% endif %} 
   
-        {% if profile_application_status == 'approved' and is_recruiter and brief.lot == 'digital-professional' 
+        {% if profile_application_status == 'approved' and is_recruiter and brief.lot == 'digital-professionals' 
         and unassessed_domains|length == 0
         and assessed_domains|length == 0 
         and brief.areaOfExpertise not in recruiter_domain_list%}
-        <h3>Have you got expertise in {{ brief.areaOfExpertise }}?</h3>
+        <h2>Have you got expertise in {{ brief.areaOfExpertise }}?</h2>
         <p> 
           Before you can apply for this opportunity you need to provide a candidate and details that meets our 
           <a href="/assessment-criteria"> assessment criteria</a>. 
@@ -282,7 +282,7 @@
       {% if profile_application_status == 'approved' and product_seller and brief.lot == 'digital-outcome' 
       and unassessed_domains|length == 0
       and assessed_domains|length == 0 %}
-      <h3>What services do you offer?</h3>
+      <h2>What services do you offer?</h2>
       <p>
         Before you can apply for this opportunity you need to select an area of expertise and 
         provide a case study and reference that meets our <a href="/assessment-criteria"> assessment criteria</a>. 
@@ -305,9 +305,9 @@
       </div>
       {% endif %} 
   
-      {% if profile_application_status == 'approved' and aoe_seller and brief.lot == 'digital-professional'
+      {% if profile_application_status == 'approved' and aoe_seller and brief.lot == 'digital-professionals'
       and brief.areaOfExpertise in supplier_assessments.unassessed %}
-      <h3>Interested in this opportunity?</h3>
+      <h2>Interested in this opportunity?</h2>
       <div class="brief-button-group" id="scen_15">
         <span>
           {% with
@@ -320,9 +320,9 @@
       </div>
       {% endif %} 
         
-      {% if profile_application_status == 'approved' and brief.lot == 'digital-professional' and
+      {% if profile_application_status == 'approved' and brief.lot == 'digital-professionals' and
       is_recruiter and brief.areaOfExpertise in supplier_assessments.unassessed %}
-      <h3>Interested in this opportunity?</h3>
+      <h2>Interested in this opportunity?</h2>
       <div class="brief-button-group" id="scen_16">
         <span>
             {% with
@@ -333,11 +333,26 @@
             {% endwith %}
           </span>
       </div>
-      {% endif %} 
+      {% endif %}
+
+      {% if profile_application_status == 'approved' and brief.lot == 'digital-professionals' and
+      product_seller and brief.areaOfExpertise in supplier_assessments.unassessed %}
+      <h2>Interested in this opportunity?</h2>
+      <div class="brief-button-group" id="scen_16_prod">
+        <span>
+            {% with
+          url = "/sellers/opportunities/{}/assessment/status".format(brief.id),
+          role = "button",
+          label = "Request an assessment" %}
+              {% include "toolkit/link-button.html" %}
+            {% endwith %}
+          </span>
+      </div>
+      {% endif %}
   
       {% if profile_application_status == 'approved' and brief.lot == 'digital-outcome' and 
       supplier_assessments.assessed|length == 0 and supplier_assessments.unassessed|length > 0 %}
-        <h3>Interested in this opportunity?</h3>
+        <h2>Interested in this opportunity?</h2>
         <div class="brief-button-group" id="scen_17">
           <span>
           {% with
@@ -350,10 +365,11 @@
         </div>
       {% endif %} 
         
-      {% if profile_application_status == 'approved' and aoe_seller and brief.lot == 'digital-professional' 
-      and brief.areaOfExpertise in unassessed_domains and 
-      brief.areaOfExpertise not in supplier_assessments.assessed %}
-      <h3>Interested in this opportunity?</h3>
+      {% if profile_application_status == 'approved' and aoe_seller and brief.lot == 'digital-professionals' 
+      and brief.areaOfExpertise in unassessed_domains 
+      and brief.areaOfExpertise not in supplier_assessments.unassessed 
+      and brief.areaOfExpertise not in supplier_assessments.assessed %}
+      <h2>Interested in this opportunity?</h2>
       <div class="brief-button-group" id="scen_18">
         <span>
         {% with
@@ -367,11 +383,11 @@
       {% endif %} 
         
       {% if profile_application_status == 'approved' and 
-      is_recruiter and brief.lot == 'digital-professional' and
+      is_recruiter and brief.lot == 'digital-professionals' and
       brief.areaOfExpertise not in supplier_assessments.assessed and
       brief.areaOfExpertise in recruiter_domain_list
       %}
-      <h3>Interested in this opportunity?</h3>
+      <h2>Interested in this opportunity?</h2>
       <div class="brief-button-group" id="scen_19">
         <span>
         {% with
@@ -383,13 +399,29 @@
       </span>
       </div>
       {% endif %} 
+
+      {% if profile_application_status == 'approved' and 
+      product_seller and brief.lot == 'digital-professionals' and
+      brief.areaOfExpertise not in supplier_assessments.assessed and
+      brief.areaOfExpertise in recruiter_domain_list
+      %}
+      <h2>Interested in this opportunity?</h2>
+      <div class="brief-button-group" id="scen_19_prod">
+        <span>
+        {% with
+          url = "/sellers/opportunities/{}/assessment/initial".format(brief.id),
+          role = "button",
+          label = "Request an assessment" %}
+          {% include "toolkit/link-button.html" %}
+        {% endwith %}
+      </span>
+      </div>
+      {% endif %}
           
       {% if profile_application_status == 'approved' and brief.lot == 'digital-outcome' and
         unassessed_domains|length > 0 and
-        supplier_assessments.assessed|length == 0 and 
-        supplier_assessments.unassessed|length == 0 
-        %}
-        <h3>Interested in this opportunity?</h3>
+        supplier_assessments.assessed|length == 0 %}
+        <h2>Interested in this opportunity?</h2>
         <div class="brief-button-group" id="scen_20">
           <span>
         {% with
@@ -404,7 +436,7 @@
 
       {% if profile_application_status == 'approved' and brief.lot == 'digital-outcome' and
         supplier_assessments.assessed|length > 0 %}
-        <h3>Interested in this opportunity?</h3>
+        <h2>Interested in this opportunity?</h2>
         <div class="brief-button-group" id="scen_23">
           <span>
         {% with
@@ -417,9 +449,9 @@
         </div>
       {% endif %} 
 
-    {% if profile_application_status == 'approved' and brief.lot == 'digital-professional' and
+    {% if profile_application_status == 'approved' and brief.lot == 'digital-professionals' and
       brief.areaOfExpertise in supplier_assessments.assessed %}
-      <h3>Interested in this opportunity?</h3>
+      <h2>Interested in this opportunity?</h2>
       <div class="brief-button-group" id="scen_24">
         <span>
       {% with

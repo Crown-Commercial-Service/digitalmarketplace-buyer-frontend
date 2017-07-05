@@ -309,7 +309,9 @@ def get_brief_by_id(framework_slug, brief_id):
                         recruiter_domain_list.append(domain[0])
 
             products = supplier.get('products', None)
-            if products is not None:
+            services = supplier.get('services', None)
+
+            if products and not services:
                 product_seller = any(products)
             supplier_code = supplier.get('code')
             supplier_assessments = data_api_client.req.assessments().supplier(supplier_code).get()
@@ -325,20 +327,23 @@ def get_brief_by_id(framework_slug, brief_id):
             if supplier_framework is None:
                 supplier_framework = 'digital-service-professionals'
 
-        if profile_application_id is not None:
-            profile_application = data_api_client.req.applications(profile_application_id).get()
-            if unassessed_domains is None:
-                unassessed_domains = profile_application.get(
-                    'application').get('supplier').get('domains', None).get('unassessed', None)
-            if assessed_domains is None:
-                assessed_domains = profile_application.get(
-                    'application').get('supplier').get('domains', None).get('assessed', None)
+        if profile_application_id:
+            try:
+                profile_application = data_api_client.req.applications(profile_application_id).get()
 
-            profile_application = data_api_client.req.applications(profile_application_id).get()
-            profile_application_status = profile_application.get('application').get('status', None)
-            if profile_application.get('application').get('type') == 'edit':
-                profile_application_status = 'approved'
+                if unassessed_domains is None:
+                    unassessed_domains = profile_application.get(
+                        'application').get('supplier').get('domains', None).get('unassessed', None)
+                if assessed_domains is None:
+                    assessed_domains = profile_application.get(
+                        'application').get('supplier').get('domains', None).get('assessed', None)
 
+                profile_application_status = profile_application.get('application').get('status', None)
+                if profile_application.get('application').get('type') == 'edit':
+                    profile_application_status = 'approved'
+
+            except APIError:
+                pass
     aoe_seller = False
     if not product_seller and not is_recruiter:
         aoe_seller = True
