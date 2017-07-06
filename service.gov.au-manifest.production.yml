@@ -2,7 +2,7 @@ command: scripts/cf_run_app.sh
 buildpack: https://github.com/cloudfoundry/buildpack-python.git
 memory: 1G
 disk_quota: 1G
-instances: 1
+instances: 2
 env:
     DM_ENVIRONMENT: production
     NEW_RELIC_ENVIRONMENT: production
