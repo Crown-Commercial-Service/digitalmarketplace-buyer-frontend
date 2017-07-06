@@ -620,8 +620,8 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
         self.supplier['supplier']['domains']['unassessed'] = []
         self.supplier['supplier']['is_recruiter'] = 'true'
         self.supplier['supplier']['recruiter_info'] = {
-            "User research and design": {
-                "active_candidates": "0",
+            "Cyber security": {
+                "active_candidates": "10",
                 "database_size": "400",
                 "margin": "20",
                 "markup": "20",

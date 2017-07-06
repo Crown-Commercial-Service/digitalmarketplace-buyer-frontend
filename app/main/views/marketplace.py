@@ -304,9 +304,8 @@ def get_brief_by_id(framework_slug, brief_id):
             else:
                 is_recruiter = False
             if is_recruiter:
-                for domain in supplier.get('recruiter_info').items():
-                    if int(domain[1].get('active_candidates')) > 0:
-                        recruiter_domain_list.append(domain[0])
+                for key, value in supplier.get('recruiter_info').items():
+                    recruiter_domain_list.append(key)
 
             products = supplier.get('products', None)
             services = supplier.get('services', None)
