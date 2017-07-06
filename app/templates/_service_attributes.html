@@ -12,8 +12,9 @@
       {% if not question.is_empty %}
         {% call summary.row() %}
           {{ summary.field_name(question.label) }}
-          {{ summary[question.type](question.filter_value|capitalize_first, question.assurance) }}
-
+          {% with item_value = summary[question.type](question.filter_value|capitalize_first, question.assurance) %}
+            {{ (item_value | preserve_line_breaks) if question.type == 'textbox_large' else item_value }}
+          {% endwith %}
         {% endcall %}
       {% endif %}
     {% endcall %}
