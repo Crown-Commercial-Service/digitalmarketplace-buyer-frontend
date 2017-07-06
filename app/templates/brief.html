@@ -65,8 +65,7 @@
   </div>
   {% endif %}
   
-  {% if not current_user.is_authenticated or
-    (profile_application_status is none and profile_url is none) %}
+  {% if not current_user.is_authenticated %}
   <h2>Interested in this opportunity?</h2>
   <div class="brief-button-group" id="scen_2">
     <span>
@@ -105,7 +104,8 @@
     {% endif %}
   
   <p>
-    {% if current_user.is_authenticated and profile_application_status is none and profile_url is none %}
+    {% if current_user.is_authenticated and current_user.role == 'buyer' and 
+    profile_application_status is none and profile_url is none %}
     <h2>You must create a seller account to apply for this opportunity.</h2>
     <div class="brief-button-group" id="scen_2">
       <span>
@@ -118,6 +118,21 @@
         </span>
       </div>
       {% endif %} 
+
+      {% if current_user.is_authenticated and current_user.role == 'supplier' and 
+      profile_application_status is none and profile_url is none %}
+      <h2>You need to update your profile to apply.</h2>
+      <div class="brief-button-group" id="scen_2a">
+        <span>
+          {% with
+            url = "/sellers/application",
+            role = "button",
+            label = "Update your profile" %}
+            {% include "toolkit/link-button.html" %}
+            {% endwith %}
+          </span>
+        </div>
+        {% endif %}
 
     {% if profile_application_status == 'saved' %}
     <h2>Complete your application to apply for this opportunity.</h2>

@@ -383,21 +383,13 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
         document = html.fromstring(res.get_data(as_text=True))
 
         brief_scenario_button_text = document.xpath('//a')[12].text
-        assert_equal(brief_scenario_button_text, 'Sign in to continue')
+        assert_equal(brief_scenario_button_text, 'Update your profile')
 
         choose_domain_url = document.xpath('//a')[12].get('href')
-        assert_equal(choose_domain_url, '/login?next=/{}/opportunities/{}'.format(
-            self.brief['frameworkSlug'], self.brief['id'])
-        )
-
-        brief_scenario_button_text = document.xpath('//a')[13].text
-        assert_equal(brief_scenario_button_text, 'Create an account')
-
-        choose_domain_url = document.xpath('//a')[13].get('href')
-        assert_equal(choose_domain_url, '/signup')
+        assert_equal(choose_domain_url, '/sellers/application')
 
         brief_scenario_id = document.xpath('//div')[18].get('id')
-        assert_equal(brief_scenario_id, 'scen_2')
+        assert_equal(brief_scenario_id, 'scen_2a')
 
     def test_submitted_app_outcome(self):
         self.login_as_supplier()
