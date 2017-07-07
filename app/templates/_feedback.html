@@ -5,13 +5,13 @@
       <form autocomplete="off" action="/feedback" method="post">
         <input id="uri" name="uri" type="hidden" value="{{ request.url }}">
 
-        <p>Don’t include personal or financial information like your National Insurance number or credit card details.</p>
+        <p>Please don’t include personal details or sensitive information about your business or project.</p>
 
-        <label for="what_doing">What you were doing</label>
-        <input autocomplete="off" id="what_doing" name="what_doing" type="text" />
+        <label for="what_doing">What you were doing?</label>
+        <input autocomplete="off" id="what_doing" name="what_doing" type="text">
 
-        <label for="what_happened">What happened</label>
-        <input autocomplete="off" id="what_happened" name="what_happened" type="text" />
+        <label for="what_happened">What happened?</label>
+        <input autocomplete="off" id="what_happened" name="what_happened" type="text">
 
         <div class="button-wrapper">
           <button name="commit" type="submit" class="button">Send</button>
