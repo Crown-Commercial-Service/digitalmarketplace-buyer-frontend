@@ -9,20 +9,19 @@ from lxml import html, cssselect
 import mock
 import pytest
 
+from app.main.views import login
+
+
 EMAIL_EMPTY_ERROR = "You must provide an email address"
 EMAIL_INVALID_ERROR = "You must provide a valid email address"
-EMAIL_SENT_MESSAGE = "If the email address you've entered belongs to a Digital Marketplace account, we'll send a link to reset the password."  # noqa
 PASSWORD_EMPTY_ERROR = "You must provide your password"
 PASSWORD_INVALID_ERROR = "Passwords must be between 10 and 50 characters"
 PASSWORD_MISMATCH_ERROR = "The passwords you entered do not match"
-NEW_PASSWORD_SUCCESS = "You have successfully changed your password"
-NEW_PASSWORD_FAIL = "Could not update password due to an error"
 NEW_PASSWORD_EMPTY_ERROR = "You must enter a new password"
 NEW_PASSWORD_CONFIRM_EMPTY_ERROR = "Please confirm your new password"
 
 PASSWORD_RESET_EMAIL_ERROR = "Failed to send password reset."
 
-TOKEN_CREATED_BEFORE_PASSWORD_LAST_CHANGED_ERROR = "This password reset link has expired."
 USER_LINK_EXPIRED_ERROR = "The link you used to create an account may have expired."
 
 
@@ -262,7 +261,7 @@ class TestResetPassword(BaseApplicationTest):
         }, follow_redirects=True)
         assert res.status_code == 200
         content = self.strip_all_whitespace(res.get_data(as_text=True))
-        assert self.strip_all_whitespace(EMAIL_SENT_MESSAGE) in content
+        assert self.strip_all_whitespace(login.EMAIL_SENT_MESSAGE) in content
 
     @mock.patch('app.main.views.login.send_email')
     def test_should_strip_whitespace_surrounding_reset_password_email_address_field(self, send_email):
@@ -362,7 +361,7 @@ class TestResetPassword(BaseApplicationTest):
             assert res.location == 'http://localhost/login'
             res = self.client.get(res.location)
 
-            assert NEW_PASSWORD_SUCCESS in res.get_data(as_text=True)
+            assert login.PASSWORD_UPDATED_MESSAGE in res.get_data(as_text=True)
 
     def test_password_change_unknown_failure(self):
         self.data_api_client_mock.update_user_password.return_value = False
@@ -381,7 +380,7 @@ class TestResetPassword(BaseApplicationTest):
             assert res.location == 'http://localhost/login'
             res = self.client.get(res.location)
 
-            assert NEW_PASSWORD_FAIL in res.get_data(as_text=True)
+            assert login.PASSWORD_NOT_UPDATED_MESSAGE in res.get_data(as_text=True)
         self.data_api_client_mock.update_user_password.return_value = True
 
     def test_should_not_strip_whitespace_surrounding_reset_password_password_field(self):
@@ -423,7 +422,7 @@ class TestResetPassword(BaseApplicationTest):
             error_selector = cssselect.CSSSelector('div.banner-destructive-without-action')
             error_elements = error_selector(document)
             assert len(error_elements) == 1
-            assert TOKEN_CREATED_BEFORE_PASSWORD_LAST_CHANGED_ERROR in error_elements[0].text_content()
+            assert login.BAD_TOKEN_MESSAGE in error_elements[0].text_content()
 
     @mock.patch('app.main.views.login.send_email')
     def test_should_call_send_email_with_correct_params(
