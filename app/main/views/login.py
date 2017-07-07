@@ -1,9 +1,12 @@
+# coding: utf-8
+from __future__ import unicode_literals
 from __future__ import absolute_import
 
 import six
 
 from flask_login import current_user
-from flask import abort, current_app, flash, redirect, render_template, request, session, url_for, get_flashed_messages
+from flask import abort, current_app, flash, redirect, render_template, request, session, url_for, get_flashed_messages,\
+    Markup
 from flask_login import logout_user, login_user
 
 from dmapiclient import HTTPError
@@ -17,6 +20,17 @@ from ..forms.auth_forms import LoginForm, EmailAddressForm, ChangePasswordForm, 
 from ..helpers import hash_email
 from ..helpers.login_helpers import redirect_logged_in_user
 from ... import data_api_client
+
+
+NO_ACCOUNT_MESSAGE = Markup("""Make sure you've entered the right email address and password. Accounts
+    are locked after 5 failed attempts. If you think your account has been locked, email
+    <a href="mailto:enquiries@digitalmarketplace.service.gov.uk">enquiries@digitalmarketplace.service.gov.uk</a>.""")
+PASSWORD_UPDATED_MESSAGE = "You have successfully changed your password."
+PASSWORD_NOT_UPDATED_MESSAGE = "Could not update password due to an error."
+EMAIL_SENT_MESSAGE = Markup("""If the email address you've entered belongs to a Digital Marketplace account, we'll
+    send a link to reset the password.""")
+BAD_TOKEN_MESSAGE = Markup("""This password reset link has expired. Enter your email address and we’ll send you a
+    new one. Password reset links are only valid for 24 hours.""")
 
 
 @main.route('/login', methods=["GET"])
@@ -42,7 +56,7 @@ def process_login():
             current_app.logger.info(
                 "login.fail: failed to log in {email_hash}",
                 extra={'email_hash': hash_email(form.email_address.data)})
-            flash("no_account", "error")
+            flash(NO_ACCOUNT_MESSAGE, "error")
             return render_template(
                 "auth/login.html",
                 form=form,
@@ -129,7 +143,7 @@ def send_reset_password_email():
                 "Password reset request for invalid supplier email {email_hash}",
                 extra={'email_hash': hash_email(email_address)})
 
-        flash('email_sent')
+        flash(EMAIL_SENT_MESSAGE)
         return redirect(url_for('.request_password_reset'))
     else:
         return render_template("auth/request-password-reset.html",
@@ -140,7 +154,7 @@ def send_reset_password_email():
 def reset_password(token):
     decoded = decode_password_reset_token(token, data_api_client)
     if 'error' in decoded:
-        flash(decoded['error'], 'error')
+        flash(BAD_TOKEN_MESSAGE, 'error')
         return redirect(url_for('.request_password_reset'))
 
     email_address = decoded['email']
@@ -156,7 +170,7 @@ def update_password(token):
     form = ChangePasswordForm()
     decoded = decode_password_reset_token(token, data_api_client)
     if 'error' in decoded:
-        flash(decoded['error'], 'error')
+        flash(BAD_TOKEN_MESSAGE, 'error')
         return redirect(url_for('.request_password_reset'))
 
     user_id = decoded["user"]
@@ -168,9 +182,9 @@ def update_password(token):
             current_app.logger.info(
                 "User {user_id} successfully changed their password",
                 extra={'user_id': user_id})
-            flash('password_updated')
+            flash(PASSWORD_UPDATED_MESSAGE)
         else:
-            flash('password_not_updated', 'error')
+            flash(PASSWORD_NOT_UPDATED_MESSAGE, 'error')
         return redirect(url_for('.render_login'))
     else:
         return render_template("auth/reset-password.html",
