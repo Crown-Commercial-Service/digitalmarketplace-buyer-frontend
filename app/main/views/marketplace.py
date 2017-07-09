@@ -297,7 +297,7 @@ def get_brief_by_id(framework_slug, brief_id):
             legacy_domains = supplier.get('domains').get('legacy', None)
 
             if profile_application_id is None:
-                profile_application_id = supplier.get('application_id')
+                profile_application_id = supplier.get('application_id', None)
             is_recruiter = supplier.get('is_recruiter', False)
             if is_recruiter == 'true':
                 is_recruiter = True
@@ -326,7 +326,7 @@ def get_brief_by_id(framework_slug, brief_id):
             if supplier_framework is None:
                 supplier_framework = 'digital-service-professionals'
 
-        if profile_application_id:
+        if profile_application_id is not None:
             try:
                 profile_application = data_api_client.req.applications(profile_application_id).get()
 
@@ -343,6 +343,9 @@ def get_brief_by_id(framework_slug, brief_id):
 
             except APIError:
                 pass
+            except HTTPError:
+                pass
+
     aoe_seller = False
     if not product_seller and not is_recruiter:
         aoe_seller = True
