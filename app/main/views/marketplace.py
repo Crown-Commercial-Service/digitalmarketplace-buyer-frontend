@@ -386,10 +386,10 @@ def get_brief_response_preview_by_id(framework_slug, brief_id):
     hypothetical_dates = brief['dates'].get('hypothetical', None)
     if hypothetical_dates is None:
         published_date = brief['dates'].get('published_date', None)
-        closing_date = brief['dates'].get('closing_date', None)
+        closing_time = brief['dates'].get('closing_time', None)
     else:
         published_date = hypothetical_dates.get('published_date', None)
-        closing_date = hypothetical_dates.get('closing_date', None)
+        closing_time = hypothetical_dates.get('closing_time', None)
 
     outdata = io.BytesIO()
 
@@ -432,13 +432,13 @@ def get_brief_response_preview_by_id(framework_slug, brief_id):
                             'copy and paste your answers from this template into \n', link, application_url)
     sheet.write_string('D1', '', right_border_question)
 
-    df = DateFormatter()
+    df = DateFormatter(current_app.config['DM_TIMEZONE'])
     sheet.write_string('E1', brief['title'], heading)
     sheet.write_string('E2', brief['summary'], darkgrey)
     sheet.write_string('E3', 'For: '+brief['organisation'], darkgrey)
     sheet.write_string('E4', 'Published: '+df.dateformat(published_date), darkgrey)
     sheet.write_string('E5', 'Closing date for application: ' +
-                       df.datetimeformat(closing_date), bold_red)
+                       df.datetimeformat(closing_time), bold_red)
 
     sheet.write_string('A2', 'Guidance', bold_question)
     sheet.write_string('B2', 'Question', bold_question)
