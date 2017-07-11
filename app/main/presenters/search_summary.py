@@ -237,4 +237,8 @@ class SummaryFragment(object):
                     filter_string = self.rules.add_filter_preposition(
                         filter_id=filter, filter_string=filter_string)
                     processed_filters.append(filter_string)
+                else:
+                    raise Exception(
+                        "Filter with id '{}' not found in filterRules.".format(filter)
+                    )
         return processed_filters
