@@ -501,6 +501,16 @@ class TestSummaryFragment(object):
             u" or aligned with <em>uptime institute tier 2</em>"
         )
 
+        # now check we can still create a summary if some of the filters are missing from the filter-rules list
+        self.rules_instance_mock.filter_rules_ids = ['uptime institute tier 1']
+        summary_fragment = SummaryFragment(
+            id, filters, self.rules_instance_mock)
+        assert summary_fragment.str() == (
+            u"datacentre tiers <em>TIA-942 Tier 1</em>" +
+            u", met with a <em>uptime institute tier 1</em>" +
+            u" or <em>uptime institute tier 2</em>"
+        )
+
     def test_str_method_works(self):
         id = 'Datacentre tier'
         filters = ['TIA-942 Tier 1']
