@@ -4,47 +4,6 @@
 
 {% block main_content %}
 
-{% with messages = get_flashed_messages(with_categories=true) %}
-{% if messages %}
-{% for category, message in messages %}
-    {% if category == 'error' %}
-      <div class="banner-destructive-without-action">
-    {% elif category != 'must_login' %}
-      <div class="banner-success-without-action">
-    {% endif %}
-            {% if message == 'no_account' %}
-              <p class="banner-message">
-                Make sure you've entered the right email address and password.
-                Accounts are locked after 5 failed attempts. If you think your
-                account has been locked, email
-                <a href="mailto:enquiries@digitalmarketplace.service.gov.uk">enquiries@digitalmarketplace.service.gov.uk</a>.
-              </p>
-            {% elif message == 'password_updated' %}
-              <p class="banner-message">
-                You have successfully changed your password.
-              </p>
-            {% elif message == 'password_not_updated' %}
-              <p class="banner-message">
-                Could not update password due to an error.
-              </p>
-            {% elif message == 'supplier-role-required' %}
-              <p class="banner-message">
-                You must log in with a supplier account to see this page.
-              </p>
-            {% elif message == 'buyer-role-required' %}
-              <p class="banner-message">
-                  You must log in with a buyer account to see this page.
-              </p>
-            {% elif category != 'must_login' %}
-              {{ message }}
-            {% endif %}
-    {% if category != 'must_login' %}
-      </div>
-    {% endif %}
-{% endfor %}
-{% endif %}
-{% endwith %}
-
 {% if form.errors|length > 1 %}
     <div class="validation-masthead" aria-labelledby="validation-masthead-heading">
         <h3 class="validation-masthead-heading" id="validation-masthead-heading">
