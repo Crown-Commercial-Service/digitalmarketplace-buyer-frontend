@@ -216,15 +216,15 @@ class TestSearchResults(BaseApplicationTest):
         self._search_api_client.search_services.return_value = return_value
 
         res = self.client.get(
-            '/g-cloud/search?q=email&lot=cloud-software&phoneSupport=true&supportAvailableToThirdParty=true')
+            '/g-cloud/search?q=email&lot=cloud-software&phoneSupport=true&onsiteSupport=yes')
         assert res.status_code == 200
         summary = find_search_summary(res.get_data(as_text=True))[0]
         assert '<span class="search-summary-count">1</span> result found' \
             ' containing <em>email</em> in' \
             ' <em>Cloud software</em>' in summary
         assert ' where user support is available ' in summary
-        assert 'that <em>can be used by third parties</em>' in summary
         assert 'by <em>phone</em>' in summary
+        assert 'through <em>onsite support</em>' in summary
 
     def test_should_render_summary_with_a_group_of_1_array_filter(self):
         return_value = self.search_results_multiple_page
