@@ -5,7 +5,6 @@ import json
 from nose.tools import assert_equal, assert_true, assert_false, assert_in
 from ...helpers import BaseApplicationTest
 from lxml import html
-import pytest
 
 
 def find_pagination_links(res_data):
@@ -20,7 +19,6 @@ def find_search_summary(res_data):
         r'<span class="search-summary-count">.+</span>[^\n]+', res_data)
 
 
-@pytest.mark.skip
 class TestCataloguePageNewDomains(BaseApplicationTest):
     def setup(self):
         super(TestCataloguePageNewDomains, self).setup()
@@ -144,7 +142,6 @@ class TestCataloguePageNewDomains(BaseApplicationTest):
         assert 'page' in response.get_data(as_text=True)
 
 
-@pytest.mark.skip
 class TestCataloguePage(BaseApplicationTest):
     def setup(self):
         super(TestCataloguePage, self).setup()
