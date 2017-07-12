@@ -1,5 +1,6 @@
 # coding: utf-8
 import mock
+import pytest
 from lxml import html
 
 from nose.tools import assert_equal, assert_true, assert_false
@@ -38,6 +39,7 @@ class TestSuppliersPage(BaseApplicationTest):
 
         assert res.status_code == 302
 
+    @pytest.mark.skip
     def test_suppliers_can_see_own_page(self, api_client):
         self.login_as_supplier(supplier_code=1234)
         api_client.return_value.get_supplier.return_value = self.supplier
@@ -47,6 +49,7 @@ class TestSuppliersPage(BaseApplicationTest):
 
         assert res.status_code == 200
 
+    @pytest.mark.skip
     def test_should_have_supplier_details_on_supplier_page(self, api_client):
         self.login_as_buyer()
         api_client.return_value.get_supplier.return_value = self.supplier
@@ -58,6 +61,7 @@ class TestSuppliersPage(BaseApplicationTest):
         assert res.status_code == 200
         assert document.xpath('//h1')[0].text.strip() == 'Example PTY LTD'
 
+    @pytest.mark.skip
     def test_should_show_supplier_with_minimum_data(self, api_client):
         self.login_as_buyer()
         api_client.return_value.get_supplier.return_value = self.supplier_with_minimum_data

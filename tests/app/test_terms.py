@@ -2,6 +2,7 @@ from datetime import timedelta
 import mock
 from datetime import date, time, datetime
 import pendulum
+import pytest
 
 from app.helpers.terms_helpers import TermsManager
 
@@ -82,6 +83,7 @@ class TestAcceptanceCheck(BaseApplicationTest):
         terms_accepted_at = (dt + offset)
         self.login_as_buyer(terms_accepted_at=terms_accepted_at)
 
+    @pytest.mark.skip
     def test_non_stale_user(self):
         self.login(acceptance_stale=False)
 
