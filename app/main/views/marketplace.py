@@ -26,7 +26,7 @@ from ..forms.brief_forms import BriefSearchForm
 
 from flask_weasyprint import HTML, render_pdf
 from app.api_client.data import DataAPIClient
-from app.api_client.error import APIError
+from app.api_client.error import APIError, HTTPError
 
 
 @main.route('/')
