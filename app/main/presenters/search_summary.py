@@ -232,9 +232,10 @@ class SummaryFragment(object):
             return processed_filters
         else:
             for filter in filters:
+                filter_string = _mark_up_filter(filter)
                 if filter in self.rules.filter_rules_ids:
-                    filter_string = _mark_up_filter(filter)
                     filter_string = self.rules.add_filter_preposition(
                         filter_id=filter, filter_string=filter_string)
-                    processed_filters.append(filter_string)
+                processed_filters.append(filter_string)
+
         return processed_filters
