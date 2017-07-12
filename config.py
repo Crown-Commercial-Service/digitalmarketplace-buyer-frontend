@@ -109,7 +109,7 @@ class Test(Config):
     CSRF_ENABLED = False
     CSRF_FAKED = True
 
-    DM_DATA_API_URL = "http://localhost:5000"
+    DM_DATA_API_URL = "http://localhost:5000/api/"
     DM_DATA_API_AUTH_TOKEN = "myToken"
 
     # Used a fixed timezone for tests. Using Sydney timezone will catch more timezone bugs than London.
@@ -136,7 +136,7 @@ class Development(Config):
     SESSION_COOKIE_SECURE = False
     DM_SEARCH_PAGE_SIZE = 5
 
-    DM_DATA_API_URL = "http://localhost:5000"
+    DM_DATA_API_URL = "http://localhost:5000/api/"
     DM_DATA_API_AUTH_TOKEN = "myToken"
     DM_DEFAULT_CACHE_MAX_AGE = 60
 
