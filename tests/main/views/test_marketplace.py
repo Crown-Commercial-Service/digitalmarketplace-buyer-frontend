@@ -4,10 +4,7 @@ import mock
 from six import iteritems
 from six.moves.urllib.parse import urlparse, parse_qs
 from lxml import html
-from datetime import datetime
 from ...helpers import BaseApplicationTest
-from dmapiclient import APIError
-from dmutils.formats import DATETIME_FORMAT, DISPLAY_DATE_FORMAT, DISPLAY_DATETIME_FORMAT
 import pytest
 
 
@@ -336,7 +333,7 @@ class TestStaticMarketplacePages(BaseApplicationTest):
         assert res.status_code == 200
         assert '<h1>Cookies</h1>' in self._strip_whitespace(res.get_data(as_text=True))
 
-    def test_cookie_page(self):
+    def test_terms_and_conditions_page(self):
         res = self.client.get('/terms-and-conditions')
         assert res.status_code == 200
         assert '<h1>Termsandconditions</h1>' in self._strip_whitespace(res.get_data(as_text=True))
@@ -359,14 +356,6 @@ class BaseBriefPageTest(BaseApplicationTest):
 
 class TestBriefPage(BaseBriefPageTest):
 
-    def _assert_page_title(self, document):
-        brief_title = self.brief['briefs']['title']
-        brief_organisation = self.brief['briefs']['organisation']
-
-        page_heading = document.xpath('//header[@class="page-heading-smaller"]')[0]
-        page_heading_h1 = page_heading.xpath('h1/text()')[0]
-        page_heading_context = page_heading.xpath('p[@class="context"]/text()')[0]
-
     def test_dos_brief_404s_if_brief_is_draft(self):
         self.brief['briefs']['status'] = 'draft'
         brief_id = self.brief['briefs']['id']
@@ -380,7 +369,9 @@ class TestBriefPage(BaseBriefPageTest):
 
         document = html.fromstring(res.get_data(as_text=True))
 
-        self._assert_page_title(document)
+        page_heading = document.xpath('//header[@class="page-heading-smaller"]')[0]
+        assert page_heading.xpath('h1/text()')[0] == self.brief['briefs']['title']
+        assert page_heading.xpath('p[@class="context"]/text()')[0] == self.brief['briefs']['organisation']
 
     def test_dos_brief_has_lot_analytics_string(self):
         brief = self.brief['briefs']
@@ -770,7 +761,7 @@ class TestWithdrawnSpecificBriefPage(BaseBriefPageTest):
             "The buyer may publish an updated&nbsp;version on the Digital&nbsp;Marketplace."
         ) in page
 
-    @pytest.mark.parametrize(('status'), ['live', 'closed'])
+    @pytest.mark.parametrize('status', ['live', 'closed'])
     def test_withdrawn_banner_not_shown_on_live_and_closed_brief(self, status):
         self.brief['briefs']['status'] = status
         del self.brief['briefs']['withdrawnAt']
