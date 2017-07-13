@@ -1,4 +1,5 @@
 from lxml import html
+import json
 import mock
 import re
 import pytest
@@ -52,7 +53,7 @@ class TestSearchResults(BaseApplicationTest):
 
         res = self.client.get('/g-cloud/search?q=email')
         assert res.status_code == 200
-        assert '<form action="/g-cloud/search" method="get">' in res.get_data(as_text=True)
+        assert '<form action="/g-cloud/search" method="get" id="js-dm-live-search-form">' in res.get_data(as_text=True)
 
     def test_search_page_allows_non_keyword_search(self):
         self._search_api_client.search_services.return_value = \
@@ -522,3 +523,60 @@ class TestSearchResults(BaseApplicationTest):
                                   'li[normalize-space(string())=$training]', training="Training (0)")
         assert len(training) == 1
         assert len(training[0].xpath('a')) == 0
+
+
+class TestSearchFilterOnClick(BaseApplicationTest):
+    def setup_method(self, method):
+        super(TestSearchFilterOnClick, self).setup_method(method)
+
+        self._search_api_client_patch = mock.patch('app.main.views.g_cloud.search_api_client', autospec=True)
+        self._search_api_client = self._search_api_client_patch.start()
+
+        self._search_api_client_presenters_patch = mock.patch('app.main.presenters.search_presenters.search_api_client',
+                                                              autospec=True)
+        self._search_api_client_presenters = self._search_api_client_presenters_patch.start()
+        self._search_api_client_presenters.aggregate_services.return_value = \
+            self._get_fixture_data('g9_aggregations_fixture.json')
+
+        self.search_results = self._get_search_results_fixture_data()
+        self.g9_search_results = self._get_g9_search_results_fixture_data()
+        self.search_results_multiple_page = self._get_search_results_multiple_page_fixture_data()
+
+        self._search_api_client.search_services.return_value = self.search_results
+
+    def teardown_method(self, method):
+        self._search_api_client_patch.stop()
+        self._search_api_client_presenters_patch.stop()
+
+    @pytest.mark.parametrize('query_string, content_type',
+                             (('', 'text/html; charset=utf-8'),
+                              ('?live-results=true', 'application/json')))
+    def test_endpoint_switches_on_live_results_request(self, query_string, content_type):
+        res = self.client.get('/g-cloud/search{}'.format(query_string))
+        assert res.status_code == 200
+        assert res.content_type == content_type
+
+    def test_live_results_returns_valid_json_structure(self):
+        res = self.client.get('/g-cloud/search?live-results=true')
+        data = json.loads(res.get_data(as_text=True))
+
+        assert set(data.keys()) == {'results', 'summary', 'categories'}
+
+        for k, v in data.items():
+            assert set(v.keys()) == {'selector', 'html'}
+
+            # We want to enforce using css IDs to describe the nodes which should be replaced.
+            assert v['selector'].startswith('#')
+
+    @pytest.mark.parametrize('query_string, urls',
+                             (('', {'search/services.html'}),
+                              ('?live-results=true', {"search/_services_results_wrapper.html",
+                                                      "search/_services_categories_wrapper.html",
+                                                      "search/_services_summary.html"})))
+    @mock.patch('app.main.views.g_cloud.render_template', autospec=True)
+    def test_base_page_renders_search_services(self, render_template_patch, query_string, urls):
+        render_template_patch.return_value = '<p>some html</p>'
+
+        res = self.client.get('/g-cloud/search{}'.format(query_string))
+
+        assert urls == set(x[0][0] for x in render_template_patch.call_args_list)
