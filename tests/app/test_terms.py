@@ -87,12 +87,12 @@ class TestAcceptanceCheck(BaseApplicationTest):
     def test_non_stale_user(self):
         self.login(acceptance_stale=False)
 
-        res = self.client.get(self.url_for('main.supplier_search'))
+        res = self.client.get(self.url_for("buyers.buyer_dashboard"))
         assert res.status_code == 200
 
     def test_stale_user(self):
         self.login(acceptance_stale=True)
 
-        res = self.client.get(self.url_for('main.supplier_search'))
+        res = self.client.get(self.url_for("buyers.buyer_dashboard"))
         assert res.status_code == 302
         assert res.location == self.url_for('main.terms_updated', _external=True)

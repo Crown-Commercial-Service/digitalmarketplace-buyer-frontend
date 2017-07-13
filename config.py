@@ -81,9 +81,7 @@ class Config(object):
         'CASE_STUDY': True,
         'XLSX_EXPORT': True,
         'SELLER_REGISTRATION': True,
-        'DOMAINS_SEARCH': True,
         'DM_FRAMEWORK': True,
-        'SEARCH': True,
         'TEAM_VIEW': True
     }
 
@@ -124,9 +122,7 @@ class Test(Config):
         'CASE_STUDY': True,
         'XLSX_EXPORT': True,
         'SELLER_REGISTRATION': True,
-        'DOMAINS_SEARCH': False,
         'DM_FRAMEWORK': False,
-        'SEARCH': False,
         'TEAM_VIEW': True
     }
 
@@ -160,8 +156,6 @@ class Live(Config):
         'XLSX_EXPORT': False,
         'SELLER_REGISTRATION': True,
         'DM_FRAMEWORK': True,
-        'DOMAINS_SEARCH': True,
-        'SEARCH': True,
         'TEAM_VIEW': True
     }
 
