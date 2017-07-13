@@ -7,7 +7,7 @@ from lxml import html
 from datetime import datetime
 from ...helpers import BaseApplicationTest
 from dmapiclient import APIError
-from dmutils.formats import DATETIME_FORMAT, DISPLAY_DATE_FORMAT
+from dmutils.formats import DATETIME_FORMAT, DISPLAY_DATE_FORMAT, DISPLAY_DATETIME_FORMAT
 import pytest
 
 
@@ -392,10 +392,6 @@ class TestBriefPage(BaseBriefPageTest):
 
         assert analytics_string in data
 
-    def _convert_date_to_display_date_format(self, date_string):
-        date_object = datetime.strptime(date_string, DATETIME_FORMAT)
-        return date_object.strftime(DISPLAY_DATE_FORMAT)
-
     def test_dos_brief_has_important_dates(self):
         brief_id = self.brief['briefs']['id']
         self.brief['briefs']['clarificationQuestionsClosedAt'] = "2016-12-14T11:08:28.054129Z"
@@ -411,15 +407,37 @@ class TestBriefPage(BaseBriefPageTest):
         assert brief_important_dates[0].xpath('td[@class="summary-item-field-first"]')[0].text_content().strip() \
             == "Published"
         assert brief_important_dates[0].xpath('td[@class="summary-item-field"]')[0].text_content().strip() \
-            == self._convert_date_to_display_date_format(self.brief['briefs']['publishedAt'])
+            == "Thursday 1 December 2016"
         assert brief_important_dates[1].xpath('td[@class="summary-item-field-first"]')[0].text_content().strip() \
             == "Deadline for asking questions"
         assert brief_important_dates[1].xpath('td[@class="summary-item-field"]')[0].text_content().strip() \
-            == self._convert_date_to_display_date_format(self.brief['briefs']['clarificationQuestionsClosedAt'])
+            == "Wednesday 14 December 2016 at 11:08am GMT"
         assert brief_important_dates[2].xpath('td[@class="summary-item-field-first"]')[0].text_content().strip() \
             == "Closing date for applications"
         assert brief_important_dates[2].xpath('td[@class="summary-item-field"]')[0].text_content().strip() \
-            == self._convert_date_to_display_date_format(self.brief['briefs']['applicationsClosedAt'])
+            == "Thursday 15 December 2016 at 11:08am GMT"
+
+    def test_dos_brief_with_daylight_savings_has_question_deadline_closing_date_forced_to_utc(self):
+        brief_id = self.brief['briefs']['id']
+        self.brief['briefs']['publishedAt'] = "2016-08-01T23:59:00.000000Z"
+        self.brief['briefs']['clarificationQuestionsClosedAt'] = "2016-08-14T23:59:00.000000Z"
+        self.brief['briefs']['applicationsClosedAt'] = "2016-08-15T23:59:00.000000Z"
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
+        assert res.status_code == 200
+
+        document = html.fromstring(res.get_data(as_text=True))
+
+        brief_important_dates = document.xpath(
+            '(//table[@class="summary-item-body"])[1]/tbody/tr')
+        assert 3 == len(brief_important_dates)
+        # Publish date does not have UTC filter applied
+        assert brief_important_dates[0].xpath('td[@class="summary-item-field"]')[0].text_content().strip() \
+            == "Monday 1 August 2016"
+        # Question deadline and closing date are forced to 11.59pm (UTC+00) on the correct day
+        assert brief_important_dates[1].xpath('td[@class="summary-item-field"]')[0].text_content().strip() \
+            == "Sunday 14 August 2016 at 11:59pm GMT"
+        assert brief_important_dates[2].xpath('td[@class="summary-item-field"]')[0].text_content().strip() \
+            == "Monday 15 August 2016 at 11:59pm GMT"
 
     def test_dos_brief_has_at_least_one_section(self):
         brief_id = self.brief['briefs']['id']
