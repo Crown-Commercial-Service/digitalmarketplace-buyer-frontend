@@ -16,7 +16,7 @@ sudo easy_install virtualenv
 
 Install dependencies, run migrations and run the app
 ```
-make run_all
+make run-all
 ````
 
 ## Setup
@@ -58,7 +58,7 @@ source ./venv/bin/activate
 
 Install new Python dependencies with pip
 
-```pip install -r requirements_for_test.txt```
+```pip install -r requirements-dev.txt```
 
 [Install frontend dependencies](https://github.com/alphagov/digitalmarketplace-buyer-frontend#front-end) with npm and gulp
 
@@ -71,7 +71,7 @@ npm install
 To run the whole testsuite:
 
 ```
-./scripts/run_tests.sh
+make test
 ```
 
 To only run the JavaScript tests:
@@ -87,7 +87,7 @@ script, which sets the required environment variables to defaults if they have
 not already been set:
 
 ```
-./scripts/run_app.sh
+make run-app
 ```
 
 More generally, the command to start the server is:
@@ -96,6 +96,19 @@ python application.py runserver
 ```
 
 The buyer app runs on port 5002 by default. Use the app at [http://127.0.0.1:5002/](http://127.0.0.1:5002/)
+
+### Updating application dependencies
+
+`requirements.txt` file is generated from the `requirements-app.txt` in order to pin
+versions of all nested dependecies. If `requirements-app.txt` has been changed (or
+we want to update the unpinned nested dependencies) `requirements.txt` should be
+regenerated with
+
+```
+make freeze-requirements
+```
+
+`requirements.txt` should be commited alongside `requirements-app.txt` changes.
 
 ### Using FeatureFlags
 
@@ -134,9 +147,3 @@ npm install
 - `npm run frontend-install` (install all non-NPM dependancies)
 
 Note: `npm run frontend-install` is run automatically as a post-install task when you run `npm install`.
-
-## Frontend tests
-
-To run the JavaScript tests, navigate to `spec/javascripts/support/` and open `LocalTestRunner.html` in a browser.
-
-TODO: Add a Gulp task which is run as part of `./scripts/run_tests.sh`.
