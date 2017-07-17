@@ -388,9 +388,6 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
         choose_domain_url = document.xpath('//a')[12].get('href')
         assert_equal(choose_domain_url, '/sellers/application')
 
-        brief_scenario_id = document.xpath('//div')[18].get('id')
-        assert_equal(brief_scenario_id, 'scen_2a')
-
     def test_submitted_app_outcome(self):
         self.login_as_supplier()
 
@@ -416,12 +413,10 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
         assert_equal(brief_scenario_button_text, 'Request an assessment')
 
         choose_domain_url = document.xpath('//a')[12].get('href')
-        assert_equal(choose_domain_url, "/sellers/opportunities/{}/assessment/choose".format(
+        assert_equal(choose_domain_url, "/sellers/opportunities/{}/assessment/status".format(
             self.brief['id']
             )
         )
-        brief_scenario_id = document.xpath('//div')[18].get('id')
-        assert_equal(brief_scenario_id, 'scen_5')
 
     def test_submitted_app_dp(self):
         self.login_as_supplier()
@@ -451,8 +446,6 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
             self.brief['id']
             )
         )
-        brief_scenario_id = document.xpath('//div')[18].get('id')
-        assert_equal(brief_scenario_id, 'scen_6')
 
     def test_existing_seller_submitted_app_outcome(self):
         self.login_as_supplier()
@@ -481,8 +474,6 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
 
         choose_domain_url = document.xpath('//a')[12].get('href')
         assert_equal(choose_domain_url, "/sellers/application")
-        brief_scenario_id = document.xpath('//div')[18].get('id')
-        assert_equal(brief_scenario_id, 'scen_7')
 
     def test_existing_seller_submitted_app_dp(self):
         self.login_as_supplier()
@@ -511,8 +502,6 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
 
         choose_domain_url = document.xpath('//a')[12].get('href')
         assert_equal(choose_domain_url, "/sellers/application")
-        brief_scenario_id = document.xpath('//div')[18].get('id')
-        assert_equal(brief_scenario_id, 'scen_8')
 
     def test_has_brief_responses(self):
         self.login_as_supplier()
@@ -565,9 +554,6 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
             self.supplier['supplier']['code']
         ))
 
-        brief_scenario_id = document.xpath('//div')[18].get('id')
-        assert_equal(brief_scenario_id, 'scen_11')
-
     def test_products_dp_no_casestudies(self):
         self.login_as_supplier()
 
@@ -601,9 +587,6 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
         assert_equal(choose_domain_url, '/supplier/{}'.format(
             self.supplier['supplier']['code']
         ))
-
-        brief_scenario_id = document.xpath('//div')[18].get('id')
-        assert_equal(brief_scenario_id, 'scen_12')
 
     def test_recruiter_dp_no_casestudies(self):
         self.login_as_supplier()
@@ -639,15 +622,12 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
         )
 
         brief_scenario_button_text = document.xpath('//a')[13].text
-        assert_equal(brief_scenario_button_text, 'Add a candidate')
+        assert_equal(brief_scenario_button_text, 'Update your profile')
 
         choose_domain_url = document.xpath('//a')[13].get('href')
         assert_equal(choose_domain_url, '/supplier/{}'.format(
             self.supplier['supplier']['code']
         ))
-
-        brief_scenario_id = document.xpath('//div')[18].get('id')
-        assert_equal(brief_scenario_id, 'scen_13')
 
     def test_products_outcome_no_casestudies(self):
         self.login_as_supplier()
@@ -676,9 +656,6 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
         choose_domain_url = document.xpath('//a')[13].get('href')
         assert_equal(choose_domain_url, '/supplier/{}'.format(self.supplier['supplier']['code']))
 
-        brief_scenario_id = document.xpath('//div')[18].get('id')
-        assert_equal(brief_scenario_id, 'scen_14')
-
     def test_aoe_dp_inreview(self):
         self.login_as_supplier()
 
@@ -701,9 +678,6 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
 
         choose_domain_url = document.xpath('//a')[12].get('href')
         assert_equal(choose_domain_url, '/sellers/opportunities/1/assessment/status')
-
-        brief_scenario_id = document.xpath('//div')[18].get('id')
-        assert_equal(brief_scenario_id, 'scen_15')
 
     def test_recruiter_dp_inreview(self):
         self.login_as_supplier()
@@ -739,13 +713,12 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
             self.brief['id']
         ))
 
-        brief_scenario_id = document.xpath('//div')[18].get('id')
-        assert_equal(brief_scenario_id, 'scen_16')
-
     def test_all_outcome_inreview(self):
         self.login_as_supplier()
 
         self.brief['lot'] = 'digital-outcome'
+        self.supplier['supplier']['domains']['assessed'] = []
+        self.supplier['supplier']['domains']['unassessed'] = ["Nunchuk skills", ]
         self.supplier['supplier']['products'] = ['this', 'and', 'the other thing']
         self.supplier['supplier']['is_recruiter'] = 'true'
         self._data_api_client.req.assessments().supplier().get.return_value = {
@@ -768,14 +741,12 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
             )
         )
 
-        brief_scenario_id = document.xpath('//div')[18].get('id')
-        assert_equal(brief_scenario_id, 'scen_17')
-
     def test_aeo_professional_not_assessed(self):
         self.login_as_supplier()
 
         self.supplier['supplier']['domains']['unassessed'] = [self.brief['areaOfExpertise'], ]
         self.supplier['supplier']['domains']['assessed'] = []
+        self._data_api_client.req.domain().get.return_value = {"domain": {"id": 1}}
         self._data_api_client.req.assessments().supplier().get.return_value = {
             'unassessed': [],
             'assessed': []
@@ -791,18 +762,15 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
         assert_equal(brief_scenario_button_text, 'Request an assessment')
 
         choose_domain_url = document.xpath('//a')[12].get('href')
-        assert_equal(choose_domain_url, "/sellers/opportunities/{}/assessment/initial".format(
+        assert_equal(choose_domain_url, "/sellers/opportunities/{}/assessment/1".format(
             self.brief['id']
             )
         )
 
-        brief_scenario_id = document.xpath('//div')[18].get('id')
-        assert_equal(brief_scenario_id, 'scen_18')
-
     def test_recruiter_dp_not_assessed(self):
         self.login_as_supplier()
         self.supplier['supplier']['domains']['assessed'] = []
-        self.supplier['supplier']['domains']['unassessed'] = []
+        self.supplier['supplier']['domains']['unassessed'] = ["User research and design"]
         self.supplier['supplier']['is_recruiter'] = 'true'
         self.supplier['supplier']['recruiter_info'] = {
             "User research and design": {
@@ -814,6 +782,7 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
             },
         }
         self._data_api_client.get_domain.return_value = self.domain_name
+        self._data_api_client.req.domain().get.return_value = {"domain": {"id": 1}}
         self._data_api_client.req.assessments().supplier().get.return_value = {
             'unassessed': [],
             'assessed': []
@@ -829,14 +798,12 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
         assert_equal(brief_scenario_button_text, 'Request an assessment')
 
         choose_domain_url = document.xpath('//a')[12].get('href')
-        assert_equal(choose_domain_url, '/sellers/opportunities/1/assessment/initial')
-
-        brief_scenario_id = document.xpath('//div')[18].get('id')
-        assert_equal(brief_scenario_id, 'scen_19')
+        assert_equal(choose_domain_url, '/sellers/opportunities/1/assessment/1')
 
     def test_all_outcome_all_unassessed(self):
         self.login_as_supplier()
 
+        self.supplier['supplier']['domains']['assessed'] = []
         self.supplier['supplier']['domains']['unassessed'] = [self.brief['areaOfExpertise'], ]
         self.supplier['supplier']['products'] = ['burgers', 'pizza', 'crumpets']
         self.supplier['supplier']['is_recruiter'] = 'true'
@@ -860,9 +827,6 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
             self.brief['id']
             )
         )
-
-        brief_scenario_id = document.xpath('//div')[18].get('id')
-        assert_equal(brief_scenario_id, 'scen_20')
 
     def test_approved_and_assessed_outcome(self):
         self.login_as_supplier()
@@ -889,9 +853,6 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
         choose_domain_url = document.xpath('//a')[12].get('href')
         assert_equal(choose_domain_url, '/sellers/opportunities/{}/responses/create'.format(self.brief['id']))
 
-        brief_scenario_id = document.xpath('//div')[18].get('id')
-        assert_equal(brief_scenario_id, 'scen_23')
-
     def test_approved_and_assessed_dp(self):
         self.login_as_supplier()
 
@@ -916,9 +877,6 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
 
         choose_domain_url = document.xpath('//a')[12].get('href')
         assert_equal(choose_domain_url, '/sellers/opportunities/{}/responses/create'.format(self.brief['id']))
-
-        brief_scenario_id = document.xpath('//div')[18].get('id')
-        assert_equal(brief_scenario_id, 'scen_24')
 
     def test_one_seller_restricted_brief(self):
         self.login_as_supplier()

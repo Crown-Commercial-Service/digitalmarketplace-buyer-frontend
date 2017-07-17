@@ -26,7 +26,8 @@ from ..forms.brief_forms import BriefSearchForm
 
 from flask_weasyprint import HTML, render_pdf
 from app.api_client.data import DataAPIClient
-from app.api_client.error import APIError, HTTPError
+from dmapiclient.errors import HTTPError
+from app.api_client.error import APIError
 
 
 @main.route('/')
@@ -269,16 +270,11 @@ def get_brief_by_id(framework_slug, brief_id):
     application_url = "/sellers/opportunities/{}/responses/create".format(brief['id'])
     add_case_study_url = None
 
-    profile_application_id = None
     profile_application_status = None
-    profile_application = None
     supplier = None
     unassessed_domains = {}
     assessed_domains = {}
-    is_recruiter = False
-    product_seller = False
     profile_url = None
-    recruiter_domain_list = []
     supplier_assessments = {}
     supplier_framework = None
 
@@ -298,20 +294,7 @@ def get_brief_by_id(framework_slug, brief_id):
 
             if profile_application_id is None:
                 profile_application_id = supplier.get('application_id', None)
-            is_recruiter = supplier.get('is_recruiter', False)
-            if is_recruiter == 'true':
-                is_recruiter = True
-            else:
-                is_recruiter = False
-            if is_recruiter:
-                for key, value in supplier.get('recruiter_info').items():
-                    recruiter_domain_list.append(key)
 
-            products = supplier.get('products', None)
-            services = supplier.get('services', None)
-
-            if products and not services:
-                product_seller = any(products)
             supplier_code = supplier.get('code')
             supplier_assessments = data_api_client.req.assessments().supplier(supplier_code).get()
 
@@ -346,13 +329,13 @@ def get_brief_by_id(framework_slug, brief_id):
             except HTTPError:
                 pass
 
-    aoe_seller = False
-    if not product_seller and not is_recruiter:
-        aoe_seller = True
+    domain_id = None
+    if brief.get('areaOfExpertise'):
+        current_domain = data_api_client.req.domain(brief['areaOfExpertise']).get()
+        domain_id = current_domain['domain']['id']
 
     return render_template_with_csrf(
         'brief.html',
-        aoe_seller=aoe_seller,
         add_case_study_url=add_case_study_url,
         application_url=application_url,
         assessed_domains=assessed_domains,
@@ -360,12 +343,10 @@ def get_brief_by_id(framework_slug, brief_id):
         brief_responses=brief_responses,
         brief_of_current_user=brief_of_current_user,
         content=brief_content,
-        is_recruiter=is_recruiter,
+        domain_id=domain_id,
         is_restricted_brief=is_restricted_brief,
-        product_seller=product_seller,
         profile_application_status=profile_application_status,
         profile_url=profile_url,
-        recruiter_domain_list=recruiter_domain_list,
         show_pdf_link=brief['status'] in ['live', 'closed'],
         unassessed_domains=unassessed_domains,
         supplier_assessments=supplier_assessments,
