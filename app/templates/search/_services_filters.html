@@ -8,11 +8,7 @@
   {% include "toolkit/forms/keyword-search.html" %}
 {% endwith %}
 
-<div class="lot-filters">
-  <h2>Choose a category</h2>
-  {% from 'search/_categories.html' import top_level_link, category_list %}
-  {{ category_list([category_tree_root]) }}
-</div>
+{% include 'search/_services_categories_wrapper.html' %}
 
 {% for f in filter_form_hidden_fields %}
   <input type="hidden" name="{{ f.name }}" value="{{ f.value }}" />

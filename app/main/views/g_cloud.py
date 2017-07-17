@@ -170,6 +170,7 @@ def search_services():
         content_manifest,
         all_lots=framework['lots']
     )
+    clean_request_query_params = clean_request_args(request.args, filters.values(), lots_by_slug)
 
     try:
         if int(request.args.get('page', 1)) <= 0:
@@ -192,7 +193,7 @@ def search_services():
 
     search_summary = SearchSummary(
         search_api_response['meta']['total'],
-        clean_request_args(request.args, filters.values(), lots_by_slug),
+        clean_request_query_params.copy(),
         filters.values(),
         lots_by_slug
     )
@@ -221,8 +222,7 @@ def search_services():
             if 'label' in filter_instance:
                 filter_instance['label'] = capitalize_first(filter_instance['label'])
 
-    return render_template(
-        'search/services.html',
+    template_args = dict(
         current_lot=current_lot,
         category_tree_root=selected_category_tree_filters[0],
         filter_form_hidden_fields=filter_form_hidden_fields_by_name.values(),
@@ -230,10 +230,34 @@ def search_services():
         lots=lots,
         pagination=pagination_config,
         search_keywords=get_keywords_from_request(request),
-        search_query=query_args_for_pagination(request.args),
+        search_query=query_args_for_pagination(clean_request_query_params),
         services=search_results_obj.search_results,
         summary=search_summary.markup(),
         title='Search results',
         total=search_results_obj.total,
-        gcloud_framework_description=framework_helpers.get_framework_description(data_api_client, 'g-cloud'),
+        gcloud_framework_description=framework_helpers.get_framework_description(data_api_client, 'g-cloud'))
+
+    if request.args.get('live-results'):
+        from flask import jsonify
+
+        live_results_dict = {
+            "results": {
+                "selector": "#js-dm-live-search-results",
+                "html": render_template("search/_services_results_wrapper.html", **template_args)
+            },
+            "categories": {
+                "selector": "#js-dm-live-search-categories",
+                "html": render_template("search/_services_categories_wrapper.html", **template_args)
+            },
+            "summary": {
+                "selector": "#js-dm-live-search-summary",
+                "html": render_template("search/_services_summary.html", **template_args)
+            }
+        }
+
+        return jsonify(live_results_dict)
+
+    return render_template(
+        'search/services.html',
+        **template_args
     )

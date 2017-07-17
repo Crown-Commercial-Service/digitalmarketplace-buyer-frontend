@@ -86,15 +86,16 @@ def set_filter_states(filter_groups, request):
     request_filters = get_filters_from_request(request)
 
     for filter_group in filter_groups:
-        for filter in filter_group['filters']:
-            filter['checked'] = False
+        for filter_item in filter_group['filters']:
+            filter_item['checked'] = False
+
             param_values = request_filters.getlist(
-                filter['name'],
+                filter_item['name'],
                 type=str
             )
             if len(param_values) > 0:
-                filter['checked'] = (
-                    filter['value'] in param_values
+                filter_item['checked'] = (
+                    filter_item['value'] in param_values
                 )
 
 
