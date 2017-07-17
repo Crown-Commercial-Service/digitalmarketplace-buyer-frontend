@@ -580,3 +580,13 @@ class TestSearchFilterOnClick(BaseApplicationTest):
         res = self.client.get('/g-cloud/search{}'.format(query_string))
 
         assert urls == set(x[0][0] for x in render_template_patch.call_args_list)
+
+    def test_g_cloud_search_has_js_hidden_filter_button(self):
+        res = self.client.get('/g-cloud/search')
+        assert res.status_code == 200
+
+        document = html.fromstring(res.get_data(as_text=True))
+
+        filter_button = document.xpath('//button[@class="button-save js-hidden js-dm-live-search"'
+                                       ' and normalize-space(text())="Filter"]')
+        assert len(filter_button) == 1

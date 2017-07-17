@@ -1013,6 +1013,15 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         assert res.status_code == 404
         self._data_api_client.find_frameworks.assert_called_once_with()
 
+    def test_briefs_search_does_not_have_js_hidden_filter_button(self):
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities')
+        assert res.status_code == 200
+
+        document = html.fromstring(res.get_data(as_text=True))
+
+        filter_button = document.xpath('//button[@class="button-save" and normalize-space(text())="Filter"]')
+        assert len(filter_button) == 1
+
 
 @mock.patch('app.main.views.marketplace.data_api_client', autospec=True)
 class TestGCloudHomepageLinks(BaseApplicationTest):
