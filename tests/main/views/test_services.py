@@ -209,14 +209,14 @@ class TestServicePage(BaseApplicationTest):
         self.service = self._get_g6_service_fixture_data()
 
         self.service['services']['status'] = 'enabled'
-        self.service['serviceMadeUnavailableAuditEvent'] = \
-            self._get_status_update_audit_event_for(
-                update_type='update_service_status',
-                old_status='published',
-                new_status='enabled',
-                timestamp='2016-01-05T17:01:07.649587Z',
-                service=self.service['services']
-            )
+        audit_event = self._get_status_update_audit_event_for(
+            update_type='update_service_status',
+            old_status='published',
+            new_status='enabled',
+            timestamp='2016-01-05T17:01:07.649587Z',
+            service=self.service['services']
+        )
+        self.service['serviceMadeUnavailableAuditEvent'] = audit_event
         data_api_client.get_service.return_value = self.service
         data_api_client.get_framework.return_value = self._get_framework_fixture_data('g-cloud-6')
 
@@ -237,14 +237,14 @@ class TestServicePage(BaseApplicationTest):
     def test_disabled_service_has_unavailable_banner(self):
         self.service = self._get_g6_service_fixture_data()
         self.service['services']['status'] = 'disabled'
-        self.service['serviceMadeUnavailableAuditEvent'] = \
-            self._get_status_update_audit_event_for(
-                update_type='update_service_status',
-                old_status='published',
-                new_status='disabled',
-                timestamp='2016-01-05T17:01:07.649587Z',
-                service=self.service['services']
-            )
+        audit_event = self._get_status_update_audit_event_for(
+            update_type='update_service_status',
+            old_status='published',
+            new_status='disabled',
+            timestamp='2016-01-05T17:01:07.649587Z',
+            service=self.service['services']
+        )
+        self.service['serviceMadeUnavailableAuditEvent'] = audit_event
         data_api_client.get_service.return_value = self.service
         data_api_client.get_framework.return_value = self._get_framework_fixture_data('g-cloud-6')
 
@@ -265,14 +265,15 @@ class TestServicePage(BaseApplicationTest):
     def test_expired_framework_causes_service_to_have_unavailable_banner(self):
         self.service = self._get_g6_service_fixture_data()
         self.service['services']['frameworkStatus'] = 'expired'
-        self.service['serviceMadeUnavailableAuditEvent'] = \
-            self._get_status_update_audit_event_for(
-                update_type='framework_update',
-                old_status='live',
-                new_status='expired',
-                timestamp='2016-01-05T17:01:07.649587Z',
-                service=self.service['services']
-            )
+        audit_event = self._get_status_update_audit_event_for(
+            update_type='framework_update',
+            old_status='live',
+            new_status='expired',
+            timestamp='2016-01-05T17:01:07.649587Z',
+            service=self.service['services']
+        )
+        self.service['serviceMadeUnavailableAuditEvent'] = audit_event
+
         data_api_client.get_service.return_value = self.service
         data_api_client.get_framework.return_value = self._get_framework_fixture_data('g-cloud-6')
 
@@ -286,12 +287,12 @@ class TestServicePage(BaseApplicationTest):
         assert unavailable_banner.heading_text() == 'This {} service is no longer available to buy.'.format(
             self.service['services']['frameworkName'],
         )
-        assert unavailable_banner.body_text() == 'The {} framework expired on {}. Any existing contracts with {} are' \
-            ' still valid.'.format(
-                self.service['services']['frameworkName'],
-                'Tuesday 5 January 2016',
-                self.service['services']['supplierName'],
-            )
+        banner_text = 'The {} framework expired on {}. Any existing contracts with {} are still valid.'.format(
+            self.service['services']['frameworkName'],
+            'Tuesday 5 January 2016',
+            self.service['services']['supplierName']
+        )
+        assert unavailable_banner.body_text() == banner_text
 
     def test_pre_live_framework_causes_404(self):
         self.service = self._get_g6_service_fixture_data()

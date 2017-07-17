@@ -10,7 +10,6 @@ from flask import abort, current_app, flash, redirect, render_template, request,
 from flask_login import logout_user, login_user
 
 from dmapiclient import HTTPError
-from dmapiclient.audit import AuditTypes
 from dmutils.user import User
 from dmutils.email import (decode_invitation_token, decode_password_reset_token, generate_token, send_email)
 from dmutils.email.exceptions import EmailError

@@ -2,7 +2,6 @@ import os
 import re
 
 from app import content_loader
-from dmutils.service_attribute import Attribute
 from dmcontent.errors import ContentNotFoundError
 from dmcontent.formats import format_service_price
 try:
@@ -16,7 +15,7 @@ except ImportError:
 
 
 def chunk_string(string, chunk_length):
-    return (string[0+i:chunk_length+i] for i in range(0, len(string), chunk_length))
+    return (string[0 + i:chunk_length + i] for i in range(0, len(string), chunk_length))
 
 
 class Service(object):
@@ -79,7 +78,7 @@ class Meta(object):
                 'urls',
                 'framework_url'
             ) or None
-        except ContentNotFoundError as e:
+        except ContentNotFoundError:
             # If no urls.yml exists then we don't have a URL for the framework
             return None
 
@@ -102,7 +101,7 @@ class Meta(object):
                 url = service_data[url_key]
                 extension = self._get_document_extension(url)
                 documents.append({
-                    'name':  names[index],
+                    'name': names[index],
                     'url': url,
                     'extension': extension
                 })
@@ -113,7 +112,7 @@ class Meta(object):
                 extension = self._get_document_extension(url)
                 name = self._get_pretty_document_name_without_extension(url)
                 documents.append({
-                    'name':  name,
+                    'name': name,
                     'url': url,
                     'extension': extension
                 })
@@ -134,7 +133,7 @@ class Meta(object):
             {
                 'key': 'educationPricing',
                 'if_exists': 'Education pricing available',
-                'if_absent':  False
+                'if_absent': False
             },
             {
                 'key': 'terminationCost',

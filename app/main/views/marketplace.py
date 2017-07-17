@@ -1,22 +1,18 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from datetime import datetime
-
 from flask_login import current_user
 from flask import abort, current_app, render_template, request
-import flask_featureflags as feature
 
 from dmapiclient import APIError
 from dmcontent.content_loader import ContentNotFoundError
 
+from app import data_api_client, content_loader
+
 from ...main import main
+from ..forms.brief_forms import BriefSearchForm
 from ..helpers.shared_helpers import get_one_framework_by_status_in_order_of_preference, parse_link
 from ..helpers.framework_helpers import get_latest_live_framework, get_framework_description
-
-from ..forms.brief_forms import BriefSearchForm
-
-from app import data_api_client, content_loader
 
 
 @main.route('/')
@@ -85,7 +81,7 @@ def get_brief_by_id(framework_framework, brief_id):
         brief_responses = data_api_client.find_brief_responses(brief_id, current_user.supplier_id)["briefResponses"]
 
     brief['clarificationQuestions'] = [
-        dict(question, number=index+1)
+        dict(question, number=index + 1)
         for index, question in enumerate(brief['clarificationQuestions'])
     ]
 

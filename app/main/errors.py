@@ -16,7 +16,7 @@ def page_not_found(e):
 
 
 @main.app_errorhandler(410)
-def page_not_found(e):
+def page_gone(e):
     return _render_error_page(410)
 
 
