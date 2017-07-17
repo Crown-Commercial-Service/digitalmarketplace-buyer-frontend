@@ -224,6 +224,7 @@ def search_services():
 
     template_args = dict(
         current_lot=current_lot,
+        framework_family=framework['framework'],
         category_tree_root=selected_category_tree_filters[0],
         filter_form_hidden_fields=filter_form_hidden_fields_by_name.values(),
         filters=filters.values(),
