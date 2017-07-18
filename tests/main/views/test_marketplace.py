@@ -4,10 +4,7 @@ import mock
 from six import iteritems
 from six.moves.urllib.parse import urlparse, parse_qs
 from lxml import html
-from datetime import datetime
 from ...helpers import BaseApplicationTest
-from dmapiclient import APIError
-from dmutils.formats import DATETIME_FORMAT, DISPLAY_DATE_FORMAT
 import pytest
 
 
@@ -336,7 +333,7 @@ class TestStaticMarketplacePages(BaseApplicationTest):
         assert res.status_code == 200
         assert '<h1>Cookies</h1>' in self._strip_whitespace(res.get_data(as_text=True))
 
-    def test_cookie_page(self):
+    def test_terms_and_conditions_page(self):
         res = self.client.get('/terms-and-conditions')
         assert res.status_code == 200
         assert '<h1>Termsandconditions</h1>' in self._strip_whitespace(res.get_data(as_text=True))
@@ -359,14 +356,6 @@ class BaseBriefPageTest(BaseApplicationTest):
 
 class TestBriefPage(BaseBriefPageTest):
 
-    def _assert_page_title(self, document):
-        brief_title = self.brief['briefs']['title']
-        brief_organisation = self.brief['briefs']['organisation']
-
-        page_heading = document.xpath('//header[@class="page-heading-smaller"]')[0]
-        page_heading_h1 = page_heading.xpath('h1/text()')[0]
-        page_heading_context = page_heading.xpath('p[@class="context"]/text()')[0]
-
     def test_dos_brief_404s_if_brief_is_draft(self):
         self.brief['briefs']['status'] = 'draft'
         brief_id = self.brief['briefs']['id']
@@ -380,7 +369,9 @@ class TestBriefPage(BaseBriefPageTest):
 
         document = html.fromstring(res.get_data(as_text=True))
 
-        self._assert_page_title(document)
+        page_heading = document.xpath('//header[@class="page-heading-smaller"]')[0]
+        assert page_heading.xpath('h1/text()')[0] == self.brief['briefs']['title']
+        assert page_heading.xpath('p[@class="context"]/text()')[0] == self.brief['briefs']['organisation']
 
     def test_dos_brief_has_lot_analytics_string(self):
         brief = self.brief['briefs']
@@ -391,10 +382,6 @@ class TestBriefPage(BaseBriefPageTest):
         analytics_string = '<span data-lot="{lot_slug}"></span>'.format(lot_slug=brief['lotSlug'])
 
         assert analytics_string in data
-
-    def _convert_date_to_display_date_format(self, date_string):
-        date_object = datetime.strptime(date_string, DATETIME_FORMAT)
-        return date_object.strftime(DISPLAY_DATE_FORMAT)
 
     def test_dos_brief_has_important_dates(self):
         brief_id = self.brief['briefs']['id']
@@ -411,15 +398,37 @@ class TestBriefPage(BaseBriefPageTest):
         assert brief_important_dates[0].xpath('td[@class="summary-item-field-first"]')[0].text_content().strip() \
             == "Published"
         assert brief_important_dates[0].xpath('td[@class="summary-item-field"]')[0].text_content().strip() \
-            == self._convert_date_to_display_date_format(self.brief['briefs']['publishedAt'])
+            == "Thursday 1 December 2016"
         assert brief_important_dates[1].xpath('td[@class="summary-item-field-first"]')[0].text_content().strip() \
             == "Deadline for asking questions"
         assert brief_important_dates[1].xpath('td[@class="summary-item-field"]')[0].text_content().strip() \
-            == self._convert_date_to_display_date_format(self.brief['briefs']['clarificationQuestionsClosedAt'])
+            == "Wednesday 14 December 2016 at 11:08am GMT"
         assert brief_important_dates[2].xpath('td[@class="summary-item-field-first"]')[0].text_content().strip() \
             == "Closing date for applications"
         assert brief_important_dates[2].xpath('td[@class="summary-item-field"]')[0].text_content().strip() \
-            == self._convert_date_to_display_date_format(self.brief['briefs']['applicationsClosedAt'])
+            == "Thursday 15 December 2016 at 11:08am GMT"
+
+    def test_dos_brief_with_daylight_savings_has_question_deadline_closing_date_forced_to_utc(self):
+        brief_id = self.brief['briefs']['id']
+        self.brief['briefs']['publishedAt'] = "2016-08-01T23:59:00.000000Z"
+        self.brief['briefs']['clarificationQuestionsClosedAt'] = "2016-08-14T23:59:00.000000Z"
+        self.brief['briefs']['applicationsClosedAt'] = "2016-08-15T23:59:00.000000Z"
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
+        assert res.status_code == 200
+
+        document = html.fromstring(res.get_data(as_text=True))
+
+        brief_important_dates = document.xpath(
+            '(//table[@class="summary-item-body"])[1]/tbody/tr')
+        assert 3 == len(brief_important_dates)
+        # Publish date does not have UTC filter applied
+        assert brief_important_dates[0].xpath('td[@class="summary-item-field"]')[0].text_content().strip() \
+            == "Monday 1 August 2016"
+        # Question deadline and closing date are forced to 11.59pm (UTC+00) on the correct day
+        assert brief_important_dates[1].xpath('td[@class="summary-item-field"]')[0].text_content().strip() \
+            == "Sunday 14 August 2016 at 11:59pm GMT"
+        assert brief_important_dates[2].xpath('td[@class="summary-item-field"]')[0].text_content().strip() \
+            == "Monday 15 August 2016 at 11:59pm GMT"
 
     def test_dos_brief_has_at_least_one_section(self):
         brief_id = self.brief['briefs']['id']
@@ -752,7 +761,7 @@ class TestWithdrawnSpecificBriefPage(BaseBriefPageTest):
             "The buyer may publish an updated&nbsp;version on the Digital&nbsp;Marketplace."
         ) in page
 
-    @pytest.mark.parametrize(('status'), ['live', 'closed'])
+    @pytest.mark.parametrize('status', ['live', 'closed'])
     def test_withdrawn_banner_not_shown_on_live_and_closed_brief(self, status):
         self.brief['briefs']['status'] = status
         del self.brief['briefs']['withdrawnAt']
