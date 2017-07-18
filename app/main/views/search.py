@@ -237,6 +237,10 @@ def supplier_search():
             services[tag] = True
         seller_type = details.get('seller_type', {})
 
+        is_recruiter = details.get('is_recruiter', False)
+        if is_recruiter == 'true' and 'recruiter' not in seller_type.keys():
+            seller_type['recruitment'] = True
+
         result = {
             'title': details['name'],
             'description': details['summary'],
