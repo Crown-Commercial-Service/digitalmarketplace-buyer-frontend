@@ -224,7 +224,7 @@ def supplier_search():
     casestudies_response = results.get('casestudies')
 
     results = []
-
+    services = {}
     for supplier in response['hits']['hits']:
         details = supplier['_source']
 
