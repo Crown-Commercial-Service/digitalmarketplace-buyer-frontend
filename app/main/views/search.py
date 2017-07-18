@@ -261,7 +261,7 @@ def supplier_search():
 
         supplier['profile_url'] = '/supplier/%s' % details['supplier_code']
         supplier['support_url'] = details.get('support')
-
+        services = {}
         result = {
             'title': details['name'],
             'description': details['summary'],
