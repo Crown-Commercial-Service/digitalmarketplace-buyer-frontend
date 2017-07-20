@@ -375,6 +375,7 @@ class TestBriefPage(BaseBriefPageTest):
         assert page_heading.xpath('p[@class="context"]/text()')[0] == self.brief['briefs']['organisation']
 
     def test_dos_brief_has_application_stats(self):
+        self._data_api_client.find_brief_responses.return_value = self.brief_responses
         brief_id = self.brief['briefs']['id']
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
         assert res.status_code == 200
@@ -382,7 +383,7 @@ class TestBriefPage(BaseBriefPageTest):
         document = html.fromstring(res.get_data(as_text=True))
 
         page_heading = document.xpath('//header[@class="page-heading-smaller"]')[1]
-        assert page_heading.xpath('h1/text()')[0] == len(self.brief_responses["brief_responses"])
+        assert page_heading.xpath('h1/text()')[0] == str(len(self.brief_responses["brief_responses"]))
         assert page_heading.xpath('p[@class="context"]/text()')[0] == "applications"
 
     def test_dos_brief_has_lot_analytics_string(self):

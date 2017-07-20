@@ -64,8 +64,8 @@
 <div class="grid-row">
   <div class="column-two-thirds">
     <header class="page-heading-smaller">
-      <p class="context">{{ brief.organisation }}</p>
-      <h1>{{ brief.title }}</h1>
+      <p class="context">applications</p>
+      <h1>{{ brief_responses["brief_responses"]|length }}</h1>
       <span data-lot="{{ brief.lotSlug }}"></span>
     </header>
   </div>
@@ -82,7 +82,7 @@
   </div>
 </div>
 
-{% if brief_responses %}
+{% if supplier_brief_responses %}
   <div class="grid-row">
     <div class="column-one-third">
         {% with
