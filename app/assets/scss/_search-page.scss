@@ -78,8 +78,18 @@ em.search-result-highlighted-text {
 
   .dm-filters {
 
-    .apply-filters-title {
+    .dm-filter-title {
       margin-bottom: 10px;
+
+      .apply-filters-title {
+        display: inline-block;
+      }
+
+      .clear-filters-link {
+        float: right;
+        font-size: 16px;
+      }
+
     }
 
   }
