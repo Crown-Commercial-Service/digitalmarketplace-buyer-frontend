@@ -75,7 +75,7 @@ def terms_and_conditions():
 def get_brief_by_id(framework_framework, brief_id):
     briefs = data_api_client.get_brief(brief_id)
     brief = briefs.get('briefs')
-    brief_responses = data_api_client.find_brief_responses(brief_id=brief_id)
+    brief_responses = (data_api_client.find_brief_responses(brief_id=brief_id)).get("brief_responses")
     if brief['status'] not in ['live', 'closed', 'withdrawn'] or brief['frameworkFramework'] != framework_framework:
         abort(404, "Opportunity '{}' can not be found".format(brief_id))
 
@@ -83,7 +83,9 @@ def get_brief_by_id(framework_framework, brief_id):
         # user unauthenticated or not a supplier
         supplier_brief_responses = None
     else:
-        supplier_brief_responses = data_api_client.find_brief_responses(brief_id, current_user.supplier_id)["briefResponses"]
+        supplier_brief_responses = [
+            response for response in brief_responses if response["supplier_id"] == current_user.supplier_id
+        ]
 
     brief['clarificationQuestions'] = [
         dict(question, number=index+1)

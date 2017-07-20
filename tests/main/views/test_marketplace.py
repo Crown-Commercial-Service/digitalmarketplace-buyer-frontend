@@ -350,6 +350,7 @@ class BaseBriefPageTest(BaseApplicationTest):
         self.brief_responses = self._get_dos_brief_responses_fixture_data()
         self.brief_id = self.brief['briefs']['id']
         self._data_api_client.get_brief.return_value = self.brief
+        self._data_api_client.find_brief_responses.return_value = self.brief_responses
 
     def teardown_method(self, method):
         self._data_api_client_patch.stop()
@@ -375,7 +376,6 @@ class TestBriefPage(BaseBriefPageTest):
         assert page_heading.xpath('p[@class="context"]/text()')[0] == self.brief['briefs']['organisation']
 
     def test_dos_brief_has_application_stats(self):
-        self._data_api_client.find_brief_responses.return_value = self.brief_responses
         brief_id = self.brief['briefs']['id']
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
         assert res.status_code == 200
@@ -553,7 +553,7 @@ class TestBriefPage(BaseBriefPageTest):
         self.login_as_supplier()
         # mocking that we haven't applied
         self._data_api_client.find_brief_responses.return_value = {
-            "briefResponses": [],
+            "brief_responses": [],
         }
         brief_id = self.brief['briefs']['id']
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
@@ -564,10 +564,6 @@ class TestBriefPage(BaseBriefPageTest):
 
     def test_supplier_applied_view_application_for_live_opportunity(self):
         self.login_as_supplier()
-        # mocking that we have applied
-        self._data_api_client.find_brief_responses.return_value = {
-            "briefResponses": [{"lazy": "mock"}],
-        }
         brief_id = self.brief['briefs']['id']
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
         assert res.status_code == 200
@@ -577,10 +573,6 @@ class TestBriefPage(BaseBriefPageTest):
 
     def test_supplier_applied_view_application_for_closed_opportunity(self):
         self.login_as_supplier()
-        # mocking that we have applied
-        self._data_api_client.find_brief_responses.return_value = {
-            "briefResponses": [{"lazy": "mock"}],
-        }
         self.brief['briefs']['status'] = "closed"
         brief_id = self.brief['briefs']['id']
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
