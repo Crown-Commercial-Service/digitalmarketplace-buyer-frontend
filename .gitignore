@@ -1,7 +1,7 @@
 *.pyc
 .vimrc
 .DS_store
-venv
+venv*
 node_modules
 npm-debug.log
 app/static/*
