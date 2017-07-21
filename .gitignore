@@ -1,7 +1,7 @@
 *.pyc
 .vimrc
 .DS_store
-venv
+venv*
 node_modules
 npm-debug.log
 app/static/*
@@ -75,3 +75,6 @@ app/content
 # Front end generated assets
 app/static
 .hypothesis
+
+# local environment customizations
+local.nix
