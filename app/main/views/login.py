@@ -338,8 +338,11 @@ def submit_buyer_invite_request():
 def send_buyer_invite(token):
     try:
         data = decode_buyer_creation_token(token.encode())
-        send_buyer_account_activation_email(name=data['name'], email_address=data['emailAddress'], token=token)
-        return render_template('auth/buyer-invite-sent.html', email_address=data['emailAddress'])
+        email_address = data.get('emailAddress', None)
+        if email_address is None:
+            email_address = data.get('email_address', None)
+        send_buyer_account_activation_email(name=data['name'], email_address=email_address, token=token)
+        return render_template('auth/buyer-invite-sent.html', email_address=email_address)
     except InvalidToken:
         abort(404)
 
@@ -352,14 +355,17 @@ def create_buyer_account(token):
         abort(404)
 
     form = auth_forms.CreateUserForm(name=data['name'])
+    email_address = data.get('emailAddress', None)
+    if email_address is None:
+        email_address = data.get('email_address', None)
 
-    user_json = data_api_client.get_user(email_address=data['emailAddress'])
+    user_json = data_api_client.get_user(email_address=email_address)
 
     if not user_json:
         return render_template_with_csrf(
             'auth/create-user.html',
             form=form,
-            email_address=data['emailAddress'],
+            email_address=email_address,
             token=token)
 
     user = User.from_json(user_json)
@@ -382,6 +388,9 @@ def submit_create_buyer_account(token):
         )
 
     form = auth_forms.CreateUserForm(request.form)
+    email_address = data.get('emailAddress', None)
+    if email_address is None:
+        email_address = data.get('email_address', None)
 
     if not form.validate():
         current_app.logger.warning(
@@ -391,21 +400,21 @@ def submit_create_buyer_account(token):
             'auth/create-user.html',
             status_code=400,
             form=form,
-            email_address=data['emailAddress'],
+            email_address=email_address,
             token=token)
 
     try:
         user = data_api_client.create_user({
             'name': form.name.data,
             'password': form.password.data,
-            'emailAddress': data['emailAddress'],
+            'emailAddress': email_address,
             'role': 'buyer'
         })
 
         user = User.from_json(user)
         login_user(user)
 
-        send_buyer_onboarding_email(form.name.data, data['emailAddress'])
+        send_buyer_onboarding_email(form.name.data, email_address)
 
     except HTTPError as e:
         if e.status_code != 409:
