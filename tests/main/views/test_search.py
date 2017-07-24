@@ -18,6 +18,23 @@ def find_search_summary(res_data):
         r'<span class="search-summary-count">.+</span>[^\n]+', res_data)
 
 
+def find_0_results_suggestion(res_data):
+    return re.findall(
+        r'<p>Suggestions:<\/p>', res_data)
+
+
+def get_0_results_search_response():
+    return {
+        "services": [],
+        "meta": {
+            "query": {},
+            "total": 0,
+            "took": 3
+        },
+        "links": {}
+    }
+
+
 class TestSearchResults(BaseApplicationTest):
     def setup_method(self, method):
         super(TestSearchResults, self).setup_method(method)
@@ -128,15 +145,7 @@ class TestSearchResults(BaseApplicationTest):
         assert 'lot=cloud-software' in prev_link
 
     def test_should_render_summary_for_0_results_in_all_categories_no_keywords(self):
-        self._search_api_client.search_services.return_value = {
-            "services": [],
-            "meta": {
-                "query": {},
-                "total": 0,
-                "took": 3
-            },
-            "links": {}
-        }
+        self._search_api_client.search_services.return_value = get_0_results_search_response()
 
         res = self.client.get('/g-cloud/search')
         assert res.status_code == 200
@@ -144,11 +153,27 @@ class TestSearchResults(BaseApplicationTest):
         assert '<span class="search-summary-count">0</span> results found in <em>All categories</em>' in summary
 
     def test_should_render_summary_for_0_results_in_cloud_software_no_keywords(self):
+        self._search_api_client.search_services.return_value = get_0_results_search_response()
+
+        res = self.client.get('/g-cloud/search?lot=cloud-software')
+        assert res.status_code == 200
+        summary = find_search_summary(res.get_data(as_text=True))[0]
+        assert '<span class="search-summary-count">0</span> results found in <em>Cloud software</em>' in summary
+
+    def test_should_render_suggestions_for_0_results(self):
+        self._search_api_client.search_services.return_value = get_0_results_search_response()
+
+        res = self.client.get('/g-cloud/search?lot=cloud-software')
+        assert res.status_code == 200
+        suggestion = find_0_results_suggestion(res.get_data(as_text=True))
+        assert len(suggestion) == 1
+
+    def test_should_not_render_suggestions_for_when_results_are_shown(self):
         self._search_api_client.search_services.return_value = {
             "services": [],
             "meta": {
                 "query": {},
-                "total": 0,
+                "total": 2,
                 "took": 3
             },
             "links": {}
@@ -156,8 +181,8 @@ class TestSearchResults(BaseApplicationTest):
 
         res = self.client.get('/g-cloud/search?lot=cloud-software')
         assert res.status_code == 200
-        summary = find_search_summary(res.get_data(as_text=True))[0]
-        assert '<span class="search-summary-count">0</span> results found in <em>Cloud software</em>' in summary
+        suggestion = find_0_results_suggestion(res.get_data(as_text=True))
+        assert len(suggestion) == 0
 
     def test_should_render_summary_for_1_result_in_cloud_software_no_keywords(self):
         return_value = self.search_results_multiple_page
