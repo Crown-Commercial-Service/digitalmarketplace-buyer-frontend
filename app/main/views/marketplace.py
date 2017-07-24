@@ -76,6 +76,8 @@ def get_brief_by_id(framework_framework, brief_id):
     briefs = data_api_client.get_brief(brief_id)
     brief = briefs.get('briefs')
     brief_responses = (data_api_client.find_brief_responses(brief_id=brief_id)).get("brief_responses")
+    if brief_responses == None:
+        brief_responses = []
     if brief['status'] not in ['live', 'closed', 'withdrawn'] or brief['frameworkFramework'] != framework_framework:
         abort(404, "Opportunity '{}' can not be found".format(brief_id))
 
