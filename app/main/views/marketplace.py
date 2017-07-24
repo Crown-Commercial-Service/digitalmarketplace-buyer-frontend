@@ -76,8 +76,11 @@ def get_brief_by_id(framework_framework, brief_id):
     briefs = data_api_client.get_brief(brief_id)
     brief = briefs.get('briefs')
     brief_responses = (data_api_client.find_brief_responses(brief_id=brief_id)).get("brief_responses")
-    if brief_responses == None:
+    if brief_responses is None:
         brief_responses = []
+    started_brief_responses_len = len([response for response in brief_responses if "submitted_at" not in response])
+    completed_brief_responses_len = len([response for response in brief_responses if "submitted_at" in response])
+
     if brief['status'] not in ['live', 'closed', 'withdrawn'] or brief['frameworkFramework'] != framework_framework:
         abort(404, "Opportunity '{}' can not be found".format(brief_id))
 
@@ -99,7 +102,8 @@ def get_brief_by_id(framework_framework, brief_id):
     return render_template(
         'brief.html',
         brief=brief,
-        brief_responses=brief_responses,
+        started_brief_responses_len=started_brief_responses_len,
+        completed_brief_responses_len=completed_brief_responses_len,
         supplier_brief_responses=supplier_brief_responses,
         content=brief_content
     )

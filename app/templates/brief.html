@@ -63,10 +63,14 @@
 
 <div class="grid-row">
   <div class="column-two-thirds">
-    <header class="page-heading-smaller">
-      <h1 class="heading-xmedium">{{ brief_responses|length }}</h1>
-      <h2 class="heading-xsmall">applications</h2>
-    </header>
+    <div id="started-applications">
+      <h1 class="heading-xmedium">{{ started_brief_responses_len }}</h1>
+      <h2 class="heading-xsmall">started applications</h2>
+    </div>
+    <div id="completed-applications">
+      <h1 class="heading-xmedium">{{ completed_brief_responses_len }}</h1>
+      <h2 class="heading-xsmall">completed applications</h2>
+    </div>
   </div>
 </div>
 

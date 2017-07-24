@@ -381,10 +381,18 @@ class TestBriefPage(BaseBriefPageTest):
         assert res.status_code == 200
 
         document = html.fromstring(res.get_data(as_text=True))
+        responses = self.brief_responses["brief_responses"]
+        number_of_all_responses = str(len(responses))
+        number_of_started_responses = str(len([response for response in responses if "submitted_at" not in response]))
+        number_of_submitted_responses = str(len([response for response in responses if "submitted_at" in response]))
 
-        page_heading = document.xpath('//header[@class="page-heading-smaller"]')[1]
-        assert page_heading.xpath('h1[@class="heading-xmedium"]/text()')[0] == str(len(self.brief_responses["brief_responses"]))
-        assert page_heading.xpath('h2[@class="heading-xsmall"]/text()')[0] == "applications"
+        started_res_section = document.xpath('//div[@id="started-applications"]')[0]
+        completed_res_section = document.xpath('//div[@id="completed-applications"]')[0]
+
+        assert started_res_section.xpath('h1[@class="heading-xmedium"]/text()')[0] == number_of_started_responses
+        assert completed_res_section.xpath('h1[@class="heading-xmedium"]/text()')[0] == number_of_submitted_responses
+        assert started_applications_section.xpath('h2[@class="heading-xsmall"]/text()')[0] == "started applications"
+        assert completed_applications_section.xpath('h2[@class="heading-xsmall"]/text()')[0] == "completed applications"
 
     def test_dos_brief_has_application_stats_correctly_when_no_applications(self):
         brief_id = self.brief['briefs']['id']
@@ -393,10 +401,13 @@ class TestBriefPage(BaseBriefPageTest):
         assert res.status_code == 200
 
         document = html.fromstring(res.get_data(as_text=True))
+        started_applications_section = document.xpath('//div[@id="started-applications"]')[0]
+        completed_applications_section = document.xpath('//div[@id="completed-applications"]')[0]
 
-        page_heading = document.xpath('//header[@class="page-heading-smaller"]')[1]
-        assert page_heading.xpath('h1[@class="heading-xmedium"]/text()')[0] == '0'
-        assert page_heading.xpath('h2[@class="heading-xsmall"]/text()')[0] == "applications"
+        assert started_applications_section.xpath('h1[@class="heading-xmedium"]/text()')[0] == '0'
+        assert completed_applications_section.xpath('h1[@class="heading-xmedium"]/text()')[0] == '0'
+        assert started_applications_section.xpath('h2[@class="heading-xsmall"]/text()')[0] == "started applications"
+        assert completed_applications_section.xpath('h2[@class="heading-xsmall"]/text()')[0] == "completed applications"
 
     def test_dos_brief_has_lot_analytics_string(self):
         brief = self.brief['briefs']
