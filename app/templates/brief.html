@@ -63,14 +63,7 @@
 
 <div class="grid-row">
   <div class="column-two-thirds">
-    <div id="started-applications">
-      <h1 class="heading-xmedium">{{ started_brief_responses_len }}</h1>
-      <h2 class="heading-xsmall">started applications</h2>
-    </div>
-    <div id="completed-applications">
-      <h1 class="heading-xmedium">{{ completed_brief_responses_len }}</h1>
-      <h2 class="heading-xsmall">completed applications</h2>
-    </div>
+    {% include '_brief_applications_stats.html' %}
   </div>
 </div>
 
