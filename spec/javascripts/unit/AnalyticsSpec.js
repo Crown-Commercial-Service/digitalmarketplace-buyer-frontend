@@ -28,35 +28,44 @@ describe("GOVUK.Analytics", function () {
   beforeEach(function () {
     window.ga = function() {};
     spyOn(window, 'ga');
-  });
 
-  describe('when initialised', function () {
+    /* It seems window.google_tag_manager cannot be interrogated in the same
+       way as window.ga, because it is not loaded at all unless it is
+       configured for a real environment. We probably don't want to actually
+       make requests to GTM when we run our tests, so we won't be doing that.
 
-    it('should initialise pageviews, events and virtual pageviews', function () {
-      spyOn(window.GOVUK.GDM.analytics, 'register');
-      spyOn(window.GOVUK.GDM.analytics.pageViews, 'init');
-      spyOn(window.GOVUK.GDM.analytics.events, 'init');
+       Instead, we can test that the GTM data layer contains the expected events
+       and other data, per
+       <https://www.simoahava.com/analytics/automated-tests-for-google-tag-managers-datalayer/>.
+       */
 
-      window.GOVUK.GDM.analytics.init();
-
-      expect(window.GOVUK.GDM.analytics.register).toHaveBeenCalled();
-      expect(window.GOVUK.GDM.analytics.pageViews.init).toHaveBeenCalled();
-      expect(window.GOVUK.GDM.analytics.events.init).toHaveBeenCalled();
-    });
+    configElement = window.document.createElement('script');
+    configElement.setAttribute('id', 'config');
+    configElement.setAttribute('data-google-tag-manager', JSON.stringify({
+      containerID: 'fakeGTMContainer',
+      environmentID: 'fakeGTMEnv',
+      authToken: 'fakeGTMAuth'}));
+    window.document.body.appendChild(configElement);
   });
 
   describe('when registered', function() {
     var universalSetupArguments;
 
     beforeEach(function() {
+      delete window.dataLayer;
       GOVUK.GDM.analytics.init();
       universalSetupArguments = window.ga.calls.allArgs();
+
     });
 
     it('configures a universal tracker', function() {
       expect(universalSetupArguments[0]).toEqual(['create', 'UA-49258698-1', {
         'cookieDomain': document.domain
       }]);
+    });
+
+    it('configures Google Tag Manager', function() {
+      expect(window.dataLayer.map(function(v) { return v.event })).toContain('gtm.js');
     });
   });
 

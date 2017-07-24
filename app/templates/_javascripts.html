@@ -1,1 +1,4 @@
-<script type="text/javascript" src="{{ asset_fingerprinter.get_url('javascripts/application.js') }}"></script>
+<script type="text/javascript" src="{{ asset_fingerprinter.get_url('javascripts/application.js') }}"
+        id="config"
+        data-google-tag-manager='{{ config.GOOGLE_TAG_MANAGER|tojson }}'
+></script>
