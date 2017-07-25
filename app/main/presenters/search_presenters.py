@@ -34,6 +34,7 @@ def filters_for_lot(lot, builder, all_lots=[]):
     for section in sections:
         section_filter = {
             "label": section["name"],
+            "slug": section["slug"],
             "filters": [],
         }
         for question in section["questions"]:

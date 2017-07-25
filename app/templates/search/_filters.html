@@ -8,6 +8,7 @@
       {%
         with
         label = filter.label,
+        options_container_id = filter.slug,
         options = filter.filters
       %}
         {% include "toolkit/forms/option-select.html" %}

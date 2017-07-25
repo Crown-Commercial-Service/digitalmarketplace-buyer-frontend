@@ -179,6 +179,19 @@ describe("GOVUK.Analytics", function () {
 
   describe("Virtual Page Views", function () {
     var $analyticsString;
+    var filterTemplate = 
+        '<form id="js-dm-live-search-form">' + 
+            '<div class="dm-filters">' +
+              '<div class="options-container" id="example-filters-group">' +
+                '<div class="js-auto-height-inner">' +
+                  '<label for="filter-option-1">' +
+                    '<input name="filter-option-1" value="filter-option-1-value" id="filter-option-1" type="checkbox" aria-controls="">' +
+                    'filter-option-1-label' +
+                  '</label>' +
+                '</div>' +
+              '</div>' +
+            '</div>' +
+          '</form>';
 
     afterEach(function () {
       $analyticsString.remove();
@@ -187,32 +200,52 @@ describe("GOVUK.Analytics", function () {
     it("Should not call google analytics without a url", function () {
       $analyticsString = $("<div data-analytics='trackPageView'/>");
       $(document.body).append($analyticsString);
-      window.GOVUK.GDM.analytics.virtualPageViews();
+      window.GOVUK.GDM.analytics.virtualPageViews.init();
       expect(window.ga.calls.any()).toEqual(false);
     });
 
     it("Should call google analytics if url exists", function () {
       $analyticsString = $("<div data-analytics='trackPageView' data-url='http://example.com'/>");
       $(document.body).append($analyticsString);
-      window.GOVUK.GDM.analytics.virtualPageViews();
+      window.GOVUK.GDM.analytics.virtualPageViews.init();
       expect(window.ga.calls.first().args).toEqual([ 'send', 'pageview', { page: 'http://example.com/vpv' } ]);
       expect(window.ga.calls.count()).toEqual(1);
     });
 
 
-      it("Should add '/vpv/' to url before question mark", function () {
-        $analyticsString = $('<div data-analytics="trackPageView" data-url="http:/testing.co.uk/testrubbs?sweet"/>');
-        $(document.body).append($analyticsString);
-        window.GOVUK.GDM.analytics.virtualPageViews();
-        expect(window.ga.calls.first().args[2]).toEqual({page: "http:/testing.co.uk/testrubbs/vpv?sweet"});
-      });
+    it("Should add '/vpv/' to url before question mark", function () {
+      $analyticsString = $('<div data-analytics="trackPageView" data-url="http:/testing.co.uk/testrubbs?sweet"/>');
+      $(document.body).append($analyticsString);
+      window.GOVUK.GDM.analytics.virtualPageViews.init();
+      expect(window.ga.calls.first().args[2]).toEqual({page: "http:/testing.co.uk/testrubbs/vpv?sweet"});
+    });
 
-      it("Should add '/vpv/' to url at the end if no question mark", function () {
-        $analyticsString = $("<div data-analytics='trackPageView' data-url='http://example.com'/>");
-        $(document.body).append($analyticsString);
-        window.GOVUK.GDM.analytics.virtualPageViews();
-        expect(window.ga.calls.first().args[2]).toEqual({page: "http://example.com/vpv"});
+    it("Should add '/vpv/' to url at the end if no question mark", function () {
+      $analyticsString = $("<div data-analytics='trackPageView' data-url='http://example.com'/>");
+      $(document.body).append($analyticsString);
+      window.GOVUK.GDM.analytics.virtualPageViews.init();
+      expect(window.ga.calls.first().args[2]).toEqual({page: "http://example.com/vpv"});
+    });
+
+    it("Should trigger virtual page view on filter selection", function () {
+      $analyticsString = $( filterTemplate );
+      $(document.body).append($analyticsString);
+      window.GOVUK.GDM.analytics.virtualPageViews.init();
+      $('#filter-option-1').click();
+      expect(window.ga.calls.first().args[2]).toEqual({
+        page: "/g-cloud/filters/example-filters-group/filter-option-1/filter-option-1-value/vpv", 
+        title: "Filter - example-filters-group - filter-option-1 - filter-option-1-value"
       });
+    });
+
+    it("Should not trigger virtual page view if a user is removing a filter", function () {
+      $analyticsString = $( filterTemplate );
+      $analyticsString.find('#filter-option-1').attr('checked', 'checked');
+      $(document.body).append($analyticsString);
+      window.GOVUK.GDM.analytics.virtualPageViews.init();
+      $('#filter-option-1').click();
+      expect(window.ga.calls.first()).not.toBeDefined();
+    });
   });
 
   describe("Opportunities search page", function() {
