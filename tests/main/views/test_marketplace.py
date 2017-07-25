@@ -388,10 +388,10 @@ class TestBriefPage(BaseBriefPageTest):
         started_responses_section = document.xpath('//div[@id="started-applications"]')[0]
         completed_responses_section = document.xpath('//div[@id="completed-applications"]')[0]
 
-        assert started_responses_section.xpath('h1[@class="heading-xmedium"]/text()')[0] == started_responses_len
-        assert completed_responses_section.xpath('h1[@class="heading-xmedium"]/text()')[0] == completed_responses_len
-        assert started_responses_section.xpath('h2[@class="heading-xsmall"]/text()')[0] == "started applications"
-        assert completed_responses_section.xpath('h2[@class="heading-xsmall"]/text()')[0] == "completed applications"
+        assert started_responses_section.xpath('h2[@class="big-statistic"]/text()')[0] == started_responses_len
+        assert completed_responses_section.xpath('h2[@class="big-statistic"]/text()')[0] == completed_responses_len
+        assert started_responses_section.xpath('h3[@class="statistic-name"]/text()')[0] == "started applications"
+        assert completed_responses_section.xpath('h3[@class="statistic-name"]/text()')[0] == "completed applications"
 
     def test_dos_brief_has_application_stats_correctly_when_no_applications(self):
         brief_id = self.brief['briefs']['id']
@@ -403,10 +403,10 @@ class TestBriefPage(BaseBriefPageTest):
         started_responses_section = document.xpath('//div[@id="started-applications"]')[0]
         completed_responses_section = document.xpath('//div[@id="completed-applications"]')[0]
 
-        assert started_responses_section.xpath('h1[@class="heading-xmedium"]/text()')[0] == '0'
-        assert completed_responses_section.xpath('h1[@class="heading-xmedium"]/text()')[0] == '0'
-        assert started_responses_section.xpath('h2[@class="heading-xsmall"]/text()')[0] == "started applications"
-        assert completed_responses_section.xpath('h2[@class="heading-xsmall"]/text()')[0] == "completed applications"
+        assert started_responses_section.xpath('h2[@class="big-statistic"]/text()')[0] == '0'
+        assert completed_responses_section.xpath('h2[@class="big-statistic"]/text()')[0] == '0'
+        assert started_responses_section.xpath('h3[@class="statistic-name"]/text()')[0] == "started applications"
+        assert completed_responses_section.xpath('h3[@class="statistic-name"]/text()')[0] == "completed applications"
 
     def test_dos_brief_has_lot_analytics_string(self):
         brief = self.brief['briefs']

@@ -1,8 +1,4 @@
-<div id="started-applications">
-  <h1 class="heading-xmedium">{{ started_brief_responses_len }}</h1>
-  <h2 class="heading-xsmall">started applications</h2>
-</div>
-<div id="completed-applications">
-  <h1 class="heading-xmedium">{{ completed_brief_responses_len }}</h1>
-  <h2 class="heading-xsmall">completed applications</h2>
-</div>
+{% import "toolkit/big-stat.html" as big_stat %}
+
+{{ big_stat.big_stat(started_brief_responses_len, "started applications", id="started-applications") }}
+{{ big_stat.big_stat(completed_brief_responses_len, "completed applications", id="completed-applications") }}
