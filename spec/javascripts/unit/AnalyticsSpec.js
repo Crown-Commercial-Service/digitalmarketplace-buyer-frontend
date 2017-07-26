@@ -32,16 +32,18 @@ describe("GOVUK.Analytics", function () {
 
   describe('when initialised', function () {
 
-    it('should initialise pageviews, events and virtual pageviews', function () {
+    it('should initialise pageviews, events, virtual pageviews and scroll tracking', function () {
       spyOn(window.GOVUK.GDM.analytics, 'register');
       spyOn(window.GOVUK.GDM.analytics.pageViews, 'init');
       spyOn(window.GOVUK.GDM.analytics.events, 'init');
+      spyOn(window.GOVUK.GDM.analytics.scrollTracking, 'init');
 
       window.GOVUK.GDM.analytics.init();
 
       expect(window.GOVUK.GDM.analytics.register).toHaveBeenCalled();
       expect(window.GOVUK.GDM.analytics.pageViews.init).toHaveBeenCalled();
       expect(window.GOVUK.GDM.analytics.events.init).toHaveBeenCalled();
+      expect(window.GOVUK.GDM.analytics.scrollTracking.init).toHaveBeenCalled();
     });
   });
 
