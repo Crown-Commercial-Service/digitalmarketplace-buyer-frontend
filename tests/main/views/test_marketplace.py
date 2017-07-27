@@ -381,21 +381,22 @@ class TestBriefPage(BaseBriefPageTest):
         assert res.status_code == 200
 
         document = html.fromstring(res.get_data(as_text=True))
-        responses = self.brief_responses["brief_responses"]
-        started_responses_len = str(len([response for response in responses if "submitted_at" not in response]))
-        completed_responses_len = str(len([response for response in responses if "submitted_at" in response]))
+        responses = self.brief_responses["briefResponses"]
+        started_responses_len = str(len([response for response in responses if "submittedAt" not in response]))
+        completed_responses_len = str(len([response for response in responses if "submittedAt" in response]))
 
         started_responses_section = document.xpath('//div[@id="started-applications"]')[0]
         completed_responses_section = document.xpath('//div[@id="completed-applications"]')[0]
 
-        assert started_responses_section.xpath('h2[@class="big-statistic"]/text()')[0] == started_responses_len
-        assert completed_responses_section.xpath('h2[@class="big-statistic"]/text()')[0] == completed_responses_len
+        assert started_responses_section.xpath('h2[@class="big-statistic"]/text()')[0] == '3'
         assert started_responses_section.xpath('h3[@class="statistic-name"]/text()')[0] == "started applications"
+
+        assert completed_responses_section.xpath('h2[@class="big-statistic"]/text()')[0] == '5'
         assert completed_responses_section.xpath('h3[@class="statistic-name"]/text()')[0] == "completed applications"
 
     def test_dos_brief_has_application_stats_correctly_when_no_applications(self):
         brief_id = self.brief['briefs']['id']
-        self._data_api_client.find_brief_responses.return_value = {"brief_responses": None}
+        self._data_api_client.find_brief_responses.return_value = {"briefResponses": None}
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
         assert res.status_code == 200
 
@@ -575,7 +576,7 @@ class TestBriefPage(BaseBriefPageTest):
         self.login_as_supplier()
         # mocking that we haven't applied
         self._data_api_client.find_brief_responses.return_value = {
-            "brief_responses": [],
+            "briefResponses": None,
         }
         brief_id = self.brief['briefs']['id']
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
