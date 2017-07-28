@@ -2,6 +2,8 @@ import re
 from math import ceil
 
 from werkzeug.datastructures import MultiDict
+from werkzeug.urls import Href
+from flask import url_for
 
 
 def get_lot_from_request(request, all_lots):
@@ -18,6 +20,33 @@ def get_page_from_request(request):
         return int(request.args['page'])
     except (KeyError, ValueError, TypeError):
         return None
+
+
+def get_request_url_without_any_filters(request, filters):
+    """
+    This function will returns the url path without any filters.
+    It will still retain the categories, keyword and lots parameters as well as any others included.
+
+    Args:
+        request: Request Object (import from flask) of the current request.
+        filters: list of all filters from digital marketplace framework
+
+    Returns:
+        URL path in string format.
+    """
+
+    all_request_filters = MultiDict(request.args.copy())
+
+    for section in filters:
+        for _filter in filters[section]['filters']:
+            all_request_filters.poplist(_filter['name'])
+
+    all_request_filters.poplist('page')
+
+    search_link_builder = Href(url_for('.search_services'))
+    url = search_link_builder(all_request_filters)
+
+    return url
 
 
 def get_filters_from_request(request):

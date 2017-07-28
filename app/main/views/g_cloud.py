@@ -20,7 +20,7 @@ from ..helpers.search_helpers import (
     get_keywords_from_request, pagination,
     get_page_from_request, query_args_for_pagination,
     get_lot_from_request, build_search_query,
-    clean_request_args
+    clean_request_args, get_request_url_without_any_filters
 )
 from ..helpers import framework_helpers
 
@@ -222,6 +222,8 @@ def search_services():
             if 'label' in filter_instance:
                 filter_instance['label'] = capitalize_first(filter_instance['label'])
 
+    clear_filters_url = get_request_url_without_any_filters(request, filters)
+
     template_args = dict(
         current_lot=current_lot,
         framework_family=framework['framework'],
@@ -236,7 +238,8 @@ def search_services():
         summary=search_summary.markup(),
         title='Search results',
         total=search_results_obj.total,
-        gcloud_framework_description=framework_helpers.get_framework_description(data_api_client, 'g-cloud'))
+        gcloud_framework_description=framework_helpers.get_framework_description(data_api_client, 'g-cloud'),
+        clear_filters_url=clear_filters_url)
 
     if request.args.get('live-results'):
         from flask import jsonify

@@ -168,6 +168,14 @@ class TestSearchResults(BaseApplicationTest):
         suggestion = find_0_results_suggestion(res.get_data(as_text=True))
         assert len(suggestion) == 1
 
+    def test_should_render_clear_all_filters_link(self):
+        self._search_api_client.search_services.return_value = get_0_results_search_response()
+
+        res = self.client.get('/g-cloud/search?lot=cloud-software')
+        assert res.status_code == 200
+        assert '<a id="dm-clear-all-filters" class="clear-filters-link" ' \
+            'href="/g-cloud/search?lot=cloud-software">Clear filters</a>' in res.get_data(as_text=True)
+
     def test_should_not_render_suggestions_for_when_results_are_shown(self):
         self._search_api_client.search_services.return_value = {
             "services": [],
