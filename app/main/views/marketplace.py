@@ -78,20 +78,19 @@ def get_brief_by_id(framework_framework, brief_id):
     brief_responses = data_api_client.find_brief_responses(
         brief_id=brief_id,
         status='draft,submitted'
-    ).get("briefResponses")
-    started_brief_responses_count = len([response for response in brief_responses if "submittedAt" not in response])
-    completed_brief_responses_count = len([response for response in brief_responses if "submittedAt" in response])
+    ).get('briefResponses')
+    started_brief_responses_count = len([response for response in brief_responses if response['status'] == 'draft'])
+    completed_brief_responses_count = len(
+        [response for response in brief_responses if response['status'] == 'submitted']
+    )
 
     if brief['status'] not in ['live', 'closed', 'withdrawn'] or brief['frameworkFramework'] != framework_framework:
         abort(404, "Opportunity '{}' can not be found".format(brief_id))
 
-    if getattr(current_user, "supplier_id", None) is None:
-        # user unauthenticated or not a supplier
-        supplier_brief_response = None
-    else:
-        supplier_brief_response = [
-            response for response in brief_responses if response["supplierId"] == current_user.supplier_id
-        ]
+    try:
+        has_supplier_responded_to_brief = current_user.supplier_id in [i['supplierId'] for i in brief_responses]
+    except AttributeError:
+        has_supplier_responded_to_brief = False
 
     brief['clarificationQuestions'] = [
         dict(question, number=index+1)
@@ -105,7 +104,7 @@ def get_brief_by_id(framework_framework, brief_id):
         brief=brief,
         started_brief_responses_count=started_brief_responses_count,
         completed_brief_responses_count=completed_brief_responses_count,
-        supplier_brief_response=supplier_brief_response,
+        has_supplier_responded_to_brief=has_supplier_responded_to_brief,
         content=brief_content
     )
 

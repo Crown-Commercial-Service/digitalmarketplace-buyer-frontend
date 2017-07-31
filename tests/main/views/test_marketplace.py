@@ -387,10 +387,10 @@ class TestBriefPage(BaseBriefPageTest):
         completed_responses_section = document.xpath('//div[@id="completed-applications"]')[0]
 
         assert started_responses_section.xpath('div[@class="big-statistic"]/text()')[0] == '3'
-        assert started_responses_section.xpath('div[@class="statistic-name"]/text()')[0] == "started applications"
+        assert started_responses_section.xpath('div[@class="statistic-name"]/text()')[0] == "Started applications"
 
         assert completed_responses_section.xpath('div[@class="big-statistic"]/text()')[0] == '5'
-        assert completed_responses_section.xpath('div[@class="statistic-name"]/text()')[0] == "completed applications"
+        assert completed_responses_section.xpath('div[@class="statistic-name"]/text()')[0] == "Completed applications"
 
     def test_dos_brief_has_application_stats_correctly_when_no_applications(self):
         brief_id = self.brief['briefs']['id']
@@ -404,8 +404,8 @@ class TestBriefPage(BaseBriefPageTest):
 
         assert started_responses_section.xpath('div[@class="big-statistic"]/text()')[0] == '0'
         assert completed_responses_section.xpath('div[@class="big-statistic"]/text()')[0] == '0'
-        assert started_responses_section.xpath('div[@class="statistic-name"]/text()')[0] == "started applications"
-        assert completed_responses_section.xpath('div[@class="statistic-name"]/text()')[0] == "completed applications"
+        assert started_responses_section.xpath('div[@class="statistic-name"]/text()')[0] == "Started applications"
+        assert completed_responses_section.xpath('div[@class="statistic-name"]/text()')[0] == "Completed applications"
 
     def test_dos_brief_has_lot_analytics_string(self):
         brief = self.brief['briefs']
@@ -585,6 +585,7 @@ class TestBriefPage(BaseBriefPageTest):
 
     def test_supplier_applied_view_application_for_live_opportunity(self):
         self.login_as_supplier()
+        # fixtures for brief responses have been set up so one of them has the supplier_id we are logged in as.
         brief_id = self.brief['briefs']['id']
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
         assert res.status_code == 200
