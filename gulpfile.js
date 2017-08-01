@@ -33,7 +33,7 @@ var paths = {
 };
 
 // JavaScript paths
-var jsSourceFile = assetsFolder + '/javascripts/+(application|autotrack|charts).js';
+var jsSourceFile = assetsFolder + '/javascripts/+(application|autotrack).js';
 var jsDistributionFolder = staticFolder + '/javascripts';
 var jsDistributionFile = 'application.js';
 
