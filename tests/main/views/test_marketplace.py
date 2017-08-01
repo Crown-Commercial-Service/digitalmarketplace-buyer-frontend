@@ -347,8 +347,10 @@ class BaseBriefPageTest(BaseApplicationTest):
         self._data_api_client = self._data_api_client_patch.start()
 
         self.brief = self._get_dos_brief_fixture_data()
+        self.brief_responses = self._get_dos_brief_responses_fixture_data()
         self.brief_id = self.brief['briefs']['id']
         self._data_api_client.get_brief.return_value = self.brief
+        self._data_api_client.find_brief_responses.return_value = self.brief_responses
 
     def teardown_method(self, method):
         self._data_api_client_patch.stop()
@@ -372,6 +374,38 @@ class TestBriefPage(BaseBriefPageTest):
         page_heading = document.xpath('//header[@class="page-heading-smaller"]')[0]
         assert page_heading.xpath('h1/text()')[0] == self.brief['briefs']['title']
         assert page_heading.xpath('p[@class="context"]/text()')[0] == self.brief['briefs']['organisation']
+
+    def test_dos_brief_shows_application_stats(self):
+        brief_id = self.brief['briefs']['id']
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
+        assert res.status_code == 200
+
+        document = html.fromstring(res.get_data(as_text=True))
+        responses = self.brief_responses["briefResponses"]
+
+        started_responses_section = document.xpath('//div[@id="started-applications"]')[0]
+        completed_responses_section = document.xpath('//div[@id="completed-applications"]')[0]
+
+        assert started_responses_section.xpath('div[@class="big-statistic"]/text()')[0] == '3'
+        assert started_responses_section.xpath('div[@class="statistic-name"]/text()')[0] == "Started applications"
+
+        assert completed_responses_section.xpath('div[@class="big-statistic"]/text()')[0] == '5'
+        assert completed_responses_section.xpath('div[@class="statistic-name"]/text()')[0] == "Completed applications"
+
+    def test_dos_brief_has_application_stats_correctly_when_no_applications(self):
+        brief_id = self.brief['briefs']['id']
+        self._data_api_client.find_brief_responses.return_value = {"briefResponses": []}
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
+        assert res.status_code == 200
+
+        document = html.fromstring(res.get_data(as_text=True))
+        started_responses_section = document.xpath('//div[@id="started-applications"]')[0]
+        completed_responses_section = document.xpath('//div[@id="completed-applications"]')[0]
+
+        assert started_responses_section.xpath('div[@class="big-statistic"]/text()')[0] == '0'
+        assert completed_responses_section.xpath('div[@class="big-statistic"]/text()')[0] == '0'
+        assert started_responses_section.xpath('div[@class="statistic-name"]/text()')[0] == "Started applications"
+        assert completed_responses_section.xpath('div[@class="statistic-name"]/text()')[0] == "Completed applications"
 
     def test_dos_brief_has_lot_analytics_string(self):
         brief = self.brief['briefs']
@@ -540,7 +574,7 @@ class TestBriefPage(BaseBriefPageTest):
         self.login_as_supplier()
         # mocking that we haven't applied
         self._data_api_client.find_brief_responses.return_value = {
-            "briefResponses": [],
+            "briefResponses": []
         }
         brief_id = self.brief['briefs']['id']
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
@@ -551,10 +585,7 @@ class TestBriefPage(BaseBriefPageTest):
 
     def test_supplier_applied_view_application_for_live_opportunity(self):
         self.login_as_supplier()
-        # mocking that we have applied
-        self._data_api_client.find_brief_responses.return_value = {
-            "briefResponses": [{"lazy": "mock"}],
-        }
+        # fixtures for brief responses have been set up so one of them has the supplier_id we are logged in as.
         brief_id = self.brief['briefs']['id']
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
         assert res.status_code == 200
@@ -564,10 +595,6 @@ class TestBriefPage(BaseBriefPageTest):
 
     def test_supplier_applied_view_application_for_closed_opportunity(self):
         self.login_as_supplier()
-        # mocking that we have applied
-        self._data_api_client.find_brief_responses.return_value = {
-            "briefResponses": [{"lazy": "mock"}],
-        }
         self.brief['briefs']['status'] = "closed"
         brief_id = self.brief['briefs']['id']
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))

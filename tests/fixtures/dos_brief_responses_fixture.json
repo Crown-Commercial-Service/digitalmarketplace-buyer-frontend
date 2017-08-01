@@ -1,0 +1,65 @@
+{
+  "briefResponses": [
+    {
+      "id": 14275,
+      "briefId": 1,
+      "createdAt": "2016-12-02T11:09:28.054129Z",
+      "status": "submitted",
+      "submittedAt": "2016-12-05T11:09:28.054129Z",
+      "supplierId": 1234
+    },
+    {
+      "id": 14276,
+      "briefId": 1,
+      "createdAt": "2016-12-02T11:09:28.054129Z",
+      "status": "submitted",
+      "submittedAt": "2016-12-05T11:09:28.054129Z",
+      "supplierId": 706033
+    },
+    {
+      "id": 14277,
+      "briefId": 1,
+      "createdAt": "2016-12-02T11:09:28.054129Z",
+      "status": "submitted",
+      "submittedAt": "2016-12-05T11:09:28.054129Z",
+      "supplierId": 706032
+    },
+    {
+      "id": 14278,
+      "briefId": 1,
+      "createdAt": "2016-12-02T11:09:28.054129Z",
+      "status": "submitted",
+      "submittedAt": "2016-12-05T11:09:28.054129Z",
+      "supplierId": 706031
+    },
+    {
+      "id": 14279,
+      "briefId": 1,
+      "createdAt": "2016-12-02T11:09:28.054129Z",
+      "status": "draft",
+      "supplierId": 706030
+    },
+    {
+      "id": 14280,
+      "briefId": 1,
+      "createdAt": "2016-12-02T11:09:28.054129Z",
+      "status": "submitted",
+      "submittedAt": "2016-12-05T11:09:28.054129Z",
+      "supplierId": 706029
+    },
+    {
+      "id": 14281,
+      "briefId": 1,
+      "createdAt": "2016-12-02T11:09:28.054129Z",
+      "status": "draft",
+      "supplierId": 706028
+    },
+    {
+      "id": 14282,
+      "briefId": 1,
+      "createdAt": "2016-12-02T11:09:28.054129Z",
+      "status": "draft",
+      "supplierId": 706027
+    }
+  ]
+}

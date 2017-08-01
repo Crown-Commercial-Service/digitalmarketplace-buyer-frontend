@@ -1,0 +1,9 @@
+{% macro big_stat(stat_value, stat_name) -%}
+  {%
+    with
+    stat_name=stat_name,
+    stat_value=stat_value
+  %}
+    {% include "toolkit/statistics.html" %}
+  {% endwith %}
+{%- endmacro %}
