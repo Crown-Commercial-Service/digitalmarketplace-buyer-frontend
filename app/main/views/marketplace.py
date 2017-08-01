@@ -79,9 +79,27 @@ def get_brief_by_id(framework_framework, brief_id):
         brief_id=brief_id,
         status='draft,submitted'
     ).get('briefResponses')
-    started_brief_responses_count = len([response for response in brief_responses if response['status'] == 'draft'])
+
+    started_brief_responses = [response for response in brief_responses if response['status'] == 'draft']
     completed_brief_responses = [response for response in brief_responses if response['status'] == 'submitted']
-    completed_brief_responses_count = len(completed_brief_responses)
+
+    # Counts for application statistics
+    started_sme_responses_count = len([
+        response for response in started_brief_responses
+        if response['supplierOrganisationSize'] in ['micro', 'small', 'medium']
+    ])
+    started_large_responses_count = len([
+        response for response in started_brief_responses
+        if response['supplierOrganisationSize'] == 'large'
+    ])
+    completed_sme_responses_count = len([
+        response for response in completed_brief_responses
+        if response['supplierOrganisationSize'] in ['micro', 'small', 'medium']
+    ])
+    completed_large_responses_count = len([
+        response for response in completed_brief_responses
+        if response['supplierOrganisationSize'] == 'large'
+    ])
 
     if brief['status'] not in ['live', 'closed', 'withdrawn'] or brief['frameworkFramework'] != framework_framework:
         abort(404, "Opportunity '{}' can not be found".format(brief_id))
@@ -103,8 +121,16 @@ def get_brief_by_id(framework_framework, brief_id):
     return render_template(
         'brief.html',
         brief=brief,
-        started_brief_responses_count=started_brief_responses_count,
-        completed_brief_responses_count=completed_brief_responses_count,
+        started_responses_stats={
+            'sme_count': started_sme_responses_count,
+            'large_count': started_large_responses_count,
+            'total': started_sme_responses_count + started_large_responses_count
+        },
+        completed_responses_stats={
+            'sme_count': completed_sme_responses_count,
+            'large_count': completed_large_responses_count,
+            'total': completed_sme_responses_count + completed_large_responses_count
+        },
         has_supplier_responded_to_brief=has_supplier_responded_to_brief,
         content=brief_content
     )
