@@ -60,7 +60,7 @@
 }
 
 .phase-banner {
-  background: $navy;
+  background: #313131;
   color: $non-white;
   padding: $tiny-spacing 0;
 
@@ -71,6 +71,9 @@
 
   a {
     @include link-colours($non-white, $white, $navy);
+    text-decoration: none;
+    border-bottom: solid 1px #1B7991;
+    transition: background-color 0.1s ease-in-out, border-color 0.1s ease-in-out;
   }
 }
 
@@ -100,7 +103,7 @@
 
 .hero-main {
   @include position(relative, null);
-  
+
   padding: 0 0 ($base-spacing * 2);
   margin-bottom: 0;
   background-color: $aqua;
