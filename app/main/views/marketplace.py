@@ -80,15 +80,17 @@ def get_brief_by_id(framework_framework, brief_id):
         status='draft,submitted'
     ).get('briefResponses')
     started_brief_responses_count = len([response for response in brief_responses if response['status'] == 'draft'])
-    completed_brief_responses_count = len(
-        [response for response in brief_responses if response['status'] == 'submitted']
-    )
+    completed_brief_responses = [response for response in brief_responses if response['status'] == 'submitted']
+    completed_brief_responses_count = len(completed_brief_responses)
 
     if brief['status'] not in ['live', 'closed', 'withdrawn'] or brief['frameworkFramework'] != framework_framework:
         abort(404, "Opportunity '{}' can not be found".format(brief_id))
 
     try:
-        has_supplier_responded_to_brief = current_user.supplier_id in [i['supplierId'] for i in brief_responses]
+        has_supplier_responded_to_brief = (
+            current_user.supplier_id in
+            [br['supplierId'] and br['status'] == 'submitted' for br in completed_brief_responses]
+        )
     except AttributeError:
         has_supplier_responded_to_brief = False
 
