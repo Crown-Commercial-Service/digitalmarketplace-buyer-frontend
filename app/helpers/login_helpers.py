@@ -36,7 +36,7 @@ def redirect_logged_in_user(next_url=None):
 def generate_buyer_creation_token(name, email_address, **unused):
     data = {
         'name': name,
-        'emailAddress': email_address,
+        'email_address': email_address,
     }
     token = generate_token(data, current_app.config['SECRET_KEY'], current_app.config['BUYER_CREATION_TOKEN_SALT'])
     return token
@@ -49,7 +49,12 @@ def decode_buyer_creation_token(token):
         current_app.config['BUYER_CREATION_TOKEN_SALT'],
         7*ONE_DAY_IN_SECONDS
     )
-    if not set(('name', 'emailAddress')).issubset(set(data.keys())):
+
+    # snake case is required for tokens created with future api
+    if not set(('name', 'email_address')).issubset(set(data.keys())):
+        # TODO: remove legacy camel case check when old invites are no longer active - 1W
+        if not set(('name', 'emailAddress')).issubset(set(data.keys())):
+            raise InvalidToken
         raise InvalidToken
     return data
 

@@ -118,19 +118,6 @@
     {% endif %}
 
     <p>
-      {% if current_user.is_authenticated and current_user.role == 'buyer' %}
-        <h2>You must create a seller account to apply for this opportunity.</h2>
-        <div class="brief-button-group">
-      <span>
-        {% with
-          url = "/become-a-seller",
-          role = "button",
-          label = "Become a seller" %}
-          {% include "toolkit/link-button.html" %}
-          {% endwith %}
-        </span>
-        </div>
-      {% endif %}
 
     {% if current_user.is_authenticated and current_user.role == 'supplier' and
       profile_application_status is none and profile_url is none %}
@@ -185,7 +172,7 @@
             </span>
       </div>
 
-    {% elif profile_application_status == 'approved' or not profile_application_status %}
+    {% elif (profile_application_status == 'approved' or not profile_application_status) and current_user.role == 'supplier' %}
       {% if brief.lot == 'digital-professionals' %}
         {% if brief.areaOfExpertise not in assessed_domains and
           brief.areaOfExpertise not in unassessed_domains and
@@ -323,8 +310,6 @@
         {% endif %}
 
       {% endif %}
-    {% else %}
-      error: don't know about application
     {% endif %}
 
     </p>
