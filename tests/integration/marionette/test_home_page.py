@@ -22,4 +22,4 @@ def test_register_buyer(client):
     go_home(client)
     link = client.find_element('id', 'buyer__call-to-action')
     link.click()
-    Wait(client, timeout=timeout).until(expected.element_present('id', 'react-bundle-signup'))
+    Wait(client, timeout=timeout).until(expected.element_present('id', 'signup'))
