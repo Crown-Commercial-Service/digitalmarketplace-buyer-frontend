@@ -29,19 +29,6 @@ Seller opportunities – {{ framework.name }} – Digital Marketplace
 
 
 {% block sidebar %}
-{% if 'BRIEF_FILTER' is active_feature %}
-<aside class="sidebar" id="nav">
-  <div class="block-2">
-    <div class="inner-block">
-      <section class="column-one-third search-page-filters" aria-label="Search filters">
-        <form action="" method="get">
-          {% include 'search/_filters.html' %}
-        </form>
-      </section>
-    </div>
-  </div>
-</aside>
-{% endif %}
 {% endblock %}
 
 {% block main_content %}

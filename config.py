@@ -77,7 +77,6 @@ class Config(object):
     RAISE_ERROR_ON_MISSING_FEATURES = True
     # List all your feature flags below
     FEATURE_FLAGS = {
-        'BRIEF_FILTER': True,
         'CASE_STUDY': True,
         'XLSX_EXPORT': True,
         'SELLER_REGISTRATION': True,
@@ -118,7 +117,6 @@ class Test(Config):
     SERVER_NAME = 'localhost'
 
     FEATURE_FLAGS = {
-        'BRIEF_FILTER': True,
         'CASE_STUDY': True,
         'XLSX_EXPORT': True,
         'SELLER_REGISTRATION': True,
@@ -151,7 +149,6 @@ class Live(Config):
     RAISE_ERROR_ON_MISSING_FEATURES = False
     # List all your feature flags below
     FEATURE_FLAGS = {
-        'BRIEF_FILTER': False,
         'CASE_STUDY': False,
         'XLSX_EXPORT': False,
         'SELLER_REGISTRATION': True,
