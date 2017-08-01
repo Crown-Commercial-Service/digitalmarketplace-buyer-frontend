@@ -513,6 +513,15 @@ class TestBriefPage(BaseBriefPageTest):
 
         self._assert_start_application(document, brief_id)
 
+    def test_apply_button_visible_if_status_is_draft(self):
+        self.brief_responses['briefResponses'][0]['status'] = 'draft'
+        brief_id = self.brief['briefs']['id']
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
+        assert res.status_code == 200
+        document = html.fromstring(res.get_data(as_text=True))
+
+        self._assert_start_application(document, brief_id)
+
     def test_cannot_apply_to_closed_brief(self):
         self.brief['briefs']['status'] = "closed"
         self.brief['briefs']['applicationsClosedAt'] = "2016-12-15T11:08:28.054129Z"
