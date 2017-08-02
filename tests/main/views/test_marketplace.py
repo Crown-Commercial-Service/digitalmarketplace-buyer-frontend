@@ -4,6 +4,7 @@ import mock
 from six import iteritems
 from six.moves.urllib.parse import urlparse, parse_qs
 from lxml import html
+import re
 from ...helpers import BaseApplicationTest
 import pytest
 
@@ -34,6 +35,10 @@ class TestHomepageAccountCreationVirtualPageViews(BaseApplicationTest):
         data = res.get_data(as_text=True)
 
         assert 'data-analytics="trackPageView" data-url="buyers?account-created=true"' in data
+        # however this should not be shown as a regular flash message
+        flash_banner_match = re.search('<p class="banner-message">\s*(.*)', data, re.MULTILINE)
+        assert flash_banner_match is None, "Unexpected flash banner message '{}'.".format(
+            flash_banner_match.groups()[0])
 
     def test_data_analytics_track_page_view_not_shown_if_no_account_created_flag_flash_message(self, data_api_client):
         res = self.client.get("/")
