@@ -386,7 +386,6 @@ class TestBriefPage(BaseBriefPageTest):
         assert res.status_code == 200
 
         document = html.fromstring(res.get_data(as_text=True))
-        responses = self.brief_responses["briefResponses"]
 
         started_responses_section = document.xpath('//div[@id="started-applications"]')[0]
         completed_responses_section = document.xpath('//div[@id="completed-applications"]')[0]
@@ -396,6 +395,42 @@ class TestBriefPage(BaseBriefPageTest):
 
         assert completed_responses_section.xpath('div[@class="big-statistic"]/text()')[0] == '5'
         assert completed_responses_section.xpath('div[@class="statistic-name"]/text()')[0] == "Completed applications"
+
+    def test_appliction_stats_pluralisation(self):
+        brief_id = self.brief['briefs']['id']
+        self._data_api_client.find_brief_responses.return_value = {
+            "briefResponses": [
+                {
+                  "id": 14275,
+                  "briefId": brief_id,
+                  "createdAt": "2016-12-02T11:09:28.054129Z",
+                  "status": "submitted",
+                  "submittedAt": "2016-12-05T11:09:28.054129Z",
+                  "supplierId": 1234
+                },
+                {
+                  "id": 14276,
+                  "briefId": brief_id,
+                  "createdAt": "2016-12-02T11:09:28.054129Z",
+                  "status": "draft",
+                  "submittedAt": "2016-12-05T11:09:28.054129Z",
+                  "supplierId": 706033
+                }
+            ]
+        }
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
+        assert res.status_code == 200
+
+        document = html.fromstring(res.get_data(as_text=True))
+
+        started_responses_section = document.xpath('//div[@id="started-applications"]')[0]
+        completed_responses_section = document.xpath('//div[@id="completed-applications"]')[0]
+
+        assert started_responses_section.xpath('div[@class="big-statistic"]/text()')[0] == '1'
+        assert started_responses_section.xpath('div[@class="statistic-name"]/text()')[0] == "Started application"
+
+        assert completed_responses_section.xpath('div[@class="big-statistic"]/text()')[0] == '1'
+        assert completed_responses_section.xpath('div[@class="statistic-name"]/text()')[0] == "Completed application"
 
     def test_dos_brief_has_application_stats_correctly_when_no_applications(self):
         brief_id = self.brief['briefs']['id']
