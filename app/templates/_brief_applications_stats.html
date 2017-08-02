@@ -1,4 +1,4 @@
 {% import "toolkit/statistics.html" as statistics %}
 
-{{ statistics.big_stat(started_brief_responses_count, "Started applications", id="started-applications") }}
-{{ statistics.big_stat(completed_brief_responses_count, "Completed applications", id="completed-applications") }}
+{{ statistics.big_stat(started_brief_responses_count, "Started applications" if started_brief_responses_count != 1 else "Started application", id="started-applications") }}
+{{ statistics.big_stat(completed_brief_responses_count, "Completed applications" if completed_brief_responses_count != 1 else "Completed application", id="completed-applications") }}
