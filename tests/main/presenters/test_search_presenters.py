@@ -86,6 +86,7 @@ class TestSearchFilters(BaseApplicationTest):
 
         assert radios_filter_group == {
             'label': 'Radios example',
+            'slug': 'radios-example',
             'filters': [
                 {
                     'label': 'Option 1',
@@ -108,6 +109,7 @@ class TestSearchFilters(BaseApplicationTest):
         )
         assert checkboxes_filter_group == {
             'label': 'Checkboxes example',
+            'slug': 'checkboxes-example',
             'filters': [
                 {
                     'label': 'Option 1',
@@ -174,6 +176,7 @@ class TestSearchFilters(BaseApplicationTest):
         )
         assert booleans_filter_group == {
             'label': 'Booleans example',
+            'slug': 'booleans-example',
             'filters': [
                 {
                     'label': 'Option 1',
@@ -276,6 +279,7 @@ class TestSearchFilters(BaseApplicationTest):
         set_filter_states(search_filters, request)
         assert search_filters[0] == {
             'label': 'Booleans example',
+            'slug': 'booleans-example',
             'filters': [
                 {
                     'checked': False,
@@ -306,6 +310,7 @@ class TestSearchFilters(BaseApplicationTest):
 
         assert search_filters[0] == {
             'label': 'Booleans example',
+            'slug': 'booleans-example',
             'filters': [
                 {
                     'checked': True,

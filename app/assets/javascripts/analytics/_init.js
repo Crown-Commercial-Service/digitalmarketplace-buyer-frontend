@@ -5,6 +5,6 @@
     this.register();
     this.pageViews.init();
     this.events.init();
-    this.virtualPageViews();
+    this.virtualPageViews.init();
   };
 })(window);
