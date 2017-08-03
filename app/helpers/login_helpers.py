@@ -47,7 +47,7 @@ def decode_buyer_creation_token(token):
         token,
         current_app.config['SECRET_KEY'],
         current_app.config['BUYER_CREATION_TOKEN_SALT'],
-        7*ONE_DAY_IN_SECONDS
+        14 * ONE_DAY_IN_SECONDS
     )
 
     # snake case is required for tokens created with future api
