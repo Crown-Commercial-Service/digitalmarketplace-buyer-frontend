@@ -393,9 +393,11 @@ class TestBriefPage(BaseBriefPageTest):
 
         assert started_responses_section.xpath('div[@class="big-statistic"]/text()')[0] == '3'
         assert started_responses_section.xpath('div[@class="statistic-name"]/text()')[0] == "Started applications"
+        assert started_responses_section.xpath('div[@class="statistic-description"]/text()')[0] == "3 SME, 0 large"
 
         assert completed_responses_section.xpath('div[@class="big-statistic"]/text()')[0] == '5'
         assert completed_responses_section.xpath('div[@class="statistic-name"]/text()')[0] == "Completed applications"
+        assert completed_responses_section.xpath('div[@class="statistic-description"]/text()')[0] == "4 SME, 1 large"
 
     def test_appliction_stats_pluralisation(self):
         brief_id = self.brief['briefs']['id']
@@ -407,7 +409,8 @@ class TestBriefPage(BaseBriefPageTest):
                     "createdAt": "2016-12-02T11:09:28.054129Z",
                     "status": "submitted",
                     "submittedAt": "2016-12-05T11:09:28.054129Z",
-                    "supplierId": 1234
+                    "supplierId": 1234,
+                    "supplierOrganisationSize": 'large'
                 },
                 {
                     "id": 14276,
@@ -415,7 +418,8 @@ class TestBriefPage(BaseBriefPageTest):
                     "createdAt": "2016-12-02T11:09:28.054129Z",
                     "status": "draft",
                     "submittedAt": "2016-12-05T11:09:28.054129Z",
-                    "supplierId": 706033
+                    "supplierId": 706033,
+                    "supplierOrganisationSize": 'micro'
                 }
             ]
         }
@@ -429,9 +433,11 @@ class TestBriefPage(BaseBriefPageTest):
 
         assert started_responses_section.xpath('div[@class="big-statistic"]/text()')[0] == '1'
         assert started_responses_section.xpath('div[@class="statistic-name"]/text()')[0] == "Started application"
+        assert started_responses_section.xpath('div[@class="statistic-description"]/text()')[0] == "1 SME, 0 large"
 
         assert completed_responses_section.xpath('div[@class="big-statistic"]/text()')[0] == '1'
         assert completed_responses_section.xpath('div[@class="statistic-name"]/text()')[0] == "Completed application"
+        assert completed_responses_section.xpath('div[@class="statistic-description"]/text()')[0] == "0 SME, 1 large"
 
     def test_dos_brief_has_application_stats_correctly_when_no_applications(self):
         brief_id = self.brief['briefs']['id']
@@ -447,6 +453,8 @@ class TestBriefPage(BaseBriefPageTest):
         assert completed_responses_section.xpath('div[@class="big-statistic"]/text()')[0] == '0'
         assert started_responses_section.xpath('div[@class="statistic-name"]/text()')[0] == "Started applications"
         assert completed_responses_section.xpath('div[@class="statistic-name"]/text()')[0] == "Completed applications"
+        assert len(started_responses_section.xpath('div[@class="statistic-description"]/text()')) == 0
+        assert len(completed_responses_section.xpath('div[@class="statistic-description"]/text()')) == 0
 
     def test_dos_brief_has_lot_analytics_string(self):
         brief = self.brief['briefs']

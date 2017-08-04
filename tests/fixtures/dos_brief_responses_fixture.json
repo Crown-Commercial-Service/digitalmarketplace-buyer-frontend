@@ -6,7 +6,8 @@
       "createdAt": "2016-12-02T11:09:28.054129Z",
       "status": "submitted",
       "submittedAt": "2016-12-05T11:09:28.054129Z",
-      "supplierId": 1234
+      "supplierId": 1234,
+      "supplierOrganisationSize": "micro"
     },
     {
       "id": 14276,
@@ -14,7 +15,8 @@
       "createdAt": "2016-12-02T11:09:28.054129Z",
       "status": "submitted",
       "submittedAt": "2016-12-05T11:09:28.054129Z",
-      "supplierId": 706033
+      "supplierId": 706033,
+      "supplierOrganisationSize": "small"
     },
     {
       "id": 14277,
@@ -22,7 +24,8 @@
       "createdAt": "2016-12-02T11:09:28.054129Z",
       "status": "submitted",
       "submittedAt": "2016-12-05T11:09:28.054129Z",
-      "supplierId": 706032
+      "supplierId": 706032,
+      "supplierOrganisationSize": "medium"
     },
     {
       "id": 14278,
@@ -30,14 +33,16 @@
       "createdAt": "2016-12-02T11:09:28.054129Z",
       "status": "submitted",
       "submittedAt": "2016-12-05T11:09:28.054129Z",
-      "supplierId": 706031
+      "supplierId": 706031,
+      "supplierOrganisationSize": "large"
     },
     {
       "id": 14279,
       "briefId": 1,
       "createdAt": "2016-12-02T11:09:28.054129Z",
       "status": "draft",
-      "supplierId": 706030
+      "supplierId": 706030,
+      "supplierOrganisationSize": "micro"
     },
     {
       "id": 14280,
@@ -45,21 +50,24 @@
       "createdAt": "2016-12-02T11:09:28.054129Z",
       "status": "submitted",
       "submittedAt": "2016-12-05T11:09:28.054129Z",
-      "supplierId": 706029
+      "supplierId": 706029,
+      "supplierOrganisationSize": "medium"
     },
     {
       "id": 14281,
       "briefId": 1,
       "createdAt": "2016-12-02T11:09:28.054129Z",
       "status": "draft",
-      "supplierId": 706028
+      "supplierId": 706028,
+      "supplierOrganisationSize": "micro"
     },
     {
       "id": 14282,
       "briefId": 1,
       "createdAt": "2016-12-02T11:09:28.054129Z",
       "status": "draft",
-      "supplierId": 706027
+      "supplierId": 706027,
+      "supplierOrganisationSize": "small"
     }
   ]
 }

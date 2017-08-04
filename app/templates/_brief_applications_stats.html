@@ -1,4 +1,16 @@
 {% import "toolkit/statistics.html" as statistics %}
 
-{{ statistics.big_stat(started_brief_responses_count, "Started applications" if started_brief_responses_count != 1 else "Started application", id="started-applications") }}
-{{ statistics.big_stat(completed_brief_responses_count, "Completed applications" if completed_brief_responses_count != 1 else "Completed application", id="completed-applications") }}
+{{ statistics.big_stat(
+     started_responses_stats["total"],
+     pluralize(started_responses_stats["total"], "Started application", "Started applications"),
+     "%d SME, %d large" | format(started_responses_stats['sme_count'], started_responses_stats['large_count']) if started_responses_stats['total'] else None,
+     id="started-applications"
+   )
+}}
+{{ statistics.big_stat(
+     completed_responses_stats["total"],
+     pluralize(completed_responses_stats["total"], "Completed application", "Completed applications"),
+     "%d SME, %d large" | format(completed_responses_stats['sme_count'], completed_responses_stats['large_count']) if completed_responses_stats['total'] else None,
+     id="completed-applications"
+   )
+}}
