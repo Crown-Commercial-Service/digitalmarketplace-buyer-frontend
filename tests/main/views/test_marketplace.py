@@ -946,6 +946,7 @@ class TestAwardedBriefPage(BaseBriefPageTest):
         awarded_banner = document.xpath('//div[@class="banner-temporary-message-without-action"]')[0]
 
         assert 'Awarded to Example Company Limited' in awarded_banner.xpath('h2/text()')[0]
+        assert 'Company size: small' in awarded_banner.xpath('p/text()')[0]
 
 
 class TestWithdrawnSpecificBriefPage(BaseBriefPageTest):

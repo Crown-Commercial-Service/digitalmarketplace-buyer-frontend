@@ -56,7 +56,7 @@
       with
       type = "temporary-message",
       heading = "Awarded to {}".format(winning_response.supplierName),
-      message = ""
+      message = "Company size: {}".format(winning_response.supplierOrganisationSize)
     %}
       {% include "toolkit/notification-banner.html" %}
     {% endwith %}
