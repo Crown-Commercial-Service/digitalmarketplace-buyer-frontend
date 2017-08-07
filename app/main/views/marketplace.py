@@ -76,10 +76,17 @@ def terms_and_conditions():
 def get_brief_by_id(framework_framework, brief_id):
     briefs = data_api_client.get_brief(brief_id)
     brief = briefs.get('briefs')
+
+    if brief['status'] not in PUBLISHED_BRIEF_STATUSES or brief['frameworkFramework'] != framework_framework:
+        abort(404, "Opportunity '{}' can not be found".format(brief_id))
+
     brief_responses = data_api_client.find_brief_responses(
         brief_id=brief_id,
         status=",".join(ALL_BRIEF_RESPONSE_STATUSES)
     ).get('briefResponses')
+
+    if brief['status'] == 'awarded':
+        winning_response = (response for response in brief_responses if response["id"] == brief['awardedBriefResponseId']).next()
 
     started_brief_responses = [response for response in brief_responses if response['status'] == 'draft']
     completed_brief_responses = [
@@ -106,7 +113,6 @@ def get_brief_by_id(framework_framework, brief_id):
 
     if brief['status'] not in PUBLISHED_BRIEF_STATUSES or brief['frameworkFramework'] != framework_framework:
         abort(404, "Opportunity '{}' can not be found".format(brief_id))
-
     try:
         has_supplier_responded_to_brief = (
             current_user.supplier_id in [
@@ -126,18 +132,19 @@ def get_brief_by_id(framework_framework, brief_id):
     return render_template(
         'brief.html',
         brief=brief,
-        started_responses_stats={
-            'sme_count': started_sme_responses_count,
-            'large_count': started_large_responses_count,
-            'total': started_sme_responses_count + started_large_responses_count
-        },
         completed_responses_stats={
             'sme_count': completed_sme_responses_count,
             'large_count': completed_large_responses_count,
             'total': completed_sme_responses_count + completed_large_responses_count
         },
+        content=brief_content,
         has_supplier_responded_to_brief=has_supplier_responded_to_brief,
-        content=brief_content
+        started_responses_stats={
+            'sme_count': started_sme_responses_count,
+            'large_count': started_large_responses_count,
+            'total': started_sme_responses_count + started_large_responses_count
+        },
+        winning_response=winning_response
     )
 
 

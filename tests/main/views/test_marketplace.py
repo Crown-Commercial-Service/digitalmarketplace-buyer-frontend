@@ -937,6 +937,7 @@ class TestAwardedBriefPage(BaseBriefPageTest):
     def setup_method(self, method):
         super(TestAwardedBriefPage, self).setup_method(method)
         self.brief['briefs']['status'] = "awarded"
+        self.brief['briefs']['awardedBriefResponseId'] = 14276
 
     def test_award_banner_shown_on_awarded_brief_page(self):
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(self.brief_id))
@@ -944,7 +945,7 @@ class TestAwardedBriefPage(BaseBriefPageTest):
         document = html.fromstring(res.get_data(as_text=True))
         awarded_banner = document.xpath('//div[@class="banner-temporary-message-without-action"]')[0]
 
-        assert 'Awarded to' in awarded_banner.xpath('h2/text()')[0]
+        assert 'Awarded to Example Company Limited' in awarded_banner.xpath('h2/text()')[0]
 
 
 class TestWithdrawnSpecificBriefPage(BaseBriefPageTest):

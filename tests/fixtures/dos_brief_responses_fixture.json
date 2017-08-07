@@ -15,7 +15,8 @@
       "createdAt": "2016-12-02T11:09:28.054129Z",
       "status": "submitted",
       "submittedAt": "2016-12-05T11:09:28.054129Z",
-      "supplierId": 706033,
+      "supplierId": 123456,
+      "supplierName": "Example Company Limited",
       "supplierOrganisationSize": "small"
     },
     {
