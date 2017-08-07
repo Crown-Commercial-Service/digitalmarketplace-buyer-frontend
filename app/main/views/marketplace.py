@@ -86,7 +86,9 @@ def get_brief_by_id(framework_framework, brief_id):
     ).get('briefResponses')
 
     if brief['status'] == 'awarded':
-        winning_response = (response for response in brief_responses if response["id"] == brief['awardedBriefResponseId']).next()
+        winning_response = (response for response in brief_responses if response["id"] == brief[
+            'awardedBriefResponseId'
+        ]).next()
 
     started_brief_responses = [response for response in brief_responses if response['status'] == 'draft']
     completed_brief_responses = [

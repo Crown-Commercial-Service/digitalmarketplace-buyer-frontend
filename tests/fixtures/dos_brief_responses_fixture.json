@@ -10,6 +10,7 @@
       "supplierOrganisationSize": "micro"
     },
     {
+      "awardDetails": {"awardedContractStartDate": "2017-08-21", "awardedContractValue": 20000},
       "id": 14276,
       "briefId": 1,
       "createdAt": "2016-12-02T11:09:28.054129Z",
