@@ -1,8 +1,9 @@
-{% macro big_stat(stat_value, stat_name) -%}
+{% macro big_stat(stat_value, stat_name, id=None) -%}
   {%
     with
     stat_name=stat_name,
-    stat_value=stat_value
+    stat_value=stat_value,
+    id=id
   %}
     {% include "toolkit/statistics.html" %}
   {% endwith %}

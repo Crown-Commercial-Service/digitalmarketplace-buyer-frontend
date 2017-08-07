@@ -399,7 +399,7 @@ class TestBriefPage(BaseBriefPageTest):
         assert completed_responses_section.xpath('div[@class="statistic-name"]/text()')[0] == "Completed applications"
         assert completed_responses_section.xpath('div[@class="statistic-description"]/text()')[0] == "4 SME, 1 large"
 
-    def test_appliction_stats_pluralisation(self):
+    def test_application_stats_pluralised_correctly(self):
         brief_id = self.brief['briefs']['id']
         self._data_api_client.find_brief_responses.return_value = {
             "briefResponses": [
@@ -931,6 +931,20 @@ class TestBriefPageQandASectionAskAQuestion(BaseBriefPageTest):
         unexpected_texts = ["Log in to ask a question", "Ask a question"]
         for unexpected_text in unexpected_texts:
             assert len(document.xpath('.//a[contains(text(),"{}")]'.format(unexpected_text))) == 0
+
+
+class TestAwardedBriefPage(BaseBriefPageTest):
+    def setup_method(self, method):
+        super(TestAwardedBriefPage, self).setup_method(method)
+        self.brief['briefs']['status'] = "awarded"
+
+    def test_award_banner_shown_on_awarded_brief_page(self):
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(self.brief_id))
+        page = res.get_data(as_text=True)
+        document = html.fromstring(res.get_data(as_text=True))
+        awarded_banner = document.xpath('//div[@class="banner-temporary-message-without-action"]')[0]
+
+        assert 'Awarded to' in awarded_banner.xpath('h2/text()')[0]
 
 
 class TestWithdrawnSpecificBriefPage(BaseBriefPageTest):

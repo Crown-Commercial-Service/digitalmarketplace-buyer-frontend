@@ -49,6 +49,19 @@
     {% endwith %}
   </div>
 </div>
+{% elif brief.status == 'awarded' %}
+<div class="grid-row">
+  <div class="column-one-whole">
+    {%
+      with
+      type = "temporary-message",
+      heading = "Awarded to",
+      message = ""
+    %}
+      {% include "toolkit/notification-banner.html" %}
+    {% endwith %}
+  </div>
+</div>
 {% endif %}
 
 <div class="grid-row">
