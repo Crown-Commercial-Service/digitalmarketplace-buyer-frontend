@@ -947,8 +947,8 @@ class TestAwardedBriefPage(BaseBriefPageTest):
 
         assert 'Awarded to Example Company Limited' in awarded_banner.xpath('h2/text()')[0]
         assert 'Start date: Monday 21 August 2017' in awarded_banner.xpath('p/text()')[0]
-        assert u'Value: GBP 20,000' in awarded_banner.xpath('p/text()')[0]
-        assert 'Company size: small' in awarded_banner.xpath('p/text()')[0]
+        assert u'Value: £20,000' in awarded_banner.xpath('p/text()')[1]
+        assert 'Company size: small' in awarded_banner.xpath('p/text()')[2]
 
 
 class TestWithdrawnSpecificBriefPage(BaseBriefPageTest):

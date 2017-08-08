@@ -56,7 +56,17 @@
       with
       type = "temporary-message",
       heading = "Awarded to {}".format(winning_response.supplierName),
-      message = "Start date: {}<br />Value: GBP {:,}<br/>Company size: {}".format((winning_response.awardDetails.awardedContractStartDate + "T11:09:28.054129Z")|dateformat, winning_response.awardDetails.awardedContractValue, winning_response.supplierOrganisationSize)
+      message = (
+        "Start date: {}"
+        + "<br />"|safe
+        + "Value: " + "&pound;"|safe + "{:,}"
+        + "<br/>"|safe
+        + "Company size: {}"
+      ).format((
+        winning_response.awardDetails.awardedContractStartDate)|dateformat,
+        winning_response.awardDetails.awardedContractValue,
+        winning_response.supplierOrganisationSize
+      )
     %}
       {% include "toolkit/notification-banner.html" %}
     {% endwith %}
