@@ -13,3 +13,7 @@ def get_one_framework_by_status_in_order_of_preference(frameworks, statuses_in_o
         for framework in frameworks:
             if framework.get('status') == status:
                 return framework
+
+
+def count_brief_responses_by_size(brief_responses, size):
+    return len([response for response in brief_responses if response['supplierOrganisationSize'] in size])

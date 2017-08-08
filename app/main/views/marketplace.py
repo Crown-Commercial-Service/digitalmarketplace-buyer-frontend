@@ -8,7 +8,11 @@ from dmapiclient import APIError
 from dmcontent.content_loader import ContentNotFoundError
 
 from ...main import main
-from ..helpers.shared_helpers import get_one_framework_by_status_in_order_of_preference, parse_link
+from ..helpers.shared_helpers import (
+    get_one_framework_by_status_in_order_of_preference,
+    parse_link,
+    count_brief_responses_by_size
+)
 from ..helpers.framework_helpers import get_latest_live_framework, get_framework_description
 
 from ..forms.brief_forms import BriefSearchForm
@@ -85,10 +89,11 @@ def get_brief_by_id(framework_framework, brief_id):
         status=",".join(ALL_BRIEF_RESPONSE_STATUSES)
     ).get('briefResponses')
 
+    winning_response = None
     if brief['status'] == 'awarded':
         winning_response = (response for response in brief_responses if response["id"] == brief[
             'awardedBriefResponseId'
-        ]).next()
+        ]).next()        
 
     started_brief_responses = [response for response in brief_responses if response['status'] == 'draft']
     completed_brief_responses = [
@@ -96,22 +101,11 @@ def get_brief_by_id(framework_framework, brief_id):
     ]
 
     # Counts for application statistics
-    started_sme_responses_count = len([
-        response for response in started_brief_responses
-        if response['supplierOrganisationSize'] in ['micro', 'small', 'medium']
-    ])
-    started_large_responses_count = len([
-        response for response in started_brief_responses
-        if response['supplierOrganisationSize'] == 'large'
-    ])
-    completed_sme_responses_count = len([
-        response for response in completed_brief_responses
-        if response['supplierOrganisationSize'] in ['micro', 'small', 'medium']
-    ])
-    completed_large_responses_count = len([
-        response for response in completed_brief_responses
-        if response['supplierOrganisationSize'] == 'large'
-    ])
+    sme, large = ['micro', 'small', 'medium'], ['large']
+    started_sme_responses_count = count_brief_responses_by_size(started_brief_responses, sme)
+    started_large_responses_count = count_brief_responses_by_size(started_brief_responses, large)
+    completed_sme_responses_count = count_brief_responses_by_size(completed_brief_responses, sme)
+    completed_large_responses_count = count_brief_responses_by_size(completed_brief_responses, large)
 
     if brief['status'] not in PUBLISHED_BRIEF_STATUSES or brief['frameworkFramework'] != framework_framework:
         abort(404, "Opportunity '{}' can not be found".format(brief_id))
