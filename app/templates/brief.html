@@ -29,8 +29,8 @@
     {%
       with
       type = "temporary-message",
-      heading = "This opportunity is closed for applications.",
-      message = "The deadline was {}.".format(brief.applicationsClosedAt|dateformat)
+      heading = "This opportunity is closed for applications",
+      message = "The deadline was {}".format(brief.applicationsClosedAt|dateformat)
     %}
       {% include "toolkit/notification-banner.html" %}
     {% endwith %}
@@ -43,7 +43,7 @@
       with
       type = "temporary-message",
       heading = "This opportunity was withdrawn on " + "{}".format(brief.withdrawnAt|dateformat)|nbsp,
-      message = "You can't apply for this opportunity now. The buyer may publish an " + "updated version"|nbsp + " on the " + "Digital Marketplace."|nbsp
+      message = "You can't apply for this opportunity now. The buyer may publish an " + "updated version"|nbsp + " on the " + "Digital Marketplace"|nbsp
     %}
       {% include "toolkit/notification-banner.html" %}
     {% endwith %}

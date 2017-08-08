@@ -999,7 +999,7 @@ class TestWithdrawnSpecificBriefPage(BaseBriefPageTest):
         assert 'This opportunity was withdrawn on' in page
         assert (
             "You can&#39;t apply for this opportunity now. "
-            "The buyer may publish an updated&nbsp;version on the Digital&nbsp;Marketplace."
+            "The buyer may publish an updated&nbsp;version on the Digital&nbsp;Marketplace"
         ) in page
 
     @pytest.mark.parametrize('status', ['live', 'closed'])
