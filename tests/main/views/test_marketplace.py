@@ -939,15 +939,32 @@ class TestAwardedBriefPage(BaseBriefPageTest):
         self.brief['briefs']['status'] = "awarded"
         self.brief['briefs']['awardedBriefResponseId'] = 14276
 
-    def test_award_banner_shown_on_awarded_brief_page(self):
+    def test_award_banner_with_winning_supplier_shown_on_awarded_brief_page(self):
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(self.brief_id))
-        page = res.get_data(as_text=True)
         document = html.fromstring(res.get_data(as_text=True))
         awarded_banner = document.xpath('//div[@class="banner-temporary-message-without-action"]')[0]
 
         assert 'Awarded to Example Company Limited' in awarded_banner.xpath('h2/text()')[0]
+
+    def test_contract_start_date_visible_on_award_banner(self):
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(self.brief_id))
+        document = html.fromstring(res.get_data(as_text=True))
+        awarded_banner = document.xpath('//div[@class="banner-temporary-message-without-action"]')[0]
+
         assert 'Start date: Monday 21 August 2017' in awarded_banner.xpath('p/text()')[0]
+
+    def test_contract_value_visible_on_award_banner(self):
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(self.brief_id))
+        document = html.fromstring(res.get_data(as_text=True))
+        awarded_banner = document.xpath('//div[@class="banner-temporary-message-without-action"]')[0]
+
         assert u'Value: £20,000' in awarded_banner.xpath('p/text()')[1]
+
+    def test_supplier_size_visible_on_award_banner(self):
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(self.brief_id))
+        document = html.fromstring(res.get_data(as_text=True))
+        awarded_banner = document.xpath('//div[@class="banner-temporary-message-without-action"]')[0]
+
         assert 'Company size: small' in awarded_banner.xpath('p/text()')[2]
 
 
