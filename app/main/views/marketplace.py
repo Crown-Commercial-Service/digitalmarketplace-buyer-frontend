@@ -80,6 +80,7 @@ def terms_and_conditions():
 def get_brief_by_id(framework_framework, brief_id):
     briefs = data_api_client.get_brief(brief_id)
     brief = briefs.get('briefs')
+    sme, large = ['micro', 'small', 'medium'], ['large']
 
     if brief['status'] not in PUBLISHED_BRIEF_STATUSES or brief['frameworkFramework'] != framework_framework:
         abort(404, "Opportunity '{}' can not be found".format(brief_id))
@@ -89,11 +90,15 @@ def get_brief_by_id(framework_framework, brief_id):
         status=",".join(ALL_BRIEF_RESPONSE_STATUSES)
     ).get('briefResponses')
 
-    winning_response = None
+    winning_response, winning_supplier_size = None, None
     if brief['status'] == 'awarded':
         winning_response = next(response for response in brief_responses if response["id"] == brief[
             'awardedBriefResponseId'
         ])
+        if winning_response["supplierOrganisationSize"] in sme:
+            winning_supplier_size = "SME"
+        elif winning_response["supplierOrganisationSize"] in large:
+            winning_supplier_size = "large"
 
     started_brief_responses = [response for response in brief_responses if response['status'] == 'draft']
     completed_brief_responses = [
@@ -101,7 +106,6 @@ def get_brief_by_id(framework_framework, brief_id):
     ]
 
     # Counts for application statistics
-    sme, large = ['micro', 'small', 'medium'], ['large']
     started_sme_responses_count = count_brief_responses_by_size(started_brief_responses, sme)
     started_large_responses_count = count_brief_responses_by_size(started_brief_responses, large)
     completed_sme_responses_count = count_brief_responses_by_size(completed_brief_responses, sme)
@@ -140,7 +144,8 @@ def get_brief_by_id(framework_framework, brief_id):
             'large_count': started_large_responses_count,
             'total': started_sme_responses_count + started_large_responses_count
         },
-        winning_response=winning_response
+        winning_response=winning_response,
+        winning_supplier_size=winning_supplier_size
     )
 
 
