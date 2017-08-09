@@ -80,4 +80,5 @@ app/static/*
 
 # IDE specific files
 .idea/
+*.iml
 version_label
