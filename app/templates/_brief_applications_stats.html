@@ -1,16 +1,22 @@
 {% import "toolkit/statistics.html" as statistics %}
 
 {{ statistics.big_stat(
-     started_responses_stats["total"],
-     pluralize(started_responses_stats["total"], "Incomplete application", "Incomplete applications"),
-     "%d SME, %d large" | format(started_responses_stats['sme_count'], started_responses_stats['large_count']) if started_responses_stats['total'] else None,
-     id="started-applications"
+     brief_responses_stats.incomplete_responses_total,
+     pluralize(brief_responses_stats.incomplete_responses_total, "Incomplete application", "Incomplete applications"),
+     "%d SME, %d large" | format(
+        brief_responses_stats.incomplete_sme_responses,
+        brief_responses_stats.incomplete_large_responses
+     ) if brief_responses_stats.incomplete_responses_total else None,
+     id="incomplete-applications"
    )
 }}
 {{ statistics.big_stat(
-     completed_responses_stats["total"],
-     pluralize(completed_responses_stats["total"], "Completed application", "Completed applications"),
-     "%d SME, %d large" | format(completed_responses_stats['sme_count'], completed_responses_stats['large_count']) if completed_responses_stats['total'] else None,
+     brief_responses_stats.completed_responses_total,
+     pluralize(brief_responses_stats.completed_responses_total, "Completed application", "Completed applications"),
+     "%d SME, %d large" | format(
+     brief_responses_stats.completed_sme_responses,
+     brief_responses_stats.completed_large_responses
+     ) if brief_responses_stats.completed_responses_total else None,
      id="completed-applications"
    )
 }}
