@@ -953,12 +953,20 @@ class TestAwardedBriefPage(BaseBriefPageTest):
 
         assert 'Start date: Monday 21 August 2017' in awarded_banner.xpath('p/text()')[0]
 
-    def test_contract_value_visible_on_award_banner(self):
+    def test_contract_value_visible_on_award_banner_does_not_include_zero_pence(self):
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(self.brief_id))
         document = html.fromstring(res.get_data(as_text=True))
         awarded_banner = document.xpath('//div[@class="banner-temporary-message-without-action"]')[0]
 
         assert u'Value: £20,000' in awarded_banner.xpath('p/text()')[1]
+
+    def test_contract_value_visible_on_award_banner_includes_non_zero_pence(self):
+        self.brief_responses["briefResponses"][1]["awardDetails"]["awardedContractValue"] = "20000.10"
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(self.brief_id))
+        document = html.fromstring(res.get_data(as_text=True))
+        awarded_banner = document.xpath('//div[@class="banner-temporary-message-without-action"]')[0]
+
+        assert u'Value: £20,000.10' in awarded_banner.xpath('p/text()')[1]
 
     def test_supplier_size_visible_on_award_banner(self):
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(self.brief_id))
