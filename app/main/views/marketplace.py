@@ -68,6 +68,12 @@ def metrics_historical():
 
 @main.route('/<template_name>')
 def content(template_name):
+    if template_name == 'buyers-guide':
+        return redirect('https://marketplace1.zendesk.com/hc/en-gb/categories/115001542047-Buyer-guide-and-FAQs',
+                        code=301)  # 301 Moved Permanently
+    if template_name == 'sellers-guide':
+        return redirect('https://marketplace1.zendesk.com/hc/en-gb/categories/115001540368-Seller-guide-and-FAQs',
+                        code=301)  # 301 Moved Permanently
     try:
         return render_template('content/{}.html'.format(template_name))
     except:
