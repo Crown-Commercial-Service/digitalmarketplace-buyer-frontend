@@ -928,7 +928,9 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
             "page": 1,
             "human": True,
         }
-        assert set(self._data_api_client.find_briefs.call_args[1]["status"].split(",")) == {"live", "closed"}
+        assert set(self._data_api_client.find_briefs.call_args[1]["status"].split(",")) == {
+            "live", "closed", "awarded"
+        }
         assert set(self._data_api_client.find_briefs.call_args[1]["lot"].split(",")) == {
             "lot-one",
             "lot-three",
@@ -1032,7 +1034,9 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
             "page": 1,
             "human": True,
         }
-        assert set(self._data_api_client.find_briefs.call_args[1]["status"].split(",")) == {"live", "closed"}
+        assert set(self._data_api_client.find_briefs.call_args[1]["status"].split(",")) == {
+            "live", "closed", "awarded"
+        }
         assert set(self._data_api_client.find_briefs.call_args[1]["lot"].split(",")) == {
             "lot-one",
             "lot-three",

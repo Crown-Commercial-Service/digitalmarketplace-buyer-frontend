@@ -41,7 +41,14 @@ class BriefSearchForm(Form):
         if not self.validate():
             raise ValueError("Invalid form")
 
-        statuses = self.status.data or tuple(id for id, label in self.status.choices)
+        # Treat 'awarded' briefs as closed for filtering purposes, but don't show as a status filter option on the form.
+        if self.status.data:
+            statuses = self.status.data.copy()
+        else:
+            statuses = [id for id, label in self.status.choices]
+        if 'closed' in statuses:
+            statuses.append('awarded')
+
         lots = self.lot.data or tuple(id for id, label in self.lot.choices)
 
         return self._data_api_client.find_briefs(
