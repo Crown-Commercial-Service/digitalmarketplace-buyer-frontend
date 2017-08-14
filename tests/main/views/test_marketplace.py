@@ -1120,14 +1120,31 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         filter_button = document.xpath('//button[@class="button-save" and normalize-space(text())="Filter"]')
         assert len(filter_button) == 1
 
-    def test_closed_and_awarded_briefs_displayed_with_word_closed(self):
+    def test_opportunity_status_and_published_date(self):
         res = self.client.get('/digital-outcomes-and-specialists/opportunities')
         assert res.status_code == 200
 
         document = html.fromstring(res.get_data(as_text=True))
-        details_of_opportunities = document.xpath('//li[@class="search-result-metadata-item"]/text()')
-        closed_instances = [item.strip() for item in details_of_opportunities if "Closed" in item.strip()]
-        assert len(closed_instances) == 2
+
+        live_opportunity_published_at = document.xpath(
+            '//div[@class="search-result"][1]//li[@class="search-result-metadata-item"]'
+        )[-2].text_content().strip()
+        assert live_opportunity_published_at == "Published: Wednesday 9 March 2016"
+
+        live_opportunity_closing_at = document.xpath(
+            '//div[@class="search-result"][1]//li[@class="search-result-metadata-item"]'
+        )[-1].text_content().strip()
+        assert live_opportunity_closing_at == "Closing: Thursday 24 March 2016"
+
+        closed_opportunity_status = document.xpath(
+            '//div[@class="search-result"][3]//li[@class="search-result-metadata-item"]'
+        )[-1].text_content().strip()
+        assert closed_opportunity_status == "Closed"
+
+        awarded_opportunity_status = document.xpath(
+            '//div[@class="search-result"][4]//li[@class="search-result-metadata-item"]'
+        )[-1].text_content().strip()
+        assert awarded_opportunity_status == "Closed"
 
 
 @mock.patch('app.main.views.marketplace.data_api_client', autospec=True)
