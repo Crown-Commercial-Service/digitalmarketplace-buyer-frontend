@@ -146,8 +146,16 @@ class BaseApplicationTest(object):
             'suppliers_by_prefix_fixture_page_with_next_and_prev.json')
 
     @staticmethod
-    def _get_direct_award_project_fixture():
-        return BaseApplicationTest._get_fixture_data('direct_award_project_fixture.json')
+    def _get_direct_award_project_fixture(**kwargs):
+        project = BaseApplicationTest._get_fixture_data('direct_award_project_fixture.json')
+
+        for key, value in kwargs.items():
+            if key in project:
+                project['project'][key] = value
+            else:
+                raise ValueError('Key "{}" does not exist in the Direct Award project fixture.')
+
+        return project
 
     @staticmethod
     def _get_direct_award_project_searches_fixture():

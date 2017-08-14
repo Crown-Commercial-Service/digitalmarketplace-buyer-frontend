@@ -343,12 +343,6 @@ def project_create(framework_framework):
 
 @direct_award.route('/<string:framework_framework>/projects/<int:project_id>', methods=['GET'])
 def view_project(framework_framework, project_id):
-    # Get core data
-    all_frameworks = data_api_client.find_frameworks().get('frameworks')
-    framework = framework_helpers.get_latest_live_framework(all_frameworks, framework_framework)
-    content_manifest = content_loader.get_manifest(framework['slug'], 'search_filters')
-    lots_by_slug = framework_helpers.get_lots_by_slug(framework)
-
     # Get the requested Direct Award Project.
     project = data_api_client.get_direct_award_project(project_id=project_id)['project']
     if not is_direct_award_project_accessible(project, current_user.id):
@@ -357,32 +351,69 @@ def view_project(framework_framework, project_id):
     searches = data_api_client.find_direct_award_project_searches(user_id=current_user.id,
                                                                   project_id=project['id'])['searches']
 
-    # A Direct Award project has one 'active' search which is what we will display on this overview page.
-    search = list(filter(lambda x: x['active'], searches))[0]
+    if searches:
+        # A Direct Award project has one 'active' search which is what we will display on this overview page.
+        search = list(filter(lambda x: x['active'], searches))[0]
 
-    # We need to get buyer-frontend query params from our saved search API URL.
-    search_query_params = search_api_client.get_frontend_params_from_search_api_url(search['searchUrl'])
-    search_query_params = ungroup_request_filters(search_query_params, content_manifest)
-    search_query_params_multidict = MultiDict(search_query_params)
+        # Indexes for our search API are named by the framework slug they relate to.
+        framework_slug = search_api_client.get_index_from_search_api_url(search['searchUrl'])
+        framework = data_api_client.get_framework(framework_slug)['frameworks']
 
-    current_lot_slug = search_query_params_multidict.get('lot', None)
-    filters = filters_for_lot(current_lot_slug, content_manifest, all_lots=framework['lots'])
-    clean_request_query_params = clean_request_args(search_query_params_multidict, filters.values(), lots_by_slug)
+        framework_filters_manifest = content_loader.get_manifest(framework['slug'], 'search_filters')
+        lots_by_slug = framework_helpers.get_lots_by_slug(framework)
 
-    # Now build the buyer-frontend URL representing the saved Search API URL
-    buyer_search_page_url = construct_url_from_base_and_params(url_for('main.search_services'), search_query_params)
+        # We need to get buyer-frontend query params from our saved search API URL.
+        search_query_params = search_api_client.get_frontend_params_from_search_api_url(search['searchUrl'])
+        search_query_params = ungroup_request_filters(search_query_params, framework_filters_manifest)
+        search_query_params_multidict = MultiDict(search_query_params)
 
-    # Get the saved Search API URL result set and build the search summary.
-    search_api_response = search_api_client._get(search['searchUrl'])
-    search_summary = SearchSummary(
-        search_api_response['meta']['total'],
-        clean_request_query_params.copy(),
-        filters.values(),
-        lots_by_slug
-    )
+        current_lot_slug = search_query_params_multidict.get('lot', None)
+        filters = filters_for_lot(current_lot_slug, framework_filters_manifest, all_lots=framework['lots'])
+        clean_request_query_params = clean_request_args(search_query_params_multidict, filters.values(), lots_by_slug)
+
+        # Now build the buyer-frontend URL representing the saved Search API URL
+        buyer_search_page_url = construct_url_from_base_and_params(url_for('main.search_services'), search_query_params)
+
+        # Get the saved Search API URL result set and build the search summary.
+        search_api_response = search_api_client._get(search['searchUrl'])
+        search_summary = SearchSummary(
+            search_api_response['meta']['total'],
+            clean_request_query_params.copy(),
+            filters.values(),
+            lots_by_slug
+        )
+        search_summary_sentence = search_summary.markup()
+
+    else:
+        all_frameworks = data_api_client.find_frameworks().get('frameworks')
+        framework = framework_helpers.get_latest_live_framework(all_frameworks, 'g-cloud')
+
+        search = None
+        buyer_search_page_url = None
+        search_summary_sentence = None
+
+    content_loader.load_messages(framework['slug'], ['descriptions', 'urls'])
+    framework_short_description = content_loader.get_message(framework['slug'], 'descriptions', 'framework_short')
+    framework_urls = content_loader.get_message(framework['slug'], 'urls')
 
     return render_template('direct-award/view-project.html',
-                           project_name=project['name'],
-                           search_page_url=buyer_search_page_url,
-                           search_created_at=search['createdAt'],
-                           search_summary=search_summary.markup())
+                           framework=framework,
+                           project=project,
+                           search=search,
+                           buyer_search_page_url=buyer_search_page_url,
+                           search_summary_sentence=search_summary_sentence,
+                           framework_short_description=framework_short_description,
+                           framework_urls=framework_urls,
+                           call_off_contract_url=framework_urls['call_off_contract_url'],
+                           customer_benefits_record_form_url=framework_urls['customer_benefits_record_form_url'],
+                           customer_benefits_record_form_email=framework_urls['customer_benefits_record_form_email'])
+
+
+@direct_award.route('/<string:framework_framework>/projects/<int:project_id>/end-search')
+def end_search(framework_framework, project_id):
+    raise NotImplementedError()
+
+
+@direct_award.route('/<string:framework_framework>/projects/<int:project_id>/download-shortlist')
+def download_shortlist(framework_framework, project_id):
+    raise NotImplementedError()

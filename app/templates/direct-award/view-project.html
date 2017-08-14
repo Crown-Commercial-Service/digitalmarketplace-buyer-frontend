@@ -1,6 +1,6 @@
 {% extends "_base_page.html" %}
 
-{% block page_title %}project_name - Digital Marketplace{% endblock %}
+{% block page_title %}{{ project.name }} - Digital Marketplace{% endblock %}
 
 {% block breadcrumb %}
   {%
@@ -15,7 +15,7 @@
           "label": "View your account"
       },
       {
-          "label": project_name
+          "label": project.name
       }
     ]
   %}
@@ -24,17 +24,107 @@
 {% endblock %}
 
 {% block main_content %}
-
-<div class="index-page">
-  <header class="page-heading">
-    <h1>
-      Project - {{ project_name }}
-    </h1>
-  </header>
   <div class="grid-row">
-    <p>{{ search_summary }}</p>
-    <p>{{ search_created_at|utcdatetimeformat }}</p>
-    <a href="{{ search_page_url }}">View your search</a>
+    <div class="column-two-thirds">
+      {% with
+        heading = project.name
+      %}
+        {% include "toolkit/page-heading.html" %}
+      {% endwith %}
+    </div>
   </div>
-</div>
+  <div class="grid-row">
+    <div class="column-two-thirds">
+      {% block before_sections %}{% endblock %}
+      <p class="">Find, compare and buy {{ framework_short_description }}.</p>
+      <ol class="instruction-list steps divider">
+        {% for step in [
+          {
+            "title": "Prepare your requirements",
+            "content": [
+              {"type": "text", "text": "Work with buyers, technical experts and someone who will use the service to prepare a list of ‘must-haves’ and ‘wants’. These should inform your search category, keywords and filters."},
+              {"type": "text", "text": "You can also <a href=\"https://www.gov.uk/guidance/talking-to-suppliers-before-you-buy-digital-marketplace-services\" target=\"_blank\" rel=\"external noopener noreferrer\">talk to suppliers before you start</a> to you refine your requirements."|safe}
+            ]
+          },
+          {
+            "title": "Search for services",
+            "content": [
+              {"type": "text", "text": "Choose a category, then search for services using keywords and filters. You can save your search at any time."},
+              {"type": "action", "label": "Search", "href": url_for('main.search_services')}
+            ] if not search_summary_sentence else [
+              {"type": "text", "class": ["search-summary"], "text": search_summary_sentence},
+              {"type": "text", "text": ''.join(["<a href=\"", buyer_search_page_url|e, "\">View results</a>"])|safe},
+              {"type": "box", "style": "complete", "label": ''.join(["Search saved on ", search.createdAt|utcdatetimeformat()])}
+            ]
+          },
+          {
+            "title": "Review services",
+            "content": [
+              {"type": "text", "text": "Read the short descriptions and service details provided by suppliers. If you need to, add or remove filters to refine the results of your search. Save your search again to record any changes you make."},
+              {"type": "box", "style": "inactive", "label": "Can't start yet"} if not search.createdAt else {"type": "text", "text": ''.join(["<a href=\"", buyer_search_page_url|e, "\">Edit search</a>"])|safe} if not search.searchedAt else {}
+            ]
+          },
+          {
+            "title": "Create a shortlist",
+            "content": [
+              {"type": "text", "text": "End your search to save a shortlist of the services you’ve found. You should only do this when you’ve finished searching for services. You can not edit your search after you save your shortlist."},
+              {"type": "box", "style": "inactive", "label": "Can't start yet"} if not search.createdAt else {"type": "action", "label": "End search", "href": url_for('direct_award.end_search', framework_framework=framework.framework, project_id=project.id)} if not search.searchedAt else {"type": "box", "style": "complete", "label": ''.join(["Search ended on ", search.searchedAt|utcdatetimeformat()])}
+            ]
+          },
+          {
+            "title": "Compare services",
+            "content": [
+              {"type": "text", "text": ''.join(["Download your shortlist as a CSV or ODF file.<br><a href=\"", framework_urls.buyers_guide_compare_services_url|e, "\" target=\"_blank\" rel=\"external noopener noreferrer\">Compare services</a> to find the cheapest or best value for money.<br>You can use the shortlist file to help record your decisions."])|safe},
+              {"type": "box", "style": "inactive", "label": "Can't start yet"} if not search.searchedAt else {"type": "action", "label": "Download shortlist", "href": url_for('direct_award.download_shortlist', framework_framework=framework.framework, project_id=project.id)} if not project.downloadedAt else {"type": "box", "style": "complete", "label": "Shortlist downloaded"},
+              {"type": "text", "text": ''.join(["<a href=\"", url_for('direct_award.download_shortlist', framework_framework=framework.framework, project_id=project.id)|e, "\">Download your shortlist again.</a>"])|safe} if project.downloadedAt else {}
+            ]
+          },
+          {
+            "title": "Award a contract",
+            "content": [
+              {"type": "text", "text": ''.join(["<a href=\"", framework_urls.call_off_contract_url|e, "\" target=\"_blank\" rel=\"external noopener noreferrer\">Download the ", framework['name'], " call-off contract</a><br>The buyer and supplier must both sign a copy of the contract before the service can be used."])|safe},
+              {"type": "text", "text": ''.join(["Read about <a href=\"https://www.gov.uk/guidance/how-to-award-a-contract-when-you-buy-services\" target=\"_blank\" rel=\"external noopener noreferrer\">how to award a contract when you buy services</a>."])|safe},
+              {"type": "box", "style": "inactive", "label": "Can't start yet"} if not project.downloadedAt else {}
+            ]
+          },
+          {
+            "title": "Publish the contract",
+            "content": [
+              {"type": "text", "text": ("Publish the contract on <a href=\"https://www.gov.uk/contracts-finder\" target=\"_blank\" rel=\"external noopener noreferrer\">Contracts Finder</a>.")|safe},
+              {"type": "box", "style": "inactive", "label": "Can't start yet"} if not project.downloadedAt else {}
+            ]
+          },
+          {
+            "title": "Complete the customer benefits record form",
+            "content": [
+              {"type": "text", "text": ''.join(["You must fill in the Crown Commercial Service (CCS) <a href=\"", framework_urls.customer_benefits_record_form_url|e, "\" target=\"_blank\" rel=\"external noopener noreferrer\">", framework['name'], " Customer Benefits Record form</a> every time you enter into a contract.<br>Email a copy to <a href=\"mailto:", framework_urls.customer_benefits_record_form_email|e, "\" target=\"_top\">", customer_benefits_record_form_email|e, "</a>."])},
+              {"type": "box", "style": "inactive", "label": "Can't start yet"} if not project.downloadedAt else {}
+            ]
+          }
+        ] %}
+          <li class="instruction-list-item divider">
+            <h2 class="instruction-list-item-body"><span class="step-number" role="presentation">{{ loop.index }}. </span>{{ step.title }}</h2>
+            {% for item in step.content %}
+              {% if item.type == 'text' %}
+                <p class="instruction-list-item-top{% for class in item.class %} {{ class }}{% endfor %}">{{ item.text|safe }}</p>
+              {% elif item.type == 'action' %}
+                <a class="instruction-list-item-action button-save" href="{{ item.href }}">{{ item.label }}</a>
+              {% elif item.type == 'box' %}
+                <p class="instruction-list-item-box {{ item.style }}">{{ item.label }}</p>
+              {% endif %}
+            {% endfor %}
+          </li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  {% if not delete_requested %}
+     <div class="grid-row">
+       <div class="column-two-thirds">
+         {% if framework.status == 'live' and project.status == 'draft' %}
+         <a href="http://localhost">Delete</a>
+         {% endif %}
+       </div>
+     </div>
+   {% endif %}
 {% endblock %}
