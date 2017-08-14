@@ -661,6 +661,62 @@ class TestBriefPage(BaseBriefPageTest):
 
         self._assert_view_application(document, brief_id)
 
+    def test_supplier_applied_view_application_for_opportunity_awarded_to_logged_in_supplier(self):
+        self.login_as_supplier()
+        self.brief['briefs']['status'] = 'awarded'
+
+        self._data_api_client.find_brief_responses.return_value = {
+            "briefResponses": [
+                {
+                    "awardDetails": {"awardedContractStartDate": "2017-08-21", "awardedContractValue": "20000.00"},
+                    "id": 14276,
+                    "briefId": 1,
+                    "createdAt": "2016-12-02T11:09:28.054129Z",
+                    "status": "awarded",
+                    "submittedAt": "2016-12-05T11:09:28.054129Z",
+                    "supplierId": 1234,
+                    "supplierName": "Example Company Limited",
+                    "supplierOrganisationSize": "small"
+                }
+            ]
+        }
+
+        self.brief['briefs']['awardedBriefResponseId'] = 14276
+        brief_id = self.brief['briefs']['id']
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
+        assert res.status_code == 200
+        document = html.fromstring(res.get_data(as_text=True))
+
+        self._assert_view_application(document, brief_id)
+
+    def test_supplier_applied_view_application_for_opportunity_pending_awarded_to_logged_in_supplier(self):
+        self.login_as_supplier()
+        self.brief['briefs']['status'] = 'closed'
+
+        self._data_api_client.find_brief_responses.return_value = {
+            "briefResponses": [
+                {
+                    "awardDetails": {"pending": True},
+                    "id": 14276,
+                    "briefId": 1,
+                    "createdAt": "2016-12-02T11:09:28.054129Z",
+                    "status": "pending-awarded",
+                    "submittedAt": "2016-12-05T11:09:28.054129Z",
+                    "supplierId": 1234,
+                    "supplierName": "Example Company Limited",
+                    "supplierOrganisationSize": "small"
+                }
+            ]
+        }
+
+        self.brief['briefs']['awardedBriefResponseId'] = 14276
+        brief_id = self.brief['briefs']['id']
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
+        assert res.status_code == 200
+        document = html.fromstring(res.get_data(as_text=True))
+
+        self._assert_view_application(document, brief_id)
+
 
 class TestBriefPageQandASectionViewQandASessionDetails(BaseBriefPageTest):
 

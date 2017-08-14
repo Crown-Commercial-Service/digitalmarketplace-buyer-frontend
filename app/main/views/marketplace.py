@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from datetime import datetime
-
 from flask_login import current_user
 from flask import abort, current_app, render_template, request
-import flask_featureflags as feature
 
 from dmapiclient import APIError
 from dmcontent.content_loader import ContentNotFoundError
@@ -17,6 +14,8 @@ from ..helpers.framework_helpers import get_latest_live_framework, get_framework
 from ..forms.brief_forms import BriefSearchForm
 
 from app import data_api_client, content_loader
+
+COMPLETED_BRIEF_RESPONSE_STATUSES = ['submitted', 'pending-awarded', 'awarded']
 
 
 @main.route('/')
@@ -106,7 +105,9 @@ def get_brief_by_id(framework_framework, brief_id):
 
     try:
         has_supplier_responded_to_brief = (
-            current_user.supplier_id in [response['supplierId'] for response in completed_brief_responses]
+            current_user.supplier_id in [
+                res['supplierId'] for res in brief_responses if res["status"] in COMPLETED_BRIEF_RESPONSE_STATUSES
+            ]
         )
     except AttributeError:
         has_supplier_responded_to_brief = False
