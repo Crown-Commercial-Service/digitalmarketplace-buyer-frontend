@@ -144,6 +144,14 @@ class BaseApplicationTest(object):
             'suppliers_by_prefix_fixture_page_with_next_and_prev.json')
 
     @staticmethod
+    def _get_direct_award_project_fixture():
+        return BaseApplicationTest._get_fixture_data('direct_award_project_fixture.json')
+
+    @staticmethod
+    def _get_direct_award_project_searches_fixture():
+        return BaseApplicationTest._get_fixture_data('direct_award_project_searches_fixture.json')
+
+    @staticmethod
     def _strip_whitespace(whitespace_in_this):
         return re.sub(r"\s+", "",
                       whitespace_in_this, flags=re.UNICODE)
@@ -184,15 +192,15 @@ class BaseApplicationTest(object):
             login_api_client.authenticate_user.assert_called_once_with(
                 "valid@email.com", "1234567890")
 
-    def login_as_buyer(self):
+    def login_as_buyer(self, user_id=123):
         with patch('app.main.views.login.data_api_client') as login_api_client:
             login_api_client.authenticate_user.return_value = self.user(
-                123, "buyer@email.com", None, None, 'Name')
+                user_id, "buyer@email.com", None, None, 'Name')
 
             self.get_user_patch = patch.object(
                 data_api_client,
                 'get_user',
-                return_value=self.user(123, "buyer@email.com", None, None, 'Some Buyer')
+                return_value=self.user(user_id, "buyer@email.com", None, None, 'Some Buyer')
             )
             self.get_user_patch.start()
 
@@ -236,6 +244,10 @@ class BaseApplicationTest(object):
     def strip_all_whitespace(content):
         pattern = re.compile(r'\s+')
         return re.sub(pattern, '', content)
+
+    @staticmethod
+    def find_search_summary(res_data):
+        return re.findall(r'<span class="search-summary-count">.+</span>[^\n]+', res_data)
 
     # Method to test flashes taken from http://blog.paulopoiati.com/2013/02/22/testing-flash-messages-in-flask/
     def assert_flashes(self, expected_message, expected_category='message'):

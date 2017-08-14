@@ -1,0 +1,40 @@
+{% extends "_base_page.html" %}
+
+{% block page_title %}Save your search - Digital Marketplace{% endblock %}
+
+{% block breadcrumb %}
+  {%
+    with
+    items = [
+      {
+          "link": url_for('main.index'),
+          "label": "Digital Marketplace"
+      },
+      {
+          "link": url_for('external.buyer_dashboard'),
+          "label": "View your account"
+      },
+      {
+          "label": project_name
+      }
+    ]
+  %}
+    {% include "toolkit/breadcrumb.html" %}
+  {% endwith %}
+{% endblock %}
+
+{% block main_content %}
+
+<div class="index-page">
+  <header class="page-heading">
+    <h1>
+      Project - {{ project_name }}
+    </h1>
+  </header>
+  <div class="grid-row">
+    <p>{{ search_summary }}</p>
+    <p>{{ search_created_at|utcdatetimeformat}}</p>
+    <a href="{{ search_page_url }}">View your search</a>
+  </div>
+</div>
+{% endblock %}
