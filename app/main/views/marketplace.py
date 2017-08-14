@@ -9,7 +9,9 @@ from dmcontent.content_loader import ContentNotFoundError
 
 from ...main import main
 from ..helpers.shared_helpers import get_one_framework_by_status_in_order_of_preference, parse_link
-from ..helpers.brief_helpers import count_brief_responses_by_size_and_status, format_winning_supplier_size
+from ..helpers.brief_helpers import (
+    count_brief_responses_by_size_and_status, format_winning_supplier_size, COMPLETED_BRIEF_RESPONSE_STATUSES
+)
 from ..helpers.framework_helpers import get_latest_live_framework, get_framework_description
 
 from ..forms.brief_forms import BriefSearchForm
