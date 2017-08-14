@@ -1,32 +1,29 @@
 {% import "toolkit/summary-table.html" as summary %}
 {% if brief.status != 'draft' %}
-{% call(item) summary.list_table(
-  [
-    {"label": "Published", "value": brief.publishedAt|dateformat},
-    {"label": "Deadline for asking questions", "value": brief.clarificationQuestionsClosedAt|datetimeformat if brief.clarificationQuestionsClosedAt is defined},
-    {"label": "Closing date for applications", "value": brief.applicationsClosedAt|datetimeformat if brief.applicationsClosedAt is defined}
-  ],
-  caption="Important dates"
-) %}
-
-  {% call summary.row() %}
-    {{ summary.field_name(item.label) }}
-    {{ summary.text(item.value) }}
-  {% endcall %}
-{% endcall %}
+<br/>
+<h2 class="visuallyhidden">Important dates</h2>
+<dl>
+  <dt>Published</dt>
+  <dd>{{ brief.publishedAt|dateformat }}</dd>
+  <div class="hr"></div>
+  <dt>Deadline for asking questions</dt>
+  <dd>{{ brief.clarificationQuestionsClosedAt|datetimeformat if brief.clarificationQuestionsClosedAt is defined }}</dd>
+  <div class="hr"></div>
+  <dt>Closing date for applications</dt>
+  <dd>{{ brief.applicationsClosedAt|datetimeformat if brief.applicationsClosedAt is defined }}</dd>
+  <div class="hr"></div>
+</dl>
 {% endif %}
 {% for section in content.summary(brief) %}
     {{ summary.heading(section.name, id="opportunity-attributes-{}".format(loop.index)) }}
      {% if section.summary_page_description %}
           {{ summary.description(section.summary_page_description) }}
         {% endif %}
-    {% call(item) summary.list_table(
-      section.questions,
-      caption=section.name
-    ) %}
-      {% call summary.row() %}
-        {{ summary.field_name(item.label) }}
-        {{ summary[item.type](item.value) | format_links}}
-      {% endcall %}
-    {% endcall %}
+    <dl>
+      {% for item in section.questions %}
+        <dt>{{ summary.field_name(item.label) }}</dt>
+        <dd>{{ summary[item.type](item.value) | format_links}}</dd>
+        <div class="hr"></div>
+      {% endfor %}
+    </dl>
 {% endfor %}

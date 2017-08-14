@@ -202,7 +202,55 @@ ol.bold-numbers {
     }
   }
 }
-
-.brief-content .summary-item-field-headings-visible {
+.brief-content .summary-item-field-headings-visible, .brief-builder .summary-item-field-headings {
   border: 0;
+}
+.brief-content {
+  hr {
+    display: none;
+    border: 0;
+  }
+  ul {
+    padding-left: 1.4em;
+  }
+
+  dt {
+
+    margin-bottom: 0;
+  }
+  dd {
+    padding: 0;
+    margin: 0;
+    margin-bottom: 1.2em;
+  }
+}
+@include media($tablet) {
+  .brief-content {
+    dt, dd, ul, .multiquestion p {
+      font-size: .875rem;
+      font-weight: 400;
+      display: inline-block;
+      margin: 0;
+    }
+    dt, dd {
+      padding: 1em 1.2em;
+    }
+    dt {
+      width: 40%;
+      vertical-align: top;
+    }
+    dd {
+      width: 50%;
+    }
+    .multiquestion {
+      padding-bottom: 1em;
+    }
+    .hr {
+      display: block;
+      width: 100%;
+      margin: 0;
+      border: 0;
+      border-bottom: 1px solid #bebebe;
+    }
+  }
 }

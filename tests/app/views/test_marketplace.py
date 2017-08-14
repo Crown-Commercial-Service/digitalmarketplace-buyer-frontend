@@ -186,20 +186,20 @@ class TestBriefPage(BaseApplicationTest):
         document = html.fromstring(res.get_data(as_text=True))
 
         section_heading = document.xpath('//h2[@class="summary-item-heading"]')[0]
-        section_attributes = section_heading.xpath('following-sibling::table[1]/tbody/tr')
+        section_attributes = section_heading.xpath('following-sibling::dl')
 
-        start_date_key = section_attributes[2].xpath('td[1]/span/text()')
-        start_date_value = section_attributes[2].xpath('td[2]/span/text()')
+        start_date_key = section_attributes[0].xpath('dt/td/span/text()')[2]
+        start_date_value = section_attributes[0].xpath('dd/td/span/text()')[2]
 
-        contract_length_key = section_attributes[3].xpath('td[1]/span/text()')
-        contract_length_value = section_attributes[3].xpath('td[2]/span/text()')
+        contract_length_key = section_attributes[0].xpath('dt/td/span/text()')[3]
+        contract_length_value = section_attributes[0].xpath('dd/td/span/text()')[3]
 
         assert_equal(section_heading.get('id'), 'opportunity-attributes-1')
         assert_equal(section_heading.text.strip(), 'Overview')
-        assert_equal(start_date_key[0], 'What is the latest start date?')
-        assert_equal(start_date_value[0], '01/03/2016')
-        assert_equal(contract_length_key[0], 'How long is the contract?')
-        assert_equal(contract_length_value[0], '4 weeks')
+        assert_equal(start_date_key, 'What is the latest start date?')
+        assert_equal(start_date_value, '01/03/2016')
+        assert_equal(contract_length_key, 'How long is the contract?')
+        assert_equal(contract_length_value, '4 weeks')
 
     def test_dos_brief_has_question_and_answer_session_details_link(self):
         brief_id = self.brief['briefs']['id']
@@ -541,7 +541,7 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
         )
         document = html.fromstring(res.get_data(as_text=True))
         assert_equal(
-            document.xpath('//h2')[8].text, 'Have you got expertise in {}?'.format(
+            document.xpath('//h2')[9].text, 'Have you got expertise in {}?'.format(
                 self.brief['areaOfExpertise']
             )
         )
@@ -575,7 +575,7 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
         document = html.fromstring(res.get_data(as_text=True))
 
         assert_equal(
-            document.xpath('//h2')[8].text, 'Have you got expertise in {}?'.format(
+            document.xpath('//h2')[9].text, 'Have you got expertise in {}?'.format(
                 self.brief['areaOfExpertise']
             )
         )
@@ -616,7 +616,7 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
         document = html.fromstring(res.get_data(as_text=True))
 
         assert_equal(
-            document.xpath('//h2')[8].text, 'Have you got expertise in {}?'.format(
+            document.xpath('//h2')[9].text, 'Have you got expertise in {}?'.format(
                 self.brief['areaOfExpertise']
             )
         )
@@ -648,7 +648,7 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
                 .format(self.brief['id'])
         )
         document = html.fromstring(res.get_data(as_text=True))
-        assert_equal(document.xpath('//h2')[8].text, 'What services do you offer?')
+        assert_equal(document.xpath('//h2')[9].text, 'What services do you offer?')
 
         brief_scenario_button_text = document.xpath('//a')[12].text
         assert_equal(brief_scenario_button_text, 'Update your profile')
