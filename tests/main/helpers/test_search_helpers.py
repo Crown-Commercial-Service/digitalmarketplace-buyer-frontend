@@ -1,6 +1,6 @@
 import mock
-
 import pytest
+import re
 from werkzeug.datastructures import MultiDict
 
 from ...helpers import BaseApplicationTest
@@ -230,9 +230,8 @@ class TestBuildSearchQueryHelpers(BaseApplicationTest):
             'question6': ['option1', 'option3'],
         })
 
-        assert search_helpers.build_search_query(self.g6_framework, request.args, self.lot_filters, self._loader(),
+        assert search_helpers.build_search_query(request.args, self.lot_filters, self._loader(),
                                                  self._lots_by_slug) == {
-            'index': 'g-cloud-6',
             'page': 5,
             'q': 'email',
             'lot': 'saas',
@@ -247,42 +246,39 @@ class TestBuildSearchQueryHelpers(BaseApplicationTest):
             'lot': 'saasaas',
         })
 
-        assert search_helpers.build_search_query(self.g6_framework, request.args, self.lot_filters, self._loader(),
-                                                 self._lots_by_slug) == {'index': 'g-cloud-6'}
+        assert search_helpers.build_search_query(request.args, self.lot_filters, self._loader(),
+                                                 self._lots_by_slug) == {}
 
     def test_build_search_query_multiple_lots_are_all_dropped(self):
         request = self._request({
             'lot': 'saas,paas',
         })
 
-        assert search_helpers.build_search_query(self.g6_framework, request.args, self.lot_filters, self._loader(),
-                                                 self._lots_by_slug) == {'index': 'g-cloud-6'}
+        assert search_helpers.build_search_query(request.args, self.lot_filters, self._loader(),
+                                                 self._lots_by_slug) == {}
 
     def test_build_search_query_no_keywords_drops_q_parameter(self):
         request = self._request({
             'q': '',
         })
 
-        assert search_helpers.build_search_query(self.g6_framework, request.args, self.lot_filters, self._loader(),
-                                                 self._lots_by_slug) == {'index': 'g-cloud-6'}
+        assert search_helpers.build_search_query(request.args, self.lot_filters, self._loader(),
+                                                 self._lots_by_slug) == {}
 
     def test_build_search_query_no_page_drops_page_parameter(self):
         request = self._request({
-            'index': 'g-cloud-6',
             'page': '',
         })
 
-        assert search_helpers.build_search_query(self.g6_framework, request.args, self.lot_filters, self._loader(),
-                                                 self._lots_by_slug) == {'index': 'g-cloud-6'}
+        assert search_helpers.build_search_query(request.args, self.lot_filters, self._loader(),
+                                                 self._lots_by_slug) == {}
 
     def test_build_search_query_g5_dots_id_search_replaces_dots_with_dashes(self):
         request = self._request({
-            'index': 'g-cloud-6',
             'q': 'some text 5.G4.1005.001',
         })
 
-        assert search_helpers.build_search_query(self.g6_framework, request.args, self.lot_filters, self._loader(),
+        assert search_helpers.build_search_query(request.args, self.lot_filters, self._loader(),
                                                  self._lots_by_slug) == {
-            'index': 'g-cloud-6',
             'q': 'some text 5-G4-1005-001',
         }

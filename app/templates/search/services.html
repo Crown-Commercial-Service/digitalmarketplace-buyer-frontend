@@ -46,7 +46,12 @@
   <div id="js-dm-live-search-wrapper" class="grid-row">
     <section class="column-one-third search-page-filters" aria-label="Search filters">
         <form action="{{ url_for('.search_services') }}" method="get" id="js-dm-live-search-form">
-            {% include 'search/_services_filters.html' %}
+          {% if show_save_button %}
+            <button id="save-search" class="button-save" role="button" type="submit" formaction="{{ url_for('direct_award.save_search') }}" style="text-align:center; margin-left:auto; margin-right: auto;">
+              Save your search
+            </button>
+          {% endif %}
+          {% include 'search/_services_filters.html' %}
         </form>
     </section>
     <section class="column-two-thirds" aria-label="Search results">

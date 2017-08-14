@@ -64,6 +64,7 @@ class Config(object):
     # Feature Flags
     RAISE_ERROR_ON_MISSING_FEATURES = True
     FEATURE_FLAGS_NEW_SUPPLIER_FLOW = False
+    FEATURE_FLAGS_DIRECT_AWARD_PROJECTS = False
 
     # LOGGING
     DM_LOG_LEVEL = 'DEBUG'
@@ -117,6 +118,7 @@ class Test(Config):
     SECRET_KEY = "KEY"
 
     FEATURE_FLAGS_NEW_SUPPLIER_FLOW = enabled_since('2016-11-29')
+    FEATURE_FLAGS_DIRECT_AWARD_PROJECTS = enabled_since('2017-08-15')
 
 
 class Development(Config):
@@ -135,6 +137,7 @@ class Development(Config):
     SHARED_EMAIL_KEY = "very_secret"
 
     FEATURE_FLAGS_NEW_SUPPLIER_FLOW = enabled_since('2016-11-29')
+    FEATURE_FLAGS_DIRECT_AWARD_PROJECTS = enabled_since('2017-08-15')
 
 
 class Live(Config):

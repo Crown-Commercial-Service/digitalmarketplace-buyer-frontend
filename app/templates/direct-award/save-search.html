@@ -1,0 +1,52 @@
+{% extends "_base_page.html" %}
+
+{% block page_title %}Save your search - Digital Marketplace{% endblock %}
+
+{% block breadcrumb %}
+  {%
+    with
+    items = [
+      {
+          "link": url_for('main.index'),
+          "label": "Digital Marketplace"
+      },
+      {
+          "label": "Save your search"
+      }
+    ]
+  %}
+    {% include "toolkit/breadcrumb.html" %}
+  {% endwith %}
+{% endblock %}
+
+{% block main_content %}
+
+<div class="index-page">
+  <header class="page-heading">
+    <h1>
+      Save your search
+    </h1>
+  </header>
+  <p>{{ search_summary.markup() }}</p>
+  <div class="grid-row">
+    <form method="post" action="{{ url_for('direct_award.project_create') }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+      <input type="hidden" name="search_api_url" value="{{ search_api_url }}"/>
+      {%
+        with
+        question = "Name a new procurement project",
+        name = "project_name"
+      %}
+        {% include "toolkit/forms/textbox.html" %}
+      {% endwith %}
+      {%
+        with
+        type = "save",
+        label = "Create project and save search"
+      %}
+        {% include "toolkit/button.html" %}
+      {% endwith %}
+    </form>
+  </div>
+</div>
+{% endblock %}

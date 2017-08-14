@@ -42,11 +42,13 @@ def create_app(config_name):
                 content_loader.load_manifest(framework_data['slug'], 'briefs', 'display_brief')
 
     from .main import main as main_blueprint
+    from .main import direct_award as direct_award_blueprint
     from .external.views.external import external as external_blueprint
     from .status import status as status_blueprint
 
     application.register_blueprint(status_blueprint)
     application.register_blueprint(main_blueprint)
+    application.register_blueprint(direct_award_blueprint)
     application.register_blueprint(external_blueprint)
 
     login_manager.login_view = 'main.render_login'

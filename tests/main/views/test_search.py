@@ -3,8 +3,8 @@ import json
 import mock
 import re
 import pytest
-from ...helpers import BaseApplicationTest
-from ...helpers import data_api_client
+
+from ...helpers import BaseApplicationTest, data_api_client
 
 
 def find_pagination_links(res_data):
@@ -12,11 +12,6 @@ def find_pagination_links(res_data):
         '<li class="[next|previous]+">[^<]+<a\ href="(/g-cloud/search\?[^"]+)',
         res_data,
         re.MULTILINE)
-
-
-def find_search_summary(res_data):
-    return re.findall(
-        r'<span class="search-summary-count">.+</span>[^\n]+', res_data)
 
 
 def find_0_results_suggestion(res_data):
@@ -150,7 +145,7 @@ class TestSearchResults(BaseApplicationTest):
 
         res = self.client.get('/g-cloud/search')
         assert res.status_code == 200
-        summary = find_search_summary(res.get_data(as_text=True))[0]
+        summary = self.find_search_summary(res.get_data(as_text=True))[0]
         assert '<span class="search-summary-count">0</span> results found in <em>All categories</em>' in summary
 
     def test_should_render_summary_for_0_results_in_cloud_software_no_keywords(self):
@@ -158,7 +153,7 @@ class TestSearchResults(BaseApplicationTest):
 
         res = self.client.get('/g-cloud/search?lot=cloud-software')
         assert res.status_code == 200
-        summary = find_search_summary(res.get_data(as_text=True))[0]
+        summary = self.find_search_summary(res.get_data(as_text=True))[0]
         assert '<span class="search-summary-count">0</span> results found in <em>Cloud software</em>' in summary
 
     def test_should_render_suggestions_for_0_results(self):
@@ -201,7 +196,7 @@ class TestSearchResults(BaseApplicationTest):
 
         res = self.client.get('/g-cloud/search?lot=cloud-software')
         assert res.status_code == 200
-        summary = find_search_summary(res.get_data(as_text=True))[0]
+        summary = self.find_search_summary(res.get_data(as_text=True))[0]
         assert '<span class="search-summary-count">1</span> result found in <em>Cloud software</em>' in summary
 
     def test_should_render_summary_for_1_result_in_cloud_hosting_no_keywords(self):
@@ -212,7 +207,7 @@ class TestSearchResults(BaseApplicationTest):
 
         res = self.client.get('/g-cloud/search?lot=cloud-hosting')
         assert res.status_code == 200
-        summary = find_search_summary(res.get_data(as_text=True))[0]
+        summary = self.find_search_summary(res.get_data(as_text=True))[0]
         assert '<span class="search-summary-count">1</span> result found' \
             ' in <em>Cloud hosting</em>' in summary
 
@@ -224,7 +219,7 @@ class TestSearchResults(BaseApplicationTest):
 
         res = self.client.get('/g-cloud/search?q=email&lot=cloud-software')
         assert res.status_code == 200
-        summary = find_search_summary(res.get_data(as_text=True))[0]
+        summary = self.find_search_summary(res.get_data(as_text=True))[0]
         assert '<span class="search-summary-count">1</span> result found' \
             ' containing <em>email</em> in' \
             ' <em>Cloud software</em>' in summary
@@ -238,7 +233,7 @@ class TestSearchResults(BaseApplicationTest):
         res = self.client.get(
             '/g-cloud/search?q=email&lot=cloud-software&phoneSupport=true')
         assert res.status_code == 200
-        summary = find_search_summary(res.get_data(as_text=True))[0]
+        summary = self.find_search_summary(res.get_data(as_text=True))[0]
         assert '<span class="search-summary-count">1</span> result found' \
             ' containing <em>email</em> in' \
             ' <em>Cloud software</em>' \
@@ -253,7 +248,7 @@ class TestSearchResults(BaseApplicationTest):
         res = self.client.get(
             '/g-cloud/search?q=email&lot=cloud-software&phoneSupport=true&onsiteSupport=yes')
         assert res.status_code == 200
-        summary = find_search_summary(res.get_data(as_text=True))[0]
+        summary = self.find_search_summary(res.get_data(as_text=True))[0]
         assert '<span class="search-summary-count">1</span> result found' \
             ' containing <em>email</em> in' \
             ' <em>Cloud software</em>' in summary
@@ -270,7 +265,7 @@ class TestSearchResults(BaseApplicationTest):
         res = self.client.get(
             '/g-cloud/search?q=email&lot=cloud-software&resellingType=not_reseller')
         assert res.status_code == 200
-        summary = find_search_summary(res.get_data(as_text=True))[0]
+        summary = self.find_search_summary(res.get_data(as_text=True))[0]
         assert '<span class="search-summary-count">1</span> result found' \
             ' containing <em>email</em> in' \
             ' <em>Cloud software</em>' \
@@ -286,7 +281,7 @@ class TestSearchResults(BaseApplicationTest):
         res = self.client.get(
             '/g-cloud/search?q=email&lot=cloud-software&resellingType=not_reseller&resellingType=reseller_no_extras')
         assert res.status_code == 200
-        summary = find_search_summary(res.get_data(as_text=True))[0]
+        summary = self.find_search_summary(res.get_data(as_text=True))[0]
         assert '<span class="search-summary-count">1</span> result found' \
             ' containing <em>email</em> in' \
             ' <em>Cloud software</em>' \
@@ -304,7 +299,7 @@ class TestSearchResults(BaseApplicationTest):
             '/g-cloud/search?q=email&lot=cloud-software&phoneSupport=true' +
             '&resellingType=not_reseller&resellingType=reseller_no_extras')
         assert res.status_code == 200
-        summary = find_search_summary(res.get_data(as_text=True))[0]
+        summary = self.find_search_summary(res.get_data(as_text=True))[0]
         assert '<span class="search-summary-count">1</span> result found' \
             ' containing <em>email</em> in' \
             ' <em>Cloud software</em>' in summary
@@ -324,7 +319,7 @@ class TestSearchResults(BaseApplicationTest):
             '&resellingType=not_reseller&resellingType=reseller_no_extras' +
             '&governmentSecurityClearances=dv')
         assert res.status_code == 200
-        summary = find_search_summary(res.get_data(as_text=True))[0]
+        summary = self.find_search_summary(res.get_data(as_text=True))[0]
         assert '<span class="search-summary-count">1</span> result found' \
             ' containing <em>email</em> in' \
             ' <em>Cloud software</em>' in summary
@@ -355,7 +350,7 @@ class TestSearchResults(BaseApplicationTest):
         res = self.client.get('/g-cloud/search?q=<div>XSS</div>')
 
         assert res.status_code == 200
-        summary = find_search_summary(res.get_data(as_text=True))[0]
+        summary = self.find_search_summary(res.get_data(as_text=True))[0]
         assert '&lt;div&gt;XSS&lt;/div&gt;' in summary
 
     def test_summary_for_unicode_query_keywords(self):
@@ -366,7 +361,7 @@ class TestSearchResults(BaseApplicationTest):
 
         res = self.client.get(u'/g-cloud/search?q=email+\U0001f47e&lot=cloud-software')
         assert res.status_code == 200
-        summary = find_search_summary(res.get_data(as_text=True))[0]
+        summary = self.find_search_summary(res.get_data(as_text=True))[0]
         assert u'<span class="search-summary-count">1</span> result found' \
             u' containing <em>email \U0001f47e</em> in' \
             u' <em>Cloud software</em>' in summary

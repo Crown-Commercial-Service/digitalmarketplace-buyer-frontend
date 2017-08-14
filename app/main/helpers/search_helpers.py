@@ -170,8 +170,7 @@ def get_filter_value_from_question_option(option):
     return (option.get('value') or option.get('label', '')).lower().replace(',', '')
 
 
-def build_search_query(framework, request_args, lot_filters, content_builder, lots_by_slug,
-                       for_aggregation=False):
+def build_search_query(request_args, lot_filters, content_builder, lots_by_slug, for_aggregation=False):
     """Match request args with known filters.
 
     Removes any unknown query parameters, and will only keep `page`, `q`
@@ -188,13 +187,7 @@ def build_search_query(framework, request_args, lot_filters, content_builder, lo
         for_aggregation=for_aggregation
     )
 
-    if 'q' in query:
-        query['q'] = replace_g5_search_dots(query['q'])
-
-    params = group_request_filters(query, content_builder)
-    params.update({'index': framework['slug']})
-
-    return params
+    return group_request_filters(query, content_builder)
 
 
 def query_args_for_pagination(args):
