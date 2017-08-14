@@ -1120,6 +1120,15 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         filter_button = document.xpath('//button[@class="button-save" and normalize-space(text())="Filter"]')
         assert len(filter_button) == 1
 
+    def test_closed_and_awarded_briefs_displayed_with_word_closed(self):
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities')
+        assert res.status_code == 200
+
+        document = html.fromstring(res.get_data(as_text=True))
+        details_of_opportunities = document.xpath('//li[@class="search-result-metadata-item"]/text()')
+        closed_instances = [item.strip() for item in details_of_opportunities if "Closed" in item.strip()]
+        assert len(closed_instances) == 2
+
 
 @mock.patch('app.main.views.marketplace.data_api_client', autospec=True)
 class TestGCloudHomepageLinks(BaseApplicationTest):

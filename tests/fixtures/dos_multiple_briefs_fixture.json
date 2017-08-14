@@ -101,6 +101,86 @@
       "title":"Another requirement",
       "updatedAt":"2016-02-16T14:04:22.617017Z",
       "workingArrangements":"Work"
+    },
+    {
+      "applicationsClosedAt":"2016-03-24T00:00:00.000000Z",
+      "backgroundInformation":"Here is the first requirements summary.",
+      "clarificationQuestions":[],
+      "clarificationQuestionsAreClosed":true,
+      "clarificationQuestionsClosedAt":"2016-03-17T00:00:00.000000Z",
+      "clarificationQuestionsPublishedBy": "2016-03-20T00:00:00.000000Z",
+      "createdAt":"2016-03-09T15:23:48.328413Z",
+      "culturalWeighting": 30,
+      "essentialRequirements": [
+        "Proven experience in recruiting niche business users"
+      ],
+      "evaluationType": [
+        "Interview"
+      ],
+      "frameworkFramework":"digital-outcomes-and-specialists",
+      "frameworkName":"Digital Outcomes and Specialists",
+      "frameworkSlug":"digital-outcomes-and-specialists",
+      "frameworkStatus":"live",
+      "id":14,
+      "links":{
+        "framework":"http://localhost:5000/frameworks/digital-outcomes-and-specialists",
+        "self":"http://localhost:5000/briefs/17"
+      },
+      "location":"International (outside the UK)",
+      "lot":"user-research-participants",
+      "lotName":"User research participants",
+      "lotSlug":"user-research-participants",
+      "niceToHaveRequirements": [],
+      "numberOfSuppliers": 5,
+      "organisation":"GDS",
+      "priceWeighting": 20,
+      "publishedAt":"2016-03-09T16:02:51.591567Z",
+      "researchDates": "1 year contract with option to extend for one additional year commencing approx mid/end June",
+      "status":"closed",
+      "summary": "Find out those user needs!",
+      "technicalWeighting": 50,
+      "title":"I need All Research Participants",
+      "updatedAt":"2016-03-09T15:56:32.487141Z"
+    },
+    {
+      "applicationsClosedAt":"2016-03-24T00:00:00.000000Z",
+      "backgroundInformation":"Here is the first requirements summary.",
+      "clarificationQuestions":[],
+      "clarificationQuestionsAreClosed":true,
+      "clarificationQuestionsClosedAt":"2016-03-17T00:00:00.000000Z",
+      "clarificationQuestionsPublishedBy": "2016-03-20T00:00:00.000000Z",
+      "createdAt":"2016-03-09T15:23:48.328413Z",
+      "culturalWeighting": 30,
+      "essentialRequirements": [
+        "Proven experience in recruiting niche business users"
+      ],
+      "evaluationType": [
+        "Interview"
+      ],
+      "frameworkFramework":"digital-outcomes-and-specialists",
+      "frameworkName":"Digital Outcomes and Specialists",
+      "frameworkSlug":"digital-outcomes-and-specialists",
+      "frameworkStatus":"live",
+      "id":15,
+      "links":{
+        "framework":"http://localhost:5000/frameworks/digital-outcomes-and-specialists",
+        "self":"http://localhost:5000/briefs/17"
+      },
+      "location":"International (outside the UK)",
+      "lot":"user-research-participants",
+      "lotName":"User research participants",
+      "lotSlug":"user-research-participants",
+      "niceToHaveRequirements": [],
+      "numberOfSuppliers": 5,
+      "organisation":"GDS",
+      "priceWeighting": 20,
+      "publishedAt":"2016-03-09T16:02:51.591567Z",
+      "researchDates": "1 year contract with option to extend for one additional year commencing approx mid/end June",
+      "status":"awarded",
+      "summary": "Find out those user needs!",
+      "technicalWeighting": 50,
+      "title":"I need More Research Participants",
+      "updatedAt":"2016-03-09T15:56:32.487141Z"
     }
   ],
   "links":{
