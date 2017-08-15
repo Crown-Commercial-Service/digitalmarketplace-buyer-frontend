@@ -583,6 +583,33 @@ class TestBriefPage(BaseBriefPageTest):
         assert len(apply_links) == 0
         assert '15 December 2016' in document.xpath('//p[@class="banner-message"]')[0].text_content()
 
+    def test_cannot_apply_to_awarded_brief(self):
+        self.brief['briefs']['status'] = "awarded"
+        self._data_api_client.find_brief_responses.return_value = {
+            "briefResponses": [
+                {
+                    "awardDetails": {"awardedContractStartDate": "2017-08-21", "awardedContractValue": "20000.00"},
+                    "id": 14276,
+                    "briefId": 1,
+                    "createdAt": "2016-12-02T11:09:28.054129Z",
+                    "status": "awarded",
+                    "submittedAt": "2016-12-05T11:09:28.054129Z",
+                    "supplierId": 123456,
+                    "supplierName": "Another, Better, Company Limited",
+                    "supplierOrganisationSize": "large"
+                }
+            ]
+        }
+        self.brief['briefs']['awardedBriefResponseId'] = 14276
+
+        brief_id = self.brief['briefs']['id']
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
+        assert res.status_code == 200
+        document = html.fromstring(res.get_data(as_text=True))
+
+        apply_links = document.xpath('//a[@href="/suppliers/opportunities/{}/responses/start"]'.format(brief_id))
+        assert len(apply_links) == 0
+
     def test_dos_brief_specialist_role_displays_label(self):
         brief_id = self.brief['briefs']['id']
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
@@ -710,6 +737,44 @@ class TestBriefPage(BaseBriefPageTest):
         }
 
         self.brief['briefs']['awardedBriefResponseId'] = 14276
+        brief_id = self.brief['briefs']['id']
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
+        assert res.status_code == 200
+        document = html.fromstring(res.get_data(as_text=True))
+
+        self._assert_view_application(document, brief_id)
+
+    def test_supplier_applied_view_application_for_opportunity_awarded_to_other_supplier(self):
+        self.login_as_supplier()
+
+        self._data_api_client.find_brief_responses.return_value = {
+            "briefResponses": [
+                {
+                    "awardDetails": {"awardedContractStartDate": "2017-08-21", "awardedContractValue": "20000.00"},
+                    "id": 14276,
+                    "briefId": 1,
+                    "createdAt": "2016-12-02T11:09:28.054129Z",
+                    "status": "awarded",
+                    "submittedAt": "2016-12-05T11:09:28.054129Z",
+                    "supplierId": 123456,
+                    "supplierName": "Another, Better, Company Limited",
+                    "supplierOrganisationSize": "large"
+                },
+                {
+                    "id": 14277,
+                    "briefId": 1,
+                    "createdAt": "2016-12-02T11:09:28.054129Z",
+                    "status": "submitted",
+                    "submittedAt": "2016-12-05T11:09:28.054129Z",
+                    "supplierId": 1234,
+                    "supplierName": "Example Company Limited",
+                    "supplierOrganisationSize": "small"
+                }
+            ]
+        }
+        self.brief['briefs']['status'] = 'awarded'
+        self.brief['briefs']['awardedBriefResponseId'] = 14276
+
         brief_id = self.brief['briefs']['id']
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
         assert res.status_code == 200
