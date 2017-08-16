@@ -6,5 +6,6 @@
     this.pageViews.init();
     this.events.init();
     this.virtualPageViews.init();
+    this.scrollTracking.init();
   };
 })(window);

@@ -2,21 +2,23 @@
 
 {% for section in service.summary_manifest %}
   {% if not section.is_empty %}
-    {{ summary.heading(section.name, id=section.slug) }}
+    <div class="scroll-tracking" id="{{ service.lot.slug }}-{{ section.slug }}">
+      {{ summary.heading(section.name, id=section.slug) }}
 
-    {% call(question) summary.list_table(
-      section.questions,
-      caption=section.name,
-      field_headings_visible=False
-    ) %}
-      {% if not question.is_empty %}
-        {% call summary.row() %}
-          {{ summary.field_name(question.label) }}
-          {% with item_value = summary[question.type](question.filter_value|capitalize_first, question.assurance) %}
-            {{ (item_value | preserve_line_breaks) if question.type == 'textbox_large' else item_value }}
-          {% endwith %}
-        {% endcall %}
-      {% endif %}
-    {% endcall %}
+      {% call(question) summary.list_table(
+        section.questions,
+        caption=section.name,
+        field_headings_visible=False
+      ) %}
+        {% if not question.is_empty %}
+          {% call summary.row() %}
+            {{ summary.field_name(question.label) }}
+            {% with item_value = summary[question.type](question.filter_value|capitalize_first, question.assurance) %}
+              {{ (item_value | preserve_line_breaks) if question.type == 'textbox_large' else item_value }}
+            {% endwith %}
+          {% endcall %}
+        {% endif %}
+      {% endcall %}
+    </div>
   {% endif %}
 {% endfor %}

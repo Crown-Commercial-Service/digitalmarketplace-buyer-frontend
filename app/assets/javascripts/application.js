@@ -14,6 +14,7 @@
 //= include ../../../bower_components/digitalmarketplace-frontend-toolkit/toolkit/javascripts/clear-filters.js
 //= include ../../../bower_components/digitalmarketplace-frontend-toolkit/toolkit/javascripts/word-counter.js
 //= include ../../../bower_components/digitalmarketplace-frontend-toolkit/toolkit/javascripts/validation.js
+//= include ../../../bower_components/scrolldepth/jquery.scrolldepth.js
 //= include ../../../node_modules/govuk_frontend_toolkit/javascripts/govuk/selection-buttons.js
 //= include ../../../node_modules/govuk_frontend_toolkit/javascripts/govuk/shim-links-with-button-role.js
 //= include ../../../bower_components/digitalmarketplace-frontend-toolkit/toolkit/javascripts/show-hide-content.js
