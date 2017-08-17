@@ -15,6 +15,7 @@ from ..forms.brief_forms import BriefSearchForm
 
 from app import data_api_client, content_loader
 
+ALL_BRIEF_RESPONSE_STATUSES = ['draft', 'submitted', 'pending-awarded', 'awarded']
 COMPLETED_BRIEF_RESPONSE_STATUSES = ['submitted', 'pending-awarded', 'awarded']
 PUBLISHED_BRIEF_STATUSES = ['live', 'withdrawn', 'closed', 'awarded']
 
@@ -77,7 +78,7 @@ def get_brief_by_id(framework_framework, brief_id):
     brief = briefs.get('briefs')
     brief_responses = data_api_client.find_brief_responses(
         brief_id=brief_id,
-        status='draft,submitted,pending-awarded,awarded'
+        status=",".join(ALL_BRIEF_RESPONSE_STATUSES)
     ).get('briefResponses')
 
     started_brief_responses = [response for response in brief_responses if response['status'] == 'draft']
