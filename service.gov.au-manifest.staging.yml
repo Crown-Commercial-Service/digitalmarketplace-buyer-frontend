@@ -3,12 +3,6 @@ buildpack: python_buildpack
 memory: 1G
 disk_quota: 1G
 instances: 1
-env:
-    NEW_RELIC_ENVIRONMENT: staging
-    DM_DATA_API_URL: https://dm-dev.apps.staging.digital.gov.au/api/
-routes:
-- route: dm-dev.apps.staging.digital.gov.au
-- route: dm-dev-buyer.apps.staging.digital.gov.au/
 applications:
 - name: dm-dev-buyer-blue
 - name: dm-dev-buyer-green
