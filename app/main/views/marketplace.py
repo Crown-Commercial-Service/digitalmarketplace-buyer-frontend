@@ -316,6 +316,17 @@ def get_brief_response_preview_by_id(framework_slug, brief_id):
     sheet.write_string('A'+str(n+1), '', question)
     sheet.write_string('B'+str(n+1), "When can you start?", bold_question)
     sheet.write_string('D'+str(n+1), '', right_border_question)
+    if brief['lotSlug'] == 'digital-professionals':
+        sheet.write_string('A'+str(n+2), '', question)
+        sheet.write_string('B'+str(n+2), "What is your daily rate, including GST?", bold_question)
+        sheet.write_string('D'+str(n+2), '', right_border_question)
+        sheet.write_string('A'+str(n+3), '', question)
+        sheet.write_rich_string('B'+str(n+3), bold_question, "Attach a resume ",
+                                question, "Use an Open Document Format (ODF) or PDF/A (eg. .pdf, .odt). "
+                                          "The maximum file size of each document is 5MB. "
+                                          "You can upload a maximum of 3 candidate CVs.", question)
+        sheet.write_string('D'+str(n+3), '', right_border_question)
+        n = n + 2
     sheet.write_string('A'+str(n+2), '', question)
     sheet.write_string('B'+str(n+2), '', question)
     sheet.write_string('D'+str(n+2), '', right_border_question)
