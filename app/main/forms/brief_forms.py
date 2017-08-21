@@ -45,11 +45,11 @@ class BriefSearchForm(Form):
         if self.status.data:
             statuses = self.status.data.copy()
         else:
-            statuses = [id for id, label in self.status.choices]
+            statuses = [id_ for id_, label in self.status.choices]
         if 'closed' in statuses:
             statuses.append('awarded')
 
-        lots = self.lot.data or tuple(id for id, label in self.lot.choices)
+        lots = self.lot.data or tuple(id_ for id_, label in self.lot.choices)
 
         return self._data_api_client.find_briefs(
             status=",".join(statuses),
