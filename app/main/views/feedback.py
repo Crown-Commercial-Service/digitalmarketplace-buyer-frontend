@@ -16,7 +16,7 @@ def send_feedback():
     for field, google_form_field in feedback_config['fields'].items():
         form_data.setlist(google_form_field, request.form.getlist(field))
 
-    result = requests.post(feedback_config['uri'], list(form_data.iteritems(multi=True)))
+    result = requests.post(feedback_config['uri'], list(form_data.items(multi=True)))
     if result.status_code != 200:
         raise ServiceUnavailable('Google forms submission problem (status %d)'.format(result.status_code))
     came_from = url_parse(request.form['uri'])
