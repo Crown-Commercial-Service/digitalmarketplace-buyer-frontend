@@ -2,7 +2,11 @@
 
 {% for section in service.summary_manifest %}
   {% if not section.is_empty %}
-    <div class="scroll-tracking" id="{{ loop.index }}-{{ section.slug }}">
+    {% if loop.index < 10 %}
+      <div class="scroll-tracking" id="0{{ loop.index }}-{{ section.slug }}">
+    {% else %}
+      <div class="scroll-tracking" id="{{ loop.index }}-{{ section.slug }}">
+    {% endif %}
       {{ summary.heading(section.name, id=section.slug) }}
 
       {% call(question) summary.list_table(
