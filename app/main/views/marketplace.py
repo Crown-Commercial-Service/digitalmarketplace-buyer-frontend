@@ -2,14 +2,11 @@
 from __future__ import unicode_literals
 
 import io
-import json
 import xlsxwriter
-import ast
 
 from flask_login import current_user
-from flask import abort, current_app, config, make_response, redirect, \
-    render_template, request, session, url_for, jsonify, flash, Response
-import flask_featureflags as feature
+from flask import abort, current_app, make_response, redirect, \
+    render_template, request, session, url_for, flash, Response
 
 from dmutils.formats import DateFormatter
 from dmutils.forms import DmForm, render_template_with_csrf
@@ -20,12 +17,11 @@ from app.main.utils import get_page_list
 from app import data_api_client, content_loader
 from app.main import main
 from app.helpers.terms_helpers import check_terms_acceptance, get_current_terms_version
-from app.helpers.buyers_helpers import allowed_email_domain
+from app.helpers.buyers_helpers import get_framework_and_lot
 
 from ..forms.brief_forms import BriefSearchForm
 
-from flask_weasyprint import HTML, render_pdf
-from app.api_client.data import DataAPIClient
+from flask_weasyprint import render_pdf
 from dmapiclient.errors import HTTPError
 from app.api_client.error import APIError
 
@@ -50,20 +46,6 @@ def index():
         suppliers_count=suppliers_count,
         briefs_count=briefs_count
     )
-
-
-@main.route('/metrics')
-def metrics():
-    data = data_api_client.get_metrics()
-    del data["brief_response_count"]
-    return jsonify(data)
-
-
-@main.route('/metrics/history')
-def metrics_historical():
-    data = data_api_client.get_metrics_historical()
-    del data["brief_response_count"]
-    return jsonify(data)
 
 
 @main.route('/<template_name>')
@@ -549,3 +531,14 @@ def collaborate_view_project(id):
         component=rendered_component,
         main_class='collapse'
     )
+
+
+@main.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>', methods=['GET'])
+def info_page_for_starting_a_brief(framework_slug, lot_slug):
+    framework, lot = get_framework_and_lot(framework_slug, lot_slug, data_api_client,
+                                           status='live', must_allow_brief=True)
+    return render_template(
+        "buyers/start_brief_info.html",
+        framework=framework,
+        lot=lot
+    ), 200

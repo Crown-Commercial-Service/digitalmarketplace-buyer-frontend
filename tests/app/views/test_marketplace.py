@@ -13,6 +13,7 @@ from six.moves.urllib.parse import urlparse, parse_qs
 from ...helpers import BaseApplicationTest
 
 from dmapiclient import APIError
+from dmapiclient import api_stubs
 from dmutils.formats import DATETIME_FORMAT
 
 
@@ -37,6 +38,25 @@ class TestHomepageAccountCreationVirtualPageViews(BaseApplicationTest):
 
 
 class TestHomepageBrowseList(BaseApplicationTest):
+    @mock.patch('app.main.views.marketplace.data_api_client')
+    def test_show_start_brief_info_page(self, data_api_client):
+        with self.app.app_context():
+            data_api_client.get_framework.return_value = api_stubs.framework(
+                slug='digital-service-professionals',
+                status='live',
+                lots=[
+                    api_stubs.lot(slug='digital-professionals', allows_brief=True),
+                ]
+            )
+
+            res = self.client.get(
+                self.expand_path(
+                    "/buyers/frameworks/digital-service-professionals/requirements/digital-professionals"
+                ))
+            assert res.status_code == 200
+            document = html.fromstring(res.get_data(as_text=True))
+            assert document.xpath('//h1')[0].text_content().strip() == "Finding an individual specialist"
+
     @mock.patch('app.main.views.marketplace.data_api_client')
     def test_homepage_headers(self, data_api_client):
         res = self.client.get(self.expand_path('/'))
