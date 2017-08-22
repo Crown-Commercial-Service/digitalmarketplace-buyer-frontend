@@ -10,13 +10,13 @@ def _count_brief_responses_by_size(brief_responses, size):
 
 def count_brief_responses_by_size_and_status(brief_responses):
     counts = {}
-    started_brief_responses = [response for response in brief_responses if response['status'] == 'draft']
+    incomplete_brief_responses = [response for response in brief_responses if response['status'] == 'draft']
     completed_brief_responses = [
         response for response in brief_responses if response['status'] in COMPLETED_BRIEF_RESPONSE_STATUSES
     ]
-    counts["started_sme_responses"] = _count_brief_responses_by_size(started_brief_responses, SME)
-    counts["started_large_responses"] = _count_brief_responses_by_size(started_brief_responses, LARGE)
-    counts["started_responses_total"] = counts["started_sme_responses"] + counts["started_large_responses"]
+    counts["incomplete_sme_responses"] = _count_brief_responses_by_size(incomplete_brief_responses, SME)
+    counts["incomplete_large_responses"] = _count_brief_responses_by_size(incomplete_brief_responses, LARGE)
+    counts["incomplete_responses_total"] = counts["incomplete_sme_responses"] + counts["incomplete_large_responses"]
     counts["completed_sme_responses"] = _count_brief_responses_by_size(completed_brief_responses, SME)
     counts["completed_large_responses"] = _count_brief_responses_by_size(completed_brief_responses, LARGE)
     counts["completed_responses_total"] = counts["completed_sme_responses"] + counts["completed_large_responses"]
