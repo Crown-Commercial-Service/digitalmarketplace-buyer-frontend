@@ -196,83 +196,22 @@ def update_password(token):
 
 @main.route('/signup', methods=['GET'])
 def single_signup(user=None, errors=None):
-    user = user or {}
-
-    rendered_component = render_component(
-        'bundles/SellerRegistration/SignupWidget.js', {
-            'application': {'signupForm': user},
-            'signupForm': user,
-            'form_options': {
-                'errors': errors,
-                'buyer_url': '/signup',
-                'seller_url': '/sellers/signup'
-            },
-        }
-    )
-
-    return render_template(
-        '_react.html',
-        component=rendered_component
-    )
+    return redirect('/2/signup')
 
 
 @main.route('/signup', methods=['POST'])
 def submit_single_signup():
-    user = from_response(request)
-    if user['user_type'] != 'buyer':
-        return abort(400)
-
-    fields = ['name', 'email_address', 'employment_status', 'user_type']
-    errors = validate_form_data(user, fields)
-    if not is_government_email(user['email_address']):
-        errors['email_address'] = {"government_email": True}
-    if errors:
-        return single_signup(user, errors)
-
-    if user['employment_status'] == 'employee':
-        token = generate_buyer_creation_token(user['name'], user['email_address'])
-        send_buyer_account_activation_email(
-            name=user["name"],
-            email_address=user["email_address"],
-            token=token
-        )
-        return render_template('auth/buyer-signup-email-sent.html', email_address=user["email_address"])
-
-    assert user['employment_status'] == 'contractor'
-
-    form = auth_forms.BuyerInviteRequestForm(request.form)
-    return render_template_with_csrf('auth/buyer-invite-request.html', form=form)
+    return redirect('/2/signup')
 
 
 @main.route('/buyers/signup', methods=['GET'])
 def buyer_signup():
-    return redirect('/signup')
+    return redirect('/2/signup')
 
 
 @main.route('/buyers/signup', methods=['POST'])
 def submit_buyer_signup():
-    form = auth_forms.BuyerSignupForm(request.form)
-
-    if not form.validate():
-        return render_template_with_csrf(
-            'auth/buyer-signup.html',
-            status_code=400,
-            form=form
-        )
-
-    if form.employment_status.data == 'employee':
-        token = generate_buyer_creation_token(**form.data)
-        send_buyer_account_activation_email(
-            name=form.name.data,
-            email_address=form.email_address.data,
-            token=token
-        )
-        return render_template('auth/buyer-signup-email-sent.html', email_address=form.email_address.data)
-
-    assert form.employment_status.data == 'contractor'
-
-    form = auth_forms.BuyerInviteRequestForm(request.form)
-    return render_template_with_csrf('auth/buyer-invite-request.html', form=form)
+    return redirect('/2/signup')
 
 
 @main.route('/buyers/request-invite', methods=['POST'])

@@ -540,6 +540,7 @@ class TestLoginFormsNotAutofillable(BaseApplicationTest):
         )
 
 
+@pytest.mark.skip
 class TestBuyerSignupForm(BaseApplicationTest):
     complete_signup_request = {
         'csrf_token': FakeCsrf.valid_token,
@@ -608,6 +609,7 @@ class TestBuyerSignupForm(BaseApplicationTest):
         assert has_validation_errors(data, 'name')
 
 
+@pytest.mark.skip
 class TestSingleSignupForm(BaseApplicationTest):
     complete_signup_request = {
         'csrf_token': FakeCsrf.valid_token,
