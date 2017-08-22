@@ -115,6 +115,7 @@ class TestBuildSearchQueryHelpers(BaseApplicationTest):
         self._lots_by_slug = framework_helpers.get_lots_by_slug(
             self._get_framework_fixture_data('g-cloud-6')['frameworks']
         )
+        self.g6_framework = self._get_framework_fixture_data('g-cloud-6')['frameworks']
 
     def _request(self, params):
         return mock.Mock(args=MultiDict(params))
@@ -229,8 +230,9 @@ class TestBuildSearchQueryHelpers(BaseApplicationTest):
             'question6': ['option1', 'option3'],
         })
 
-        assert search_helpers.build_search_query(request.args, self.lot_filters, self._loader(),
+        assert search_helpers.build_search_query(self.g6_framework, request.args, self.lot_filters, self._loader(),
                                                  self._lots_by_slug) == {
+            'index': 'g-cloud-6',
             'page': 5,
             'q': 'email',
             'lot': 'saas',
@@ -240,44 +242,47 @@ class TestBuildSearchQueryHelpers(BaseApplicationTest):
             'question6': ['option1', 'option3'],
         }
 
-    def test_build_search_query_unknown_lot(self):
+    def test_build_search_query_unknown_lot_is_dropped(self):
         request = self._request({
             'lot': 'saasaas',
         })
 
-        assert search_helpers.build_search_query(request.args, self.lot_filters, self._loader(),
-                                                 self._lots_by_slug) == {}
+        assert search_helpers.build_search_query(self.g6_framework, request.args, self.lot_filters, self._loader(),
+                                                 self._lots_by_slug) == {'index': 'g-cloud-6'}
 
-    def test_build_search_query_multiple_lots(self):
+    def test_build_search_query_multiple_lots_are_all_dropped(self):
         request = self._request({
             'lot': 'saas,paas',
         })
 
-        assert search_helpers.build_search_query(request.args, self.lot_filters, self._loader(),
-                                                 self._lots_by_slug) == {}
+        assert search_helpers.build_search_query(self.g6_framework, request.args, self.lot_filters, self._loader(),
+                                                 self._lots_by_slug) == {'index': 'g-cloud-6'}
 
-    def test_build_search_query_no_keywords(self):
+    def test_build_search_query_no_keywords_drops_q_parameter(self):
         request = self._request({
             'q': '',
         })
 
-        assert search_helpers.build_search_query(request.args, self.lot_filters, self._loader(),
-                                                 self._lots_by_slug) == {}
+        assert search_helpers.build_search_query(self.g6_framework, request.args, self.lot_filters, self._loader(),
+                                                 self._lots_by_slug) == {'index': 'g-cloud-6'}
 
-    def test_build_search_query_no_page(self):
+    def test_build_search_query_no_page_drops_page_parameter(self):
         request = self._request({
+            'index': 'g-cloud-6',
             'page': '',
         })
 
-        assert search_helpers.build_search_query(request.args, self.lot_filters, self._loader(),
-                                                 self._lots_by_slug) == {}
+        assert search_helpers.build_search_query(self.g6_framework, request.args, self.lot_filters, self._loader(),
+                                                 self._lots_by_slug) == {'index': 'g-cloud-6'}
 
-    def test_build_search_query_g5_dots_id_search(self):
+    def test_build_search_query_g5_dots_id_search_replaces_dots_with_dashes(self):
         request = self._request({
+            'index': 'g-cloud-6',
             'q': 'some text 5.G4.1005.001',
         })
 
-        assert search_helpers.build_search_query(request.args, self.lot_filters, self._loader(),
+        assert search_helpers.build_search_query(self.g6_framework, request.args, self.lot_filters, self._loader(),
                                                  self._lots_by_slug) == {
+            'index': 'g-cloud-6',
             'q': 'some text 5-G4-1005-001',
         }

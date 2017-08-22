@@ -4,6 +4,7 @@ import mock
 import re
 import pytest
 from ...helpers import BaseApplicationTest
+from ...helpers import data_api_client
 
 
 def find_pagination_links(res_data):
@@ -449,12 +450,15 @@ class TestSearchResults(BaseApplicationTest):
         assert self._search_api_client_presenters.aggregate_services.call_count == call_count
 
     def test_search_results_sends_aggregation_request_without_page_filter(self):
-        self._search_api_client.search_services.return_value = self.g9_search_results
+        data_api_client.find_frameworks.return_value = {'frameworks': [self._get_framework_fixture_data('g-cloud-9')
+                                                                       ['frameworks']]}
+        self._search_api_client.search_services.return_value = self.search_results
 
         res = self.client.get('/g-cloud/search?page=2')
         assert res.status_code == 200
 
         self._search_api_client_presenters.aggregate_services.assert_called_with(
+            index='g-cloud-9',
             lot='cloud-support',
             aggregations={'serviceCategories', 'lot'}
         )
