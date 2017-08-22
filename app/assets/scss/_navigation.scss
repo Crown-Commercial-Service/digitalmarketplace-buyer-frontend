@@ -102,6 +102,11 @@
   margin-bottom: 12px;
   @include media($mobile) {
     margin-top: -3.5em;
+  }
+  @include media($tablet) {
+    margin-right: -8.5em;
+  }
+  @include media($desktop) {
     margin-right: -16.5em;
   }
 }
