@@ -179,7 +179,7 @@ def search_services():
         abort(404)
 
     search_api_response = search_api_client.search_services(
-        **build_search_query(request.args, filters.values(), content_manifest, lots_by_slug)
+        **build_search_query(framework, request.args, filters.values(), content_manifest, lots_by_slug)
     )
     search_results_obj = SearchResults(search_api_response, lots_by_slug)
 
