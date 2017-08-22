@@ -2,7 +2,7 @@
 
 {{ statistics.big_stat(
      started_responses_stats["total"],
-     pluralize(started_responses_stats["total"], "Started application", "Started applications"),
+     pluralize(started_responses_stats["total"], "Incomplete application", "Incomplete applications"),
      "%d SME, %d large" | format(started_responses_stats['sme_count'], started_responses_stats['large_count']) if started_responses_stats['total'] else None,
      id="started-applications"
    )

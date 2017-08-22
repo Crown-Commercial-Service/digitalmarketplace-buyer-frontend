@@ -392,7 +392,7 @@ class TestBriefPage(BaseBriefPageTest):
         completed_responses_section = document.xpath('//div[@id="completed-applications"]')[0]
 
         assert started_responses_section.xpath('div[@class="big-statistic"]/text()')[0] == '3'
-        assert started_responses_section.xpath('div[@class="statistic-name"]/text()')[0] == "Started applications"
+        assert started_responses_section.xpath('div[@class="statistic-name"]/text()')[0] == "Incomplete applications"
         assert started_responses_section.xpath('div[@class="statistic-description"]/text()')[0] == "3 SME, 0 large"
 
         assert completed_responses_section.xpath('div[@class="big-statistic"]/text()')[0] == '5'
@@ -432,7 +432,7 @@ class TestBriefPage(BaseBriefPageTest):
         completed_responses_section = document.xpath('//div[@id="completed-applications"]')[0]
 
         assert started_responses_section.xpath('div[@class="big-statistic"]/text()')[0] == '1'
-        assert started_responses_section.xpath('div[@class="statistic-name"]/text()')[0] == "Started application"
+        assert started_responses_section.xpath('div[@class="statistic-name"]/text()')[0] == "Incomplete application"
         assert started_responses_section.xpath('div[@class="statistic-description"]/text()')[0] == "1 SME, 0 large"
 
         assert completed_responses_section.xpath('div[@class="big-statistic"]/text()')[0] == '1'
@@ -451,7 +451,7 @@ class TestBriefPage(BaseBriefPageTest):
 
         assert started_responses_section.xpath('div[@class="big-statistic"]/text()')[0] == '0'
         assert completed_responses_section.xpath('div[@class="big-statistic"]/text()')[0] == '0'
-        assert started_responses_section.xpath('div[@class="statistic-name"]/text()')[0] == "Started applications"
+        assert started_responses_section.xpath('div[@class="statistic-name"]/text()')[0] == "Incomplete applications"
         assert completed_responses_section.xpath('div[@class="statistic-name"]/text()')[0] == "Completed applications"
         assert len(started_responses_section.xpath('div[@class="statistic-description"]/text()')) == 0
         assert len(completed_responses_section.xpath('div[@class="statistic-description"]/text()')) == 0
