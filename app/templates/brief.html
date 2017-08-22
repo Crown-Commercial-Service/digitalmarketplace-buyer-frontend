@@ -23,7 +23,7 @@
 
 {% block main_content %}
 
-{% if brief.status == 'closed' %}
+{% if brief.status in ['closed', 'awarded'] %}
 <div class="grid-row">
   <div class="column-one-whole">
     {%
