@@ -26,3 +26,13 @@ def info_page_for_starting_a_brief(framework_slug, lot_slug):
 @external.route('/buyers/frameworks/<framework_slug>/requirements/user-research-studios')
 def studios_start_page(framework_slug):
     raise NotImplementedError()
+
+
+@external.route('/user/login')
+def render_login():
+    raise NotImplementedError()
+
+
+@external.route('/user/logout')
+def logout():
+    raise NotImplementedError()
