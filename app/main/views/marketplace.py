@@ -9,15 +9,15 @@ from dmcontent.content_loader import ContentNotFoundError
 
 from ...main import main
 from ..helpers.shared_helpers import get_one_framework_by_status_in_order_of_preference, parse_link
+from ..helpers.brief_helpers import (
+    count_brief_responses_by_size_and_status, format_winning_supplier_size,
+    COMPLETED_BRIEF_RESPONSE_STATUSES, ALL_BRIEF_RESPONSE_STATUSES, PUBLISHED_BRIEF_STATUSES
+)
 from ..helpers.framework_helpers import get_latest_live_framework, get_framework_description
 
 from ..forms.brief_forms import BriefSearchForm
 
 from app import data_api_client, content_loader
-
-ALL_BRIEF_RESPONSE_STATUSES = ['draft', 'submitted', 'pending-awarded', 'awarded']
-COMPLETED_BRIEF_RESPONSE_STATUSES = ['submitted', 'pending-awarded', 'awarded']
-PUBLISHED_BRIEF_STATUSES = ['live', 'withdrawn', 'closed', 'awarded']
 
 
 @main.route('/')
@@ -76,37 +76,26 @@ def terms_and_conditions():
 def get_brief_by_id(framework_framework, brief_id):
     briefs = data_api_client.get_brief(brief_id)
     brief = briefs.get('briefs')
+
+    if brief['status'] not in PUBLISHED_BRIEF_STATUSES or brief['frameworkFramework'] != framework_framework:
+        abort(404, "Opportunity '{}' can not be found".format(brief_id))
+
     brief_responses = data_api_client.find_brief_responses(
         brief_id=brief_id,
         status=",".join(ALL_BRIEF_RESPONSE_STATUSES)
     ).get('briefResponses')
 
-    started_brief_responses = [response for response in brief_responses if response['status'] == 'draft']
-    completed_brief_responses = [
-        response for response in brief_responses if response['status'] in COMPLETED_BRIEF_RESPONSE_STATUSES
-    ]
+    winning_response, winning_supplier_size = None, None
+    if brief['status'] == 'awarded':
+        winning_response = next(response for response in brief_responses if response["id"] == brief[
+            'awardedBriefResponseId'
+        ])
+        winning_supplier_size = format_winning_supplier_size(winning_response["supplierOrganisationSize"])
 
-    # Counts for application statistics
-    started_sme_responses_count = len([
-        response for response in started_brief_responses
-        if response['supplierOrganisationSize'] in ['micro', 'small', 'medium']
-    ])
-    started_large_responses_count = len([
-        response for response in started_brief_responses
-        if response['supplierOrganisationSize'] == 'large'
-    ])
-    completed_sme_responses_count = len([
-        response for response in completed_brief_responses
-        if response['supplierOrganisationSize'] in ['micro', 'small', 'medium']
-    ])
-    completed_large_responses_count = len([
-        response for response in completed_brief_responses
-        if response['supplierOrganisationSize'] == 'large'
-    ])
+    brief_responses_stats = count_brief_responses_by_size_and_status(brief_responses)
 
     if brief['status'] not in PUBLISHED_BRIEF_STATUSES or brief['frameworkFramework'] != framework_framework:
         abort(404, "Opportunity '{}' can not be found".format(brief_id))
-
     try:
         has_supplier_responded_to_brief = (
             current_user.supplier_id in [
@@ -126,18 +115,11 @@ def get_brief_by_id(framework_framework, brief_id):
     return render_template(
         'brief.html',
         brief=brief,
-        started_responses_stats={
-            'sme_count': started_sme_responses_count,
-            'large_count': started_large_responses_count,
-            'total': started_sme_responses_count + started_large_responses_count
-        },
-        completed_responses_stats={
-            'sme_count': completed_sme_responses_count,
-            'large_count': completed_large_responses_count,
-            'total': completed_sme_responses_count + completed_large_responses_count
-        },
+        brief_responses_stats=brief_responses_stats,
+        content=brief_content,
         has_supplier_responded_to_brief=has_supplier_responded_to_brief,
-        content=brief_content
+        winning_response=winning_response,
+        winning_supplier_size=winning_supplier_size
     )
 
 

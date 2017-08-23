@@ -380,7 +380,7 @@ class TestBriefPage(BaseBriefPageTest):
         assert page_heading.xpath('h1/text()')[0] == self.brief['briefs']['title']
         assert page_heading.xpath('p[@class="context"]/text()')[0] == self.brief['briefs']['organisation']
 
-    def test_dos_brief_shows_application_stats(self):
+    def test_dos_brief_displays_application_stats(self):
         brief_id = self.brief['briefs']['id']
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
         assert res.status_code == 200
@@ -388,18 +388,18 @@ class TestBriefPage(BaseBriefPageTest):
         document = html.fromstring(res.get_data(as_text=True))
         responses = self.brief_responses["briefResponses"]
 
-        started_responses_section = document.xpath('//div[@id="started-applications"]')[0]
+        incomplete_responses_section = document.xpath('//div[@id="incomplete-applications"]')[0]
         completed_responses_section = document.xpath('//div[@id="completed-applications"]')[0]
 
-        assert started_responses_section.xpath('div[@class="big-statistic"]/text()')[0] == '3'
-        assert started_responses_section.xpath('div[@class="statistic-name"]/text()')[0] == "Incomplete applications"
-        assert started_responses_section.xpath('div[@class="statistic-description"]/text()')[0] == "3 SME, 0 large"
+        assert incomplete_responses_section.xpath('div[@class="big-statistic"]/text()')[0] == '3'
+        assert incomplete_responses_section.xpath('div[@class="statistic-name"]/text()')[0] == "Incomplete applications"
+        assert incomplete_responses_section.xpath('div[@class="statistic-description"]/text()')[0] == "3 SME, 0 large"
 
         assert completed_responses_section.xpath('div[@class="big-statistic"]/text()')[0] == '5'
         assert completed_responses_section.xpath('div[@class="statistic-name"]/text()')[0] == "Completed applications"
         assert completed_responses_section.xpath('div[@class="statistic-description"]/text()')[0] == "4 SME, 1 large"
 
-    def test_appliction_stats_pluralisation(self):
+    def test_application_stats_pluralised_correctly(self):
         brief_id = self.brief['briefs']['id']
         self._data_api_client.find_brief_responses.return_value = {
             "briefResponses": [
@@ -428,32 +428,32 @@ class TestBriefPage(BaseBriefPageTest):
 
         document = html.fromstring(res.get_data(as_text=True))
 
-        started_responses_section = document.xpath('//div[@id="started-applications"]')[0]
+        incomplete_responses_section = document.xpath('//div[@id="incomplete-applications"]')[0]
         completed_responses_section = document.xpath('//div[@id="completed-applications"]')[0]
 
-        assert started_responses_section.xpath('div[@class="big-statistic"]/text()')[0] == '1'
-        assert started_responses_section.xpath('div[@class="statistic-name"]/text()')[0] == "Incomplete application"
-        assert started_responses_section.xpath('div[@class="statistic-description"]/text()')[0] == "1 SME, 0 large"
+        assert incomplete_responses_section.xpath('div[@class="big-statistic"]/text()')[0] == '1'
+        assert incomplete_responses_section.xpath('div[@class="statistic-name"]/text()')[0] == "Incomplete application"
+        assert incomplete_responses_section.xpath('div[@class="statistic-description"]/text()')[0] == "1 SME, 0 large"
 
         assert completed_responses_section.xpath('div[@class="big-statistic"]/text()')[0] == '1'
         assert completed_responses_section.xpath('div[@class="statistic-name"]/text()')[0] == "Completed application"
         assert completed_responses_section.xpath('div[@class="statistic-description"]/text()')[0] == "0 SME, 1 large"
 
-    def test_dos_brief_has_application_stats_correctly_when_no_applications(self):
+    def test_dos_brief_displays_application_stats_correctly_when_no_applications(self):
         brief_id = self.brief['briefs']['id']
         self._data_api_client.find_brief_responses.return_value = {"briefResponses": []}
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
         assert res.status_code == 200
 
         document = html.fromstring(res.get_data(as_text=True))
-        started_responses_section = document.xpath('//div[@id="started-applications"]')[0]
+        incomplete_responses_section = document.xpath('//div[@id="incomplete-applications"]')[0]
         completed_responses_section = document.xpath('//div[@id="completed-applications"]')[0]
 
-        assert started_responses_section.xpath('div[@class="big-statistic"]/text()')[0] == '0'
+        assert incomplete_responses_section.xpath('div[@class="big-statistic"]/text()')[0] == '0'
         assert completed_responses_section.xpath('div[@class="big-statistic"]/text()')[0] == '0'
-        assert started_responses_section.xpath('div[@class="statistic-name"]/text()')[0] == "Incomplete applications"
+        assert incomplete_responses_section.xpath('div[@class="statistic-name"]/text()')[0] == "Incomplete applications"
         assert completed_responses_section.xpath('div[@class="statistic-name"]/text()')[0] == "Completed applications"
-        assert len(started_responses_section.xpath('div[@class="statistic-description"]/text()')) == 0
+        assert len(incomplete_responses_section.xpath('div[@class="statistic-description"]/text()')) == 0
         assert len(completed_responses_section.xpath('div[@class="statistic-description"]/text()')) == 0
 
     def test_dos_brief_has_lot_analytics_string(self):
@@ -933,6 +933,49 @@ class TestBriefPageQandASectionAskAQuestion(BaseBriefPageTest):
             assert len(document.xpath('.//a[contains(text(),"{}")]'.format(unexpected_text))) == 0
 
 
+class TestAwardedBriefPage(BaseBriefPageTest):
+    def setup_method(self, method):
+        super(TestAwardedBriefPage, self).setup_method(method)
+        self.brief['briefs']['status'] = "awarded"
+        self.brief['briefs']['awardedBriefResponseId'] = 14276
+
+    def test_award_banner_with_winning_supplier_shown_on_awarded_brief_page(self):
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(self.brief_id))
+        document = html.fromstring(res.get_data(as_text=True))
+        awarded_banner = document.xpath('//div[@class="banner-temporary-message-without-action"]')[0]
+
+        assert 'Awarded to Example Company Limited' in awarded_banner.xpath('h2/text()')[0]
+
+    def test_contract_start_date_visible_on_award_banner(self):
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(self.brief_id))
+        document = html.fromstring(res.get_data(as_text=True))
+        awarded_banner = document.xpath('//div[@class="banner-temporary-message-without-action"]')[0]
+
+        assert 'Start date: Monday 21 August 2017' in awarded_banner.xpath('p/text()')[0]
+
+    def test_contract_value_visible_on_award_banner_does_not_include_zero_pence(self):
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(self.brief_id))
+        document = html.fromstring(res.get_data(as_text=True))
+        awarded_banner = document.xpath('//div[@class="banner-temporary-message-without-action"]')[0]
+
+        assert u'Value: £20,000' in awarded_banner.xpath('p/text()')[1]
+
+    def test_contract_value_visible_on_award_banner_includes_non_zero_pence(self):
+        self.brief_responses["briefResponses"][1]["awardDetails"]["awardedContractValue"] = "20000.10"
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(self.brief_id))
+        document = html.fromstring(res.get_data(as_text=True))
+        awarded_banner = document.xpath('//div[@class="banner-temporary-message-without-action"]')[0]
+
+        assert u'Value: £20,000.10' in awarded_banner.xpath('p/text()')[1]
+
+    def test_supplier_size_visible_on_award_banner(self):
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(self.brief_id))
+        document = html.fromstring(res.get_data(as_text=True))
+        awarded_banner = document.xpath('//div[@class="banner-temporary-message-without-action"]')[0]
+
+        assert 'Company size: SME' in awarded_banner.xpath('p/text()')[2]
+
+
 class TestWithdrawnSpecificBriefPage(BaseBriefPageTest):
     def setup_method(self, method):
         super(TestWithdrawnSpecificBriefPage, self).setup_method(method)
@@ -964,7 +1007,7 @@ class TestWithdrawnSpecificBriefPage(BaseBriefPageTest):
         assert 'This opportunity was withdrawn on' in page
         assert (
             "You can&#39;t apply for this opportunity now. "
-            "The buyer may publish an updated&nbsp;version on the Digital&nbsp;Marketplace."
+            "The buyer may publish an updated&nbsp;version on the Digital&nbsp;Marketplace"
         ) in page
 
     @pytest.mark.parametrize('status', ['live', 'closed'])

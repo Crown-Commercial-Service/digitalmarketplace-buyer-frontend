@@ -23,14 +23,14 @@
 
 {% block main_content %}
 
-{% if brief.status in ['closed', 'awarded'] %}
+{% if brief.status == 'closed' %}
 <div class="grid-row">
   <div class="column-one-whole">
     {%
       with
       type = "temporary-message",
-      heading = "This opportunity is closed for applications.",
-      message = "The deadline was {}.".format(brief.applicationsClosedAt|dateformat)
+      heading = "This opportunity is closed for applications",
+      message = "The deadline was {}".format(brief.applicationsClosedAt|dateformat)
     %}
       {% include "toolkit/notification-banner.html" %}
     {% endwith %}
@@ -43,7 +43,30 @@
       with
       type = "temporary-message",
       heading = "This opportunity was withdrawn on " + "{}".format(brief.withdrawnAt|dateformat)|nbsp,
-      message = "You can't apply for this opportunity now. The buyer may publish an " + "updated version"|nbsp + " on the " + "Digital Marketplace."|nbsp
+      message = "You can't apply for this opportunity now. The buyer may publish an " + "updated version"|nbsp + " on the " + "Digital Marketplace"|nbsp
+    %}
+      {% include "toolkit/notification-banner.html" %}
+    {% endwith %}
+  </div>
+</div>
+{% elif brief.status == 'awarded' %}
+<div class="grid-row">
+  <div class="column-one-whole">
+    {%
+      with
+      type = "temporary-message",
+      heading = "Awarded to {}".format(winning_response.supplierName),
+      message = (
+        "Start date: {}"
+        + "<br />"|safe
+        + "Value: " + "&pound;"|safe + "{:,.2f}"
+        + "<br/>"|safe
+        + "Company size: {}"
+      ).format((
+        winning_response.awardDetails.awardedContractStartDate + "T00:00:00.000000Z")|dateformat,
+        winning_response.awardDetails.awardedContractValue|float,
+        winning_supplier_size
+      ).replace(".00", "")
     %}
       {% include "toolkit/notification-banner.html" %}
     {% endwith %}

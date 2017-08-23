@@ -10,12 +10,14 @@
       "supplierOrganisationSize": "micro"
     },
     {
+      "awardDetails": {"awardedContractStartDate": "2017-08-21", "awardedContractValue": "20000.00"},
       "id": 14276,
       "briefId": 1,
       "createdAt": "2016-12-02T11:09:28.054129Z",
-      "status": "submitted",
+      "status": "awarded",
       "submittedAt": "2016-12-05T11:09:28.054129Z",
-      "supplierId": 706033,
+      "supplierId": 123456,
+      "supplierName": "Example Company Limited",
       "supplierOrganisationSize": "small"
     },
     {
