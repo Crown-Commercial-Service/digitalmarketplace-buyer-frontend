@@ -7,14 +7,6 @@ from dmutils.asset_fingerprint import AssetFingerprinter
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 
-def get_asset_fingerprint(asset_file_path):
-    hasher = hashlib.md5()
-    with open(asset_file_path, 'rb') as asset_file:
-        buf = asset_file.read()
-        hasher.update(buf)
-    return hasher.hexdigest()
-
-
 class Config(object):
 
     VERSION = get_version_label(
