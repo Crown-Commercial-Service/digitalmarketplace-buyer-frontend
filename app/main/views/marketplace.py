@@ -106,7 +106,7 @@ def get_brief_by_id(framework_framework, brief_id):
         has_supplier_responded_to_brief = False
 
     brief['clarificationQuestions'] = [
-        dict(question, number=index+1)
+        dict(question, number=index + 1)
         for index, question in enumerate(brief['clarificationQuestions'])
     ]
 

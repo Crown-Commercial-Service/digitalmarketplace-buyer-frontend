@@ -167,7 +167,7 @@ class BaseApplicationTest(object):
     @classmethod
     def _squashed_element_text(cls, element):
         return element.text + "".join(
-            cls._squashed_element_text(child_element)+child_element.tail for child_element in element
+            cls._squashed_element_text(child_element) + child_element.tail for child_element in element
         )
 
     def teardown_login(self):

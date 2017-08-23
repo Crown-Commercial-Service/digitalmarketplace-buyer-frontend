@@ -1,6 +1,5 @@
 import json
 import os
-import pytest
 from app.main.presenters.service_presenters import (
     Service, Meta,
     chunk_string
@@ -122,12 +121,6 @@ class TestMeta(object):
         assert self.meta.get_external_framework_url({'frameworkSlug': 'None'}) is None
 
     def test_get_documents_returns_the_correct_document_information(self):
-        keys = [
-            'pricing',
-            'sfiaRateDocument',
-            'serviceDefinitionDocument',
-            'termsAndConditions'
-        ]
         expected_information = [
             {
                 'name': 'Pricing',
