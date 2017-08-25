@@ -1,4 +1,4 @@
-{% import "toolkit/summary-table.html" as summary %}
+{% import "macros/summary-table.html" as summary %}
 {% if brief.status != 'draft' %}
 <br/>
 <h2 class="visuallyhidden">Important dates</h2>
@@ -22,7 +22,11 @@
     <dl>
       {% for item in section.questions %}
         <dt>{{ summary.field_name(item.label) }}</dt>
-        <dd>{{ summary[item.type](item.value) | format_links}}</dd>
+        {% if item.type == 'textbox_large' %}
+            <dd>{{ summary[item.type](item.value) | format_links | nl2br}}</dd>
+        {% else %}
+            <dd>{{ summary[item.type](item.value) | format_links}}</dd>
+        {% endif %}
         <div class="hr"></div>
       {% endfor %}
     </dl>

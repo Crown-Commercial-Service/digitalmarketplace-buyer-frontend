@@ -1,40 +1,16 @@
 # coding=utf-8
-from flask.helpers import url_for
 
 from datetime import datetime
 from lxml import html
 import pytest
 import mock
-import json
-from nose.tools import assert_equal, assert_true, assert_in, assert_not_equals
+from nose.tools import assert_equal, assert_true, assert_not_equals
 from six import iteritems
-from six.moves.urllib.parse import urlparse, parse_qs
 
 from ...helpers import BaseApplicationTest
 
-from dmapiclient import APIError
 from dmapiclient import api_stubs
 from dmutils.formats import DATETIME_FORMAT
-
-
-@pytest.mark.skipif(True, reason="not applicable to AU")
-class TestHomepageAccountCreationVirtualPageViews(BaseApplicationTest):
-    @mock.patch('app.main.views.marketplace.data_api_client')
-    def test_data_analytics_track_page_view_is_shown_if_account_created_flag_flash_message(self, data_api_client):
-        with self.client.session_transaction() as session:
-            session['_flashes'] = [('flag', 'account-created')]
-
-        res = self.client.get("/")
-        data = res.get_data(as_text=True)
-
-        assert 'data-analytics="trackPageView" data-url="/vpv/?account-created=true"' in data
-
-    @mock.patch('app.main.views.marketplace.data_api_client')
-    def test_data_analytics_track_page_view_not_shown_if_no_account_created_flag_flash_message(self, data_api_client):
-        res = self.client.get("/")
-        data = res.get_data(as_text=True)
-
-        assert 'data-analytics="trackPageView" data-url="/vpv/?account-created=true"' not in data
 
 
 class TestHomepageBrowseList(BaseApplicationTest):
@@ -170,33 +146,6 @@ class TestBriefPage(BaseApplicationTest):
                               .format(brief_id))
         assert_equal(200, res.status_code)
         assert_equal(res.mimetype, 'application/pdf')
-
-    @pytest.mark.skipif(True, reason="test failing on AU CI server")
-    def test_dos_brief_has_important_dates(self):
-        brief_id = self.brief['briefs']['id']
-        self.brief['briefs']['clarificationQuestionsClosedAt'] = "2016-03-10T11:08:28.054129Z"
-        self.brief['briefs']['applicationsClosedAt'] = "2016-03-11T11:08:28.054129Z"
-        res = self.client.get(self.expand_path('/digital-service-professionals/opportunities/{}').format(brief_id))
-        assert_equal(200, res.status_code)
-
-        document = html.fromstring(res.get_data(as_text=True))
-
-        brief_important_dates = document.xpath(
-            '(//table[@class="summary-item-body"])[1]/tbody/tr')
-
-        assert_equal(len(brief_important_dates), 3)
-        assert_true(brief_important_dates[0].xpath(
-            'td[@class="summary-item-field-first"]')[0].text_content().strip(), "Published")
-        assert_true(brief_important_dates[0].xpath(
-            'td[@class="summary-item-field"]')[0].text_content().strip(), "Thursday 25 February 2016")
-        assert_true(brief_important_dates[1].xpath(
-            'td[@class="summary-item-field-first"]')[0].text_content().strip(), "Deadline for asking questions")
-        assert_true(brief_important_dates[1].xpath(
-            'td[@class="summary-item-field"]')[0].text_content().strip(), "Thursday 10 March 2016")
-        assert_true(brief_important_dates[2].xpath(
-            'td[@class="summary-item-field-first"]')[0].text_content().strip(), "Closing date for applications")
-        assert_true(brief_important_dates[2].xpath(
-            'td[@class="summary-item-field"]')[0].text_content().strip(), "Thursday 11 March 2016")
 
     def test_dos_brief_has_at_least_one_section(self):
         brief_id = self.brief['briefs']['id']
@@ -908,7 +857,8 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
         )
         document = html.fromstring(res.get_data(as_text=True))
         assert_equal(document.xpath(
-            '//p')[4].text, "Only invited sellers can apply for 'Open to one' or 'Open to selected' opportunity."
+            '//p[@id="is_restricted_brief"]')[0].text,
+            "Only invited sellers can apply for 'Open to one' or 'Open to selected' opportunity."
             )
 
     def test_some_sellers_restricted_brief(self):
@@ -921,7 +871,8 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
         )
         document = html.fromstring(res.get_data(as_text=True))
         assert_equal(document.xpath(
-            '//p')[4].text, "Only invited sellers can apply for 'Open to one' or 'Open to selected' opportunity."
+            '//p[@id="is_restricted_brief"]')[0].text,
+            "Only invited sellers can apply for 'Open to one' or 'Open to selected' opportunity."
             )
 
 

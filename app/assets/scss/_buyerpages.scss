@@ -226,8 +226,10 @@ ol.bold-numbers {
 }
 @include media($tablet) {
   .brief-content {
-    dt, dd, ul, .multiquestion p {
+    dt, dd, ul, p {
       font-size: .875rem;
+    }
+    dt, dd, ul {
       font-weight: 400;
       display: inline-block;
       margin: 0;
