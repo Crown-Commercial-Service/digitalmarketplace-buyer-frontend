@@ -571,8 +571,9 @@ class TestBriefPage(BaseBriefPageTest):
 
         self._assert_start_application(document, brief_id)
 
-    def test_cannot_apply_to_closed_brief(self):
-        self.brief['briefs']['status'] = "closed"
+    @pytest.mark.parametrize('status', ['closed', 'unsuccessful', 'cancelled'])
+    def test_cannot_apply_to_closed_cancelled_or_unsuccessful_brief(self, status):
+        self.brief['briefs']['status'] = status
         self.brief['briefs']['applicationsClosedAt'] = "2016-12-15T11:08:28.054129Z"
         brief_id = self.brief['briefs']['id']
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
@@ -678,9 +679,10 @@ class TestBriefPage(BaseBriefPageTest):
 
         self._assert_view_application(document, brief_id)
 
-    def test_supplier_applied_view_application_for_closed_opportunity(self):
+    @pytest.mark.parametrize('status', ['closed', 'unsuccessful', 'cancelled'])
+    def test_supplier_applied_view_application_for_closed_unsuccessful_or_cancelled_opportunity(self, status):
         self.login_as_supplier()
-        self.brief['briefs']['status'] = "closed"
+        self.brief['briefs']['status'] = status
         brief_id = self.brief['briefs']['id']
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
         assert res.status_code == 200
@@ -1093,7 +1095,7 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
             "human": True,
         }
         assert set(self._data_api_client.find_briefs.call_args[1]["status"].split(",")) == {
-            "live", "closed", "awarded"
+            "live", "closed", "awarded", "unsuccessful", "cancelled"
         }
         assert set(self._data_api_client.find_briefs.call_args[1]["lot"].split(",")) == {
             "lot-one",
@@ -1199,7 +1201,7 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
             "human": True,
         }
         assert set(self._data_api_client.find_briefs.call_args[1]["status"].split(",")) == {
-            "live", "closed", "awarded"
+            "live", "closed", "awarded", "unsuccessful", "cancelled"
         }
         assert set(self._data_api_client.find_briefs.call_args[1]["lot"].split(",")) == {
             "lot-one",

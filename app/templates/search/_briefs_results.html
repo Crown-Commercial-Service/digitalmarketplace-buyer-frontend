@@ -25,7 +25,7 @@
     </ul>
 
     <ul class="search-result-metadata">
-        {% if brief.data.status in ['closed', 'awarded'] %}
+        {% if brief.data.status in ['closed', 'awarded', 'cancelled', 'unsuccessful'] %}
             <li class="search-result-metadata-item">
                 Closed
             </li>
