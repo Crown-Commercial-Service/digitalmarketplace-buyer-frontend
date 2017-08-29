@@ -1122,7 +1122,7 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         assert not any(element.get("checked") for element in status_inputs)
 
         ss_elem = document.xpath("//p[@class='search-summary']")[0]
-        assert self._normalize_whitespace(self._squashed_element_text(ss_elem)) == "2 opportunities"
+        assert self._normalize_whitespace(self._squashed_element_text(ss_elem)) == "6 opportunities"
 
         specialist_role_labels = document.xpath("//div[@class='search-result']/ul[2]/li[2]/text()")
         assert len(specialist_role_labels) == 1  # only one brief has a specialist role so only one label should exist
@@ -1182,7 +1182,7 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
             normalize_qs(parsed_prev_url.query)
 
         ss_elem = document.xpath("//p[@class='search-summary']")[0]
-        assert self._normalize_whitespace(self._squashed_element_text(ss_elem)) == "2 results"
+        assert self._normalize_whitespace(self._squashed_element_text(ss_elem)) == "6 results"
 
     def test_catalogue_of_briefs_page_filtered_all_options_selected(self):
         original_url = "/digital-outcomes-and-specialists/opportunities?status=live&lot=lot-one&lot=lot-three"\
@@ -1242,7 +1242,7 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         assert normalize_qs(parsed_original_url.query) == normalize_qs(parsed_next_url.query)
 
         ss_elem = document.xpath("//p[@class='search-summary']")[0]
-        assert self._normalize_whitespace(self._squashed_element_text(ss_elem)) == "2 results"
+        assert self._normalize_whitespace(self._squashed_element_text(ss_elem)) == "6 results"
 
     def test_catalogue_of_briefs_404_if_invalid_status(self):
         res = self.client.get('/digital-outcomes-and-specialists/opportunities?status=pining-for-fjords')
@@ -1311,6 +1311,16 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
             '//div[@class="search-result"][4]//li[@class="search-result-metadata-item"]'
         )[-1].text_content().strip()
         assert awarded_opportunity_status == "Closed"
+
+        cancelled_opportunity_status = document.xpath(
+            '//div[@class="search-result"][5]//li[@class="search-result-metadata-item"]'
+        )[-1].text_content().strip()
+        assert cancelled_opportunity_status == "Closed"
+
+        unsuccessful_opportunity_status = document.xpath(
+            '//div[@class="search-result"][6]//li[@class="search-result-metadata-item"]'
+        )[-1].text_content().strip()
+        assert unsuccessful_opportunity_status == "Closed"
 
 
 @mock.patch('app.main.views.marketplace.data_api_client', autospec=True)
