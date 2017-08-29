@@ -24,7 +24,7 @@ def send_feedback():
     replaced = came_from._replace(scheme='', netloc='')
 
     flash(Markup(
-        """Thank you for your message. If you have more detailed feedback, please email 
+        """Thank you for your message. If you have more detailed feedback, please email
         <a href="mailto:enquiries@digitalmarketplace.service.gov.uk">enquiries@digitalmarketplace.service.gov.uk</a> or
         <a href="https://airtable.com/shrkFM8L6Wfenzn5Q">take part in our research</a>.
         """))
