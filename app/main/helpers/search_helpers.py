@@ -138,6 +138,25 @@ def group_request_filters(request_filters, content_builder):
     return filter_query
 
 
+def ungroup_request_filters(request_filters, content_builder):
+    """Carries out the inverse of the above method which is required when going from search api url parameters
+    to frontend url parameters. Where group_request_filters takes request_filters as a MultiDict, this method
+    takes request_filters as a tuple of tuple pairs ((param_name, param_value), ...)"""
+    filter_query = []
+
+    for key, value in request_filters:
+        if is_radio_type(content_builder, key):
+            if ',' in value:
+                for value in value.split(','):
+                    filter_query.append((key, value))
+            else:
+                filter_query.append((key, value))
+        else:
+            filter_query.append((key, value))
+
+    return tuple(filter_query)
+
+
 def is_radio_type(content_builer, key):
     if key == 'lot':
         return True

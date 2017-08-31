@@ -29,12 +29,12 @@
   </header>
   <p>{{ search_summary.markup() }}</p>
   <div class="grid-row">
-    <form method="post" action="{{ url_for('direct_award.project_create') }}">
+    <form method="post" action="{{ url_for('direct_award.project_create', framework_framework=framework_framework) }}">
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
       <input type="hidden" name="search_api_url" value="{{ search_api_url }}"/>
       {%
         with
-        question = "Name a new procurement project",
+        question = "Name a new project",
         name = "project_name"
       %}
         {% include "toolkit/forms/textbox.html" %}

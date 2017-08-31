@@ -1,6 +1,6 @@
 {% extends "_base_page.html" %}
 
-{% block page_title %}Save your search - Digital Marketplace{% endblock %}
+{% block page_title %}project_name - Digital Marketplace{% endblock %}
 
 {% block breadcrumb %}
   {%
@@ -33,7 +33,7 @@
   </header>
   <div class="grid-row">
     <p>{{ search_summary }}</p>
-    <p>{{ search_created_at|utcdatetimeformat}}</p>
+    <p>{{ search_created_at|utcdatetimeformat }}</p>
     <a href="{{ search_page_url }}">View your search</a>
   </div>
 </div>

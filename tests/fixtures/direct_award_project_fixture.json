@@ -8,7 +8,7 @@
     "users": [
       {
         "active": true,
-        "email": "buyer@example.com@",
+        "email": "buyer@example.com",
         "id": 123,
         "name": "A Buyer",
         "role": "buyer"

@@ -6,7 +6,7 @@
       "createdBy": 10000,
       "id": 1,
       "projectId": 1,
-      "searchUrl": "http://search-api.digitalmarketplace.service.gov.uk/g-cloud/services/search?q=accelerator",
+      "searchUrl": "http://search-api.digitalmarketplace.service.gov.uk/g-cloud-9/services/search?q=accelerator",
       "searchedAt": null
     },
     {
@@ -15,7 +15,7 @@
       "createdBy": 10000,
       "id": 2,
       "projectId": 1,
-      "searchUrl": "http://search-api.digitalmarketplace.service.gov.uk/g-cloud/services/search?q=accelerating",
+      "searchUrl": "http://search-api.digitalmarketplace.service.gov.uk/g-cloud-9/services/search?q=accelerating",
       "searchedAt": null
     },
     {
@@ -24,7 +24,7 @@
       "createdBy": 10000,
       "id": 3,
       "projectId": 1,
-      "searchUrl": "http://search-api.digitalmarketplace.service.gov.uk/g-cloud/services/search?q=accelerated",
+      "searchUrl": "http://search-api.digitalmarketplace.service.gov.uk/g-cloud-9/services/search?q=accelerated",
       "searchedAt": null
     }
   ]

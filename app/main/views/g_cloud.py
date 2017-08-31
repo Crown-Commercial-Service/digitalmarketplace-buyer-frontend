@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 from flask import abort, render_template, request, redirect, current_app, url_for, flash, Markup
 from flask_login import current_user
 import flask_featureflags
-from urllib.parse import urlencode, urlunparse, urlparse
 from werkzeug.datastructures import MultiDict
 
 from dmutils.formats import dateformat
@@ -24,16 +23,18 @@ from ..helpers.search_helpers import (
     get_keywords_from_request, pagination,
     get_page_from_request, query_args_for_pagination,
     get_lot_from_request, build_search_query,
-    clean_request_args, get_request_url_without_any_filters
+    clean_request_args, get_request_url_without_any_filters,
+    ungroup_request_filters
 )
 from ..helpers import framework_helpers
 from ..helpers.direct_award_helpers import is_direct_award_project_accessible
+from ..helpers.shared_helpers import construct_url_from_base_and_params
 
 from ..exceptions import AuthException
 from app import search_api_client, data_api_client, content_loader
 
 
-PROJECT_CREATED_MESSAGE = Markup("""Your new procurement project has been created.""")
+PROJECT_CREATED_MESSAGE = Markup("""Your new project has been created.""")
 
 
 @main.route('/g-cloud')
@@ -232,7 +233,6 @@ def search_services():
                 filter_instance['label'] = capitalize_first(filter_instance['label'])
 
     clear_filters_url = get_request_url_without_any_filters(request, filters)
-    show_save_button = flask_featureflags.is_active('DIRECT_AWARD_PROJECTS')
 
     template_args = dict(
         current_lot=current_lot,
@@ -249,8 +249,7 @@ def search_services():
         title='Search results',
         total=search_results_obj.total,
         gcloud_framework_description=framework_helpers.get_framework_description(data_api_client, 'g-cloud'),
-        clear_filters_url=clear_filters_url,
-        show_save_button=show_save_button)
+        clear_filters_url=clear_filters_url)
 
     if request.args.get('live-results'):
         from flask import jsonify
@@ -278,11 +277,11 @@ def search_services():
     )
 
 
-@direct_award.route('/save-search', methods=['GET'])
-def save_search():
+@direct_award.route('/<string:framework_framework>/save-search', methods=['GET'])
+def save_search(framework_framework):
     # Get core data
     all_frameworks = data_api_client.find_frameworks().get('frameworks')
-    framework = framework_helpers.get_latest_live_framework(all_frameworks, 'g-cloud')
+    framework = framework_helpers.get_latest_live_framework(all_frameworks, framework_framework)
     lots_by_slug = framework_helpers.get_lots_by_slug(framework)
     current_lot_slug = get_lot_from_request(request, lots_by_slug)
 
@@ -308,13 +307,14 @@ def save_search():
 
     return render_template(
         'direct-award/save-search.html',
+        framework_framework=framework_framework,
         search_summary=search_summary,
         search_api_url=search_api_url,
     )
 
 
-@direct_award.route('/projects/create', methods=['POST'])
-def project_create():
+@direct_award.route('/<string:framework_framework>/projects/create', methods=['POST'])
+def project_create(framework_framework):
     try:
         api_project = data_api_client.create_direct_award_project(user_id=current_user.id,
                                                                   user_email=current_user.email_address,
@@ -337,15 +337,16 @@ def project_create():
     flash(PROJECT_CREATED_MESSAGE, 'success')
 
     return redirect(url_for('.view_project',
+                            framework_framework=framework_framework,
                             project_id=project['id']
                             ))
 
 
-@direct_award.route('/projects/<int:project_id>', methods=['GET'])
-def view_project(project_id):
+@direct_award.route('/<string:framework_framework>/projects/<int:project_id>', methods=['GET'])
+def view_project(framework_framework, project_id):
     # Get core data
     all_frameworks = data_api_client.find_frameworks().get('frameworks')
-    framework = framework_helpers.get_latest_live_framework(all_frameworks, 'g-cloud')
+    framework = framework_helpers.get_latest_live_framework(all_frameworks, framework_framework)
     content_manifest = content_loader.get_manifest(framework['slug'], 'search_filters')
     lots_by_slug = framework_helpers.get_lots_by_slug(framework)
 
@@ -362,6 +363,7 @@ def view_project(project_id):
 
     # We need to get buyer-frontend query params from our saved search API URL.
     search_query_params = search_api_client.get_frontend_params_from_search_api_url(search['searchUrl'])
+    search_query_params = ungroup_request_filters(search_query_params, content_manifest)
     search_query_params_multidict = MultiDict(search_query_params)
 
     current_lot_slug = search_query_params_multidict.get('lot', None)
@@ -369,10 +371,7 @@ def view_project(project_id):
     clean_request_query_params = clean_request_args(search_query_params_multidict, filters.values(), lots_by_slug)
 
     # Now build the buyer-frontend URL representing the saved Search API URL
-    search_page_base_url = url_for('main.search_services')
-    parsed_url = list(urlparse(search_page_base_url))
-    parsed_url[4] = urlencode(search_query_params)
-    search_page_full_url = urlunparse(parsed_url)
+    buyer_search_page_url = construct_url_from_base_and_params(url_for('main.search_services'), search_query_params)
 
     # Get the saved Search API URL result set and build the search summary.
     search_api_response = search_api_client._get(search['searchUrl'])
@@ -385,6 +384,6 @@ def view_project(project_id):
 
     return render_template('direct-award/view-project.html',
                            project_name=project['name'],
-                           search_page_url=search_page_full_url,
+                           search_page_url=buyer_search_page_url,
                            search_created_at=search['createdAt'],
                            search_summary=search_summary.markup())

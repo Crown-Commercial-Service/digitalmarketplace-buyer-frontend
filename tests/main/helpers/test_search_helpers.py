@@ -272,13 +272,3 @@ class TestBuildSearchQueryHelpers(BaseApplicationTest):
 
         assert search_helpers.build_search_query(request.args, self.lot_filters, self._loader(),
                                                  self._lots_by_slug) == {}
-
-    def test_build_search_query_g5_dots_id_search_replaces_dots_with_dashes(self):
-        request = self._request({
-            'q': 'some text 5.G4.1005.001',
-        })
-
-        assert search_helpers.build_search_query(request.args, self.lot_filters, self._loader(),
-                                                 self._lots_by_slug) == {
-            'q': 'some text 5-G4-1005-001',
-        }
