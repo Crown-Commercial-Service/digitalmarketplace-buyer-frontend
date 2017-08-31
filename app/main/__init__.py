@@ -19,5 +19,5 @@ def require_login():
 from . import errors
 from .views import (
     crown_hosting, digital_services_framework, g_cloud,
-    marketplace, suppliers
+    login, marketplace, suppliers
 )
