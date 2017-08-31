@@ -275,6 +275,25 @@ def search_services():
         **template_args
     )
 
+@direct_award.route('', methods=['GET'])
+def saved_search_overview():
+    projects = data_api_client.find_direct_award_projects(current_user.id).get('projects', [])
+    open_searches = []
+    closed_searches = []
+    
+    for project in projects:
+
+        if project['active']:
+            open_searches.append( project )
+        else:
+            closed_searches.append( project )
+    
+    return render_template(
+        'direct-award/index.html',
+        open_searches=open_searches,
+        closed_searches=closed_searches
+    )
+
 
 @direct_award.route('/<string:framework_framework>/save-search', methods=['GET'])
 def save_search(framework_framework):
