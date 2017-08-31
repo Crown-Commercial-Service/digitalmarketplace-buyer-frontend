@@ -1,0 +1,31 @@
+{
+  "searches": [
+    {
+      "active": true,
+      "createdAt": "2017-08-29T07:00:02.000000Z",
+      "createdBy": 10000,
+      "id": 1,
+      "projectId": 1,
+      "searchUrl": "http://search-api.digitalmarketplace.service.gov.uk/g-cloud-9/services/search?q=accelerator",
+      "searchedAt": null
+    },
+    {
+      "active": false,
+      "createdAt": "2017-08-29T07:00:01.000000Z",
+      "createdBy": 10000,
+      "id": 2,
+      "projectId": 1,
+      "searchUrl": "http://search-api.digitalmarketplace.service.gov.uk/g-cloud-9/services/search?q=accelerating",
+      "searchedAt": null
+    },
+    {
+      "active": false,
+      "createdAt": "2017-08-29T07:00:00.000000Z",
+      "createdBy": 10000,
+      "id": 3,
+      "projectId": 1,
+      "searchUrl": "http://search-api.digitalmarketplace.service.gov.uk/g-cloud-9/services/search?q=accelerated",
+      "searchedAt": null
+    }
+  ]
+}

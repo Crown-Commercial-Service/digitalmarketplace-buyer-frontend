@@ -138,6 +138,25 @@ def group_request_filters(request_filters, content_builder):
     return filter_query
 
 
+def ungroup_request_filters(request_filters, content_builder):
+    """Carries out the inverse of the above method which is required when going from search api url parameters
+    to frontend url parameters. Where group_request_filters takes request_filters as a MultiDict, this method
+    takes request_filters as a tuple of tuple pairs ((param_name, param_value), ...)"""
+    filter_query = []
+
+    for key, value in request_filters:
+        if is_radio_type(content_builder, key):
+            if ',' in value:
+                for value in value.split(','):
+                    filter_query.append((key, value))
+            else:
+                filter_query.append((key, value))
+        else:
+            filter_query.append((key, value))
+
+    return tuple(filter_query)
+
+
 def is_radio_type(content_builer, key):
     if key == 'lot':
         return True
@@ -170,8 +189,7 @@ def get_filter_value_from_question_option(option):
     return (option.get('value') or option.get('label', '')).lower().replace(',', '')
 
 
-def build_search_query(framework, request_args, lot_filters, content_builder, lots_by_slug,
-                       for_aggregation=False):
+def build_search_query(request_args, lot_filters, content_builder, lots_by_slug, for_aggregation=False):
     """Match request args with known filters.
 
     Removes any unknown query parameters, and will only keep `page`, `q`
@@ -188,13 +206,7 @@ def build_search_query(framework, request_args, lot_filters, content_builder, lo
         for_aggregation=for_aggregation
     )
 
-    if 'q' in query:
-        query['q'] = replace_g5_search_dots(query['q'])
-
-    params = group_request_filters(query, content_builder)
-    params.update({'index': framework['slug']})
-
-    return params
+    return group_request_filters(query, content_builder)
 
 
 def query_args_for_pagination(args):

@@ -1,0 +1,18 @@
+{
+  "project": {
+    "active": true,
+    "createdAt": "2017-08-29T07:49:26.677778Z",
+    "id": 1,
+    "lockedAt": null,
+    "name": "My procurement project",
+    "users": [
+      {
+        "active": true,
+        "email": "buyer@example.com",
+        "id": 123,
+        "name": "A Buyer",
+        "role": "buyer"
+      }
+    ]
+  }
+}
