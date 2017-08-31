@@ -3,7 +3,6 @@ from __future__ import unicode_literals
 
 from flask import abort, render_template, request, redirect, current_app, url_for, flash, Markup
 from flask_login import current_user
-import flask_featureflags
 from werkzeug.datastructures import MultiDict
 
 from dmutils.formats import dateformat
@@ -351,7 +350,7 @@ def view_project(framework_framework, project_id):
     lots_by_slug = framework_helpers.get_lots_by_slug(framework)
 
     # Get the requested Direct Award Project.
-    project = data_api_client.get_direct_award_project(user_id=current_user.id, project_id=project_id)['project']
+    project = data_api_client.get_direct_award_project(project_id=project_id)['project']
     if not is_direct_award_project_accessible(project, current_user.id):
         abort(404)
 
