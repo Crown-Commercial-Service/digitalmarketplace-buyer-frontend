@@ -46,7 +46,7 @@ class TestDirectAward(BaseApplicationTest):
     def test_save_search_redirects_to_login(self):
         res = self.client.get('/buyers/direct-award/g-cloud/save-search?lot=cloud-software')
         assert res.status_code == 302
-        assert res.location == 'http://localhost/login?next=' \
+        assert res.location == 'http://localhost/user/login?next=' \
                                '%2Fbuyers%2Fdirect-award%2Fg-cloud%2Fsave-search%3Flot%3Dcloud-software'
 
     def test_save_search_renders_summary_on_page(self):
