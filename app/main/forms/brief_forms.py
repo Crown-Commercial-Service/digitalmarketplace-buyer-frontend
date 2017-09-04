@@ -3,7 +3,7 @@ from wtforms import IntegerField, SelectMultipleField
 from wtforms.validators import NumberRange
 
 
-CLOSED_BRIEF_STATUSES = ['closed', 'awarded', 'cancelled', 'unsuccessful']
+BRIEF_AWARD_STATUSES = ['awarded', 'cancelled', 'unsuccessful']
 
 
 class BriefSearchForm(Form):
@@ -50,12 +50,12 @@ class BriefSearchForm(Form):
         else:
             statuses = [id_ for id_, label in self.status.choices]
         if 'closed' in statuses:
-            statuses.extend(CLOSED_BRIEF_STATUSES)
+            statuses.extend(BRIEF_AWARD_STATUSES)
 
         lots = self.lot.data or tuple(id_ for id_, label in self.lot.choices)
 
         return self._data_api_client.find_briefs(
-            status=",".join(set(statuses)),
+            status=",".join(statuses),
             lot=",".join(lots),
             framework=self._framework_slug,
             page=self.page.data,
