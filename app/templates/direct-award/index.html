@@ -1,5 +1,4 @@
 {% extends "_base_page.html" %}
-{% import "toolkit/summary-table.html" as summary %}
 
 {% block page_title %}Saved searches - Digital Marketplace{% endblock %}
 
@@ -10,6 +9,10 @@
       {
           "link": url_for('main.index'),
           "label": "Digital Marketplace"
+      },
+      {
+          "link": "/buyers",
+          "label": "Account Overview"
       },
       {
           "label": "Saved searches"
