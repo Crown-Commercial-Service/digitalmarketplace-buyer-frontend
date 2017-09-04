@@ -1,0 +1,19 @@
+.direct-award-saved-searches {
+
+    .summary-heading {
+        font-size: 22px;
+        margin-bottom: 10px;
+    }
+
+    table {
+        .summary-last-narrow {
+            text-align: left;
+            width: 25%;
+        }
+        
+        &.summary-item-body {
+            margin-bottom: 60px;
+        }
+    }
+
+}
