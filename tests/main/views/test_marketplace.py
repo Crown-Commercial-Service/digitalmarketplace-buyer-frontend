@@ -976,6 +976,18 @@ class TestAwardedBriefPage(BaseBriefPageTest):
 
         assert 'Company size: SME' in awarded_banner.xpath('p/text()')[2]
 
+class TestCancelledBriefPage(BaseBriefPageTest):
+    def setup_method(self, method):
+        super(TestCancelledBriefPage, self).setup_method(method)
+        self.brief['briefs']['status'] = "cancelled"
+
+    def test_cancelled_banner_shown_on_cancelled_brief_page(self):
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(self.brief_id))
+        document = html.fromstring(res.get_data(as_text=True))
+        cancelled_banner = document.xpath('//div[@class="banner-temporary-message-without-action"]')[0]
+
+        assert 'This opportunity was cancelled' in cancelled_banner.xpath('h2/text()')[0]
+
 
 class TestWithdrawnSpecificBriefPage(BaseBriefPageTest):
     def setup_method(self, method):
