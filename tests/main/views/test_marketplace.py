@@ -988,6 +988,15 @@ class TestCancelledBriefPage(BaseBriefPageTest):
 
         assert 'This opportunity was cancelled' in cancelled_banner.xpath('h2/text()')[0]
 
+    def test_explanation_message_shown_on_cancelled_banner(self):
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(self.brief_id))
+        document = html.fromstring(res.get_data(as_text=True))
+        cancelled_banner = document.xpath('//div[@class="banner-temporary-message-without-action"]')[0]
+        message_part_1 = 'The buyer cancelled this opportunity, for example because they no longer have the budget.'
+        message_part_2 = 'They may publish an updated version later.'
+        assert message_part_1 in cancelled_banner.xpath('p/text()')[0]
+        assert message_part_2 in cancelled_banner.xpath('p/text()')[1]
+
 
 class TestWithdrawnSpecificBriefPage(BaseBriefPageTest):
     def setup_method(self, method):

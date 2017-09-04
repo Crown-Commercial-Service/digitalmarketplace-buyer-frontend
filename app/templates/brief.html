@@ -56,7 +56,11 @@
       with
       type = "temporary-message",
       heading = "This opportunity was cancelled",
-      message = "You can't apply for this opportunity now. The buyer may publish an " + "updated version"|nbsp + " on the " + "Digital Marketplace"|nbsp
+      message = (
+        "The buyer cancelled this opportunity, for example because they no longer have the budget."
+        + "<br />"|safe
+        + "They may publish an updated version later."
+      )
     %}
       {% include "toolkit/notification-banner.html" %}
     {% endwith %}
