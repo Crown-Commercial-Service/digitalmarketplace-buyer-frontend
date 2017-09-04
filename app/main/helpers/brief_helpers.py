@@ -1,7 +1,7 @@
 SME, LARGE = ['micro', 'small', 'medium'], ['large']
 COMPLETED_BRIEF_RESPONSE_STATUSES = ['submitted', 'pending-awarded', 'awarded']
 ALL_BRIEF_RESPONSE_STATUSES = ['draft', 'submitted', 'pending-awarded', 'awarded']
-PUBLISHED_BRIEF_STATUSES = ['live', 'withdrawn', 'closed', 'awarded']
+PUBLISHED_BRIEF_STATUSES = ['live', 'withdrawn', 'closed', 'awarded', 'cancelled', 'unsuccessful']
 
 
 def _count_brief_responses_by_size(brief_responses, size):
