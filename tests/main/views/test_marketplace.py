@@ -581,7 +581,6 @@ class TestBriefPage(BaseBriefPageTest):
 
         apply_links = document.xpath('//a[@href="/suppliers/opportunities/{}/responses/start"]'.format(brief_id))
         assert len(apply_links) == 0
-        assert '15 December 2016' in document.xpath('//p[@class="banner-message"]')[0].text_content()
 
     def test_cannot_apply_to_awarded_brief(self):
         self.brief['briefs']['status'] = "awarded"
@@ -976,6 +975,7 @@ class TestAwardedBriefPage(BaseBriefPageTest):
 
         assert 'Company size: SME' in awarded_banner.xpath('p/text()')[2]
 
+
 class TestCancelledBriefPage(BaseBriefPageTest):
     def setup_method(self, method):
         super(TestCancelledBriefPage, self).setup_method(method)
@@ -1009,6 +1009,15 @@ class TestUnsuccessfulBriefPage(BaseBriefPageTest):
         unsuccessful_banner = document.xpath('//div[@class="banner-temporary-message-without-action"]')[0]
 
         assert 'No suitable suppliers applied' in unsuccessful_banner.xpath('h2/text()')[0]
+
+    def test_explanation_message_shown_on_unsuccessful_banner(self):
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(self.brief_id))
+        document = html.fromstring(res.get_data(as_text=True))
+        cancelled_banner = document.xpath('//div[@class="banner-temporary-message-without-action"]')[0]
+        message_part_1 = "The buyer didn't award this contract because no suppliers met their requirements"
+        message_part_2 = "They may publish an updated version later."
+        assert message_part_1 in cancelled_banner.xpath('p/text()')[0]
+        assert message_part_2 in cancelled_banner.xpath('p/text()')[1]
 
 
 class TestWithdrawnSpecificBriefPage(BaseBriefPageTest):

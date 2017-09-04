@@ -23,7 +23,7 @@
 
 {% block main_content %}
 
-{% if brief.status in ['closed', 'cancelled', 'unsuccessful'] %}
+{% if brief.status == 'closed' %}
 <div class="grid-row">
   <div class="column-one-whole">
     {%
@@ -43,7 +43,7 @@
       with
       type = "temporary-message",
       heading = "This opportunity was withdrawn on " + "{}".format(brief.withdrawnAt|dateformat)|nbsp,
-      message = "You can't apply for this opportunity now. The buyer may publish an " + "updated version"|nbsp + " on the " + "Digital Marketplace"|nbsp
+      message = "You can't apply for this opportunity now. The buyer may publish an " + "updated version"|nbsp + " on the " + "Digital Marketplace."|nbsp
     %}
       {% include "toolkit/notification-banner.html" %}
     {% endwith %}
@@ -74,7 +74,7 @@
       type = "temporary-message",
       heading = "No suitable suppliers applied",
       message = (
-        "example"
+        "The buyer didn't award this contract because no suppliers met their requirements"
         + "<br />"|safe
         + "They may publish an updated version later."
       )
