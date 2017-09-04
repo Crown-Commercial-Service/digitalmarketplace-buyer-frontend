@@ -937,7 +937,7 @@ class TestBriefPageQandASectionAskAQuestion(BaseBriefPageTest):
 class TestAwardedBriefPage(BaseBriefPageTest):
     def setup_method(self, method):
         super(TestAwardedBriefPage, self).setup_method(method)
-        self.brief['briefs']['status'] = "awarded"
+        self.brief['briefs']['status'] = 'awarded'
         self.brief['briefs']['awardedBriefResponseId'] = 14276
 
     def test_award_banner_with_winning_supplier_shown_on_awarded_brief_page(self):
@@ -979,7 +979,7 @@ class TestAwardedBriefPage(BaseBriefPageTest):
 class TestCancelledBriefPage(BaseBriefPageTest):
     def setup_method(self, method):
         super(TestCancelledBriefPage, self).setup_method(method)
-        self.brief['briefs']['status'] = "cancelled"
+        self.brief['briefs']['status'] = 'cancelled'
 
     def test_cancelled_banner_shown_on_cancelled_brief_page(self):
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(self.brief_id))
@@ -996,6 +996,19 @@ class TestCancelledBriefPage(BaseBriefPageTest):
         message_part_2 = 'They may publish an updated version later.'
         assert message_part_1 in cancelled_banner.xpath('p/text()')[0]
         assert message_part_2 in cancelled_banner.xpath('p/text()')[1]
+
+
+class TestUnsuccessfulBriefPage(BaseBriefPageTest):
+    def setup_method(self, method):
+        super(TestUnsuccessfulBriefPage, self).setup_method(method)
+        self.brief['briefs']['status'] = 'unsuccessful'
+
+    def test_unsuccessful_banner_shown_on_unsuccessful_brief_page(self):
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(self.brief_id))
+        document = html.fromstring(res.get_data(as_text=True))
+        unsuccessful_banner = document.xpath('//div[@class="banner-temporary-message-without-action"]')[0]
+
+        assert 'No suitable suppliers applied' in unsuccessful_banner.xpath('h2/text()')[0]
 
 
 class TestWithdrawnSpecificBriefPage(BaseBriefPageTest):

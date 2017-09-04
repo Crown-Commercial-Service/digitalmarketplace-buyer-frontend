@@ -66,6 +66,23 @@
     {% endwith %}
   </div>
 </div>
+{% elif brief.status == 'unsuccessful' %}
+<div class="grid-row">
+  <div class="column-one-whole">
+    {%
+      with
+      type = "temporary-message",
+      heading = "No suitable suppliers applied",
+      message = (
+        "example"
+        + "<br />"|safe
+        + "They may publish an updated version later."
+      )
+    %}
+      {% include "toolkit/notification-banner.html" %}
+    {% endwith %}
+  </div>
+</div>
 {% elif brief.status == 'awarded' %}
 <div class="grid-row">
   <div class="column-one-whole">
