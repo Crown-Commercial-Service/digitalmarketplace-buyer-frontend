@@ -914,7 +914,7 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
             "framework": "digital-service-professionals",
             "page": 1,
             "human": True,
-            "per_page": 500
+            "per_page": 50
         }
         assert set(self._data_api_client.find_briefs.call_args[1]["status"].split(",")) == {"live", "closed"}
         assert set(self._data_api_client.find_briefs.call_args[1]["lot"].split(",")) == {
