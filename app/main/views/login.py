@@ -20,7 +20,7 @@ from dmutils import terms_of_use
 from app import data_api_client
 from app.main import main
 from app.helpers.login_helpers import (
-    decode_buyer_creation_token, generate_buyer_creation_token, redirect_logged_in_user,
+    decode_buyer_creation_token, decode_user_creation_token, generate_buyer_creation_token, redirect_logged_in_user,
     send_buyer_account_activation_email, send_buyer_onboarding_email
 )
 from app.helpers.terms_helpers import check_terms_acceptance
@@ -276,7 +276,7 @@ def submit_buyer_invite_request():
 @main.route('/buyers/signup/send-invite/<string:token>', methods=['GET'])
 def send_buyer_invite(token):
     try:
-        data = decode_buyer_creation_token(token.encode())
+        data = decode_user_creation_token(token.encode())
         email_address = data.get('emailAddress', None)
         if email_address is None:
             email_address = data.get('email_address', None)

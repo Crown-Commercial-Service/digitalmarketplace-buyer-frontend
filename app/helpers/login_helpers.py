@@ -59,6 +59,23 @@ def decode_buyer_creation_token(token):
     return data
 
 
+def decode_user_creation_token(token):
+    data = decode_token(
+        token,
+        current_app.config['SECRET_KEY'],
+        current_app.config['SIGNUP_INVITATION_TOKEN_SALT'],
+        14 * ONE_DAY_IN_SECONDS
+    )
+
+    # snake case is required for tokens created with future api
+    if not set(('name', 'email_address')).issubset(set(data.keys())):
+        # TODO: remove legacy camel case check when old invites are no longer active - 1W
+        if not set(('name', 'emailAddress')).issubset(set(data.keys())):
+            raise InvalidToken
+        raise InvalidToken
+    return data
+
+
 def send_buyer_account_activation_email(name, email_address, token):
     token = generate_buyer_creation_token(name=name, email_address=email_address)
     url = url_for('main.create_buyer_account', token=token, _external=True)

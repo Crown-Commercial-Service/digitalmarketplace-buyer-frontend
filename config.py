@@ -70,6 +70,7 @@ class Config(object):
     RESET_PASSWORD_SALT = 'ResetPasswordSalt'
     INVITE_EMAIL_SALT = 'InviteEmailSalt'
     BUYER_CREATION_TOKEN_SALT = 'BuyerCreation'
+    SIGNUP_INVITATION_TOKEN_SALT = 'NewUserInviteEmail'
 
     ASSET_PATH = URL_PREFIX + '/static'
 
