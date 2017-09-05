@@ -60,7 +60,7 @@
   {%
     with
     text = "Return to overview",
-    link = url_for('main.index')
+    link = "/buyers/direct-award/{}".format(project.id)
   %}
     {% include "toolkit/external-link.html" %}
   {% endwith %}
