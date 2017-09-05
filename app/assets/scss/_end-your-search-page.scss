@@ -1,0 +1,10 @@
+.end-search-page {
+  .end-your-search-button {
+    @include core-16;
+    margin-top: 1.5em;
+  }
+
+  h2 {
+    margin-bottom: 1em;
+  }
+}

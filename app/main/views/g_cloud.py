@@ -275,6 +275,13 @@ def search_services():
         **template_args
     )
 
+@direct_award.route('/<string:direct_award_id>/end-search', methods=['GET'])
+def end_search(direct_award_id):
+    return render_template(
+        'direct-award/end-search.html'
+    )
+
+
 
 @direct_award.route('/<string:framework_framework>', methods=['GET'])
 def saved_search_overview(framework_framework):

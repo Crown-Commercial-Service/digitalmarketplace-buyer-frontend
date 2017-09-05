@@ -1,0 +1,65 @@
+{% extends "_base_page.html" %}
+
+{% block page_title %}Save your search - Digital Marketplace{% endblock %}
+
+{% block breadcrumb %}
+  {%
+    with
+    items = [
+      {
+        "link": url_for('main.index'),
+        "label": "Digital Marketplace"
+      },
+      {
+        "link": "/buyers",
+        "label": "Your Account"
+      },
+      {
+        "link": "/buyers/direct-award",
+        "label": "Saved Searches"
+      },
+      {
+        "link": "",
+        "label": "{Saved Search Name}"
+      },
+      {
+        "label": "End search"
+      }
+    ]
+  %}
+    {% include "toolkit/breadcrumb.html" %}
+  {% endwith %}
+{% endblock %}
+
+{% block main_content %}
+
+<div class="end-search-page">
+  <header class="page-heading">
+    <h1>
+      End search
+    </h1>
+  </header>
+
+  <h2>Before you end your search</h2>
+  <p>You should only continue when you have finished searching for cloud services</p>
+  <p>and are ready to start comparing the services you've found</p>
+
+  <br>
+  <p>You can not edit your search after it has ended.</p>
+  <br>
+
+  <h2>After your search has ended</h2>
+  <p>Ending your search will save a shortlist of the services you've found. You can</p>
+  <p>download the shortlist to help you compare services.</p>
+
+  <button class="button-save end-your-search-button">End search and continue</button>
+  {%
+    with
+    text = "Return to overview",
+    link = url_for('main.index')
+  %}
+    {% include "toolkit/external-link.html" %}
+  {% endwith %}
+
+</div>
+{% endblock %}
