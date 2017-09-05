@@ -6,6 +6,7 @@ import re
 import mock
 
 from app import create_app, data_api_client
+from tests import login_for_tests
 from datetime import datetime, timedelta
 from mock import patch
 from werkzeug.http import parse_cookie
@@ -22,6 +23,7 @@ class BaseApplicationTest(object):
         data_api_client.find_frameworks = mock.Mock()
         data_api_client.find_frameworks.return_value = self._get_frameworks_list_fixture_data()
         self.app = create_app('test')
+        self.app.register_blueprint(login_for_tests)
         self.client = self.app.test_client()
         self.get_user_patch = None
 
@@ -165,7 +167,7 @@ class BaseApplicationTest(object):
     @classmethod
     def _squashed_element_text(cls, element):
         return element.text + "".join(
-            cls._squashed_element_text(child_element)+child_element.tail for child_element in element
+            cls._squashed_element_text(child_element) + child_element.tail for child_element in element
         )
 
     def teardown_login(self):
@@ -173,44 +175,34 @@ class BaseApplicationTest(object):
             self.get_user_patch.stop()
 
     def login_as_supplier(self):
-        with patch('app.main.views.login.data_api_client') as login_api_client:
+        with patch('app.data_api_client') as login_api_client:
             login_api_client.authenticate_user.return_value = self.user(
-                123, "email@email.com", 1234, 'Supplier Name', 'Name', role='supplier')
+                123, "email@email.com", 1234, u'Supplier NĀme', u'Năme')
 
             self.get_user_patch = patch.object(
                 data_api_client,
                 'get_user',
-                return_value=self.user(123, "email@email.com", 1234, 'Supplier Name', 'Name', role='supplier')
+                return_value=self.user(123, "email@email.com", 1234, u'Supplier NĀme', u'Năme')
             )
             self.get_user_patch.start()
 
-            self.client.post("/login", data={
-                'email_address': 'valid@email.com',
-                'password': '1234567890'
-            })
-
-            login_api_client.authenticate_user.assert_called_once_with(
-                "valid@email.com", "1234567890")
+            response = self.client.post("/auto-supplier-login")
+            assert response.status_code == 200
 
     def login_as_buyer(self, user_id=123):
-        with patch('app.main.views.login.data_api_client') as login_api_client:
+        with patch('app.data_api_client') as login_api_client:
             login_api_client.authenticate_user.return_value = self.user(
-                user_id, "buyer@email.com", None, None, 'Name')
+                user_id, "buyer@email.com", None, None, 'Ā Buyer', role='buyer')
 
             self.get_user_patch = patch.object(
                 data_api_client,
                 'get_user',
-                return_value=self.user(user_id, "buyer@email.com", None, None, 'Some Buyer')
+                return_value=self.user(user_id, "buyer@email.com", None, None, 'Buyer', role='buyer')
             )
             self.get_user_patch.start()
 
-            self.client.post("/login", data={
-                'email_address': 'valid@email.com',
-                'password': '1234567890'
-            })
-
-            login_api_client.authenticate_user.assert_called_once_with(
-                "valid@email.com", "1234567890")
+            response = self.client.post("/auto-buyer-login")
+            assert response.status_code == 200
 
     def login_as_admin(self):
         with patch('app.main.views.login.data_api_client') as login_api_client:

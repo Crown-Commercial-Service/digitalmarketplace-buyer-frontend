@@ -1,6 +1,5 @@
 import mock
 import pytest
-import re
 from werkzeug.datastructures import MultiDict
 
 from ...helpers import BaseApplicationTest

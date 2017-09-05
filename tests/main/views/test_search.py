@@ -609,7 +609,7 @@ class TestSearchFilterOnClick(BaseApplicationTest):
     def test_base_page_renders_search_services(self, render_template_patch, query_string, urls):
         render_template_patch.return_value = '<p>some html</p>'
 
-        res = self.client.get('/g-cloud/search{}'.format(query_string))
+        self.client.get('/g-cloud/search{}'.format(query_string))
 
         assert urls == set(x[0][0] for x in render_template_patch.call_args_list)
 

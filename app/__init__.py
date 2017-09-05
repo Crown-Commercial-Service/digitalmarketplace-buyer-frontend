@@ -51,7 +51,7 @@ def create_app(config_name):
     application.register_blueprint(direct_award_blueprint)
     application.register_blueprint(external_blueprint)
 
-    login_manager.login_view = 'main.render_login'
+    login_manager.login_view = '/user/login'
     login_manager.login_message_category = "must_login"
     csrf.init_app(application)
 

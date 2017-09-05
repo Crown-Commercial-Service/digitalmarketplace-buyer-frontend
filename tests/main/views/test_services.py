@@ -216,7 +216,7 @@ class TestServicePage(BaseApplicationTest):
                 new_status='enabled',
                 timestamp='2016-01-05T17:01:07.649587Z',
                 service=self.service['services']
-            )
+        )
         data_api_client.get_service.return_value = self.service
         data_api_client.get_framework.return_value = self._get_framework_fixture_data('g-cloud-6')
 
@@ -244,7 +244,7 @@ class TestServicePage(BaseApplicationTest):
                 new_status='disabled',
                 timestamp='2016-01-05T17:01:07.649587Z',
                 service=self.service['services']
-            )
+        )
         data_api_client.get_service.return_value = self.service
         data_api_client.get_framework.return_value = self._get_framework_fixture_data('g-cloud-6')
 
@@ -272,7 +272,7 @@ class TestServicePage(BaseApplicationTest):
                 new_status='expired',
                 timestamp='2016-01-05T17:01:07.649587Z',
                 service=self.service['services']
-            )
+        )
         data_api_client.get_service.return_value = self.service
         data_api_client.get_framework.return_value = self._get_framework_fixture_data('g-cloud-6')
 
@@ -291,7 +291,7 @@ class TestServicePage(BaseApplicationTest):
                 self.service['services']['frameworkName'],
                 'Tuesday 5 January 2016',
                 self.service['services']['supplierName'],
-            )
+        )
 
     def test_pre_live_framework_causes_404(self):
         self.service = self._get_g6_service_fixture_data()

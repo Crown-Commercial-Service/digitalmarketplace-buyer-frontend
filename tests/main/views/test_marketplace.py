@@ -386,7 +386,6 @@ class TestBriefPage(BaseBriefPageTest):
         assert res.status_code == 200
 
         document = html.fromstring(res.get_data(as_text=True))
-        responses = self.brief_responses["briefResponses"]
 
         incomplete_responses_section = document.xpath('//div[@id="incomplete-applications"]')[0]
         completed_responses_section = document.xpath('//div[@id="completed-applications"]')[0]
@@ -1080,6 +1079,9 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
     def teardown_method(self, method):
         self._data_api_client_patch.stop()
 
+    def normalize_qs(self, qs):
+        return {k: set(v) for k, v in iteritems(parse_qs(qs)) if k != "page"}
+
     def test_catalogue_of_briefs_page(self):
         res = self.client.get('/digital-outcomes-and-specialists/opportunities')
         assert res.status_code == 200
@@ -1176,10 +1178,9 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         parsed_next_url = urlparse(document.xpath("//li[@class='next']/a/@href")[0])
         assert parsed_original_url.path == parsed_prev_url.path == parsed_next_url.path
 
-        normalize_qs = lambda qs: {k: set(v) for k, v in iteritems(parse_qs(qs)) if k != "page"}
-        assert normalize_qs(parsed_original_url.query) == \
-            normalize_qs(parsed_next_url.query) == \
-            normalize_qs(parsed_prev_url.query)
+        assert self.normalize_qs(parsed_original_url.query) == \
+            self.normalize_qs(parsed_next_url.query) == \
+            self.normalize_qs(parsed_prev_url.query)
 
         ss_elem = document.xpath("//p[@class='search-summary']")[0]
         assert self._normalize_whitespace(self._squashed_element_text(ss_elem)) == "6 results"
@@ -1238,8 +1239,7 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         parsed_next_url = urlparse(document.xpath("//li[@class='next']/a/@href")[0])
         assert parsed_original_url.path == parsed_next_url.path
 
-        normalize_qs = lambda qs: {k: set(v) for k, v in iteritems(parse_qs(qs)) if k != "page"}
-        assert normalize_qs(parsed_original_url.query) == normalize_qs(parsed_next_url.query)
+        assert self.normalize_qs(parsed_original_url.query) == self.normalize_qs(parsed_next_url.query)
 
         ss_elem = document.xpath("//p[@class='search-summary']")[0]
         assert self._normalize_whitespace(self._squashed_element_text(ss_elem)) == "6 results"

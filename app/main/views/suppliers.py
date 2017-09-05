@@ -8,11 +8,6 @@ from ..helpers.shared_helpers import parse_link
 from ..helpers.framework_helpers import get_framework_description
 import re
 
-try:
-    from urlparse import urlparse, parse_qs
-except ImportError:
-    from urllib.parse import urlparse, parse_qs
-
 
 def process_prefix(prefix=None, format='view'):
     if prefix == u"other":  # special case
