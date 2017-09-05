@@ -277,8 +277,14 @@ def search_services():
 
 @direct_award.route('/<string:direct_award_id>/end-search', methods=['GET'])
 def end_search(direct_award_id):
+    project = data_api_client.get_direct_award_project(direct_award_id).get('project')
+
+    if not project:
+        abort(404)
+
     return render_template(
-        'direct-award/end-search.html'
+        'direct-award/end-search.html',
+        project=project
     )
 
 
