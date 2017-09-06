@@ -380,6 +380,17 @@ class TestBriefPage(BaseBriefPageTest):
         assert page_heading.xpath('h1/text()')[0] == self.brief['briefs']['title']
         assert page_heading.xpath('p[@class="context"]/text()')[0] == self.brief['briefs']['organisation']
 
+    @pytest.mark.parametrize('status', ['closed', 'unsuccessful', 'cancelled', 'awarded'])
+    def test_only_one_banner_at_once_brief_page(self, status):
+        self.brief['briefs']['status'] = status
+        if self.brief['briefs']['status'] == 'awarded':
+            self.brief['briefs']['awardedBriefResponseId'] = 14276
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(self.brief_id))
+        document = html.fromstring(res.get_data(as_text=True))
+        number_of_banners = len(document.xpath('//div[@class="banner-temporary-message-without-action"]'))
+
+        assert number_of_banners == 1
+
     def test_dos_brief_displays_application_stats(self):
         brief_id = self.brief['briefs']['id']
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
