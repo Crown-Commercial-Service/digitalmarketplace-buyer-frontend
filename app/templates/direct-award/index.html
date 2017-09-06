@@ -1,5 +1,5 @@
 {% extends "_base_page.html" %}
-
+{% import "toolkit/summary-table.html" as summary %}
 {% block page_title %}Saved searches - Digital Marketplace{% endblock %}
 
 {% block breadcrumb %}
@@ -34,75 +34,36 @@
   </header>
 
   <div class="grid">
-    <h2 class="summary-heading">
-        Searching
-    </h2>
-
-    {% if open_searches|length == 0 %}
     
-    <p class="summary-item-no-content">
-        You have no saved searches
-    </p>
+    {{ summary.heading("Searching", id="searching_table") }}
+    {% call(item) summary.list_table(open_searches,
+      caption="Summary table",
+      empty_message="You have no saved searches",
+      field_headings=[
+        "Name",
+        "Saved"  ],
+      field_headings_visible=True
+    ) %}
+      {% call summary.row() %}
+        {{ summary.service_link(item.name, '/buyers/direct-award/{}'.format(item.id)) }}
+        {{ summary.text(item.createdAt | datetimeformat ) }}
+      {% endcall %}
+    {% endcall %}
 
-    {% else %}
-    <table class="summary-item-body">
-      <caption class="visually-hidden">
-        Searching
-      </caption>
-      <thead class="summary-item-field-headings-visible">
-        <tr>
-          <th class="summary-item-field-heading-first" scope="col">Name</th>
-          <th class="summary-last-narrow" scope="col">Saved</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for search in open_searches %}
-        <tr class="summary-item-row">
-            <td class="summary-item-field-first-half"><span><a href="/buyers/direct-award/{{ search.id }}">{{ search.name }}</a></span></td>
-            <td class="summary-item-field"><span>{{ search.createdAt | datetimeformat }}</span></td>          
-        </tr>
-        {% else %}
-        <tr class="summary-item-row">
-            <td colspan="2">You have no saved searches</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-    {% endif %}
-
-    <h2 class="summary-heading">
-        Search Ended
-    </h2>
-
-    {% if closed_searches|length == 0 %}
-
-    <p class="summary-item-no-content">
-        You have no saved searches
-    </p>
-
-    {% else %}
-
-    <table class="summary-item-body">
-      <caption class="visually-hidden">
-        Search Ended
-      </caption>
-      <thead class="summary-item-field-headings-visible">
-        <tr>
-          <th class="summary-item-field-heading-first" scope="col">Name</th>
-          <th class="summary-last-narrow" scope="col">Shortlist created</th>
-        </tr>
-      </thead>
-      <tbody>
-          {% for search in closed_searches %}
-          <tr class="summary-item-row">
-              <td class="summary-item-field-first-half"><span><a href="/buyers/direct-award/{{ search.id }}">{{ search.name }}</a></span></td>
-              <td class="summary-item-field"><span>{{ search.createdAt | datetimeformat }}</span></td>          
-          </tr>
-          {% endfor %}
-      </tbody>
-    </table>
-
-    {% endif %}
+    {{ summary.heading("Search Ended", id="search_ended_table") }}
+    {% call(item) summary.list_table(closed_searches,
+      caption="Summary table",
+      empty_message="You have no saved searches",
+      field_headings=[
+        "Name",
+        "Shortlist created"  ],
+      field_headings_visible=True
+    ) %}
+      {% call summary.row() %}
+        {{ summary.service_link(item.name, '/buyers/direct-award/{}'.format(item.id)) }}
+        {{ summary.text(item.lockedAt | datetimeformat ) }}
+      {% endcall %}
+    {% endcall %}
 
   </div>
   
