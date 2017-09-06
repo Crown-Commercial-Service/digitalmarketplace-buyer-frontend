@@ -279,7 +279,7 @@ def search_services():
 @direct_award.route('/<string:framework_framework>', methods=['GET'])
 def saved_search_overview(framework_framework):
     all_frameworks = data_api_client.find_frameworks().get('frameworks')
-    framework = framework_helpers.get_latest_live_framework(all_frameworks, 'g-cloud')
+    framework = framework_helpers.get_latest_live_framework(all_frameworks, framework_framework)
     content_loader.load_messages(framework['slug'], ['descriptions', 'urls'])
     framework_short_description = content_loader.get_message(framework['slug'], 'descriptions', 'framework_short')
 
