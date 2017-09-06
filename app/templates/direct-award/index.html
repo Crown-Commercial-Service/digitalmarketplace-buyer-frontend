@@ -1,0 +1,71 @@
+{% extends "_base_page.html" %}
+{% import "toolkit/summary-table.html" as summary %}
+{% block page_title %}Saved searches - Digital Marketplace{% endblock %}
+
+{% block breadcrumb %}
+  {%
+    with
+    items = [
+      {
+          "link": url_for('main.index'),
+          "label": "Digital Marketplace"
+      },
+      {
+          "link": url_for('external.buyer_dashboard'),
+          "label": "View your account"
+      },
+      {
+          "label": "Saved searches"
+      }
+    ]
+  %}
+    {% include "toolkit/breadcrumb.html" %}
+  {% endwith %}
+{% endblock %}
+
+{% block main_content %}
+
+<div class="direct-award-saved-searches">
+  <header class="page-heading">
+    <h1>
+      Saved searches
+    </h1>
+    <p class="context">Find, compare and buy {{ framework_short_description }}.</p>
+  </header>
+
+  <div class="grid">
+    
+    {{ summary.heading("Searching", id="searching_table") }}
+    {% call(item) summary.list_table(open_projects,
+      caption="Summary table",
+      empty_message="You have no saved searches",
+      field_headings=[
+        "Name",
+        "Saved"  ],
+      field_headings_visible=True
+    ) %}
+      {% call summary.row() %}
+        {{ summary.service_link(item.name, url_for('direct_award.view_project', framework_framework=framework.framework, project_id=item.id)) }}
+        {{ summary.text(item.createdAt | utcdatetimeformat ) }}
+      {% endcall %}
+    {% endcall %}
+
+    {{ summary.heading("Search Ended", id="search_ended_table") }}
+    {% call(item) summary.list_table(closed_projects,
+      caption="Summary table",
+      empty_message="You have no saved searches",
+      field_headings=[
+        "Name",
+        "Shortlist created"  ],
+      field_headings_visible=True
+    ) %}
+      {% call summary.row() %}
+        {{ summary.service_link(item.name, url_for('direct_award.view_project', framework_framework=framework.framework, project_id=item.id)) }}
+        {{ summary.text(item.lockedAt | utcdatetimeformat ) }}
+      {% endcall %}
+    {% endcall %}
+
+  </div>
+  
+</div>
+{% endblock %}
