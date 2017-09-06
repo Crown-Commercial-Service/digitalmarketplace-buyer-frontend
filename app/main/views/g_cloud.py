@@ -278,6 +278,11 @@ def search_services():
 
 @direct_award.route('/<string:framework_framework>', methods=['GET'])
 def saved_search_overview(framework_framework):
+    all_frameworks = data_api_client.find_frameworks().get('frameworks')
+    framework = framework_helpers.get_latest_live_framework(all_frameworks, 'g-cloud')
+    content_loader.load_messages(framework['slug'], ['descriptions', 'urls'])
+    framework_short_description = content_loader.get_message(framework['slug'], 'descriptions', 'framework_short')
+
     projects = data_api_client.find_direct_award_projects(current_user.id).get('projects', [])
     open_projects = []
     closed_projects = []
@@ -292,7 +297,8 @@ def saved_search_overview(framework_framework):
         'direct-award/index.html',
         open_projects=open_projects,
         closed_projects=closed_projects,
-        framework_framework=framework_framework
+        framework=framework,
+        framework_short_description=framework_short_description
     )
 
 
