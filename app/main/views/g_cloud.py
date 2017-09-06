@@ -3,7 +3,6 @@ from __future__ import unicode_literals
 
 from flask import abort, render_template, request, redirect, current_app, url_for, flash, Markup
 from flask_login import current_user
-from werkzeug.datastructures import MultiDict
 
 from dmutils.formats import dateformat
 from dmutils.filters import capitalize_first
@@ -23,11 +22,12 @@ from ..helpers.search_helpers import (
     get_page_from_request, query_args_for_pagination,
     get_lot_from_request, build_search_query,
     clean_request_args, get_request_url_without_any_filters,
-    ungroup_request_filters
 )
 from ..helpers import framework_helpers
+from ..helpers.search_save_helpers import SearchMeta
+from ..forms.direct_award_forms import CreateProjectForm
+
 from ..helpers.direct_award_helpers import is_direct_award_project_accessible
-from ..helpers.shared_helpers import construct_url_from_base_and_params
 
 from ..exceptions import AuthException
 from app import search_api_client, data_api_client, content_loader
@@ -344,40 +344,54 @@ def save_search(framework_framework):
         framework_framework=framework_framework,
         search_summary=search_summary,
         search_api_url=search_api_url,
+        form=CreateProjectForm(),
     )
 
 
 @direct_award.route('/<string:framework_framework>/projects/create', methods=['POST'])
 def project_create(framework_framework):
-    try:
-        api_project = data_api_client.create_direct_award_project(user_id=current_user.id,
-                                                                  user_email=current_user.email_address,
-                                                                  project_name=request.form.get('project_name',
-                                                                                                'My new project'))
+    form = CreateProjectForm()
+    if form.validate_on_submit():
+        name = form.name.data
+        try:
+            api_project = data_api_client.create_direct_award_project(user_id=current_user.id,
+                                                                      user_email=current_user.email_address,
+                                                                      project_name=name)
 
-    except HTTPError as e:
-        abort(e.status_code)
+        except HTTPError as e:
+            abort(e.status_code)
 
-    project = api_project['project']
+        project = api_project['project']
 
-    try:
-        data_api_client.create_direct_award_project_search(user_id=current_user.id,
-                                                           user_email=current_user.email_address,
-                                                           project_id=project['id'],
-                                                           search_url=request.form['search_api_url'])
-    except HTTPError as e:
-        abort(e.status_code)
+        try:
+            data_api_client.create_direct_award_project_search(user_id=current_user.id,
+                                                               user_email=current_user.email_address,
+                                                               project_id=project['id'],
+                                                               search_url=request.form['search_api_url'])
+        except HTTPError as e:
+            abort(e.status_code)
 
-    flash(PROJECT_CREATED_MESSAGE, 'success')
+        flash(PROJECT_CREATED_MESSAGE, 'success')
 
-    return redirect(url_for('.view_project',
-                            framework_framework=framework_framework,
-                            project_id=project['id']
-                            ))
+        return redirect(url_for('.view_project',
+                                framework_framework=framework_framework,
+                                project_id=project['id']
+                                ))
+    else:
+        frameworks_by_slug = framework_helpers.get_frameworks_by_slug(data_api_client)
+
+        search_meta = SearchMeta(request.form['search_api_url'], frameworks_by_slug)
+
+        return render_template('direct-award/save-search.html',
+                               form=form,
+                               search_summary=search_meta.search_summary,
+                               search_api_url=request.form['search_api_url'],
+                               framework_framework=framework_framework)
 
 
 @direct_award.route('/<string:framework_framework>/projects/<int:project_id>', methods=['GET'])
 def view_project(framework_framework, project_id):
+    frameworks_by_slug = framework_helpers.get_frameworks_by_slug(data_api_client)
     # Get the requested Direct Award Project.
     project = data_api_client.get_direct_award_project(project_id=project_id)['project']
     if not is_direct_award_project_accessible(project, current_user.id):
@@ -390,38 +404,14 @@ def view_project(framework_framework, project_id):
         # A Direct Award project has one 'active' search which is what we will display on this overview page.
         search = list(filter(lambda x: x['active'], searches))[0]
 
-        # Indexes for our search API are named by the framework slug they relate to.
-        framework_slug = search_api_client.get_index_from_search_api_url(search['searchUrl'])
-        framework = data_api_client.get_framework(framework_slug)['frameworks']
+        search_meta = SearchMeta(search['searchUrl'], frameworks_by_slug)
 
-        framework_filters_manifest = content_loader.get_manifest(framework['slug'], 'search_filters')
-        lots_by_slug = framework_helpers.get_lots_by_slug(framework)
-
-        # We need to get buyer-frontend query params from our saved search API URL.
-        search_query_params = search_api_client.get_frontend_params_from_search_api_url(search['searchUrl'])
-        search_query_params = ungroup_request_filters(search_query_params, framework_filters_manifest)
-        search_query_params_multidict = MultiDict(search_query_params)
-
-        current_lot_slug = search_query_params_multidict.get('lot', None)
-        filters = filters_for_lot(current_lot_slug, framework_filters_manifest, all_lots=framework['lots'])
-        clean_request_query_params = clean_request_args(search_query_params_multidict, filters.values(), lots_by_slug)
-
-        # Now build the buyer-frontend URL representing the saved Search API URL
-        buyer_search_page_url = construct_url_from_base_and_params(url_for('main.search_services'), search_query_params)
-
-        # Get the saved Search API URL result set and build the search summary.
-        search_api_response = search_api_client._get(search['searchUrl'])
-        search_summary = SearchSummary(
-            search_api_response['meta']['total'],
-            clean_request_query_params.copy(),
-            filters.values(),
-            lots_by_slug
-        )
-        search_summary_sentence = search_summary.markup()
+        search_summary_sentence = search_meta.search_summary.markup()
+        framework = frameworks_by_slug[search_meta.framework_slug]
+        buyer_search_page_url = search_meta.url
 
     else:
-        all_frameworks = data_api_client.find_frameworks().get('frameworks')
-        framework = framework_helpers.get_latest_live_framework(all_frameworks, 'g-cloud')
+        framework = framework_helpers.get_latest_live_framework(frameworks_by_slug.values(), 'g-cloud')
 
         search = None
         buyer_search_page_url = None

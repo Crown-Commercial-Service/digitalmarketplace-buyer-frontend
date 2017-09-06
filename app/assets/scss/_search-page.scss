@@ -2,12 +2,34 @@
 
 .search-summary {
   padding: 0 0 $gutter-half;
-  margin: 0 0 $gutter-half;
-  border-bottom: 1px solid $border-colour;
 
   em {
     font-style: normal;
     font-weight: bold;
+  }
+}
+
+.button-save-wrapper {
+  border-top: 1px solid $border-colour;
+  border-bottom: 1px solid $border-colour;
+  padding: 20px 5px;
+  min-height: 34px;
+  margin-bottom: 20px;
+
+  .save-summary-text {
+    display: inline-block;
+    font-size: 16px;
+    padding: 5px;
+  }
+
+  .save-button {
+    display: inline-block;
+    right: 0;
+    float: right;
+
+    .button-save {
+      font-size: 16px;
+    }
   }
 }
 

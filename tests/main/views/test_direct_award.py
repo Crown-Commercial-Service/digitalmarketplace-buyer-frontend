@@ -9,20 +9,23 @@ from app.main.views.g_cloud import data_api_client
 from ...helpers import BaseApplicationTest
 
 
-class TestDirectAward(BaseApplicationTest):
+class TestDirectAwardBase(BaseApplicationTest):
     def setup_method(self, method):
-        super(TestDirectAward, self).setup_method(method)
-
+        super(TestDirectAwardBase, self).setup_method(method)
         self._search_api_client_patch = mock.patch('app.main.views.g_cloud.search_api_client', autospec=True)
         self._search_api_client = self._search_api_client_patch.start()
-
-        self._search_api_client_presenters_patch = mock.patch('app.main.presenters.search_presenters.search_api_client',
-                                                              autospec=True)
-        self._search_api_client_presenters = self._search_api_client_presenters_patch.start()
-        self._search_api_client_presenters.aggregate_services.return_value = \
+        self._search_api_client.aggregate_services.return_value = \
             self._get_fixture_data('g9_aggregations_fixture.json')
 
         self._search_api_client.get_index_from_search_api_url.return_value = 'g-cloud-9'
+
+        self._search_api_client_presenters_patch = mock.patch('app.main.presenters.search_presenters.search_api_client',
+                                                              new=self._search_api_client)
+        self._search_api_client_presenters = self._search_api_client_presenters_patch.start()
+
+        self._search_api_client_helpers_patch = \
+            mock.patch('app.main.helpers.search_save_helpers.search_api_client', new=self._search_api_client)
+        self._search_api_client_helpers = self._search_api_client_helpers_patch.start()
 
         self.g9_search_results = self._get_g9_search_results_fixture_data()
 
@@ -39,7 +42,10 @@ class TestDirectAward(BaseApplicationTest):
     def teardown_method(self, method):
         self._search_api_client_patch.stop()
         self._search_api_client_presenters_patch.stop()
+        self._search_api_client_helpers_patch.stop()
 
+
+class TestDirectAward(TestDirectAwardBase):
     def test_renders_save_search_button(self):
         self._search_api_client.search_services.return_value = self.g9_search_results
 
@@ -67,42 +73,16 @@ class TestDirectAward(BaseApplicationTest):
         assert '<span class="search-summary-count">1150</span> results found in <em>Cloud software</em>' in summary
 
 
-class TestDirectAwardProjectOverview(BaseApplicationTest):
+class TestDirectAwardProjectOverview(TestDirectAwardBase):
     def setup_method(self, method):
         super(TestDirectAwardProjectOverview, self).setup_method(method)
 
-        self._search_api_client_patch = mock.patch('app.main.views.g_cloud.search_api_client', autospec=True)
-        self._search_api_client = self._search_api_client_patch.start()
-
         self._search_api_client.get_frontend_params_from_search_api_url.return_value = (('q', 'accelerator'), )
-
-        self._search_api_client_presenters_patch = mock.patch(
-            'app.main.presenters.search_presenters.search_api_client',
-            autospec=True)
-        self._search_api_client_presenters = self._search_api_client_presenters_patch.start()
-        self._search_api_client_presenters.aggregate_services.return_value = \
-            self._get_fixture_data('g9_aggregations_fixture.json')
-
-        self.g9_search_results = self._get_g9_search_results_fixture_data()
-
-        data_api_client.get_direct_award_project = mock.Mock()
-        data_api_client.get_direct_award_project.return_value = self._get_direct_award_project_fixture()
-
-        data_api_client.get_framework = mock.Mock()
-        data_api_client.get_framework.return_value = self._get_framework_fixture_data('g-cloud-9')
-
-        data_api_client.find_direct_award_project_searches = mock.Mock()
-        data_api_client.find_direct_award_project_searches.return_value = \
-            self._get_direct_award_project_searches_fixture()
 
         self.login_as_buyer()
 
         self.content_loader = ContentLoader('tests/fixtures/content')
         self.content_loader.load_messages('g9', ['urls'])
-
-    def teardown_method(self, method):
-        self._search_api_client_patch.stop()
-        self._search_api_client_presenters_patch.stop()
 
     def _task_has_link(self, tasklist, task, link):
         """Task here refers to the tasklist item number rather than the zero-indexed python array. This feels easier to
@@ -138,8 +118,6 @@ class TestDirectAwardProjectOverview(BaseApplicationTest):
                     for task in range(len(tasklist))])
 
     def test_view_project_page_shows_title(self):
-        self.login_as_buyer()
-
         res = self.client.get('/buyers/direct-award/g-cloud/projects/1')
 
         doc = html.fromstring(res.get_data(as_text=True))

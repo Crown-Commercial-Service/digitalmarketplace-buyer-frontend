@@ -1,0 +1,26 @@
+.save-search-page {
+    .search-results-summary{
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        clear: both;
+        border-left: 9px solid $border-colour;
+        padding: 0 0.78947em;
+        margin-bottom: 0.78947em;
+        font-size: 19px;
+        line-height: 1.31579;
+    }
+
+    h2 {
+        font-size: 24px;
+    }
+
+    .question {
+        margin-bottom: 0;
+    }
+
+    .button-save {
+        margin-top: 0px;
+        font-size: 20px;
+    }
+}
