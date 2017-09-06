@@ -11,6 +11,14 @@
   }
 }
 
+.button-save-wrapper {
+  border-bottom: 1px solid #bfc1c3;
+}
+
+#save-search {
+  display: inline;
+}
+
 @import "search/_search-result.scss";
 
 em.search-result-highlighted-text {

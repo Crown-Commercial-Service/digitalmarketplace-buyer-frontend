@@ -43,20 +43,23 @@
 <header class="page-heading">
         <h1>Search results</h1>
 </header>
-  <div id="js-dm-live-search-wrapper" class="grid-row">
+<div id="js-dm-live-search-wrapper" class="grid-row">
+  <form action="{{ url_for('.search_services') }}" method="get" id="js-dm-live-search-form">
     <section class="column-one-third search-page-filters" aria-label="Search filters">
-        <form action="{{ url_for('.search_services') }}" method="get" id="js-dm-live-search-form">
-          {% if 'DIRECT_AWARD_PROJECTS' is active_feature %}
-            <button id="save-search" class="button-save" role="button" type="submit" formaction="{{ url_for('direct_award.save_search', framework_framework=framework_family) }}" style="text-align:center; margin-left:auto; margin-right: auto;">
-              Save your search
-            </button>
-          {% endif %}
           {% include 'search/_services_filters.html' %}
-        </form>
     </section>
     <section class="column-two-thirds" aria-label="Search results">
       {% include 'search/_services_summary.html' %}
+      {% if 'DIRECT_AWARD_PROJECTS' is active_feature %}
+        <div class="button-save-wrapper">
+          <span>Save details of your search and download a shortlist of services</span>
+          <button id="save-search" class="button-save" role="button" type="submit" formaction="{{ url_for('direct_award.save_search', framework_framework=framework_family) }}">
+            Save search
+          </button>
+        </div>
+      {% endif %}
       {% include 'search/_services_results_wrapper.html' %}
     </section>
-  </div>
+  </form>
+</div>
 {% endblock %}
