@@ -439,7 +439,10 @@ def view_project(framework_framework, project_id):
 def end_search(framework_framework, project_id):
     all_frameworks = data_api_client.find_frameworks().get('frameworks')
     framework = framework_helpers.get_latest_live_framework(all_frameworks, framework_framework)
+
     project = data_api_client.get_direct_award_project(project_id).get('project')
+    if not is_direct_award_project_accessible(project, current_user.id):
+        abort(404)
 
     if not framework or not project:
         abort(404)
