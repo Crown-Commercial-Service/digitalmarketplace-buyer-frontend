@@ -293,7 +293,7 @@ def saved_search_overview(framework_framework):
     closed_projects = []
 
     for project in projects:
-        if project['active']:
+        if project['lockedAt'] is None:
             open_projects.append(project)
         else:
             closed_projects.append(project)
@@ -450,6 +450,7 @@ def end_search(framework_framework, project_id):
         framework=framework
     )
 
+
 @direct_award.route('/<string:framework_framework>/projects/<int:project_id>/end-search', methods=['POST'])
 def end_search_action(framework_framework, project_id):
     project = data_api_client.get_direct_award_project(project_id).get('project')
@@ -466,13 +467,8 @@ def end_search_action(framework_framework, project_id):
 
     flash(PROJECT_ENDED_MESSAGE, 'success')
 
-    return redirect(url_for('.view_project',
-        framework_framework=framework_framework,
-        project_id=project['id']
-    ))
-    
+    return redirect(url_for('.view_project', framework_framework=framework_framework, project_id=project['id']))
 
-    
 
 @direct_award.route('/<string:framework_framework>/projects/<int:project_id>/download-shortlist')
 def download_shortlist(framework_framework, project_id):
@@ -503,4 +499,3 @@ def download_shortlist(framework_framework, project_id):
                            project=project,
                            framework_urls=framework_urls
                            )
-    
