@@ -21,7 +21,7 @@
 
 {% block main_content %}
 
-<div class="single-question-page">
+<div class="single-question-page save-search-page">
   <div class="grid-row">
     <div class="column-two-thirds">
       <header class="page-heading-smaller page-heading-without-breadcrumb">
@@ -34,37 +34,35 @@
   <form method="post" action="{{ url_for('direct_award.project_create', framework_framework=framework_framework)}}" id="createProjectForm">
     <div class="grid-row">
       <div class="column-two-thirds">
-        <span class="question-advice">
-            <p>{{ search_summary.markup() }}</p>
-          </span>
-          <span class="question-advice" id="input-title-question-advice">
-            <h2>Create a new saved search</h2>
-            <p>Name your search. A short description of what you want to buy makes a good name.</p>
-          </span>
-          {% if form.name.errors %}
-          <div class="validation-wrapper">
-              {% endif %}
-              <div class="question" id="{{ form.name.name }}">
-                  {{ form.name.label(class="question-heading") }}
-                  <p class="hint">
-                      100 characters maximum
-                  </p>
-                  {% if form.name.errors %}
-                  <p class="validation-message" id="error-name-textbox">
-                      {% for error in form.name.errors %}{{ error }}{% endfor %}
-                  </p>
-                  {% endif %}
-                  {{ form.name(class="text-box") }}
-              </div>
-              {% if form.name.errors %}
-          </div>
-          {% endif %}
-
-          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-          <input type="hidden" name="search_api_url" value="{{ search_api_url }}"/>
-          <input type="submit" class="button-save" name="return_to_overview" value="Save and continue">
+        <div class="search-results-summary">
+          <p>{{ search_summary.markup() }}</p>
         </div>
+        <h2>Create a new saved search</h2>
+        <p>Name your search. A short description of what you want to buy makes a good name.</p>
+        {% if form.name.errors %}
+        <div class="validation-wrapper">
+            {% endif %}
+            <div class="question" id="{{ form.name.name }}">
+                {{ form.name.label(class="question-heading") }}
+                <p class="hint">
+                    100 characters maximum
+                </p>
+                {% if form.name.errors %}
+                <p class="validation-message" id="error-name-textbox">
+                    {% for error in form.name.errors %}{{ error }}{% endfor %}
+                </p>
+                {% endif %}
+                {{ form.name(class="text-box") }}
+            </div>
+            {% if form.name.errors %}
+        </div>
+        {% endif %}
+
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+        <input type="hidden" name="search_api_url" value="{{ search_api_url }}"/>
+        <input type="submit" class="button-save" name="return_to_overview" value="Save and continue">
       </div>
+    </div>
   </form>
 </div>
 {% endblock %}

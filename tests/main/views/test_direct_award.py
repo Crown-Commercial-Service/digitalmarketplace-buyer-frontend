@@ -15,14 +15,19 @@ class TestDirectAward(BaseApplicationTest):
 
         self._search_api_client_patch = mock.patch('app.main.views.g_cloud.search_api_client', autospec=True)
         self._search_api_client = self._search_api_client_patch.start()
-
-        self._search_api_client_presenters_patch = mock.patch('app.main.presenters.search_presenters.search_api_client',
-                                                              autospec=True)
-        self._search_api_client_presenters = self._search_api_client_presenters_patch.start()
-        self._search_api_client_presenters.aggregate_services.return_value = \
+        self._search_api_client.aggregate_services.return_value = \
             self._get_fixture_data('g9_aggregations_fixture.json')
 
         self._search_api_client.get_index_from_search_api_url.return_value = 'g-cloud-9'
+
+        self._search_api_client_presenters_patch = mock.patch('app.main.presenters.search_presenters.search_api_client',
+                                                              new=self._search_api_client)
+        self._search_api_client_presenters = self._search_api_client_presenters_patch.start()
+
+
+        self._search_api_client_helpers_patch = \
+            mock.patch('app.main.helpers.search_save_helpers.search_api_client', new=self._search_api_client)
+        self._search_api_client_helpers = self._search_api_client_helpers_patch.start()
 
         self.g9_search_results = self._get_g9_search_results_fixture_data()
 
@@ -39,6 +44,7 @@ class TestDirectAward(BaseApplicationTest):
     def teardown_method(self, method):
         self._search_api_client_patch.stop()
         self._search_api_client_presenters_patch.stop()
+        self._search_api_client_helpers_patch.stop()
 
     def test_renders_save_search_button(self):
         self._search_api_client.search_services.return_value = self.g9_search_results

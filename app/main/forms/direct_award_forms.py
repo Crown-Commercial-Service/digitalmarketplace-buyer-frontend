@@ -1,6 +1,7 @@
 from flask_wtf import Form
 from wtforms.validators import Length
-from dmutils.forms import StripWhitespaceStringField, StringField
+from dmutils.forms import StripWhitespaceStringField
+
 
 class CreateProjectForm(Form):
     name = StripWhitespaceStringField(

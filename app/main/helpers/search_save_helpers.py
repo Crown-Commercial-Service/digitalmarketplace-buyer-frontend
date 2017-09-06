@@ -9,7 +9,7 @@ from app.main.presenters.search_summary import SearchSummary
 from app.main.helpers.search_helpers import clean_request_args
 from ..helpers.shared_helpers import construct_url_from_base_and_params
 
-from app import search_api_client, data_api_client, content_loader
+from app import search_api_client, content_loader, data_api_client
 
 
 class SearchMeta(object):
@@ -20,7 +20,7 @@ class SearchMeta(object):
         content_manifest = content_loader.get_manifest(framework_slug, 'search_filters')
         lots_by_slug = get_lots_by_slug(self.framework)
 
-         # We need to get buyer-frontend query params from our saved search API URL.
+        # We need to get buyer-frontend query params from our saved search API URL.
         search_query_params = search_api_client.get_frontend_params_from_search_api_url(search_api_url)
         search_query_params_multidict = MultiDict(search_query_params)
 

@@ -52,10 +52,14 @@
       {% include 'search/_services_summary.html' %}
       {% if 'DIRECT_AWARD_PROJECTS' is active_feature %}
         <div class="button-save-wrapper">
-          <span>Save details of your search and download a shortlist of services</span>
-          <button id="save-search" class="button-save" role="button" type="submit" formaction="{{ url_for('direct_award.save_search', framework_framework=framework_family) }}">
-            Save search
-          </button>
+          <div class="save-summary-text">
+            Save details of your search and download a shortlist of services
+          </div>
+          <div class="save-button">
+            <button id="save-search" class="button-save" role="button" type="submit" formaction="{{ url_for('direct_award.save_search', framework_framework=framework_family) }}">
+              Save search
+            </button>
+          </div>
         </div>
       {% endif %}
       {% include 'search/_services_results_wrapper.html' %}

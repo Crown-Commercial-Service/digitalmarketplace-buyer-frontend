@@ -3,7 +3,6 @@ from __future__ import unicode_literals
 
 from flask import abort, render_template, request, redirect, current_app, url_for, flash, Markup
 from flask_login import current_user
-from werkzeug.datastructures import MultiDict
 
 from dmutils.formats import dateformat
 from dmutils.filters import capitalize_first
@@ -23,14 +22,12 @@ from ..helpers.search_helpers import (
     get_page_from_request, query_args_for_pagination,
     get_lot_from_request, build_search_query,
     clean_request_args, get_request_url_without_any_filters,
-    ungroup_request_filters
 )
 from ..helpers import framework_helpers
 from ..helpers.search_save_helpers import SearchMeta
 from ..forms.direct_award_forms import CreateProjectForm
 
 from ..helpers.direct_award_helpers import is_direct_award_project_accessible
-from ..helpers.shared_helpers import construct_url_from_base_and_params
 
 from ..exceptions import AuthException
 from app import search_api_client, data_api_client, content_loader
@@ -342,9 +339,9 @@ def project_create(framework_framework):
         flash(PROJECT_CREATED_MESSAGE, 'success')
 
         return redirect(url_for('.view_project',
-                            framework_framework=framework_framework,
-                            project_id=project['id']
-                            ))
+                                framework_framework=framework_framework,
+                                project_id=project['id']
+                                ))
     else:
         all_frameworks = data_api_client.find_frameworks().get('frameworks')
         search_meta = SearchMeta(request.form['search_api_url'],
