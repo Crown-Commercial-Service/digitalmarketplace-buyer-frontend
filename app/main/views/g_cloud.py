@@ -302,6 +302,12 @@ def saved_search_overview(framework_framework):
     )
 
 
+@direct_award.route('/<string:framework_framework>/projects', methods=['GET'])
+def view_projects(framework_framework):
+    return redirect(url_for('.saved_search_overview',
+            framework_framework=framework_framework
+    ))
+
 @direct_award.route('/<string:framework_framework>/save-search', methods=['GET'])
 def save_search(framework_framework):
     # Get core data
