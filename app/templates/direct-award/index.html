@@ -36,7 +36,7 @@
   <div class="grid">
     
     {{ summary.heading("Searching", id="searching_table") }}
-    {% call(item) summary.list_table(open_searches,
+    {% call(item) summary.list_table(open_projects,
       caption="Summary table",
       empty_message="You have no saved searches",
       field_headings=[
@@ -51,7 +51,7 @@
     {% endcall %}
 
     {{ summary.heading("Search Ended", id="search_ended_table") }}
-    {% call(item) summary.list_table(closed_searches,
+    {% call(item) summary.list_table(closed_projects,
       caption="Summary table",
       empty_message="You have no saved searches",
       field_headings=[
