@@ -56,12 +56,14 @@
   <p>Ending your search will save a shortlist of the services you've found. You can</p>
   <p>download the shortlist to help you compare services.</p>
 
+  
+  <br>
   <form 
     action="{{ url_for('direct_award.end_search_action', framework_framework=framework.framework, project_id=project.id) }}"
     method="POST"  
     >
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" /> 
-    <button class="button-save end-your-search-button">End search and continue</button>    
+    <button class="button-save end-your-searxch-button">End search and continue</button>    
   </form>
 
   {%
