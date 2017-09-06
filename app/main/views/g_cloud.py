@@ -34,6 +34,7 @@ from app import search_api_client, data_api_client, content_loader
 
 
 PROJECT_CREATED_MESSAGE = Markup("""Your new project has been created.""")
+PROJECT_ENDED_MESSAGE = Markup("""Your search has been ended. You can now download your shortlist.""")
 
 
 @main.route('/g-cloud')
@@ -275,19 +276,6 @@ def search_services():
         **template_args
     )
 
-@direct_award.route('/<string:direct_award_id>/end-search', methods=['GET'])
-def end_search(direct_award_id):
-    project = data_api_client.get_direct_award_project(direct_award_id).get('project')
-
-    if not project:
-        abort(404)
-
-    return render_template(
-        'direct-award/end-search.html',
-        project=project
-    )
-
-
 
 @direct_award.route('/<string:framework_framework>', methods=['GET'])
 def saved_search_overview(framework_framework):
@@ -447,10 +435,44 @@ def view_project(framework_framework, project_id):
                            customer_benefits_record_form_email=framework_urls['customer_benefits_record_form_email'])
 
 
-@direct_award.route('/<string:framework_framework>/projects/<int:project_id>/end-search')
+@direct_award.route('/<string:framework_framework>/projects/<int:project_id>/end-search', methods=['GET'])
 def end_search(framework_framework, project_id):
-    raise NotImplementedError()
+    all_frameworks = data_api_client.find_frameworks().get('frameworks')
+    framework = framework_helpers.get_latest_live_framework(all_frameworks, framework_framework)
+    project = data_api_client.get_direct_award_project(project_id).get('project')
 
+    if not framework or not project:
+        abort(404)
+
+    return render_template(
+        'direct-award/end-search.html',
+        project=project,
+        framework=framework
+    )
+
+@direct_award.route('/<string:framework_framework>/projects/<int:project_id>/end-search', methods=['POST'])
+def end_search_action(framework_framework, project_id):
+    project = data_api_client.get_direct_award_project(project_id).get('project')
+    if not project:
+        abort(404)
+
+    try:
+        data_api_client.lock_direct_award_project(
+            user_email=current_user.email_address,
+            project_id=project_id
+        )
+    except HTTPError as e:
+        abort(e.status_code)
+
+    flash(PROJECT_ENDED_MESSAGE, 'success')
+
+    return redirect(url_for('.view_project',
+        framework_framework=framework_framework,
+        project_id=project['id']
+    ))
+    
+
+    
 
 @direct_award.route('/<string:framework_framework>/projects/<int:project_id>/download-shortlist')
 def download_shortlist(framework_framework, project_id):
@@ -481,3 +503,4 @@ def download_shortlist(framework_framework, project_id):
                            project=project,
                            framework_urls=framework_urls
                            )
+    

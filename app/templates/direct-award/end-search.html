@@ -11,15 +11,15 @@
         "label": "Digital Marketplace"
       },
       {
-        "link": "/buyers",
+        "link": url_for('external.buyer_dashboard'),
         "label": "Your Account"
       },
       {
-        "link": "/buyers/direct-award",
+        "link": url_for('direct_award.saved_search_overview', framework_framework=framework.framework),
         "label": "Saved Searches"
       },
       {
-        "link": "/buyers/direct-award/{}".format(project.id),
+        "link": url_for('direct_award.view_project', framework_framework=framework.framework, project_id=project.id),
         "label": project.name
       },
       {
@@ -56,11 +56,18 @@
   <p>Ending your search will save a shortlist of the services you've found. You can</p>
   <p>download the shortlist to help you compare services.</p>
 
-  <button class="button-save end-your-search-button">End search and continue</button>
+  <form 
+    action="{{ url_for('direct_award.end_search_action', framework_framework=framework.framework, project_id=project.id) }}"
+    method="POST"  
+    >
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" /> 
+    <button class="button-save end-your-search-button">End search and continue</button>    
+  </form>
+
   {%
     with
     text = "Return to overview",
-    link = "/buyers/direct-award/{}".format(project.id)
+    link = url_for('direct_award.view_project', framework_framework=framework.framework, project_id=project.id)
   %}
     {% include "toolkit/external-link.html" %}
   {% endwith %}
