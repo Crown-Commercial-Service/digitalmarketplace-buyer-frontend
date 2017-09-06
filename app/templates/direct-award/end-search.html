@@ -34,45 +34,46 @@
 {% block main_content %}
 
 <div class="end-search-page">
-  <header class="page-heading">
-    <h1>
-      End search
-    </h1>
-  </header>
+  <div class="grid-row">
+    <div class="column-two-thirds">
+      <header class="page-heading">
+        <h1>
+          End search
+        </h1>
+      </header>
 
-  <div class="dmspeak">
-    <h2 class="heading-xmedium">Before you end your search</h2>
+      <div class="dmspeak">
+        <h2 class="heading-xmedium">Before you end your search</h2>
+      </div>
+      <p>You should only continue when you have finished searching for cloud services and are ready to start comparing the services you’ve found</p>
+
+      <br>
+      <p>You can’t edit your search after it has ended.</p>
+      <br>
+
+      <div class="dmspeak">
+        <h2 class="heading-xmedium">After your search has ended</h2>
+      </div>
+      <p>Ending your search will save a shortlist of the services you’ve found. You can download the shortlist to help you compare services.</p>
+
+      <br>
+      <form
+        action="{{ url_for('direct_award.end_search', framework_framework=framework.framework, project_id=project.id) }}"
+        method="POST"
+        >
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+        <button class="button-save end-your-search-button">End search and continue</button>
+      </form>
+
+      {%
+        with
+        text = "Return to overview",
+        link = url_for('direct_award.view_project', framework_framework=framework.framework, project_id=project.id)
+      %}
+        {% include "toolkit/external-link.html" %}
+      {% endwith %}
+    </div>
   </div>
-  <p>You should only continue when you have finished searching for cloud services</p>
-  <p>and are ready to start comparing the services you’ve found</p>
-
-  <br>
-  <p>You can’t edit your search after it has ended.</p>
-  <br>
-
-  <div class="dmspeak">
-    <h2 class="heading-xmedium">After your search has ended</h2>
-  </div>
-  <p>Ending your search will save a shortlist of the services you’ve found. You can</p>
-  <p>download the shortlist to help you compare services.</p>
-
-  
-  <br>
-  <form 
-    action="{{ url_for('direct_award.end_search', framework_framework=framework.framework, project_id=project.id) }}"
-    method="POST"  
-    >
-    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" /> 
-    <button class="button-save end-your-search-button">End search and continue</button>
-  </form>
-
-  {%
-    with
-    text = "Return to overview",
-    link = url_for('direct_award.view_project', framework_framework=framework.framework, project_id=project.id)
-  %}
-    {% include "toolkit/external-link.html" %}
-  {% endwith %}
 
 </div>
 {% endblock %}
