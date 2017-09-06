@@ -350,7 +350,7 @@ def project_create(framework_framework):
         return render_template('direct-award/save-search.html',
                                form=form,
                                search_summary=search_meta.search_summary,
-                               search_api_url=search_meta.url,
+                               search_api_url=request.form['search_api_url'],
                                framework_framework=framework_framework)
 
 
