@@ -45,7 +45,7 @@
       field_headings_visible=True
     ) %}
       {% call summary.row() %}
-        {{ summary.service_link(item.name, '/buyers/direct-award/{}'.format(item.id)) }}
+        {{ summary.service_link(item.name, url_for('direct_award.view_project', framework_framework="g-cloud", project_id=item.id)) }}
         {{ summary.text(item.createdAt | datetimeformat ) }}
       {% endcall %}
     {% endcall %}
@@ -60,7 +60,7 @@
       field_headings_visible=True
     ) %}
       {% call summary.row() %}
-        {{ summary.service_link(item.name, '/buyers/direct-award/{}'.format(item.id)) }}
+        {{ summary.service_link(item.name, url_for('direct_award.view_project', framework_framework="g-cloud", project_id=item.id)) }}
         {{ summary.text(item.lockedAt | datetimeformat ) }}
       {% endcall %}
     {% endcall %}
