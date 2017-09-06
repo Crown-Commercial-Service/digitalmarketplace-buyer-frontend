@@ -343,10 +343,9 @@ def project_create(framework_framework):
                                 project_id=project['id']
                                 ))
     else:
-        all_frameworks = data_api_client.find_frameworks().get('frameworks')
-        search_meta = SearchMeta(request.form['search_api_url'],
-                                 all_frameworks,
-                                 framework_framework)
+        frameworks_by_slug = framework_helpers.get_frameworks_by_slug(data_api_client)
+
+        search_meta = SearchMeta(request.form['search_api_url'], frameworks_by_slug)
 
         return render_template('direct-award/save-search.html',
                                form=form,
@@ -356,9 +355,7 @@ def project_create(framework_framework):
 
 @direct_award.route('/<string:framework_framework>/projects/<int:project_id>', methods=['GET'])
 def view_project(framework_framework, project_id):
-
-    all_frameworks = data_api_client.find_frameworks().get('frameworks')
-
+    frameworks_by_slug = framework_helpers.get_frameworks_by_slug(data_api_client)
     # Get the requested Direct Award Project.
     project = data_api_client.get_direct_award_project(project_id=project_id)['project']
     if not is_direct_award_project_accessible(project, current_user.id):
@@ -371,16 +368,14 @@ def view_project(framework_framework, project_id):
         # A Direct Award project has one 'active' search which is what we will display on this overview page.
         search = list(filter(lambda x: x['active'], searches))[0]
 
-        search_meta = SearchMeta(search['searchUrl'])
+        search_meta = SearchMeta(search['searchUrl'], frameworks_by_slug)
 
         search_summary_sentence = search_meta.search_summary.markup()
-
-        framework = search_meta.framework
-
+        framework = frameworks_by_slug[search_meta.framework_slug]
         buyer_search_page_url = search_meta.url
 
     else:
-        framework = framework_helpers.get_latest_live_framework(all_frameworks, 'g-cloud')
+        framework = framework_helpers.get_latest_live_framework(frameworks_by_slug.values(), 'g-cloud')
 
         search = None
         buyer_search_page_url = None

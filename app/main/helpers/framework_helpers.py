@@ -1,6 +1,10 @@
 from ... import content_loader
 
 
+def get_frameworks_by_slug(data_api_client):
+    return {framework['slug']: framework for framework in data_api_client.find_frameworks().get('frameworks')}
+
+
 def get_latest_live_framework(all_frameworks, framework_type):
     try:
         latest = max(
