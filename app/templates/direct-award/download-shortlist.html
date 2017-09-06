@@ -1,0 +1,72 @@
+{% extends "_base_page.html" %}
+
+{% block page_title %}Download your shortlist - Digital Marketplace{% endblock %}
+
+{% block breadcrumb %}
+  {%
+    with
+    items = [
+      {
+          "link": url_for('main.index'),
+          "label": "Digital Marketplace"
+      },
+      {
+        "link": url_for('external.buyer_dashboard'),
+        "label": "Your Account"
+      },
+      {
+        "link": url_for('direct_award.saved_search_overview', framework_framework=framework.framework),
+        "label": "Saved searches"
+      },
+      {
+        "link": url_for('direct_award.view_project', framework_framework=framework.framework, project_id=project.id),
+        "label": project.name
+      },
+      {
+        "label": "End search"
+      }
+    ]
+  %}
+    {% include "toolkit/breadcrumb.html" %}
+  {% endwith %}
+{% endblock %}
+
+{% block main_content %}
+<div class="grid-row">
+  <div class="column-two-thirds">
+    <header class="page-heading">
+      <h1>
+        Download your shortlist
+      </h1>
+    </header>
+  </div>
+  <div class="column-two-thirds">
+    <div class="marketplace-paragraph">
+      <p>Download your shortlist to help you track and record your decision-making.</p>
+    </div>
+    <div class="explanation-list">
+      <p class="lead">The shortlist file includes:</p>
+      <ul class='list-bullet'>
+        <li>service names, descriptions and pricing information</li>
+        <li>links to detailed service description pages on the Digital Marketplace</li>
+        <li>supplier names and contact details</li>
+      </ul>
+    </div>
+    <div class="marketplace-paragraph">
+      <p>
+        <br>
+        <a href="{{ url_for('direct_award.download_shortlist', framework_framework=framework.framework, project_id=project.id, filetype='odf') }}">Download shortlist (ODF)</a>
+        <br>
+        <a href="{{ url_for('direct_award.download_shortlist', framework_framework=framework.framework, project_id=project.id, filetype='csv') }}">Download shortlist (CSV)</a>
+      </p>
+      <br>
+    </div>
+    <div class="marketplace-paragraph">
+    <h2>After you download your shortlist</h2>
+      <p>Compare services to find the cheapest or best value for money.<br>Read the <a href="{{ framework_urls.buyers_guide_compare_services_url }}">{{ framework.framework|title }} Buyers' Guide</a> for details
+    of how to compare services.</p>
+      <p><a href="{{ url_for('direct_award.view_project', framework_framework=framework.framework, project_id=project.id) }}">Return to overview</a></p>
+    </div>
+  </div>
+</div>
+{% endblock %}

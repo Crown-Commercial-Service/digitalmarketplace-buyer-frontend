@@ -451,4 +451,30 @@ def end_search(framework_framework, project_id):
 
 @direct_award.route('/<string:framework_framework>/projects/<int:project_id>/download-shortlist')
 def download_shortlist(framework_framework, project_id):
-    raise NotImplementedError()
+    # Get the requested Direct Award Project.
+    project = data_api_client.get_direct_award_project(project_id=project_id)['project']
+    if not is_direct_award_project_accessible(project, current_user.id):
+        abort(404)
+
+    searches = data_api_client.find_direct_award_project_searches(user_id=current_user.id,
+                                                                  project_id=project['id'])['searches']
+
+    if searches:
+        # A Direct Award project has one 'active' search which is what we will display on this overview page.
+        search = list(filter(lambda x: x['active'], searches))[0]
+
+        # Indexes for our search API are named by the framework slug they relate to.
+        framework_slug = search_api_client.get_index_from_search_api_url(search['searchUrl'])
+        framework = data_api_client.get_framework(framework_slug)['frameworks']
+
+        content_loader.load_messages(framework['slug'], ['descriptions', 'urls'])
+        framework_urls = content_loader.get_message(framework['slug'], 'urls')
+
+    else:
+        abort(404)
+
+    return render_template('direct-award/download-shortlist.html',
+                           framework=framework,
+                           project=project,
+                           framework_urls=framework_urls
+                           )
