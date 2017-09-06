@@ -10,6 +10,7 @@ from app.main.helpers.search_helpers import clean_request_args
 from ..helpers.shared_helpers import construct_url_from_base_and_params
 
 from app import search_api_client, content_loader, data_api_client
+from .search_helpers import ungroup_request_filters
 
 
 class SearchMeta(object):
@@ -22,6 +23,7 @@ class SearchMeta(object):
 
         # We need to get buyer-frontend query params from our saved search API URL.
         search_query_params = search_api_client.get_frontend_params_from_search_api_url(search_api_url)
+        search_query_params = ungroup_request_filters(search_query_params, content_manifest)
         search_query_params_multidict = MultiDict(search_query_params)
 
         current_lot_slug = search_query_params_multidict.get('lot', None)

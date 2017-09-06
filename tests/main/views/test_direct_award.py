@@ -24,7 +24,6 @@ class TestDirectAward(BaseApplicationTest):
                                                               new=self._search_api_client)
         self._search_api_client_presenters = self._search_api_client_presenters_patch.start()
 
-
         self._search_api_client_helpers_patch = \
             mock.patch('app.main.helpers.search_save_helpers.search_api_client', new=self._search_api_client)
         self._search_api_client_helpers = self._search_api_client_helpers_patch.start()
