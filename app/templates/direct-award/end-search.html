@@ -44,26 +44,26 @@
     <h2 class="heading-xmedium">Before you end your search</h2>
   </div>
   <p>You should only continue when you have finished searching for cloud services</p>
-  <p>and are ready to start comparing the services you've found</p>
+  <p>and are ready to start comparing the services you’ve found</p>
 
   <br>
-  <p>You can not edit your search after it has ended.</p>
+  <p>You can’t edit your search after it has ended.</p>
   <br>
 
   <div class="dmspeak">
     <h2 class="heading-xmedium">After your search has ended</h2>
   </div>
-  <p>Ending your search will save a shortlist of the services you've found. You can</p>
+  <p>Ending your search will save a shortlist of the services you’ve found. You can</p>
   <p>download the shortlist to help you compare services.</p>
 
   
   <br>
   <form 
-    action="{{ url_for('direct_award.end_search_action', framework_framework=framework.framework, project_id=project.id) }}"
+    action="{{ url_for('direct_award.end_search', framework_framework=framework.framework, project_id=project.id) }}"
     method="POST"  
     >
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" /> 
-    <button class="button-save end-your-searxch-button">End search and continue</button>    
+    <button class="button-save end-your-search-button">End search and continue</button>
   </form>
 
   {%
