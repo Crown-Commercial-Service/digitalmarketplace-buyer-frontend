@@ -46,7 +46,7 @@
     ) %}
       {% call summary.row() %}
         {{ summary.service_link(item.name, url_for('direct_award.view_project', framework_framework=framework.framework, project_id=item.id)) }}
-        {{ summary.text(item.createdAt | datetimeformat ) }}
+        {{ summary.text(item.createdAt | utcdatetimeformat ) }}
       {% endcall %}
     {% endcall %}
 
@@ -61,7 +61,7 @@
     ) %}
       {% call summary.row() %}
         {{ summary.service_link(item.name, url_for('direct_award.view_project', framework_framework=framework.framework, project_id=item.id)) }}
-        {{ summary.text(item.lockedAt | datetimeformat ) }}
+        {{ summary.text(item.lockedAt | utcdatetimeformat ) }}
       {% endcall %}
     {% endcall %}
 
