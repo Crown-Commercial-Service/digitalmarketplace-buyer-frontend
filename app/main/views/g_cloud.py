@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from flask import abort, render_template, request, redirect, current_app, url_for, flash, Markup
+from flask import abort, render_template, request, redirect, current_app, url_for, flash, Markup, make_response
 from flask_login import current_user
 
 from dmutils.formats import dateformat
@@ -422,6 +422,12 @@ def view_project(framework_framework, project_id):
     framework_short_description = content_loader.get_message(framework['slug'], 'descriptions', 'framework_short')
     framework_urls = content_loader.get_message(framework['slug'], 'urls')
 
+    # TODO: Remove this after labs on Thursday 7th September 2017.
+    if request.cookies.get('shortlistDownloaded') == 'true':
+        import datetime
+        project['downloadedAt'] = datetime.datetime.utcnow()
+    # TODO: End.
+
     return render_template('direct-award/view-project.html',
                            framework=framework,
                            project=project,
@@ -467,7 +473,7 @@ def end_search(framework_framework, project_id):
     )
 
 
-@direct_award.route('/<string:framework_framework>/projects/<int:project_id>/download-shortlist')
+@direct_award.route('/<string:framework_framework>/projects/<int:project_id>/download-shortlist', methods=['GET'])
 def download_shortlist(framework_framework, project_id):
     # Get the requested Direct Award Project.
     project = data_api_client.get_direct_award_project(project_id=project_id)['project']
@@ -491,8 +497,20 @@ def download_shortlist(framework_framework, project_id):
     else:
         abort(404)
 
-    return render_template('direct-award/download-shortlist.html',
-                           framework=framework,
-                           project=project,
-                           framework_urls=framework_urls
-                           )
+    # TODO: Remove this after labs on Thursday 7th September 2017.
+    if request.args.get('filetype') in ['csv', 'odf']:
+        flash("Your shortlist has been downloaded.", 'success')
+
+    rendered_template = render_template('direct-award/download-shortlist.html',
+                                        framework=framework,
+                                        project=project,
+                                        framework_urls=framework_urls
+                                        )
+
+    response = make_response(rendered_template)
+
+    if request.args.get('filetype') in ['csv', 'odf']:
+        response.set_cookie('shortlistDownloaded', 'true')
+    # TODO: End.
+
+    return response
