@@ -86,7 +86,7 @@ def logout():
 
 @main.route('/reset-password', methods=["GET"])
 def request_password_reset():
-    return render_template_with_csrf("auth/request-password-reset.html", form=auth_forms.EmailAddressForm())
+    return redirect('/2/reset-password')
 
 
 @main.route('/reset-password', methods=["POST"])
@@ -152,17 +152,7 @@ def send_reset_password_email():
 
 @main.route('/reset-password/<token>', methods=["GET"])
 def reset_password(token):
-    decoded = decode_password_reset_token(token.encode(), data_api_client)
-    if decoded.get('error', None):
-        flash(decoded['error'], 'error')
-        return redirect(url_for('.request_password_reset'))
-
-    email_address = decoded['email']
-
-    return render_template_with_csrf("auth/reset-password.html",
-                                     email_address=email_address,
-                                     form=auth_forms.ChangePasswordForm(),
-                                     token=token)
+    return redirect('/2/reset-password')
 
 
 @main.route('/reset-password/<token>', methods=["POST"])

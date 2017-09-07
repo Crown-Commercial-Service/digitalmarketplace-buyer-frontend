@@ -228,6 +228,7 @@ class TestLogin(BaseApplicationTest):
             assert has_validation_errors(data, 'email_address'), address
 
 
+@pytest.mark.skip
 class TestResetPassword(BaseApplicationTest):
 
     _user = None
@@ -509,12 +510,14 @@ class TestLoginFormsNotAutofillable(BaseApplicationTest):
             "Sign in to the Marketplace"
         )
 
+    @pytest.mark.skip
     def test_request_password_reset_form_and_inputs_not_autofillable(self):
         self._forms_and_inputs_not_autofillable(
             self.expand_path('/reset-password'),
             "Reset password"
         )
 
+    @pytest.mark.skip
     @mock.patch('app.main.views.login.data_api_client')
     def test_reset_password_form_and_inputs_not_autofillable(
             self, data_api_client
