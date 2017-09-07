@@ -1,0 +1,79 @@
+{% extends "_base_page.html" %}
+
+{% block page_title %}Save your search - Digital Marketplace{% endblock %}
+
+{% block breadcrumb %}
+  {%
+    with
+    items = [
+      {
+        "link": url_for('main.index'),
+        "label": "Digital Marketplace"
+      },
+      {
+        "link": url_for('external.buyer_dashboard'),
+        "label": "Your Account"
+      },
+      {
+        "link": url_for('direct_award.saved_search_overview', framework_framework=framework.framework),
+        "label": "Saved Searches"
+      },
+      {
+        "link": url_for('direct_award.view_project', framework_framework=framework.framework, project_id=project.id),
+        "label": project.name
+      },
+      {
+        "label": "End search"
+      }
+    ]
+  %}
+    {% include "toolkit/breadcrumb.html" %}
+  {% endwith %}
+{% endblock %}
+
+{% block main_content %}
+
+<div class="end-search-page">
+  <div class="grid-row">
+    <div class="column-two-thirds">
+      <header class="page-heading">
+        <h1>
+          End search
+        </h1>
+      </header>
+
+      <div class="dmspeak">
+        <h2 class="heading-xmedium">Before you end your search</h2>
+      </div>
+      <p>You should only continue when you have finished searching for cloud services and are ready to start comparing the services you’ve found.</p>
+
+      <br>
+      <p>You can’t edit your search after it has ended.</p>
+      <br>
+
+      <div class="dmspeak">
+        <h2 class="heading-xmedium">After your search has ended</h2>
+      </div>
+      <p>Ending your search will save a shortlist of the services you’ve found. You can download the shortlist to help you compare services.</p>
+
+      <br>
+      <form
+        action="{{ url_for('direct_award.end_search', framework_framework=framework.framework, project_id=project.id) }}"
+        method="POST"
+        >
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+        <button class="button-save end-your-search-button">End search and continue</button>
+      </form>
+
+      {%
+        with
+        text = "Return to overview",
+        link = url_for('direct_award.view_project', framework_framework=framework.framework, project_id=project.id)
+      %}
+        {% include "toolkit/external-link.html" %}
+      {% endwith %}
+    </div>
+  </div>
+
+</div>
+{% endblock %}

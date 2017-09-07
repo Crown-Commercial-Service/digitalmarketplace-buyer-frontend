@@ -10,6 +10,11 @@ def api_error_handler(e):
     return _render_error_page(e.status_code)
 
 
+@main.app_errorhandler(400)
+def page_bad_request(e):
+    return _render_error_page(400)
+
+
 @main.app_errorhandler(404)
 def page_not_found(e):
     return _render_error_page(404)
@@ -32,6 +37,7 @@ def service_unavailable(e):
 
 def _render_error_page(status_code, error_message=None):
     templates = {
+        400: "errors/400.html",
         404: "errors/404.html",
         410: "errors/404.html",
         500: "errors/500.html",
