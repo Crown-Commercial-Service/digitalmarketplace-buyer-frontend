@@ -293,7 +293,7 @@ def saved_search_overview(framework_framework):
     closed_projects = []
 
     for project in projects:
-        if project['active']:
+        if project['lockedAt'] is None:
             open_projects.append(project)
         else:
             closed_projects.append(project)
