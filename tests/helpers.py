@@ -162,6 +162,12 @@ class BaseApplicationTest(object):
         return project
 
     @staticmethod
+    def _get_direct_award_lock_project_fixture():
+        fixture = BaseApplicationTest._get_fixture_data('direct_award_project_fixture.json')
+        fixture['project']['lockedAt'] = "2017-09-08T14:07:14.716154Z"
+        return fixture
+
+    @staticmethod
     def _get_direct_award_project_searches_fixture():
         return BaseApplicationTest._get_fixture_data('direct_award_project_searches_fixture.json')
 
