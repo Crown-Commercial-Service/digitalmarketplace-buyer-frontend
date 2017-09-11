@@ -377,7 +377,7 @@ def project_create(framework_framework):
         return redirect(url_for('.view_project',
                                 framework_framework=framework_framework,
                                 project_id=project['id']
-                                ))
+                                ), code=303)
     else:
         frameworks_by_slug = framework_helpers.get_frameworks_by_slug(data_api_client)
 
