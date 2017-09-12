@@ -387,7 +387,7 @@ def project_create(framework_framework):
                                form=form,
                                search_summary=search_meta.search_summary,
                                search_api_url=request.form['search_api_url'],
-                               framework_framework=framework_framework)
+                               framework_framework=framework_framework), 400
 
 
 @direct_award.route('/<string:framework_framework>/projects/<int:project_id>', methods=['GET'])
