@@ -1003,10 +1003,10 @@ class TestCancelledBriefPage(BaseBriefPageTest):
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(self.brief_id))
         document = html.fromstring(res.get_data(as_text=True))
         cancelled_banner = document.xpath('//div[@class="banner-temporary-message-without-action"]')[0]
-        message_part_1 = 'The buyer cancelled this opportunity, for example because they no longer have the budget.'
-        message_part_2 = 'They may publish an updated version later.'
-        assert message_part_1 in cancelled_banner.xpath('p/text()')[0]
-        assert message_part_2 in cancelled_banner.xpath('p/text()')[1]
+        expected_message = ("The buyer cancelled this opportunity, for example because they no longer have the budget. "
+                            "They may publish an updated version later."
+                            )
+        assert expected_message in cancelled_banner.xpath('p/text()')[0]
 
 
 class TestUnsuccessfulBriefPage(BaseBriefPageTest):
@@ -1025,10 +1025,10 @@ class TestUnsuccessfulBriefPage(BaseBriefPageTest):
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(self.brief_id))
         document = html.fromstring(res.get_data(as_text=True))
         cancelled_banner = document.xpath('//div[@class="banner-temporary-message-without-action"]')[0]
-        message_part_1 = "The buyer didn't award this contract because no suppliers met their requirements"
-        message_part_2 = "They may publish an updated version later."
-        assert message_part_1 in cancelled_banner.xpath('p/text()')[0]
-        assert message_part_2 in cancelled_banner.xpath('p/text()')[1]
+        expected_message = ("The buyer didn't award this contract because no suppliers met their requirements. "
+                            "They may publish an updated version later."
+                            )
+        assert expected_message in cancelled_banner.xpath('p/text()')[0]
 
 
 class TestWithdrawnSpecificBriefPage(BaseBriefPageTest):
