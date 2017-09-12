@@ -1,7 +1,4 @@
-// GOVUK Front-end toolkit styles
-@import "_grid_layout.scss";
-@import "_typography.scss";
-@import "_url-helpers.scss";
+@import "govuk-elements";
 
 // Path to assets for use with file-url()
 $path: "/static/images/";
