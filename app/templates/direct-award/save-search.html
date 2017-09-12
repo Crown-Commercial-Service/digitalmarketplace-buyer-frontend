@@ -35,7 +35,9 @@
     <div class="grid-row">
       <div class="column-two-thirds">
         <div class="search-results-summary">
-          <p>{{ search_summary.markup() }}</p>
+          {% with content = search_summary_sentence %}
+            {% include "toolkit/search-summary.html" %}
+          {% endwith %}
         </div>
         <h2>Create a new saved search</h2>
         <p>Name your search. A short description of what you want to buy makes a good name.</p>
