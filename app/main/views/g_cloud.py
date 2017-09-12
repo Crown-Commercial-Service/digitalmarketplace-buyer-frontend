@@ -418,8 +418,7 @@ def view_project(framework_framework, project_id):
         buyer_search_page_url = None
         search_summary_sentence = None
 
-    content_loader.load_messages(framework['slug'], ['descriptions', 'urls'])
-    framework_short_description = content_loader.get_message(framework['slug'], 'descriptions', 'framework_short')
+    content_loader.load_messages(framework['slug'], ['urls'])
     framework_urls = content_loader.get_message(framework['slug'], 'urls')
 
     return render_template('direct-award/view-project.html',
@@ -428,7 +427,6 @@ def view_project(framework_framework, project_id):
                            search=search,
                            buyer_search_page_url=buyer_search_page_url,
                            search_summary_sentence=search_summary_sentence,
-                           framework_short_description=framework_short_description,
                            framework_urls=framework_urls,
                            call_off_contract_url=framework_urls['call_off_contract_url'],
                            customer_benefits_record_form_url=framework_urls['customer_benefits_record_form_url'],
