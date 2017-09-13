@@ -71,6 +71,27 @@ def terms_of_use():
         update_time=terms.datetime.date())
 
 
+def _is_supplier_selected_for_brief(brief):
+    def domain(email):
+        return email.split('@')[-1]
+
+    current_user_domain = domain(current_user.email_address) \
+        if domain(current_user.email_address) not in current_app.config.get('GENERIC_EMAIL_DOMAINS') \
+        else None
+
+    if brief.get('sellerSelector', '') == 'allSellers':
+        return True
+    if brief.get('sellerSelector', '') == 'someSellers':
+        seller_domain_list = [domain(x).lower() for x in brief.get('sellerEmailList', [])]
+        return current_user.email_address in brief.get('sellerEmailList', []) \
+            or current_user_domain.lower() in seller_domain_list if current_user_domain else False
+    if brief.get('sellerSelector', '') == 'oneSeller':
+        return current_user.email_address.lower() == brief.get('sellerEmail', '').lower() \
+            or current_user_domain.lower() == domain(brief.get('sellerEmail', '').lower()) \
+            if current_user_domain else False
+    return False
+
+
 @main.route('/<framework_slug>/opportunities/<brief_id>')
 def get_brief_by_id(framework_slug, brief_id):
     briefs = data_api_client.get_brief(brief_id)
@@ -82,8 +103,10 @@ def get_brief_by_id(framework_slug, brief_id):
     if current_user.is_authenticated and current_user.role == 'supplier':
         brief_responses = data_api_client.find_brief_responses(
             brief_id, current_user.supplier_code)["briefResponses"]
+        selected_for_brief = _is_supplier_selected_for_brief(brief)
     else:
         brief_responses = None
+        selected_for_brief = False
 
     brief['clarificationQuestions'] = [
         dict(question, number=index+1)
@@ -178,6 +201,7 @@ def get_brief_by_id(framework_slug, brief_id):
         content=brief_content,
         domain_id=domain_id,
         is_restricted_brief=is_restricted_brief,
+        selected_for_brief=selected_for_brief,
         profile_application_status=profile_application_status,
         profile_url=profile_url,
         show_pdf_link=brief['status'] in ['live', 'closed'],

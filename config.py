@@ -100,6 +100,10 @@ class Config(object):
     S3_ENDPOINT_URL = 's3-ap-southeast-2.amazonaws.com'
     AWS_DEFAULT_REGION = None
 
+    GENERIC_EMAIL_DOMAINS = ['gmail.com', 'bigpond.com', 'outlook.com', 'outlook.com.au', 'hotmail.com', 'yahoo.com',
+                             'optusnet.com.au', 'msn.com', 'internode.on.net', 'iinet.net.au', 'ozemail.com.au',
+                             'live.com.au', 'digital.gov.au', 'icloud.com']
+
 
 class Test(Config):
     DEBUG = True

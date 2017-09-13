@@ -1,235 +1,245 @@
-{% if not current_user.is_authenticated %}
-<h2>Interested in this opportunity?</h2>
-<div class="brief-button-group">
+
+
+{% if is_restricted_brief %}
+    <div class="uikit-page-alerts uikit-page-alerts--warning">
+    <h3 id="is_restricted_brief">Only invited sellers can apply for an 'Open to one' or 'Open to selected' opportunity.</h3>
+        <p>Learn more about <a href="https://marketplace1.zendesk.com/hc/en-gb/articles/115012291387">Open to selected</a> opportunities.</p>
     <span>
     {% with
       url = "/login?next=/{}/opportunities/{}".format(brief.frameworkSlug, brief.id),
       role = "button",
       label = "Sign in to continue" %}
-      {% include "toolkit/link-button.html" %}
+        {% include "toolkit/link-button.html" %}
+    {% endwith %}
+  </span></div>
+{% elif not current_user.is_authenticated %}
+    <h2>Interested in this opportunity?</h2>
+    <div class="brief-button-group">
+    <span>
+    {% with
+      url = "/login?next=/{}/opportunities/{}".format(brief.frameworkSlug, brief.id),
+      role = "button",
+      label = "Sign in to continue" %}
+        {% include "toolkit/link-button.html" %}
     {% endwith %}
   </span>
-    <span>
+        <span>
     {% with
   url = "/2/signup",
   role = "button",
   label = "Create an account" %}
-      {% include "toolkit/link-button.html" %}
+        {% include "toolkit/link-button.html" %}
     {% endwith %}
   </span>
-</div>
+    </div>
 {% endif %}
 
-{% if is_restricted_brief %}
-<p id="is_restricted_brief">Only invited sellers can apply for 'Open to one' or 'Open to selected' opportunity.</p>
-{% endif %}
+{% if brief.status == 'live' and (not is_restricted_brief or selected_for_brief) %}
 
-{% if brief.status == 'live' %}
-
-{% if brief_responses %}
-{% with
-url = "{}/sellers/opportunities/{}/responses/result".format(config['URL_PREFIX'],
-brief.id),
-role = "button",
-label = "View your application" %}
-{% include "toolkit/link-button.html" %}
-{% endwith %}
-{% endif %}
-
-<p>
-
-    {% if current_user.is_authenticated and current_user.role == 'supplier' and
-    profile_application_status is none and profile_url is none %}
-<h2>You need to update your profile to apply.</h2>
-<div class="brief-button-group">
-        <span>
-          {% with
-            url = "/sellers/application",
-            role = "button",
-            label = "Update your profile" %}
-            {% include "toolkit/link-button.html" %}
-            {% endwith %}
-          </span>
-</div>
-{% elif profile_application_status == 'saved' %}
-<h2>Complete your application to apply for this opportunity.</h2>
-<div class="brief-button-group">
-      <span>
+    {% if brief_responses %}
         {% with
-          url = "/sellers/application",
-          role = "button",
-          label = "Joining the Marketplace" %}
-          {% include "toolkit/link-button.html" %}
-          {% endwith %}
-        </span>
-</div>
-
-
-{% elif profile_application_status == 'submitted' and supplier_framework == 'digital-marketplace' %}
-<h2>Interested in this opportunity?</h2>
-<div class="brief-button-group">
-        <span>
-          {% with
-            url = "/sellers/opportunities/{}/assessment/status".format(brief.id),
-            role = "button",
-            label = "Request an assessment" %}
-            {% include "toolkit/link-button.html" %}
-            {% endwith %}
-          </span>
-</div>
-
-{% elif profile_application_status == 'submitted' and supplier_framework == 'digital-service-professionals' %}
-<h2>You need to update your profile to apply.</h2>
-<div class="brief-button-group">
-          <span>
-            {% with
-              url = "/sellers/application",
-              role = "button",
-              label = "Update your profile" %}
-              {% include "toolkit/link-button.html" %}
-              {% endwith %}
-            </span>
-</div>
-
-{% elif (profile_application_status == 'approved' or not profile_application_status) and current_user.role == 'supplier' %}
-{% if brief.lot == 'digital-professionals' %}
-{% if brief.areaOfExpertise not in assessed_domains and
-brief.areaOfExpertise not in unassessed_domains and
-brief.areaOfExpertise not in supplier_assessments.unassessed and
-brief.areaOfExpertise not in supplier_assessments.assessed %}
-<h2>Have you got expertise in {{ brief.areaOfExpertise }}?</h2>
-<p>
-    Before you can apply for this opportunity you need to provide a case
-    study and reference that meets our <a href="/assessment-criteria">
-    assessment criteria.
-</a>
-</p>
-<p>
-    If we can confirm your expertise before the opportunity closes we will invite you to apply.
-</p>
-<p>
-    If successful you can apply for {{ brief.areaOfExpertise }} opportunities in
-    future without the need for further assessment.
-</p>
-<div class="brief-button-group">
-          <span>
-            {% with
-              url = profile_url,
-              role = "button",
-              label = "Update your profile" %}
-              {% include "toolkit/link-button.html" %}
-            {% endwith %}
-          </span>
-</div>
-{% elif brief.areaOfExpertise not in assessed_domains
-and brief.areaOfExpertise not in supplier_assessments.unassessed
-and brief.areaOfExpertise not in supplier_assessments.assessed %}
-<h2>Interested in this opportunity?</h2>
-<div class="brief-button-group">
-        <span>
-        {% with
-          url = "/sellers/opportunities/{}/assessment/{}".format(brief.id, domain_id),
-          role = "button",
-          label = "Request an assessment" %}
-          {% include "toolkit/link-button.html" %}
-        {% endwith %}
-      </span>
-</div>
-{% elif brief.areaOfExpertise not in assessed_domains
-and brief.areaOfExpertise in supplier_assessments.unassessed
-and brief.areaOfExpertise not in supplier_assessments.assessed %}
-<h2>Interested in this opportunity?</h2>
-<div class="brief-button-group">
-        <span>
-        {% with
-          url = "/sellers/opportunities/{}/assessment/status".format(brief.id),
-          role = "button",
-          label = "Request an assessment" %}
-          {% include "toolkit/link-button.html" %}
-        {% endwith %}
-      </span>
-</div>
-{% elif   brief.areaOfExpertise in supplier_assessments.assessed or brief.areaOfExpertise in assessed_domains %}
-<h2>Interested in this opportunity?</h2>
-<div class="brief-button-group" id="scen_24">
-        <span>
-      {% with
-        url = application_url,
+        url = "{}/sellers/opportunities/{}/responses/result".format(config['URL_PREFIX'],
+        brief.id),
         role = "button",
-        label = "Apply Now" %}
-        {% include "toolkit/link-button.html" %}
-      {% endwith %}
-    </span>
-</div>
-{% endif %}
-
-{% elif brief.lot == 'digital-outcome' %}
-{% if unassessed_domains|length == 0 and assessed_domains|length == 0 %}
-<h2>What services do you offer?</h2>
-<p>
-    Before you can apply for this opportunity you need to select an area of expertise and
-    provide a case study and reference that meets our <a href="/assessment-criteria"> assessment criteria</a>.
-</p>
-<p>
-    If we can confirm your expertise before the opportunity closes we will invite you to apply.
-</p>
-<p>
-    If successful you can apply for opportunities in future without the need for further assessment.
-</p>
-<div class="brief-button-group">
-        <span>
-          {% with
-            url = profile_url,
-            role = "button",
-            label = "Update your profile" %}
+        label = "View your application" %}
             {% include "toolkit/link-button.html" %}
-          {% endwith %}
-        </span>
-</div>
-
-{% elif assessed_domains|length == 0 and
-supplier_assessments.unassessed|length > 0 %}
-<h2>Interested in this opportunity?</h2>
-<div class="brief-button-group">
-          <span>
-          {% with
-            url = "/sellers/opportunities/{}/assessment/status".format(brief.id),
-            role = "button",
-            label = "Request an assessment" %}
-            {% include "toolkit/link-button.html" %}
-          {% endwith %}
-        </span>
-</div>
-{% elif assessed_domains|length == 0 and
-supplier_assessments.unassessed|length == 0 %}
-<h2>Interested in this opportunity?</h2>
-<div class="brief-button-group">
-          <span>
-        {% with
-          url = "/sellers/opportunities/{}/assessment/choose".format(brief.id),
-          role = "button",
-          label = "Request an assessment" %}
-          {% include "toolkit/link-button.html" %}
         {% endwith %}
-        </span>
-</div>
+    {% endif %}
 
-{% elif supplier_assessments.assessed|length > 0 or assessed_domains|length > 0 %}
-<h2>Interested in this opportunity?</h2>
-<div class="brief-button-group">
-          <span>
-        {% with
-          url = application_url,
-          role = "button",
-          label = "Apply Now" %}
-          {% include "toolkit/link-button.html" %}
-        {% endwith %}
-        </span>
-</div>
-{% endif %}
+    <p>
 
-{% endif %}
-{% endif %}
+        {% if current_user.is_authenticated and current_user.role == 'supplier' and profile_application_status is none and profile_url is none %}
+            <h2>You need to update your profile to apply.</h2>
+            <div class="brief-button-group">
+                <span>
+                  {% with
+                    url = "/sellers/application",
+                    role = "button",
+                    label = "Update your profile" %}
+                      {% include "toolkit/link-button.html" %}
+                  {% endwith %}
+                  </span>
+            </div>
+        {% elif profile_application_status == 'saved' %}
+            <h2>Complete your application to apply for this opportunity.</h2>
+            <div class="brief-button-group">
+              <span>
+                {% with
+                  url = "/sellers/application",
+                  role = "button",
+                  label = "Joining the Marketplace" %}
+                    {% include "toolkit/link-button.html" %}
+                {% endwith %}
+                </span>
+            </div>
 
-</p>
+
+        {% elif profile_application_status == 'submitted' and supplier_framework == 'digital-marketplace' %}
+            <h2>Interested in this opportunity?</h2>
+            <div class="brief-button-group">
+                <span>
+                  {% with
+                    url = "/sellers/opportunities/{}/assessment/status".format(brief.id),
+                    role = "button",
+                    label = "Request an assessment" %}
+                      {% include "toolkit/link-button.html" %}
+                  {% endwith %}
+                  </span>
+            </div>
+
+        {% elif profile_application_status == 'submitted' and supplier_framework == 'digital-service-professionals' %}
+            <h2>You need to update your profile to apply.</h2>
+            <div class="brief-button-group">
+                  <span>
+                    {% with
+                      url = "/sellers/application",
+                      role = "button",
+                      label = "Update your profile" %}
+                        {% include "toolkit/link-button.html" %}
+                    {% endwith %}
+                    </span>
+            </div>
+
+        {% elif (profile_application_status == 'approved' or not profile_application_status) and current_user.role == 'supplier' %}
+            {% if brief.lot == 'digital-professionals' %}
+                {% if brief.areaOfExpertise not in assessed_domains and
+            brief.areaOfExpertise not in unassessed_domains and
+            brief.areaOfExpertise not in supplier_assessments.unassessed and
+            brief.areaOfExpertise not in supplier_assessments.assessed %}
+                    <h2>Have you got expertise in {{ brief.areaOfExpertise }}?</h2>
+                    <p>
+                        Before you can apply for this opportunity you need to provide a case
+                        study and reference that meets our <a href="/assessment-criteria">
+                        assessment criteria.
+                    </a>
+                    </p>
+                    <p>
+                        If we can confirm your expertise before the opportunity closes we will invite you to apply.
+                    </p>
+                    <p>
+                        If successful you can apply for {{ brief.areaOfExpertise }} opportunities in
+                        future without the need for further assessment.
+                    </p>
+                    <div class="brief-button-group">
+                      <span>
+                        {% with
+                          url = profile_url,
+                          role = "button",
+                          label = "Update your profile" %}
+                            {% include "toolkit/link-button.html" %}
+                        {% endwith %}
+                      </span>
+                    </div>
+                {% elif brief.areaOfExpertise not in assessed_domains
+            and brief.areaOfExpertise not in supplier_assessments.unassessed
+            and brief.areaOfExpertise not in supplier_assessments.assessed %}
+                    <h2>Interested in this opportunity?</h2>
+                    <div class="brief-button-group">
+                    <span>
+                    {% with
+                      url = "/sellers/opportunities/{}/assessment/{}".format(brief.id, domain_id),
+                      role = "button",
+                      label = "Request an assessment" %}
+                        {% include "toolkit/link-button.html" %}
+                    {% endwith %}
+                  </span>
+                    </div>
+                {% elif brief.areaOfExpertise not in assessed_domains
+            and brief.areaOfExpertise in supplier_assessments.unassessed
+            and brief.areaOfExpertise not in supplier_assessments.assessed %}
+                    <h2>Interested in this opportunity?</h2>
+                    <div class="brief-button-group">
+                    <span>
+                    {% with
+                      url = "/sellers/opportunities/{}/assessment/status".format(brief.id),
+                      role = "button",
+                      label = "Request an assessment" %}
+                        {% include "toolkit/link-button.html" %}
+                    {% endwith %}
+                  </span>
+                    </div>
+                {% elif brief.areaOfExpertise in supplier_assessments.assessed or brief.areaOfExpertise in assessed_domains %}
+                    <h2>Interested in this opportunity?</h2>
+                    <div class="brief-button-group" id="scen_24">
+                    <span>
+                  {% with
+                    url = application_url,
+                    role = "button",
+                    label = "Apply Now" %}
+                      {% include "toolkit/link-button.html" %}
+                  {% endwith %}
+                </span>
+                    </div>
+                {% endif %}
+
+            {% elif brief.lot == 'digital-outcome' %}
+                {% if unassessed_domains|length == 0 and assessed_domains|length == 0 %}
+                    <h2>What services do you offer?</h2>
+                    <p>
+                        Before you can apply for this opportunity you need to select an area of expertise and
+                        provide a case study and reference that meets our <a href="/assessment-criteria"> assessment
+                        criteria</a>.
+                    </p>
+                    <p>
+                        If we can confirm your expertise before the opportunity closes we will invite you to apply.
+                    </p>
+                    <p>
+                        If successful you can apply for opportunities in future without the need for further assessment.
+                    </p>
+                    <div class="brief-button-group">
+                    <span>
+                      {% with
+                        url = profile_url,
+                        role = "button",
+                        label = "Update your profile" %}
+                          {% include "toolkit/link-button.html" %}
+                      {% endwith %}
+                    </span>
+                    </div>
+
+                {% elif assessed_domains|length == 0 and
+            supplier_assessments.unassessed|length > 0 %}
+                    <h2>Interested in this opportunity?</h2>
+                    <div class="brief-button-group">
+                      <span>
+                      {% with
+                        url = "/sellers/opportunities/{}/assessment/status".format(brief.id),
+                        role = "button",
+                        label = "Request an assessment" %}
+                          {% include "toolkit/link-button.html" %}
+                      {% endwith %}
+                    </span>
+                    </div>
+                {% elif assessed_domains|length == 0 and
+            supplier_assessments.unassessed|length == 0 %}
+                    <h2>Interested in this opportunity?</h2>
+                    <div class="brief-button-group">
+                      <span>
+                    {% with
+                      url = "/sellers/opportunities/{}/assessment/choose".format(brief.id),
+                      role = "button",
+                      label = "Request an assessment" %}
+                        {% include "toolkit/link-button.html" %}
+                    {% endwith %}
+                    </span>
+                    </div>
+
+                {% elif supplier_assessments.assessed|length > 0 or assessed_domains|length > 0 %}
+                    <h2>Interested in this opportunity?</h2>
+                    <div class="brief-button-group">
+                      <span>
+                    {% with
+                      url = application_url,
+                      role = "button",
+                      label = "Apply Now" %}
+                        {% include "toolkit/link-button.html" %}
+                    {% endwith %}
+                    </span>
+                    </div>
+                {% endif %}
+
+            {% endif %}
+        {% endif %}
+
+    </p>
 {% endif %}
