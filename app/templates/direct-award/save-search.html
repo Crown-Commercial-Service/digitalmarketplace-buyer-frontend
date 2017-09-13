@@ -33,11 +33,13 @@
   </div>
   <form method="post" action="{{ url_for('direct_award.project_create', framework_framework=framework_framework)}}" id="createProjectForm">
     <div class="grid-row">
-      <div class="column-two-thirds">
-        <div class="search-results-summary">
-          <p>{{ search_summary.markup() }}</p>
+      <div class="column-two-thirds dmspeak">
+        <div class="panel panel-border-wide">
+          {% with content = search_summary_sentence %}
+            {% include "toolkit/search-summary.html" %}
+          {% endwith %}
         </div>
-        <h2>Create a new saved search</h2>
+        <h2 class="heading-xmedium">Create a new saved search</h2>
         <p>Name your search. A short description of what you want to buy makes a good name.</p>
         {% if form.name.errors %}
         <div class="validation-wrapper">

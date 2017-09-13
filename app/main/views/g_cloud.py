@@ -33,7 +33,7 @@ from ..exceptions import AuthException
 from app import search_api_client, data_api_client, content_loader
 
 
-PROJECT_CREATED_MESSAGE = Markup("""Your new project has been created.""")
+PROJECT_CREATED_MESSAGE = Markup("""New search saved.""")
 PROJECT_ENDED_MESSAGE = Markup("""Your search has been ended. You can now download your shortlist.""")
 
 
@@ -343,7 +343,7 @@ def save_search(framework_framework):
     return render_template(
         'direct-award/save-search.html',
         framework_framework=framework_framework,
-        search_summary=search_summary,
+        search_summary_sentence=search_summary.markup(),
         search_api_url=search_api_url,
         form=CreateProjectForm(),
     )
@@ -385,7 +385,7 @@ def project_create(framework_framework):
 
         return render_template('direct-award/save-search.html',
                                form=form,
-                               search_summary=search_meta.search_summary,
+                               search_summary_sentence=search_meta.search_summary.markup(),
                                search_api_url=request.form['search_api_url'],
                                framework_framework=framework_framework)
 
