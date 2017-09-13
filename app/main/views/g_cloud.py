@@ -33,7 +33,7 @@ from ..exceptions import AuthException
 from app import search_api_client, data_api_client, content_loader
 
 
-PROJECT_CREATED_MESSAGE = Markup("""Your new project has been created.""")
+PROJECT_CREATED_MESSAGE = Markup("""New search saved.""")
 PROJECT_ENDED_MESSAGE = Markup("""Your search has been ended. You can now download your shortlist.""")
 
 
