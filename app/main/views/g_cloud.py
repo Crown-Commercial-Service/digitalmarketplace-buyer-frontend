@@ -33,7 +33,7 @@ from ..exceptions import AuthException
 from app import search_api_client, data_api_client, content_loader
 
 
-PROJECT_CREATED_MESSAGE = Markup("""New search saved.""")
+PROJECT_SAVED_MESSAGE = Markup("""Search saved.""")
 PROJECT_ENDED_MESSAGE = Markup("""Your search has been ended. You can now download your shortlist.""")
 
 
@@ -372,7 +372,7 @@ def project_create(framework_framework):
         except HTTPError as e:
             abort(e.status_code)
 
-        flash(PROJECT_CREATED_MESSAGE, 'success')
+        flash(PROJECT_SAVED_MESSAGE, 'success')
 
         return redirect(url_for('.view_project',
                                 framework_framework=framework_framework,
