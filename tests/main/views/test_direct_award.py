@@ -2,6 +2,7 @@ from lxml import html
 from html import escape as html_escape
 import mock
 import pytest
+from urllib.parse import quote_plus, urlparse
 
 from dmcontent.content_loader import ContentLoader
 from app import search_api_client
@@ -46,6 +47,14 @@ class TestDirectAwardBase(BaseApplicationTest):
 
 
 class TestDirectAward(TestDirectAwardBase):
+    @classmethod
+    def setup_class(cls):
+        cls.SAVE_SEARCH_URL = '/buyers/direct-award/g-cloud/save-search'
+        cls.SIMPLE_SEARCH_PARAMS = 'lot=cloud-software'
+        cls.PROJECT_CREATE_URL = '/buyers/direct-award/g-cloud/projects/create'
+        cls.SIMPLE_SAVE_SEARCH_URL = '{}?{}'.format(cls.SAVE_SEARCH_URL, cls.SIMPLE_SEARCH_PARAMS)
+        cls.SEARCH_API_URL = 'g-cloud-9/services/search'  # TODO dep on search API should go away from buyer f-e tests
+
     def test_renders_save_search_button(self):
         self._search_api_client.search_services.return_value = self.g9_search_results
 
@@ -54,23 +63,58 @@ class TestDirectAward(TestDirectAwardBase):
 
         doc = html.fromstring(res.get_data(as_text=True))
         assert len(doc.xpath('//button[@id="save-search"'
-                             ' and @formaction="/buyers/direct-award/g-cloud/save-search"]')) == 1
+                             ' and @formaction="{}"]'.format(self.SAVE_SEARCH_URL))) == 1
 
     def test_save_search_redirects_to_login(self):
         res = self.client.get('/buyers/direct-award/g-cloud/save-search?lot=cloud-software')
         assert res.status_code == 302
-        assert res.location == 'http://localhost/user/login?next=' \
-                               '%2Fbuyers%2Fdirect-award%2Fg-cloud%2Fsave-search%3Flot%3Dcloud-software'
+        assert res.location == 'http://localhost/user/login?next={}'.format(quote_plus(self.SIMPLE_SAVE_SEARCH_URL))
 
     def test_save_search_renders_summary_on_page(self):
         self.login_as_buyer()
         self._search_api_client.search_services.return_value = self.g9_search_results
 
-        res = self.client.get('/buyers/direct-award/g-cloud/save-search?lot=cloud-software')
+        res = self.client.get(self.SIMPLE_SAVE_SEARCH_URL)
         assert res.status_code == 200
 
         summary = self.find_search_summary(res.get_data(as_text=True))[0]
         assert '<span class="search-summary-count">1150</span> results found in <em>Cloud software</em>' in summary
+
+    def _create_project(self, name):
+        self.login_as_buyer()
+        self._search_api_client.search_services.return_value = self.g9_search_results
+
+        data_api_client.create_direct_award_project = mock.Mock()
+        data_api_client.create_direct_award_project.return_value = self._get_direct_award_project_fixture()
+
+        data_api_client.create_direct_award_project_search = mock.Mock()
+        data_api_client.create_direct_award_project_search.return_value = \
+            self._get_direct_award_project_searches_fixture()['searches'][0]
+
+        return self.client.post(self.PROJECT_CREATE_URL,
+                                data={
+                                    'name': name,
+                                    'search_api_url': '{}?{}'.format(self.SEARCH_API_URL, self.SIMPLE_SEARCH_PARAMS)
+                                })
+
+    def _asserts_for_create_project_failure(self, res):
+        assert res.status_code == 400
+        html = res.get_data(as_text=True)
+        assert self.SEARCH_API_URL in html
+        assert "Names must be between 1 and 100 characters" in html
+
+    def test_save_search_submit_success(self):
+        res = self._create_project('some name " foo bar \u2016')
+        assert res.status_code == 303
+        assert urlparse(res.location).path == '/buyers/direct-award/g-cloud/projects/1'
+
+    def test_save_search_submit_no_name(self):
+        res = self._create_project('')
+        self._asserts_for_create_project_failure(res)
+
+    def test_save_search_submit_name_too_long(self):
+        res = self._create_project('x' * 101)
+        self._asserts_for_create_project_failure(res)
 
 
 class TestDirectAwardProjectOverview(TestDirectAwardBase):

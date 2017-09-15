@@ -377,7 +377,7 @@ def project_create(framework_framework):
         return redirect(url_for('.view_project',
                                 framework_framework=framework_framework,
                                 project_id=project['id']
-                                ))
+                                ), code=303)
     else:
         frameworks_by_slug = framework_helpers.get_frameworks_by_slug(data_api_client)
 
@@ -387,7 +387,7 @@ def project_create(framework_framework):
                                form=form,
                                search_summary_sentence=search_meta.search_summary.markup(),
                                search_api_url=request.form['search_api_url'],
-                               framework_framework=framework_framework)
+                               framework_framework=framework_framework), 400
 
 
 @direct_award.route('/<string:framework_framework>/projects/<int:project_id>', methods=['GET'])
