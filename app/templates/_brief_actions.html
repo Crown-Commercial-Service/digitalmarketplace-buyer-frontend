@@ -1,17 +1,21 @@
 
-
-{% if is_restricted_brief %}
+{% if is_restricted_brief and not selected_for_brief %}
     <div class="uikit-page-alerts uikit-page-alerts--warning">
-    <h3 id="is_restricted_brief">Only invited sellers can apply for an 'Open to one' or 'Open to selected' opportunity.</h3>
-        <p>Learn more about <a href="https://marketplace1.zendesk.com/hc/en-gb/articles/115012291387">Open to selected</a> opportunities.</p>
-    <span>
-    {% with
-      url = "/login?next=/{}/opportunities/{}".format(brief.frameworkSlug, brief.id),
-      role = "button",
-      label = "Sign in to continue" %}
-        {% include "toolkit/link-button.html" %}
-    {% endwith %}
-  </span></div>
+        <h3 id="is_restricted_brief">Only invited sellers can apply for an 'Open to one' or 'Open to selected'
+            opportunity.</h3>
+        <p>Learn more about <a href="https://marketplace1.zendesk.com/hc/en-gb/articles/115012291387">Open to
+            selected</a> opportunities.</p>
+        {% if not current_user.is_authenticated %}
+            <span>
+                {% with
+                  url = "/login?next=/{}/opportunities/{}".format(brief.frameworkSlug, brief.id),
+                  role = "button",
+                  label = "Sign in to continue" %}
+                    {% include "toolkit/link-button.html" %}
+                {% endwith %}
+            </span>
+        {% endif %}
+    </div>
 {% elif not current_user.is_authenticated %}
     <h2>Interested in this opportunity?</h2>
     <div class="brief-button-group">
