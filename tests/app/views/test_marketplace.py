@@ -858,7 +858,8 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
         document = html.fromstring(res.get_data(as_text=True))
         assert_equal(document.xpath(
             '//h3[@id="is_restricted_brief"]')[0].text,
-            "Only invited sellers can apply for an 'Open to one' or 'Open to selected' opportunity."
+             "Only invited sellers can apply for an 'Open to one' or 'Open to selected'\n"
+             "                opportunity."
             )
 
     def test_some_sellers_restricted_brief(self):
@@ -872,7 +873,8 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
         document = html.fromstring(res.get_data(as_text=True))
         assert_equal(document.xpath(
             '//h3[@id="is_restricted_brief"]')[0].text,
-            "Only invited sellers can apply for an 'Open to one' or 'Open to selected' opportunity."
+             "Only invited sellers can apply for an 'Open to one' or 'Open to selected'\n"
+             "                opportunity."
             )
 
 
