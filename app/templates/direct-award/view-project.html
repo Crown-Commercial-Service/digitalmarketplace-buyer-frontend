@@ -70,7 +70,7 @@
           {
             "title": "End your search",
             "content": [
-              {"type": "text", "text": "End your search to create a spreadsheet of the services you’ve found.<br>You should only do this when you have finished searching for services.<br>You can not edit your search once it has ended."},
+              {"type": "text", "text": "End your search to create a spreadsheet of the services you’ve found.<br>You should only do this when you have finished searching for services.<br>You cannot edit your search once it has ended."},
               {"type": "box", "style": "inactive", "label": "Can't start yet"} if not search.createdAt else {"type": "action", "label": "End search", "href": url_for('direct_award.end_search', framework_framework=framework.framework, project_id=project.id)} if not search.searchedAt else {"type": "box", "style": "complete", "label": ''.join(["Search ended on ", search.searchedAt|utcdatetimeformat()])}
             ]
           },
