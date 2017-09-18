@@ -12,7 +12,7 @@
       },
       {
           "link": url_for('external.buyer_dashboard'),
-          "label": "Your Account"
+          "label": "Your account"
       },
       {
           "label": "Saved searches"
@@ -30,7 +30,6 @@
     <h1>
       Saved searches
     </h1>
-    <p class="context">Find, compare and buy {{ framework_short_description }}</p>
   </header>
 
   <div class="grid">
@@ -56,7 +55,7 @@
       empty_message="You have no saved searches",
       field_headings=[
         "Name",
-        "Shortlist created"  ],
+        "Ended"  ],
       field_headings_visible=True
     ) %}
       {% call summary.row() %}
