@@ -480,7 +480,7 @@ def end_search(framework_framework, project_id):
     )
 
 
-@direct_award.route('/<string:framework_framework>/projects/<int:project_id>/download-shortlist')
+@direct_award.route('/<string:framework_framework>/projects/<int:project_id>/download-search-results')
 def download_shortlist(framework_framework, project_id):
     # Get the requested Direct Award Project.
     project = data_api_client.get_direct_award_project(project_id=project_id)['project']
@@ -504,7 +504,7 @@ def download_shortlist(framework_framework, project_id):
     else:
         abort(404)
 
-    return render_template('direct-award/download-shortlist.html',
+    return render_template('direct-award/download-search-results.html',
                            framework=framework,
                            project=project,
                            framework_urls=framework_urls
