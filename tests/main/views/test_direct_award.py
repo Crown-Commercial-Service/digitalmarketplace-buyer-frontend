@@ -168,7 +168,7 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
                                                                          ' at 7:00am GMT')
 
     def _task_search_downloaded(self, tasklist, task):
-        return self._task_has_box(tasklist, task, style='complete', text='Shortlist downloaded')
+        return self._task_has_box(tasklist, task, style='complete', text='Search results downloaded')
 
     def _cannot_start_from_task(self, tasklist, cannot_start_from):
         return all([self._task_cannot_start_yet(tasklist, task + 1) is ((task + 1) >= cannot_start_from)
