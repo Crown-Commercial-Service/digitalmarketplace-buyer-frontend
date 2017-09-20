@@ -146,6 +146,10 @@ class BaseApplicationTest(object):
             'suppliers_by_prefix_fixture_page_with_next_and_prev.json')
 
     @staticmethod
+    def _get_direct_award_project_list_fixture(**kwargs):
+        return BaseApplicationTest._get_fixture_data('direct_award_project_list_fixture.json')
+
+    @staticmethod
     def _get_direct_award_project_fixture(**kwargs):
         project = BaseApplicationTest._get_fixture_data('direct_award_project_fixture.json')
 

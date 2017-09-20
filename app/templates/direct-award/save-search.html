@@ -33,36 +33,68 @@
   </div>
   <form method="post" action="{{ url_for('direct_award.project_create', framework_framework=framework_framework)}}" id="createProjectForm">
     <div class="grid-row">
-      <div class="column-two-thirds dmspeak">
+      <div class="column-two-thirds">
         <div class="panel panel-border-wide">
           {% with content = search_summary_sentence %}
             {% include "toolkit/search-summary.html" %}
           {% endwith %}
         </div>
-        <h2 class="heading-xmedium">Create a new saved search</h2>
-        <p>Name your search. A short description of what you want to buy makes a good name.</p>
-        {% if form.name.errors %}
-        <div class="validation-wrapper">
-            {% endif %}
-            <div class="question" id="{{ form.name.name }}">
+
+        <div class="dmspeak">
+          <h2 class="heading-xmedium">Choose where to save your search</h2>
+        </div>
+        
+        <fieldset>
+          <div class="multiple-choice" data-target="new-search">
+            <input type="radio" name="save_search_selection" value="new_search" 
+              {% if request.form.save_search_selection == 'new_search' or not projects %}checked="checked"{% endif %} 
+              required="required">
+            <label for="save_search_selection">Create a new search</label>
+          </div>
+          <div class="panel panel-border-narrow js-hidden" id="new-search">
+            {% if form.name.errors %}
+            <div class="validation-wrapper">
+              {% endif %}
+              <div class="question" id="{{ form.name.name }}">
                 {{ form.name.label(class="question-heading") }}
+                <p>Name your search. A short description of what you want to buy makes a good name.</p>
                 <p class="hint">
-                    100 characters maximum
+                  100 characters maximum
                 </p>
                 {% if form.name.errors %}
                 <p class="validation-message" id="error-name-textbox">
-                    {% for error in form.name.errors %}{{ error }}{% endfor %}
+                  {% for error in form.name.errors %}{{ error }}{% endfor %}
                 </p>
                 {% endif %}
                 {{ form.name(class="text-box") }}
+              </div>
+              {% if form.name.errors %}
             </div>
-            {% if form.name.errors %}
-        </div>
-        {% endif %}
+              {% endif %}
+          </div>
+
+          {% if projects %}
+
+          <p class="form-block">or</p>
+
+          {% for project in projects %}
+
+          <div class="multiple-choice">
+            <input type="radio" name="save_search_selection" value="{{ project.id }}" {% if request.form.save_search_selection == project.id %}checked="checked"{% endif %}>
+            <label for="save_search_selection">{{ project.name or "No Project Name" }}</label>
+          </div>
+
+          {% endfor %}
+
+          {% endif %}
+        </fieldset>
+
+        <br>
 
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
         <input type="hidden" name="search_api_url" value="{{ search_api_url }}"/>
         <input type="submit" class="button-save" name="return_to_overview" value="Save and continue">
+
       </div>
     </div>
   </form>

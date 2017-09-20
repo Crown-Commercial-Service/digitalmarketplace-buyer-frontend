@@ -27,7 +27,7 @@ from ..helpers import framework_helpers
 from ..helpers.search_save_helpers import SearchMeta
 from ..forms.direct_award_forms import CreateProjectForm
 
-from ..helpers.direct_award_helpers import is_direct_award_project_accessible
+from ..helpers.direct_award_helpers import is_direct_award_project_accessible, get_direct_award_projects
 
 from ..exceptions import AuthException
 from app import search_api_client, data_api_client, content_loader
@@ -288,20 +288,12 @@ def saved_search_overview(framework_framework):
     content_loader.load_messages(framework['slug'], ['descriptions', 'urls'])
     framework_short_description = content_loader.get_message(framework['slug'], 'descriptions', 'framework_short')
 
-    projects = data_api_client.find_direct_award_projects(current_user.id).get('projects', [])
-    open_projects = []
-    closed_projects = []
-
-    for project in projects:
-        if project['lockedAt'] is None:
-            open_projects.append(project)
-        else:
-            closed_projects.append(project)
+    projects = get_direct_award_projects(current_user.id)
 
     return render_template(
         'direct-award/index.html',
-        open_projects=open_projects,
-        closed_projects=closed_projects,
+        open_projects=projects['open_projects'],
+        closed_projects=projects['closed_projects'],
         framework=framework,
         framework_short_description=framework_short_description
     )
@@ -340,54 +332,77 @@ def save_search(framework_framework):
         **build_search_query(request.args, filters.values(), content_manifest, lots_by_slug)
     )
 
+    projects = get_direct_award_projects(current_user.id, 'open_projects', 'name')
+
     return render_template(
         'direct-award/save-search.html',
         framework_framework=framework_framework,
         search_summary_sentence=search_summary.markup(),
         search_api_url=search_api_url,
         form=CreateProjectForm(),
+        projects=projects,
     )
 
 
 @direct_award.route('/<string:framework_framework>/projects/create', methods=['POST'])
 def project_create(framework_framework):
     form = CreateProjectForm()
-    if form.validate_on_submit():
-        name = form.name.data
-        try:
-            api_project = data_api_client.create_direct_award_project(user_id=current_user.id,
-                                                                      user_email=current_user.email_address,
-                                                                      project_name=name)
+    name = form.name.data
 
-        except HTTPError as e:
-            abort(e.status_code)
+    try:
+        save_search_selection = request.form['save_search_selection']
+    except:
+        save_search_selection = None
 
-        project = api_project['project']
+    name_is_invalid = save_search_selection == "new_search" and not name
 
-        try:
-            data_api_client.create_direct_award_project_search(user_id=current_user.id,
-                                                               user_email=current_user.email_address,
-                                                               project_id=project['id'],
-                                                               search_url=request.form['search_api_url'])
-        except HTTPError as e:
-            abort(e.status_code)
-
-        flash(PROJECT_SAVED_MESSAGE, 'success')
-
-        return redirect(url_for('.view_project',
-                                framework_framework=framework_framework,
-                                project_id=project['id']
-                                ), code=303)
-    else:
+    if not form.validate_on_submit() or not save_search_selection or name_is_invalid:
+        projects = get_direct_award_projects(current_user.id, 'open_projects', 'name')
+        projects.sort(key=lambda x: x['name'])
         frameworks_by_slug = framework_helpers.get_frameworks_by_slug(data_api_client)
-
         search_meta = SearchMeta(request.form['search_api_url'], frameworks_by_slug)
+
+        if not name:
+            form.name.errors = ["Names must be between 1 and 100 characters"]
 
         return render_template('direct-award/save-search.html',
                                form=form,
                                search_summary_sentence=search_meta.search_summary.markup(),
                                search_api_url=request.form['search_api_url'],
+                               request=request,
+                               projects=projects,
                                framework_framework=framework_framework), 400
+
+    elif save_search_selection == "new_search" and name:
+        try:
+            api_project = data_api_client.create_direct_award_project(user_id=current_user.id,
+                                                                      user_email=current_user.email_address,
+                                                                      project_name=name)
+        except HTTPError as e:
+            abort(e.status_code)
+
+        project = api_project['project']
+
+    elif save_search_selection:
+        project = data_api_client.get_direct_award_project(project_id=save_search_selection)['project']
+        if not project or not is_direct_award_project_accessible(project, current_user.id):
+            abort(404)
+
+    try:
+        data_api_client.create_direct_award_project_search(user_id=current_user.id,
+                                                           user_email=current_user.email_address,
+                                                           project_id=project['id'],
+                                                           search_url=request.form['search_api_url'])
+
+    except HTTPError as e:
+        abort(e.status_code)
+
+    flash(PROJECT_SAVED_MESSAGE, 'success')
+
+    return redirect(url_for('.view_project',
+                            framework_framework=framework_framework,
+                            project_id=project['id']
+                            ), code=303)
 
 
 @direct_award.route('/<string:framework_framework>/projects/<int:project_id>', methods=['GET'])
