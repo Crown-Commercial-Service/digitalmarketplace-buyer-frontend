@@ -194,9 +194,9 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         body = res.get_data(as_text=True)
         doc = html.fromstring(body)
 
-        item_headings = ['Write a list of your requirements', 'Save your search', 'Refine your search', 'End your search',
-                         'Download your search results', 'Award a contract', 'Publish the contract',
-                         'Complete the Customer Benefits Record form']
+        item_headings = ['Write a list of your requirements', 'Save your search', 'Refine your search',
+                         'End your search', 'Download your search results', 'Award a contract',
+                         'Publish the contract', 'Complete the Customer Benefits Record form']
 
         tasklist = doc.xpath('//li[@class="instruction-list-item divider"]')
 
