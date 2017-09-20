@@ -7,7 +7,12 @@ from flask import url_for
 
 
 def get_lot_from_request(request, all_lots):
-    lot = request.args.get('lot', None)
+    # TODO prefer get_lot_from_args - get rid of this
+    return get_lot_from_args(request.args, all_lots)
+
+
+def get_lot_from_args(args, all_lots):
+    lot = args.get('lot', None)
     return lot if (not lot or lot in all_lots) else None
 
 

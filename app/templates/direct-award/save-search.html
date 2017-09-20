@@ -31,7 +31,7 @@
       </header>
     </div>
   </div>
-  <form method="post" action="{{ url_for('direct_award.project_create', framework_framework=framework_framework)}}" id="createProjectForm">
+  <form method="post" action="" id="createProjectForm">
     <div class="grid-row">
       <div class="column-two-thirds">
         <div class="panel panel-border-wide">
@@ -92,7 +92,7 @@
         <br>
 
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-        <input type="hidden" name="search_api_url" value="{{ search_api_url }}"/>
+        <input type="hidden" name="search_query" value="{{ search_query }}"/>
         <input type="submit" class="button-save" name="return_to_overview" value="Save and continue">
 
       </div>

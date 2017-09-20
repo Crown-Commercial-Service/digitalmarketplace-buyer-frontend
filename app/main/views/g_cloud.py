@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from werkzeug.urls import url_encode, url_decode
 from flask import abort, render_template, request, redirect, current_app, url_for, flash, Markup
 from flask_login import current_user
 
@@ -20,6 +21,7 @@ from ..presenters.service_presenters import Service
 from ..helpers.search_helpers import (
     get_keywords_from_request, pagination,
     get_page_from_request, query_args_for_pagination,
+    get_lot_from_args,
     get_lot_from_request, build_search_query,
     clean_request_args, get_request_url_without_any_filters,
 )
@@ -233,6 +235,7 @@ def search_services():
                 filter_instance['label'] = capitalize_first(filter_instance['label'])
 
     clear_filters_url = get_request_url_without_any_filters(request, filters)
+    search_query = query_args_for_pagination(clean_request_query_params)
 
     template_args = dict(
         current_lot=current_lot,
@@ -243,7 +246,8 @@ def search_services():
         lots=lots,
         pagination=pagination_config,
         search_keywords=get_keywords_from_request(request),
-        search_query=query_args_for_pagination(clean_request_query_params),
+        search_query=search_query,
+        search_query_url=url_encode(search_query),  # for save-search form
         services=search_results_obj.search_results,
         summary=search_summary.markup(),
         title='Search results',
@@ -266,7 +270,11 @@ def search_services():
             "summary": {
                 "selector": "#js-dm-live-search-summary",
                 "html": render_template("search/_services_summary.html", **template_args)
-            }
+            },
+            "save-form": {
+                "selector": "#js-dm-live-save-search-form",
+                "html": render_template("search/_services_save_search.html", **template_args)
+            },
         }
 
         return jsonify(live_results_dict)
@@ -304,48 +312,21 @@ def view_projects(framework_framework):
     return redirect(url_for('.saved_search_overview', framework_framework=framework_framework))
 
 
-@direct_award.route('/<string:framework_framework>/save-search', methods=['GET'])
+@direct_award.route('/<string:framework_framework>/save-search', methods=['GET', 'POST'])
 def save_search(framework_framework):
     # Get core data
     all_frameworks = data_api_client.find_frameworks().get('frameworks')
     framework = framework_helpers.get_latest_live_framework(all_frameworks, framework_framework)
     lots_by_slug = framework_helpers.get_lots_by_slug(framework)
-    current_lot_slug = get_lot_from_request(request, lots_by_slug)
+
+    search_query = url_decode(request.values.get('search_query'))
+
+    current_lot_slug = get_lot_from_args(search_query, lots_by_slug)
 
     content_manifest = content_loader.get_manifest(framework['slug'], 'search_filters')
     filters = filters_for_lot(current_lot_slug, content_manifest, all_lots=framework['lots'])
-    clean_request_query_params = clean_request_args(request.args, filters.values(), lots_by_slug)
+    clean_request_query_params = clean_request_args(search_query, filters.values(), lots_by_slug)
 
-    # Retrieve results so we can display SearchSummary
-    search_api_response = search_api_client.search_services(
-        index=framework['slug'],
-        **build_search_query(request.args, filters.values(), content_manifest, lots_by_slug)
-    )
-
-    search_summary = SearchSummary(search_api_response['meta']['total'], clean_request_query_params.copy(),
-                                   filters.values(), lots_by_slug)
-
-    # Embed search api URL in form so that the next view can be aware of it
-    # This is maybe not ideal
-    search_api_url = search_api_client.get_search_url(
-        index=framework['slug'],
-        **build_search_query(request.args, filters.values(), content_manifest, lots_by_slug)
-    )
-
-    projects = get_direct_award_projects(current_user.id, 'open_projects', 'name')
-
-    return render_template(
-        'direct-award/save-search.html',
-        framework_framework=framework_framework,
-        search_summary_sentence=search_summary.markup(),
-        search_api_url=search_api_url,
-        form=CreateProjectForm(),
-        projects=projects,
-    )
-
-
-@direct_award.route('/<string:framework_framework>/projects/create', methods=['POST'])
-def project_create(framework_framework):
     form = CreateProjectForm()
     name = form.name.data
 
@@ -356,22 +337,28 @@ def project_create(framework_framework):
 
     name_is_invalid = save_search_selection == "new_search" and not name
 
-    if not form.validate_on_submit() or not save_search_selection or name_is_invalid:
+    if request.method == 'GET' or not form.validate_on_submit() or not save_search_selection or name_is_invalid:
         projects = get_direct_award_projects(current_user.id, 'open_projects', 'name')
         projects.sort(key=lambda x: x['name'])
-        frameworks_by_slug = framework_helpers.get_frameworks_by_slug(data_api_client)
-        search_meta = SearchMeta(request.form['search_api_url'], frameworks_by_slug)
 
-        if not name:
+        # Retrieve results so we can display SearchSummary
+        search_api_response = search_api_client.search_services(
+            index=framework['slug'],
+            **build_search_query(search_query, filters.values(), content_manifest, lots_by_slug)
+        )
+        search_summary = SearchSummary(search_api_response['meta']['total'], clean_request_query_params.copy(),
+                                       filters.values(), lots_by_slug)
+
+        if not name and request.method == 'POST':
             form.name.errors = ["Names must be between 1 and 100 characters"]
 
         return render_template('direct-award/save-search.html',
                                form=form,
-                               search_summary_sentence=search_meta.search_summary.markup(),
-                               search_api_url=request.form['search_api_url'],
+                               search_summary_sentence=search_summary.markup(),
+                               search_query=url_encode(search_query),
                                request=request,
                                projects=projects,
-                               framework_framework=framework_framework), 400
+                               framework_framework=framework_framework), 400 if request.method == 'POST' else 200
 
     elif save_search_selection == "new_search" and name:
         try:
@@ -388,11 +375,15 @@ def project_create(framework_framework):
         if not project or not is_direct_award_project_accessible(project, current_user.id):
             abort(404)
 
+    search_api_url = search_api_client.get_search_url(
+        index=framework['slug'],
+        **build_search_query(search_query, filters.values(), content_manifest, lots_by_slug)
+    )
     try:
         data_api_client.create_direct_award_project_search(user_id=current_user.id,
                                                            user_email=current_user.email_address,
                                                            project_id=project['id'],
-                                                           search_url=request.form['search_api_url'])
+                                                           search_url=search_api_url)
 
     except HTTPError as e:
         abort(e.status_code)

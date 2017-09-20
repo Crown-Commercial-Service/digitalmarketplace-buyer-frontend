@@ -1,0 +1,17 @@
+<div id="js-dm-live-save-search-form">
+  {% if 'DIRECT_AWARD_PROJECTS' is active_feature %}
+    <form action="{{ url_for('direct_award.save_search', framework_framework=framework_family) }}">
+      <input type="hidden" name="search_query" value="{{ search_query_url }}">
+      <div class="button-save-wrapper">
+        <div class="save-summary-text">
+          Save details of your search and download a shortlist of services
+        </div>
+        <div class="save-button">
+          <button id="save-search" class="button-save" role="button" type="submit">
+            Save search
+          </button>
+        </div>
+      </div>
+    </form>
+  {% endif %}
+</div>
