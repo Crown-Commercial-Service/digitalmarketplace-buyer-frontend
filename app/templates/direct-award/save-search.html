@@ -90,12 +90,11 @@
         </fieldset>
 
         <br>
-        
-        <fieldset>
-          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-          <input type="hidden" name="search_api_url" value="{{ search_api_url }}"/>
-          <input type="submit" class="button-save" name="return_to_overview" value="Save and continue">
-        </fieldset>
+
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+        <input type="hidden" name="search_api_url" value="{{ search_api_url }}"/>
+        <input type="submit" class="button-save" name="return_to_overview" value="Save and continue">
+
       </div>
     </div>
   </form>
