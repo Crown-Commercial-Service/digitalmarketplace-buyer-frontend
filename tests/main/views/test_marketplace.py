@@ -294,7 +294,7 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
         sidebar_link_texts = [str(item).strip() for item in sidebar_links]
 
         assert 'View Digital Outcomes and Specialists opportunities' in sidebar_link_texts
-        assert 'Create a supplier account' in sidebar_link_texts
+        assert 'Become a supplier' in sidebar_link_texts
 
     @mock.patch('app.main.views.marketplace.data_api_client', autospec=True)
     def test_homepage_sidebar_messages_when_logged_in(self, data_api_client):
@@ -315,7 +315,7 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
         sidebar_link_texts = [str(item).strip() for item in sidebar_links]
 
         assert 'View Digital Outcomes and Specialists opportunities' in sidebar_link_texts
-        assert 'Create a supplier account' not in sidebar_link_texts
+        assert 'Become a supplier' not in sidebar_link_texts
 
     # here we've given an valid framework with a valid status but there is no message.yml file to read from
     @mock.patch('app.main.views.marketplace.data_api_client', autospec=True)
