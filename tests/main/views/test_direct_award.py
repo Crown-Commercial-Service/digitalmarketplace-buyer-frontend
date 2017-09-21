@@ -168,7 +168,7 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
                                                                          ' at 7:00am GMT')
 
     def _task_search_downloaded(self, tasklist, task):
-        return self._task_has_box(tasklist, task, style='complete', text='Shortlist downloaded')
+        return self._task_has_box(tasklist, task, style='complete', text='Search results downloaded')
 
     def _cannot_start_from_task(self, tasklist, cannot_start_from):
         return all([self._task_cannot_start_yet(tasklist, task + 1) is ((task + 1) >= cannot_start_from)
@@ -194,9 +194,9 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         body = res.get_data(as_text=True)
         doc = html.fromstring(body)
 
-        item_headings = ['Prepare your requirements', 'Search for services', 'Review services', 'Create a shortlist',
-                         'Compare services', 'Award a contract', 'Publish the contract',
-                         'Complete the customer benefits record form']
+        item_headings = ['Write a list of your requirements', 'Save your search', 'Refine your search',
+                         'End your search', 'Download your search results', 'Award a contract',
+                         'Publish the contract', 'Complete the Customer Benefits Record form']
 
         tasklist = doc.xpath('//li[@class="instruction-list-item divider"]')
 
@@ -298,7 +298,7 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         assert self._task_has_link(tasklist, 3, '/g-cloud/search?q=accelerator') is False
         assert self._task_search_ended(tasklist, 4) is True
         assert self._task_has_link(tasklist, 5,
-                                   '/buyers/direct-award/g-cloud/projects/1/download-shortlist') is True
+                                   '/buyers/direct-award/g-cloud/projects/1/download-search-results') is True
 
         assert self._cannot_start_from_task(tasklist, 6) is True
 
@@ -325,7 +325,7 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         assert self._task_has_link(tasklist, 3, '/g-cloud/search?q=accelerator') is False
         assert self._task_search_downloaded(tasklist, 5) is True
         assert self._task_has_link(tasklist, 5,
-                                   '/buyers/direct-award/g-cloud/projects/1/download-shortlist') is True
+                                   '/buyers/direct-award/g-cloud/projects/1/download-search-results') is True
 
         assert self._cannot_start_from_task(tasklist, 9) is True
 
