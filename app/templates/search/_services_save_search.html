@@ -7,7 +7,11 @@
           Save details of your search and download your search results.
         </div>
         <div class="save-button">
-          <button id="save-search" class="button-save" role="button" type="submit">
+          <button id="save-search" class="button-save" role="button" type="submit"
+            data-analytics="trackEvent"
+            data-analytics-category="Direct Award"
+            data-analytics-action="Save Search"
+            data-analytics-label="{{ search_count }}">
             Save search
           </button>
         </div>

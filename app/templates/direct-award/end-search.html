@@ -65,9 +65,13 @@
         method="POST"
         >
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-        <button class="button-save end-your-search-button" {% if disable_end_search_btn %}disabled="disabled"{% endif %}>
-          End search and continue
-        </button>
+        <button class="button-save end-your-search-button"
+          data-analytics="trackEvent"
+          data-analytics-category="Direct Award"
+          data-analytics-action="End your search"
+          data-analytics-label="{{ search_count }}"
+          {% if disable_end_search_btn %}disabled="disabled"{% endif %}
+          >End search and continue</button>
       </form>
 
       {%
