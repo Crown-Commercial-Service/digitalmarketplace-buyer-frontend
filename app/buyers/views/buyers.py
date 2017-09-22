@@ -9,6 +9,8 @@ import pendulum
 import io
 import re
 import rollbar
+import os
+import botocore
 from collections import OrderedDict as od
 
 import xlsxwriter
@@ -28,9 +30,10 @@ from app.helpers.buyers_helpers import (
 from dmutils.forms import render_template_with_csrf
 from dmutils.logging import notify_team
 from dmutils.documents import get_signed_url
-from dmapiclient import HTTPError, APIError
-from dmutils import s3
+from dmapiclient import HTTPError
 from react.render import render_component
+from dmutils.file import s3_download_file
+import mimetypes
 
 
 @buyers.route('/buyers')
@@ -463,12 +466,21 @@ def download_brief_response_attachment(framework_slug, lot_slug, brief_id, respo
     response = data_api_client.get_brief_response(response_id)
     if not response or not response.get('briefResponses', {}).get('attachedDocumentURL'):
         abort(404)
+    slug = response['briefResponses']['attachedDocumentURL'][attachment_id]
 
-    url = get_signed_url(current_app.config['S3_BUCKET_NAME'],
-                         response['briefResponses']['attachedDocumentURL'][attachment_id], None)
-    if not url:
-        abort(404)
-    return redirect(url)
+    try:
+        # try newer file storage
+        file = s3_download_file(slug, os.path.join(brief['frameworkSlug'], 'documents',
+                                                   'brief-' + str(brief_id),
+                                                   'supplier-' + str(response['briefResponses']['supplierCode'])))
+
+        mimetype = mimetypes.guess_type(slug)[0] or 'binary/octet-stream'
+        return Response(file, mimetype=mimetype)
+    except botocore.exceptions.ClientError:
+        url = get_signed_url(current_app.config['S3_BUCKET_NAME'], slug, None)
+        if not url:
+            abort(404)
+        return redirect(url)
 
 
 @buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/responses/download',

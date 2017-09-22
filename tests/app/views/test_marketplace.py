@@ -819,8 +819,8 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
         brief_scenario_button_text = document.xpath('//a')[11].text
         assert_equal(brief_scenario_button_text, 'Apply Now')
 
-        choose_domain_url = document.xpath('//a')[11].get('href')
-        assert_equal(choose_domain_url, '/sellers/opportunities/{}/responses/create'.format(self.brief['id']))
+        response_create_url = document.xpath('//a')[11].get('href')
+        assert_equal(response_create_url, '/2/brief/{}/respond'.format(self.brief['id']))
 
     def test_approved_and_assessed_dp(self):
         self.login_as_supplier()
@@ -844,8 +844,8 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
         brief_scenario_button_text = document.xpath('//a')[11].text
         assert_equal(brief_scenario_button_text, 'Apply Now')
 
-        choose_domain_url = document.xpath('//a')[11].get('href')
-        assert_equal(choose_domain_url, '/sellers/opportunities/{}/responses/create'.format(self.brief['id']))
+        response_create_url = document.xpath('//a')[11].get('href')
+        assert_equal(response_create_url, '/2/brief/{}/respond'.format(self.brief['id']))
 
     def test_one_seller_restricted_brief(self):
         self.login_as_supplier()

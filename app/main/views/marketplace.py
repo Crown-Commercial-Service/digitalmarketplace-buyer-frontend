@@ -123,7 +123,7 @@ def get_brief_by_id(framework_slug, brief_id):
 
     is_restricted_brief = brief.get('sellerSelector', '') in ('someSellers', 'oneSeller')
 
-    application_url = "/sellers/opportunities/{}/responses/create".format(brief['id'])
+    application_url = "/2/brief/{}/respond".format(brief['id'])
     add_case_study_url = None
 
     profile_application_status = None
