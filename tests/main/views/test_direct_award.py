@@ -49,11 +49,14 @@ class TestDirectAwardBase(BaseApplicationTest):
 class TestDirectAward(TestDirectAwardBase):
     @classmethod
     def setup_class(cls):
+
         cls.SAVE_SEARCH_URL = '/buyers/direct-award/g-cloud/save-search'
         cls.SIMPLE_SEARCH_PARAMS = 'lot=cloud-software'
+        cls.SEARCH_URL = '/g-cloud/search?' + cls.SIMPLE_SEARCH_PARAMS
         cls.PROJECT_CREATE_URL = '/buyers/direct-award/g-cloud/projects/create'
-        cls.SIMPLE_SAVE_SEARCH_URL = '{}?{}'.format(cls.SAVE_SEARCH_URL, cls.SIMPLE_SEARCH_PARAMS)
-        cls.SEARCH_API_URL = 'g-cloud-9/services/search'  # TODO dep on search API should go away from buyer f-e tests
+        cls.SIMPLE_SAVE_SEARCH_URL = '{}?search_query={}'.format(
+            cls.SAVE_SEARCH_URL, quote_plus(cls.SIMPLE_SEARCH_PARAMS))
+        cls.SEARCH_API_URL = 'g-cloud-9/services/search'
 
         data_api_client.find_direct_award_projects = mock.Mock()
         data_api_client.find_direct_award_projects.return_value = cls._get_direct_award_project_list_fixture()
@@ -61,15 +64,17 @@ class TestDirectAward(TestDirectAwardBase):
     def test_renders_save_search_button(self):
         self._search_api_client.search_services.return_value = self.g9_search_results
 
-        res = self.client.get('/g-cloud/search')
+        res = self.client.get(self.SEARCH_URL)
         assert res.status_code == 200
 
         doc = html.fromstring(res.get_data(as_text=True))
-        assert len(doc.xpath('//button[@id="save-search"'
-                             ' and @formaction="{}"]'.format(self.SAVE_SEARCH_URL))) == 1
+        assert doc.xpath('id("js-dm-live-save-search-form")//input[@name="search_query"]'
+                         '/@value')[0] == self.SIMPLE_SEARCH_PARAMS
+        assert doc.xpath('id("js-dm-live-save-search-form")//form/@action')[0] == self.SAVE_SEARCH_URL
+        assert len(doc.xpath('id("js-dm-live-save-search-form")//form//button[@type="submit"]')) > 0
 
     def test_save_search_redirects_to_login(self):
-        res = self.client.get('/buyers/direct-award/g-cloud/save-search?lot=cloud-software')
+        res = self.client.get(self.SIMPLE_SAVE_SEARCH_URL)
         assert res.status_code == 302
         assert res.location == 'http://localhost/user/login?next={}'.format(quote_plus(self.SIMPLE_SAVE_SEARCH_URL))
 
@@ -84,7 +89,7 @@ class TestDirectAward(TestDirectAwardBase):
         summary = self.find_search_summary(res.get_data(as_text=True))[0]
         assert '<span class="search-summary-count">1150</span> results found in <em>Cloud software</em>' in summary
 
-    def _create_project(self, name, save_search_selection="new_search"):
+    def _save_search(self, name, save_search_selection="new_search"):
         self.login_as_buyer()
         self._search_api_client.search_services.return_value = self.g9_search_results
 
@@ -95,38 +100,39 @@ class TestDirectAward(TestDirectAwardBase):
         data_api_client.create_direct_award_project_search.return_value = \
             self._get_direct_award_project_searches_fixture()['searches'][0]
 
-        return self.client.post(self.PROJECT_CREATE_URL,
+        return self.client.post(self.SAVE_SEARCH_URL,
                                 data={
                                     'name': name,
-                                    'search_api_url': '{}?{}'.format(self.SEARCH_API_URL, self.SIMPLE_SEARCH_PARAMS),
+                                    'search_query': self.SIMPLE_SEARCH_PARAMS,
                                     'save_search_selection': save_search_selection
                                 })
 
     def _update_existing_project(self, save_search_selection):
-        return self._create_project(None, save_search_selection)
+        return self._save_search(None, save_search_selection)
 
     def _asserts_for_create_project_failure(self, res):
         assert res.status_code == 400
         html = res.get_data(as_text=True)
-        assert self.SEARCH_API_URL in html
+        assert self.SEARCH_API_URL not in html  # it was once, so let's check
+        assert self.SIMPLE_SEARCH_PARAMS in html
         assert "Names must be between 1 and 100 characters" in html
 
     def test_save_search_submit_success(self):
-        res = self._create_project('some name " foo bar \u2016')
+        res = self._save_search('some name " foo bar \u2016')
         assert res.status_code == 303
         assert urlparse(res.location).path == '/buyers/direct-award/g-cloud/projects/1'
 
     def test_save_existing_search_submit_success(self):
-        res = self._update_existing_project('1')
+        res = self._save_search(name='', save_search_selection='1')
         assert res.status_code == 303
         assert urlparse(res.location).path == '/buyers/direct-award/g-cloud/projects/1'
 
     def test_save_search_submit_no_name(self):
-        res = self._create_project('')
+        res = self._save_search('')
         self._asserts_for_create_project_failure(res)
 
     def test_save_search_submit_name_too_long(self):
-        res = self._create_project('x' * 101)
+        res = self._save_search('x' * 101)
         self._asserts_for_create_project_failure(res)
 
 

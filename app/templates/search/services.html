@@ -48,22 +48,12 @@
     <section class="column-one-third search-page-filters" aria-label="Search filters">
           {% include 'search/_services_filters.html' %}
     </section>
-    <section class="column-two-thirds" aria-label="Search results">
-      {% include 'search/_services_summary.html' %}
-      {% if 'DIRECT_AWARD_PROJECTS' is active_feature %}
-        <div class="button-save-wrapper">
-          <div class="save-summary-text">
-            Save details of your search and download your search results.
-          </div>
-          <div class="save-button">
-            <button id="save-search" class="button-save" role="button" type="submit" formaction="{{ url_for('direct_award.save_search', framework_framework=framework_family) }}">
-              Save search
-            </button>
-          </div>
-        </div>
-      {% endif %}
-      {% include 'search/_services_results_wrapper.html' %}
-    </section>
   </form>
+  <section class="column-two-thirds" aria-label="Search results">
+    {% include 'search/_services_summary.html' %}
+    {% include 'search/_services_save_search.html' %}
+    {% include 'search/_services_results_wrapper.html' %}
+  </section>
+
 </div>
 {% endblock %}
