@@ -464,9 +464,6 @@ def end_search(framework_framework, project_id):
         flash(TOO_MANY_RESULTS_ERROR, 'error')
         disable_end_search_btn = True
 
-    if not is_direct_award_project_accessible(project, current_user.id):
-        abort(404)
-
     if not framework or not project:
         abort(404)
 
