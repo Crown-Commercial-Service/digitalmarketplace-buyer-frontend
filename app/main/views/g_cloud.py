@@ -22,7 +22,7 @@ from ..helpers.search_helpers import (
     get_keywords_from_request, pagination,
     get_page_from_request, query_args_for_pagination,
     get_lot_from_args,
-    get_lot_from_request, build_search_query,
+    build_search_query,
     clean_request_args, get_request_url_without_any_filters,
 )
 from ..helpers import framework_helpers
@@ -169,7 +169,7 @@ def search_services():
 
     lots_by_slug = framework_helpers.get_lots_by_slug(framework)
 
-    current_lot_slug = get_lot_from_request(request, lots_by_slug)
+    current_lot_slug = get_lot_from_args(request.args, lots_by_slug)
 
     # the bulk of the possible filter parameters are defined through the content loader. they're all boolean and the
     # search api uses the same "question" labels as the content for its attributes, so we can really use those labels
