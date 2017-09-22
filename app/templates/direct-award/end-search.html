@@ -65,11 +65,9 @@
         method="POST"
         >
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-        <button class="button-save end-your-search-button"
-          {% if disable_end_search_btn %} 
-           disabled="disabled"
-          {% endif %}
-        >End search and continue</button>
+        <button class="button-save end-your-search-button" {% if disable_end_search_btn %}disabled="disabled"{% endif %}>
+          End search and continue
+        </button>
       </form>
 
       {%

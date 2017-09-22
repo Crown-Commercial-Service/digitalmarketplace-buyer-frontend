@@ -401,7 +401,7 @@ class TestDirectAwardEndSearch(TestDirectAwardBase):
         doc = html.fromstring(res.get_data(as_text=True))
         assert len(doc.xpath('//h1[contains(normalize-space(), "End search")]')) == 1
 
-    def test_end_search_page_renders_error_when_results_more_than_999(self):
+    def test_end_search_page_renders_error_when_results_more_than_limit(self):
         self.login_as_buyer()
 
         search_api_client._get = mock.Mock()

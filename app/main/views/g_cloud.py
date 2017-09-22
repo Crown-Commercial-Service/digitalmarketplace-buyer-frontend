@@ -38,7 +38,7 @@ from app import search_api_client, data_api_client, content_loader
 END_SEARCH_LIMIT = 100  # TODO: This should be done in the API.
 PROJECT_SAVED_MESSAGE = Markup("""Search saved.""")
 PROJECT_ENDED_MESSAGE = Markup("""Search ended. You can now download your search results.""")
-TOO_MANY_RESULTS_ERROR = Markup("""
+TOO_MANY_RESULTS_MESSAGE = Markup("""
     You have too many results. Choose a category or add filters to refine your search.""")
 
 
@@ -461,7 +461,7 @@ def end_search(framework_framework, project_id):
     disable_end_search_btn = False
 
     if int(search_count) > END_SEARCH_LIMIT:
-        flash(TOO_MANY_RESULTS_ERROR, 'error')
+        flash(TOO_MANY_RESULTS_MESSAGE, 'error')
         disable_end_search_btn = True
 
     if not framework or not project:
@@ -470,7 +470,7 @@ def end_search(framework_framework, project_id):
     if project['lockedAt']:
         abort(400)
 
-    if request.method == 'POST' and not int(search_count) > END_SEARCH_LIMIT:
+    if request.method == 'POST' and int(search_count) <= END_SEARCH_LIMIT:
         try:
             data_api_client.lock_direct_award_project(user_email=current_user.email_address, project_id=project_id)
         except HTTPError as e:
