@@ -1,7 +1,28 @@
-@import "govuk-elements";
+// GOVUK Front-end toolkit styles, including dependencies for govuk-elements
+// Settings (variables)
+@import "colours";                                // Colour variables
+@import "font_stack";                             // Font family variables
+@import "measurements";                           // Widths and gutter variables
+
+// Mixins
+@import "conditionals";                           // Media query mixin
+@import "device-pixels";                          // Retina image mixin
+@import "grid_layout";                            // Basic grid layout mixin
+@import "typography";                             // Core bold and heading mixins
+@import "shims";                                  // Inline block mixin, clearfix placeholder
+
+// Mixins to generate components (chunks of UI)
+@import "design-patterns/alpha-beta";             // Only required if using _phase-banner.scss
+@import "design-patterns/buttons";                // Only required if using _buttons.scss
+
+// Functions
+@import "url-helpers";
 
 // Path to assets for use with file-url()
 $path: "/static/images/";
+
+// Other govuk-elements "partials"
+@import "elements/_forms.scss";
 
 // Digital Marketplace front end toolkit components
 @import "forms/word-counter";
