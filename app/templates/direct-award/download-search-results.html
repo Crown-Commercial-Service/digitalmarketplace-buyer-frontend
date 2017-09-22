@@ -1,6 +1,6 @@
 {% extends "_base_page.html" %}
 
-{% block page_title %}Download your shortlist - Digital Marketplace{% endblock %}
+{% block page_title %}Download your search results - Digital Marketplace{% endblock %}
 
 {% block breadcrumb %}
   {%
@@ -23,7 +23,7 @@
         "label": project.name
       },
       {
-        "label": "End search"
+        "label": "Download search results"
       }
     ]
   %}
@@ -36,18 +36,18 @@
   <div class="column-two-thirds">
     <header class="page-heading">
       <h1>
-        Download your shortlist
+        Download your search results
       </h1>
     </header>
   </div>
   <div class="column-two-thirds">
     <div class="marketplace-paragraph">
-      <p>Download your shortlist to help you track and record your decision-making.</p>
+      <p>Download your search results to help you track and record your decision-making.</p>
     </div>
     <div class="explanation-list">
-      <p class="lead">The shortlist file includes:</p>
+      <p class="lead">The spreadsheet includes:</p>
       <ul class='list-bullet'>
-        <li>service names, descriptions and pricing information</li>
+        <li>service names, descriptions and prices</li>
         <li>links to detailed service description pages on the Digital Marketplace</li>
         <li>supplier names and contact details</li>
       </ul>
@@ -55,15 +55,15 @@
     <div class="marketplace-paragraph">
       <p>
         <br>
-        <a href="{{ url_for('direct_award.download_shortlist', framework_framework=framework.framework, project_id=project.id, filetype='odf') }}">Download shortlist (ODF)</a>
+        <a href="{{ url_for('direct_award.download_shortlist', framework_framework=framework.framework, project_id=project.id, filetype='odf') }}">Download search results spreadsheet (ODF)</a>
         <br>
-        <a href="{{ url_for('direct_award.download_shortlist', framework_framework=framework.framework, project_id=project.id, filetype='csv') }}">Download shortlist (CSV)</a>
+        <a href="{{ url_for('direct_award.download_shortlist', framework_framework=framework.framework, project_id=project.id, filetype='csv') }}">Download search results spreadsheet (CSV)</a>
       </p>
       <br>
     </div>
     <div class="marketplace-paragraph">
     <h2>After you download your shortlist</h2>
-      <p>Compare services to find the cheapest or best value for money.<br>Read the <a href="{{ framework_urls.buyers_guide_compare_services_url }}">{{ framework.framework|title }} Buyers' Guide</a> for details
+      <p>Review or compare services to find the cheapest or best value for money.<br>You can use the spreadsheet to help record your decisions.<br>Read the <a href="{{ framework_urls.buyers_guide_compare_services_url }}">{{ framework.framework|title }} Buyers' Guide</a> for details
     of how to compare services.</p>
       <p><a href="{{ url_for('direct_award.view_project', framework_framework=framework.framework, project_id=project.id) }}">Return to overview</a></p>
     </div>
