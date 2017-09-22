@@ -53,13 +53,26 @@
       </ul>
     </div>
     <div class="marketplace-paragraph">
-      <p>
-        <br>
-        <a href="{{ url_for('direct_award.download_results', framework_framework=framework.framework, project_id=project.id, filetype='ods') }}">Download search results spreadsheet (ODS)</a>
-        <br>
-        <a href="{{ url_for('direct_award.download_results', framework_framework=framework.framework, project_id=project.id, filetype='csv') }}">Download search results spreadsheet (CSV)</a>
-      </p>
       <br>
+      {%
+      with
+      items = [
+          {
+              "title": "Download search results as a spreadsheet",
+              "link": url_for('direct_award.download_shortlist', framework_framework=framework.framework, project_id=project.id, filetype='odf'),
+              "file_type": "ODS",
+              "download": "True"
+          },
+          {
+              "title": "Download search results as comma-separated values",
+              "link": url_for('direct_award.download_shortlist', framework_framework=framework.framework, project_id=project.id, filetype='csv'),
+              "file_type": "CSV",
+              "download": "True"
+          }
+      ]
+      %}
+          {% include "toolkit/documents.html" %}
+      {% endwith %}
     </div>
     <div class="marketplace-paragraph">
     <h2>After you download your shortlist</h2>
