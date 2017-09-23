@@ -1,0 +1,29 @@
+{
+  "links": {
+    "self": "http://localhost:5000/direct-award/projects/1/services"
+  },
+  "meta": {
+    "total": 1
+  },
+  "services": [
+    {
+      "data": {
+        "serviceName": "Service name",
+        "serviceDescription": "This is a really interesting and appropriate service description.",
+        "priceMin": "1.00",
+        "priceMax": "10.00",
+        "priceInterval": "hour",
+        "priceUnit": "virtual machine"
+      },
+      "id": "123456789",
+      "supplier": {
+        "contact": {
+          "email": "test@fixture.com",
+          "name": "Supplier contact name",
+          "phone": "01234 000 000"
+        },
+        "name": "Supplier name"
+      }
+    }
+  ]
+}

@@ -55,9 +55,9 @@
     <div class="marketplace-paragraph">
       <p>
         <br>
-        <a href="{{ url_for('direct_award.download_shortlist', framework_framework=framework.framework, project_id=project.id, filetype='odf') }}">Download search results spreadsheet (ODF)</a>
+        <a href="{{ url_for('direct_award.download_results', framework_framework=framework.framework, project_id=project.id, filetype='ods') }}">Download search results spreadsheet (ODS)</a>
         <br>
-        <a href="{{ url_for('direct_award.download_shortlist', framework_framework=framework.framework, project_id=project.id, filetype='csv') }}">Download search results spreadsheet (CSV)</a>
+        <a href="{{ url_for('direct_award.download_results', framework_framework=framework.framework, project_id=project.id, filetype='csv') }}">Download search results spreadsheet (CSV)</a>
       </p>
       <br>
     </div>

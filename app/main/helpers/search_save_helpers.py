@@ -13,7 +13,7 @@ from .search_helpers import ungroup_request_filters
 
 
 class SearchMeta(object):
-    def __init__(self, search_api_url, frameworks_by_slug):
+    def __init__(self, search_api_url, frameworks_by_slug, include_markup=False):
         # Get core data
         self.framework_slug = search_api_client.get_index_from_search_api_url(search_api_url)
         framework = frameworks_by_slug[self.framework_slug]
@@ -38,5 +38,6 @@ class SearchMeta(object):
             search_api_response['meta']['total'],
             clean_request_query_params.copy(),
             filters.values(),
-            lots_by_slug
+            lots_by_slug,
+            include_markup=include_markup
         )

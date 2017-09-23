@@ -1,12 +1,19 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from werkzeug.urls import url_encode, url_decode
+from datetime import datetime
 from flask import abort, render_template, request, redirect, current_app, url_for, flash, Markup
 from flask_login import current_user
+import inflection
+from werkzeug.urls import url_encode, url_decode
 
-from dmutils.formats import dateformat
+from dmcontent.formats import format_service_price
+from dmcontent.questions import Pricing
+
+from dmutils.ods import A as AnchorElement
+from dmutils.formats import dateformat, DATETIME_FORMAT, utcdatetimeformat
 from dmutils.filters import capitalize_first
+from dmutils.views import SimpleDownloadFileView
 from dmapiclient import HTTPError
 
 from ...main import main, direct_award
@@ -27,6 +34,7 @@ from ..helpers.search_helpers import (
 )
 from ..helpers import framework_helpers
 from ..helpers.search_save_helpers import SearchMeta
+from ..helpers.shared_helpers import get_fields_from_manifest, get_questions_from_manifest_by_id
 from ..forms.direct_award_forms import CreateProjectForm
 
 from ..helpers.direct_award_helpers import is_direct_award_project_accessible, get_direct_award_projects
@@ -455,8 +463,9 @@ def end_search(framework_framework, project_id):
         abort(404)
 
     searches = data_api_client.find_direct_award_project_searches(user_id=current_user.id,
-                                                                  project_id=project['id'])['searches']
-    search = list(filter(lambda x: x['active'], searches))[0]
+                                                                  project_id=project['id'],
+                                                                  only_active=True)['searches']
+    search = searches[0]
     search_meta = SearchMeta(search['searchUrl'], frameworks_by_slug)
     search_count = search_meta.search_summary.count
     disable_end_search_btn = False
@@ -490,32 +499,189 @@ def end_search(framework_framework, project_id):
     )
 
 
-@direct_award.route('/<string:framework_framework>/projects/<int:project_id>/download-search-results')
-def download_shortlist(framework_framework, project_id):
+@direct_award.route('/<string:framework_framework>/projects/<int:project_id>/results')
+def search_results(framework_framework, project_id):
     # Get the requested Direct Award Project.
     project = data_api_client.get_direct_award_project(project_id=project_id)['project']
     if not is_direct_award_project_accessible(project, current_user.id):
         abort(404)
 
-    searches = data_api_client.find_direct_award_project_searches(user_id=current_user.id,
-                                                                  project_id=project['id'])['searches']
+    if not project['lockedAt']:
+        abort(400)
 
-    if searches:
-        # A Direct Award project has one 'active' search which is what we will display on this overview page.
-        search = list(filter(lambda x: x['active'], searches))[0]
+    try:
+        search = data_api_client.find_direct_award_project_searches(user_id=current_user.id,
+                                                                    project_id=project['id'],
+                                                                    only_active=True)['searches'][0]
+    except (KeyError, IndexError):
+        abort(400)
 
-        # Indexes for our search API are named by the framework slug they relate to.
-        framework_slug = search_api_client.get_index_from_search_api_url(search['searchUrl'])
-        framework = data_api_client.get_framework(framework_slug)['frameworks']
+    # Indexes for our search API are named by the framework slug they relate to.
+    framework_slug = search_api_client.get_index_from_search_api_url(search['searchUrl'])
+    framework = data_api_client.get_framework(framework_slug)['frameworks']
 
-        content_loader.load_messages(framework['slug'], ['descriptions', 'urls'])
-        framework_urls = content_loader.get_message(framework['slug'], 'urls')
+    content_loader.load_messages(framework['slug'], ['descriptions', 'urls'])
+    framework_urls = content_loader.get_message(framework['slug'], 'urls')
 
-    else:
-        abort(404)
-
-    return render_template('direct-award/download-search-results.html',
+    return render_template('direct-award/results.html',
                            framework=framework,
                            project=project,
                            framework_urls=framework_urls
                            )
+
+
+class DownloadResultsView(SimpleDownloadFileView):
+    def _init_hook(self, **kwargs):
+        self.data_api_client = data_api_client
+        self.search_api_client = search_api_client
+        self.content_loader = content_loader
+
+    def _post_request_hook(self, response, **kwargs):
+        if response[1] == 200:
+            self.data_api_client.record_direct_award_project_download(user_email=current_user.email_address,
+                                                                      project_id=kwargs['project_id'])
+
+    def determine_filetype(self, file_context=None, **kwargs):
+        file_type = self.request.args.get('filetype', '').lower()
+
+        if file_type == 'csv':
+            return DownloadResultsView.FILETYPES.CSV
+
+        elif file_type == 'ods':
+            return DownloadResultsView.FILETYPES.ODS
+
+        abort(400)
+
+    @staticmethod
+    def get_project_and_search(project_id):
+        project = data_api_client.get_direct_award_project(project_id=project_id)['project']
+        if not is_direct_award_project_accessible(project, current_user.id):
+            abort(404)  # TODO: This should really be a 403, but we don't have a template for that error.
+
+        if not project['lockedAt']:
+            abort(400)
+
+        try:
+            search = data_api_client.find_direct_award_project_searches(user_id=current_user.id,
+                                                                        project_id=project['id'],
+                                                                        only_active=True)['searches'][0]
+        except (KeyError, IndexError):
+            abort(400)
+
+        return project, search
+
+    def get_file_context(self, **kwargs):
+        """All of the data required to generate what will go into the files"""
+        project, search = self.get_project_and_search(kwargs['project_id'])
+
+        frameworks_by_slug = framework_helpers.get_frameworks_by_slug(data_api_client)
+        framework_slug = self.search_api_client.get_index_from_search_api_url(search['searchUrl'])
+
+        download_results_manifest = self.content_loader.get_manifest(framework_slug, 'download_results')
+        required_fields = get_fields_from_manifest(download_results_manifest)
+
+        manifest_questions = get_questions_from_manifest_by_id(download_results_manifest)
+        price_question = list(filter(lambda x: type(x) == Pricing, manifest_questions.values()))
+
+        locked_at = datetime.strptime(project['lockedAt'], DATETIME_FORMAT)
+        filename = '{}-{}-results'.format(locked_at.strftime('%Y-%M-%d'), inflection.parameterize(project['name']))
+        locked_at = utcdatetimeformat(locked_at)
+
+        services = self.data_api_client.get_direct_award_project_services_iter(project_id=project['id'],
+                                                                               user_id=current_user.id,
+                                                                               fields=required_fields)
+
+        all_services = []
+
+        for service in services:
+            if price_question:  # Assumption: only one pricing question per service - SW - 23/09/2017
+                service['data'][price_question[0].id] = format_service_price(service['data'])
+
+            all_services.append(service)
+
+        search_meta = SearchMeta(search['searchUrl'], frameworks_by_slug, include_markup=False)
+
+        file_context = {
+            'framework': frameworks_by_slug[framework_slug]['name'],
+            'search': search,
+            'project': project,
+            'questions': manifest_questions,
+            'services': all_services,
+            'filename': filename,
+            "sheetname": "Search results",
+            'locked_at': locked_at,
+            'search_summary': search_meta.search_summary.markup(),
+        }
+
+        return file_context
+
+    def get_file_data_and_column_styles(self, file_context):
+        """Generate the structure and styling for the download from the file context"""
+        file_rows = []
+
+        # Assign the column styles
+        column_styles = [
+            {'stylename': 'col-wide'},  # Framework/supplier name
+            {'stylename': 'col-wide'},  # Search ended/service name
+            {'stylename': 'col-extra-wide'},     # summary/description
+            {'stylename': 'col-wide'},  # price
+            {'stylename': 'col-wide'},  # service page URL
+            {'stylename': 'col-wide'},  # contact name
+            {'stylename': 'col-wide'},  # contact telephone
+            {'stylename': 'col-extra-wide'},     # contact email
+        ]
+
+        # Search meta - headers
+        file_rows.append({
+            'cells': ['Framework', 'Search ended', 'Search summary'],
+            'meta': {'name': 'meta-header',
+                     'row_styles': {'stylename': 'row-default'},
+                     'cell_styles': {'stylename': 'cell-header'}},
+        })
+
+        # Search meta - data
+        file_rows.append({
+            'cells': [file_context['framework'], file_context['locked_at'], file_context['search_summary']],
+            'meta': {'name': 'meta-header',
+                     'row_styles': {'stylename': 'row-tall-optimal'},
+                     'cell_styles': {'stylename': 'cell-default'}},
+        })
+
+        # Blank divider between the two sections
+        file_rows.append({'cells': [], 'meta': {'name': 'divider'}})
+
+        # Search results - headers
+        content_headers = [question.name for question in file_context['questions'].values()]
+        file_rows.append({
+            'cells': ['Supplier name'] + content_headers + ['Service page URL', 'Contact name', 'Telephone', 'Email'],
+            'meta': {'name': 'results-header',
+                     'row_styles': {'stylename': 'row-default'},
+                     'cell_styles': {'stylename': 'cell-header'}},
+        })
+
+        # Search results - data
+        for service in file_context['services']:
+            content_fields = [service['data'].get(question_id) for question_id in file_context['questions'].keys()]
+
+            service_values = [
+                service['supplier']['name']] + content_fields + [
+                AnchorElement(href=url_for('main.get_service_by_id', service_id=service['id'], _external=True),
+                              text=url_for('main.get_service_by_id', service_id=service['id'], _external=True)),
+                service['supplier']['contact']['name'],
+                service['supplier']['contact']['phone'],
+                service['supplier']['contact']['email'],
+            ]
+
+            file_rows.append({
+                'cells': service_values,
+                'meta': {'name': 'results-{}'.format(service['id']),
+                         'row_styles': {'stylename': 'row-default'},
+                         'cell_styles': {'stylename': 'cell-default'}},
+            })
+
+        return file_rows, column_styles
+
+
+direct_award.add_url_rule('/<string:framework_framework>/projects/<int:project_id>/results/download',
+                          view_func=DownloadResultsView.as_view(str('download_results')),
+                          methods=['GET'])

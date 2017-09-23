@@ -1,3 +1,5 @@
+from collections import OrderedDict
+from itertools import chain
 from urllib.parse import urlparse, parse_qs, urlencode, urlunparse
 
 
@@ -27,3 +29,21 @@ def construct_url_from_base_and_params(base_url, query_params):
 
     # Reconstruct the full URL with inline params from our six-item iterable
     return urlunparse(parsed_url)
+
+
+def get_fields_from_manifest(content_manifest):
+    """Takes a content manifest and returns a tuple of all the key names that hold data."""
+    fields_nested = [section.get_field_names() for section in content_manifest.sections]
+
+    return tuple(chain.from_iterable(fields_nested))
+
+
+def get_questions_from_manifest_by_id(content_manifest):
+    """Returns an OrderedDict of all questions in a content manifest, {question.id: question, ...}"""
+    questions = OrderedDict()
+
+    for section in content_manifest.sections:
+        for question in section.questions:
+            questions[question.id] = question
+
+    return questions
