@@ -389,3 +389,45 @@ class TestDirectAwardURLGeneration(BaseApplicationTest):
         doc = html.fromstring(body)
         assert html_escape(frontend_url) in body
         assert len(doc.xpath('//a[@href="{}"]'.format(frontend_url)))
+
+
+class TestDirectAwardEndSearch(TestDirectAwardBase):
+    def test_end_search_page_renders(self):
+        self.login_as_buyer()
+
+        res = self.client.get('/buyers/direct-award/g-cloud/projects/1/end-search')
+        assert res.status_code == 200
+
+        doc = html.fromstring(res.get_data(as_text=True))
+        assert len(doc.xpath('//h1[contains(normalize-space(), "End search")]')) == 1
+
+    def test_end_search_page_renders_error_when_results_more_than_limit(self):
+        self.login_as_buyer()
+
+        search_api_client._get = mock.Mock()
+        search_api_client._get.return_value = {
+            "services": [],
+            "meta": {
+                "query": {},
+                "total": 1000,
+                "took": 3
+            },
+            "links": {}
+        }
+
+        self._search_api_client_helpers_patch = \
+            mock.patch('app.main.helpers.search_save_helpers.search_api_client', new=search_api_client)
+        self._search_api_client_helpers = self._search_api_client_helpers_patch.start()
+
+        res = self.client.get('/buyers/direct-award/g-cloud/projects/1/end-search')
+        assert res.status_code == 200
+        assert "You have too many results." in res.get_data(as_text=True)
+
+    def test_end_search_redirects_to_project_page(self):
+        self.login_as_buyer()
+        data_api_client.lock_direct_award_project = mock.Mock()
+        data_api_client.lock_direct_award_project.return_value = self._get_direct_award_lock_project_fixture()
+
+        res = self.client.post('/buyers/direct-award/g-cloud/projects/1/end-search')
+        assert res.status_code == 302
+        assert res.location.endswith('/buyers/direct-award/g-cloud/projects/1')
