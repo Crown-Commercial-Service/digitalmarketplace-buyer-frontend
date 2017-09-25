@@ -28,6 +28,8 @@ $path: "/static/images/";
 @import "forms/word-counter";
 @import "forms/list-entry";
 
+// Note we DO NOT load the govuk-elements _reset.scss, only our own custom one, which is different
+
 /* Classes shared between multiple apps */
 @import "toolkit/shared_scss/_reset.scss";
 @import "toolkit/shared_scss/_lists.scss";
