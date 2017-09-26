@@ -1,3 +1,5 @@
+from lxml import html
+
 import mock
 from ...helpers import BaseApplicationTest
 
@@ -21,3 +23,9 @@ class TestFeedbackForm(BaseApplicationTest):
         assert response.status_code == 303
         new_page = self.client.get(response.location)
         assert "Thank you for your message" in new_page.get_data(as_text=True)
+
+    def test_feedback_form_has_csrf(self):
+        res = self.client.get("/")
+        document = html.fromstring(res.get_data(as_text=True))
+
+        assert len(document.cssselect('.report-a-problem-container form input[name="csrf_token"]')) == 1
