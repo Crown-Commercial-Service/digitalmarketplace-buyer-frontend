@@ -29,3 +29,10 @@ class TestFeedbackForm(BaseApplicationTest):
         document = html.fromstring(res.get_data(as_text=True))
 
         assert len(document.cssselect('.report-a-problem-container form input[name="csrf_token"]')) == 1
+
+    @mock.patch('requests.post')
+    def test_feedback_form_fail(self, external_requests_post):
+        external_requests_post.return_value.status_code = 404
+        response = self._post()
+
+        assert response.status_code == 503

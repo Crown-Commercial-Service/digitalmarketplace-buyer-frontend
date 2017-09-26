@@ -18,7 +18,10 @@ def send_feedback():
 
     result = requests.post(feedback_config['uri'], list(form_data.items(multi=True)))
     if result.status_code != 200:
-        raise ServiceUnavailable('Google forms submission problem (status %d)'.format(result.status_code))
+        current_app.logger.error(
+            "Feedback form submission error - unexpected response {}.".format(result.status_code))
+        raise ServiceUnavailable('There was a problem submitting your feedback. Please try again later.')
+
     came_from = url_parse(request.form['uri'])
     # strip netloc and scheme as we should ignore attempts to make us redirect elsewhere
     replaced = came_from._replace(scheme='', netloc='')
