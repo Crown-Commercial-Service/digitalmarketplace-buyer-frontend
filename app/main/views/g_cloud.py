@@ -251,6 +251,7 @@ def search_services():
         search_keywords=get_keywords_from_request(request),
         search_query=search_query,
         search_query_url=url_encode(search_query),  # for save-search form
+        search_count=search_api_response['meta']['total'],
         services=search_results_obj.search_results,
         summary=search_summary.markup(),
         title='Search results',
@@ -485,6 +486,7 @@ def end_search(framework_framework, project_id):
         project=project,
         framework=framework,
         disable_end_search_btn=disable_end_search_btn,
+        search_count=search_count,
     )
 
 
