@@ -35,8 +35,11 @@ from ..exceptions import AuthException
 from app import search_api_client, data_api_client, content_loader
 
 
+END_SEARCH_LIMIT = 100  # TODO: This should be done in the API.
 PROJECT_SAVED_MESSAGE = Markup("""Search saved.""")
-PROJECT_ENDED_MESSAGE = Markup("""Your search has been ended. You can now download your shortlist.""")
+PROJECT_ENDED_MESSAGE = Markup("""Search ended. You can now download your search results.""")
+TOO_MANY_RESULTS_MESSAGE = Markup("""
+    You have too many results. Choose a category or add filters to refine your search.""")
 
 
 @main.route('/g-cloud')
@@ -443,10 +446,23 @@ def view_project(framework_framework, project_id):
 def end_search(framework_framework, project_id):
     all_frameworks = data_api_client.find_frameworks().get('frameworks')
     framework = framework_helpers.get_latest_live_framework(all_frameworks, framework_framework)
+    frameworks_by_slug = framework_helpers.get_frameworks_by_slug(data_api_client)
 
-    project = data_api_client.get_direct_award_project(project_id).get('project')
+    # Get the requested Direct Award Project.
+    project = data_api_client.get_direct_award_project(project_id=project_id)['project']
     if not is_direct_award_project_accessible(project, current_user.id):
         abort(404)
+
+    searches = data_api_client.find_direct_award_project_searches(user_id=current_user.id,
+                                                                  project_id=project['id'])['searches']
+    search = list(filter(lambda x: x['active'], searches))[0]
+    search_meta = SearchMeta(search['searchUrl'], frameworks_by_slug)
+    search_count = search_meta.search_summary.count
+    disable_end_search_btn = False
+
+    if int(search_count) > END_SEARCH_LIMIT:
+        flash(TOO_MANY_RESULTS_MESSAGE, 'error')
+        disable_end_search_btn = True
 
     if not framework or not project:
         abort(404)
@@ -454,7 +470,7 @@ def end_search(framework_framework, project_id):
     if project['lockedAt']:
         abort(400)
 
-    if request.method == 'POST':
+    if request.method == 'POST' and int(search_count) <= END_SEARCH_LIMIT:
         try:
             data_api_client.lock_direct_award_project(user_email=current_user.email_address, project_id=project_id)
         except HTTPError as e:
@@ -467,7 +483,8 @@ def end_search(framework_framework, project_id):
     return render_template(
         'direct-award/end-search.html',
         project=project,
-        framework=framework
+        framework=framework,
+        disable_end_search_btn=disable_end_search_btn,
     )
 
 
