@@ -46,7 +46,12 @@
             "title": "Write a list of your requirements",
             "content": [
               {"type": "text", "text": "Work with buyers, someone who will use the service and technical experts to prepare a list of ‘must-haves’ and ‘wants’. These should inform your search category, keywords and filters."},
-              {"type": "text", "text": "You can also <a href=\"https://www.gov.uk/guidance/talking-to-suppliers-before-you-buy-digital-marketplace-services\" target=\"_blank\" rel=\"external noopener noreferrer\">talk to suppliers before you start</a> to help you refine your requirements."|safe}
+              {"type": "text", "text": "You can also <a href=\"https://www.gov.uk/guidance/talking-to-suppliers-before-you-buy-digital-marketplace-services\" target=\"_blank\" rel=\"external noopener noreferrer\" 
+                data-analytics=\"trackEvent\"
+                data-analytics-category=\"Direct Award\"
+                data-analytics-action=\"External Link\"
+                data-analytics-label=\"https://www.gov.uk/guidance/talking-to-suppliers-before-you-buy-digital-marketplace-services\"
+                >talk to suppliers before you start</a> to help you refine your requirements."|safe}
             ]
           },
           {
@@ -77,7 +82,12 @@
           {
             "title": "Download your search results",
             "content": [
-              {"type": "text", "text": ''.join(["Download a spreadsheet of your search results.<br>You can use the spreadsheet to help you review or <a href=\"", framework_urls.buyers_guide_compare_services_url|e, "\" target=\"_blank\" rel=\"external noopener noreferrer\">compare services</a>."])|safe},
+              {"type": "text", "text": ''.join(["Download a spreadsheet of your search results.<br>You can use the spreadsheet to help you review or <a href=\"", framework_urls.buyers_guide_compare_services_url|e, "\" target=\"_blank\" rel=\"external noopener noreferrer\"
+                data-analytics=\"trackEvent\"
+                data-analytics-category=\"Direct Award\"
+                data-analytics-action=\"External Link\"
+                data-analytics-label=\"", framework_urls.buyers_guide_compare_services_url|e, "\"
+                >compare services</a>."])|safe},
               {"type": "box", "style": "inactive", "label": "Can't start yet"} if not search.searchedAt else {"type": "action", "label": "Download search results", "href": url_for('direct_award.search_results', framework_framework=framework.framework, project_id=project.id)} if not project.downloadedAt else {"type": "box", "style": "complete", "label": "Search results downloaded"},
               {"type": "text", "text": ''.join(["<a href=\"", url_for('direct_award.search_results', framework_framework=framework.framework, project_id=project.id)|e, "\">Download your results again.</a>"])|safe} if project.downloadedAt else {}
             ]
@@ -85,7 +95,17 @@
           {
             "title": "Award a contract",
             "content": [
-              {"type": "text", "text": ''.join(["<a href=\"", framework_urls.call_off_contract_url|e, "\" target=\"_blank\" rel=\"external noopener noreferrer\">Download the ", framework['name'], " call-off contract</a>.<br>Read about <a href=\"https://www.gov.uk/guidance/how-to-award-a-contract-when-you-buy-services\" target=\"_blank\" rel=\"external noopener noreferrer\">how to award a contract when you buy services</a>."])|safe},
+              {"type": "text", "text": ''.join(["<a href=\"", framework_urls.call_off_contract_url|e, "\" target=\"_blank\" rel=\"external noopener noreferrer\"
+                data-analytics=\"trackEvent\"
+                data-analytics-category=\"Direct Award\"
+                data-analytics-action=\"External Link\"
+                data-analytics-label=\"", framework_urls.call_off_contract_url|e, "\"
+                >Download the ", framework['name'], " call-off contract</a>.<br>Read about <a href=\"https://www.gov.uk/guidance/how-to-award-a-contract-when-you-buy-services\" target=\"_blank\" rel=\"external noopener noreferrer\"
+                data-analytics=\"trackEvent\"
+                data-analytics-category=\"Direct Award\"
+                data-analytics-action=\"External Link\"
+                data-analytics-label=\"https://www.gov.uk/guidance/how-to-award-a-contract-when-you-buy-services\"
+                >how to award a contract when you buy services</a>."])|safe},
               {"type": "text", "text": ''.join(["The buyer and supplier must both sign a copy of the contract before the service can be used."])|safe},
               {"type": "box", "style": "inactive", "label": "Can't start yet"} if not project.downloadedAt else {}
             ]
@@ -93,14 +113,29 @@
           {
             "title": "Publish the contract",
             "content": [
-              {"type": "text", "text": ("Contracts worth over £10,000 must be published on <a href=\"https://www.gov.uk/contracts-finder\" target=\"_blank\" rel=\"external noopener noreferrer\">Contracts Finder</a>.")|safe},
+              {"type": "text", "text": ("Contracts worth over £10,000 must be published on <a href=\"https://www.gov.uk/contracts-finder\" target=\"_blank\" rel=\"external noopener noreferrer\"
+                data-analytics=\"trackEvent\"
+                data-analytics-category=\"Direct Award\"
+                data-analytics-action=\"External Link\"
+                data-analytics-label=\"https://www.gov.uk/contracts-finder\"
+                >Contracts Finder</a>.")|safe},
               {"type": "box", "style": "inactive", "label": "Can't start yet"} if not project.downloadedAt else {}
             ]
           },
           {
             "title": "Complete the Customer Benefits Record form",
             "content": [
-              {"type": "text", "text": ''.join(["Fill in the Crown Commercial Service’s <a href=\"", framework_urls.customer_benefits_record_form_url|e, "\" target=\"_blank\" rel=\"external noopener noreferrer\">", framework['name'], " Customer Benefits Record form</a>.<br>Email a copy to <a href=\"mailto:", framework_urls.customer_benefits_record_form_email|e, "\" target=\"_top\">", customer_benefits_record_form_email|e, "</a>."])},
+              {"type": "text", "text": ''.join(["Fill in the Crown Commercial Service’s <a href=\"", framework_urls.customer_benefits_record_form_url|e, "\" target=\"_blank\" rel=\"external noopener noreferrer\"
+                data-analytics=\"trackEvent\"
+                data-analytics-category=\"Direct Award\"
+                data-analytics-action=\"External Link\"
+                data-analytics-label=\"", framework_urls.customer_benefits_record_form_url|e, "\"
+                >", framework['name'], " Customer Benefits Record form</a>.<br>Email a copy to <a href=\"mailto:", framework_urls.customer_benefits_record_form_email|e, "\" target=\"_top\"
+                  data-analytics=\"trackEvent\"
+                  data-analytics-category=\"Direct Award\"
+                  data-analytics-action=\"External Link\"
+                  data-analytics-label=\"mailto:", framework_urls.customer_benefits_record_form_email|e, "\"
+                  >", customer_benefits_record_form_email|e, "</a>."])},
               {"type": "box", "style": "inactive", "label": "Can't start yet"} if not project.downloadedAt else {}
             ]
           }
