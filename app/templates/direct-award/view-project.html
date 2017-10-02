@@ -78,8 +78,8 @@
             "title": "Download your search results",
             "content": [
               {"type": "text", "text": ''.join(["Download a spreadsheet of your search results.<br>You can use the spreadsheet to help you review or <a href=\"", framework_urls.buyers_guide_compare_services_url|e, "\" target=\"_blank\" rel=\"external noopener noreferrer\">compare services</a>."])|safe},
-              {"type": "box", "style": "inactive", "label": "Can't start yet"} if not search.searchedAt else {"type": "action", "label": "Download search results", "href": url_for('direct_award.download_shortlist', framework_framework=framework.framework, project_id=project.id)} if not project.downloadedAt else {"type": "box", "style": "complete", "label": "Search results downloaded"},
-              {"type": "text", "text": ''.join(["<a href=\"", url_for('direct_award.download_shortlist', framework_framework=framework.framework, project_id=project.id)|e, "\">Download your results again.</a>"])|safe} if project.downloadedAt else {}
+              {"type": "box", "style": "inactive", "label": "Can't start yet"} if not search.searchedAt else {"type": "action", "label": "Download search results", "href": url_for('direct_award.search_results', framework_framework=framework.framework, project_id=project.id)} if not project.downloadedAt else {"type": "box", "style": "complete", "label": "Search results downloaded"},
+              {"type": "text", "text": ''.join(["<a href=\"", url_for('direct_award.search_results', framework_framework=framework.framework, project_id=project.id)|e, "\">Download your results again.</a>"])|safe} if project.downloadedAt else {}
             ]
           },
           {

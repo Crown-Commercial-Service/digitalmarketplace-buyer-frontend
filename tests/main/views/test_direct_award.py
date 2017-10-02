@@ -1,12 +1,15 @@
+from flask import Markup
 from lxml import html
 from html import escape as html_escape
 import mock
 import pytest
+import sys
 from urllib.parse import quote_plus, urlparse
+from werkzeug.exceptions import BadRequest, NotFound
 
 from dmcontent.content_loader import ContentLoader
-from app import search_api_client
-from app.main.views.g_cloud import data_api_client
+from app import data_api_client, search_api_client, content_loader
+from app.main.views.g_cloud import DownloadResultsView
 from ...helpers import BaseApplicationTest
 
 
@@ -304,7 +307,7 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         assert self._task_has_link(tasklist, 3, '/g-cloud/search?q=accelerator') is False
         assert self._task_search_ended(tasklist, 4) is True
         assert self._task_has_link(tasklist, 5,
-                                   '/buyers/direct-award/g-cloud/projects/1/download-search-results') is True
+                                   '/buyers/direct-award/g-cloud/projects/1/results') is True
 
         assert self._cannot_start_from_task(tasklist, 6) is True
 
@@ -331,7 +334,7 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         assert self._task_has_link(tasklist, 3, '/g-cloud/search?q=accelerator') is False
         assert self._task_search_downloaded(tasklist, 5) is True
         assert self._task_has_link(tasklist, 5,
-                                   '/buyers/direct-award/g-cloud/projects/1/download-search-results') is True
+                                   '/buyers/direct-award/g-cloud/projects/1/results') is True
 
         assert self._cannot_start_from_task(tasklist, 9) is True
 
@@ -344,18 +347,8 @@ class TestDirectAwardURLGeneration(BaseApplicationTest):
 
         self.g9_search_results = self._get_g9_search_results_fixture_data()
 
-        search_api_client.search_services = mock.Mock()
-        search_api_client.search_services.return_value = self.g9_search_results
-
-        data_api_client.get_framework = mock.Mock()
-        data_api_client.get_framework.return_value = self._get_framework_fixture_data('g-cloud-9')
-
-        data_api_client.get_direct_award_project = mock.Mock()
-        data_api_client.get_direct_award_project.return_value = self._get_direct_award_project_fixture()
-
-        data_api_client.find_direct_award_project_searches = mock.Mock()
-        data_api_client.find_direct_award_project_searches.return_value = \
-            self._get_direct_award_project_searches_fixture()
+    def teardown_method(self, method):
+        super(TestDirectAwardURLGeneration, self).teardown_method(method)
 
     @pytest.mark.parametrize('search_api_url, frontend_url',
                              (
@@ -376,13 +369,26 @@ class TestDirectAwardURLGeneration(BaseApplicationTest):
     def test_search_api_urls_convert_to_correct_frontend_urls(self, search_api_url, frontend_url):
         self.login_as_buyer()
 
-        search_api_client._get = mock.Mock()
-        search_api_client._get.return_value = self._get_search_results_fixture_data()
+        with mock.patch.object(data_api_client, 'get_framework') as get_framework_patch,\
+                mock.patch.object(data_api_client, 'get_direct_award_project') as get_direct_award_project_patch,\
+                mock.patch.object(data_api_client, 'find_direct_award_project_searches') as\
+                find_direct_award_project_searches_patch,\
+                mock.patch.object(data_api_client, 'find_frameworks') as find_frameworks_patch,\
+                mock.patch.object(search_api_client, 'search_services') as search_services_patch,\
+                mock.patch.object(search_api_client, '_get') as _get_patch:
 
-        project_searches = data_api_client.find_direct_award_project_searches.return_value
-        project_searches['searches'][0]['searchUrl'] = search_api_url
+            get_framework_patch.return_value = self._get_framework_fixture_data('g-cloud-9')
+            get_direct_award_project_patch.return_value = self._get_direct_award_project_fixture()
+            find_direct_award_project_searches_patch.return_value = self._get_direct_award_project_searches_fixture()
+            find_frameworks_patch.return_value = self._get_frameworks_list_fixture_data()
+            search_services_patch.return_value = self.g9_search_results
+            _get_patch.return_value = self._get_search_results_fixture_data()
 
-        res = self.client.get('/buyers/direct-award/g-cloud/projects/1')
+            project_searches = data_api_client.find_direct_award_project_searches.return_value
+            project_searches['searches'][0]['searchUrl'] = search_api_url
+
+            res = self.client.get('/buyers/direct-award/g-cloud/projects/1')
+
         assert res.status_code == 200
 
         body = res.get_data(as_text=True)
@@ -404,8 +410,7 @@ class TestDirectAwardEndSearch(TestDirectAwardBase):
     def test_end_search_page_renders_error_when_results_more_than_limit(self):
         self.login_as_buyer()
 
-        search_api_client._get = mock.Mock()
-        search_api_client._get.return_value = {
+        self._search_api_client_helpers._get.return_value = {
             "services": [],
             "meta": {
                 "query": {},
@@ -415,19 +420,188 @@ class TestDirectAwardEndSearch(TestDirectAwardBase):
             "links": {}
         }
 
-        self._search_api_client_helpers_patch = \
-            mock.patch('app.main.helpers.search_save_helpers.search_api_client', new=search_api_client)
-        self._search_api_client_helpers = self._search_api_client_helpers_patch.start()
-
         res = self.client.get('/buyers/direct-award/g-cloud/projects/1/end-search')
+
         assert res.status_code == 200
         assert "You have too many results." in res.get_data(as_text=True)
 
     def test_end_search_redirects_to_project_page(self):
         self.login_as_buyer()
-        data_api_client.lock_direct_award_project = mock.Mock()
-        data_api_client.lock_direct_award_project.return_value = self._get_direct_award_lock_project_fixture()
 
-        res = self.client.post('/buyers/direct-award/g-cloud/projects/1/end-search')
+        with mock.patch.object(data_api_client, 'lock_direct_award_project') as lock_direct_award_project_patch:
+            lock_direct_award_project_patch.return_value = self._get_direct_award_lock_project_fixture()
+
+            res = self.client.post('/buyers/direct-award/g-cloud/projects/1/end-search')
+
         assert res.status_code == 302
         assert res.location.endswith('/buyers/direct-award/g-cloud/projects/1')
+
+
+class TestDirectAwardDownloadResultsView(TestDirectAwardBase):
+    def setup_method(self, method):
+        super(TestDirectAwardDownloadResultsView, self).setup_method(method)
+
+        self.project_id = 1
+        self.kwargs = {'project_id': 1}
+        self.file_context = {
+            'filename': 'test', 'sheetname': 'search results',
+            'services': self._get_direct_award_project_services_fixture()['services'][:3],
+        }
+        self.view = DownloadResultsView()
+
+        data_api_client.record_direct_award_project_download = mock.Mock()
+
+        data_api_client.get_direct_award_project_services_iter = mock.Mock()
+        data_api_client.get_direct_award_project_services_iter.return_value = \
+            self._get_direct_award_project_services_fixture()['services']
+
+        data_api_client.get_direct_award_project.return_value = self._get_direct_award_lock_project_fixture()
+
+        self._request_patch = mock.patch.object(self.view, 'request', autospec=False)
+        self._request = self._request_patch.start()
+
+        self._current_user_patch = mock.patch('app.main.views.g_cloud.current_user', autospec=True)
+        self._current_user = self._current_user_patch.start()
+        self._current_user.id = 123
+        self._current_user.email_address = 'buyer@example.com'
+
+        self.view._init_hook()
+
+    def teardown_method(self, method):
+        super(TestDirectAwardDownloadResultsView, self).teardown_method(method)
+
+        self._request_patch.stop()
+        self._current_user_patch.stop()
+
+    def test_init_hook(self):
+        assert self.view.data_api_client is data_api_client
+        assert self.view.search_api_client is self._search_api_client
+        assert self.view.content_loader is content_loader
+
+    @pytest.mark.parametrize('status_code, call_count',
+                             (
+                                 (200, 1),
+                                 (400, 0),
+                                 (404, 0),
+                             ))
+    def test_post_request_hook(self, status_code, call_count):
+        self.view._post_request_hook((None, status_code), **self.kwargs)
+        assert self.view.data_api_client.record_direct_award_project_download.call_count == call_count
+
+    def test_determine_filetype(self):
+        self.view.request.args = {'filetype': 'csv'}
+        filetype = self.view.determine_filetype(self.file_context, **self.kwargs)
+        assert filetype == DownloadResultsView.FILETYPES.CSV
+
+        self.view.request.args = {'filetype': 'ods'}
+        filetype = self.view.determine_filetype(self.file_context, **self.kwargs)
+        assert filetype == DownloadResultsView.FILETYPES.ODS
+
+        self.view.request.args = {'filetype': 'docx'}
+        with pytest.raises(BadRequest):
+            self.view.determine_filetype(self.file_context, **self.kwargs)
+
+        self.view.request.args = {}
+        with pytest.raises(BadRequest):
+            self.view.determine_filetype(self.file_context, **self.kwargs)
+
+    def test_get_project_and_search(self):
+        project, search = self.view.get_project_and_search(self.project_id)
+
+        assert project is self.view.data_api_client.get_direct_award_project.return_value['project']
+        assert search is self.view.data_api_client.find_direct_award_project_searches.return_value['searches'][0]
+
+    def test_get_project_and_search_404s_on_unauthorized_user_access(self):
+        with pytest.raises(NotFound):
+            self._current_user.id = sys.maxsize
+            self.view.get_project_and_search(self.project_id)
+
+    def test_get_project_and_search_400s_for_unlocked_state(self):
+        with pytest.raises(BadRequest):
+            data_api_client.get_direct_award_project.return_value = self._get_direct_award_project_fixture()
+            self.view.get_project_and_search(self.project_id)
+
+    def test_get_project_and_search_400s_on_invalid_searches(self):
+        data_api_client.find_direct_award_project_searches.return_value = {}
+        with pytest.raises(BadRequest):
+            self.view.get_project_and_search(self.project_id)
+
+        data_api_client.find_direct_award_project_searches.return_value = {'searches': []}
+        with pytest.raises(BadRequest):
+            self.view.get_project_and_search(self.project_id)
+
+    def test_get_file_context(self):
+        with self.app.app_context(), self.app.test_request_context('/'):
+            file_context = self.view.get_file_context(**self.kwargs)
+
+        assert set(file_context.keys()) == {'framework', 'search', 'project', 'questions', 'services', 'filename',
+                                            'sheetname', 'locked_at', 'search_summary'}
+
+        assert file_context['framework'] == 'G-Cloud 9'
+        assert file_context['search'] == data_api_client.find_direct_award_project_searches.return_value['searches'][0]
+        assert file_context['project'] == data_api_client.get_direct_award_project.return_value['project']
+        assert set(q.id for q in file_context['questions'].values()) == {'serviceName', 'serviceDescription', 'price'}
+        assert len(file_context['services']) == 1
+        assert file_context['filename'] == '2017-00-08-my-procurement-project-results'
+        assert file_context['sheetname'] == "Search results"
+        assert file_context['locked_at'] == 'Friday 8 September 2017 at 12:00am GMT'
+        assert file_context['search_summary'] == Markup('1 result found in All categories')
+
+    def test_get_file_data_and_column_styles(self):
+        """This test will quite closely reproduce the implementation, but is the only way I can think of to tightly
+        pin the content and styling that will go into the file to be downloaded. It also validates that the structure
+        meets the expectations of the parent class."""
+        with self.app.app_context(), self.app.test_request_context('/'):
+            file_context = self.view.get_file_context(**self.kwargs)
+            file_rows, column_styles = self.view.get_file_data_and_column_styles(file_context)
+
+        assert column_styles == [
+            {'stylename': 'col-wide'},  # Framework/supplier name
+            {'stylename': 'col-wide'},  # Search ended/service name
+            {'stylename': 'col-extra-wide'},     # summary/description
+            {'stylename': 'col-wide'},  # price
+            {'stylename': 'col-wide'},  # service page URL
+            {'stylename': 'col-wide'},  # contact name
+            {'stylename': 'col-wide'},  # contact telephone
+            {'stylename': 'col-extra-wide'},     # contact email
+        ]
+
+        # Test content and non-default styles.
+        assert file_rows[0]['cells'] == ['Framework', 'Search ended', 'Search summary']
+        assert file_rows[0]['meta']['cell_styles']['stylename'] == 'cell-header'
+
+        assert file_rows[1]['cells'] == [file_context['framework'], file_context['locked_at'],
+                                         file_context['search_summary']]
+        assert file_rows[1]['meta']['row_styles']['stylename'] == 'row-tall-optimal'
+
+        assert file_rows[2]['cells'] == []
+
+        assert file_rows[3]['cells'] == ['Supplier name'] + [k.name for k in file_context['questions'].values()] + \
+                                        ['Service page URL', 'Contact name', 'Telephone', 'Email']
+        assert file_rows[3]['meta']['cell_styles']['stylename'] == 'cell-header'
+
+        for i, file_row in enumerate(file_rows[4:]):
+            assert file_row['cells'][0] == file_context['services'][i]['supplier']['name']
+
+            for j, question in enumerate(file_context['questions'].values()):
+                assert file_row['cells'][1 + j] == file_context['services'][i]['data'][question.id]
+
+            assert file_row['cells'][j + 2].getAttribute('href').endswith('/g-cloud/services/123456789')
+            assert file_row['cells'][j + 3] == file_context['services'][i]['supplier']['contact']['name']
+            assert file_row['cells'][j + 4] == file_context['services'][i]['supplier']['contact']['phone']
+            assert file_row['cells'][j + 5] == file_context['services'][i]['supplier']['contact']['email']
+
+    def test_file_download(self):
+        self.login_as_buyer()
+
+        with self.app.app_context():
+            res = self.client.get('/buyers/direct-award/g-cloud/projects/1/results/download?filetype=csv')
+            assert res.status_code == 200
+
+        with self.app.app_context():
+            res = self.client.get('/buyers/direct-award/g-cloud/projects/1/results/download?filetype=ods')
+            assert res.status_code == 200
+
+        with self.app.app_context():
+            res = self.client.get('/buyers/direct-award/g-cloud/projects/1/results/download?filetype=docx')
+            assert res.status_code == 400

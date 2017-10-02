@@ -38,6 +38,7 @@ def create_app(config_name):
                     content_loader.load_manifest(framework_data['slug'], 'services', 'search_filters')
                 # we need to be able to display old services, even on expired frameworks
                 content_loader.load_manifest(framework_data['slug'], 'services', 'display_service')
+                content_loader.load_manifest(framework_data['slug'], 'services', 'download_results')
             elif framework_data['framework'] == 'digital-outcomes-and-specialists':
                 content_loader.load_manifest(framework_data['slug'], 'briefs', 'display_brief')
 

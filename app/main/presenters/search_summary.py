@@ -1,3 +1,4 @@
+from lxml.html import document_fromstring
 import os
 import yaml
 from collections import defaultdict
@@ -31,7 +32,9 @@ class SearchSummary(object):
             formatted_conjunction = " {} ".format(final_conjunction)
             return formatted_conjunction.join([u', '.join(start), end])
 
-    def __init__(self, results_total, request_args, filter_groups, lots_by_slug):
+    def __init__(self, results_total, request_args, filter_groups, lots_by_slug, include_markup=True):
+        self.include_markup = include_markup
+
         self._lots_by_slug = lots_by_slug
         self._set_initial_sentence(results_total, request_args)
 
@@ -50,7 +53,8 @@ class SearchSummary(object):
                     SummaryFragment(
                         group_id=group_id,
                         filters=filters,
-                        rules=group_rules)
+                        rules=group_rules,
+                        include_markup=self.include_markup)
                 )
 
     def _set_initial_sentence(self, results_total, request_args):
@@ -89,7 +93,13 @@ class SearchSummary(object):
                 map(_get_fragment_string, self.filters_fragments))
             parts.append(SearchSummary.write_list_as_sentence(
                 fragment_strings, u"and"))
-        return Markup(u" ".join(parts))
+
+        marked_up_text = Markup(u" ".join(parts))
+
+        if not self.include_markup:
+            marked_up_text = document_fromstring(marked_up_text).text_content()
+
+        return marked_up_text
 
     def get_starting_sentence(self):
         return u"{}{}{} {}".format(
@@ -188,7 +198,8 @@ class SummaryFragment(object):
     POST_TAG = u'</em>'
     FINAL_CONJUNCTION = u'and'
 
-    def __init__(self, group_id, filters, rules):
+    def __init__(self, group_id, filters, rules, include_markup=True):
+
         self.id = group_id
         self.rules = rules
         self.form = 'singular'

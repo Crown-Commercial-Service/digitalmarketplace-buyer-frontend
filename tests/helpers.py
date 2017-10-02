@@ -154,22 +154,29 @@ class BaseApplicationTest(object):
         project = BaseApplicationTest._get_fixture_data('direct_award_project_fixture.json')
 
         for key, value in kwargs.items():
-            if key in project:
+            if key in project['project']:
                 project['project'][key] = value
             else:
-                raise ValueError('Key "{}" does not exist in the Direct Award project fixture.')
+                raise ValueError('Key "{}" does not exist in the Direct Award project fixture.'.format(key))
 
         return project
 
     @staticmethod
     def _get_direct_award_lock_project_fixture():
-        fixture = BaseApplicationTest._get_fixture_data('direct_award_project_fixture.json')
-        fixture['project']['lockedAt'] = "2017-09-08T00:00:00.000000Z"
-        return fixture
+        return BaseApplicationTest._get_direct_award_project_fixture(lockedAt="2017-09-08T00:00:00.000000Z")
 
     @staticmethod
-    def _get_direct_award_project_searches_fixture():
-        return BaseApplicationTest._get_fixture_data('direct_award_project_searches_fixture.json')
+    def _get_direct_award_project_searches_fixture(only_active=False):
+        searches = BaseApplicationTest._get_fixture_data('direct_award_project_searches_fixture.json')
+
+        if only_active:
+            searches = {'searches': [search for search in searches['searches'] if search['active']]}
+
+        return searches
+
+    @staticmethod
+    def _get_direct_award_project_services_fixture():
+        return BaseApplicationTest._get_fixture_data('direct_award_project_services_fixture.json')
 
     @staticmethod
     def _strip_whitespace(whitespace_in_this):
