@@ -364,8 +364,14 @@ def save_search(framework_framework):
         if not name and request.method == 'POST':
             form.name.errors = ["Names must be between 1 and 100 characters"]
 
+        if not save_search_selection and request.method == "POST":
+            save_search_selection_error = "Please choose where to save your search."
+        else:
+            save_search_selection_error = None
+
         return render_template('direct-award/save-search.html',
                                form=form,
+                               save_search_selection_error=save_search_selection_error,
                                search_summary_sentence=search_summary.markup(),
                                search_query=url_encode(search_query),
                                request=request,
