@@ -6,6 +6,7 @@ import pytest
 import sys
 from urllib.parse import quote_plus, urlparse
 from werkzeug.exceptions import BadRequest, NotFound
+from dateutil import parser
 
 from dmcontent.content_loader import ContentLoader
 from app import data_api_client, search_api_client, content_loader
@@ -53,6 +54,7 @@ class TestDirectAward(TestDirectAwardBase):
     @classmethod
     def setup_class(cls):
 
+        cls.SAVE_SEARCH_OVERVIEW_URL = '/buyers/direct-award/g-cloud'
         cls.SAVE_SEARCH_URL = '/buyers/direct-award/g-cloud/save-search'
         cls.SIMPLE_SEARCH_PARAMS = 'lot=cloud-software'
         cls.SEARCH_URL = '/g-cloud/search?' + cls.SIMPLE_SEARCH_PARAMS
@@ -63,6 +65,33 @@ class TestDirectAward(TestDirectAwardBase):
 
         data_api_client.find_direct_award_projects = mock.Mock()
         data_api_client.find_direct_award_projects.return_value = cls._get_direct_award_project_list_fixture()
+
+    def test_renders_saved_search_overview(self):
+        self.login_as_buyer()
+        res = self.client.get(self.SAVE_SEARCH_OVERVIEW_URL)
+        assert res.status_code == 200
+
+        result_html = res.get_data(as_text=True)
+        doc = html.fromstring(result_html)
+        page_header = doc.xpath('//*[@id="content"]/div/header/h1')[0].text.strip()
+
+        assert page_header == "Your saved searches"
+        assert page_header in doc.xpath('/html/head/title')[0].text.strip()
+        assert doc.xpath('//*[@id="searching_table"]')[0].text.strip() == "Searching"
+        assert doc.xpath('//*[@id="search_ended_table"]')[0].text.strip() == "Search ended"
+
+        tables = [
+            doc.xpath('//*[@id="content"]/div/div/table[1]/tbody/tr'),
+            doc.xpath('//*[@id="content"]/div/div/table[2]/tbody/tr')
+        ]
+
+        for table in tables:
+            previous_date = None
+            for row in table:
+                current_date = row[1][0].text
+                if previous_date:
+                    assert parser.parse(previous_date) >= parser.parse(current_date)
+                previous_date = current_date
 
     def test_renders_save_search_button(self):
         self._search_api_client.search_services.return_value = self.g9_search_results
