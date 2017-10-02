@@ -12,23 +12,20 @@
 .button-save-wrapper {
   border-top: 1px solid $border-colour;
   border-bottom: 1px solid $border-colour;
-  padding: 20px 5px;
-  min-height: 34px;
+  padding-top: 20px;
   margin-bottom: 20px;
 
   .save-summary-text {
-    display: inline-block;
-    font-size: 16px;
-    padding: 5px;
+    @include core-16($line-height: (36/16));
+    @include media(mobile) {
+      margin-bottom: 10px;
+    }
   }
 
   .save-button {
-    display: inline-block;
-    right: 0;
-    float: right;
-
     .button-save {
-      font-size: 16px;
+      @include core-16;
+      width: 100%;
     }
   }
 }
