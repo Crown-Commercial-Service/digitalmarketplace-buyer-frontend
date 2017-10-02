@@ -19,6 +19,9 @@ class TestSuppliersPage(BaseApplicationTest):
         self._data_api_client.find_suppliers.return_value = self.suppliers_by_prefix
         self._data_api_client.get_supplier.return_value = self.supplier
 
+        gcloud9_framework = self._get_framework_fixture_data('g-cloud-9')['frameworks']
+        self._data_api_client.find_frameworks.return_value = {'frameworks': [gcloud9_framework]}
+
     def teardown_method(self, method):
         self._data_api_client_patch.stop()
 
@@ -240,3 +243,11 @@ class TestSuppliersPage(BaseApplicationTest):
     def test_should_not_show_web_address(self):
         res = self.client.get('/g-cloud/supplier/92191')
         assert 'www.examplecompany.biz' not in res.get_data(as_text=True)
+
+    def test_should_not_show_supplier_without_services_on_framework(self):
+        supplier_data = self.supplier.copy()
+        supplier_data['suppliers']['service_counts']['G-Cloud 9'] = 0
+        self._data_api_client.get_supplier.return_value = supplier_data
+
+        res = self.client.get('/g-cloud/supplier/92191')
+        assert res.status_code == 404

@@ -60,15 +60,22 @@ def suppliers_list_by_prefix():
 def suppliers_details(supplier_id):
     supplier = data_api_client.get_supplier(supplier_id=supplier_id)["suppliers"]
 
-    first_character_of_supplier_name = supplier["name"][:1]
-    if is_alpha(first_character_of_supplier_name):
-        prefix = process_prefix(prefix=first_character_of_supplier_name, format='template')
-    else:
-        prefix = u"other"
+    all_frameworks = data_api_client.find_frameworks().get('frameworks')
+    live_framework_names = [f['name'] for f in all_frameworks if f['status'] == 'live' and f['framework'] == 'g-cloud']
 
-    return render_template(
-        'suppliers_details.html',
-        supplier=supplier,
-        prefix=prefix,
-        gcloud_framework_description=get_framework_description(data_api_client, 'g-cloud'),
-    )
+    if any(supplier.get('service_counts', {}).get(framework_name, 0) > 0 for framework_name in live_framework_names):
+        first_character_of_supplier_name = supplier["name"][:1]
+        if is_alpha(first_character_of_supplier_name):
+            prefix = process_prefix(prefix=first_character_of_supplier_name, format='template')
+        else:
+            prefix = u"other"
+
+        return render_template(
+            'suppliers_details.html',
+            supplier=supplier,
+            prefix=prefix,
+            gcloud_framework_description=get_framework_description(data_api_client, 'g-cloud'),
+        )
+
+    else:
+        abort(404)
