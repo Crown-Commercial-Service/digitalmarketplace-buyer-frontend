@@ -466,7 +466,14 @@ def download_brief_response_attachment(framework_slug, lot_slug, brief_id, respo
     response = data_api_client.get_brief_response(response_id)
     if not response or not response.get('briefResponses', {}).get('attachedDocumentURL'):
         abort(404)
-    slug = response['briefResponses']['attachedDocumentURL'][attachment_id]
+
+    try:
+        slug = response['briefResponses']['attachedDocumentURL'][attachment_id]
+    except IndexError:
+        abort(404)
+
+    if slug is None:
+        abort(404)
 
     try:
         # try newer file storage
