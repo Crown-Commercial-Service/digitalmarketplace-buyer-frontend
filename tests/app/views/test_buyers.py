@@ -1007,8 +1007,7 @@ class TestPublishBrief(BaseApplicationTest):
         assert res.status_code == 302
         assert data_api_client.publish_brief.called
         assert notify_team.called
-        assert res.location.endswith(
-            '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234?published=true')  # noqa
+        assert res.location.endswith('/2/brief/1234/published')
 
     @mock.patch('app.buyers.views.buyers.notify_team')
     def test_csrf_protection(self, notify_team, data_api_client):

@@ -611,9 +611,7 @@ def publish_brief(framework_slug, lot_slug, brief_id):
             abort(400, 'There are still unanswered required questions')
         data_api_client.publish_brief(brief_id, brief_user_name)
 
-        # the 'published' parameter is for tracking this request by analytics
-        brief_url = url_for('.view_brief_overview', framework_slug=brief['frameworkSlug'], lot_slug=brief['lotSlug'],
-                            brief_id=brief['id'], published='true')
+        brief_url = '/2/brief/{}/published'.format(brief_id)
 
         brief_url_external = url_for('main.get_brief_by_id', framework_slug=brief['frameworkSlug'],
                                      brief_id=brief['id'], _external=True)
