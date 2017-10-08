@@ -68,7 +68,7 @@
   {% if show_pdf_link %}
     <div class="m-t-1">
       <a href="{{ url_for('.get_brief_pdf', framework_slug=brief.frameworkSlug, brief_id=brief.id) }}" target="_blank">
-        Download this brief as a PDF
+        Download this brief (PDF, less than 100kb)
       </a>
     </div>
   {% endif %}
