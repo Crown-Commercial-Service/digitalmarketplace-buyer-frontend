@@ -105,8 +105,8 @@
       var href = $target.attr('href');
       var text = $target.text();
       
-      if ( !label && href ) label = href;
-      else if ( !label && !href && text ) label = text;
+      if ( !label && text ) label = text;
+      else if ( !label && !text && href ) label = href;
 
       GOVUK.GDM.analytics.events.sendEvent(category, action, label);
       
