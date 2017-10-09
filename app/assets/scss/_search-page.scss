@@ -16,7 +16,8 @@
   margin: 0px 0px 20px;
 
   .save-summary-text {
-    @include core-16($line-height: (36/16));
+    @include core-16;
+    padding: 7px 15px;
     @include media(mobile) {
       margin-bottom: 10px;
     }
