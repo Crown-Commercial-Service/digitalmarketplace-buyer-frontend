@@ -17,6 +17,7 @@
     ],
     "dunsNumber": "333333333",
     "eSourcingId": "333333",
-    "clients": []
+    "clients": [],
+    "service_counts": {"G-Cloud 9": 1}
   }
 }

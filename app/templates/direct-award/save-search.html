@@ -43,13 +43,21 @@
         <div class="dmspeak">
           <h2 class="heading-xmedium">Choose where to save your search</h2>
         </div>
+        {% if save_search_selection_error %}
+        <p class="validation-message" id="error-save-search-selection">
+          {{ save_search_selection_error }}
+        </p>
+        {% endif %}
         
         <fieldset>
+          
+          <div{% if save_search_selection_error %} class="validation-wrapper"{% endif %}>
+          
           <div class="multiple-choice" data-target="new-search">
             <input type="radio" name="save_search_selection" value="new_search" id="project-new"
               {% if request.form.save_search_selection == 'new_search' or not projects %}checked="checked"{% endif %} 
               required="required">
-            <label for="project-new">Create a new search</label>
+            <label for="project-new">Create a new saved search</label>
           </div>
           <div class="panel panel-border-narrow js-hidden" id="new-search">
             {% if form.name.errors %}
@@ -57,7 +65,7 @@
               {% endif %}
               <div class="question" id="{{ form.name.name }}">
                 {{ form.name.label(class="question-heading") }}
-                <p>Name your search. A short description of what you want to buy makes a good name.</p>
+                <p>Name your saved search. A reference number or short description of what you want to buy makes a good name.</p>
                 <p class="hint">
                   100 characters maximum
                 </p>
@@ -75,7 +83,7 @@
 
           {% if projects %}
 
-          <p class="form-block">or</p>
+          <p class="form-block">or update an existing search</p>
 
           {% for project in projects %}
 
@@ -87,6 +95,7 @@
           {% endfor %}
 
           {% endif %}
+          </div>
         </fieldset>
 
         <br>

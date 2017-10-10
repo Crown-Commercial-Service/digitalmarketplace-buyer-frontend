@@ -22,7 +22,9 @@
 $path: "/static/images/";
 
 // Other govuk-elements "partials"
+@import "elements/_helpers.scss";
 @import "elements/_forms.scss";
+@import "elements/_panels.scss";
 
 // Digital Marketplace front end toolkit components
 @import "forms/word-counter";

@@ -102,7 +102,12 @@
       var category = $target.attr('data-analytics-category');
       var action = $target.attr('data-analytics-action');
       var label = $target.attr('data-analytics-label');
+      var href = $target.attr('href');
+      var text = $target.text();
       
+      if ( !label && text ) label = text;
+      else if ( !label && !text && href ) label = href;
+
       GOVUK.GDM.analytics.events.sendEvent(category, action, label);
       
     },
