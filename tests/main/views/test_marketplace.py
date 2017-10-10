@@ -1303,7 +1303,7 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         assert res.status_code == 200
         document = html.fromstring(res.get_data(as_text=True))
 
-        header = document.xpath("//h2[@class='opportunity-data-header']")[0].text
+        header = document.xpath("//h2[@id='opportunity-data-header']")[0].text
 
         assert "Opportunity data" in header
 
@@ -1312,32 +1312,29 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         assert res.status_code == 200
         document = html.fromstring(res.get_data(as_text=True))
 
-        description = document.xpath("//p[@class='opportunity-data-description']")[0].text
-        expected_description = (
-        "Download data about closed opportunities including who won"
-        + " and how much the contract was worth or if the contract was never awarded and why."
-        )
+        description = document.xpath("//p[@id='opportunity-data-description']")[0].text
+        expected_desc = "Download data about closed opportunities including award status. This will be updated daily."
 
-        assert expected_description in description
+        assert expected_desc in description
 
     def test_opportunity_data_link_text_visible_on_catalogue_page(self):
         res = self.client.get('/digital-outcomes-and-specialists/opportunities')
         assert res.status_code == 200
         document = html.fromstring(res.get_data(as_text=True))
 
-        link_text = document.xpath("//a[@class='opportunity-data-link']")[0].text
+        link_text = document.xpath("//a[@class='document-link-with-icon']")[0].text_content()
 
-        assert "You can download new data every week." in link_text
+        assert "Download data" in link_text
 
     def test_opportunity_data_file_url_correct_on_catalogue_page(self):
         res = self.client.get('/digital-outcomes-and-specialists/opportunities')
         assert res.status_code == 200
         document = html.fromstring(res.get_data(as_text=True))
 
-        link = document.xpath("//a[@class='opportunity-data-link']")[0].values()
+        link = document.xpath("//a[@class='document-link-with-icon']")[0].values()
         expected_link = (
             "https://assets.digitalmarketplace.service.gov.uk"
-            + "/digital-outcomes-and-specialists-2/communications/data/test.csv"
+            + "/digital-outcomes-and-specialists-2/communications/data/opportunity-data.csv"
         )
 
         assert expected_link in link
