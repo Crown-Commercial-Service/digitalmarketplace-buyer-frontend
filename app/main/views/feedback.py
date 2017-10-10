@@ -29,7 +29,7 @@ def send_feedback():
     flash(Markup(
         """Thank you for your message. If you have more detailed feedback, please email
         <a href="mailto:enquiries@digitalmarketplace.service.gov.uk">enquiries@digitalmarketplace.service.gov.uk</a> or
-        <a href="https://airtable.com/shrkFM8L6Wfenzn5Q">take part in our research</a>.
+        <a target="_blank" href="https://airtable.com/shrkFM8L6Wfenzn5Q">take part in our research</a>.
         """))
 
     return redirect(replaced, code=303)
