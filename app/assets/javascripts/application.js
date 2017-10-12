@@ -46,7 +46,7 @@
       "color:#550; background:yellow; font-size: 11pt",
       "color:yellow; background: #550;font-size:11pt"
     );
-    console.time("Modules loaded");
+    if (typeof console.time !== "undefined") console.time("Modules loaded");
   }
 
   // Initialise our modules
@@ -72,6 +72,6 @@
 
   GOVUK.GDM = GDM;
 
-  if (GDM.debug) console.timeEnd("Modules loaded");
+  if (GDM.debug && typeof console.timeEnd !== "undefined") console.timeEnd("Modules loaded");
 
 }).apply(this, [GOVUK||{}, GOVUK.GDM||{}]);
