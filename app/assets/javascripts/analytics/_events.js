@@ -51,8 +51,11 @@
   };
   
   var downloadLinkLabel = function (linkClick) {
-    var path = GOVUK.GDM.analytics.location.pathname().match(/\/buyers\/frameworks\/([a-z\-]+)\/requirements\/([a-z\-]+)\/*(\d+)*/),
-        lot = path[2],
+    var path = GOVUK.GDM.analytics.location.pathname().match(/\/buyers\/frameworks\/([a-z\-]+)\/requirements\/([a-z\-]+)\/*(\d+)*/);
+
+    if (!path) return false; 
+
+    var lot = path[2],
         lots = {
           'digital-specialists': 'specialists',
           'digital-outcomes': 'outcomes',
@@ -60,7 +63,7 @@
           'user-research-studios': 'user research studios'
         },
         briefId;
-
+    
     if (linkClick.text.match('Download supplier responses') !== null) {
         briefId = path[3];
         return 'supplier response list' + ' | ' + lots[lot] + ' | ' + briefId;
@@ -121,7 +124,7 @@
       // TODO: this should be within a specific class and only initialised on the supplier list download page
       // Currently this is running on click of any <a> link!
       $('body').on('click', 'a', this.supplierListDownload);
-      $('body').on('click', '[data-analytics=trackEvent]', this.trackEvent);
+      $('body').on('click', '[data-analytics=trackEvent]', this.trackEvent);      
     }
   };
 })(window, window.GOVUK);
