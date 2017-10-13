@@ -53,7 +53,7 @@
   var downloadLinkLabel = function (linkClick) {
     var path = GOVUK.GDM.analytics.location.pathname().match(/\/buyers\/frameworks\/([a-z\-]+)\/requirements\/([a-z\-]+)\/*(\d+)*/);
 
-    if (!path) return false; 
+    if (!path) return false; // added this in to stop errors where path is not defined.
 
     var lot = path[2],
         lots = {
