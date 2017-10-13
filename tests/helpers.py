@@ -27,8 +27,12 @@ class BaseApplicationTest(object):
         self.client = self.app.test_client()
         self.get_user_patch = None
 
+        self.app_context = self.app.app_context()
+        self.app_context.push()
+
     def teardown_method(self, method):
         self.teardown_login()
+        self.app_context.pop()
 
     @staticmethod
     def user(id, email_address, supplier_id, supplier_name, name,
