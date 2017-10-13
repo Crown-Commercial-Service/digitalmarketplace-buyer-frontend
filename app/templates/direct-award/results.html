@@ -61,38 +61,25 @@
               "title": "Download search results as a spreadsheet",
               "link": url_for('direct_award.download_results', framework_framework=framework.framework, project_id=project.id, filetype='odf'),
               "file_type": "ODS",
-              "download": "True"
+              "download": "True",
+              "analytics": "trackEvent",
+              "analytics_category": "Direct Award",
+              "analytics_action": "Download search results format",
+              "analytics_label": "ODS"
           },
           {
               "title": "Download search results as comma-separated values",
               "link": url_for('direct_award.download_results', framework_framework=framework.framework, project_id=project.id, filetype='csv'),
               "file_type": "CSV",
-              "download": "True"
+              "download": "True",
+              "analytics": "trackEvent",
+              "analytics_category": "Direct Award",
+              "analytics_action": "Download search results format",
+              "analytics_label": "CSV"
           }
       ]
       %}
-        <ul class='document-list'>
-          {% for item in items %}
-            <li class='document-list-item'>
-              {% if item.file_type %}
-                <a href="{{ item.link }}" class='document-link-with-icon' {% if item.download %}download {% endif %}
-                  data-analytics="trackEvent"
-                  data-analytics-category="Direct Award"
-                  data-analytics-action="Download search results format"
-                  data-analytics-label="{{ item.file_type }}"
-                >
-                  <span class='document-icon'>{{ item.file_type }}<span> document:</span></span>
-                  {{ item.title }}
-                </a>
-              {% else %}
-                <a href="{{ item.link }}" class='document-link'>
-                  {{ item.title }}
-                </a>
-              {% endif %}
-            </li>
-          {% endfor %}
-        </ul>
-      
+        {% include "toolkit/documents.html" %}
       {% endwith %}
     </div>
     <div class="marketplace-paragraph">
