@@ -365,7 +365,7 @@ def save_search(framework_framework):
             form.name.errors = ["Names must be between 1 and 100 characters"]
 
         if not save_search_selection and request.method == "POST":
-            save_search_selection_error = "Please choose where to save your search."
+            save_search_selection_error = "Please choose where to save your search"
         else:
             save_search_selection_error = None
 
@@ -374,6 +374,7 @@ def save_search(framework_framework):
                                save_search_selection_error=save_search_selection_error,
                                search_summary_sentence=search_summary.markup(),
                                search_query=url_encode(search_query),
+                               search_url=url_for('main.search_services', **search_query),
                                request=request,
                                projects=projects,
                                framework_framework=framework_framework), 400 if request.method == 'POST' else 200
