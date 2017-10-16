@@ -437,6 +437,21 @@ class TestDirectAwardEndSearch(TestDirectAwardBase):
         assert res.location.endswith('/buyers/direct-award/g-cloud/projects/1')
 
 
+class TestDirectAwardResultsPage(TestDirectAwardBase):
+    def test_results_page_download_links_work(self):
+        self.login_as_buyer()
+
+        with self.app.app_context():
+            res = self.client.get('/buyers/direct-award/g-cloud/projects/1/results')
+            doc = html.fromstring(res.get_data(as_text=True))
+
+            download_links = doc.xpath('//ul[@class="document-list"]//a[@class="document-link-with-icon"]/@href')
+
+            for download_link in download_links:
+                res = self.client.get(download_link)
+                assert res.status_code == 200
+
+
 class TestDirectAwardDownloadResultsView(TestDirectAwardBase):
     def setup_method(self, method):
         super(TestDirectAwardDownloadResultsView, self).setup_method(method)
