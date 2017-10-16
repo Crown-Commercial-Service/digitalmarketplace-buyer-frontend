@@ -32,9 +32,7 @@ class SearchSummary(object):
             formatted_conjunction = " {} ".format(final_conjunction)
             return formatted_conjunction.join([u', '.join(start), end])
 
-    def __init__(self, results_total, request_args, filter_groups, lots_by_slug, include_markup=True):
-        self.include_markup = include_markup
-
+    def __init__(self, results_total, request_args, filter_groups, lots_by_slug):
         self._lots_by_slug = lots_by_slug
         self._set_initial_sentence(results_total, request_args)
 
@@ -53,8 +51,7 @@ class SearchSummary(object):
                     SummaryFragment(
                         group_id=group_id,
                         filters=filters,
-                        rules=group_rules,
-                        include_markup=self.include_markup)
+                        rules=group_rules)
                 )
 
     def _set_initial_sentence(self, results_total, request_args):
@@ -94,12 +91,10 @@ class SearchSummary(object):
             parts.append(SearchSummary.write_list_as_sentence(
                 fragment_strings, u"and"))
 
-        marked_up_text = Markup(u" ".join(parts))
+        return Markup(u" ".join(parts))
 
-        if not self.include_markup:
-            marked_up_text = document_fromstring(marked_up_text).text_content()
-
-        return marked_up_text
+    def text_content(self):
+        return document_fromstring(self.markup()).text_content()
 
     def get_starting_sentence(self):
         return u"{}{}{} {}".format(
@@ -198,8 +193,7 @@ class SummaryFragment(object):
     POST_TAG = u'</em>'
     FINAL_CONJUNCTION = u'and'
 
-    def __init__(self, group_id, filters, rules, include_markup=True):
-
+    def __init__(self, group_id, filters, rules):
         self.id = group_id
         self.rules = rules
         self.form = 'singular'

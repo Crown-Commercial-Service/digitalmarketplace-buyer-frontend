@@ -38,6 +38,5 @@ class SearchMeta(object):
             search_api_response['meta']['total'],
             clean_request_query_params.copy(),
             filters.values(),
-            lots_by_slug,
-            include_markup=include_markup
+            lots_by_slug
         )
