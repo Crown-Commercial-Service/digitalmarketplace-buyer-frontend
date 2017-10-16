@@ -417,8 +417,8 @@ def prepared_response_contents_for_brief(brief, responses):
     def row(r):
         answers = od()
 
-        ess_responses = r.get(ESS, [])
-        nth_responses = r.get(NTH, [])
+        ess_responses = r.get(ESS, ['']*len(nth_req_names))
+        nth_responses = r.get(NTH, ['']*len(nth_req_names))
 
         answers.update({'Supplier': r.get('supplierName', 'UNKNOWN')})
         answers.update({'Contact': r.get('respondToEmailAddress', 'UNKNOWN')})

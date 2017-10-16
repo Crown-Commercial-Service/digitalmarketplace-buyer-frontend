@@ -200,13 +200,13 @@ class TestBuyersHelpers(unittest.TestCase):
         brief = {"id": 1, "niceToHaveRequirements": ["Nice", "to", "have", "yes", "please"]}
 
         assert helpers.buyers_helpers.get_sorted_responses_for_brief(brief, data_api_client) == [
-            {'id': 'five', 'niceToHaveRequirements': [True, True, True, True, True]},
-            {'id': 'five', 'niceToHaveRequirements': [True, True, True, True, True]},
-            {'id': 'four', 'niceToHaveRequirements': [True, True, True, True, False]},
-            {'id': 'four', 'niceToHaveRequirements': [True, True, True, True, False]},
-            {'id': 'three', 'niceToHaveRequirements': [True, True, False, False, True]},
+            {"id": "five", "niceToHaveRequirements": [True, True, True, True, True]},
+            {"id": "zero", "niceToHaveRequirements": [False, False, False, False, False]},
+            {"id": "three", "niceToHaveRequirements": [True, True, False, False, True]},
+            {"id": "five", "niceToHaveRequirements": [True, True, True, True, True]},
+            {"id": "four", "niceToHaveRequirements": [True, True, True, True, False]},
             {"id": "one", "niceToHaveRequirements": [False, False, False, True, False]},
-            {'id': 'zero', 'niceToHaveRequirements': [False, False, False, False, False]}
+            {"id": "four", "niceToHaveRequirements": [True, True, True, True, False]},
         ]
 
     def test_get_sorted_responses_does_not_sort_if_no_nice_to_haves(self):

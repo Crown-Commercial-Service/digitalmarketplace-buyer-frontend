@@ -14,18 +14,18 @@ from tempfile import NamedTemporaryFile
 from openpyxl import load_workbook
 
 
-CSV_EXPECTED = """Supplier,Kev's Fried Noodles,Kev's Pies,Kev's Doughnuts,Kev's Butties,Kev's Pizza
-Contact,test4@email.com,test2@email.com,test3@email.com,test1@email.com,test5@email.com
-Availability Date,After Christmas,A week Friday,As soon as the sugar is delivered,Next Tuesday,Within the hour
-Day rate,12.35,&euro;3.50,10,¥1.49,£350
+CSV_EXPECTED = """Supplier,Kev's Butties,Kev's Pies,Kev's Doughnuts,Kev's Fried Noodles,Kev's Pizza
+Contact,test1@email.com,test2@email.com,test3@email.com,test4@email.com,test5@email.com
+Availability Date,Next Tuesday,A week Friday,As soon as the sugar is delivered,After Christmas,Within the hour
+Day rate,¥1.49,&euro;3.50,10,12.35,£350
 Attached Document URL 1,,,,,
 Attached Document URL 2,,,,,
 Attached Document URL 3,,,,,
-E1,False,True,True,True,False
+E1,True,True,True,False,False
 E2,True,True,False,True,False
 Nice1,True,False,True,True,False
-Nice2,True,True,True,False,False
-Nice3,True,True,False,False,False"""
+Nice2,False,True,True,True,False
+Nice3,False,True,False,True,False"""
 
 
 @mock.patch('app.buyers.views.buyers.data_api_client')
