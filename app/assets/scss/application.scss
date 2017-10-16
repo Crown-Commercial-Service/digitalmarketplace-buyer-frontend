@@ -24,6 +24,7 @@ $path: "/static/images/";
 // Other govuk-elements "partials"
 @import "elements/_helpers.scss";
 @import "elements/_forms.scss";
+@import "elements/forms/_form-validation.scss";
 @import "elements/_panels.scss";
 
 // Digital Marketplace front end toolkit components

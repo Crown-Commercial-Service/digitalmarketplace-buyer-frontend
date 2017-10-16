@@ -27,10 +27,31 @@
 
 <div class="single-question-page save-search-page">
   <div class="grid-row">
+    <div class="column-one-whole">
+        {% if form.name.errors or save_search_selection_error %}
+        <div class="error-summary" role="alert" aria-labelledby="saving-search-error" tabindex="-1">
+
+          <div class="dmspeak">
+            <h2 class="heading-xmedium">There was a problem saving your search</h2>
+          </div>
+
+          <ul class="error-summary-list">
+              {% if save_search_selection_error %}
+                <li><a href="#select-where-to-save-error">{{ save_search_selection_error }}</a></li>
+              {% elif form.name.errors and not save_search_selection_error %}
+                {% for error in form.name.errors %}<li><a href="#name-your-search-error">{{ error }}</a></li>{% endfor %}
+              {% endif %}
+          </ul>
+    
+        </div>
+        {% endif %}
+    </div>
+  </div>
+  <div class="grid-row">
     <div class="column-two-thirds">
       <header class="page-heading-smaller page-heading-without-breadcrumb">
         <h1>
-          Save your search
+          Choose where to save your search
         </h1>
       </header>
     </div>
@@ -44,61 +65,62 @@
           {% endwith %}
         </div>
 
-        <div class="dmspeak">
-          <h2 class="heading-xmedium">Choose where to save your search</h2>
-        </div>
-        {% if save_search_selection_error %}
-        <p class="validation-message" id="error-save-search-selection">
-          {{ save_search_selection_error }}
-        </p>
-        {% endif %}
+       
         
         <fieldset>
           
+          
+
           <div{% if save_search_selection_error %} class="validation-wrapper"{% endif %}>
           
-          <div class="multiple-choice" data-target="new-search">
-            <input type="radio" name="save_search_selection" value="new_search" id="project-new"
-              {% if request.form.save_search_selection == 'new_search' or not projects %}checked="checked"{% endif %} 
-              required="required">
-            <label for="project-new">Create a new saved search</label>
-          </div>
-          <div class="panel panel-border-narrow js-hidden" id="new-search">
-            {% if form.name.errors %}
-            <div class="validation-wrapper">
+              {% if save_search_selection_error %}
+              <p class="validation-message" id="select-where-to-save-error">
+                {{ save_search_selection_error }}
+              </p>
               {% endif %}
-              <div class="question" id="{{ form.name.name }}">
-                {{ form.name.label(class="question-heading") }}
-                <p>Name your saved search. A reference number or short description of what you want to buy makes a good name.</p>
-                <p class="hint">
-                  100 characters maximum
-                </p>
-                {% if form.name.errors %}
-                <p class="validation-message" id="error-name-textbox">
-                  {% for error in form.name.errors %}{{ error }}{% endfor %}
-                </p>
-                {% endif %}
-                {{ form.name(class="text-box") }}
+
+              {% if projects %}
+
+              
+
+              {% for project in projects %}
+
+              <div class="multiple-choice">
+                <input type="radio" name="save_search_selection" value="{{ project.id }}" id="project-{{ project.id }}"{% if request.form.save_search_selection == project.id %}checked="checked"{% endif %}>
+                <label for="project-{{ project.id }}">{{ project.name or "Untitled project {}".format(project.id) }}</label>
               </div>
-              {% if form.name.errors %}
-            </div>
+
+              {% endfor %}
+
+              <p class="form-block">or</p>
+
               {% endif %}
-          </div>
 
-          {% if projects %}
+              <div class="multiple-choice" data-target="new-search">
+                <input type="radio" name="save_search_selection" value="new_search" id="project-new" aria-required="true" 
+                  {% if request.form.save_search_selection == 'new_search' or not projects %}checked="checked"{% endif %}>
+                <label for="project-new">Create a new saved search</label>
+              </div>
+              <div class="panel panel-border-narrow js-hidden" id="new-search">
+                
+                <div{% if form.name.errors and not save_search_selection_error %} class="validation-wrapper"{% endif %}>
+                  <div class="question" id="{{ form.name.name }}">
+                    {{ form.name.label(class="question-heading") }}
+                    <p>Name your saved search. A reference number or short description of what you want to buy makes a good name.</p>
+                    <p class="hint">
+                      100 characters maximum
+                    </p>
+                    {% if form.name.errors and not save_search_selection_error %}
+                    <p class="validation-message" id="name-your-search-error">
+                      {% for error in form.name.errors %}{{ error }}{% endfor %}
+                    </p>
+                    {% endif %}
+                    {{ form.name(class="text-box") }}
+                  </div>
+                </div>
+              </div>
 
-          <p class="form-block">or update an existing search</p>
 
-          {% for project in projects %}
-
-          <div class="multiple-choice">
-            <input type="radio" name="save_search_selection" value="{{ project.id }}" id="project-{{ project.id }}"{% if request.form.save_search_selection == project.id %}checked="checked"{% endif %}>
-            <label for="project-{{ project.id }}">{{ project.name or "No Project Name" }}</label>
-          </div>
-
-          {% endfor %}
-
-          {% endif %}
           </div>
         </fieldset>
 
