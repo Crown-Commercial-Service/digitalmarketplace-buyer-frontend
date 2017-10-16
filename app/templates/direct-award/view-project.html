@@ -87,7 +87,11 @@
                 data-analytics-action=\"External Link\"
                 >compare services</a>."])|safe},
               {"type": "box", "style": "inactive", "label": "Can't start yet"} if not search.searchedAt else {"type": "action", "label": "Download search results", "href": url_for('direct_award.search_results', framework_framework=framework.framework, project_id=project.id)} if not project.downloadedAt else {"type": "box", "style": "complete", "label": "Search results downloaded"},
-              {"type": "text", "text": ''.join(["<a href=\"", url_for('direct_award.search_results', framework_framework=framework.framework, project_id=project.id)|e, "\">Download your results again.</a>"])|safe} if project.downloadedAt else {}
+              {"type": "text", "text": ''.join(["<a href=\"", url_for('direct_award.search_results', framework_framework=framework.framework, project_id=project.id)|e, "\"
+                data-analytics=\"trackEvent\"
+                data-analytics-category=\"Direct Award\"
+                data-analytics-action=\"Internal Link\"
+              >Download your results again.</a>"])|safe} if project.downloadedAt else {}
             ]
           },
           {
@@ -139,7 +143,11 @@
               {% if item.type == 'text' %}
                 <p class="instruction-list-item-top{% for class in item.class %} {{ class }}{% endfor %}">{{ item.text|safe }}</p>
               {% elif item.type == 'action' %}
-                <a class="instruction-list-item-action button-save" href="{{ item.href }}">{{ item.label }}</a>
+                <a class="instruction-list-item-action button-save" href="{{ item.href }}" 
+                data-analytics="trackEvent"
+                data-analytics-category="Direct Award"
+                data-analytics-action="Internal Link"
+                >{{ item.label }}</a>
               {% elif item.type == 'box' %}
                 <p class="instruction-list-item-box {{ item.style }}">{{ item.label }}</p>
               {% endif %}
