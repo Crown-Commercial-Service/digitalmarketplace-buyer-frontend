@@ -566,7 +566,7 @@ class TestSearchResults(BaseApplicationTest):
         document = html.fromstring(res.get_data(as_text=True))
 
         hidden_inputs = document.xpath('//form[@id="js-dm-live-search-form"]//input[@type="hidden"]')
-        kv_pairs = { input_el.get('name'): input_el.get('value') for input_el in hidden_inputs }
+        kv_pairs = {input_el.get('name'): input_el.get('value') for input_el in hidden_inputs}
 
         assert kv_pairs == {
             'lot': 'cloud-software',

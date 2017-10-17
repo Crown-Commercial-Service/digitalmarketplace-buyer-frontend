@@ -256,7 +256,7 @@ class TestSearchFilters(BaseApplicationTest):
         with self.app.test_request_context(url):
             selection = build_lots_and_categories_link_tree(framework, lots, category_filter_group, flask.request,
                                                             g9_builder)
-            assert len(selection) == 4  # all -> software -> option2 -> option2.2
+            assert len(selection) == 5  # all -> software -> option2 -> option2.2; option2 as a parent category filter
 
             tree_root = selection[0]
             # check that only siblings of the selected sub-category are shown, and other categories
@@ -268,6 +268,9 @@ class TestSearchFilters(BaseApplicationTest):
             assert category_filters[0]['selected']
             sub_category_filters = category_filters[0]['children']
             assert len(sub_category_filters) == 2
+
+            assert [f for f in selection if f.get('name') == 'parentCategory'] == [
+                {'name': 'parentCategory', 'value': 'option 2'}]
 
     def test_filter_groups_have_correct_default_state(self):
         request = self._get_request_for_params({
