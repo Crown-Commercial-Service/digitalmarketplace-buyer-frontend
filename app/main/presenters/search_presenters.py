@@ -288,8 +288,18 @@ def _annotate_categories_with_selection(lot_slug, category_filters, request, url
             content_manifest, framework, aggregations, keys_to_remove, parent_category=category['value'])
 
         if selected_descendants:
-            # If a parentCategory has been sent as a url query param, de-select all other parent categories.
-            if request.values.get('parentCategory', category['value']) != category['value']:
+            # If a parentCategory has been sent as a url query param, and it's this category...
+            # (Note: `get` fallback is for if there are selected descendants but no parent category is set, which is
+            # not expected, but could happen if constructing URLs by hand.)
+            if request.values.get('parentCategory', category['value']) == category['value']:
+                # ... then ensure this choice survives as a hidden field for the filters form
+                parent_category_filter = dict()
+                parent_category_filter['name'] = 'parentCategory'
+                parent_category_filter['value'] = category['value']
+                selected_category_filters.append(parent_category_filter)
+
+            else:
+                # ... but otherwise, don't include this category's children in the tree
                 selected_descendants = []
 
         if directly_selected or selected_descendants:

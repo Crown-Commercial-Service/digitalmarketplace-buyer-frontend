@@ -230,8 +230,8 @@ def search_services():
                                                                          request, content_manifest)
 
     # Filter form should also filter by lot, and by category, when any of those are selected.
-    # (But if a sub-category is selected, there is no need to filter by the parent category as,
-    # well, so we can just take one hidden field per key - sub-cat will be last.)
+    # (If a sub-category is selected, we also need the parent category id, so that the correct part
+    # of the category tree is displayed when the sub-category appears under multiple parents.)
     filter_form_hidden_fields_by_name = {f['name']: f for f in selected_category_tree_filters[1:]}
 
     current_lot = lots_by_slug.get(current_lot_slug)
