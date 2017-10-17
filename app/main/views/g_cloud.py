@@ -606,7 +606,7 @@ class DownloadResultsView(SimpleDownloadFileView):
 
             all_services.append(service)
 
-        search_meta = SearchMeta(search['searchUrl'], frameworks_by_slug, include_markup=False)
+        search_meta = SearchMeta(search['searchUrl'], frameworks_by_slug)
 
         file_context = {
             'framework': frameworks_by_slug[framework_slug]['name'],
@@ -617,7 +617,7 @@ class DownloadResultsView(SimpleDownloadFileView):
             'filename': filename,
             "sheetname": "Search results",
             'locked_at': locked_at,
-            'search_summary': search_meta.search_summary.markup(),
+            'search_summary': search_meta.search_summary.text_content(),
         }
 
         return file_context
