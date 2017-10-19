@@ -211,7 +211,7 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
 
         for i, item in enumerate(tasklist):
             assert item.xpath('h2/span/text()')[0].startswith(str(i + 1))
-            assert item.xpath('h2/text()')[0] == item_headings[i]
+            assert item_headings[i] in item.xpath('h2/text()')[0]
 
     def test_overview_renders_links_common_to_all_states(self):
         res = self.client.get('/buyers/direct-award/g-cloud/projects/1')
