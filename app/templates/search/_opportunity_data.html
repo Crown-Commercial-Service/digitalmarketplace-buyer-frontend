@@ -1,0 +1,21 @@
+<div class="dmspeak">
+  <h2 class="heading-small" id="opportunity-data-header">Opportunity data</h2>
+  <p id="opportunity-data-description">Download data about closed opportunities including award status. This will be updated daily.<p>
+</div>
+{%
+  with
+  items = [
+      {
+          "title": "Download data",
+          "link": "https://assets.digitalmarketplace.service.gov.uk/digital-outcomes-and-specialists-2/communications/data/opportunity-data.csv",
+          "file_type": "CSV",
+          "download": "True",
+          "analytics": "trackEvent",
+          "analytics_category": "opportunity-data-csv",
+          "analytics_action": "download CSV",
+          "analytics_label": "Opportunity Data CSV"
+      }
+    ]
+%}
+    {% include "toolkit/documents.html" %}
+{% endwith %}

@@ -92,12 +92,13 @@
   GOVUK.GDM.analytics.events = {
     'supplierListDownload': function (e) {
       var linkClick = new LinkClick(e);
-
-      if ((linkClick.category() === 'download') && (linkClick.fileType() === 'csv')) {
-        GOVUK.analytics.trackEvent('download', 'csv', {
-          'label': downloadLinkLabel(linkClick),
-          'transport': 'beacon'
-        });
+      if (downloadLinkLabel(linkClick)) {
+        if ((linkClick.category() === 'download') && (linkClick.fileType() === 'csv')) {
+          GOVUK.analytics.trackEvent('download', 'csv', {
+            'label': downloadLinkLabel(linkClick),
+            'transport': 'beacon'
+          });
+        }
       }
     },
     trackEvent: function (e) {

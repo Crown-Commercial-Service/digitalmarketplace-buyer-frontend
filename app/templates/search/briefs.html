@@ -29,16 +29,21 @@
     </div>
 
     <div class="grid-row search-results-page">
-        <section class="column-one-third search-page-filters" aria-label="Search filters">
-            <form action="" method="get">
-                {% include 'search/_filters.html' %}
-            </form>
+      <div class="column-one-third">
+        <section class="search-page-filters" aria-label="Search filters">
+          <form action="" method="get">
+            {% include 'search/_filters.html' %}
+          </form>
         </section>
-        <section class="column-two-thirds" aria-label="Opportunities found">
-            {% include 'search/_briefs_summary.html' %}
-            {% include 'search/_briefs_results.html' %}
-            {% include 'search/_briefs_pagination.html' %}
+        <section class="search-page-opportunity-data" aria-label="Download opportunity data">
+          {% include 'search/_opportunity_data.html' %}
         </section>
+      </div>
+      <section class="column-two-thirds" aria-label="Opportunities found">
+        {% include 'search/_briefs_summary.html' %}
+        {% include 'search/_briefs_results.html' %}
+        {% include 'search/_briefs_pagination.html' %}
+      </section>
     </div>
 
 {% endblock %}
