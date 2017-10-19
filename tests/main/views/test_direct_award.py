@@ -405,7 +405,7 @@ class TestDirectAwardEndSearch(TestDirectAwardBase):
         assert res.status_code == 200
 
         doc = html.fromstring(res.get_data(as_text=True))
-        assert len(doc.xpath('//h1[contains(normalize-space(), "End search")]')) == 1
+        assert len(doc.xpath('//h1[contains(normalize-space(), "End your search")]')) == 1
 
     def test_end_search_page_renders_error_when_results_more_than_limit(self):
         self.login_as_buyer()
