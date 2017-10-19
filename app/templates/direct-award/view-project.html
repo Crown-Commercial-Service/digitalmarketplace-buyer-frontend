@@ -16,7 +16,7 @@
       },
       {
           "link": url_for('direct_award.saved_search_overview', framework_framework=framework.framework),
-          "label": "Saved searches"
+          "label": "Your saved searches"
       }
     ]
   %}
@@ -135,7 +135,7 @@
           }
         ] %}
           <li class="instruction-list-item divider">
-            <h2 class="instruction-list-item-body"><span class="step-number" role="presentation">{{ loop.index }}. </span>{{ step.title }}</h2>
+            <h2 class="instruction-list-item-body"><span class="step-number" role="presentation">{{ loop.index }}.</span>&nbsp;{{ step.title }}</h2>
             {% for item in step.content %}
               {% if item.type == 'text' %}
                 <p class="instruction-list-item-top{% for class in item.class %} {{ class }}{% endfor %}">{{ item.text|safe }}</p>

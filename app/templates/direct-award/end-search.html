@@ -1,6 +1,6 @@
 {% extends "_base_page.html" %}
 
-{% block page_title %}Save your search - Digital Marketplace{% endblock %}
+{% block page_title %}End search - Digital Marketplace{% endblock %}
 
 {% block breadcrumb %}
   {%
@@ -16,7 +16,7 @@
       },
       {
         "link": url_for('direct_award.saved_search_overview', framework_framework=framework.framework),
-        "label": "Saved Searches"
+        "label": "Your saved Searches"
       },
       {
         "link": url_for('direct_award.view_project', framework_framework=framework.framework, project_id=project.id),
