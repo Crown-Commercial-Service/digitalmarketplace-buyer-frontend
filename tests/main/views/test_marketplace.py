@@ -1298,6 +1298,47 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         ss_elem = document.xpath("//p[@class='search-summary']")[0]
         assert self._normalize_whitespace(self._squashed_element_text(ss_elem)) == "6 results"
 
+    def test_opportunity_data_header_visible_on_catalogue_page(self):
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities')
+        assert res.status_code == 200
+        document = html.fromstring(res.get_data(as_text=True))
+
+        header = document.xpath("//h2[@id='opportunity-data-header']")[0].text
+
+        assert "Opportunity data" in header
+
+    def test_opportunity_data_description_visible_on_catalogue_page(self):
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities')
+        assert res.status_code == 200
+        document = html.fromstring(res.get_data(as_text=True))
+
+        description = document.xpath("//p[@id='opportunity-data-description']")[0].text
+        expected_desc = "Download data about closed opportunities including award status. This will be updated daily."
+
+        assert expected_desc in description
+
+    def test_opportunity_data_link_text_visible_on_catalogue_page(self):
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities')
+        assert res.status_code == 200
+        document = html.fromstring(res.get_data(as_text=True))
+
+        link_text = document.xpath("//a[@class='document-link-with-icon']")[0].text_content()
+
+        assert "Download data" in link_text
+
+    def test_opportunity_data_file_url_correct_on_catalogue_page(self):
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities')
+        assert res.status_code == 200
+        document = html.fromstring(res.get_data(as_text=True))
+
+        link = document.xpath("//a[@class='document-link-with-icon']")[0].values()
+        expected_link = (
+            "https://assets.digitalmarketplace.service.gov.uk"
+            + "/digital-outcomes-and-specialists-2/communications/data/opportunity-data.csv"
+        )
+
+        assert expected_link in link
+
     def test_catalogue_of_briefs_404_if_invalid_status(self):
         res = self.client.get('/digital-outcomes-and-specialists/opportunities?status=pining-for-fjords')
         assert res.status_code == 404

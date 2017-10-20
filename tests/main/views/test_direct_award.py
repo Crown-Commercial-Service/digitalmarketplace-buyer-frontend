@@ -211,7 +211,7 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
 
         for i, item in enumerate(tasklist):
             assert item.xpath('h2/span/text()')[0].startswith(str(i + 1))
-            assert item.xpath('h2/text()')[0] == item_headings[i]
+            assert item_headings[i] in item.xpath('h2/text()')[0]
 
     def test_overview_renders_links_common_to_all_states(self):
         res = self.client.get('/buyers/direct-award/g-cloud/projects/1')
@@ -405,7 +405,7 @@ class TestDirectAwardEndSearch(TestDirectAwardBase):
         assert res.status_code == 200
 
         doc = html.fromstring(res.get_data(as_text=True))
-        assert len(doc.xpath('//h1[contains(normalize-space(), "End search")]')) == 1
+        assert len(doc.xpath('//h1[contains(normalize-space(), "End your search")]')) == 1
 
     def test_end_search_page_renders_error_when_results_more_than_limit(self):
         self.login_as_buyer()

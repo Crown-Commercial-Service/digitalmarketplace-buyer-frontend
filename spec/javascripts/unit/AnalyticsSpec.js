@@ -109,6 +109,19 @@ describe("GOVUK.Analytics", function () {
       }]);
     });
 
+    it('sends an event requested via html attributes on example of Oportunity Data download', function() {
+      $(document.body).append('<a id="opportunity-data" data-analytics="trackEvent" data-analytics-category="opportunity-data-csv" data-analytics-action="download CSV" data-analytics-label="Opportunity Data CSV" href="https://assets.digitalmarketplace.service.gov.uk/digital-outcomes-and-specialists-2/communications/data/opportunity-data.csv">Download data</a>');
+      GOVUK.GDM.analytics.events.init();
+      $('#opportunity-data').click();
+      expect(window.ga.calls.first().args).toEqual(['send', {
+        'hitType': 'event',
+        'eventCategory': "opportunity-data-csv",
+        'eventAction': "download CSV",
+        'eventLabel': "Opportunity Data CSV",
+        'transport': 'beacon'
+      }]);
+    });
+
     it('sends the right event when a list of user research labs download link is clicked', function() {
       spyOn(GOVUK.GDM.analytics.location, "pathname")
         .and

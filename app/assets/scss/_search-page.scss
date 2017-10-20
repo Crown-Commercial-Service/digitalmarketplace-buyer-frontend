@@ -122,7 +122,9 @@ em.search-result-highlighted-text {
     display: block;
   }
 }
-
+.search-page-filters {
+  padding-bottom: 15px;
+}
 .search-result-important-metadata {
   li {
     @include bold-19;
