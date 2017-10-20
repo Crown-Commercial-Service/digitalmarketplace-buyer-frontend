@@ -22,13 +22,26 @@ Seller opportunities – {{ framework.name }} – Digital Marketplace
 {% endblock %}
 
 {% block content_summary %}
-<div class="intro">
-  <h1>Latest opportunities</h1>
-</div>
+    <div class="intro">
+        <h1> Opportunities</h1>
+        <article class="content-main" style="float: right;text-align: right;margin-top: -2.5em;">
+            Show:
+            {% if link_args['status'] != 'live' %}
+                <a href="?status=live">open only</a>
+                |
+                <b>open and closed</b>
+            {% else %}
+                <b>open only</b>
+                |
+                <a href="?">open and closed</a>
+            {% endif %}
+        </article>
+    </div>
 {% endblock %}
 
 
 {% block sidebar %}
+
 {% endblock %}
 
 {% block main_content %}

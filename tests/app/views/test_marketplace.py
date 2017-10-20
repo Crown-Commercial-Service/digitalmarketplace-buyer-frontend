@@ -926,7 +926,7 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         }
 
         heading = document.xpath('normalize-space(//h1/text())')
-        assert heading == "Latest opportunities"
+        assert heading == "Opportunities"
         # to-do: fix this test
         # assert 'lot 1, lot 3 and lot 4' in document.xpath(
         #     "normalize-space(//div[@class='marketplace-paragraph']/p/text())"

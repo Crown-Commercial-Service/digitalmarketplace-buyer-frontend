@@ -26,7 +26,7 @@
             {% if briefs_count > 0 %}
               <a
                 aria-labelledby="opportunities__call-to-action"
-                href="{{ url_for('.list_opportunities', framework_slug=framework_slug) }}"
+                href="{{ url_for('.list_opportunities', framework_slug=framework_slug, status='live') }}"
                 class="card seller">
                 <p>
                   <span>{{ briefs_count }}</span>
