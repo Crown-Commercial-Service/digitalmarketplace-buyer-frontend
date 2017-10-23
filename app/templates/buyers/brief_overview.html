@@ -62,7 +62,7 @@
               <p class="banner-message">
                   Your brief has been successfully published. It will be open until {{ brief.applicationsClosedAt | dateformat }} at 6PM (in Canberra)
               </p>
-              <a href="{{ url_for("main.get_brief_by_id", framework_slug=framework.slug, brief_id=brief.id) }}" role="button">View Live Brief</a>
+              <a href="{{ url_for("main.get_brief_by_id", framework_slug=framework.slug, brief_id=brief.id) }}" class="button">View Live Brief</a>
           </div>
       {% endif %}{% endblock %}
 
@@ -245,7 +245,7 @@
   {% if not delete_requested %}
     <div class="m-t-4">
       {% if framework.status == 'live' and brief.status == 'draft' %}
-      <a href="{{ url_for('buyers.view_brief_overview', framework_slug=framework.slug, lot_slug=brief.lotSlug, brief_id=brief.id, delete_requested=True) }}" role="button">Delete</a>
+      <a href="{{ url_for('buyers.view_brief_overview', framework_slug=framework.slug, lot_slug=brief.lotSlug, brief_id=brief.id, delete_requested=True) }}" class="button">Delete</a>
       {% endif %}
     </div>
   {% endif %}

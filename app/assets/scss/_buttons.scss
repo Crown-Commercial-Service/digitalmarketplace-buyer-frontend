@@ -1,5 +1,6 @@
 button,
 .button,
+main article:first-of-type a.button,
 [role='button'],
 [type='submit'],
 [type='reset'],
@@ -42,6 +43,11 @@ button,
   .callout--info & {
     margin-bottom: $tiny-spacing;
   }
+}
+
+main article:first-of-type a:hover.button,
+main article:first-of-type a:focus.button {
+  color: white;
 }
 
 .sidebar {
