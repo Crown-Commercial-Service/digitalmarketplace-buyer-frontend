@@ -1313,7 +1313,7 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         document = html.fromstring(res.get_data(as_text=True))
 
         description = document.xpath("//p[@id='opportunity-data-description']")[0].text
-        expected_desc = "Download data about closed opportunities including award status. This will be updated daily."
+        expected_desc = "Download data buyers have provided about closed opportunities. Some data may be missing."
 
         assert expected_desc in description
 
