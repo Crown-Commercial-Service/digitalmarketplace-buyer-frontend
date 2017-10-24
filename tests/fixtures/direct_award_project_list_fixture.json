@@ -1,164 +1,90 @@
 {
   "links": {
-    "self": "http://localhost:5000/direct-award/projects?user-id=32157"
+      "self": "http://127.0.0.1:5000/direct-award/projects?latest-first=1"
   },
   "meta": {
-    "total": 22
+      "total": 10
   },
   "projects": [
-    {
-      "active": true,
-      "createdAt": "2017-08-31T11:49:45.546512Z",
-      "id": 3,
-      "lockedAt": "2017-09-06T16:55:03.244373Z",
-      "name": "Procurement Test - Software"
-    },
-    {
-      "active": false,
-      "createdAt": "2017-09-04T10:29:52.686781Z",
-      "id": 4,
-      "lockedAt": "2017-09-04T10:29:52.686781Z",
-      "name": "Procurement Test - Legal Software"
-    },
-    {
-      "active": true,
-      "createdAt": "2017-09-04T11:28:27.318985Z",
-      "id": 5,
-      "lockedAt": "2017-09-06T17:03:09.868521Z",
-      "name": "Procurement Test - Test"
-    },
-    {
-      "active": true,
-      "createdAt": "2017-09-05T13:26:15.692748Z",
-      "id": 6,
-      "lockedAt": "2017-09-06T17:03:20.549849Z",
-      "name": "Procurement Test - Chocolate"
-    },
-    {
-      "active": true,
-      "createdAt": "2017-09-06T09:46:28.186848Z",
-      "id": 7,
-      "lockedAt": "2017-09-06T16:51:33.010667Z",
-      "name": "Procurement Test - Laptops"
-    },
-    {
-      "active": true,
-      "createdAt": "2017-09-06T11:24:42.366588Z",
-      "id": 8,
-      "lockedAt": "2017-09-06T17:04:26.039944Z",
-      "name": "Procurement Test - Trainers"
-    },
-    {
-      "active": true,
-      "createdAt": "2017-09-06T16:41:49.819477Z",
-      "id": 9,
-      "lockedAt": "2017-09-18T14:32:51.142053Z",
-      "name": "Procurement Test 25"
-    },
-    {
-      "active": true,
-      "createdAt": "2017-09-06T17:04:44.194675Z",
-      "id": 10,
-      "lockedAt": "2017-09-18T14:34:52.685518Z",
-      "name": "Procurement Test 10"
-    },
-    {
-      "active": true,
-      "createdAt": "2017-09-06T17:13:26.514960Z",
-      "id": 11,
-      "lockedAt": "2017-09-06T17:18:19.035669Z",
-      "name": "Procurement Test 11"
-    },
-    {
-      "active": true,
-      "createdAt": "2017-09-07T10:42:47.823866Z",
-      "id": 12,
-      "lockedAt": "2017-09-08T14:05:17.113039Z",
-      "name": "Procurement Test 12"
-    },
-    {
-      "active": true,
-      "createdAt": "2017-09-08T14:06:42.245101Z",
-      "id": 13,
-      "lockedAt": "2017-09-08T14:06:45.597781Z",
-      "name": "Procurement Test 13"
-    },
-    {
-      "active": true,
-      "createdAt": "2017-09-08T14:07:10.804280Z",
-      "id": 14,
-      "lockedAt": "2017-09-08T14:07:14.716154Z",
-      "name": "Procurement Test 14"
-    },
-    {
-      "active": true,
-      "createdAt": "2017-09-12T14:53:49.533362Z",
-      "id": 15,
-      "lockedAt": "2017-09-18T14:35:32.716428Z",
-      "name": "Procurement Test 15"
-    },
-    {
-      "active": true,
-      "createdAt": "2017-09-15T09:32:13.320740Z",
-      "id": 19,
-      "lockedAt": "2017-09-18T14:35:54.266574Z",
-      "name": "Procurement Test 19"
-    },
-    {
-      "active": true,
-      "createdAt": "2017-09-18T11:24:10.790422Z",
-      "id": 20,
-      "lockedAt": "2017-09-18T14:36:04.709057Z",
-      "name": "Procurement Test 20"
-    },
-    {
-      "active": true,
-      "createdAt": "2017-09-18T13:27:48.463582Z",
-      "id": 21,
-      "lockedAt": "2017-09-18T14:36:26.493646Z",
-      "name": "Procurement Test 21"
-    },
-    {
-      "active": true,
-      "createdAt": "2017-09-18T13:52:59.573140Z",
-      "id": 22,
-      "lockedAt": "2017-09-18T14:36:35.996437Z",
-      "name": "Procurement Test 22"
-    },
-    {
-      "active": true,
-      "createdAt": "2017-09-18T14:08:25.040681Z",
-      "id": 23,
-      "lockedAt": "2017-09-18T14:36:48.956226Z",
-      "name": "Procurement Test 23"
-    },
-    {
-      "active": true,
-      "createdAt": "2017-09-18T14:15:17.217630Z",
-      "id": 24,
-      "lockedAt": "2017-09-18T14:36:56.265221Z",
-      "name": "Procurement Test 24"
-    },
-    {
-      "active": true,
-      "createdAt": "2017-09-18T14:40:41.741815Z",
-      "id": 25,
-      "lockedAt": "2017-09-18T14:40:52.903082Z",
-      "name": "Test"
-    },
-    {
-      "active": true,
-      "createdAt": "2017-09-18T15:33:37.612538Z",
-      "id": 26,
-      "lockedAt": null,
-      "name": "test"
-    },
-    {
-      "active": true,
-      "createdAt": "2017-09-18T15:33:52.215176Z",
-      "id": 27,
-      "lockedAt": null,
-      "name": "test 2"
-    }
+      {
+          "active": true,
+          "createdAt": "2017-10-18T11:22:04.840284Z",
+          "downloadedAt": null,
+          "id": 61,
+          "lockedAt": null,
+          "name": "fdsfdsfds"
+      },
+      {
+          "active": true,
+          "createdAt": "2017-10-18T11:21:45.619315Z",
+          "downloadedAt": null,
+          "id": 60,
+          "lockedAt": null,
+          "name": "zcczx"
+      },
+      {
+          "active": true,
+          "createdAt": "2017-10-17T09:18:26.953779Z",
+          "downloadedAt": null,
+          "id": 59,
+          "lockedAt": null,
+          "name": "rrewr"
+      },
+      {
+          "active": true,
+          "createdAt": "2017-10-12T16:13:27.336376Z",
+          "downloadedAt": null,
+          "id": 58,
+          "lockedAt": "2017-10-12T16:13:54.969422Z",
+          "name": "fgfdfds"
+      },
+      {
+          "active": true,
+          "createdAt": "2017-10-12T15:28:55.224286Z",
+          "downloadedAt": "2017-10-13T15:53:36.091384Z",
+          "id": 57,
+          "lockedAt": "2017-10-13T15:45:12.332316Z",
+          "name": "fsdfdsfd"
+      },
+      {
+          "active": true,
+          "createdAt": "2017-10-12T12:12:00.660057Z",
+          "downloadedAt": "2017-10-12T15:05:40.695771Z",
+          "id": 56,
+          "lockedAt": "2017-10-12T12:12:19.768680Z",
+          "name": "dsadsa"
+      },
+      {
+          "active": true,
+          "createdAt": "2017-10-11T14:29:38.460374Z",
+          "downloadedAt": null,
+          "id": 49,
+          "lockedAt": null,
+          "name": "my cloud project"
+      },
+      {
+          "active": true,
+          "createdAt": "2017-10-11T14:29:23.340801Z",
+          "downloadedAt": null,
+          "id": 48,
+          "lockedAt": null,
+          "name": "my cloud project"
+      },
+      {
+          "active": true,
+          "createdAt": "2017-10-11T14:28:44.620077Z",
+          "downloadedAt": null,
+          "id": 47,
+          "lockedAt": null,
+          "name": "my cloud project"
+      },
+      {
+          "active": true,
+          "createdAt": "2017-10-11T14:28:32.913715Z",
+          "downloadedAt": null,
+          "id": 46,
+          "lockedAt": null,
+          "name": "my cloud project"
+      }
   ]
 }

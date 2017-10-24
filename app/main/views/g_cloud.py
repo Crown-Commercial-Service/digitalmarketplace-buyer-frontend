@@ -36,6 +36,7 @@ from ..helpers import framework_helpers
 from ..helpers.search_save_helpers import SearchMeta
 from ..helpers.shared_helpers import get_fields_from_manifest, get_questions_from_manifest_by_id
 from ..forms.direct_award_forms import CreateProjectForm
+from operator import itemgetter
 
 from ..helpers.direct_award_helpers import is_direct_award_project_accessible, get_direct_award_projects
 
@@ -308,7 +309,8 @@ def saved_search_overview(framework_framework):
     content_loader.load_messages(framework['slug'], ['descriptions', 'urls'])
     framework_short_description = content_loader.get_message(framework['slug'], 'descriptions', 'framework_short')
 
-    projects = get_direct_award_projects(current_user.id)
+    projects = get_direct_award_projects(current_user.id, latest_first=True)
+    projects['closed_projects'].sort(key=itemgetter('lockedAt'), reverse=True)
 
     return render_template(
         'direct-award/index.html',
