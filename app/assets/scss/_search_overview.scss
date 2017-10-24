@@ -18,7 +18,7 @@ ol.instruction-list-item-top li {
 
 ol.steps {
   @include bold-27;
-  padding-left: 25px;
+  padding-left: 30px;
 
   @include media( $min-width: $site-width + (2 * (27px + $gutter) ) ) {
     padding-left: 0;
@@ -30,11 +30,11 @@ ol.steps {
   .instruction-list-item-top,
   .instruction-list-item-box,
   .instruction-list-item-action {
-    margin-left: 25px;
+    margin-left: 30px;
   }
 
   .step-number {
-    min-width: 25px;
+    min-width: 30px;
     float: left;
   }
 }
