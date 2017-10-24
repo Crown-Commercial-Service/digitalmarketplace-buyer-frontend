@@ -1,5 +1,11 @@
 {% extends "_base_page.html" %}
 
+{% if page_title %}
+    {% block page_title -%}
+        {{ page_title }} - Digital Marketplace
+    {%- endblock %}
+{% endif %}
+
 {% if main_class %}
   {% block main_class -%}
     {{ main_class }}

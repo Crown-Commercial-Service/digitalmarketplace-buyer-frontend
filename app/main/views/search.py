@@ -352,6 +352,7 @@ def supplier_search():
         component = render_component('bundles/Search/SearchWidget.js', props)
         return render_template(
             '_react.html',
+            page_title='Seller catalogue',
             component=component,
             breadcrumb_items=[
                 {'link': url_for('main.index'), 'label': 'Home'},

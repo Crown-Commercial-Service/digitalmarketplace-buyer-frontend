@@ -86,6 +86,7 @@ def buyer_dashboard(view=None):
 
         return render_template(
             '_react.html',
+            page_title="Dashboard",
             component=rendered_component,
         )
 
@@ -133,6 +134,7 @@ def buyer_overview():
 
     return render_template(
         '_react.html',
+        page_title="Dashboard",
         component=rendered_component,
     )
 

@@ -74,6 +74,7 @@ def get_supplier(code):
 
     return render_template(
         '_react.html',
+        page_title=supplier.get('name'),
         component=rendered_component,
         breadcrumb_items=[
             {'link': url_for('main.index'), 'label': 'Home'},
@@ -113,6 +114,7 @@ def get_supplier_case_study(casestudy_id):
     rendered_component = render_component('bundles/CaseStudy/CaseStudyViewWidget.js', {"casestudy": dict(casestudy)})
     return render_template(
         '_react.html',
+        page_title=casestudy.get('title'),
         breadcrumb_items=[
             {'link': url_for('main.index'), 'label': 'Home'},
             {'link': url_for('main.supplier_search'), 'label': 'Seller catalogue'},
