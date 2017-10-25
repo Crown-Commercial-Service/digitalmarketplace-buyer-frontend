@@ -224,6 +224,16 @@ ol.bold-numbers {
     margin-bottom: 1.2em;
   }
 }
+
+
+@include media($tablet) {
+  .briefs-filter {
+    float: right;
+    text-align: right;
+    margin-top: -2.5em;
+  }
+}
+
 @include media($tablet) {
   .brief-content {
     dt, dd, ul, p {
