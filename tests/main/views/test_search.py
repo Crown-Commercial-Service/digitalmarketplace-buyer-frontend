@@ -556,6 +556,24 @@ class TestSearchResults(BaseApplicationTest):
         assert len(training) == 1
         assert len(training[0].xpath('a')) == 0
 
+    def test_filter_form_given_category_selection(self):
+        self._search_api_client.search_services.return_value = self.g9_search_results
+
+        res = self.client.get('/g-cloud/search?parentCategory=electronic+document+and+records+management+%28edrm%29&'
+                              'lot=cloud-software&serviceCategories=content+management+system+%28cms%29')
+        assert res.status_code == 200
+
+        document = html.fromstring(res.get_data(as_text=True))
+
+        hidden_inputs = document.xpath('//form[@id="js-dm-live-search-form"]//input[@type="hidden"]')
+        kv_pairs = {input_el.get('name'): input_el.get('value') for input_el in hidden_inputs}
+
+        assert kv_pairs == {
+            'lot': 'cloud-software',
+            'serviceCategories': 'content management system (cms)',
+            'parentCategory': 'electronic document and records management (edrm)'
+        }
+
 
 class TestSearchFilterOnClick(BaseApplicationTest):
     def setup_method(self, method):
