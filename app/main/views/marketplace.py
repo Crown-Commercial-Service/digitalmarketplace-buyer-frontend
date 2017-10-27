@@ -204,7 +204,6 @@ def get_brief_by_id(framework_slug, brief_id):
         selected_for_brief=selected_for_brief,
         profile_application_status=profile_application_status,
         profile_url=profile_url,
-        show_pdf_link=brief['status'] in ['live', 'closed'],
         unassessed_domains=unassessed_domains,
         supplier_assessments=supplier_assessments,
         supplier_framework=supplier_framework
@@ -356,11 +355,6 @@ def get_brief_response_preview_by_id(framework_slug, brief_id):
             "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         }
     ), 200
-
-
-@main.route('/<framework_slug>/opportunities/opportunity_<brief_id>.pdf')
-def get_brief_pdf(framework_slug, brief_id):
-    return render_pdf(url_for('.get_brief_by_id', framework_slug=framework_slug, brief_id=brief_id))
 
 
 @main.route('/<framework_slug>/opportunities')

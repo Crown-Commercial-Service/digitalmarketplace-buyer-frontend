@@ -140,13 +140,6 @@ class TestBriefPage(BaseApplicationTest):
 
         self._assert_page_title(document)
 
-    def test_dos_brief_pdf(self):
-        brief_id = self.brief['briefs']['id']
-        res = self.client.get(self.expand_path('/digital-service-professionals/opportunities/opportunity_{}.pdf')
-                              .format(brief_id))
-        assert_equal(200, res.status_code)
-        assert_equal(res.mimetype, 'application/pdf')
-
     def test_dos_brief_has_at_least_one_section(self):
         brief_id = self.brief['briefs']['id']
         res = self.client.get(self.expand_path('/digital-service-professionals/opportunities/{}').format(brief_id))
@@ -268,9 +261,9 @@ class TestBriefPage(BaseApplicationTest):
         document = html.fromstring(res.get_data(as_text=True))
 
         brief_response_url = self.expand_path('/sellers/opportunities/{}/responses/create'.format(brief_id))
-        assert_equal(document.xpath('//a')[11].text, "Sign in to continue")
+        assert_equal(document.xpath('//a')[10].text, "Sign in to continue")
         assert_equal(
-            document.xpath('//a')[11].values()[1],
+            document.xpath('//a')[10].values()[1],
             "/login?next=/digital-service-professionals/opportunities/{}".format(brief_id)
         )
 
@@ -351,10 +344,10 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
         )
         document = html.fromstring(res.get_data(as_text=True))
 
-        brief_scenario_button_text = document.xpath('//a')[11].text
+        brief_scenario_button_text = document.xpath('//a')[10].text
         assert_equal(brief_scenario_button_text, 'Update your profile')
 
-        choose_domain_url = document.xpath('//a')[11].get('href')
+        choose_domain_url = document.xpath('//a')[10].get('href')
         assert_equal(choose_domain_url, '/sellers/application')
 
     def test_submitted_app_outcome(self):
@@ -378,10 +371,10 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
         )
         document = html.fromstring(res.get_data(as_text=True))
 
-        brief_scenario_button_text = document.xpath('//a')[11].text
+        brief_scenario_button_text = document.xpath('//a')[10].text
         assert_equal(brief_scenario_button_text, 'Request an assessment')
 
-        choose_domain_url = document.xpath('//a')[11].get('href')
+        choose_domain_url = document.xpath('//a')[10].get('href')
         assert_equal(choose_domain_url, "/sellers/opportunities/{}/assessment/status".format(
             self.brief['id']
             )
@@ -407,10 +400,10 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
         )
         document = html.fromstring(res.get_data(as_text=True))
 
-        brief_scenario_button_text = document.xpath('//a')[11].text
+        brief_scenario_button_text = document.xpath('//a')[10].text
         assert_equal(brief_scenario_button_text, 'Request an assessment')
 
-        choose_domain_url = document.xpath('//a')[11].get('href')
+        choose_domain_url = document.xpath('//a')[10].get('href')
         assert_equal(choose_domain_url, "/sellers/opportunities/{}/assessment/status".format(
             self.brief['id']
             )
@@ -438,10 +431,10 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
         )
         document = html.fromstring(res.get_data(as_text=True))
 
-        brief_scenario_button_text = document.xpath('//a')[11].text
+        brief_scenario_button_text = document.xpath('//a')[10].text
         assert_equal(brief_scenario_button_text, 'Update your profile')
 
-        choose_domain_url = document.xpath('//a')[11].get('href')
+        choose_domain_url = document.xpath('//a')[10].get('href')
         assert_equal(choose_domain_url, "/sellers/application")
 
     def test_existing_seller_submitted_app_dp(self):
@@ -466,10 +459,10 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
         )
         document = html.fromstring(res.get_data(as_text=True))
 
-        brief_scenario_button_text = document.xpath('//a')[11].text
+        brief_scenario_button_text = document.xpath('//a')[10].text
         assert_equal(brief_scenario_button_text, 'Update your profile')
 
-        choose_domain_url = document.xpath('//a')[11].get('href')
+        choose_domain_url = document.xpath('//a')[10].get('href')
         assert_equal(choose_domain_url, "/sellers/application")
 
     def test_has_brief_responses(self):
@@ -488,7 +481,7 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
 
         document = html.fromstring(res.get_data(as_text=True))
         assert_equal(
-            document.xpath('//a')[11].text, 'View your application'
+            document.xpath('//a')[10].text, 'View your application'
         )
 
     def test_aoe_dp_no_casestudies(self):
@@ -515,10 +508,10 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
             )
         )
 
-        brief_scenario_button_text = document.xpath('//a')[12].text
+        brief_scenario_button_text = document.xpath('//a')[11].text
         assert_equal(brief_scenario_button_text, 'Update your profile')
 
-        choose_domain_url = document.xpath('//a')[12].get('href')
+        choose_domain_url = document.xpath('//a')[11].get('href')
         assert_equal(choose_domain_url, '/supplier/{}'.format(
             self.supplier['supplier']['code']
         ))
@@ -549,10 +542,10 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
             )
         )
 
-        brief_scenario_button_text = document.xpath('//a')[12].text
+        brief_scenario_button_text = document.xpath('//a')[11].text
         assert_equal(brief_scenario_button_text, 'Update your profile')
 
-        choose_domain_url = document.xpath('//a')[12].get('href')
+        choose_domain_url = document.xpath('//a')[11].get('href')
         assert_equal(choose_domain_url, '/supplier/{}'.format(
             self.supplier['supplier']['code']
         ))
@@ -590,10 +583,10 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
             )
         )
 
-        brief_scenario_button_text = document.xpath('//a')[12].text
+        brief_scenario_button_text = document.xpath('//a')[11].text
         assert_equal(brief_scenario_button_text, 'Update your profile')
 
-        choose_domain_url = document.xpath('//a')[12].get('href')
+        choose_domain_url = document.xpath('//a')[11].get('href')
         assert_equal(choose_domain_url, '/supplier/{}'.format(
             self.supplier['supplier']['code']
         ))
@@ -619,10 +612,10 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
         document = html.fromstring(res.get_data(as_text=True))
         assert_equal(document.xpath('//h2')[9].text, 'What services do you offer?')
 
-        brief_scenario_button_text = document.xpath('//a')[12].text
+        brief_scenario_button_text = document.xpath('//a')[11].text
         assert_equal(brief_scenario_button_text, 'Update your profile')
 
-        choose_domain_url = document.xpath('//a')[12].get('href')
+        choose_domain_url = document.xpath('//a')[11].get('href')
         assert_equal(choose_domain_url, '/supplier/{}'.format(self.supplier['supplier']['code']))
 
     def test_aoe_dp_inreview(self):
@@ -642,10 +635,10 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
         )
         document = html.fromstring(res.get_data(as_text=True))
 
-        brief_scenario_button_text = document.xpath('//a')[11].text
+        brief_scenario_button_text = document.xpath('//a')[10].text
         assert_equal(brief_scenario_button_text, 'Request an assessment')
 
-        choose_domain_url = document.xpath('//a')[11].get('href')
+        choose_domain_url = document.xpath('//a')[10].get('href')
         assert_equal(choose_domain_url, '/sellers/opportunities/1/assessment/status')
 
     def test_recruiter_dp_inreview(self):
@@ -674,10 +667,10 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
         )
         document = html.fromstring(res.get_data(as_text=True))
 
-        brief_scenario_button_text = document.xpath('//a')[11].text
+        brief_scenario_button_text = document.xpath('//a')[10].text
         assert_equal(brief_scenario_button_text, 'Request an assessment')
 
-        choose_domain_url = document.xpath('//a')[11].get('href')
+        choose_domain_url = document.xpath('//a')[10].get('href')
         assert_equal(choose_domain_url, '/sellers/opportunities/{}/assessment/status'.format(
             self.brief['id']
         ))
@@ -701,10 +694,10 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
         )
         document = html.fromstring(res.get_data(as_text=True))
 
-        brief_scenario_button_text = document.xpath('//a')[11].text
+        brief_scenario_button_text = document.xpath('//a')[10].text
         assert_equal(brief_scenario_button_text, 'Request an assessment')
 
-        choose_domain_url = document.xpath('//a')[11].get('href')
+        choose_domain_url = document.xpath('//a')[10].get('href')
         assert_equal(choose_domain_url, "/sellers/opportunities/{}/assessment/status".format(
             self.brief['id']
             )
@@ -727,10 +720,10 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
         )
         document = html.fromstring(res.get_data(as_text=True))
 
-        brief_scenario_button_text = document.xpath('//a')[11].text
+        brief_scenario_button_text = document.xpath('//a')[10].text
         assert_equal(brief_scenario_button_text, 'Request an assessment')
 
-        choose_domain_url = document.xpath('//a')[11].get('href')
+        choose_domain_url = document.xpath('//a')[10].get('href')
         assert_equal(choose_domain_url, "/sellers/opportunities/{}/assessment/1".format(
             self.brief['id']
             )
@@ -763,10 +756,10 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
         )
         document = html.fromstring(res.get_data(as_text=True))
 
-        brief_scenario_button_text = document.xpath('//a')[11].text
+        brief_scenario_button_text = document.xpath('//a')[10].text
         assert_equal(brief_scenario_button_text, 'Request an assessment')
 
-        choose_domain_url = document.xpath('//a')[11].get('href')
+        choose_domain_url = document.xpath('//a')[10].get('href')
         assert_equal(choose_domain_url, '/sellers/opportunities/1/assessment/1')
 
     def test_all_outcome_all_unassessed(self):
@@ -788,10 +781,10 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
         )
         document = html.fromstring(res.get_data(as_text=True))
 
-        brief_scenario_button_text = document.xpath('//a')[11].text
+        brief_scenario_button_text = document.xpath('//a')[10].text
         assert_equal(brief_scenario_button_text, 'Request an assessment')
 
-        choose_domain_url = document.xpath('//a')[11].get('href')
+        choose_domain_url = document.xpath('//a')[10].get('href')
         assert_equal(choose_domain_url, "/sellers/opportunities/{}/assessment/choose".format(
             self.brief['id']
             )
@@ -816,10 +809,10 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
         )
         document = html.fromstring(res.get_data(as_text=True))
 
-        brief_scenario_button_text = document.xpath('//a')[11].text
+        brief_scenario_button_text = document.xpath('//a')[10].text
         assert_equal(brief_scenario_button_text, 'Apply Now')
 
-        response_create_url = document.xpath('//a')[11].get('href')
+        response_create_url = document.xpath('//a')[10].get('href')
         assert_equal(response_create_url, '/2/brief/{}/respond'.format(self.brief['id']))
 
     def test_approved_and_assessed_dp(self):
@@ -841,10 +834,10 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
         )
         document = html.fromstring(res.get_data(as_text=True))
 
-        brief_scenario_button_text = document.xpath('//a')[11].text
+        brief_scenario_button_text = document.xpath('//a')[10].text
         assert_equal(brief_scenario_button_text, 'Apply Now')
 
-        response_create_url = document.xpath('//a')[11].get('href')
+        response_create_url = document.xpath('//a')[10].get('href')
         assert_equal(response_create_url, '/2/brief/{}/respond'.format(self.brief['id']))
 
     def test_one_seller_restricted_brief(self):
