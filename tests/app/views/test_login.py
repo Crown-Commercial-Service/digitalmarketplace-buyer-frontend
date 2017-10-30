@@ -82,7 +82,8 @@ class TestLogin(BaseApplicationTest):
                 'csrf_token': FakeCsrf.valid_token,
             })
             assert res.status_code == 302
-            assert res.location == 'http://localhost' + self.expand_path('/digital-marketplace/opportunities?status=live')
+            assert res.location == 'http://localhost' + \
+                                   self.expand_path('/digital-marketplace/opportunities?status=live')
             assert 'Secure;' in res.headers['Set-Cookie']
 
     def test_should_redirect_logged_in_buyer(self):
