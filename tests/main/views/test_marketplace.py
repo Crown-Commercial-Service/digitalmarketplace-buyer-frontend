@@ -72,120 +72,115 @@ class TestHomepageBrowseList(BaseApplicationTest):
     }
 
     def test_dos_links_are_shown(self, data_api_client):
-        with self.app.app_context():
-            data_api_client.find_frameworks.return_value = {
-                "frameworks": [
-                    self.mock_live_dos_1_framework
-                ]
-            }
+        data_api_client.find_frameworks.return_value = {
+            "frameworks": [
+                self.mock_live_dos_1_framework
+            ]
+        }
 
-            res = self.client.get("/")
-            document = html.fromstring(res.get_data(as_text=True))
+        res = self.client.get("/")
+        document = html.fromstring(res.get_data(as_text=True))
 
-            assert res.status_code == 200
+        assert res.status_code == 200
 
-            link_texts = [item.text_content().strip() for item in document.cssselect('.browse-list-item a')]
-            assert link_texts[0] == "Find an individual specialist"
-            assert link_texts[-1] == "Buy physical datacentre space"
-            assert "Find specialists to work on digital projects" not in link_texts
+        link_texts = [item.text_content().strip() for item in document.cssselect('.browse-list-item a')]
+        assert link_texts[0] == "Find an individual specialist"
+        assert link_texts[-1] == "Buy physical datacentre space"
+        assert "Find specialists to work on digital projects" not in link_texts
 
     def test_links_are_for_existing_dos_framework_when_a_new_dos_framework_in_standstill_exists(self, data_api_client):
-        with self.app.app_context():
-            mock_standstill_dos_2_framework = self.mock_live_dos_2_framework.copy()
-            mock_standstill_dos_2_framework.update({"status": "standstill"})
+        mock_standstill_dos_2_framework = self.mock_live_dos_2_framework.copy()
+        mock_standstill_dos_2_framework.update({"status": "standstill"})
 
-            data_api_client.find_frameworks.return_value = {
-                "frameworks": [
-                    self.mock_live_dos_1_framework,
-                    mock_standstill_dos_2_framework,
-                ]
-            }
+        data_api_client.find_frameworks.return_value = {
+            "frameworks": [
+                self.mock_live_dos_1_framework,
+                mock_standstill_dos_2_framework,
+            ]
+        }
 
-            res = self.client.get("/")
-            document = html.fromstring(res.get_data(as_text=True))
+        res = self.client.get("/")
+        document = html.fromstring(res.get_data(as_text=True))
 
-            assert res.status_code == 200
+        assert res.status_code == 200
 
-            link_locations = [item.values()[1] for item in document.cssselect('.browse-list-item a')]
+        link_locations = [item.values()[1] for item in document.cssselect('.browse-list-item a')]
 
-            lots = ['digital-specialists', 'digital-outcomes', 'user-research-participants', 'user-research-studios']
-            dos_base_path = '/buyers/frameworks/digital-outcomes-and-specialists/requirements/{}'
+        lots = ['digital-specialists', 'digital-outcomes', 'user-research-participants', 'user-research-studios']
+        dos_base_path = '/buyers/frameworks/digital-outcomes-and-specialists/requirements/{}'
 
-            for index, lot_slug in enumerate(lots):
-                assert link_locations[index] == dos_base_path.format(lot_slug)
+        for index, lot_slug in enumerate(lots):
+            assert link_locations[index] == dos_base_path.format(lot_slug)
 
     def test_links_are_for_the_newest_live_dos_framework_when_multiple_live_dos_frameworks_exist(self, data_api_client):
-        with self.app.app_context():
-            data_api_client.find_frameworks.return_value = {
-                "frameworks": [
-                    self.mock_live_dos_1_framework,
-                    self.mock_live_dos_2_framework,
-                ]
-            }
+        data_api_client.find_frameworks.return_value = {
+            "frameworks": [
+                self.mock_live_dos_1_framework,
+                self.mock_live_dos_2_framework,
+            ]
+        }
 
-            res = self.client.get("/")
-            document = html.fromstring(res.get_data(as_text=True))
+        res = self.client.get("/")
+        document = html.fromstring(res.get_data(as_text=True))
 
-            assert res.status_code == 200
+        assert res.status_code == 200
 
-            link_locations = [item.values()[1] for item in document.cssselect('.browse-list-item a')]
+        link_locations = [item.values()[1] for item in document.cssselect('.browse-list-item a')]
 
-            lots = ['digital-specialists', 'digital-outcomes', 'user-research-participants', 'user-research-studios']
-            dos2_base_path = '/buyers/frameworks/digital-outcomes-and-specialists-2/requirements/{}'
+        lots = ['digital-specialists', 'digital-outcomes', 'user-research-participants', 'user-research-studios']
+        dos2_base_path = '/buyers/frameworks/digital-outcomes-and-specialists-2/requirements/{}'
 
-            for index, lot_slug in enumerate(lots):
-                assert link_locations[index] == dos2_base_path.format(lot_slug)
+        for index, lot_slug in enumerate(lots):
+            assert link_locations[index] == dos2_base_path.format(lot_slug)
 
     def test_links_are_for_live_dos_framework_when_expired_dos_framework_exists(self, data_api_client):
-        with self.app.app_context():
-            mock_expired_dos_1_framework = self.mock_live_dos_1_framework.copy()
-            mock_expired_dos_1_framework.update({"status": "expired"})
+        mock_expired_dos_1_framework = self.mock_live_dos_1_framework.copy()
+        mock_expired_dos_1_framework.update({"status": "expired"})
 
-            data_api_client.find_frameworks.return_value = {
-                "frameworks": [
-                    mock_expired_dos_1_framework,
-                    self.mock_live_dos_2_framework,
-                ]
-            }
+        data_api_client.find_frameworks.return_value = {
+            "frameworks": [
+                mock_expired_dos_1_framework,
+                self.mock_live_dos_2_framework,
+            ]
+        }
 
-            res = self.client.get("/")
-            document = html.fromstring(res.get_data(as_text=True))
+        res = self.client.get("/")
+        document = html.fromstring(res.get_data(as_text=True))
 
-            assert res.status_code == 200
+        assert res.status_code == 200
 
-            link_locations = [item.values()[1] for item in document.cssselect('.browse-list-item a')]
+        link_locations = [item.values()[1] for item in document.cssselect('.browse-list-item a')]
 
-            lots = ['digital-specialists', 'digital-outcomes', 'user-research-participants', 'user-research-studios']
-            dos2_base_path = '/buyers/frameworks/digital-outcomes-and-specialists-2/requirements/{}'
+        lots = ['digital-specialists', 'digital-outcomes', 'user-research-participants', 'user-research-studios']
+        dos2_base_path = '/buyers/frameworks/digital-outcomes-and-specialists-2/requirements/{}'
 
-            for index, lot_slug in enumerate(lots):
-                assert link_locations[index] == dos2_base_path.format(lot_slug)
+        for index, lot_slug in enumerate(lots):
+            assert link_locations[index] == dos2_base_path.format(lot_slug)
 
     def test_non_dos_links_are_shown_if_no_live_dos_framework(self, data_api_client):
-        with self.app.app_context():
-            mock_expired_dos_1_framework = self.mock_live_dos_1_framework.copy()
-            mock_expired_dos_1_framework.update({"status": "expired"})
-            mock_expired_dos_2_framework = self.mock_live_dos_2_framework.copy()
-            mock_expired_dos_2_framework.update({"status": "expired"})
-            mock_g_cloud_9_framework = self.mock_live_g_cloud_9_framework.copy()
+        mock_expired_dos_1_framework = self.mock_live_dos_1_framework.copy()
+        mock_expired_dos_1_framework.update({"status": "expired"})
+        mock_expired_dos_2_framework = self.mock_live_dos_2_framework.copy()
+        mock_expired_dos_2_framework.update({"status": "expired"})
+        mock_g_cloud_9_framework = self.mock_live_g_cloud_9_framework.copy()
 
-            data_api_client.find_frameworks.return_value = {
-                "frameworks": [
-                    mock_expired_dos_1_framework,
-                    mock_expired_dos_2_framework,
-                    mock_g_cloud_9_framework,
-                ]
-            }
+        data_api_client.find_frameworks.return_value = {
+            "frameworks": [
+                mock_expired_dos_1_framework,
+                mock_expired_dos_2_framework,
+                mock_g_cloud_9_framework,
+            ]
+        }
 
-            res = self.client.get("/")
-            document = html.fromstring(res.get_data(as_text=True))
+        res = self.client.get("/")
+        document = html.fromstring(res.get_data(as_text=True))
 
-            assert res.status_code == 200
+        assert res.status_code == 200
 
-            link_texts = [item.text_content().strip() for item in document.cssselect('.browse-list-item a')]
-            assert link_texts[0] == "Find cloud hosting, software and support"
-            assert link_texts[1] == "Buy physical datacentre space"
-            assert len(link_texts) == 2
+        link_texts = [item.text_content().strip() for item in document.cssselect('.browse-list-item a')]
+        assert link_texts[0] == "Find cloud hosting, software and support"
+        assert link_texts[1] == "Buy physical datacentre space"
+        assert len(link_texts) == 2
 
 
 class TestHomepageSidebarMessage(BaseApplicationTest):
@@ -1432,17 +1427,16 @@ class TestGCloudHomepageLinks(BaseApplicationTest):
                              (('g-cloud-8', 'Find cloud technology and support'),
                               ('g-cloud-9', 'Find cloud hosting, software and support')))
     def test_g_cloud_homepage_content_is_correct(self, data_api_client, framework_slug, gcloud_content):
-        with self.app.app_context():
-            data_api_client.find_frameworks.return_value = {
-                "frameworks": [self.mock_live_g_cloud_framework.copy()]
-            }
-            data_api_client.find_frameworks.return_value['frameworks'][0].update({'slug': framework_slug})
+        data_api_client.find_frameworks.return_value = {
+            "frameworks": [self.mock_live_g_cloud_framework.copy()]
+        }
+        data_api_client.find_frameworks.return_value['frameworks'][0].update({'slug': framework_slug})
 
-            res = self.client.get("/")
-            document = html.fromstring(res.get_data(as_text=True))
+        res = self.client.get("/")
+        document = html.fromstring(res.get_data(as_text=True))
 
-            assert res.status_code == 200
+        assert res.status_code == 200
 
-            link_texts = [item.text_content().strip() for item in document.cssselect('.browse-list-item a')]
-            assert link_texts[-2] == gcloud_content
-            assert link_texts[-1] == 'Buy physical datacentre space'
+        link_texts = [item.text_content().strip() for item in document.cssselect('.browse-list-item a')]
+        assert link_texts[-2] == gcloud_content
+        assert link_texts[-1] == 'Buy physical datacentre space'

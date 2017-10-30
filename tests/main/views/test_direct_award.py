@@ -575,7 +575,7 @@ class TestDirectAwardDownloadResultsView(TestDirectAwardBase):
             self.view.get_project_and_search(self.project_id)
 
     def test_get_file_context(self):
-        with self.app.app_context(), self.app.test_request_context('/'):
+        with self.app.test_request_context('/'):
             file_context = self.view.get_file_context(**self.kwargs)
 
         assert set(file_context.keys()) == {'framework', 'search', 'project', 'questions', 'services', 'filename',
@@ -595,7 +595,7 @@ class TestDirectAwardDownloadResultsView(TestDirectAwardBase):
         """This test will quite closely reproduce the implementation, but is the only way I can think of to tightly
         pin the content and styling that will go into the file to be downloaded. It also validates that the structure
         meets the expectations of the parent class."""
-        with self.app.app_context(), self.app.test_request_context('/'):
+        with self.app.test_request_context('/'):
             file_context = self.view.get_file_context(**self.kwargs)
             file_rows, column_styles = self.view.get_file_data_and_column_styles(file_context)
 
@@ -638,14 +638,11 @@ class TestDirectAwardDownloadResultsView(TestDirectAwardBase):
     def test_file_download(self):
         self.login_as_buyer()
 
-        with self.app.app_context():
-            res = self.client.get('/buyers/direct-award/g-cloud/projects/1/results/download?filetype=csv')
-            assert res.status_code == 200
+        res = self.client.get('/buyers/direct-award/g-cloud/projects/1/results/download?filetype=csv')
+        assert res.status_code == 200
 
-        with self.app.app_context():
-            res = self.client.get('/buyers/direct-award/g-cloud/projects/1/results/download?filetype=ods')
-            assert res.status_code == 200
+        res = self.client.get('/buyers/direct-award/g-cloud/projects/1/results/download?filetype=ods')
+        assert res.status_code == 200
 
-        with self.app.app_context():
-            res = self.client.get('/buyers/direct-award/g-cloud/projects/1/results/download?filetype=docx')
-            assert res.status_code == 400
+        res = self.client.get('/buyers/direct-award/g-cloud/projects/1/results/download?filetype=docx')
+        assert res.status_code == 400
