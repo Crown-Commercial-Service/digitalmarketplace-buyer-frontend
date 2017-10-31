@@ -115,7 +115,7 @@ form {
       width: 1px;
 
       &:focus + label {
-        outline: 1px solid $border-colour;
+        box-shadow: 0 0 0 5px #e05200;
       }
 
       &:invalid + label {
