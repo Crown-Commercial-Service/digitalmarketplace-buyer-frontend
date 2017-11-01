@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"'  width="327px" height="196px" viewBox="0 0 327 196" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="background: #FFFFFF;">
+    <!-- Generator: Sketch 45.2 (43514) - http://www.bohemiancoding.com/sketch -->
+    <title>768 total opportunities</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="326.721509" height="195.212589"></rect>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-2">
+            <stop stop-color="#33B0C1" offset="0%"></stop>
+            <stop stop-color="#17788D" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="768-total-opportunities">
+            <g>
+                <g id="Rectangle">
+                    <use fill="#FAFBFC" fill-rule="evenodd" xlink:href="#path-1"></use>
+                    <rect stroke="#BBBBBB" stroke-width="1" x="0.5" y="0.5" width="325.721509" height="194.212589"></rect>
+                </g>
+                <text id="339" font-size="36" font-weight="bold" letter-spacing="-1.50000024" fill="#17788D">
+                    <tspan x="16" y="59">339</tspan>
+                </text>
+                <text id="Total-opportunities" font-size="17" font-weight="normal" line-spacing="28" fill="#313131">
+                    <tspan x="16" y="89">Total opportunities </tspan>
+                    <tspan x="16" y="117">since 29 August 2016.</tspan>
+                </text>
+                <text id="47-new-briefs-this-m" font-size="20" font-weight="bold" line-spacing="28" fill="#313131">
+                    <tspan x="16" y="159">47 new briefs this month</tspan>
+                </text>
+                <polyline id="Shape" stroke="url(#linearGradient-2)" stroke-width="3" stroke-linecap="round" points="213 66 214.010631 65.6048193 215.022757 65.6048193 220.078904 65.6048193 221.089535 64.4204819 222.101661 64.4204819 223.112292 64.026506 224.122924 64.026506 225.13505 63.2373494 226.145681 62.8421687 227.157807 61.6578313 228.168439 61.2626506 229.17907 61.2626506 230.191196 61.2626506 231.201827 60.0795181 233.224585 59.2891566 234.235216 59.2891566 235.247342 58.5 236.257973 58.5 237.2701 57.7108434 238.280731 57.3156627 239.292857 56.9204819 240.303488 54.553012 241.31412 52.5795181 242.326246 52.1843373 244.349003 52.1843373 245.359635 51.7891566 246.370266 51 247.382392 51 248.393023 50.2108434 249.40515 49.026506 250.415781 48.6313253 251.426412 48.6313253 252.438538 48.6313253 253.449169 48.2373494 254.461296 47.446988 255.471927 47.053012 256.482558 46.6578313 257.494684 46.6578313 258.505316 46.6578313 259.517442 46.2626506 260.528073 45.8686747 261.538704 44.6843373 262.550831 44.2891566 263.561462 42.7108434 264.573588 42.7108434 265.584219 42.3156627 266.59485 42.3156627 267.606977 41.9204819 268.617608 40.7373494 269.629734 40.3421687 270.640365 39.553012 271.650997 39.553012 273.673754 39.553012 274.68588 38.3686747 276.707143 36.7891566 277.719269 36.3951807 278.7299 36.3951807 279.742027 36 280.752658 35.6048193 281.764784 35.6048193 282.775415 34.8156627 283.786047 31.6578313 284.798173 31.6578313 285.808804 31.2626506 286.82093 31.2626506 287.831561 29.2891566 288.842193 28.8951807 289.854319 28.8951807 291.877076 27.3156627 292.887708 27.3156627 294.910465 26.526506 295.921096 24.946988 297.943854 24.1578313 298.954485 22.973494 300.977243 22.973494 301.989369 22.1843373 303 21"></polyline>
+            </g>
+        </g>
+    </g>
+</svg>

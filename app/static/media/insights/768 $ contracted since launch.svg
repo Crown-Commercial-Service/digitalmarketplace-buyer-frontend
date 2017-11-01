@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"'  width="327px" height="196px" viewBox="0 0 327 196" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="background: #FFFFFF;">
+    <!-- Generator: Sketch 45.2 (43514) - http://www.bohemiancoding.com/sketch -->
+    <title>768 $ contracted since launch</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="326.721509" height="195.212589"></rect>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-2">
+            <stop stop-color="#33B0C1" offset="0%"></stop>
+            <stop stop-color="#17788D" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="768-$-contracted-since-launch">
+            <g>
+                <g id="Rectangle-Copy">
+                    <use fill="#FAFBFC" fill-rule="evenodd" xlink:href="#path-1"></use>
+                    <rect stroke="#BBBBBB" stroke-width="1" x="0.5" y="0.5" width="325.721509" height="194.212589"></rect>
+                </g>
+                <text id="$47.19M" font-size="36" font-weight="bold" letter-spacing="-1.50000024" fill="#17788D">
+                    <tspan x="16" y="59">$47.19M</tspan>
+                </text>
+                <text id="Contracted-through-t" font-size="17" font-weight="normal" line-spacing="28" fill="#313131">
+                    <tspan x="16" y="89">Contracted through the Marketplace </tspan>
+                    <tspan x="16" y="117">since 29 August 2016. </tspan>
+                </text>
+                <text id="$2.95M-this-month" font-size="20" font-weight="bold" line-spacing="28" fill="#313131">
+                    <tspan x="16" y="159">$2.95M this month</tspan>
+                </text>
+                <polyline id="Shape" stroke="url(#linearGradient-2)" stroke-width="3" stroke-linecap="round" points="213 66 216.033389 66 217.045515 65.5180723 218.056146 58.7337349 219.066777 58.7337349 220.078904 58.7337349 221.089535 58.3108434 223.112292 58.3108434 224.122924 57.7373494 225.13505 56.5963855 226.145681 56.2349398 227.157807 56.2349398 228.168439 55.6240964 230.191196 55.6240964 231.201827 49.1987952 232.213953 49.0783133 233.224585 47.6795181 234.235216 47.6795181 235.247342 47.3445783 237.2701 47.3445783 238.280731 47.113253 239.292857 47.113253 240.303488 46.6686747 242.326246 46.3662651 243.336877 46.3662651 246.370266 46.2927711 247.382392 41.6891566 248.393023 41.1903614 249.40515 41.0445783 252.438538 41.0445783 253.449169 40.4662651 254.461296 35.5578313 255.471927 35.1951807 260.528073 35.1951807 261.538704 34.6457831 262.550831 34.0987952 263.561462 32.9554217 266.59485 32.9554217 267.606977 32.4638554 268.617608 32.1975904 269.629734 31.7831325 275.696512 31.7831325 276.707143 30.0542169 277.719269 29.4746988 278.7299 29.4746988 281.764784 29.4746988 282.775415 28.8783133 283.786047 28.6072289 284.798173 28.6072289 286.82093 28.6072289 287.831561 28.139759 288.842193 28.139759 289.854319 25.0506024 290.86495 23.6759036 291.877076 23.6759036 293.898339 23.6759036 294.910465 23.4506024 295.921096 22.5746988 296.933223 22.5746988 297.943854 21.8481928 298.954485 21.3855422 301.989369 21.3855422 303 21"></polyline>
+            </g>
+        </g>
+    </g>
+</svg>

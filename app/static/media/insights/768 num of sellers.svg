@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"'  width="327px" height="196px" viewBox="0 0 327 196" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="background: #FFFFFF;">
+    <!-- Generator: Sketch 45.2 (43514) - http://www.bohemiancoding.com/sketch -->
+    <title>768 # of sellers</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="326.721509" height="195.212589"></rect>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-2">
+            <stop stop-color="#33B0C1" offset="0%"></stop>
+            <stop stop-color="#17788D" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="768-#-of-sellers">
+            <g>
+                <g id="Rectangle">
+                    <use fill="#FAFBFC" fill-rule="evenodd" xlink:href="#path-1"></use>
+                    <rect stroke="#BBBBBB" stroke-width="1" x="0.5" y="0.5" width="325.721509" height="194.212589"></rect>
+                </g>
+                <text id="702" font-size="36" font-weight="bold" letter-spacing="-1.50000024" fill="#17788D">
+                    <tspan x="16" y="59">702</tspan>
+                </text>
+                <text id="Sellers-registered-t" font-size="17" font-weight="normal" line-spacing="28" fill="#313131">
+                    <tspan x="16" y="89">Sellers registered to offer </tspan>
+                    <tspan x="16" y="117">digital and ICT services.</tspan>
+                </text>
+                <text id="57-new-sellers-this" font-size="20" font-weight="bold" line-spacing="28" fill="#313131">
+                    <tspan x="16" y="159">57 new sellers this month</tspan>
+                </text>
+                <polyline id="Shape" stroke="url(#linearGradient-2)" stroke-width="3" stroke-linecap="round" points="213 66 214.010631 63.0361446 215.022757 63.0361446 216.033389 63.0361446 217.045515 62.4975904 218.056146 61.4192771 219.066777 61.4192771 220.078904 60.8807229 221.089535 60.0722892 223.112292 60.0722892 224.122924 59.2638554 225.13505 58.1855422 226.145681 57.3771084 227.157807 55.4915663 228.168439 54.6831325 231.201827 54.6831325 232.213953 54.413253 233.224585 53.0662651 234.235216 52.7963855 237.2701 52.7963855 238.280731 52.526506 239.292857 50.3710843 240.303488 49.2939759 241.31412 49.0240964 242.326246 48.4855422 244.349003 48.4855422 245.359635 47.9457831 246.370266 46.5987952 247.382392 46.060241 249.40515 44.4433735 250.415781 44.4433735 252.438538 44.4433735 253.449169 43.9036145 254.461296 43.6349398 255.471927 41.2096386 257.494684 41.2096386 258.505316 40.939759 259.517442 40.4012048 260.528073 40.1313253 261.538704 38.7843373 262.550831 38.7843373 263.561462 38.2457831 264.573588 38.2457831 266.59485 38.2457831 267.606977 37.9759036 268.617608 37.9759036 269.629734 36.8987952 270.640365 36.3590361 271.650997 36.3590361 273.673754 36.3590361 274.68588 36.0903614 276.707143 33.9337349 277.719269 33.6650602 279.742027 33.6650602 280.752658 32.3168675 281.764784 31.239759 282.775415 30.7 283.786047 30.1614458 284.798173 29.0843373 286.82093 29.0843373 287.831561 28.8144578 290.86495 25.5807229 291.877076 25.3108434 294.910465 25.3108434 295.921096 23.6951807 296.933223 22.886747 297.943854 21.5385542 300.977243 21.5385542 301.989369 21 303 21"></polyline>
+            </g>
+        </g>
+    </g>
+</svg>
