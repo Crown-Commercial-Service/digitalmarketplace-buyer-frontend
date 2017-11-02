@@ -26,3 +26,13 @@ def info_page_for_starting_a_brief(framework_slug, lot_slug):
 @external.route('/buyers/frameworks/<framework_slug>/requirements/user-research-studios')
 def studios_start_page(framework_slug):
     raise NotImplementedError()
+
+
+@external.route('/suppliers/opportunities/<brief_id>/responses/start')
+def start_brief_response(brief_id):
+    raise NotImplementedError()
+
+
+@external.route('/suppliers/opportunities/<brief_id>/responses/result')
+def brief_response_result(brief_id):
+    raise NotImplementedError()

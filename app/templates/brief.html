@@ -130,7 +130,7 @@
   <div class="grid-row">
     <div class="column-one-third">
         {% with
-           url = "/suppliers/opportunities/{}/responses/result".format(brief.id),
+           url = url_for('external.brief_response_result', brief_id=brief.id),
            text = "View your application",
            bigger = True
         %}
@@ -141,7 +141,7 @@
 {% elif brief.status == 'live' %}
   <div class="grid-row">
     <div class="column-two-thirds">
-      <form action="{{ '/suppliers/opportunities/{}/responses/start'.format(brief.id) }}" method="get">
+      <form action="{{ url_for('external.start_brief_response', brief_id=brief.id) }}" method="get">
         {%
           with
           label="Apply for this opportunity",
