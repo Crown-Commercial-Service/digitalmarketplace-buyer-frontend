@@ -141,19 +141,15 @@
 {% elif brief.status == 'live' %}
   <div class="grid-row">
     <div class="column-two-thirds">
-      <h2 class="summary-item-heading">Apply for this opportunity</h2>
-      <p class="dmspeak">To apply, you must give evidence for all the essential and nice-to-have skills and experience you have.</p>
-    </div>
-  </div>
-  <div class="grid-row">
-    <div class="column-one-third">
-      {% with
-         url = "/suppliers/opportunities/{}/responses/start".format(brief.id),
-         label = "Apply",
-         advice = True
-      %}
-        {% include "toolkit/link-button.html" %}
-      {% endwith %}
+      <form action="{{ '/suppliers/opportunities/{}/responses/start'.format(brief.id) }}" method="get">
+        {%
+          with
+          label="Apply for this opportunity",
+          type="save"
+        %}
+          {% include "toolkit/button.html" %}
+        {% endwith %}
+      </form>
     </div>
   </div>
 {% endif %}
