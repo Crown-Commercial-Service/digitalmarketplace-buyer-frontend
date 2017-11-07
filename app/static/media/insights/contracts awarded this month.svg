@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"'  width="272px" height="159px" viewBox="0 0 272 159" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="background: #FFFFFF;">
+<svg font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"' width="272px" height="159px" viewBox="0 0 272 159" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="background: #FFFFFF;">
     <!-- Generator: Sketch 45.2 (43514) - http://www.bohemiancoding.com/sketch -->
     <title># contracts awarded this month</title>
     <desc>Created with Sketch.</desc>
@@ -18,7 +18,7 @@
                 </text>
                 <text id="Briefs-have-been-con" font-size="17" font-weight="normal" line-spacing="28" fill="#313131">
                     <tspan x="13.3088685" y="89">Briefs have been </tspan>
-                    <tspan x="13.3088685" y="117">contracted this month</tspan>
+                    <tspan x="13.3088685" y="117">contracted this month *</tspan>
                 </text>
             </g>
         </g>

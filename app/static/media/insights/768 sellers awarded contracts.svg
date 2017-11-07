@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"'  width="418px" height="498px" viewBox="0 0 418 498" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="background: #FFFFFF;">
+<svg font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"' width="418px" height="498px" viewBox="0 0 418 498" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="background: #FFFFFF;">
     <!-- Generator: Sketch 45.2 (43514) - http://www.bohemiancoding.com/sketch -->
     <title>768 sellers awarded contracts</title>
     <desc>Created with Sketch.</desc>
@@ -24,8 +24,8 @@
                     <tspan x="69.3071289" y="179">Paper Giant</tspan>
                 </text>
                 <text id="Adelphi-Digital-Cons" font-size="11" font-weight="normal" fill="#224A61">
-                    <tspan x="2.31884766" y="211">Adelphi Digital Consulting </tspan>
-                    <tspan x="95.3623047" y="224">Group</tspan>
+                    <tspan x="52.31884766" y="201">Adelphi Digital </tspan>
+                    <tspan x="35.3623047" y="214">Consulting Group</tspan>
                 </text>
                 <text id="Tobias-&amp;-Tobias" font-size="11" font-weight="normal" fill="#224A61">
                     <tspan x="48.1074219" y="275">Tobias &amp; Tobias</tspan>
@@ -83,7 +83,7 @@
                     <tspan x="64.1401367" y="340">Pragmateam</tspan>
                 </text>
                 <text id="Other-large-enterpri" font-size="11" font-weight="normal" fill="#224A61">
-                    <tspan x="21.3647461" y="404">Other large enterprise</tspan>
+                    <tspan x="12.3647461" y="404">Other large enterprise</tspan>
                 </text>
                 <rect id="Rectangle-10-Copy-20" fill="#17788D" x="140.195312" y="326" width="12.5" height="20"></rect>
                 <rect id="Rectangle-10-Copy-26" stroke="#17788D" stroke-width="2" x="141" y="391" width="66.75" height="18"></rect>
@@ -111,7 +111,7 @@
                 <rect id="Rectangle-3-Copy-11" fill="#17788D" x="137" y="482" width="16" height="16"></rect>
                 <rect id="Rectangle-3-Copy-12" stroke="#17788D" stroke-width="2" x="215" y="483" width="14" height="14"></rect>
                 <text id="Sellers-awarded-cont" font-size="17" font-weight="normal" line-spacing="26" fill="#313131">
-                    <tspan x="48.4980469" y="16">Sellers awarded contracts this financial year</tspan>
+                    <tspan x="48.4980469" y="16">Sellers awarded contracts this financial year *</tspan>
                 </text>
             </g>
         </g>

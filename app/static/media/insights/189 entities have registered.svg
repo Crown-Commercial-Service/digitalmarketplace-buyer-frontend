@@ -1,64 +1,53 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"'  width="284px" height="251px" viewBox="0 0 284 251" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="background: #FFFFFF;">
-    <!-- Generator: Sketch 45.2 (43514) - http://www.bohemiancoding.com/sketch -->
+<svg font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"' width="274px" height="251px" viewBox="0 0 274 251" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="background: #FFFFFF;">
+    <!-- Generator: Sketch 47.1 (45422) - http://www.bohemiancoding.com/sketch -->
     <title>189 entities have registered</title>
     <desc>Created with Sketch.</desc>
     <defs></defs>
     <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
         <g id="189-entities-have-registered">
-            <g>
-                <text id="189-entities-have-re"  font-size="16" font-weight="bold" line-spacing="22" fill="#4A4A4A">
-                    <tspan x="146" y="25">189 entities have </tspan>
-                    <tspan x="146" y="47">registered</tspan>
-                    <tspan x="146" y="69" font-weight="normal">50% of which are </tspan>
-                    <tspan x="146" y="91" font-weight="normal">Commonwealth </tspan>
-                    <tspan x="146" y="113" font-weight="normal">government</tspan>
+            <path d="M63.4806588,132.108059 C98.5507404,132.108059 126.980659,103.678141 126.980659,68.608059 C126.980659,33.5379774 98.5507404,5.10805902 63.4806588,5.10805902" id="Oval-3" stroke="#224A61" stroke-width="2" stroke-linecap="round" transform="translate(95.230659, 68.608059) rotate(2.000000) translate(-95.230659, -68.608059) "></path>
+            <g transform="translate(2.000000, 10.000000)">
+                <text id="186-entities-have-re" font-size="16" font-weight="bold" line-spacing="22" fill="#4A4A4A">
+                    <tspan x="144" y="15">186 entities </tspan>
+                    <tspan x="144" y="37">have registered</tspan>
+                    <tspan x="262.28125" y="37" font-weight="normal"></tspan>
+                    <tspan x="144" y="59" font-weight="normal">50% of which are </tspan>
+                    <tspan x="144" y="81" font-weight="normal">Commonwealth </tspan>
+                    <tspan x="144" y="103" font-weight="normal">government</tspan>
                 </text>
-                <path d="M133,62 L133,72" id="Line-Copy-15" stroke="#224A61" stroke-width="2" stroke-linecap="round" transform="translate(133.000000, 67.000000) rotate(-90.000000) translate(-133.000000, -67.000000) "></path>
+                <path d="M130,52 L130,62" id="Line-Copy-15" stroke="#224A61" stroke-width="2" stroke-linecap="round" transform="translate(130.000000, 57.000000) rotate(-90.000000) translate(-130.000000, -57.000000) "></path>
                 <text id="Commonwealth-CCE" font-size="14" font-weight="normal" fill="#808184">
-                    <tspan x="24" y="170">Commonwealth </tspan>
-                    <tspan x="24" y="187">CCE</tspan>
+                    <tspan x="22" y="160">Commonwealth </tspan>
+                    <tspan x="22" y="177">CCE</tspan>
                 </text>
                 <text id="State-/-Territory-Copy-2" font-size="14" font-weight="normal" fill="#808184">
-                    <tspan x="24" y="220">State / Territory</tspan>
+                    <tspan x="22" y="210">State / Territory</tspan>
                 </text>
                 <text id="Commonwealth-NCCE" font-size="14" font-weight="normal" fill="#808184">
-                    <tspan x="168" y="170">Commonwealth </tspan>
-                    <tspan x="168" y="187">NCCE</tspan>
+                    <tspan x="166" y="160">Commonwealth </tspan>
+                    <tspan x="166" y="177">NCCE</tspan>
                 </text>
                 <text id="Local-Copy" font-size="14" font-weight="normal" fill="#808184">
-                    <tspan x="168" y="220">Local</tspan>
+                    <tspan x="166" y="210">Local</tspan>
                 </text>
-                <rect id="Rectangle-3-Copy-11" fill="#0C7B92" x="2" y="158" width="16" height="16"></rect>
-                <rect id="Rectangle-3-Copy-12" fill="#6C81DA" x="2" y="206" width="16" height="16"></rect>
-                <rect id="Rectangle-3-Copy-13" fill="#C35D8E" x="146" y="158" width="16" height="16"></rect>
-                <rect id="Rectangle-3-Copy-14" fill="#F17465" x="146" y="206" width="16" height="16"></rect>
+                <rect id="Rectangle-3-Copy-11" fill="#0C7B92" x="0" y="148" width="16" height="16"></rect>
+                <rect id="Rectangle-3-Copy-12" fill="#6C81DA" x="0" y="196" width="16" height="16"></rect>
+                <rect id="Rectangle-3-Copy-13" fill="#C35D8E" x="144" y="148" width="16" height="16"></rect>
+                <rect id="Rectangle-3-Copy-14" fill="#F17465" x="144" y="196" width="16" height="16"></rect>
                 <text id="Other-Copy-2" font-size="14" font-weight="normal" fill="#808184">
-                    <tspan x="23" y="248">Other</tspan>
+                    <tspan x="21" y="238">Other</tspan>
                 </text>
-                <rect id="Rectangle-3-Copy-15" fill="#4E9774" x="2" y="234" width="16" height="16"></rect>
-                <g id="Group" transform="translate(63.000000, 64.500000) rotate(-1.000000) translate(-63.000000, -64.500000) translate(2.000000, 3.000000)" fill-rule="nonzero" stroke="#FFFFFF">
-                    <g id="Shape">
-                        <g>
-                            <g transform="translate(58.770764, 79.300000)" fill="#C35D8E">
-                                <path d="M1.21825933,6.08651795 C7.2106749,6.28646972 13.0654949,4.25831098 17.6584894,0.391484412 L41.1063563,28.428711 C29.6238701,38.0957775 14.9868201,43.1661743 0.00578120928,42.6662949 L1.21825933,6.08651795 Z"></path>
-                            </g>
-                            <g transform="translate(60.797342, 0.000000)" fill="#0C7B92">
-                                <path d="M15.6319113,79.6914844 C23.4069714,73.1456875 26.3126519,62.4434866 22.9206635,52.8455554 C19.5286752,43.2476242 10.5524333,36.7726342 0.404215213,36.6033707 L1.01053803,0.00842686384 C26.3810831,0.431585403 48.821688,16.6190606 57.3016588,40.6138885 C65.7816297,64.6087164 58.5174286,91.3642187 39.0797783,107.728711 L15.6319113,79.6914844 Z"></path>
-                            </g>
-                            <g fill="#F17465">
-                                <path d="M61.2015574,36.6033707 C54.6475574,36.4940557 48.3271035,39.0439435 43.6728644,43.6750464 C39.0186253,48.3061493 36.4247674,54.6262602 36.4792452,61.2027883 L0.00209975316,61.5069708 C-0.134094731,45.0656506 6.35054995,29.2653732 17.9861477,17.687616 C29.6217455,6.10985879 45.4228802,-0.264860629 61.8078802,0.00842686384 L61.2015574,36.6033707 Z"></path>
-                            </g>
-                            <g transform="translate(0.000000, 61.000000)" fill="#4E9774">
-                                <path d="M36.4792452,0.202788302 C36.503951,3.18526204 37.0734447,6.13791859 38.1594823,8.91432099 L4.20269236,22.2858025 C1.48759856,15.3447965 0.0638643298,7.96315511 0.00209975316,0.506970756 L36.4792452,0.202788302 Z"></path>
-                            </g>
-                            <g transform="translate(4.053156, 69.540000)" fill="#6C81DA">
-                                <path d="M34.1063261,0.374320995 C37.6528677,9.44088295 46.2337488,15.5227828 55.9358673,15.8465179 L54.7233892,52.4262949 C30.4680928,51.6169569 9.01589008,36.4122074 0.149536212,13.7458025 L34.1063261,0.374320995 Z"></path>
-                            </g>
-                        </g>
-                    </g>
+                <rect id="Rectangle-3-Copy-15" fill="#4E9774" x="0" y="224" width="16" height="16"></rect>
+            </g>
+            <g id="Group-8" transform="translate(5.000000, 9.000000)" fill-rule="nonzero" stroke="#FFFFFF">
+                <g id="Group">
+                    <path d="M57.5304569,81.8870705 C63.2772817,82.0788275 68.89215,80.13379 73.296907,76.42544 L95.7837958,103.3136 C84.7719034,112.584475 70.7347324,117.447069 56.3676705,116.967676 L57.5304569,81.8870705 Z" id="Shape" fill="#0C7B92"></path>
+                    <path d="M73.296907,76.42544 C80.7533172,70.1479134 83.5399123,59.8843273 80.2869399,50.6797539 C77.0339675,41.4751806 68.4256043,35.265559 58.6932969,35.1032326 L59.2747704,0.00808150057 C83.6055391,0.413897476 105.126447,15.9379515 113.258878,38.9493849 C121.391309,61.9608182 114.424821,87.6197835 95.7837958,103.3136 L73.296907,76.42544 Z" id="Shape" fill="#C35D8E"></path>
+                    <path d="M58.6932969,35.1032326 C52.4079034,34.9983977 46.3464845,37.4437819 41.8829929,41.8850855 C37.4195013,46.3263891 34.9319491,52.3874791 34.9841942,58.6944773 L0.00201369771,58.9861933 C-0.128599045,43.2186977 6.09028151,28.0659727 17.2490105,16.9627137 C28.4077395,5.85945474 43.5612868,-0.254005685 59.2747704,0.00808150057 L58.6932969,35.1032326 Z" id="Shape" fill="#F17465"></path>
+                    <path d="M34.9841942,58.6944773 C35.0078875,61.5547185 35.5540413,64.3863646 36.5955691,67.04898 L4.03045087,79.8724499 C1.4266314,73.2159114 0.0612469393,66.1367963 0.00201369771,58.9861933 L34.9841942,58.6944773 Z" id="Shape" fill="#4E9774"></path>
+                    <path d="M36.5955691,67.04898 C39.9967605,75.7439615 48.2259662,81.5766031 57.5304569,81.8870705 L56.3676705,116.967676 C33.1064437,116.191508 12.5334296,101.609904 4.03045087,79.8724499 L36.5955691,67.04898 Z" id="Shape" fill="#6C81DA"></path>
                 </g>
-                <path d="M63,128 C98.346224,128 127,99.346224 127,64 C127,28.653776 98.346224,0 63,0" id="Oval-2" stroke="#224A61" stroke-width="2"></path>
             </g>
         </g>
     </g>

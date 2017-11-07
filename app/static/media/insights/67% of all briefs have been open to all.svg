@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"'  width="275px" height="160px" viewBox="0 0 275 160" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="background: #FFFFFF;">
+<svg font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"' width="275px" height="160px" viewBox="0 0 275 160" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="background: #FFFFFF;">
     <!-- Generator: Sketch 45.2 (43514) - http://www.bohemiancoding.com/sketch -->
     <title>67% of all briefs have been open to all</title>
     <desc>Created with Sketch.</desc>
@@ -20,7 +20,7 @@
                     <tspan x="1" y="57">67% </tspan>
                     <tspan x="36.546875" y="57"  font-weight="normal">of all briefs </tspan>
                     <tspan x="1" y="79"  font-weight="normal">have been</tspan>
-                    <tspan x="83.65625" y="79"> open </tspan>
+                    <tspan x="78.65625" y="79"> open </tspan>
                     <tspan x="1" y="101">to all</tspan>
                 </text>
                 <path d="M252.983555,131.498443 C261.072445,120.721554 265.865114,107.328827 265.865114,92.8167119 C265.865114,57.1943455 236.987481,28.3167119 201.365114,28.3167119 C186.979252,28.3167119 173.693385,33.0263538 162.965246,40.9879053 C160.293135,42.9709288 157.779701,45.1556953 155.44747,47.5196798 C143.957137,59.1664523 136.865114,75.1633668 136.865114,92.8167119 C136.865114,101.800233 138.701692,110.354798 142.019862,118.125423" id="Oval-21-Copy-2" stroke="#224A61" stroke-width="2" stroke-linecap="round" transform="translate(201.365114, 79.907578) scale(-1, 1) rotate(114.000000) translate(-201.365114, -79.907578) "></path>
