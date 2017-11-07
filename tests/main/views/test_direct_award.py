@@ -586,7 +586,7 @@ class TestDirectAwardDownloadResultsView(TestDirectAwardBase):
         assert file_context['project'] == data_api_client.get_direct_award_project.return_value['project']
         assert set(q.id for q in file_context['questions'].values()) == {'serviceName', 'serviceDescription', 'price'}
         assert len(file_context['services']) == 1
-        assert file_context['filename'] == '2017-00-08-my-procurement-project-results'
+        assert file_context['filename'] == '2017-09-08-my-procurement-project-results'
         assert file_context['sheetname'] == "Search results"
         assert file_context['locked_at'] == 'Friday 8 September 2017 at 12:00am GMT'
         assert file_context['search_summary'] == Markup('1 result found in All categories')
