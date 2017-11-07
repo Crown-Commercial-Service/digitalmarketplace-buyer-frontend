@@ -593,7 +593,7 @@ class DownloadResultsView(SimpleDownloadFileView):
         price_question = list(filter(lambda x: type(x) == Pricing, manifest_questions.values()))
 
         locked_at = datetime.strptime(project['lockedAt'], DATETIME_FORMAT)
-        filename = '{}-{}-results'.format(locked_at.strftime('%Y-%M-%d'), inflection.parameterize(project['name']))
+        filename = '{}-{}-results'.format(locked_at.strftime('%Y-%m-%d'), inflection.parameterize(project['name']))
         locked_at = utcdatetimeformat(locked_at)
 
         services = self.data_api_client.get_direct_award_project_services_iter(project_id=project['id'],
