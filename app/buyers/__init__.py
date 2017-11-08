@@ -19,7 +19,7 @@ content_loader.load_manifest('digital-marketplace', 'clarification_question', 'c
 @buyers.before_request
 @login_required
 def require_login():
-    if current_user.is_authenticated and current_user.role != 'buyer':
+    if current_user.is_authenticated and current_user.role != 'buyer' and current_user.role != 'admin':
         flash('buyer-role-required', 'error')
         return current_app.login_manager.unauthorized()
 

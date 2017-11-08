@@ -1,5 +1,5 @@
 from flask import abort
-from datetime import datetime, timedelta
+from flask_login import current_user
 
 
 def get_framework_and_lot(framework_slug, lot_slug, data_api_client, status=None, must_allow_brief=False):
@@ -25,6 +25,8 @@ def is_brief_correct(brief, framework_slug, lot_slug, current_user_id):
 
 
 def is_brief_associated_with_user(brief, current_user_id):
+    if current_user and current_user.role == 'admin':
+        return True
     user_ids = [user.get('id') for user in brief.get('users', [])]
     return current_user_id in user_ids
 
