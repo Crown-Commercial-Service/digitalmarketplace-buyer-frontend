@@ -77,3 +77,19 @@
 
 </div>
 {% endblock %}
+
+{% block page_scripts %}
+
+  {% if disable_end_search_btn %}
+    <script>
+      GOVUK.GDM.analytics.virtualPageViews.sendVirtualPageView(
+        window.location.pathname + '/error', 
+        'End search error', 
+        [
+          { id: 9, label: "{{ search_count }}" }
+        ]
+      );
+    </script>
+  {% endif %}
+
+{% endblock %}
