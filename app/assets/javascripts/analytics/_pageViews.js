@@ -16,6 +16,18 @@
           i,
           j;
 
+      // page level custom dimension
+      var customDimensions = $('meta[name="ga_customDimension"]');
+      for (var i = 0; i < customDimensions.length; i++)
+      {
+        var customDimension = customDimensions[i];
+        var dimensionId = $(customDimension).attr('data-id');
+        var dimensionValue = $(customDimension).attr('data-value');
+
+        if ( !dimensionId || !dimensionValue ) continue;
+        GOVUK.analytics.setDimension(dimensionId, dimensionValue);
+      }
+
       // check that we're on the catalogue page for opportunites
       if (pathname === "/digital-outcomes-and-specialists/opportunities") {
 

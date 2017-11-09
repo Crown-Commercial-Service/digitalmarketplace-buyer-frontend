@@ -448,9 +448,20 @@ def view_project(framework_framework, project_id):
     content_loader.load_messages(framework['slug'], ['urls'])
     framework_urls = content_loader.get_message(framework['slug'], 'urls')
 
+    # Current Project Stage
+    current_project_stage = None
+
+    if project['downloadedAt']:
+        current_project_stage = 'download_results'
+    elif project['lockedAt']:
+        current_project_stage = 'search_ended'
+    else:
+        current_project_stage = 'save_and_refine_search'
+
     return render_template('direct-award/view-project.html',
                            framework=framework,
                            project=project,
+                           current_project_stage=current_project_stage,
                            search=search,
                            buyer_search_page_url=buyer_search_page_url,
                            search_summary_sentence=search_summary_sentence,
