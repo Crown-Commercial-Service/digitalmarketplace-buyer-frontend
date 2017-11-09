@@ -13,12 +13,12 @@ a.card {
     margin-bottom: 0.75rem;
     margin-right: rem(8);
     padding: rem(18);
-    width: 32%;
+    width: 47%;
   }
 
   @include media($sm-desktop) {
     margin-right: rem(20);
-    width: 30%;
+    width: 23%;
   }
 
   &:active,
@@ -46,7 +46,7 @@ a.card {
 
   p {
     margin-bottom: 0;
-
+font-size: 0.9em;
     &:first-of-type {
       font-size: rem(20);
       font-weight: $bold-font-weight;
@@ -57,7 +57,7 @@ a.card {
       display: inline;
       line-height: 0.8;
       @include media($tablet) {
-        font-size: rem(60);
+        font-size: rem(55);
         display: block;
       }
     }

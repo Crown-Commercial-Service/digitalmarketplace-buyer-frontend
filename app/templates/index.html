@@ -5,9 +5,7 @@
 {% block hero %}
 {% with
   site_title='Digital Marketplace',
-  tagline='Where government buyers and digital specialists do business.',
-  callout_title='Become a seller',
-  callout_text='Access more digital opportunities across government.'
+  tagline='Where government buyers and digital specialists do business.'
   %}
   {% include "_hero.html" %}
   {% endwith %}
@@ -59,6 +57,16 @@
                 <p id="buyer__call-to-action">Create a buyer account</p>
               </a>
             {% endif %}
+            <a
+                    aria-labelledby="insight__call-to-action"
+                    href="/2/insights"
+                    class="card buyer">
+                <p>
+                    <span>$47.2m</span>
+                    <strong>Total contracted</strong>
+                </p>
+                <p id="insight__call-to-action">View Marketplace insights</p>
+            </a>
         </nav>
       </div>
     </div>
