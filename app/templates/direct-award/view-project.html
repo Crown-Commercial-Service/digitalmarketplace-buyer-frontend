@@ -2,6 +2,10 @@
 
 {% block page_title %}{{ project.name }} - Digital Marketplace{% endblock %}
 
+{% block custom_meta %}
+  <meta name="ga_customDimension" data-id="8" data-value="{{ current_project_stage }}">
+{% endblock %}
+
 {% block breadcrumb %}
   {%
     with
