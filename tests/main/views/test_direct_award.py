@@ -236,10 +236,9 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
                          'End your search', 'Download your search results', 'Award a contract',
                          'Publish the contract', 'Complete the Customer Benefits Record form']
 
-        tasklist = doc.xpath('//li[@class="instruction-list-item divider"]')
+        tasklist = doc.xpath('//li[contains(@class, "instruction-list-item")]')
 
         for i, item in enumerate(tasklist):
-            assert item.xpath('h2/span/text()')[0].startswith(str(i + 1))
             assert item_headings[i] in item.xpath('h2/text()')[0]
 
     def test_overview_renders_links_common_to_all_states(self):
@@ -249,7 +248,7 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         body = res.get_data(as_text=True)
         doc = html.fromstring(body)
 
-        tasklist = doc.xpath('//li[@class="instruction-list-item divider"]')
+        tasklist = doc.xpath('//li[contains(@class, "instruction-list-item")]')
 
         # Step 1 should link to the guidance for preparing requirements.
         assert self._task_has_link(tasklist, 1, 'https://www.gov.uk/guidance/talking-to-suppliers-before-you-buy-'
@@ -290,7 +289,7 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         body = res.get_data(as_text=True)
         doc = html.fromstring(body)
 
-        tasklist = doc.xpath('//li[@class="instruction-list-item divider"]')
+        tasklist = doc.xpath('//li[contains(@class, "instruction-list-item")]')
 
         assert self._task_has_link(tasklist, 2, '/g-cloud/search') is True
         assert self._task_has_link(tasklist, 3, '/g-cloud/search') is False
@@ -305,7 +304,7 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         body = res.get_data(as_text=True)
         doc = html.fromstring(body)
 
-        tasklist = doc.xpath('//li[@class="instruction-list-item divider"]')
+        tasklist = doc.xpath('//li[contains(@class, "instruction-list-item")]')
 
         assert self._task_has_link(tasklist, 2, '/g-cloud/search?q=accelerator') is True
         assert self._task_has_link(tasklist, 3, '/g-cloud/search?q=accelerator') is True
@@ -330,7 +329,7 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         body = res.get_data(as_text=True)
         doc = html.fromstring(body)
 
-        tasklist = doc.xpath('//li[@class="instruction-list-item divider"]')
+        tasklist = doc.xpath('//li[contains(@class, "instruction-list-item")]')
 
         assert self._task_has_link(tasklist, 2, '/g-cloud/search?q=accelerator') is True
         assert self._task_has_link(tasklist, 3, '/g-cloud/search?q=accelerator') is False
@@ -357,7 +356,7 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         body = res.get_data(as_text=True)
         doc = html.fromstring(body)
 
-        tasklist = doc.xpath('//li[@class="instruction-list-item divider"]')
+        tasklist = doc.xpath('//li[contains(@class, "instruction-list-item")]')
 
         assert self._task_has_link(tasklist, 2, '/g-cloud/search?q=accelerator') is True
         assert self._task_has_link(tasklist, 3, '/g-cloud/search?q=accelerator') is False
