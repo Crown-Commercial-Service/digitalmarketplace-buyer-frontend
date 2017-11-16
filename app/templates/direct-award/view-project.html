@@ -38,14 +38,13 @@
       {% endwith %}
     </div>
   </div>
-  <div class="grid-row">
+  <div class="grid-row direct-award-project-overview-page">
     <div class="column-two-thirds">
       {% block before_sections %}{% endblock %}
-      <ol class="instruction-list steps">
-        {% for step in [
+        {% with items = [
           {
-            "title": "Write a list of your requirements",
-            "content": [
+            "body": "Write a list of your requirements",
+            "custom_body_list": [
               {"type": "text", "text": "Work with buyers, someone who will use the service and technical experts to prepare a list of ‘must-haves’ and ‘wants’. These should inform your search category, keywords and filters."},
               {"type": "text", "text": "You can also <a href=\"https://www.gov.uk/guidance/talking-to-suppliers-before-you-buy-digital-marketplace-services\" target=\"_blank\" rel=\"external noopener noreferrer\" 
                 data-analytics=\"trackEvent\"
@@ -55,10 +54,10 @@
             ]
           },
           {
-            "title": "Save your search",
-            "content": [
+            "body": "Save your search",
+            "custom_body_list": [
               {"type": "text", "text": "Choose a category, then search for services using keywords and filters. You can save your search at any time."},
-              {"type": "action", "label": "Search", "href": url_for('main.search_services')}
+              {"type": "action", "label": "Search", "href": url_for('main.search_services'), "analytics": "trackEvent", "analytics_category": "Direct Award", "analytics_action": "Internal Link"}
             ] if not search_summary_sentence else [
               {"type": "text", "class": ["search-summary"], "text": search_summary_sentence},
               {"type": "text", "text": ''.join(["<a href=\"", buyer_search_page_url|e, "\">View results</a>"])|safe},
@@ -66,28 +65,29 @@
             ]
           },
           {
-            "title": "Refine your search",
-            "content": [
-              {"type": "text", "text": "If you need to, add filters to refine the results of your search.<br>Save your search again to record any changes you make."},
+            "body": "Refine your search",
+            "custom_body_list": [
+              {"type": "text", "text": "If you need to, add filters to refine the results of your search. Save your search again to record any changes you make."},
               {"type": "box", "style": "inactive", "label": "Can't start yet"} if not search.createdAt else {"type": "text", "text": ''.join(["<a href=\"", buyer_search_page_url|e, "\">Edit search</a>"])|safe} if not search.searchedAt else {}
             ]
           },
           {
-            "title": "End your search",
-            "content": [
-              {"type": "text", "text": "End your search to create a spreadsheet of the services you’ve found.<br>You should only do this when you have finished searching for services.<br>You cannot edit your search once it has ended."},
-              {"type": "box", "style": "inactive", "label": "Can't start yet"} if not search.createdAt else {"type": "action", "label": "End search", "href": url_for('direct_award.end_search', framework_framework=framework.framework, project_id=project.id)} if not search.searchedAt else {"type": "box", "style": "complete", "label": ''.join(["Search ended on ", search.searchedAt|utcdatetimeformat()])}
+            "body": "End your search",
+            "custom_body_list": [
+              {"type": "text", "text": "End your search to create a spreadsheet of the services you’ve found. You should only do this when you have finished searching for services."},
+              {"type": "text", "text": "You cannot edit your search once it has ended."},
+              {"type": "box", "style": "inactive", "label": "Can't start yet"} if not search.createdAt else {"type": "action", "label": "End search", "href": url_for('direct_award.end_search', framework_framework=framework.framework, project_id=project.id), "analytics": "trackEvent", "analytics_category": "Direct Award", "analytics_action": "Internal Link"} if not search.searchedAt else {"type": "box", "style": "complete", "label": ''.join(["Search ended on ", search.searchedAt|utcdatetimeformat()])}
             ]
           },
           {
-            "title": "Download your search results",
-            "content": [
+            "body": "Download your search results",
+            "custom_body_list": [
               {"type": "text", "text": ''.join(["Download a spreadsheet of your search results.<br>You can use the spreadsheet to help you review or <a href=\"", framework_urls.buyers_guide_compare_services_url|e, "\" target=\"_blank\" rel=\"external noopener noreferrer\"
                 data-analytics=\"trackEvent\"
                 data-analytics-category=\"Direct Award\"
                 data-analytics-action=\"External Link\"
                 >compare services</a>."])|safe},
-              {"type": "box", "style": "inactive", "label": "Can't start yet"} if not search.searchedAt else {"type": "action", "label": "Download search results", "href": url_for('direct_award.search_results', framework_framework=framework.framework, project_id=project.id)} if not project.downloadedAt else {"type": "box", "style": "complete", "label": "Search results downloaded"},
+              {"type": "box", "style": "inactive", "label": "Can't start yet"} if not search.searchedAt else {"type": "action", "label": "Download search results", "href": url_for('direct_award.search_results', framework_framework=framework.framework, project_id=project.id), "analytics": "trackEvent", "analytics_category": "Direct Award", "analytics_action": "Internal Link"} if not project.downloadedAt else {"type": "box", "style": "complete", "label": "Search results downloaded"},
               {"type": "text", "text": ''.join(["<a href=\"", url_for('direct_award.search_results', framework_framework=framework.framework, project_id=project.id)|e, "\"
                 data-analytics=\"trackEvent\"
                 data-analytics-category=\"Direct Award\"
@@ -96,8 +96,8 @@
             ]
           },
           {
-            "title": "Award a contract",
-            "content": [
+            "body": "Award a contract",
+            "custom_body_list": [
               {"type": "text", "text": ''.join(["<a href=\"", framework_urls.call_off_contract_url|e, "\" target=\"_blank\" rel=\"external noopener noreferrer\"
                 data-analytics=\"trackEvent\"
                 data-analytics-category=\"Direct Award\"
@@ -112,8 +112,8 @@
             ]
           },
           {
-            "title": "Publish the contract",
-            "content": [
+            "body": "Publish the contract",
+            "custom_body_list": [
               {"type": "text", "text": ("Contracts worth over £10,000 must be published on <a href=\"https://www.gov.uk/contracts-finder\" target=\"_blank\" rel=\"external noopener noreferrer\"
                 data-analytics=\"trackEvent\"
                 data-analytics-category=\"Direct Award\"
@@ -123,13 +123,14 @@
             ]
           },
           {
-            "title": "Complete the Customer Benefits Record form",
-            "content": [
+            "body": "Complete the Customer Benefits Record form",
+            "custom_body_list": [
               {"type": "text", "text": ''.join(["Fill in the Crown Commercial Service’s <a href=\"", framework_urls.customer_benefits_record_form_url|e, "\" target=\"_blank\" rel=\"external noopener noreferrer\"
                 data-analytics=\"trackEvent\"
                 data-analytics-category=\"Direct Award\"
                 data-analytics-action=\"External Link\"
-                >", framework['name'], " Customer Benefits Record form</a>.<br>Email a copy to <a href=\"mailto:", framework_urls.customer_benefits_record_form_email|e, "\" target=\"_top\"
+                >", framework['name'], " Customer Benefits Record form</a>."])},
+              {"type": "text", "text": ''.join(["Email a copy to <a href=\"mailto:", framework_urls.customer_benefits_record_form_email|e, "\" target=\"_top\"
                   data-analytics=\"trackEvent\"
                   data-analytics-category=\"Direct Award\"
                   data-analytics-action=\"External Link\"
@@ -137,25 +138,12 @@
               {"type": "box", "style": "inactive", "label": "Can't start yet"} if not project.downloadedAt else {}
             ]
           }
-        ] %}
-          <li class="instruction-list-item divider">
-            <h2 class="instruction-list-item-body"><span class="step-number" role="presentation">{{ loop.index }}.</span>&nbsp;{{ step.title }}</h2>
-            {% for item in step.content %}
-              {% if item.type == 'text' %}
-                <p class="instruction-list-item-top{% for class in item.class %} {{ class }}{% endfor %}">{{ item.text|safe }}</p>
-              {% elif item.type == 'action' %}
-                <a class="instruction-list-item-action button-save" href="{{ item.href }}" 
-                data-analytics="trackEvent"
-                data-analytics-category="Direct Award"
-                data-analytics-action="Internal Link"
-                >{{ item.label }}</a>
-              {% elif item.type == 'box' %}
-                <p class="instruction-list-item-box {{ item.style }}">{{ item.label }}</p>
-              {% endif %}
-            {% endfor %}
-          </li>
-        {% endfor %}
-      </ol>
+
+        ], 
+         verbose = True
+        %}
+          {% include "toolkit/instruction-list.html" %}
+        {% endwith %}
     </div>
   </div>
   {% if not delete_requested %}

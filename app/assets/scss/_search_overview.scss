@@ -1,40 +1,14 @@
-.instruction-list-item {
-
-  h2 {
+.direct-award-project-overview-page {
+  .instruction-list {
     @include bold-27;
-    margin-bottom: 10px;
   }
-
-  .instruction-list-item-top {
-    @include core-19;
-    display: block;
+  .instruction-list-item {
+    h2 {
+      @include bold-27;
+    }
+    .instruction-list-item-top {
+      @include core-19;
+      display: block;
+    }
   }
-}
-
-ul.instruction-list-item-top li,
-ol.instruction-list-item-top li {
-  margin-bottom: 0;
-}
-
-ol.steps {
-  @include bold-27;
-  padding-left: 25px;
-
-  @include media( $min-width: $site-width + (2 * (27px + $gutter) ) ) {
-    padding-left: 0;
-  }
-
-  list-style: none;
-  padding-left: 0;
-
-  .instruction-list-item-top,
-  .instruction-list-item-box,
-  .instruction-list-item-action {
-    margin-left: 25px;
-  }
-
-  .step-number {
-    min-width: 25px;
-    float: left;
-  }
-}
+} 
