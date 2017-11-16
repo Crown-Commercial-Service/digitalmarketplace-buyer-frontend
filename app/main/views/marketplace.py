@@ -402,25 +402,7 @@ def list_opportunities(framework_slug):
 
 @main.route('/collaborate')
 def collaborate():
-    try:
-        metrics = data_api_client.get_metrics()
-        suppliers_count = metrics['supplier_count']['value']
-    except Exception as e:
-        suppliers_count = 0
-    props = {
-        'form_options': {
-            'seller_count': suppliers_count
-        }
-    }
-    rendered_component = render_component('bundles/Collaborate/CollaborateLandingWidget.js', props)
-    return render_template(
-        '_react.html',
-        breadcrumb_items=[
-            {'link': url_for('main.index'), 'label': 'Home'},
-            {'label': 'Collaborate'}
-        ],
-        component=rendered_component
-    )
+    return redirect('/2/collaborate', 301)
 
 
 @main.route('/collaborate/code')
