@@ -40,3 +40,7 @@
 %icon-external-link--aqua {
   @include inline-background-image('external-link--aqua');
 }
+
+.icon {
+  display: inline-block;
+}
