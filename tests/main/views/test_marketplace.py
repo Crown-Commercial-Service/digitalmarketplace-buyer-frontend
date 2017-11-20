@@ -623,17 +623,10 @@ class TestBriefPage(BaseBriefPageTest):
         assert 'Quality assurance analyst' in res.get_data(as_text=True)
 
     def _assert_start_application(self, document, brief_id):
-        message_list = document.xpath("//p[@class='dmspeak']/text()")
-        message = message_list[0] if message_list else None
-
-        assert message == "To apply, you must give evidence for all the essential and nice-to-have " \
-            "skills and experience you have."
-        assert len(document.xpath(
-            '//a[@href="{0}"][contains(normalize-space(text()), normalize-space("{1}"))]'.format(
-                "/suppliers/opportunities/{}/responses/start".format(brief_id),
-                'Apply',
-            )
-        )) == 1
+        assert document.xpath("//form[@method='get']/@action") == [
+            "/suppliers/opportunities/{}/responses/start".format(brief_id)
+        ]
+        assert document.xpath("//input[@class='button-save']/@value") == ['Apply for this opportunity']
 
     def _assert_view_application(self, document, brief_id):
         assert len(document.xpath(
