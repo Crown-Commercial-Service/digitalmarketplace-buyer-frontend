@@ -56,6 +56,9 @@ def content(template_name):
     if template_name == 'sellers-guide':
         return redirect('https://marketplace1.zendesk.com/hc/en-gb/categories/115001540368-Seller-guide-and-FAQs',
                         code=301)  # 301 Moved Permanently
+    if template_name == 'assessment-criteria':
+        return redirect('https://marketplace1.zendesk.com/hc/en-gb/articles/333757011655-Assessment-criteria',
+                        code=301)
     try:
         return render_template('content/{}.html'.format(template_name))
     except:

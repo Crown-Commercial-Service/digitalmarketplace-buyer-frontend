@@ -18,7 +18,23 @@ footer[role='contentinfo'] {
   }
 
   .footer-logo {
-
+    .nisalogo {
+      padding-right: 2em
+    }
+    .nisa {
+      max-width: 30em;
+      font-family: Helvetica;
+      vertical-align: top;
+      div {
+        display: inline-block;
+        font-size: 14px;
+        line-height: 21px;
+        margin-top: 20px;
+        a {
+          font-weight: bold;
+        }
+      }
+    }
     ul {
       display: table;
       margin: 0 auto;

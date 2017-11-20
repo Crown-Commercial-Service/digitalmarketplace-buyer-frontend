@@ -58,7 +58,7 @@
             }
           ]
         %}
-        <ul class='document-list' style="list-style: none;">
+        <ul class='document-list'>
           {% for item in items %}
           {% if 'XLSX_EXPORT' is active_feature or item.file_type != 'XLSX' %}
             <li class='document-list-item'>
