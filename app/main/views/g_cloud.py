@@ -51,6 +51,21 @@ TOO_MANY_RESULTS_MESSAGE = Markup("""
     You have too many results. Choose a category or add filters to refine your search.""")
 
 
+# TODO: Temporary redirect for direct_award internal IDs. Remove after 21/11/2017 - SW.
+@direct_award.before_request
+def redirect_internal_ids():
+    if 'project_id' in request.view_args:
+        project_id = request.view_args['project_id']
+
+        project = data_api_client.get_direct_award_project(project_id=project_id)['project']
+        if project and is_direct_award_project_accessible(project, current_user.id):
+            if project_id.isdigit() and project_id != str(project['id']):
+                view_args = request.view_args.copy()
+                view_args['project_id'] = project['id']
+
+                return redirect(url_for(request.endpoint, **view_args))
+
+
 @main.route('/g-cloud')
 def index_g_cloud():
     # if there are multiple live g-cloud frameworks, assume they all have the same lots
@@ -417,7 +432,7 @@ def save_search(framework_framework):
                             ), code=303)
 
 
-@direct_award.route('/<string:framework_framework>/projects/<int:project_id>', methods=['GET'])
+@direct_award.route('/<string:framework_framework>/projects/<string:project_id>', methods=['GET'])
 def view_project(framework_framework, project_id):
     frameworks_by_slug = framework_helpers.get_frameworks_by_slug(data_api_client)
     # Get the requested Direct Award Project.
@@ -471,7 +486,7 @@ def view_project(framework_framework, project_id):
                            customer_benefits_record_form_email=framework_urls['customer_benefits_record_form_email'])
 
 
-@direct_award.route('/<string:framework_framework>/projects/<int:project_id>/end-search', methods=['GET', 'POST'])
+@direct_award.route('/<string:framework_framework>/projects/<string:project_id>/end-search', methods=['GET', 'POST'])
 def end_search(framework_framework, project_id):
     all_frameworks = data_api_client.find_frameworks().get('frameworks')
     framework = framework_helpers.get_latest_live_framework(all_frameworks, framework_framework)
@@ -519,7 +534,7 @@ def end_search(framework_framework, project_id):
     )
 
 
-@direct_award.route('/<string:framework_framework>/projects/<int:project_id>/results')
+@direct_award.route('/<string:framework_framework>/projects/<string:project_id>/results')
 def search_results(framework_framework, project_id):
     # Get the requested Direct Award Project.
     project = data_api_client.get_direct_award_project(project_id=project_id)['project']
@@ -702,6 +717,6 @@ class DownloadResultsView(SimpleDownloadFileView):
         return file_rows, column_styles
 
 
-direct_award.add_url_rule('/<string:framework_framework>/projects/<int:project_id>/results/download',
+direct_award.add_url_rule('/<string:framework_framework>/projects/<string:project_id>/results/download',
                           view_func=DownloadResultsView.as_view(str('download_results')),
                           methods=['GET'])
