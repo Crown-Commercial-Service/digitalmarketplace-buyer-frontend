@@ -23,6 +23,7 @@ dependencies:
   pre:
     - curl -v -L -o cf-cli_amd64.deb 'https://cli.run.pivotal.io/stable?release=debian64&source=github'
     - sudo dpkg -i cf-cli_amd64.deb
+    - cf install-plugin https://github.com/govau/autopilot/releases/download/0.0.5-venapp/autopilot-linux -f
     - cf -v
   override:
     - ./scripts/ci_build.sh
@@ -37,7 +38,7 @@ deployment:
     commands:
       - cf login -a https://api.system.z.cld.gov.au -u $CF_USER_STAGING -p $CF_PASSWORD_STAGING
       - cf target -o dta -s marketplace
-      - cf push -f service.gov.au-manifest.staging.yml
+      - cf zero-downtime-push dm-dev-buyer -f service.gov.au-manifest.staging.yml --show-app-log
       - xvfb-run -a firefox -marionette:
           background: true
       - py.test -x ./tests/integration/marionette
