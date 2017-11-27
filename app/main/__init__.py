@@ -16,6 +16,7 @@ def require_login():
         flash(LOGIN_REQUIRED_MESSAGE, 'error')
         return current_app.login_manager.unauthorized()
 
+
 from . import errors
 from .views import (
     crown_hosting,

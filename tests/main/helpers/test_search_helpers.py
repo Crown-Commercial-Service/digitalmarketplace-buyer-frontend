@@ -182,7 +182,6 @@ class TestBuildSearchQueryHelpers(BaseApplicationTest):
             'question1': 'true',
             'question2': 'true',
             'question3': ['option1', 'option2'],
-            'page': 'false',
             'q': 'email',
             'lot': 'saas',
             'page': 9,

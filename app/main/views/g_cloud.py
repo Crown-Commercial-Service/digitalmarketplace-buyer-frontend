@@ -359,10 +359,7 @@ def save_search(framework_framework):
     form = CreateProjectForm()
     name = form.name.data
 
-    try:
-        save_search_selection = request.form['save_search_selection']
-    except:
-        save_search_selection = None
+    save_search_selection = request.form.get('save_search_selection', None)
 
     name_is_invalid = save_search_selection == "new_search" and not name
 
