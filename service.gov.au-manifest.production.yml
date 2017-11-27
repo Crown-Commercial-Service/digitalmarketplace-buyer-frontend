@@ -3,13 +3,11 @@ buildpack: python_buildpack
 memory: 1G
 disk_quota: 1G
 instances: 2
-env:
-    DM_ENVIRONMENT: production
-    NEW_RELIC_ENVIRONMENT: production
-    DM_DATA_API_URL:  https://marketplace.service.gov.au/api/
 routes:
-- route: marketplace.service.gov.au/
-- route: dm-buyer.apps.platform.digital.gov.au/
+- route: marketplace.service.gov.au
+- route: dm-buyer.apps.b.cld.gov.au
+services:
+- ups-dm-common
+- ups-dm-buyer
 applications:
-- name: dm-buyer-blue
-- name: dm-buyer-green
+- name: dm-buyer

@@ -161,8 +161,8 @@ class Live(Config):
         'TEAM_VIEW': True
     }
 
-    REACT_BUNDLE_URL = 'https://dm-frontend.apps.platform.digital.gov.au/bundle/'
-    REACT_RENDER_URL = 'https://dm-frontend.apps.platform.digital.gov.au/render'
+    REACT_BUNDLE_URL = 'https://dm-frontend.apps.b.cld.gov.au/bundle/'
+    REACT_RENDER_URL = 'https://dm-frontend.apps.b.cld.gov.au/render'
     REACT_RENDER = True
 
 

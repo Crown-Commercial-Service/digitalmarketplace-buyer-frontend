@@ -3,7 +3,7 @@
         {
             "id": 1,
             "links": {
-                "self": "https://dm-dev-api.apps.staging.digital.gov.au/domains/1"
+                "self": "https://dm-dev-api.apps.y.cld.gov.au/domains/1"
             },
             "name": "Change & transformation",
             "suppliers": []
@@ -11,7 +11,7 @@
         {
             "id": 2,
             "links": {
-                "self": "https://dm-dev-api.apps.staging.digital.gov.au/domains/2"
+                "self": "https://dm-dev-api.apps.y.cld.gov.au/domains/2"
             },
             "name": "Content & publishing",
             "suppliers": []
@@ -19,7 +19,7 @@
         {
             "id": 3,
             "links": {
-                "self": "https://dm-dev-api.apps.staging.digital.gov.au/domains/3"
+                "self": "https://dm-dev-api.apps.y.cld.gov.au/domains/3"
             },
             "name": "Cyber security",
             "suppliers": []
@@ -27,7 +27,7 @@
         {
             "id": 4,
             "links": {
-                "self": "https://dm-dev-api.apps.staging.digital.gov.au/domains/4"
+                "self": "https://dm-dev-api.apps.y.cld.gov.au/domains/4"
             },
             "name": "Data science",
             "suppliers": []
@@ -35,7 +35,7 @@
         {
             "id": 5,
             "links": {
-                "self": "https://dm-dev-api.apps.staging.digital.gov.au/domains/5"
+                "self": "https://dm-dev-api.apps.y.cld.gov.au/domains/5"
             },
             "name": "Emerging technology",
             "suppliers": []
@@ -43,7 +43,7 @@
         {
             "id": 6,
             "links": {
-                "self": "https://dm-dev-api.apps.staging.digital.gov.au/domains/6"
+                "self": "https://dm-dev-api.apps.y.cld.gov.au/domains/6"
             },
             "name": "Engineering & development",
             "suppliers": []
@@ -51,7 +51,7 @@
         {
             "id": 7,
             "links": {
-                "self": "https://dm-dev-api.apps.staging.digital.gov.au/domains/7"
+                "self": "https://dm-dev-api.apps.y.cld.gov.au/domains/7"
             },
             "name": "Marketing, comms & engagement",
             "suppliers": []
@@ -59,7 +59,7 @@
         {
             "id": 8,
             "links": {
-                "self": "https://dm-dev-api.apps.staging.digital.gov.au/domains/8"
+                "self": "https://dm-dev-api.apps.y.cld.gov.au/domains/8"
             },
             "name": "Operations",
             "suppliers": []
@@ -67,7 +67,7 @@
         {
             "id": 9,
             "links": {
-                "self": "https://dm-dev-api.apps.staging.digital.gov.au/domains/9"
+                "self": "https://dm-dev-api.apps.y.cld.gov.au/domains/9"
             },
             "name": "Policy & law",
             "suppliers": []
@@ -75,7 +75,7 @@
         {
             "id": 10,
             "links": {
-                "self": "https://dm-dev-api.apps.staging.digital.gov.au/domains/10"
+                "self": "https://dm-dev-api.apps.y.cld.gov.au/domains/10"
             },
             "name": "Products",
             "suppliers": []
@@ -83,7 +83,7 @@
         {
             "id": 11,
             "links": {
-                "self": "https://dm-dev-api.apps.staging.digital.gov.au/domains/11"
+                "self": "https://dm-dev-api.apps.y.cld.gov.au/domains/11"
             },
             "name": "Recruitment",
             "suppliers": []
@@ -91,7 +91,7 @@
         {
             "id": 12,
             "links": {
-                "self": "https://dm-dev-api.apps.staging.digital.gov.au/domains/12"
+                "self": "https://dm-dev-api.apps.y.cld.gov.au/domains/12"
             },
             "name": "Strategy, delivery, and governance",
             "suppliers": []
@@ -99,7 +99,7 @@
         {
             "id": 13,
             "links": {
-                "self": "https://dm-dev-api.apps.staging.digital.gov.au/domains/13"
+                "self": "https://dm-dev-api.apps.y.cld.gov.au/domains/13"
             },
             "name": "User research & design",
             "suppliers": []
