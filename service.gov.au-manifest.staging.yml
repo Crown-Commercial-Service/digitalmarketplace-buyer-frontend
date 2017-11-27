@@ -4,8 +4,8 @@ memory: 1G
 disk_quota: 1G
 instances: 1
 routes:
-- route: dm-dev.apps.z.cld.gov.au
-- route: dm-dev-buyer.apps.z.cld.gov.au
+- route: dm-dev.apps.y.cld.gov.au
+- route: dm-dev-buyer.apps.y.cld.gov.au
 services:
 - ups-dm-dev-common
 - ups-dm-dev-buyer

@@ -91,8 +91,8 @@ class Config(object):
     DM_APP_NAME = 'buyer-frontend'
     DM_DOWNSTREAM_REQUEST_ID_HEADER = 'X-Amz-Cf-Id'
 
-    REACT_BUNDLE_URL = 'https://dm-dev-frontend.apps.z.cld.gov.au/bundle/'
-    REACT_RENDER_URL = 'https://dm-dev-frontend.apps.z.cld.gov.au/render'
+    REACT_BUNDLE_URL = 'https://dm-dev-frontend.apps.y.cld.gov.au/bundle/'
+    REACT_RENDER_URL = 'https://dm-dev-frontend.apps.y.cld.gov.au/render'
     REACT_RENDER = not DEBUG
 
     ROLLBAR_TOKEN = None
