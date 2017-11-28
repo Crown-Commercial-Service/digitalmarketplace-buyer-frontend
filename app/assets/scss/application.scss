@@ -1,49 +1,31 @@
-// GOVUK Front-end toolkit styles, including dependencies for govuk-elements
-// Settings (variables)
-@import "colours";                                // Colour variables
-@import "font_stack";                             // Font family variables
-@import "measurements";                           // Widths and gutter variables
-
-// Mixins
-@import "conditionals";                           // Media query mixin
-@import "device-pixels";                          // Retina image mixin
-@import "grid_layout";                            // Basic grid layout mixin
-@import "typography";                             // Core bold and heading mixins
-@import "shims";                                  // Inline block mixin, clearfix placeholder
-
-// Mixins to generate components (chunks of UI)
-@import "design-patterns/alpha-beta";             // Only required if using _phase-banner.scss
-@import "design-patterns/buttons";                // Only required if using _buttons.scss
-
-// Functions
-@import "url-helpers";
+// GOVUK Front-end toolkit variables, mixins and functions
+@import "colours";              // Colour variables
+@import "_grid_layout.scss";    // Grid variables
+@import "_typography.scss";     // Core bold and heading mixins
+@import "_url-helpers.scss";
 
 // Path to assets for use with file-url()
 $path: "/static/images/";
 
-// Other govuk-elements "partials"
+// govuk-elements styles
 @import "elements/_helpers.scss";
 @import "elements/_forms.scss";
 @import "elements/forms/_form-validation.scss";
 @import "elements/_panels.scss";
 
-// Digital Marketplace front end toolkit components
-@import "forms/word-counter";
-@import "forms/list-entry";
-
 // Note we DO NOT load the govuk-elements _reset.scss, only our own custom one, which is different
 
-/* Classes shared between multiple apps */
+/* Digital Marketplace Front-end toolkit shared styles between multiple apps */
 @import "toolkit/shared_scss/_reset.scss";
 @import "toolkit/shared_scss/_lists.scss";
 @import "toolkit/shared_scss/_dmspeak.scss";
 @import "toolkit/shared_scss/_conditionals2.scss";
 
-/* Blocks shared between multiple selectors */
+/* Digital Marketplace Front-end toolkit shared styles between multiple selectors */
 @import "toolkit/shared_placeholders/_temporary-messages.scss";
 @import "toolkit/shared_placeholders/_placeholders.scss";
 @import "toolkit/shared_placeholders/_dm-typography.scss";
-@import "toolkit/shared_placeholders/_mixins.scss";
+
 
 // Digital Marketplace Front-end toolkit styles
 @import "toolkit/_breadcrumb.scss";
@@ -53,7 +35,6 @@ $path: "/static/images/";
 @import "toolkit/_document.scss";
 @import "toolkit/_grids.scss";
 @import "toolkit/_instruction-list.scss";
-@import "toolkit/_link-button.scss";
 @import "toolkit/_notification-banners.scss";
 @import "toolkit/_page-headings.scss";
 @import "toolkit/_phase-banner.scss";
@@ -66,6 +47,7 @@ $path: "/static/images/";
 @import "toolkit/forms/_dates.scss";
 @import "toolkit/forms/_hint.scss";
 @import "toolkit/forms/_keyword-search.scss";
+@import "toolkit/forms/_list-entry.scss";
 @import "toolkit/forms/_option-select.scss";
 @import "toolkit/forms/_questions.scss";
 @import "toolkit/forms/_selection-buttons.scss";
@@ -74,33 +56,30 @@ $path: "/static/images/";
 @import "toolkit/forms/_validation.scss";
 @import "toolkit/search/_search-result.scss";
 
+
 #wrapper {
   @extend %site-width-container;
   padding-bottom: $gutter * 2;
 }
 
-@import "toolkit/forms/_hint.scss";
-@import "toolkit/forms/_questions.scss";
-@import "toolkit/shared_scss/_dmspeak.scss";
 
 // Buyers app styles
-@import "_search_overview.scss";
+@import "_atoz_navigation.scss";
 @import "_end-your-search-page.scss";
+@import "_error-pages.scss";
 @import "_footer.scss";
-@import "_table.scss";
-@import "_text.scss";
-@import "_notice.scss";
-@import "_service-page.scss";
 @import "_index-page.scss";
-@import "_save-search-page.scss";
-@import "_search-page.scss";
-@import "_secondary-action-link.scss";
+@import "_notice.scss";
 @import "_pagination.scss";
 @import "_publication.scss";
+@import "_save-search-page.scss";
+@import "_search-page.scss";
+@import "_search_overview.scss";
+@import "_secondary-action-link.scss";
+@import "_service-page.scss";
 @import "_supplier-a-to-z.scss";
-@import "_atoz_navigation.scss";
-@import "_error-pages.scss";
-@import "_requirements-page.scss";
+@import "_table.scss";
+@import "_text.scss";
 
 .return-to-top {
   display: block;

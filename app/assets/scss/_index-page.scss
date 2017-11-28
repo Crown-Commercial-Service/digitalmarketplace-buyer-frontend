@@ -27,10 +27,6 @@
         top: auto;
       }
     }
-
-    .browse-list-item-body {
-      margin-top: 0;
-    }
   }
 
   .lead {
@@ -67,51 +63,16 @@
       padding-top: 5px;
       padding-bottom: 5px;
     }
-
   }
 
   .supplier-messages {
-
     p {
-
-      &.hint {
-        color: $grey-1;
-        margin-bottom: 5px;
-      }
-
-      &.supplier-info {
-        margin-top: $gutter-half;
-        border-bottom: 1px solid $border-colour;
-        padding-bottom: $gutter-half;
-      }
-
       a.top-level-link {
         @include bold-19;
         text-decoration: none;
       }
     }
-
-    nav {
-      padding-top: $gutter-half;
-
-      ul {
-        margin: 0;
-        padding: 0;
-        list-style: none;
-
-        li {
-          margin-bottom: 5px;
-        }
-
-      }
-    }
   }
-
-  /* `.supplier-message p` overwrites the `margin-bottom` of paragraphs in the temporary message */
-  .supplier-messages .temporary-message-message {
-    margin-bottom: 5px;
-  }
-
 }
 
 .marketplace-homepage-heading {
