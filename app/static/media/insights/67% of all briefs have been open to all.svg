@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"' width="275px" height="160px" viewBox="0 0 275 160" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="background: #FFFFFF;">
-    <!-- Generator: Sketch 45.2 (43514) - http://www.bohemiancoding.com/sketch -->
+<svg font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"' width="274px" height="131px" viewBox="0 0 274 131" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 47.1 (45422) - http://www.bohemiancoding.com/sketch -->
     <title>67% of all briefs have been open to all</title>
     <desc>Created with Sketch.</desc>
     <defs></defs>
-    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="67%-of-all-briefs-have-been-open-to-all">
-            <g>
-                <g id="Group" transform="translate(212.000000, 74.000000) scale(-1, 1) translate(-212.000000, -74.000000) translate(151.000000, 13.000000)">
+    <g id="Mocks" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Nov-monthly-report-greater-than-768px" transform="translate(-372.000000, -907.000000)">
+            <g id="67%-of-all-briefs-have-been-open-to-all" transform="translate(371.000000, 898.000000)">
+                <g id="Group" stroke-width="1" fill-rule="evenodd" transform="translate(212.000000, 74.000000) scale(-1, 1) translate(-212.000000, -74.000000) translate(151.000000, 13.000000)">
                     <g>
                         <g id="Group-2">
                             <g></g>
@@ -15,36 +15,29 @@
                         <g transform="translate(2.342037, 0.000000)"></g>
                     </g>
                 </g>
-                <path d="M137,74 L147,74" id="Line-Copy-15" stroke="#224A61" stroke-width="2" stroke-linecap="round" transform="translate(142.000000, 75.000000) scale(-1, 1) translate(-142.000000, -75.000000) "></path>
-                <text id="67%-of-all-briefs-ha"  font-size="16" font-weight="bold" line-spacing="22" fill="#333333">
-                    <tspan x="1" y="57">67% </tspan>
-                    <tspan x="36.546875" y="57"  font-weight="normal">of all briefs </tspan>
-                    <tspan x="1" y="79"  font-weight="normal">have been</tspan>
-                    <tspan x="1" y="101">open to all</tspan>
+                <path d="M138,74 L148,74" id="Line-Copy-15" stroke="#224A61" stroke-width="2" stroke-linecap="round" transform="translate(143.000000, 75.000000) scale(-1, 1) translate(-143.000000, -75.000000) "></path>
+                <text id="68%-of-all-briefs-ha"  font-size="16" font-weight="bold" line-spacing="22" fill="#333333">
+                    <tspan x="1" y="59">68% </tspan>
+                    <tspan x="37.8359375" y="59"  font-weight="normal">of all briefs </tspan>
+                    <tspan x="1" y="81"  font-weight="normal">have been</tspan>
+                    <tspan x="78.4453125" y="81"> open </tspan>
+                    <tspan x="1" y="103">to all</tspan>
                 </text>
-                <path d="M252.983555,131.498443 C261.072445,120.721554 265.865114,107.328827 265.865114,92.8167119 C265.865114,57.1943455 236.987481,28.3167119 201.365114,28.3167119 C186.979252,28.3167119 173.693385,33.0263538 162.965246,40.9879053 C160.293135,42.9709288 157.779701,45.1556953 155.44747,47.5196798 C143.957137,59.1664523 136.865114,75.1633668 136.865114,92.8167119 C136.865114,101.800233 138.701692,110.354798 142.019862,118.125423" id="Oval-21-Copy-2" stroke="#224A61" stroke-width="2" stroke-linecap="round" transform="translate(201.365114, 79.907578) scale(-1, 1) rotate(114.000000) translate(-201.365114, -79.907578) "></path>
-                <g id="Group" transform="translate(212.000000, 75.000000) scale(-1, 1) translate(-212.000000, -75.000000) translate(151.000000, 14.000000)" stroke-width="2" stroke="#FFFFFF" fill-rule="nonzero">
-                    <g id="Shape">
-                        <g transform="translate(7.254302, 0.000000)" fill="#17788D">
-                            <path d="M32.0344298,72.6798328 C37.7383555,83.076195 50.0545905,87.8121173 61.1846921,83.8888897 C72.3147937,79.965662 79.0127679,68.5274582 77.0375648,56.8167659 C75.0623618,45.1060736 64.9900314,36.5382106 53.1982123,36.5382106 L53.1982123,-2.84217094e-14 C82.6777602,-2.84217094e-14 107.858586,21.4196575 112.796594,50.6963883 C117.734601,79.973119 100.989666,108.568628 73.1644119,118.376698 C45.3391579,128.184767 14.5485703,116.344961 0.288756154,90.3540553 L32.0344298,72.6798328 Z"></path>
-                        </g>
-                        <g transform="translate(7.254302, 0.000000)" fill="#C35D8E">
-                            <path d="M53.1982123,36.5382106 C44.3974175,36.5382106 36.2915404,41.3549038 32.0344298,49.1142027 L0.288756154,31.4399801 C10.9315327,12.0417329 31.1962255,4.26325641e-14 53.1982123,4.26325641e-14 L53.1982123,36.5382106 Z"></path>
-                        </g>
-                        <g transform="translate(0.000000, 31.260469)" fill="#4E9774">
-                            <path d="M39.2887315,17.8537336 C35.2657673,25.1862612 35.2657673,34.086836 39.2887315,41.4193637 L7.54305782,59.0935863 C-2.51435261,40.7622671 -2.51435261,18.5108301 7.54305782,0.179510984 L39.2887315,17.8537336 Z"></path>
-                        </g>
-                    </g>
+                <g id="Group-13" stroke-width="1" fill-rule="evenodd" transform="translate(213.000000, 75.000000) scale(-1, 1) translate(-213.000000, -75.000000) translate(152.000000, 14.000000)" stroke="#FFFFFF">
+                    <path d="M38.8488936,71.2699873 C44.034763,82.1384724 56.3938928,87.5748988 67.9096818,84.0529935 C79.4254707,80.5310882 86.6295112,69.1116038 84.8489888,57.201652 C83.0684663,45.2917003 72.8396514,36.4784053 60.7973422,36.4784053 L60.7973422,0 C90.9031153,1.72796439e-14 116.475153,22.0332374 120.926459,51.8081168 C125.377765,81.5829963 107.367663,110.131707 78.5781912,118.93647 C49.7887188,127.741234 18.8908942,114.150168 5.92622068,86.9789549 L38.8488936,71.2699873 Z" id="Shape" fill="#17788D" fill-rule="nonzero"></path>
+                    <path d="M60.7973422,36.4784053 C52.1576591,36.4784053 44.1666215,41.062248 39.8049478,48.5201247 L8.31635622,30.1042985 C19.2205405,11.4596066 39.1981345,0 60.7973422,0 L60.7973422,36.4784053 Z" id="Shape" fill="#152D3B" fill-rule="nonzero"></path>
+                    <path d="M39.8049478,48.5201247 C35.7365223,55.4765863 35.3784675,63.9967083 38.8488936,71.2699873 L5.92622068,86.9789549 C-2.74984455,68.7957575 -1.85470743,47.4954525 8.31635622,30.1042985 L39.8049478,48.5201247 Z" id="Shape" fill="#870F48" fill-rule="nonzero"></path>
                 </g>
                 <text id="One"  font-size="11" font-weight="bold" fill="#FFFFFF">
-                    <tspan x="223" y="42">One</tspan>
+                    <tspan x="245" y="78">One</tspan>
                 </text>
                 <text id="Some"  font-size="11" font-weight="bold" fill="#FFFFFF">
-                    <tspan x="240" y="78">Some</tspan>
+                    <tspan x="221" y="42">Some</tspan>
                 </text>
                 <text id="All"  font-size="11" font-weight="bold" fill="#FFFFFF">
-                    <tspan x="170" y="101">All</tspan>
+                    <tspan x="165" y="79">All</tspan>
                 </text>
+                <path d="M228.772749,138.8147 C256.309874,131.463255 276.592505,106.346408 276.592505,76.4922988 C276.592505,40.8699325 247.714872,11.9922988 212.092505,11.9922988 C180.628257,11.9922988 154.426047,34.5217591 148.737709,64.328844" id="Oval-3" stroke="#224A61" stroke-width="2" stroke-linecap="round" transform="translate(212.665107, 75.403499) rotate(-165.000000) translate(-212.665107, -75.403499) "></path>
             </g>
         </g>
     </g>

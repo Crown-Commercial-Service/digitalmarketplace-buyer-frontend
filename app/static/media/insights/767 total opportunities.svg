@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"' width="272px" height="193px" viewBox="0 0 272 193" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="background: #FFFFFF;">
-    <!-- Generator: Sketch 45.2 (43514) - http://www.bohemiancoding.com/sketch -->
+<svg font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"' width="272px" height="193px" viewBox="0 0 272 193" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 47.1 (45422) - http://www.bohemiancoding.com/sketch -->
     <title>767 total opportunities</title>
     <desc>Created with Sketch.</desc>
     <defs>
@@ -10,24 +10,26 @@
             <stop stop-color="#17788D" offset="100%"></stop>
         </linearGradient>
     </defs>
-    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="767-total-opportunities">
-            <g>
-                <g id="Rectangle-Copy">
-                    <use fill="#FAFBFC" fill-rule="evenodd" xlink:href="#path-1"></use>
-                    <rect stroke="#BBBBBB" stroke-width="1" x="0.5" y="0.5" width="271" height="192"></rect>
+    <g id="Mocks" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Nov-monthly-report-less-than-767px" transform="translate(-24.000000, -2479.000000)">
+            <g id="767-total-opportunities" transform="translate(24.000000, 2479.000000)">
+                <g>
+                    <g id="Rectangle-Copy">
+                        <use fill="#FAFBFC" fill-rule="evenodd" xlink:href="#path-1"></use>
+                        <rect stroke="#BBBBBB" stroke-width="1" x="0.5" y="0.5" width="271" height="192"></rect>
+                    </g>
+                    <text id="374"  font-size="36" font-weight="bold" letter-spacing="-1.50000024" fill="#17788D">
+                        <tspan x="12" y="60">374</tspan>
+                    </text>
+                    <text id="Total-opportunities"  font-size="17" font-weight="normal" line-spacing="28" fill="#313131">
+                        <tspan x="12" y="89">Total opportunities since 29 </tspan>
+                        <tspan x="12" y="117">August 2016</tspan>
+                    </text>
+                    <text id="35-new-briefs-this-m"  font-size="20" font-weight="bold" line-spacing="28" fill="#313131">
+                        <tspan x="13" y="162">35 new briefs this month</tspan>
+                    </text>
+                    <polyline id="Shape" stroke="url(#linearGradient-2)" stroke-width="3" stroke-linecap="round" points="163 70.8388704 164.010631 70.8388704 165.022757 70.348505 166.033389 69.3692691 167.045515 69.3692691 168.056146 68.3900332 169.066777 66.9204319 170.078904 66.4300664 171.089535 66.4300664 172.101661 66.4300664 173.112292 65.941196 174.122924 64.9604651 175.13505 64.4715947 176.145681 63.9812292 177.157807 63.9812292 178.168439 63.9812292 179.17907 63.4923588 180.191196 63.0019934 181.201827 61.532392 182.213953 61.0420266 183.224585 59.0835548 184.235216 59.0835548 185.247342 58.5931894 186.257973 58.5931894 187.2701 58.1043189 188.280731 56.6347176 189.292857 56.1443522 190.303488 55.1651163 191.31412 55.1651163 193.336877 55.1651163 194.349003 53.695515 196.370266 51.7355482 197.382392 51.2466777 198.393023 51.2466777 199.40515 50.7563123 200.415781 50.2659468 201.426412 50.2659468 202.438538 49.286711 203.449169 45.3682724 204.461296 45.3682724 205.471927 44.879402 206.482558 44.879402 207.494684 42.4290698 208.505316 41.9401993 209.517442 41.9401993 211.538704 39.9802326 212.550831 39.9802326 214.573588 39.0009967 215.584219 37.0410299 217.606977 36.061794 218.617608 34.5921927 220.640365 34.5921927 221.650997 33.6129568 222.663123 32.1433555 223.673754 31.65299 224.68588 29.6945183 225.696512 28.2249169 227.719269 28.2249169 228.7299 27.7345515 229.742027 26.2664452 230.752658 25.2857143 231.764784 24.3064784 232.775415 23.816113 234.798173 23.816113 235.808804 22.8368771 241.877076 22.8368771 242.887708 21.8576412 243.898339 20.3880399 244.910465 20.3880399 246.933223 19.408804 247.943854 19.408804 248.954485 18.9184385 249.966611 16.9599668 250.977243 16.9599668 251.989369 15.4903654 253 15"></polyline>
                 </g>
-                <text id="339" font-size="36" font-weight="bold" letter-spacing="-1.50000024" fill="#17788D">
-                    <tspan x="12" y="59">339</tspan>
-                </text>
-                <text id="Total-opportunities"  font-size="17" font-weight="normal" line-spacing="28" fill="#313131">
-                    <tspan x="12" y="89">Total opportunities since 29 </tspan>
-                    <tspan x="12" y="117">August 2016.</tspan>
-                </text>
-                <text id="47-new-briefs-this-m" font-size="20" font-weight="bold" line-spacing="28" fill="#313131">
-                    <tspan x="13" y="160">47 new briefs this month</tspan>
-                </text>
-                <polyline id="Shape" stroke="url(#linearGradient-2)" stroke-width="3" stroke-linecap="round" points="170 66 171.010631 65.6048193 172.022757 65.6048193 177.078904 65.6048193 178.089535 64.4204819 179.101661 64.4204819 180.112292 64.026506 181.122924 64.026506 182.13505 63.2373494 183.145681 62.8421687 184.157807 61.6578313 185.168439 61.2626506 186.17907 61.2626506 187.191196 61.2626506 188.201827 60.0795181 190.224585 59.2891566 191.235216 59.2891566 192.247342 58.5 193.257973 58.5 194.2701 57.7108434 195.280731 57.3156627 196.292857 56.9204819 197.303488 54.553012 198.31412 52.5795181 199.326246 52.1843373 201.349003 52.1843373 202.359635 51.7891566 203.370266 51 204.382392 51 205.393023 50.2108434 206.40515 49.026506 207.415781 48.6313253 208.426412 48.6313253 209.438538 48.6313253 210.449169 48.2373494 211.461296 47.446988 212.471927 47.053012 213.482558 46.6578313 214.494684 46.6578313 215.505316 46.6578313 216.517442 46.2626506 217.528073 45.8686747 218.538704 44.6843373 219.550831 44.2891566 220.561462 42.7108434 221.573588 42.7108434 222.584219 42.3156627 223.59485 42.3156627 224.606977 41.9204819 225.617608 40.7373494 226.629734 40.3421687 227.640365 39.553012 228.650997 39.553012 230.673754 39.553012 231.68588 38.3686747 233.707143 36.7891566 234.719269 36.3951807 235.7299 36.3951807 236.742027 36 237.752658 35.6048193 238.764784 35.6048193 239.775415 34.8156627 240.786047 31.6578313 241.798173 31.6578313 242.808804 31.2626506 243.82093 31.2626506 244.831561 29.2891566 245.842193 28.8951807 246.854319 28.8951807 248.877076 27.3156627 249.887708 27.3156627 251.910465 26.526506 252.921096 24.946988 254.943854 24.1578313 255.954485 22.973494 257.977243 22.973494 258.989369 22.1843373 260 21"></polyline>
             </g>
         </g>
     </g>

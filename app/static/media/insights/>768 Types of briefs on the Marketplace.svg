@@ -1,79 +1,81 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"' width="367px" height="343px" viewBox="0 0 367 343" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="background: #FFFFFF;">
+<svg font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"' width="354px" height="333px" viewBox="0 0 354 333" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <!-- Generator: Sketch 47.1 (45422) - http://www.bohemiancoding.com/sketch -->
     <title>&gt;768 Types of briefs on the Marketplace</title>
     <desc>Created with Sketch.</desc>
     <defs></defs>
-    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="&gt;768-Types-of-briefs-on-the-Marketplace">
-            <g transform="translate(1.000000, 0.000000)">
-                <text id="Number-of-briefs" font-size="14" font-weight="bold" fill="#224A61">
-                    <tspan x="204" y="338">Number of briefs</tspan>
-                </text>
-                <text id="Top-5-areas-of-exper" font-size="17" font-weight="normal" line-spacing="26" fill="#313131">
-                    <tspan x="94.0234375" y="16">Top 5 areas of expertise </tspan>
-                    <tspan x="102.01709" y="42">since 29 August 2016</tspan>
-                </text>
-                <text id="Software-engineering-Copy" font-size="11" font-weight="normal" fill="#224A61">
-                    <tspan x="33.5292969" y="74">Software engineering </tspan>
-                    <tspan x="51.7802734" y="87">and development</tspan>
-                </text>
-                <text id="Outcomes-(area-not-s" font-size="11" font-weight="normal" fill="#224A61">
-                    <tspan x="42.5439453" y="273">Outcomes (area not </tspan>
-                    <tspan x="90.4165039" y="286">specified)</tspan>
-                </text>
-                <text id="User-research-and-de-Copy-2" font-size="11" font-weight="normal" fill="#224A61">
-                    <tspan x="13.1298828" y="114">User research and design</tspan>
-                </text>
-                <text id="Agile-delivery-and-g-Copy" font-size="11" font-weight="normal" fill="#224A61">
-                    <tspan x="50.9584961" y="141">Agile delivery and </tspan>
-                    <tspan x="78.5068359" y="154">governance</tspan>
-                </text>
-                <text id="Other-areas-of-exper" font-size="11" font-weight="normal" fill="#224A61">
-                    <tspan x="18.4677734" y="248">Other areas of expertise</tspan>
-                </text>
-                <text id="Change-training-and" font-size="11" font-weight="normal" fill="#224A61">
-                    <tspan x="38.3041992" y="175">Change training and </tspan>
-                    <tspan x="65.4335938" y="188">transformation</tspan>
-                </text>
-                <text id="Cyber-security" font-size="11" font-weight="normal" fill="#224A61">
-                    <tspan x="66.0942383" y="214">Cyber security</tspan>
-                </text>
-                <text id="0-copy-4" font-size="11" font-weight="normal" fill="#224A61">
-                    <tspan x="151.329102" y="317">0</tspan>
-                </text>
-                <text id="150" font-size="11" font-weight="normal" fill="#224A61">
-                    <tspan x="348.017578" y="317">150</tspan>
-                </text>
-                <path d="M153,300.5 L365.530709,300.5" id="Line-Copy-4" stroke="#BBBBBB" stroke-linecap="square"></path>
-                <rect id="Rectangle-10-Copy-16" fill="#17788D" x="151" y="67" width="86.0100021" height="20"></rect>
-                <rect id="Rectangle-10-Copy-17" fill="#17788D" x="151" y="267" width="208.679993" height="20"></rect>
-                <rect id="Rectangle-10-Copy-18" fill="#17788D" x="151" y="100" width="67.6800003" height="20"></rect>
-                <rect id="Rectangle-10-Copy-19" fill="#17788D" x="151" y="134" width="52.1699982" height="20"></rect>
-                <rect id="Rectangle-10-Copy-20" fill="#17788D" x="151" y="234" width="32.4300003" height="20"></rect>
-                <rect id="Rectangle-10-Copy-21" fill="#17788D" x="151" y="167" width="16.9200001" height="20"></rect>
-                <rect id="Rectangle-10-Copy-22" fill="#17788D" x="151" y="200" width="14.1000004" height="20"></rect>
-                <text id="61" font-size="14" font-weight="bold" fill="#224A61">
-                    <tspan x="244.277344" y="82">61</tspan>
-                </text>
-                <text id="148" font-size="14" font-weight="bold" fill="#FFFFFF">
-                    <tspan x="329.076172" y="282">148</tspan>
-                </text>
-                <text id="48" font-size="14" font-weight="bold" fill="#224A61">
-                    <tspan x="225.795898" y="115">48</tspan>
-                </text>
-                <text id="37" font-size="14" font-weight="bold" fill="#224A61">
-                    <tspan x="210.169922" y="149">37</tspan>
-                </text>
-                <text id="23" font-size="14" font-weight="bold" fill="#224A61">
-                    <tspan x="190.739258" y="249">23</tspan>
-                </text>
-                <text id="12" font-size="14" font-weight="bold" fill="#224A61">
-                    <tspan x="173.837891" y="183">12</tspan>
-                </text>
-                <text id="10" font-size="14" font-weight="bold" fill="#224A61">
-                    <tspan x="171.167969" y="215">10</tspan>
-                </text>
+    <g id="Mocks" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Nov-monthly-report-greater-than-768px" transform="translate(-704.000000, -1817.000000)">
+            <g id="&gt;768-Types-of-briefs-on-the-Marketplace" transform="translate(690.000000, 1811.000000)">
+                <g transform="translate(1.000000, 0.000000)">
+                    <text id="Number-of-briefs"  font-size="14" font-weight="bold" fill="#224A61">
+                        <tspan x="204" y="338">Number of briefs</tspan>
+                    </text>
+                    <text id="Top-5-areas-of-exper"  font-size="17" font-weight="normal" line-spacing="26" fill="#313131">
+                        <tspan x="94.0234375" y="20">Top 5 areas of expertise </tspan>
+                        <tspan x="102.01709" y="42">since 29 August 2016</tspan>
+                    </text>
+                    <text id="Software-engineering-Copy"  font-size="11" font-weight="normal" fill="#224A61">
+                        <tspan x="33.5292969" y="79">Software engineering </tspan>
+                        <tspan x="51.7802734" y="92">and development</tspan>
+                    </text>
+                    <text id="Outcomes-(area-not-s"  font-size="11" font-weight="normal" fill="#224A61">
+                        <tspan x="42.5439453" y="282">Outcomes (area not </tspan>
+                        <tspan x="90.4165039" y="295">specified)</tspan>
+                    </text>
+                    <text id="User-research-and-de-Copy-2"  font-size="11" font-weight="normal" fill="#224A61">
+                        <tspan x="13.1298828" y="116">User research and design</tspan>
+                    </text>
+                    <text id="Agile-delivery-and-g-Copy"  font-size="11" font-weight="normal" fill="#224A61">
+                        <tspan x="50.9584961" y="145">Agile delivery and </tspan>
+                        <tspan x="78.5068359" y="158">governance</tspan>
+                    </text>
+                    <text id="Other-areas-of-exper"  font-size="11" font-weight="normal" fill="#224A61">
+                        <tspan x="22.4677734" y="248">Other areas of expertise</tspan>
+                    </text>
+                    <text id="Change-training-and"  font-size="11" font-weight="normal" fill="#224A61">
+                        <tspan x="38.3041992" y="177">Change training and </tspan>
+                        <tspan x="65.4335938" y="190">transformation</tspan>
+                    </text>
+                    <text id="Cyber-security"  font-size="11" font-weight="normal" fill="#224A61">
+                        <tspan x="66.0942383" y="216">Cyber security</tspan>
+                    </text>
+                    <text id="0-copy-4"  font-size="11" font-weight="normal" fill="#224A61">
+                        <tspan x="151.329102" y="317">0</tspan>
+                    </text>
+                    <text id="170"  font-size="11" font-weight="normal" fill="#224A61">
+                        <tspan x="347.131348" y="318">170</tspan>
+                    </text>
+                    <path d="M153,300.5 L365.530709,300.5" id="Line-Copy-4" stroke="#BBBBBB" stroke-linecap="square"></path>
+                    <rect id="Rectangle-10-Copy-16" fill="#17788D" x="151" y="67" width="82.5" height="20"></rect>
+                    <rect id="Rectangle-10-Copy-17" fill="#17788D" x="153" y="267" width="201.25" height="20"></rect>
+                    <rect id="Rectangle-10-Copy-18" fill="#17788D" x="151" y="101" width="65" height="20"></rect>
+                    <rect id="Rectangle-10-Copy-19" fill="#17788D" x="151" y="134" width="51.25" height="20"></rect>
+                    <rect id="Rectangle-10-Copy-20" fill="#17788D" x="151" y="233" width="37.5" height="20"></rect>
+                    <rect id="Rectangle-10-Copy-21" fill="#17788D" x="151" y="168" width="15" height="20"></rect>
+                    <rect id="Rectangle-10-Copy-22" fill="#17788D" x="151" y="201" width="15" height="20"></rect>
+                    <text id="66"  font-size="14" font-weight="bold" fill="#224A61">
+                        <tspan x="241.017578" y="83">66</tspan>
+                    </text>
+                    <text id="161"  font-size="14" font-weight="bold" fill="#FFFFFF">
+                        <tspan x="249.026367" y="282">161</tspan>
+                    </text>
+                    <text id="52"  font-size="14" font-weight="bold" fill="#224A61">
+                        <tspan x="225.017578" y="116">52</tspan>
+                    </text>
+                    <text id="41"  font-size="14" font-weight="bold" fill="#224A61">
+                        <tspan x="208.017578" y="149">41</tspan>
+                    </text>
+                    <text id="30"  font-size="14" font-weight="bold" fill="#224A61">
+                        <tspan x="190.017578" y="250">30</tspan>
+                    </text>
+                    <text id="12"  font-size="14" font-weight="bold" fill="#224A61">
+                        <tspan x="171.017578" y="184">12</tspan>
+                    </text>
+                    <text id="12"  font-size="14" font-weight="bold" fill="#224A61">
+                        <tspan x="170.017578" y="217">12</tspan>
+                    </text>
+                </g>
             </g>
         </g>
     </g>

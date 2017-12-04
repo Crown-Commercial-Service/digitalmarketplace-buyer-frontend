@@ -1,122 +1,124 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"' width="273px" height="561px" viewBox="0 0 273 561" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="background: #FFFFFF;">
-    <!-- Generator: Sketch 45.2 (43514) - http://www.bohemiancoding.com/sketch -->
+<svg font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"' width="273px" height="559px" viewBox="0 0 273 559" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 47.1 (45422) - http://www.bohemiancoding.com/sketch -->
     <title>767 sellers awarded contracts this financial year</title>
     <desc>Created with Sketch.</desc>
     <defs></defs>
-    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="767-sellers-awarded-contracts-this-financial-year">
-            <g>
-                <text id="HiTech-Group" font-size="11" font-weight="normal" fill="#224A61">
-                    <tspan x="55.4521484" y="80">HiTech Group</tspan>
-                </text>
-                <text id="Oakton" font-size="11" font-weight="normal" fill="#224A61">
-                    <tspan x="87.2006836" y="112">Oakton</tspan>
-                </text>
-                <text id="Paxus" font-size="11" font-weight="normal" fill="#224A61">
-                    <tspan x="93.0766602" y="141">Paxus</tspan>
-                </text>
-                <text id="2XM-Technology-Pty-L" font-size="11" font-weight="normal" fill="#224A61">
-                    <tspan x="4.33544922" y="174">2XM Technology Pty Ltd</tspan>
-                </text>
-                <text id="Paper-Giant" font-size="11" font-weight="normal" fill="#224A61">
-                    <tspan x="66.3071289" y="206">Paper Giant</tspan>
-                </text>
-                <text id="Adelphi-Digital-Cons" font-size="11" font-weight="normal" fill="#224A61">
-                    <tspan x="53.3789062" y="238">Adelphi Digital </tspan>
-                    <tspan x="38.3022461" y="251">Consulting Group</tspan>
-                </text>
-                <text id="Tobias-&amp;-Tobias" font-size="11" font-weight="normal" fill="#224A61">
-                    <tspan x="45.1074219" y="302">Tobias &amp; Tobias</tspan>
-                </text>
-                <text id="Senuamedia" font-size="11" font-weight="normal" fill="#224A61">
-                    <tspan x="62.4775391" y="270">Senuamedia</tspan>
-                </text>
-                <text id="Number-of-briefs-won-Copy" font-size="14" font-weight="bold" fill="#224A61">
-                    <tspan x="66" y="494">Number of briefs won</tspan>
-                </text>
-                <text id="ThoughtWorks" font-size="11" font-weight="normal" fill="#224A61">
-                    <tspan x="50.7094727" y="336">ThoughtWorks</tspan>
-                </text>
-                <text id="Other-SME" font-size="11" font-weight="normal" fill="#224A61">
-                    <tspan x="70.5986328" y="400">Other SME</tspan>
-                </text>
-                <text id="Pragmateam" font-size="11" font-weight="normal" fill="#224A61">
-                    <tspan x="61.1401367" y="367">Pragmateam</tspan>
-                </text>
-                <text id="Other-large-enterpri" font-size="11" font-weight="normal" fill="#224A61">
-                    <tspan x="18.3647461" y="431">Other large enterprise</tspan>
-                </text>
-                <g id="Group-18" transform="translate(137.000000, 65.000000)">
-                    <rect id="Rectangle-10-Copy-16" fill="#17788D" x="0.105308419" y="0" width="23.5890858" height="20"></rect>
-                    <rect id="Rectangle-10-Copy-17" stroke="#17788D" stroke-width="2" x="1.10530842" y="33" width="18.2192164" height="18"></rect>
-                    <rect id="Rectangle-10-Copy-18" fill="#17788D" x="0.105308419" y="64" width="20.2192164" height="20"></rect>
-                    <rect id="Rectangle-10-Copy-19" fill="#17788D" x="0.105308419" y="96" width="16.849347" height="20"></rect>
-                    <rect id="Rectangle-10-Copy-22" fill="#17788D" x="0.105308419" y="224" width="6.73973881" height="20"></rect>
-                    <rect id="Rectangle-10-Copy-23" fill="#17788D" x="0.105308419" y="192" width="10.1096082" height="20"></rect>
-                    <rect id="Rectangle-10-Copy-24" fill="#17788D" x="0.105308419" y="160" width="13.4794776" height="20"></rect>
-                    <rect id="Rectangle-10-Copy-25" fill="#17788D" x="0.105308419" y="128" width="13.4794776" height="20"></rect>
-                    <text id="7" font-size="14" font-weight="bold" fill="#224A61">
-                        <tspan x="29.9589552" y="15">7</tspan>
+    <g id="Mocks" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Nov-monthly-report-less-than-767px" transform="translate(-24.000000, -5250.000000)">
+            <g id="767-sellers-awarded-contracts-this-financial-year" transform="translate(24.000000, 5248.000000)">
+                <g transform="translate(-19.000000, 0.000000)">
+                    <text id="Oakton"  font-size="11" font-weight="normal" fill="#224A61">
+                        <tspan x="103.262695" y="81">Oakton</tspan>
                     </text>
-                    <text id="6" font-size="14" font-weight="bold" fill="#224A61">
-                        <tspan x="26.7238806" y="47">6</tspan>
+                    <text id="HiTech-Group"  font-size="11" font-weight="normal" fill="#224A61">
+                        <tspan x="70.3647461" y="113">HiTech Group</tspan>
                     </text>
-                    <text id="6" font-size="14" font-weight="bold" fill="#224A61">
-                        <tspan x="26.7238806" y="79">6</tspan>
+                    <text id="Paxus"  font-size="11" font-weight="normal" fill="#224A61">
+                        <tspan x="110.497559" y="142">Paxus</tspan>
                     </text>
-                    <text id="5" font-size="14" font-weight="bold" fill="#224A61">
-                        <tspan x="22.9496269" y="111">5</tspan>
+                    <text id="Paper-Giant"  font-size="11" font-weight="normal" fill="#224A61">
+                        <tspan x="80.4570312" y="175">Paper Giant</tspan>
                     </text>
-                    <text id="4-copy-5" font-size="14" font-weight="bold" fill="#224A61">
-                        <tspan x="19.7145522" y="143">4</tspan>
+                    <text id="2XM-Technology-Pty-L"  font-size="11" font-weight="normal" fill="#224A61">
+                        <tspan x="18.8398438" y="208">2XM Technology Pty Ltd</tspan>
                     </text>
-                    <text id="4" font-size="14" font-weight="bold" fill="#224A61">
-                        <tspan x="19.7145522" y="175">4</tspan>
+                    <text id="Adelphi-Digital-Cons"  font-size="11" font-weight="normal" fill="#224A61">
+                        <tspan x="66.8198242" y="233">Adelphi Digital </tspan>
+                        <tspan x="50.9482422" y="248">Consulting Group</tspan>
                     </text>
-                    <text id="3-copy-2" font-size="14" font-weight="bold" fill="#224A61">
-                        <tspan x="16.4794776" y="207">3</tspan>
+                    <text id="Talentpool-Recruitme"  font-size="11" font-weight="normal" fill="#224A61">
+                        <tspan x="20.3867188" y="303">Talentpool Recruitment</tspan>
                     </text>
-                    <text id="2-copy-3" font-size="14" font-weight="bold" fill="#224A61">
-                        <tspan x="13.244403" y="239">2</tspan>
+                    <text id="ThoughtWorks"  font-size="11" font-weight="normal" fill="#224A61">
+                        <tspan x="65.7670898" y="271">ThoughtWorks</tspan>
                     </text>
-                    <text id="40" font-size="11" font-weight="normal" fill="#224A61">
-                        <tspan x="121.611816" y="397">40</tspan>
+                    <text id="Number-of-briefs-won-Copy"  font-size="14" font-weight="bold" fill="#224A61">
+                        <tspan x="85" y="494">Number of briefs won</tspan>
                     </text>
-                    <text id="0-copy" font-size="11" font-weight="normal" fill="#224A61">
-                        <tspan x="0" y="396">0</tspan>
+                    <text id="Zen-Ex-Machina"  font-size="11" font-weight="normal" fill="#224A61">
+                        <tspan x="60.5141602" y="337">Zen Ex Machina</tspan>
                     </text>
-                    <rect id="Rectangle-10-Copy-20" fill="#17788D" x="0.105308419" y="288" width="6.73973881" height="20"></rect>
-                    <rect id="Rectangle-10-Copy-26" stroke="#17788D" stroke-width="2" x="1" y="353" width="35.0685634" height="18"></rect>
-                    <rect id="Rectangle-10-Copy-21" stroke="#17788D" stroke-width="2" x="1.10530842" y="257" width="4.73973881" height="18"></rect>
-                    <rect id="Rectangle-10-Copy-27" fill="#17788D" x="0.0917633968" y="320" width="131.424907" height="20"></rect>
-                    <path d="M0.207592543,380.5 L135.002369,380.5" id="Line-Copy" stroke="#BBBBBB" stroke-linecap="square"></path>
-                    <text id="2-copy-4" font-size="14" font-weight="bold" fill="#224A61">
-                        <tspan x="13.244403" y="271">2</tspan>
+                    <text id="Other-SME"  font-size="11" font-weight="normal" fill="#224A61">
+                        <tspan x="89.5986328" y="400">Other SME</tspan>
                     </text>
-                    <text id="39" font-size="14" font-weight="bold" fill="#FFFFFF">
-                        <tspan x="106.107276" y="335">39</tspan>
+                    <text id="Senuamedia"  font-size="11" font-weight="normal" fill="#224A61">
+                        <tspan x="77.1269531" y="368">Senuamedia</tspan>
                     </text>
-                    <text id="2-copy-5" font-size="14" font-weight="bold" fill="#224A61">
-                        <tspan x="13.244403" y="303">2</tspan>
+                    <text id="Other-large-enterpri"  font-size="11" font-weight="normal" fill="#224A61">
+                        <tspan x="37.3647461" y="431">Other large enterprise</tspan>
                     </text>
-                    <text id="11" font-size="14" font-weight="bold" fill="#224A61">
-                        <tspan x="39.8992537" y="367">11</tspan>
+                    <g id="Group-18" transform="translate(156.000000, 65.000000)">
+                        <rect id="Rectangle-10-Copy-16" stroke="#17788D" stroke-width="2" x="1.10530842" y="1" width="18.25" height="18"></rect>
+                        <rect id="Rectangle-10-Copy-17" fill="#17788D" x="0.105308419" y="32" width="15.75" height="20"></rect>
+                        <rect id="Rectangle-10-Copy-18" fill="#17788D" x="0.105308419" y="64" width="13.5" height="20"></rect>
+                        <rect id="Rectangle-10-Copy-19" fill="#17788D" x="0.105308419" y="96" width="13.5" height="20"></rect>
+                        <rect id="Rectangle-10-Copy-22" fill="#17788D" x="0.105308419" y="224" width="6.75" height="20"></rect>
+                        <rect id="Rectangle-10-Copy-23" stroke="#17788D" stroke-width="2" x="1.10530842" y="193" width="4.75" height="18"></rect>
+                        <rect id="Rectangle-10-Copy-24" fill="#17788D" x="0.11000061" y="160" width="9" height="20"></rect>
+                        <rect id="Rectangle-10-Copy-25" fill="#17788D" x="0.105308419" y="128" width="11.25" height="20"></rect>
+                        <text id="9"  font-size="14" font-weight="bold" fill="#224A61">
+                            <tspan x="26.9589552" y="16">9</tspan>
+                        </text>
+                        <text id="7"  font-size="14" font-weight="bold" fill="#224A61">
+                            <tspan x="23.7238806" y="48">7</tspan>
+                        </text>
+                        <text id="6"  font-size="14" font-weight="bold" fill="#224A61">
+                            <tspan x="21" y="79">6</tspan>
+                        </text>
+                        <text id="6"  font-size="14" font-weight="bold" fill="#224A61">
+                            <tspan x="21" y="112">6</tspan>
+                        </text>
+                        <text id="5"  font-size="14" font-weight="bold" fill="#224A61">
+                            <tspan x="17.7145522" y="144">5</tspan>
+                        </text>
+                        <text id="4"  font-size="14" font-weight="bold" fill="#224A61">
+                            <tspan x="15.7145522" y="176">4</tspan>
+                        </text>
+                        <text id="3"  font-size="14" font-weight="bold" fill="#224A61">
+                            <tspan x="13" y="208">3</tspan>
+                        </text>
+                        <text id="3"  font-size="14" font-weight="bold" fill="#224A61">
+                            <tspan x="13" y="240">3</tspan>
+                        </text>
+                        <text id="60"  font-size="11" font-weight="normal" fill="#224A61">
+                            <tspan x="122.295898" y="397">60</tspan>
+                        </text>
+                        <text id="0-copy"  font-size="11" font-weight="normal" fill="#224A61">
+                            <tspan x="0" y="396">0</tspan>
+                        </text>
+                        <rect id="Rectangle-10-Copy-20" fill="#17788D" x="0.105308419" y="288" width="6.75" height="20"></rect>
+                        <rect id="Rectangle-10-Copy-26" stroke="#17788D" stroke-width="2" x="1" y="353" width="31.75" height="18"></rect>
+                        <rect id="Rectangle-10-Copy-21" fill="#17788D" x="0.105308419" y="256" width="6.75" height="20"></rect>
+                        <rect id="Rectangle-10-Copy-27" fill="#17788D" x="0.0917633968" y="320" width="123.75" height="20"></rect>
+                        <path d="M0.207592543,380.5 L135.002369,380.5" id="Line-Copy" stroke="#BBBBBB" stroke-linecap="square"></path>
+                        <text id="3"  font-size="14" font-weight="bold" fill="#224A61">
+                            <tspan x="13" y="272">3</tspan>
+                        </text>
+                        <text id="55"  font-size="14" font-weight="bold" fill="#FFFFFF">
+                            <tspan x="100.107276" y="335">55</tspan>
+                        </text>
+                        <text id="3"  font-size="14" font-weight="bold" fill="#224A61">
+                            <tspan x="13" y="304">3</tspan>
+                        </text>
+                        <text id="15"  font-size="14" font-weight="bold" fill="#224A61">
+                            <tspan x="37.8992537" y="368">15</tspan>
+                        </text>
+                    </g>
+                    <text id="SME"  font-size="14" font-weight="normal" fill="#808184">
+                        <tspan x="177" y="530">SME</tspan>
+                    </text>
+                    <text id="Large-enterprise"  font-size="14" font-weight="normal" fill="#808184">
+                        <tspan x="177" y="558">Large enterprise</tspan>
+                    </text>
+                    <rect id="Rectangle-3-Copy-11" fill="#17788D" x="155" y="516" width="16" height="16"></rect>
+                    <rect id="Rectangle-3-Copy-12" stroke="#17788D" stroke-width="2" x="156" y="545" width="14" height="14"></rect>
+                    <rect id="Rectangle-14" fill="#FFFFFF" x="60" y="2" width="126" height="36"></rect>
+                    <text id="Sellers-awarded-cont"  font-size="17" font-weight="normal" line-spacing="26" fill="#313131">
+                        <tspan x="44.5249023" y="16">Sellers awarded contracts this </tspan>
+                        <tspan x="102.40625" y="42">financial year*</tspan>
                     </text>
                 </g>
-                <text id="SME" font-size="14" font-weight="normal" fill="#808184">
-                    <tspan x="158" y="530">SME</tspan>
-                </text>
-                <text id="Large-enterprise" font-size="14" font-weight="normal" fill="#808184">
-                    <tspan x="158" y="558">Large enterprise</tspan>
-                </text>
-                <rect id="Rectangle-3-Copy-11" fill="#17788D" x="136" y="516" width="16" height="16"></rect>
-                <rect id="Rectangle-3-Copy-12" stroke="#17788D" stroke-width="2" x="137" y="545" width="14" height="14"></rect>
-                <rect id="Rectangle-14" fill="#FFFFFF" x="41" y="2" width="126" height="36"></rect>
-                <text id="Sellers-awarded-cont" font-size="17" font-weight="normal" line-spacing="26" fill="#313131">
-                    <tspan x="25.5249023" y="16">Sellers awarded contracts this </tspan>
-                    <tspan x="87.5068359" y="42">financial year *</tspan>
-                </text>
             </g>
         </g>
     </g>

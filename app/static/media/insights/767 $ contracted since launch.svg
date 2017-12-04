@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"' width="272px" height="221px" viewBox="0 0 272 221" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="background: #FFFFFF;">
-    <!-- Generator: Sketch 45.2 (43514) - http://www.bohemiancoding.com/sketch -->
+<svg font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"' width="272px" height="221px" viewBox="0 0 272 221" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 47.1 (45422) - http://www.bohemiancoding.com/sketch -->
     <title>767 $ contracted since launch</title>
     <desc>Created with Sketch.</desc>
     <defs>
@@ -10,25 +10,27 @@
             <stop stop-color="#17788D" offset="100%"></stop>
         </linearGradient>
     </defs>
-    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="767-$-contracted-since-launch">
-            <g>
-                <g id="Rectangle-Copy">
-                    <use fill="#FAFBFC" fill-rule="evenodd" xlink:href="#path-1"></use>
-                    <rect stroke="#BBBBBB" stroke-width="1" x="0.5" y="0.5" width="271" height="220"></rect>
+    <g id="Mocks" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Nov-monthly-report-less-than-767px" transform="translate(-24.000000, -2017.000000)">
+            <g id="767-$-contracted-since-launch" transform="translate(24.000000, 2017.000000)">
+                <g id="Group">
+                    <g id="Rectangle-Copy">
+                        <use fill="#FAFBFC" fill-rule="evenodd" xlink:href="#path-1"></use>
+                        <rect stroke="#BBBBBB" stroke-width="1" x="0.5" y="0.5" width="271" height="220"></rect>
+                    </g>
+                    <text id="$55.13M"  font-size="36" font-weight="bold" letter-spacing="-1.50000024" fill="#17788D">
+                        <tspan x="12" y="62">$55.13M</tspan>
+                    </text>
+                    <text id="Contracted-through-t"  font-size="17" font-weight="normal" line-spacing="28" fill="#313131">
+                        <tspan x="12" y="89">Contracted through the </tspan>
+                        <tspan x="12" y="117">Marketplace since 29 August </tspan>
+                        <tspan x="12" y="145">2016* </tspan>
+                    </text>
+                    <text id="$7.46M-this-month"  font-size="20" font-weight="bold" line-spacing="28" fill="#313131">
+                        <tspan x="13" y="190">$7.46M this month</tspan>
+                    </text>
+                    <polyline id="Shape" stroke="url(#linearGradient-2)" stroke-width="3" stroke-linecap="round" points="169 67.8388704 172.033389 67.7611296 173.045515 62.9038206 174.056146 62.0980066 175.066777 61.9440199 178.101661 61.9440199 179.112292 61.3340532 180.122924 56.1538206 181.13505 55.7710963 186.191196 55.7710963 187.201827 55.1925249 188.213953 54.6139535 189.224585 53.4074751 192.257973 53.4074751 193.2701 52.8887043 194.280731 52.6076412 195.292857 52.1710963 201.359635 52.1710963 202.370266 50.344186 203.382392 49.7342193 204.393023 49.7342193 207.426412 49.7342193 208.438538 49.1048173 209.449169 48.7639535 210.461296 48.7639535 212.482558 48.7639535 213.494684 48.269103 214.505316 48.269103 215.517442 45.0099668 216.528073 43.5583056 217.538704 43.5583056 219.561462 43.5583056 220.573588 43.320598 221.584219 42.3951827 222.59485 42.3951827 223.606977 41.6297342 224.617608 41.1408638 227.650997 41.1408638 228.663123 40.7342193 229.673754 40.7342193 230.68588 40.4083056 231.696512 36.3837209 232.707143 36.3837209 234.7299 36.3837209 235.742027 33.963289 240.798173 33.963289 241.808804 32.2141196 242.82093 32.2141196 243.831561 31.1451827 244.842193 30.1674419 245.854319 27.1789037 247.877076 27.1789037 248.887708 26.3865449 254.954485 26.2774086 255.966611 13.9300664 256.977243 12.2107973 257.989369 12 259 12"></polyline>
                 </g>
-                <text id="$47.19M" font-size="36" font-weight="bold" letter-spacing="-1.50000024" fill="#17788D">
-                    <tspan x="12" y="59">$47.19M</tspan>
-                </text>
-                <text id="Contracted-through-t" font-size="17" font-weight="normal" line-spacing="28" fill="#313131">
-                    <tspan x="12" y="89">Contracted through the </tspan>
-                    <tspan x="12" y="117">Marketplace since 29 August </tspan>
-                    <tspan x="12" y="145">2016 *</tspan>
-                </text>
-                <text id="$2.95M-this-month" font-size="20" font-weight="bold" line-spacing="28" fill="#313131">
-                    <tspan x="13" y="188">$2.95M this month</tspan>
-                </text>
-                <polyline id="Shape" stroke="url(#linearGradient-2)" stroke-width="3" stroke-linecap="round" points="170 66 173.033389 66 174.045515 65.5180723 175.056146 58.7337349 176.066777 58.7337349 177.078904 58.7337349 178.089535 58.3108434 180.112292 58.3108434 181.122924 57.7373494 182.13505 56.5963855 183.145681 56.2349398 184.157807 56.2349398 185.168439 55.6240964 187.191196 55.6240964 188.201827 49.1987952 189.213953 49.0783133 190.224585 47.6795181 191.235216 47.6795181 192.247342 47.3445783 194.2701 47.3445783 195.280731 47.113253 196.292857 47.113253 197.303488 46.6686747 199.326246 46.3662651 200.336877 46.3662651 203.370266 46.2927711 204.382392 41.6891566 205.393023 41.1903614 206.40515 41.0445783 209.438538 41.0445783 210.449169 40.4662651 211.461296 35.5578313 212.471927 35.1951807 217.528073 35.1951807 218.538704 34.6457831 219.550831 34.0987952 220.561462 32.9554217 223.59485 32.9554217 224.606977 32.4638554 225.617608 32.1975904 226.629734 31.7831325 232.696512 31.7831325 233.707143 30.0542169 234.719269 29.4746988 235.7299 29.4746988 238.764784 29.4746988 239.775415 28.8783133 240.786047 28.6072289 241.798173 28.6072289 243.82093 28.6072289 244.831561 28.139759 245.842193 28.139759 246.854319 25.0506024 247.86495 23.6759036 248.877076 23.6759036 250.898339 23.6759036 251.910465 23.4506024 252.921096 22.5746988 253.933223 22.5746988 254.943854 21.8481928 255.954485 21.3855422 258.989369 21.3855422 260 21"></polyline>
             </g>
         </g>
     </g>
