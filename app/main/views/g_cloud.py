@@ -197,11 +197,10 @@ def search_services():
     lots_by_slug = framework_helpers.get_lots_by_slug(framework)
 
     current_lot_slug = get_lot_from_args(request.args, lots_by_slug)
-
     # the bulk of the possible filter parameters are defined through the content loader. they're all boolean and the
     # search api uses the same "question" labels as the content for its attributes, so we can really use those labels
     # verbatim. It also means we can use their human-readable names as defined in the content
-    content_manifest = content_loader.get_manifest(framework['slug'], 'search_filters')
+    content_manifest = content_loader.get_manifest(framework['slug'], 'services_search_filters')
     # filters - an OrderedDictionary of dicts describing each parameter group
     filters = filters_for_lot(
         current_lot_slug,
@@ -352,7 +351,7 @@ def save_search(framework_framework):
 
     current_lot_slug = get_lot_from_args(search_query, lots_by_slug)
 
-    content_manifest = content_loader.get_manifest(framework['slug'], 'search_filters')
+    content_manifest = content_loader.get_manifest(framework['slug'], 'services_search_filters')
     filters = filters_for_lot(current_lot_slug, content_manifest, all_lots=framework['lots'])
     clean_request_query_params = clean_request_args(search_query, filters.values(), lots_by_slug)
 
