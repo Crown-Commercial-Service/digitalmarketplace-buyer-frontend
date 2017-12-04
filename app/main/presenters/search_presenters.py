@@ -219,10 +219,6 @@ def build_lots_and_categories_link_tree(
     root_node['children'] = list()
     selected_filters.append(root_node)
 
-    # If we're searching against a specific lot, we should only build the tree for that lot.
-    if current_lot_slug:
-        lots = list(filter(lambda lot: lot['slug'] == current_lot_slug, lots))
-
     aggregations_by_lot = {
         lot['slug']: _get_aggregations_for_lot_with_filters(
             lot['slug'], content_manifest, framework, request, doc_type, index
@@ -240,9 +236,9 @@ def build_lots_and_categories_link_tree(
         lot_filter['service_count'] = aggregations_by_lot[lot['slug']].results['lot'].get(lot['slug'], 0)
 
         url_args_for_lot = _build_base_url_args(preserved_request_args, content_manifest, framework, lot['slug'])
+        categories = category_filter_group['filters'] if category_filter_group else []
 
         if lot_selected:
-            categories = category_filter_group['filters'] if category_filter_group else []
             selected_categories = _annotate_categories_with_selection(lot['slug'], categories, request,
                                                                       url_args_for_lot, content_manifest, framework,
                                                                       aggregations_by_lot[lot['slug']], keys_to_remove)
@@ -258,7 +254,7 @@ def build_lots_and_categories_link_tree(
                                                                           lot_slug=lot['slug'])
             lot_filter['link'] = search_link_builder(url_args_for_lot)
 
-        if lot_selected or current_lot_slug is None:
+        if lot_selected or current_lot_slug is None or (current_lot_slug and not categories):
             root_node['children'].append(lot_filter)
 
     return selected_filters
