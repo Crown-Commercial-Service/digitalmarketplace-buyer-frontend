@@ -4,20 +4,29 @@ from __future__ import unicode_literals
 from flask_login import current_user
 from flask import abort, current_app, render_template, request
 
+# from werkzeug.urls import url_encode, url_decode
+from werkzeug.datastructures import MultiDict
+
 from dmapiclient import APIError
 from dmcontent.content_loader import ContentNotFoundError
+from dmutils.filters import capitalize_first
 
 from ...main import main
-from ..helpers.shared_helpers import get_one_framework_by_status_in_order_of_preference, parse_link
+from ..helpers.shared_helpers import get_one_framework_by_status_in_order_of_preference
 from ..helpers.brief_helpers import (
     count_brief_responses_by_size_and_status, format_winning_supplier_size,
     COMPLETED_BRIEF_RESPONSE_STATUSES, ALL_BRIEF_RESPONSE_STATUSES, PUBLISHED_BRIEF_STATUSES
 )
-from ..helpers.framework_helpers import get_latest_live_framework, get_framework_description
+from ..helpers.search_helpers import (
+    pagination, get_page_from_request, query_args_for_pagination, get_lot_from_args, build_search_query,
+    clean_request_args, get_request_url_without_any_filters,
+)
+from ..presenters.search_presenters import filters_for_lot, set_filter_states, build_lots_and_categories_link_tree
+from ..presenters.search_results import SearchResults
+from ..presenters.search_summary import SearchSummary
+from ..helpers.framework_helpers import get_latest_live_framework, get_framework_description, get_lots_by_slug
 
-from ..forms.brief_forms import BriefSearchForm
-
-from app import data_api_client, content_loader
+from app import search_api_client, data_api_client, content_loader
 
 
 @main.route('/')
@@ -123,50 +132,129 @@ def get_brief_by_id(framework_framework, brief_id):
     )
 
 
-@main.route('/<framework_framework>/opportunities')
-def list_opportunities(framework_framework):
+@main.route('/<framework_family>/opportunities')
+def list_opportunities(framework_family):
     frameworks = data_api_client.find_frameworks()['frameworks']
-
-    frameworks = [v for v in frameworks if v['framework'] == framework_framework]
+    frameworks = [v for v in frameworks if v['framework'] == framework_family]
     frameworks.sort(key=lambda x: x['id'], reverse=True)
+    framework = get_latest_live_framework(frameworks, framework_family)
 
-    if not frameworks:
-        abort(404, "No framework {}".format(framework_framework))
+    if not framework:
+        abort(404, "No framework {}".format(framework_family))
 
-    # disabling csrf protection as this should only ever be a GET request
-    form = BriefSearchForm(request.args, frameworks=frameworks, data_api_client=data_api_client, csrf_enabled=False)
-    if not form.validate():
-        abort(404, "Invalid form data")
+    lots_by_slug = get_lots_by_slug(framework)
+    current_lot_slug = get_lot_from_args(request.args, lots_by_slug)
+    content_manifest = content_loader.get_manifest(framework['slug'], 'briefs_search_filters')
 
-    api_result = form.get_briefs()
+    filters = filters_for_lot(
+        current_lot_slug,
+        content_manifest,
+        all_lots=framework['lots']
+    )
 
-    briefs = [{
-        "data": brief,
-        "content": content_loader.get_manifest(brief['frameworkSlug'], 'display_brief').filter(brief)
-    } for brief in api_result["briefs"]]
+    clean_request_query_params = clean_request_args(request.args, filters.values(), lots_by_slug)
 
-    links = api_result["links"]
+    try:
+        if int(request.args.get('page', 1)) <= 0:
+            abort(404)
+    except ValueError:
+        abort(404)
 
-    api_prev_link_args = parse_link(links, "prev")
-    prev_link_args = None
-    if api_prev_link_args:
-        prev_link_args = request.args.copy()
-        prev_link_args.setlist("page", api_prev_link_args.get("page") or ())
+    index = 'briefs-digital-outcomes-and-specialists'
+    updated_request_args = None
 
-    api_next_link_args = parse_link(links, "next")
-    next_link_args = None
-    if api_next_link_args:
-        next_link_args = request.args.copy()
-        next_link_args.setlist("page", api_next_link_args.get("page") or ())
+    if 'status' not in request.args.keys():
+        updated_request_args = MultiDict([
+            ('status', 'live'),
+            ('status', 'closed'),
+            ('status', 'awarded'),
+            ('status', 'unsuccessful'),
+            ('status', 'cancelled')
+        ])
+        updated_request_args.update(request.args)
 
-    return render_template('search/briefs.html',
-                           framework=frameworks[-1],
-                           form=form,
-                           filters=form.get_filters(),
-                           filters_applied=form.filters_applied(),
-                           briefs=briefs,
-                           lot_names=tuple(label for id_, label in form.lot.choices),
-                           prev_link_args=prev_link_args,
-                           next_link_args=next_link_args,
-                           briefs_count=api_result.get("meta", {}).get("total", None),
-                           )
+    search_api_response = search_api_client.search_briefs(
+        index=index,
+        **build_search_query(
+            updated_request_args if updated_request_args else clean_request_query_params,
+            filters.values(),
+            content_manifest,
+            lots_by_slug
+        )
+    )
+
+    search_results_obj = SearchResults(search_api_response, lots_by_slug)
+
+    pagination_config = pagination(
+        search_results_obj.total,
+        current_app.config["DM_SEARCH_PAGE_SIZE"],
+        get_page_from_request(request)
+    )
+
+    search_summary = SearchSummary(
+        search_api_response['meta']['total'],
+        clean_request_query_params.copy(),
+        filters.values(),
+        lots_by_slug
+    )
+
+    category_filter_group = filters.pop('categories') if 'categories' in filters else None
+    lots = [lot for lot in framework['lots'] if lot['allowsBrief']]
+
+    selected_category_tree_filters = build_lots_and_categories_link_tree(framework, lots, category_filter_group,
+                                                                         request, content_manifest, 'briefs', index)
+
+    filter_form_hidden_fields_by_name = {f['name']: f for f in selected_category_tree_filters[1:]}
+    current_lot = lots_by_slug.get(current_lot_slug)
+
+    set_filter_states(filters.values(), request)
+
+    for filter_groups in filters.values():
+        for filter_instance in filter_groups['filters']:
+            if 'label' in filter_instance:
+                filter_instance['label'] = capitalize_first(filter_instance['label'])
+
+    clear_filters_url = get_request_url_without_any_filters(request, filters)
+    search_query = query_args_for_pagination(clean_request_query_params)
+
+    template_args = dict(
+        briefs=search_results_obj.search_results,
+        category_tree_root=selected_category_tree_filters[0],
+        clear_filters_url=clear_filters_url,
+        current_lot=current_lot,
+        filters=filters.values(),
+        filter_form_hidden_fields=filter_form_hidden_fields_by_name.values(),
+        framework=frameworks[-1],
+        framework_family=framework['framework'],
+        lot_names=tuple(lot['name'] for lot in lots_by_slug.values() if lot['allowsBrief']),
+        pagination=pagination_config,
+        search_query=search_query,
+        summary=search_summary.markup(),
+        total=search_results_obj.total,
+        view_name='list_opportunities',
+    )
+
+    if request.args.get('live-results'):
+        from flask import jsonify
+
+        live_results_dict = {
+            "results": {
+                "selector": "#js-dm-live-search-results",
+                "html": render_template("search/_results_wrapper.html", **template_args)
+            },
+            "categories": {
+                "selector": "#js-dm-live-search-categories",
+                "html": render_template("search/_categories_wrapper.html", **template_args)
+            },
+            "summary": {
+                "selector": "#js-dm-live-search-summary",
+                "html": render_template("search/_summary.html", **template_args)
+            },
+        }
+
+        return jsonify(live_results_dict)
+
+    return render_template(
+        'search/briefs.html',
+        **template_args
+    )
