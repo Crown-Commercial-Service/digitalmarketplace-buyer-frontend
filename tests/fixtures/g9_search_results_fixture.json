@@ -11,7 +11,7 @@
     "took":8,
     "total":1150
   },
-  "services":[
+  "documents":[
     {
       "frameworkName":"G-Cloud 9",
       "highlight":{
