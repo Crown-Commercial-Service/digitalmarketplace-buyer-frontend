@@ -301,7 +301,7 @@ class TestSearchFilters(BaseApplicationTest):
 
 
 @mock.patch('app.main.presenters.search_presenters.search_api_client', autospec=True,
-            **{'aggregate_services.return_value': _get_g9_aggregations_fixture_data()})
+            **{'aggregate_docs.return_value': _get_g9_aggregations_fixture_data()})
 class TestLotsAndCategoriesSelection(BaseApplicationTest):
     def setup_method(self, method):
         super().setup_method(method)
@@ -315,7 +315,8 @@ class TestLotsAndCategoriesSelection(BaseApplicationTest):
               "&checkboxTreeExample=option+1&page=2"
         with self.app.test_request_context(url):
             selection = build_lots_and_categories_link_tree(self.framework, self.framework['lots'],
-                                                            self.category_filter_group, flask.request, g9_builder)
+                                                            self.category_filter_group, flask.request, g9_builder,
+                                                            'services', 'g-cloud-9')
             assert len(selection) == 3  # all -> software -> option1
 
             tree_root = selection[0]
@@ -349,7 +350,8 @@ class TestLotsAndCategoriesSelection(BaseApplicationTest):
         url = "/g-cloud/search?q=&lot=cloud-software&otherfilter=somevalue&checkboxTreeExample=option+2.2"
         with self.app.test_request_context(url):
             selection = build_lots_and_categories_link_tree(self.framework, self.framework['lots'],
-                                                            self.category_filter_group, flask.request, g9_builder)
+                                                            self.category_filter_group, flask.request, g9_builder,
+                                                            'services', 'g-cloud-9')
             assert len(selection) == 5  # all -> software -> option2 -> option2.2; option2 as a parent category filter
 
             tree_root = selection[0]

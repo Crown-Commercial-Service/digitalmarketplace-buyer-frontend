@@ -19,7 +19,7 @@ class TestDirectAwardBase(BaseApplicationTest):
         super(TestDirectAwardBase, self).setup_method(method)
         self._search_api_client_patch = mock.patch('app.main.views.g_cloud.search_api_client', autospec=True)
         self._search_api_client = self._search_api_client_patch.start()
-        self._search_api_client.aggregate_services.return_value = \
+        self._search_api_client.aggregate_docs.return_value = \
             self._get_fixture_data('g9_aggregations_fixture.json')
 
         self._search_api_client.get_index_from_search_api_url.return_value = 'g-cloud-9'
