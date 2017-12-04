@@ -200,7 +200,11 @@ def build_lots_and_categories_link_tree(
 
     # Links in the tree should preserve all the filters, except those relating to this tree (i.e. lot
     # and category).
-    search_link_builder = Href(url_for('.search_services'))
+    if framework['framework'] == 'g-cloud':
+        search_link_builder = Href(url_for('.search_services'))
+    else:
+        search_link_builder = Href(url_for('.list_opportunities', framework_family=framework['framework']))
+
     keys_to_remove = _get_category_filter_key_set(category_filter_group)
     keys_to_remove.add('page')
     preserved_request_args = MultiDict((k, v) for (k, v) in request.args.items(multi=True) if k not in keys_to_remove)
