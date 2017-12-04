@@ -116,7 +116,7 @@ def _get_category_filter_key_set(category_filter_group):
     return keys
 
 
-def _get_aggregations_for_lot_with_filters(lot, content_manifest, framework, request):
+def _get_aggregations_for_lot_with_filters(lot, content_manifest, framework, request, doc_type, index):
     filters = filters_for_lot(lot, content_manifest, all_lots=framework['lots'])
     lots_by_slug = get_lots_by_slug(framework)
 
@@ -129,13 +129,18 @@ def _get_aggregations_for_lot_with_filters(lot, content_manifest, framework, req
 
     aggregate_request_args['lot'] = lot
 
-    aggregate_api_response = search_api_client.aggregate_services(index=framework['slug'],
-                                                                  aggregations=aggregate_on_fields,
-                                                                  **build_search_query(aggregate_request_args,
-                                                                                       filters.values(),
-                                                                                       content_manifest,
-                                                                                       lots_by_slug,
-                                                                                       for_aggregation=True))
+    aggregate_api_response = search_api_client.aggregate_docs(
+        index=index,
+        doc_type=doc_type,
+        aggregations=aggregate_on_fields,
+        **build_search_query(
+            aggregate_request_args,
+            filters.values(),
+            content_manifest,
+            lots_by_slug,
+            for_aggregation=True
+        )
+    )
 
     return AggregationResults(aggregate_api_response)
 
@@ -173,7 +178,9 @@ def _update_base_url_args_for_lot_and_category(url_args, keys_to_remove, lot_slu
     return url_args
 
 
-def build_lots_and_categories_link_tree(framework, lots, category_filter_group, request, content_manifest):
+def build_lots_and_categories_link_tree(
+    framework, lots, category_filter_group, request, content_manifest, doc_type, index
+):
     """
     Equivalent of set_filter_states but for where we are creating a tree of links i.e. the
     lots/categories widget. Adds links (where necessary) and shows the currently-selected
@@ -212,9 +219,11 @@ def build_lots_and_categories_link_tree(framework, lots, category_filter_group, 
     if current_lot_slug:
         lots = list(filter(lambda lot: lot['slug'] == current_lot_slug, lots))
 
-    aggregations_by_lot = {lot['slug']: _get_aggregations_for_lot_with_filters(lot['slug'], content_manifest,
-                                                                               framework, request)
-                           for lot in lots}
+    aggregations_by_lot = {
+        lot['slug']: _get_aggregations_for_lot_with_filters(
+            lot['slug'], content_manifest, framework, request, doc_type, index
+        ) for lot in lots
+    }
 
     for lot in lots:
         selected_categories = []
