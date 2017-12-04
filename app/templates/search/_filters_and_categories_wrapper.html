@@ -1,0 +1,19 @@
+{% if framework_family == 'g-cloud' %}
+  {%
+    with
+    id = "keywords",
+    name = "q",
+    label = "Keyword search",
+    value = search_keywords
+  %}
+    {% include "toolkit/forms/keyword-search.html" %}
+  {% endwith %}
+{%endif%}
+
+{% include 'search/_categories_wrapper.html' %}
+
+{% for f in filter_form_hidden_fields %}
+  <input type="hidden" name="{{ f.name }}" value="{{ f.value }}" />
+{% endfor %}
+
+{% include 'search/_filters.html' %}
