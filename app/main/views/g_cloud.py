@@ -241,8 +241,9 @@ def search_services():
     category_filter_group = filters.pop('categories') if 'categories' in filters else None
 
     lots = framework['lots']
-    selected_category_tree_filters = build_lots_and_categories_link_tree(framework, lots, category_filter_group,
-                                                                         request, content_manifest)
+    selected_category_tree_filters = build_lots_and_categories_link_tree(
+        framework, lots, category_filter_group, request, content_manifest, 'services', framework['slug']
+    )
 
     # Filter form should also filter by lot, and by category, when any of those are selected.
     # (If a sub-category is selected, we also need the parent category id, so that the correct part
