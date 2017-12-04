@@ -19,7 +19,7 @@
         </li>
         {% if 'specialistRole' in brief %}
         <li class="search-result-metadata-item">
-            {{ brief.specialistRole | split_camel_case() | capitalize() }}
+            {{ brief.specialistRole | capitalize() }}
         </li>
         {% endif %}
     </ul>

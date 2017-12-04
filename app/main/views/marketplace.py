@@ -183,6 +183,11 @@ def list_opportunities(framework_family):
         )
     )
 
+    # Convert the shortened, camel cased specialistRole value into a human readable format.
+    content = content_loader.get_manifest(framework['slug'], 'display_brief')
+    for brief in search_api_response['documents']:
+        brief['specialistRole'] = content.summary(brief).get_question('specialistRole').value
+
     search_results_obj = SearchResults(search_api_response, lots_by_slug)
 
     pagination_config = pagination(
