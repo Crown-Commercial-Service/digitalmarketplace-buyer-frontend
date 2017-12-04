@@ -1,49 +1,69 @@
 {% extends "_base_page.html" %}
 
 {% block page_title %}
-    Supplier opportunities – {{ framework.name }} – Digital Marketplace
+  Supplier opportunities – {{ framework.name }} – Digital Marketplace
+{% endblock %}
+
+{% block head %}
+  <meta name="robots" content="noindex">
+  {{ super() }}
 {% endblock %}
 
 {% block breadcrumb %}
-    {% with items = [
+  {% with %}
+    {% if current_lot %}
+      {% set items = [
         {
-        "link": url_for('.index'),
-        "label": "Digital Marketplace"
+          "link": url_for('.index'),
+          "label": "Digital Marketplace"
+        },
+        {
+          "link": url_for('.list_opportunities', framework_family='digital-outcomes-and-specialists'),
+          "label": "Supplier opportunities"
+        },
+        {
+          "label": current_lot.name
         }
-    ]
-    %}
+      ] %}
+    {% else %}
+      {% set items = [
+        {
+          "link": url_for('.index'),
+          "label": "Digital Marketplace"
+        },
+        {
+          "link": url_for('.list_opportunities', framework_family='digital-outcomes-and-specialists'),
+          "label": "Supplier opportunities"
+        }
+      ] %}
+    {% endif %}
     {% include "toolkit/breadcrumb.html" %}
-    {% endwith %}
+  {% endwith %}
 {% endblock %}
 
 {% block main_content %}
-    <div class="grid-row">
-      <div class="column-two-thirds">
-        {% with heading="{} opportunities".format(framework.name) %}
-            {% include "toolkit/page-heading.html" %}
-        {% endwith %}
-        <div class="marketplace-paragraph">
-          <p>View buyer requirements for {{ lot_names | map('lower') | smartjoin }}.</p>
-        </div>
-      </div>
+<div class="grid-row">
+  <div class="column-two-thirds">
+    {% with heading="{} opportunities".format(framework.name) %}
+        {% include "toolkit/page-heading.html" %}
+    {% endwith %}
+    <div class="marketplace-paragraph">
+      <p>View buyer requirements for {{ lot_names | map('lower') | smartjoin }}.</p>
     </div>
+  </div>
+</div>
 
-    <div class="grid-row search-results-page">
-      <div class="column-one-third">
-        <section class="search-page-filters" aria-label="Search filters">
-          <form action="" method="get">
-            {% include 'search/_filters.html' %}
-          </form>
-        </section>
-        <section class="search-page-opportunity-data" aria-label="Download opportunity data">
+<div id="js-dm-live-search-wrapper" class="grid-row search-results-page">
+  <form action="{{ url_for('.list_opportunities', framework_family=framework_family) }}" method="get" id="js-dm-live-search-form">
+    <section class="column-one-third search-page-filters" aria-label="Search filters">
+          {% include 'search/_filters_and_categories_wrapper.html' %}
           {% include 'search/_opportunity_data.html' %}
-        </section>
-      </div>
-      <section class="column-two-thirds" aria-label="Opportunities found">
-        {% include 'search/_briefs_summary.html' %}
-        {% include 'search/_briefs_results.html' %}
-        {% include 'search/_briefs_pagination.html' %}
-      </section>
-    </div>
+    </section>
+  </form>
+  <section class="column-two-thirds" aria-label="Search results">
+    {% include 'search/_summary.html' %}
+    {% include 'search/_results_wrapper.html' %}
+  </section>
 
+</div>
 {% endblock %}

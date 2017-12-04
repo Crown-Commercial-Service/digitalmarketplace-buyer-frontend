@@ -250,6 +250,7 @@ def search_services():
     search_query = query_args_for_pagination(clean_request_query_params)
 
     template_args = dict(
+        view_name='search_services',
         current_lot=current_lot,
         framework_family=framework['framework'],
         category_tree_root=selected_category_tree_filters[0],
@@ -274,15 +275,15 @@ def search_services():
         live_results_dict = {
             "results": {
                 "selector": "#js-dm-live-search-results",
-                "html": render_template("search/_services_results_wrapper.html", **template_args)
+                "html": render_template("search/_results_wrapper.html", **template_args)
             },
             "categories": {
                 "selector": "#js-dm-live-search-categories",
-                "html": render_template("search/_services_categories_wrapper.html", **template_args)
+                "html": render_template("search/_categories_wrapper.html", **template_args)
             },
             "summary": {
                 "selector": "#js-dm-live-search-summary",
-                "html": render_template("search/_services_summary.html", **template_args)
+                "html": render_template("search/_summary.html", **template_args)
             },
             "save-form": {
                 "selector": "#js-dm-live-save-search-form",
