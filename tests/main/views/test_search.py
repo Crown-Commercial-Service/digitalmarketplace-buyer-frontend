@@ -21,7 +21,7 @@ def find_0_results_suggestion(res_data):
 
 def get_0_results_search_response():
     return {
-        "services": [],
+        "documents": [],
         "meta": {
             "query": {},
             "total": 0,
@@ -41,7 +41,7 @@ class TestSearchResults(BaseApplicationTest):
         self._search_api_client_presenters_patch = mock.patch('app.main.presenters.search_presenters.search_api_client',
                                                               autospec=True)
         self._search_api_client_presenters = self._search_api_client_presenters_patch.start()
-        self._search_api_client_presenters.aggregate_services.return_value = \
+        self._search_api_client_presenters.aggregate_docs.return_value = \
             self._get_fixture_data('g9_aggregations_fixture.json')
 
         self.search_results = self._get_search_results_fixture_data()
@@ -174,7 +174,7 @@ class TestSearchResults(BaseApplicationTest):
 
     def test_should_not_render_suggestions_for_when_results_are_shown(self):
         self._search_api_client.search_services.return_value = {
-            "services": [],
+            "documents": [],
             "meta": {
                 "query": {},
                 "total": 2,
@@ -190,7 +190,7 @@ class TestSearchResults(BaseApplicationTest):
 
     def test_should_render_summary_for_1_result_in_cloud_software_no_keywords(self):
         return_value = self.search_results_multiple_page
-        return_value["services"] = [return_value["services"][0]]
+        return_value["documents"] = [return_value["documents"][0]]
         return_value["meta"]["total"] = 1
         self._search_api_client.search_services.return_value = return_value
 
@@ -201,7 +201,7 @@ class TestSearchResults(BaseApplicationTest):
 
     def test_should_render_summary_for_1_result_in_cloud_hosting_no_keywords(self):
         return_value = self.search_results_multiple_page
-        return_value["services"] = [return_value["services"][0]]
+        return_value["documents"] = [return_value["documents"][0]]
         return_value["meta"]["total"] = 1
         self._search_api_client.search_services.return_value = return_value
 
@@ -213,7 +213,7 @@ class TestSearchResults(BaseApplicationTest):
 
     def test_should_render_summary_for_1_result_in_cloud_software_with_keywords(self):
         return_value = self.search_results_multiple_page
-        return_value["services"] = [return_value["services"][0]]
+        return_value["documents"] = [return_value["documents"][0]]
         return_value["meta"]["total"] = 1
         self._search_api_client.search_services.return_value = return_value
 
@@ -226,7 +226,7 @@ class TestSearchResults(BaseApplicationTest):
 
     def test_should_render_summary_with_a_group_of_1_boolean_filter(self):
         return_value = self.search_results_multiple_page
-        return_value["services"] = [return_value["services"][0]]
+        return_value["documents"] = [return_value["documents"][0]]
         return_value["meta"]["total"] = 1
         self._search_api_client.search_services.return_value = return_value
 
@@ -241,7 +241,7 @@ class TestSearchResults(BaseApplicationTest):
 
     def test_should_render_summary_with_a_group_of_2_boolean_filters(self):
         return_value = self.search_results_multiple_page
-        return_value["services"] = [return_value["services"][0]]
+        return_value["documents"] = [return_value["documents"][0]]
         return_value["meta"]["total"] = 1
         self._search_api_client.search_services.return_value = return_value
 
@@ -258,7 +258,7 @@ class TestSearchResults(BaseApplicationTest):
 
     def test_should_render_summary_with_a_group_of_1_array_filter(self):
         return_value = self.search_results_multiple_page
-        return_value["services"] = [return_value["services"][0]]
+        return_value["documents"] = [return_value["documents"][0]]
         return_value["meta"]["total"] = 1
         self._search_api_client.search_services.return_value = return_value
 
@@ -274,7 +274,7 @@ class TestSearchResults(BaseApplicationTest):
 
     def test_should_render_summary_with_a_group_of_2_array_filters(self):
         return_value = self.search_results_multiple_page
-        return_value["services"] = [return_value["services"][0]]
+        return_value["documents"] = [return_value["documents"][0]]
         return_value["meta"]["total"] = 1
         self._search_api_client.search_services.return_value = return_value
 
@@ -291,7 +291,7 @@ class TestSearchResults(BaseApplicationTest):
 
     def test_should_render_summary_with_2_groups_of_filters(self):
         return_value = self.search_results_multiple_page
-        return_value["services"] = [return_value["services"][0]]
+        return_value["documents"] = [return_value["documents"][0]]
         return_value["meta"]["total"] = 1
         self._search_api_client.search_services.return_value = return_value
 
@@ -310,7 +310,7 @@ class TestSearchResults(BaseApplicationTest):
 
     def test_should_render_summary_with_3_groups_of_filters(self):
         return_value = self.search_results_multiple_page
-        return_value["services"] = [return_value["services"][0]]
+        return_value["documents"] = [return_value["documents"][0]]
         return_value["meta"]["total"] = 1
         self._search_api_client.search_services.return_value = return_value
 
@@ -331,7 +331,7 @@ class TestSearchResults(BaseApplicationTest):
 
     def test_should_ignore_unknown_arguments(self):
         return_value = self.search_results_multiple_page
-        return_value["services"] = [return_value["services"][0]]
+        return_value["documents"] = [return_value["documents"][0]]
         return_value["meta"]["total"] = 1
         self._search_api_client.search_services.return_value = return_value
 
@@ -343,7 +343,7 @@ class TestSearchResults(BaseApplicationTest):
 
     def test_query_text_is_escaped(self):
         return_value = self.search_results_multiple_page
-        return_value["services"] = [return_value["services"][0]]
+        return_value["documents"] = [return_value["documents"][0]]
         return_value["meta"]["total"] = 1
         self._search_api_client.search_services.return_value = return_value
 
@@ -355,7 +355,7 @@ class TestSearchResults(BaseApplicationTest):
 
     def test_summary_for_unicode_query_keywords(self):
         return_value = self.search_results_multiple_page
-        return_value["services"] = [return_value["services"][0]]
+        return_value["documents"] = [return_value["documents"][0]]
         return_value["meta"]["total"] = 1
         self._search_api_client.search_services.return_value = return_value
 
@@ -433,17 +433,6 @@ class TestSearchResults(BaseApplicationTest):
             category_name, number_of_services = category_matcher.match(category.text_content()).groups()
             assert expected_lot_counts[category_name] == int(number_of_services)
 
-    @pytest.mark.parametrize('query_params, call_count',
-                             (('', 3),
-                              ('lot=cloud-hosting', 1)))
-    def test_search_results_hit_aggregations_only_for_lots_displayed(self, query_params, call_count):
-        self._search_api_client.search_services.return_value = self.g9_search_results
-
-        res = self.client.get('/g-cloud/search{}'.format('?{}'.format(query_params) if query_params else ''))
-        assert res.status_code == 200
-
-        assert self._search_api_client_presenters.aggregate_services.call_count == call_count
-
     def test_search_results_sends_aggregation_request_without_page_filter(self):
         data_api_client.find_frameworks.return_value = {'frameworks': [self._get_framework_fixture_data('g-cloud-9')
                                                                        ['frameworks']]}
@@ -452,8 +441,9 @@ class TestSearchResults(BaseApplicationTest):
         res = self.client.get('/g-cloud/search?page=2')
         assert res.status_code == 200
 
-        self._search_api_client_presenters.aggregate_services.assert_called_with(
+        self._search_api_client_presenters.aggregate_docs.assert_called_with(
             index='g-cloud-9',
+            doc_type='services',
             lot='cloud-support',
             aggregations={'serviceCategories', 'lot'}
         )
@@ -585,7 +575,7 @@ class TestSearchFilterOnClick(BaseApplicationTest):
         self._search_api_client_presenters_patch = mock.patch('app.main.presenters.search_presenters.search_api_client',
                                                               autospec=True)
         self._search_api_client_presenters = self._search_api_client_presenters_patch.start()
-        self._search_api_client_presenters.aggregate_services.return_value = \
+        self._search_api_client_presenters.aggregate_docs.return_value = \
             self._get_fixture_data('g9_aggregations_fixture.json')
 
         self.search_results = self._get_search_results_fixture_data()
@@ -620,9 +610,9 @@ class TestSearchFilterOnClick(BaseApplicationTest):
 
     @pytest.mark.parametrize('query_string, urls',
                              (('', {'search/services.html'}),
-                              ('?live-results=true', {"search/_services_results_wrapper.html",
-                                                      "search/_services_categories_wrapper.html",
-                                                      "search/_services_summary.html",
+                              ('?live-results=true', {"search/_results_wrapper.html",
+                                                      "search/_categories_wrapper.html",
+                                                      "search/_summary.html",
                                                       "search/_services_save_search.html",
                                                       })))
     @mock.patch('app.main.views.g_cloud.render_template', autospec=True)

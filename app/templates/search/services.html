@@ -46,13 +46,13 @@
 <div id="js-dm-live-search-wrapper" class="grid-row search-results-page">
   <form action="{{ url_for('.search_services') }}" method="get" id="js-dm-live-search-form">
     <section class="column-one-third search-page-filters" aria-label="Search filters">
-          {% include 'search/_services_filters.html' %}
+          {% include 'search/_filters_and_categories_wrapper.html' %}
     </section>
   </form>
   <section class="column-two-thirds" aria-label="Search results">
-    {% include 'search/_services_summary.html' %}
+    {% include 'search/_summary.html' %}
     {% include 'search/_services_save_search.html' %}
-    {% include 'search/_services_results_wrapper.html' %}
+    {% include 'search/_results_wrapper.html' %}
   </section>
 
 </div>

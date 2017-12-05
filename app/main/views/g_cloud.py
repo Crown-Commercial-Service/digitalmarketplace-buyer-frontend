@@ -197,11 +197,10 @@ def search_services():
     lots_by_slug = framework_helpers.get_lots_by_slug(framework)
 
     current_lot_slug = get_lot_from_args(request.args, lots_by_slug)
-
     # the bulk of the possible filter parameters are defined through the content loader. they're all boolean and the
     # search api uses the same "question" labels as the content for its attributes, so we can really use those labels
     # verbatim. It also means we can use their human-readable names as defined in the content
-    content_manifest = content_loader.get_manifest(framework['slug'], 'search_filters')
+    content_manifest = content_loader.get_manifest(framework['slug'], 'services_search_filters')
     # filters - an OrderedDictionary of dicts describing each parameter group
     filters = filters_for_lot(
         current_lot_slug,
@@ -242,8 +241,9 @@ def search_services():
     category_filter_group = filters.pop('categories') if 'categories' in filters else None
 
     lots = framework['lots']
-    selected_category_tree_filters = build_lots_and_categories_link_tree(framework, lots, category_filter_group,
-                                                                         request, content_manifest)
+    selected_category_tree_filters = build_lots_and_categories_link_tree(
+        framework, lots, category_filter_group, request, content_manifest, 'services', framework['slug']
+    )
 
     # Filter form should also filter by lot, and by category, when any of those are selected.
     # (If a sub-category is selected, we also need the parent category id, so that the correct part
@@ -265,6 +265,7 @@ def search_services():
     search_query = query_args_for_pagination(clean_request_query_params)
 
     template_args = dict(
+        view_name='search_services',
         current_lot=current_lot,
         framework_family=framework['framework'],
         category_tree_root=selected_category_tree_filters[0],
@@ -289,15 +290,15 @@ def search_services():
         live_results_dict = {
             "results": {
                 "selector": "#js-dm-live-search-results",
-                "html": render_template("search/_services_results_wrapper.html", **template_args)
+                "html": render_template("search/_results_wrapper.html", **template_args)
             },
             "categories": {
                 "selector": "#js-dm-live-search-categories",
-                "html": render_template("search/_services_categories_wrapper.html", **template_args)
+                "html": render_template("search/_categories_wrapper.html", **template_args)
             },
             "summary": {
                 "selector": "#js-dm-live-search-summary",
-                "html": render_template("search/_services_summary.html", **template_args)
+                "html": render_template("search/_summary.html", **template_args)
             },
             "save-form": {
                 "selector": "#js-dm-live-save-search-form",
@@ -352,7 +353,7 @@ def save_search(framework_framework):
 
     current_lot_slug = get_lot_from_args(search_query, lots_by_slug)
 
-    content_manifest = content_loader.get_manifest(framework['slug'], 'search_filters')
+    content_manifest = content_loader.get_manifest(framework['slug'], 'services_search_filters')
     filters = filters_for_lot(current_lot_slug, content_manifest, all_lots=framework['lots'])
     clean_request_query_params = clean_request_args(search_query, filters.values(), lots_by_slug)
 

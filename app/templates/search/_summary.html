@@ -10,9 +10,11 @@
     <ul class="list list-bullet">
         <li>try removing filters</li>
         <li>choose a different category</li>
-        <li>double-check your spelling</li>
-        <li>use fewer keywords</li>
-        <li>search for something less specific, you can refine your results later</li>
+        {% if framework_family == 'g-cloud' %}
+          <li>double-check your spelling</li>
+          <li>use fewer keywords</li>
+          <li>search for something less specific, you can refine your results later</li>
+        {% endif %}
     </ul>
   </div>
 
