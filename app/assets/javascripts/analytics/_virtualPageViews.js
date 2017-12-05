@@ -36,20 +36,22 @@
 
   };
 
-  VirtualPageViews.prototype.trackFilterAnalytics = function( group, key, value ) {
+  VirtualPageViews.prototype.trackFilterAnalytics = function( framework, group, key, value ) {
 
     var filter_path = '/' + group + '/' + key + '/' + value;
-    var url = '/g-cloud/filters' + filter_path;
+    var url = '/' + framework + '/filters' + filter_path;
     this.sendVirtualPageView( url, 'Filter' + filter_path.replace(/[/]/g, " - ") );
 
   };
 
   VirtualPageViews.prototype.filterSelected = function(){
     if(this.checked) {
+      var framework = $(this).closest('.options-container').attr('data-framework');
+      framework = framework ? framework : 'g-cloud';
       var group = $(this).closest('.options-container').attr('id');
       var key = $(this).attr('name');
       var value = $(this).attr('value');
-      GOVUK.GDM.analytics.virtualPageViews.trackFilterAnalytics(group, key, value);
+      GOVUK.GDM.analytics.virtualPageViews.trackFilterAnalytics(framework, group, key, value);
     }
   };
 
