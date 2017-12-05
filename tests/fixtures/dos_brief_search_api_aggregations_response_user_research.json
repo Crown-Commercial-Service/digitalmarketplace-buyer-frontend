@@ -1,0 +1,17 @@
+{
+  "aggregations": {
+    "lot": {
+      "user-research-participants": 39
+    }
+  },
+  "links": {},
+  "meta": {
+    "query": {
+      "aggregations": "lot",
+      "filter_lot": "user-research-participants",
+      "filter_status": "live,closed"
+    },
+    "took": 0,
+    "total": 39
+  }
+}

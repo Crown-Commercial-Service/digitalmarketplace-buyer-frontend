@@ -1,0 +1,19 @@
+{
+  "aggregations": {
+    "lot": {
+      "digital-outcomes": 629
+    }
+  },
+  "links": {
+    "next": "http://localhost:5001/briefs-digital-outcomes-and-specialists/briefs/search?page=2&aggregations=lot&filter_status=live%2Cclosed&filter_lot=digital-outcomes"
+  },
+  "meta": {
+    "query": {
+      "aggregations": "lot",
+      "filter_lot": "digital-outcomes",
+      "filter_status": "live,closed"
+    },
+    "took": 0,
+    "total": 629
+  }
+}
