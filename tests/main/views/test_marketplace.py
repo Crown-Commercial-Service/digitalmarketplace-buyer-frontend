@@ -1,5 +1,7 @@
 # coding=utf-8
 
+import json
+from flask import current_app
 import mock
 from six import iteritems
 from six.moves.urllib.parse import urlparse, parse_qs
@@ -1073,12 +1075,22 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
     def setup_method(self, method):
         super(TestCatalogueOfBriefsPage, self).setup_method(method)
 
+        self._view_search_api_client_patch = mock.patch('app.main.views.marketplace.search_api_client', autospec=True)
+        self._view_search_api_client = self._view_search_api_client_patch.start()
+        self._view_search_api_client.search_briefs.return_value = self._get_dos_brief_search_api_response_fixture_data()
+
+        self._presenters_search_api_client_patch = mock.patch(
+            'app.main.presenters.search_presenters.search_api_client', autospec=True
+        )
+        self._presenters_search_api_client = self._presenters_search_api_client_patch.start()
+        self._presenters_search_api_client.aggregate_docs.side_effect = [
+            self._get_dos_brief_search_api_aggregations_response_outcomes_fixture_data(),
+            self._get_dos_brief_search_api_aggregations_response_specialists_fixture_data(),
+            self._get_dos_brief_search_api_aggregations_response_user_research_fixture_data(),
+        ]
+
         self._data_api_client_patch = mock.patch('app.main.views.marketplace.data_api_client', autospec=True)
         self._data_api_client = self._data_api_client_patch.start()
-
-        self.briefs = self._get_dos_brief_fixture_data(multi=True)
-        self._data_api_client.find_briefs.return_value = self.briefs
-
         self._data_api_client.find_frameworks.return_value = {'frameworks': [
             {
                 'id': 3,
@@ -1086,11 +1098,12 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
                 'slug': "digital-outcomes-and-specialists-2",
                 'framework': "digital-outcomes-and-specialists",
                 'lots': [
-                    {'name': 'Lot 1', 'slug': 'lot-one', 'allowsBrief': True},
-                    {'name': 'Lot 2', 'slug': 'lot-two', 'allowsBrief': False},
-                    {'name': 'Lot 3', 'slug': 'lot-three', 'allowsBrief': True},
-                    {'name': 'Lot 4', 'slug': 'lot-four', 'allowsBrief': True},
-                ]
+                    {'name': 'Digital outcomes', 'slug': 'digital-outcomes', 'allowsBrief': True},
+                    {'name': 'Digital specialists', 'slug': 'digital-specialists', 'allowsBrief': True},
+                    {'name': 'User research participants', 'slug': 'user-research-participants', 'allowsBrief': True},
+                    {'name': 'User research studios', 'slug': 'user-research-studios', 'allowsBrief': False},
+                ],
+                'status': 'live',
             },
             {
                 'id': 1,
@@ -1102,7 +1115,8 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
                     {'name': 'Lot 2', 'slug': 'lot-two', 'allowsBrief': False},
                     {'name': 'Lot 3', 'slug': 'lot-three', 'allowsBrief': True},
                     {'name': 'Lot 4', 'slug': 'lot-four', 'allowsBrief': True},
-                ]
+                ],
+                'status': 'expired',
             },
             {
                 'id': 2,
@@ -1114,12 +1128,15 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
                     {'name': 'Lot 2', 'slug': 'lot-two', 'allowsBrief': False},
                     {'name': 'Lot 3', 'slug': 'lot-three', 'allowsBrief': True},
                     {'name': 'Lot 4', 'slug': 'lot-four', 'allowsBrief': True},
-                ]
+                ],
+                'status': 'expired',
             },
         ]}
 
     def teardown_method(self, method):
         self._data_api_client_patch.stop()
+        self._view_search_api_client_patch.stop()
+        self._presenters_search_api_client_patch.stop()
 
     def normalize_qs(self, qs):
         return {k: set(v) for k, v in iteritems(parse_qs(qs)) if k != "page"}
@@ -1130,81 +1147,101 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         document = html.fromstring(res.get_data(as_text=True))
 
         self._data_api_client.find_frameworks.assert_called_once_with()
-        regular_args = {
-            k: v for k, v in iteritems(self._data_api_client.find_briefs.call_args[1]) if k not in ("status", "lot",)
-        }
-        assert regular_args == {
-            "framework": "digital-outcomes-and-specialists-2,digital-outcomes-and-specialists",
-            "page": 1,
-            "human": True,
-        }
-        assert set(self._data_api_client.find_briefs.call_args[1]["status"].split(",")) == {
-            "live", "closed", "awarded", "unsuccessful", "cancelled"
-        }
-        assert set(self._data_api_client.find_briefs.call_args[1]["lot"].split(",")) == {
-            "lot-one",
-            "lot-three",
-            "lot-four",
-        }
+
+        self._view_search_api_client.search_briefs.assert_called_once_with(
+            index='briefs-digital-outcomes-and-specialists',
+            status='live,closed,awarded,cancelled,unsuccessful'
+        )
 
         heading = document.xpath('normalize-space(//h1/text())')
         assert heading == "Digital Outcomes and Specialists opportunities"
-        assert 'lot 1, lot 3 and lot 4' in document.xpath(
+        assert ('View buyer requirements for digital outcomes, '
+                'digital specialists and user research participants') in document.xpath(
             "normalize-space(//div[@class='marketplace-paragraph']/p/text())"
         )
 
-        lot_inputs = document.xpath("//form[@method='get']//input[@name='lot']")
-        assert set(element.get("value") for element in lot_inputs) == {
-            "lot-one",
-            "lot-three",
-            "lot-four",
+        lot_filters = document.xpath("//form[@method='get']//ul[@class='lot-filters--last-list']//a")
+        assert set(element.text for element in lot_filters) == {
+            "Digital outcomes (629)",
+            "Digital specialists (827)",
+            "User research participants (39)",
         }
-        assert not any(element.get("checked") for element in lot_inputs)
+        assert len(document.xpath("//form[@method='get']//ul[@class='lot-filters--last-list']//strong")) == 0
 
         status_inputs = document.xpath("//form[@method='get']//input[@name='status']")
-        assert set(element.get("value") for element in status_inputs) == {"live", "closed"}
+        assert set(element.get("value") for element in status_inputs) == \
+            {"live", "closed", "awarded", "cancelled", "unsuccessful", "cancelled"}
         assert not any(element.get("checked") for element in status_inputs)
 
+        location_inputs = document.xpath("//form[@method='get']//input[@name='location']")
+        assert {
+            element.get("value"): bool(element.get("checked"))
+            for element in location_inputs
+        } == {
+            "scotland": False,
+            "north east england": False,
+            "north west england": False,
+            "yorkshire and the humber": False,
+            "east midlands": False,
+            "west midlands": False,
+            "east of england": False,
+            "wales": False,
+            "london": False,
+            "south east england": False,
+            "south west england": False,
+            "northern ireland": False,
+            "international (outside the uk)": False,
+            "off-site": False,
+        }
+
         ss_elem = document.xpath("//p[@class='search-summary']")[0]
-        assert self._normalize_whitespace(self._squashed_element_text(ss_elem)) == "6 opportunities"
+        assert self._normalize_whitespace(self._squashed_element_text(ss_elem)) == "864 results found in All categories"
 
         specialist_role_labels = document.xpath("//div[@class='search-result']/ul[2]/li[2]/text()")
-        assert len(specialist_role_labels) == 1  # only one brief has a specialist role so only one label should exist
-        assert specialist_role_labels[0].strip() == "Business analyst"
+        assert len(specialist_role_labels) == 2  # only two briefs has a specialist role so only one label should exist
+        assert specialist_role_labels[0].strip() == "Developer"
+        assert specialist_role_labels[1].strip() == "Technical architect"
 
     def test_catalogue_of_briefs_page_filtered(self):
-        original_url = "/digital-outcomes-and-specialists/opportunities?page=2&status=live&lot=lot-one&lot=lot-three"
+        original_url = "/digital-outcomes-and-specialists/opportunities?page=2&status=live&lot=digital-outcomes"\
+            "&location=wales"
         res = self.client.get(original_url)
         assert res.status_code == 200
+
         document = html.fromstring(res.get_data(as_text=True))
 
         self._data_api_client.find_frameworks.assert_called_once_with()
-        regular_args = {
-            k: v for k, v in iteritems(self._data_api_client.find_briefs.call_args[1]) if k not in ("status", "lot",)
-        }
-        assert regular_args == {
-            "framework": "digital-outcomes-and-specialists-2,digital-outcomes-and-specialists",
-            "page": 2,
-            "human": True,
-        }
-        assert set(self._data_api_client.find_briefs.call_args[1]["status"].split(",")) == {"live"}
-        assert set(self._data_api_client.find_briefs.call_args[1]["lot"].split(",")) == {"lot-one", "lot-three"}
+        self._view_search_api_client.search_briefs.assert_called_once_with(
+            index='briefs-digital-outcomes-and-specialists',
+            status='live',
+            lot='digital-outcomes',
+            location='wales',
+            page='2',
+        )
 
         heading = document.xpath('normalize-space(//h1/text())')
         assert heading == "Digital Outcomes and Specialists opportunities"
-        assert 'lot 1, lot 3 and lot 4' in document.xpath(
+        assert ('View buyer requirements for digital outcomes, '
+                'digital specialists and user research participants') in document.xpath(
             "normalize-space(//div[@class='marketplace-paragraph']/p/text())"
         )
 
-        lot_inputs = document.xpath("//form[@method='get']//input[@name='lot']")
+        all_categories_return_link = document.xpath("//form[@method='get']//div[@class='lot-filters']/ul/li/a")[0]
+        assert all_categories_return_link.text == 'All categories'
+
+        lot_filters = document.xpath("//form[@method='get']//div[@class='lot-filters']//ul//ul/li/*[1]")
         assert {
-            element.get("value"): bool(element.get("checked"))
-            for element in lot_inputs
+            element.text: element.tag
+            for element in lot_filters
         } == {
-            "lot-one": True,
-            "lot-three": True,
-            "lot-four": False,
+            'Digital outcomes (629)': 'strong',
+            'Digital specialists (827)': 'a',
+            'User research participants (39)': 'a',
         }
+
+        assert '<a id="dm-clear-all-filters" class="clear-filters-link" ' \
+            'href="/digital-outcomes-and-specialists/opportunities?lot=digital-outcomes">Clear filters</a>' \
+            in res.get_data(as_text=True)
 
         status_inputs = document.xpath("//form[@method='get']//input[@name='status']")
         assert {
@@ -1213,6 +1250,30 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         } == {
             "live": True,
             "closed": False,
+            "awarded": False,
+            "unsuccessful": False,
+            "cancelled": False
+        }
+
+        location_inputs = document.xpath("//form[@method='get']//input[@name='location']")
+        assert {
+            element.get("value"): bool(element.get("checked"))
+            for element in location_inputs
+        } == {
+            "scotland": False,
+            "north east england": False,
+            "north west england": False,
+            "yorkshire and the humber": False,
+            "east midlands": False,
+            "west midlands": False,
+            "east of england": False,
+            "wales": True,
+            "london": False,
+            "south east england": False,
+            "south west england": False,
+            "northern ireland": False,
+            "international (outside the uk)": False,
+            "off-site": False,
         }
 
         parsed_original_url = urlparse(original_url)
@@ -1225,47 +1286,43 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
             self.normalize_qs(parsed_prev_url.query)
 
         ss_elem = document.xpath("//p[@class='search-summary']")[0]
-        assert self._normalize_whitespace(self._squashed_element_text(ss_elem)) == "6 results"
+        assert self._normalize_whitespace(self._squashed_element_text(ss_elem)) == \
+            "864 results found in Digital outcomes where the opportunity is open " \
+            "and where the opportunity is located in Wales"
 
-    def test_catalogue_of_briefs_page_filtered_all_options_selected(self):
-        original_url = "/digital-outcomes-and-specialists/opportunities?status=live&lot=lot-one&lot=lot-three"\
-            "&status=closed&lot=lot-four"
+    def test_catalogue_of_briefs_page_filtered_all_lots_selected(self):
+        original_url = "/digital-outcomes-and-specialists/opportunities?lot=digital-outcomes&lot=digital-specialists"\
+            "&lot=user-research-participants"
         res = self.client.get(original_url)
         assert res.status_code == 200
         document = html.fromstring(res.get_data(as_text=True))
 
         self._data_api_client.find_frameworks.assert_called_once_with()
-        regular_args = {
-            k: v for k, v in iteritems(self._data_api_client.find_briefs.call_args[1]) if k not in ("status", "lot",)
-        }
-        assert regular_args == {
-            "framework": "digital-outcomes-and-specialists-2,digital-outcomes-and-specialists",
-            "page": 1,
-            "human": True,
-        }
-        assert set(self._data_api_client.find_briefs.call_args[1]["status"].split(",")) == {
-            "live", "closed", "awarded", "unsuccessful", "cancelled"
-        }
-        assert set(self._data_api_client.find_briefs.call_args[1]["lot"].split(",")) == {
-            "lot-one",
-            "lot-three",
-            "lot-four",
-        }
+
+        self._view_search_api_client.search_briefs.assert_called_once_with(
+            index='briefs-digital-outcomes-and-specialists',
+            status='live,closed,awarded,cancelled,unsuccessful',
+            lot='digital-outcomes',
+        )
 
         heading = document.xpath('normalize-space(//h1/text())')
         assert heading == "Digital Outcomes and Specialists opportunities"
-        assert 'lot 1, lot 3 and lot 4' in document.xpath(
+        assert ('View buyer requirements for digital outcomes, '
+                'digital specialists and user research participants') in document.xpath(
             "normalize-space(//div[@class='marketplace-paragraph']/p/text())"
         )
 
-        lot_inputs = document.xpath("//form[@method='get']//input[@name='lot']")
+        all_categories_return_link = document.xpath("//form[@method='get']//div[@class='lot-filters']/ul/li/a")[0]
+        assert all_categories_return_link.text == 'All categories'
+
+        lot_filters = document.xpath("//form[@method='get']//div[@class='lot-filters']//ul//ul/li/*[1]")
         assert {
-            element.get("value"): bool(element.get("checked"))
-            for element in lot_inputs
+            element.text: element.tag
+            for element in lot_filters
         } == {
-            "lot-one": True,
-            "lot-three": True,
-            "lot-four": True,
+            'Digital outcomes (629)': 'strong',
+            'Digital specialists (827)': 'a',
+            'User research participants (39)': 'a',
         }
 
         status_inputs = document.xpath("//form[@method='get']//input[@name='status']")
@@ -1273,66 +1330,66 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
             element.get("value"): bool(element.get("checked"))
             for element in status_inputs
         } == {
-            "live": True,
-            "closed": True,
+            "live": False,
+            "closed": False,
+            "awarded": False,
+            "unsuccessful": False,
+            "cancelled": False
+        }
+
+        location_inputs = document.xpath("//form[@method='get']//input[@name='location']")
+        assert {
+            element.get("value"): bool(element.get("checked"))
+            for element in location_inputs
+        } == {
+            "scotland": False,
+            "north east england": False,
+            "north west england": False,
+            "yorkshire and the humber": False,
+            "east midlands": False,
+            "west midlands": False,
+            "east of england": False,
+            "wales": False,
+            "london": False,
+            "south east england": False,
+            "south west england": False,
+            "northern ireland": False,
+            "international (outside the uk)": False,
+            "off-site": False,
         }
 
         parsed_original_url = urlparse(original_url)
         parsed_next_url = urlparse(document.xpath("//li[@class='next']/a/@href")[0])
         assert parsed_original_url.path == parsed_next_url.path
 
-        assert self.normalize_qs(parsed_original_url.query) == self.normalize_qs(parsed_next_url.query)
+        assert self.normalize_qs(parsed_next_url.query) == {'lot': {'digital-outcomes'}}
 
         ss_elem = document.xpath("//p[@class='search-summary']")[0]
-        assert self._normalize_whitespace(self._squashed_element_text(ss_elem)) == "6 results"
+        assert self._normalize_whitespace(self._squashed_element_text(ss_elem)) == \
+            "864 results found in Digital outcomes"
 
-    def test_opportunity_data_header_visible_on_catalogue_page(self):
+    def test_opportunity_data_download_info_and_link_visible_on_catalogue_page(self):
         res = self.client.get('/digital-outcomes-and-specialists/opportunities')
         assert res.status_code == 200
         document = html.fromstring(res.get_data(as_text=True))
 
         header = document.xpath("//h2[@id='opportunity-data-header']")[0].text
-
-        assert "Opportunity data" in header
-
-    def test_opportunity_data_description_visible_on_catalogue_page(self):
-        res = self.client.get('/digital-outcomes-and-specialists/opportunities')
-        assert res.status_code == 200
-        document = html.fromstring(res.get_data(as_text=True))
-
         description = document.xpath("//p[@id='opportunity-data-description']")[0].text
         expected_desc = "Download data buyers have provided about closed opportunities. Some data may be missing."
-
-        assert expected_desc in description
-
-    def test_opportunity_data_link_text_visible_on_catalogue_page(self):
-        res = self.client.get('/digital-outcomes-and-specialists/opportunities')
-        assert res.status_code == 200
-        document = html.fromstring(res.get_data(as_text=True))
-
         link_text = document.xpath("//a[@class='document-link-with-icon']")[0].text_content()
-
-        assert "Download data" in link_text
-
-    def test_opportunity_data_file_url_correct_on_catalogue_page(self):
-        res = self.client.get('/digital-outcomes-and-specialists/opportunities')
-        assert res.status_code == 200
-        document = html.fromstring(res.get_data(as_text=True))
-
         link = document.xpath("//a[@class='document-link-with-icon']")[0].values()
         expected_link = (
             "https://assets.digitalmarketplace.service.gov.uk"
             + "/digital-outcomes-and-specialists-2/communications/data/opportunity-data.csv"
         )
 
+        assert "Opportunity data" in header
+        assert expected_desc in description
+        assert "Download data" in link_text
         assert expected_link in link
 
-    def test_catalogue_of_briefs_404_if_invalid_status(self):
-        res = self.client.get('/digital-outcomes-and-specialists/opportunities?status=pining-for-fjords')
-        assert res.status_code == 404
-
     def test_catalogue_of_briefs_page_shows_pagination_if_more_pages(self):
-        res = self.client.get('/digital-outcomes-and-specialists/opportunities')
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities?page=2')
         assert res.status_code == 200
         page = res.get_data(as_text=True)
         document = html.fromstring(page)
@@ -1343,16 +1400,18 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         next_url = str(document.xpath('string(//li[@class="next"]/a/@href)'))
         assert prev_url.endswith('/opportunities?page=1')
         assert next_url.endswith('/opportunities?page=3')
+        assert '<span class="page-numbers">1 of 9</span>' in res.get_data(as_text=True)
+        assert '<span class="page-numbers">3 of 9</span>' in res.get_data(as_text=True)
 
     def test_no_pagination_if_no_more_pages(self):
-        del self.briefs['links']['prev']
-        del self.briefs['links']['next']
-        res = self.client.get('/digital-outcomes-and-specialists/opportunities')
-        assert res.status_code == 200
-        page = res.get_data(as_text=True)
+        with self.app.app_context():
+            current_app.config['DM_SEARCH_PAGE_SIZE'] = 1000
+            res = self.client.get('/digital-outcomes-and-specialists/opportunities')
+            assert res.status_code == 200
+            page = res.get_data(as_text=True)
 
-        assert '<li class="previous">' not in page
-        assert '<li class="next">' not in page
+            assert '<li class="previous">' not in page
+            assert '<li class="next">' not in page
 
     def test_catalogue_of_briefs_page_404_for_framework_that_does_not_exist(self):
         res = self.client.get('/digital-giraffes-and-monkeys/opportunities')
@@ -1360,13 +1419,15 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         assert res.status_code == 404
         self._data_api_client.find_frameworks.assert_called_once_with()
 
-    def test_briefs_search_does_not_have_js_hidden_filter_button(self):
+    def test_briefs_search_has_js_hidden_filter_button(self):
         res = self.client.get('/digital-outcomes-and-specialists/opportunities')
         assert res.status_code == 200
 
         document = html.fromstring(res.get_data(as_text=True))
 
-        filter_button = document.xpath('//button[@class="button-save" and normalize-space(text())="Filter"]')
+        filter_button = document.xpath(
+            '//button[@class="button-save js-hidden js-dm-live-search" and normalize-space(text())="Filter"]'
+        )
         assert len(filter_button) == 1
 
     def test_opportunity_status_and_published_date(self):
@@ -1378,32 +1439,258 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         live_opportunity_published_at = document.xpath(
             '//div[@class="search-result"][1]//li[@class="search-result-metadata-item"]'
         )[-2].text_content().strip()
-        assert live_opportunity_published_at == "Published: Wednesday 9 March 2016"
+        assert live_opportunity_published_at == "Published: Friday 17 November 2017"
 
         live_opportunity_closing_at = document.xpath(
             '//div[@class="search-result"][1]//li[@class="search-result-metadata-item"]'
         )[-1].text_content().strip()
-        assert live_opportunity_closing_at == "Closing: Thursday 24 March 2016"
+        assert live_opportunity_closing_at == "Closing: Friday 1 December 2017"
 
         closed_opportunity_status = document.xpath(
-            '//div[@class="search-result"][3]//li[@class="search-result-metadata-item"]'
+            '//div[@class="search-result"][2]//li[@class="search-result-metadata-item"]'
         )[-1].text_content().strip()
         assert closed_opportunity_status == "Closed"
 
-        awarded_opportunity_status = document.xpath(
-            '//div[@class="search-result"][4]//li[@class="search-result-metadata-item"]'
+        unsuccessful_opportunity_status = document.xpath(
+            '//div[@class="search-result"][3]//li[@class="search-result-metadata-item"]'
         )[-1].text_content().strip()
-        assert awarded_opportunity_status == "Closed"
+        assert unsuccessful_opportunity_status == "Unsuccessful"
 
         cancelled_opportunity_status = document.xpath(
-            '//div[@class="search-result"][5]//li[@class="search-result-metadata-item"]'
+            '//div[@class="search-result"][4]//li[@class="search-result-metadata-item"]'
         )[-1].text_content().strip()
-        assert cancelled_opportunity_status == "Closed"
+        assert cancelled_opportunity_status == "Cancelled"
 
-        unsuccessful_opportunity_status = document.xpath(
+        awarded_opportunity_status = document.xpath(
             '//div[@class="search-result"][6]//li[@class="search-result-metadata-item"]'
         )[-1].text_content().strip()
-        assert unsuccessful_opportunity_status == "Closed"
+        assert awarded_opportunity_status == "Awarded"
+
+    def test_should_render_summary_for_0_results_in_all_lots(self):
+        search_results = self._get_dos_brief_search_api_response_fixture_data()
+        search_results['meta']['total'] = 0
+        self._view_search_api_client.search_briefs.return_value = search_results
+
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities')
+        assert res.status_code == 200
+        summary = self.find_search_summary(res.get_data(as_text=True))[0]
+        assert '<span class="search-summary-count">0</span> results found in <em>All categories</em>' in summary
+
+    def test_should_render_summary_for_0_results_in_particular_lot(self):
+        search_results = self._get_dos_brief_search_api_response_fixture_data()
+        search_results['meta']['total'] = 0
+        self._view_search_api_client.search_briefs.return_value = search_results
+
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities?lot=digital-outcomes')
+        assert res.status_code == 200
+        summary = self.find_search_summary(res.get_data(as_text=True))[0]
+        assert '<span class="search-summary-count">0</span> results found in <em>Digital outcomes</em>' in summary
+
+    def test_should_render_summary_for_1_result_found_in_all_lots(self):
+        search_results = self._get_dos_brief_search_api_response_fixture_data()
+        search_results['meta']['total'] = 1
+        self._view_search_api_client.search_briefs.return_value = search_results
+
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities')
+        assert res.status_code == 200
+        summary = self.find_search_summary(res.get_data(as_text=True))[0]
+        assert '<span class="search-summary-count">1</span> result found in <em>All categories</em>' in summary
+
+    def test_should_render_summary_for_many_results_found_in_a_particular_lot(self):
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities?lot=digital-specialists')
+        assert res.status_code == 200
+        summary = self.find_search_summary(res.get_data(as_text=True))[0]
+        assert '<span class="search-summary-count">864</span> results found in <em>Digital specialists</em>' in summary
+
+    def test_should_render_summary_for_results_in_digital_specialists_with_role_filters(self):
+        res = self.client.get(
+            '/digital-outcomes-and-specialists/opportunities?lot=digital-specialists'
+            '&specialistRole=agilecoach&location=scotland'
+        )
+        assert res.status_code == 200
+        summary = self.find_search_summary(res.get_data(as_text=True))[0]
+        assert '<span class="search-summary-count">864</span> results found ' \
+            'in <em>Digital specialists</em> where the opportunity is located in <em>Scotland</em> ' \
+            'and where the specialist role is <em>Agile coach</em>' in summary
+
+    def test_should_render_suggestions_for_0_results(self):
+        search_results = self._get_dos_brief_search_api_response_fixture_data()
+        search_results['meta']['total'] = 0
+        self._view_search_api_client.search_briefs.return_value = search_results
+
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities')
+        assert res.status_code == 200
+        suggestion = re.findall(r'<p>Suggestions:<\/p>', res.get_data(as_text=True))
+        assert len(suggestion) == 1
+
+    def test_should_not_render_suggestions_when_results(self):
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities')
+        assert res.status_code == 200
+        suggestion = re.findall(r'<p>Suggestions:<\/p>', res.get_data(as_text=True))
+        assert len(suggestion) == 0
+
+    def test_should_ignore_unknown_arguments(self):
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities?location=my-lovely-horse')
+
+        assert res.status_code == 200
+
+    def test_should_404_on_invalid_page_param(self):
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities?page=1')
+        assert res.status_code == 200
+
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities?page=-1')
+        assert res.status_code == 404
+
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities?page=potato')
+        assert res.status_code == 404
+
+    def test_search_results_with_invalid_lot_fall_back_to_all_categories(self):
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities?lot=bad-lot-slug')
+        assert res.status_code == 200
+
+        document = html.fromstring(res.get_data(as_text=True))
+
+        lots = document.xpath('//div[@class="lot-filters"]//ul[@class="lot-filters--last-list"]//li/a')
+        assert lots[0].text_content().startswith('Digital outcomes')
+        assert lots[1].text_content().startswith('Digital specialists')
+        assert lots[2].text_content().startswith('User research participants')
+
+    def test_lot_links_retain_all_category_filters(self):
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities?location=london')
+        assert res.status_code == 200
+
+        document = html.fromstring(res.get_data(as_text=True))
+
+        lots = document.xpath('//div[@class="lot-filters"]//ul[@class="lot-filters--last-list"]//li/a')
+        for lot in lots:
+            assert 'location=london' in lot.get('href')
+
+    def test_all_category_link_drops_lot_specific_filters(self):
+        res = self.client.get(
+            '/digital-outcomes-and-specialists/opportunities?lot=digital-specialists&'
+            'location=scotland&specialistRole=agilecoach'
+        )
+        assert res.status_code == 200
+
+        document = html.fromstring(res.get_data(as_text=True))
+
+        lots = document.xpath('//div[@class="lot-filters"]/ul/li/a')
+        assert 'location=scotland' in lots[0].get('href')
+        assert 'specialistRole=agilecoach' not in lots[0].get('href')
+
+    def test_lot_with_no_briefs_is_not_a_link(self):
+        specialists_aggregation = self._get_dos_brief_search_api_aggregations_response_specialists_fixture_data()
+        specialists_aggregation['aggregations']['lot']['digital-specialists'] = 0
+        self._presenters_search_api_client.aggregate_docs.side_effect = [
+            self._get_dos_brief_search_api_aggregations_response_outcomes_fixture_data(),
+            specialists_aggregation,
+            self._get_dos_brief_search_api_aggregations_response_user_research_fixture_data(),
+        ]
+
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities')
+        assert res.status_code == 200
+
+        document = html.fromstring(res.get_data(as_text=True))
+
+        specialist_label = document.xpath("//ul[@class='lot-filters--last-list']//li")[-2]
+        assert len(specialist_label.xpath('a')) == 0
+        assert specialist_label.text_content() == 'Digital specialists (0)'
+
+    def test_filter_form_given_filter_selection(self):
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities?lot=digital-outcomes&location=london')
+        assert res.status_code == 200
+
+        document = html.fromstring(res.get_data(as_text=True))
+
+        hidden_inputs = document.xpath('//form[@id="js-dm-live-search-form"]//input[@type="hidden"]')
+        kv_pairs = {input_el.get('name'): input_el.get('value') for input_el in hidden_inputs}
+
+        assert kv_pairs == {
+            'lot': 'digital-outcomes',
+        }
+
+
+class TestCatalogueOfBriefsFilterOnClick(BaseApplicationTest):
+    def setup_method(self, method):
+        super().setup_method(method)
+
+        self._view_search_api_client_patch = mock.patch('app.main.views.marketplace.search_api_client', autospec=True)
+        self._view_search_api_client = self._view_search_api_client_patch.start()
+        self._view_search_api_client.search_briefs.return_value = self._get_dos_brief_search_api_response_fixture_data()
+
+        self._presenters_search_api_client_patch = mock.patch(
+            'app.main.presenters.search_presenters.search_api_client', autospec=True
+        )
+        self._presenters_search_api_client = self._presenters_search_api_client_patch.start()
+        self._presenters_search_api_client.aggregate_docs.side_effect = [
+            self._get_dos_brief_search_api_aggregations_response_outcomes_fixture_data(),
+            self._get_dos_brief_search_api_aggregations_response_specialists_fixture_data(),
+            self._get_dos_brief_search_api_aggregations_response_user_research_fixture_data(),
+        ]
+
+        self._data_api_client_patch = mock.patch('app.main.views.marketplace.data_api_client', autospec=True)
+        self._data_api_client = self._data_api_client_patch.start()
+        self._data_api_client.find_frameworks.return_value = {'frameworks': [
+            {
+                'id': 3,
+                'name': "Digital Outcomes and Specialists 2",
+                'slug': "digital-outcomes-and-specialists-2",
+                'framework': "digital-outcomes-and-specialists",
+                'lots': [
+                    {'name': 'Digital outcomes', 'slug': 'digital-outcomes', 'allowsBrief': True}
+                ],
+                'status': 'live',
+            }]
+        }
+
+    def teardown_method(self, method):
+        self._data_api_client_patch.stop()
+        self._view_search_api_client_patch.stop()
+        self._presenters_search_api_client_patch.stop()
+
+    @pytest.mark.parametrize('query_string, content_type',
+                             (('', 'text/html; charset=utf-8'),
+                              ('?live-results=true', 'application/json')))
+    def test_endpoint_switches_on_live_results_request(self, query_string, content_type):
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities{}'.format(query_string))
+        assert res.status_code == 200
+        assert res.content_type == content_type
+
+    def test_live_results_returns_valid_json_structure(self):
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities?live-results=true')
+        data = json.loads(res.get_data(as_text=True))
+
+        assert set(data.keys()) == {'results', 'summary', 'categories'}
+
+        for k, v in data.items():
+            assert set(v.keys()) == {'selector', 'html'}
+
+            # We want to enforce using css IDs to describe the nodes which should be replaced.
+            assert v['selector'].startswith('#')
+
+    @pytest.mark.parametrize('query_string, urls',
+                             (('', {'search/briefs.html'}),
+                              ('?live-results=true', {"search/_results_wrapper.html",
+                                                      "search/_categories_wrapper.html",
+                                                      "search/_summary.html",
+                                                      })))
+    @mock.patch('app.main.views.marketplace.render_template', autospec=True)
+    def test_base_page_renders_search_services(self, render_template_patch, query_string, urls):
+        render_template_patch.return_value = '<p>some html</p>'
+
+        self.client.get('/digital-outcomes-and-specialists/opportunities{}'.format(query_string))
+
+        assert urls == set(x[0][0] for x in render_template_patch.call_args_list)
+
+    def test_form_has_js_hidden_filter_button_chris(self):
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities')
+        assert res.status_code == 200
+
+        document = html.fromstring(res.get_data(as_text=True))
+
+        filter_button = document.xpath('//button[@class="button-save js-hidden js-dm-live-search"'
+                                       ' and normalize-space(text())="Filter"]')
+        assert len(filter_button) == 1
 
 
 @mock.patch('app.main.views.marketplace.data_api_client', autospec=True)
