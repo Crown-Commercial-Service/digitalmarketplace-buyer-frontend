@@ -22,7 +22,7 @@ def get_page_from_request(request):
         return None
 
 
-def get_request_url_without_any_filters(request, filters):
+def get_request_url_without_any_filters(request, filters, view_name, **kwargs):
     """
     This function will returns the url path without any filters.
     It will still retain the categories, keyword and lots parameters as well as any others included.
@@ -43,7 +43,7 @@ def get_request_url_without_any_filters(request, filters):
 
     all_request_filters.poplist('page')
 
-    search_link_builder = Href(url_for('.search_services'))
+    search_link_builder = Href(url_for('.{}'.format(view_name), **kwargs))
     url = search_link_builder(all_request_filters)
 
     return url

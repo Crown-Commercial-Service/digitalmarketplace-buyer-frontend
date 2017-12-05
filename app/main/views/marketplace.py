@@ -215,7 +215,10 @@ def list_opportunities(framework_family):
             if 'label' in filter_instance:
                 filter_instance['label'] = capitalize_first(filter_instance['label'])
 
-    clear_filters_url = get_request_url_without_any_filters(request, filters)
+    view_name = 'list_opportunities'
+    clear_filters_url = get_request_url_without_any_filters(
+        request, filters, view_name, framework_family=framework_family
+    )
     search_query = query_args_for_pagination(clean_request_query_params)
 
     template_args = dict(
@@ -232,7 +235,7 @@ def list_opportunities(framework_family):
         search_query=search_query,
         summary=search_summary.markup(),
         total=search_results_obj.total,
-        view_name='list_opportunities',
+        view_name=view_name,
     )
 
     if request.args.get('live-results'):

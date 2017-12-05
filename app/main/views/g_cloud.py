@@ -261,11 +261,12 @@ def search_services():
             if 'label' in filter_instance:
                 filter_instance['label'] = capitalize_first(filter_instance['label'])
 
-    clear_filters_url = get_request_url_without_any_filters(request, filters)
+    view_name = 'search_services'
+    clear_filters_url = get_request_url_without_any_filters(request, filters, view_name)
     search_query = query_args_for_pagination(clean_request_query_params)
 
     template_args = dict(
-        view_name='search_services',
+        view_name=view_name,
         current_lot=current_lot,
         framework_family=framework['framework'],
         category_tree_root=selected_category_tree_filters[0],
