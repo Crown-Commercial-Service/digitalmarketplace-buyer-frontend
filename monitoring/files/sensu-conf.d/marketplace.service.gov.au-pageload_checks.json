@@ -8,7 +8,7 @@
     },
     "marketplace.service.gov.au-catalogue_load": {
       "handlers": ["default", "slack", "pagerduty"],
-      "command": "/opt/sensu/embedded/bin/check-http.rb --timeout 10 --url ${URL}search/sellers --response-code 200 --query '[sS]ellers'",
+      "command": "/opt/sensu/embedded/bin/check-http.rb --timeout 30 --url ${URL}search/sellers --response-code 200 --query '[sS]ellers'",
       "interval": 300,
       "standalone": true
     }
