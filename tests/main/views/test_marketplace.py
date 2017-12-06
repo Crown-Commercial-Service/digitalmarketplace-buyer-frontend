@@ -1287,8 +1287,7 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
 
         ss_elem = document.xpath("//p[@class='search-summary']")[0]
         assert self._normalize_whitespace(self._squashed_element_text(ss_elem)) == \
-            "864 results found in Digital outcomes where the opportunity is open " \
-            "and where the opportunity is located in Wales"
+            "864 results found in Digital outcomes"
 
     def test_catalogue_of_briefs_page_filtered_all_lots_selected(self):
         original_url = "/digital-outcomes-and-specialists/opportunities?lot=digital-outcomes&lot=digital-specialists"\
@@ -1501,17 +1500,6 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         assert res.status_code == 200
         summary = self.find_search_summary(res.get_data(as_text=True))[0]
         assert '<span class="search-summary-count">864</span> results found in <em>Digital specialists</em>' in summary
-
-    def test_should_render_summary_for_results_in_digital_specialists_with_role_filters(self):
-        res = self.client.get(
-            '/digital-outcomes-and-specialists/opportunities?lot=digital-specialists'
-            '&specialistRole=agilecoach&location=scotland'
-        )
-        assert res.status_code == 200
-        summary = self.find_search_summary(res.get_data(as_text=True))[0]
-        assert '<span class="search-summary-count">864</span> results found ' \
-            'in <em>Digital specialists</em> where the opportunity is located in <em>Scotland</em> ' \
-            'and where the specialist role is <em>Agile coach</em>' in summary
 
     def test_should_render_suggestions_for_0_results(self):
         search_results = self._get_dos_brief_search_api_response_fixture_data()
