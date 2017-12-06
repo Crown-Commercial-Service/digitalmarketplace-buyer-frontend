@@ -49,9 +49,9 @@ class TestSearchResults(BaseApplicationTest):
 
     def test_search_results_accepts_top_level_documents_key_in_response_instead_of_services(self):
         self.fixture['documents'] = self.fixture.pop('services')
+        result = SearchResults(self.fixture, self._lots_by_slug)
 
-        search_results_instance = SearchResults(self.fixture, self._lots_by_slug)
-        assert hasattr(search_results_instance, 'search_results')
+        assert result.search_results == self.fixture['documents']
 
     def test_search_results_is_set(self):
         search_results_instance = SearchResults(self.fixture, self._lots_by_slug)
