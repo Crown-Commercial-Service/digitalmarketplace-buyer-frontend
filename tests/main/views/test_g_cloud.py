@@ -15,7 +15,7 @@ class TestGCloudIndexResults(BaseApplicationTest):
         self._search_api_client_patch.stop()
 
     def test_renders_correct_search_links(self):
-        self._search_api_client.search_services.return_value = self.search_results
+        self._search_api_client.search.return_value = self.search_results
 
         res = self.client.get('/g-cloud')
         assert res.status_code == 200

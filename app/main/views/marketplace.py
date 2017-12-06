@@ -168,8 +168,9 @@ def list_opportunities(framework_family):
         updated_request_args = MultiDict(allowed_status_params)
         updated_request_args.update(clean_request_query_params)
 
-    search_api_response = search_api_client.search_briefs(
+    search_api_response = search_api_client.search(
         index=index,
+        doc_type='briefs',
         **build_search_query(
             updated_request_args if updated_request_args else clean_request_query_params,
             filters.values(),

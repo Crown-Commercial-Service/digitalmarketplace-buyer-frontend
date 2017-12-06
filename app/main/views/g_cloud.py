@@ -215,8 +215,9 @@ def search_services():
     except ValueError:
         abort(404)
 
-    search_api_response = search_api_client.search_services(
+    search_api_response = search_api_client.search(
         index=framework['slug'],
+        doc_type='services',
         **build_search_query(request.args, filters.values(), content_manifest, lots_by_slug)
     )
     search_results_obj = SearchResults(search_api_response, lots_by_slug)
@@ -370,8 +371,9 @@ def save_search(framework_framework):
         projects.sort(key=lambda x: x['name'])
 
         # Retrieve results so we can display SearchSummary
-        search_api_response = search_api_client.search_services(
+        search_api_response = search_api_client.search(
             index=framework['slug'],
+            doc_type='services',
             **build_search_query(search_query, filters.values(), content_manifest, lots_by_slug)
         )
         search_summary = SearchSummary(search_api_response['meta']['total'], clean_request_query_params.copy(),

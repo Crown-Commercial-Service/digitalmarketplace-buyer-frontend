@@ -41,7 +41,7 @@ class TestSearchResults(BaseApplicationTest):
         self._search_api_client_presenters_patch = mock.patch('app.main.presenters.search_presenters.search_api_client',
                                                               autospec=True)
         self._search_api_client_presenters = self._search_api_client_presenters_patch.start()
-        self._search_api_client_presenters.aggregate_docs.return_value = \
+        self._search_api_client_presenters.aggregate.return_value = \
             self._get_fixture_data('g9_aggregations_fixture.json')
 
         self.search_results = self._get_search_results_fixture_data()
@@ -53,7 +53,7 @@ class TestSearchResults(BaseApplicationTest):
         self._search_api_client_presenters_patch.stop()
 
     def test_search_page_results_service_links(self):
-        self._search_api_client.search_services.return_value = \
+        self._search_api_client.search.return_value = \
             self.search_results
 
         res = self.client.get('/g-cloud/search?q=email')
@@ -61,7 +61,7 @@ class TestSearchResults(BaseApplicationTest):
         assert '<a href="/g-cloud/services/5-G3-0279-010">CDN VDMS</a>' in res.get_data(as_text=True)
 
     def test_search_page_form(self):
-        self._search_api_client.search_services.return_value = \
+        self._search_api_client.search.return_value = \
             self.search_results
 
         res = self.client.get('/g-cloud/search?q=email')
@@ -69,7 +69,7 @@ class TestSearchResults(BaseApplicationTest):
         assert '<form action="/g-cloud/search" method="get" id="js-dm-live-search-form">' in res.get_data(as_text=True)
 
     def test_search_page_allows_non_keyword_search(self):
-        self._search_api_client.search_services.return_value = \
+        self._search_api_client.search.return_value = \
             self.search_results
 
         res = self.client.get('/g-cloud/search?lot=cloud-software')
@@ -77,7 +77,7 @@ class TestSearchResults(BaseApplicationTest):
         assert '<a href="/g-cloud/services/5-G3-0279-010">CDN VDMS</a>' in res.get_data(as_text=True)
 
     def test_should_not_render_pagination_on_single_results_page(self):
-        self._search_api_client.search_services.return_value = \
+        self._search_api_client.search.return_value = \
             self.search_results
 
         res = self.client.get('/g-cloud/search?lot=cloud-software')
@@ -86,7 +86,7 @@ class TestSearchResults(BaseApplicationTest):
         assert '<li class="previous">' not in res.get_data(as_text=True)
 
     def test_should_render_pagination_link_on_first_results_page(self):
-        self._search_api_client.search_services.return_value = \
+        self._search_api_client.search.return_value = \
             self.search_results_multiple_page
 
         res = self.client.get('/g-cloud/search?lot=cloud-software')
@@ -100,7 +100,7 @@ class TestSearchResults(BaseApplicationTest):
         assert 'lot=cloud-software' in next_link
 
     def test_should_render_pagination_link_on_second_results_page(self):
-        self._search_api_client.search_services.return_value = \
+        self._search_api_client.search.return_value = \
             self.search_results_multiple_page
 
         res = self.client.get('/g-cloud/search?lot=cloud-software&page=2')
@@ -117,7 +117,7 @@ class TestSearchResults(BaseApplicationTest):
         assert 'lot=cloud-software' in next_link
 
     def test_should_render_total_pages_on_pagination_links(self):
-        self._search_api_client.search_services.return_value = \
+        self._search_api_client.search.return_value = \
             self.search_results_multiple_page
 
         res = self.client.get('/g-cloud/search?lot=cloud-software&page=2')
@@ -127,7 +127,7 @@ class TestSearchResults(BaseApplicationTest):
         assert '<span class="page-numbers">3 of 200</span>' in res.get_data(as_text=True)
 
     def test_should_render_pagination_link_on_last_results_page(self):
-        self._search_api_client.search_services.return_value = \
+        self._search_api_client.search.return_value = \
             self.search_results_multiple_page
 
         res = self.client.get('/g-cloud/search?lot=cloud-software&page=200')
@@ -141,7 +141,7 @@ class TestSearchResults(BaseApplicationTest):
         assert 'lot=cloud-software' in prev_link
 
     def test_should_render_summary_for_0_results_in_all_categories_no_keywords(self):
-        self._search_api_client.search_services.return_value = get_0_results_search_response()
+        self._search_api_client.search.return_value = get_0_results_search_response()
 
         res = self.client.get('/g-cloud/search')
         assert res.status_code == 200
@@ -149,7 +149,7 @@ class TestSearchResults(BaseApplicationTest):
         assert '<span class="search-summary-count">0</span> results found in <em>All categories</em>' in summary
 
     def test_should_render_summary_for_0_results_in_cloud_software_no_keywords(self):
-        self._search_api_client.search_services.return_value = get_0_results_search_response()
+        self._search_api_client.search.return_value = get_0_results_search_response()
 
         res = self.client.get('/g-cloud/search?lot=cloud-software')
         assert res.status_code == 200
@@ -157,7 +157,7 @@ class TestSearchResults(BaseApplicationTest):
         assert '<span class="search-summary-count">0</span> results found in <em>Cloud software</em>' in summary
 
     def test_should_render_suggestions_for_0_results(self):
-        self._search_api_client.search_services.return_value = get_0_results_search_response()
+        self._search_api_client.search.return_value = get_0_results_search_response()
 
         res = self.client.get('/g-cloud/search?lot=cloud-software')
         assert res.status_code == 200
@@ -165,7 +165,7 @@ class TestSearchResults(BaseApplicationTest):
         assert len(suggestion) == 1
 
     def test_should_render_clear_all_filters_link(self):
-        self._search_api_client.search_services.return_value = get_0_results_search_response()
+        self._search_api_client.search.return_value = get_0_results_search_response()
 
         res = self.client.get('/g-cloud/search?lot=cloud-software')
         assert res.status_code == 200
@@ -173,7 +173,7 @@ class TestSearchResults(BaseApplicationTest):
             'href="/g-cloud/search?lot=cloud-software">Clear filters</a>' in res.get_data(as_text=True)
 
     def test_should_not_render_suggestions_for_when_results_are_shown(self):
-        self._search_api_client.search_services.return_value = {
+        self._search_api_client.search.return_value = {
             "documents": [],
             "meta": {
                 "query": {},
@@ -192,7 +192,7 @@ class TestSearchResults(BaseApplicationTest):
         return_value = self.search_results_multiple_page
         return_value["documents"] = [return_value["documents"][0]]
         return_value["meta"]["total"] = 1
-        self._search_api_client.search_services.return_value = return_value
+        self._search_api_client.search.return_value = return_value
 
         res = self.client.get('/g-cloud/search?lot=cloud-software')
         assert res.status_code == 200
@@ -203,7 +203,7 @@ class TestSearchResults(BaseApplicationTest):
         return_value = self.search_results_multiple_page
         return_value["documents"] = [return_value["documents"][0]]
         return_value["meta"]["total"] = 1
-        self._search_api_client.search_services.return_value = return_value
+        self._search_api_client.search.return_value = return_value
 
         res = self.client.get('/g-cloud/search?lot=cloud-hosting')
         assert res.status_code == 200
@@ -215,7 +215,7 @@ class TestSearchResults(BaseApplicationTest):
         return_value = self.search_results_multiple_page
         return_value["documents"] = [return_value["documents"][0]]
         return_value["meta"]["total"] = 1
-        self._search_api_client.search_services.return_value = return_value
+        self._search_api_client.search.return_value = return_value
 
         res = self.client.get('/g-cloud/search?q=email&lot=cloud-software')
         assert res.status_code == 200
@@ -228,7 +228,7 @@ class TestSearchResults(BaseApplicationTest):
         return_value = self.search_results_multiple_page
         return_value["documents"] = [return_value["documents"][0]]
         return_value["meta"]["total"] = 1
-        self._search_api_client.search_services.return_value = return_value
+        self._search_api_client.search.return_value = return_value
 
         res = self.client.get(
             '/g-cloud/search?q=email&lot=cloud-software&phoneSupport=true')
@@ -243,7 +243,7 @@ class TestSearchResults(BaseApplicationTest):
         return_value = self.search_results_multiple_page
         return_value["documents"] = [return_value["documents"][0]]
         return_value["meta"]["total"] = 1
-        self._search_api_client.search_services.return_value = return_value
+        self._search_api_client.search.return_value = return_value
 
         res = self.client.get(
             '/g-cloud/search?q=email&lot=cloud-software&phoneSupport=true&onsiteSupport=yes')
@@ -260,7 +260,7 @@ class TestSearchResults(BaseApplicationTest):
         return_value = self.search_results_multiple_page
         return_value["documents"] = [return_value["documents"][0]]
         return_value["meta"]["total"] = 1
-        self._search_api_client.search_services.return_value = return_value
+        self._search_api_client.search.return_value = return_value
 
         res = self.client.get(
             '/g-cloud/search?q=email&lot=cloud-software&resellingType=not_reseller')
@@ -276,7 +276,7 @@ class TestSearchResults(BaseApplicationTest):
         return_value = self.search_results_multiple_page
         return_value["documents"] = [return_value["documents"][0]]
         return_value["meta"]["total"] = 1
-        self._search_api_client.search_services.return_value = return_value
+        self._search_api_client.search.return_value = return_value
 
         res = self.client.get(
             '/g-cloud/search?q=email&lot=cloud-software&resellingType=not_reseller&resellingType=reseller_no_extras')
@@ -293,7 +293,7 @@ class TestSearchResults(BaseApplicationTest):
         return_value = self.search_results_multiple_page
         return_value["documents"] = [return_value["documents"][0]]
         return_value["meta"]["total"] = 1
-        self._search_api_client.search_services.return_value = return_value
+        self._search_api_client.search.return_value = return_value
 
         res = self.client.get(
             '/g-cloud/search?q=email&lot=cloud-software&phoneSupport=true' +
@@ -312,7 +312,7 @@ class TestSearchResults(BaseApplicationTest):
         return_value = self.search_results_multiple_page
         return_value["documents"] = [return_value["documents"][0]]
         return_value["meta"]["total"] = 1
-        self._search_api_client.search_services.return_value = return_value
+        self._search_api_client.search.return_value = return_value
 
         res = self.client.get(
             '/g-cloud/search?q=email&lot=cloud-software&phoneSupport=true' +
@@ -333,7 +333,7 @@ class TestSearchResults(BaseApplicationTest):
         return_value = self.search_results_multiple_page
         return_value["documents"] = [return_value["documents"][0]]
         return_value["meta"]["total"] = 1
-        self._search_api_client.search_services.return_value = return_value
+        self._search_api_client.search.return_value = return_value
 
         res = self.client.get(
             '/g-cloud/search?q=&lot=cloud-software' +
@@ -345,7 +345,7 @@ class TestSearchResults(BaseApplicationTest):
         return_value = self.search_results_multiple_page
         return_value["documents"] = [return_value["documents"][0]]
         return_value["meta"]["total"] = 1
-        self._search_api_client.search_services.return_value = return_value
+        self._search_api_client.search.return_value = return_value
 
         res = self.client.get('/g-cloud/search?q=<div>XSS</div>')
 
@@ -357,7 +357,7 @@ class TestSearchResults(BaseApplicationTest):
         return_value = self.search_results_multiple_page
         return_value["documents"] = [return_value["documents"][0]]
         return_value["meta"]["total"] = 1
-        self._search_api_client.search_services.return_value = return_value
+        self._search_api_client.search.return_value = return_value
 
         res = self.client.get(u'/g-cloud/search?q=email+\U0001f47e&lot=cloud-software')
         assert res.status_code == 200
@@ -367,7 +367,7 @@ class TestSearchResults(BaseApplicationTest):
             u' <em>Cloud software</em>' in summary
 
     def test_should_404_on_invalid_page_param(self):
-        self._search_api_client.search_services.return_value = \
+        self._search_api_client.search.return_value = \
             self.search_results_multiple_page
 
         res = self.client.get('/g-cloud/search?lot=cloud-hosting&page=1')
@@ -380,7 +380,7 @@ class TestSearchResults(BaseApplicationTest):
         assert res.status_code == 404
 
     def test_search_results_with_invalid_lot_fall_back_to_all_categories(self):
-        self._search_api_client.search_services.return_value = self.g9_search_results
+        self._search_api_client.search.return_value = self.g9_search_results
 
         res = self.client.get('/g-cloud/search?lot=bad-lot-slug')
         assert res.status_code == 200
@@ -393,7 +393,7 @@ class TestSearchResults(BaseApplicationTest):
         assert lots[2].text_content().startswith('Cloud support')
 
     def test_search_results_show_aggregations_by_lot(self):
-        self._search_api_client.search_services.return_value = self.g9_search_results
+        self._search_api_client.search.return_value = self.g9_search_results
 
         res = self.client.get('/g-cloud/search')
         assert res.status_code == 200
@@ -406,7 +406,7 @@ class TestSearchResults(BaseApplicationTest):
         assert lots[2].text_content() == 'Cloud support (500)'
 
     def test_search_results_does_not_show_aggregation_for_lot_if_category_selected(self):
-        self._search_api_client.search_services.return_value = self.g9_search_results
+        self._search_api_client.search.return_value = self.g9_search_results
 
         res = self.client.get('/g-cloud/search?lot=cloud-software')
         assert res.status_code == 200
@@ -417,7 +417,7 @@ class TestSearchResults(BaseApplicationTest):
         assert lots[0].text_content() == 'Cloud software'
 
     def test_search_results_show_aggregations_by_parent_category(self):
-        self._search_api_client.search_services.return_value = self.g9_search_results
+        self._search_api_client.search.return_value = self.g9_search_results
 
         res = self.client.get('/g-cloud/search?lot=cloud-software')
         assert res.status_code == 200
@@ -436,12 +436,12 @@ class TestSearchResults(BaseApplicationTest):
     def test_search_results_sends_aggregation_request_without_page_filter(self):
         data_api_client.find_frameworks.return_value = {'frameworks': [self._get_framework_fixture_data('g-cloud-9')
                                                                        ['frameworks']]}
-        self._search_api_client.search_services.return_value = self.search_results
+        self._search_api_client.search.return_value = self.search_results
 
         res = self.client.get('/g-cloud/search?page=2')
         assert res.status_code == 200
 
-        self._search_api_client_presenters.aggregate_docs.assert_called_with(
+        self._search_api_client_presenters.aggregate.assert_called_with(
             index='g-cloud-9',
             doc_type='services',
             lot='cloud-support',
@@ -449,7 +449,7 @@ class TestSearchResults(BaseApplicationTest):
         )
 
     def test_search_results_does_not_show_aggregation_for_lot_or_parent_category_if_child_selected(self):
-        self._search_api_client.search_services.return_value = self.g9_search_results
+        self._search_api_client.search.return_value = self.g9_search_results
 
         res = self.client.get('/g-cloud/search?lot=cloud-software&serviceCategories=accounting+and+finance')
         assert res.status_code == 200
@@ -466,7 +466,7 @@ class TestSearchResults(BaseApplicationTest):
         assert parent_category.xpath('strong')[0].text_content() == 'Accounting and finance'
 
     def test_search_results_show_aggregations_by_child_category(self):
-        self._search_api_client.search_services.return_value = self.g9_search_results
+        self._search_api_client.search.return_value = self.g9_search_results
 
         res = self.client.get('/g-cloud/search?lot=cloud-software&serviceCategories=accounting+and+finance')
         assert res.status_code == 200
@@ -484,7 +484,7 @@ class TestSearchResults(BaseApplicationTest):
             assert expected_lot_counts[category_name] == int(number_of_services)
 
     def test_search_results_subcategory_links_include_parent_category_param(self):
-        self._search_api_client.search_services.return_value = self.g9_search_results
+        self._search_api_client.search.return_value = self.g9_search_results
 
         res = self.client.get('/g-cloud/search?lot=cloud-software&serviceCategories=accounting+and+finance')
         assert res.status_code == 200
@@ -497,7 +497,7 @@ class TestSearchResults(BaseApplicationTest):
             assert 'parentCategory=accounting+and+finance' in category_anchor.get('href')
 
     def test_lot_links_retain_all_category_filters(self):
-        self._search_api_client.search_services.return_value = self.g9_search_results
+        self._search_api_client.search.return_value = self.g9_search_results
 
         res = self.client.get('/g-cloud/search?phoneSupport=true')
         assert res.status_code == 200
@@ -509,7 +509,7 @@ class TestSearchResults(BaseApplicationTest):
             assert 'phoneSupport=true' in lot.get('href')
 
     def test_all_category_link_drops_lot_specific_filters(self):
-        self._search_api_client.search_services.return_value = self.g9_search_results
+        self._search_api_client.search.return_value = self.g9_search_results
 
         res = self.client.get('/g-cloud/search?lot=cloud-hosting&phoneSupport=true&scalingType=automatic')
         assert res.status_code == 200
@@ -521,7 +521,7 @@ class TestSearchResults(BaseApplicationTest):
         assert 'scalingType=automatic' not in lots[0].get('href')
 
     def test_subcategory_link_retains_lot_specific_filters(self):
-        self._search_api_client.search_services.return_value = self.g9_search_results
+        self._search_api_client.search.return_value = self.g9_search_results
 
         res = self.client.get('/g-cloud/search?lot=cloud-hosting&phoneSupport=true&scalingType=automatic')
         assert res.status_code == 200
@@ -534,7 +534,7 @@ class TestSearchResults(BaseApplicationTest):
             assert 'scalingType=automatic' in category_link.get('href')
 
     def test_category_with_no_results_is_not_a_link(self):
-        self._search_api_client.search_services.return_value = self.g9_search_results
+        self._search_api_client.search.return_value = self.g9_search_results
 
         res = self.client.get('/g-cloud/search?lot=cloud-support')
         assert res.status_code == 200
@@ -547,7 +547,7 @@ class TestSearchResults(BaseApplicationTest):
         assert len(training[0].xpath('a')) == 0
 
     def test_filter_form_given_category_selection(self):
-        self._search_api_client.search_services.return_value = self.g9_search_results
+        self._search_api_client.search.return_value = self.g9_search_results
 
         res = self.client.get('/g-cloud/search?parentCategory=electronic+document+and+records+management+%28edrm%29&'
                               'lot=cloud-software&serviceCategories=content+management+system+%28cms%29')
@@ -575,14 +575,14 @@ class TestSearchFilterOnClick(BaseApplicationTest):
         self._search_api_client_presenters_patch = mock.patch('app.main.presenters.search_presenters.search_api_client',
                                                               autospec=True)
         self._search_api_client_presenters = self._search_api_client_presenters_patch.start()
-        self._search_api_client_presenters.aggregate_docs.return_value = \
+        self._search_api_client_presenters.aggregate.return_value = \
             self._get_fixture_data('g9_aggregations_fixture.json')
 
         self.search_results = self._get_search_results_fixture_data()
         self.g9_search_results = self._get_g9_search_results_fixture_data()
         self.search_results_multiple_page = self._get_search_results_multiple_page_fixture_data()
 
-        self._search_api_client.search_services.return_value = self.search_results
+        self._search_api_client.search.return_value = self.search_results
 
     def teardown_method(self, method):
         self._search_api_client_patch.stop()

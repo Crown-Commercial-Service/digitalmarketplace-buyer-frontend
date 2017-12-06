@@ -129,7 +129,7 @@ def _get_aggregations_for_lot_with_filters(lot, content_manifest, framework, req
 
     aggregate_request_args['lot'] = lot
 
-    aggregate_api_response = search_api_client.aggregate_docs(
+    aggregate_api_response = search_api_client.aggregate(
         index=index,
         doc_type=doc_type,
         aggregations=aggregate_on_fields,

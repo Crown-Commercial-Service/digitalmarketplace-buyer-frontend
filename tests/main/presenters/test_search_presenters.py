@@ -301,7 +301,7 @@ class TestSearchFilters(BaseApplicationTest):
 
 
 @mock.patch('app.main.presenters.search_presenters.search_api_client', autospec=True,
-            **{'aggregate_docs.return_value': _get_g9_aggregations_fixture_data()})
+            **{'aggregate.return_value': _get_g9_aggregations_fixture_data()})
 class TestLotsAndCategoriesSelection(BaseApplicationTest):
     def setup_method(self, method):
         super().setup_method(method)
