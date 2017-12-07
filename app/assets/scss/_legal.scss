@@ -1,7 +1,6 @@
 @import "_typography.scss";
 
-.terms-and-conditions {
-
+.legal-content {
   h2 {
     @include heading-27;
     font-weight: bold;
@@ -20,5 +19,4 @@
   p, li {
     @include copy-19;
   }
-
 }
