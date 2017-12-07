@@ -180,11 +180,12 @@ def list_opportunities(framework_family):
         )
     )
 
-    # Convert the shortened, camel cased specialistRole value into a human readable format.
-    content = content_loader.get_manifest(framework['slug'], 'display_brief')
+    # Convert the values of certain attributes to their label counterparts
+    content = content_loader.get_manifest(framework['slug'], 'briefs_search_filters')
     for brief in search_api_response['documents']:
         if brief.get('specialistRole'):
             brief['specialistRole'] = content.summary(brief).get_question('specialistRole').value
+        brief['location'] = content.summary(brief).get_question('location').value
 
     search_results_obj = SearchResults(search_api_response, lots_by_slug)
 
