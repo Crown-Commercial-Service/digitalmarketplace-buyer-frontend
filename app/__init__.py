@@ -17,6 +17,7 @@ feature_flags = flask_featureflags.FeatureFlag()
 csrf = CsrfProtect()
 
 content_loader = ContentLoader('app/content')
+from .main.helpers.framework_helpers import get_latest_live_framework
 
 
 def create_app(config_name):
@@ -31,7 +32,8 @@ def create_app(config_name):
         search_api_client=search_api_client
     )
 
-    for framework_data in data_api_client.find_frameworks().get('frameworks'):
+    frameworks = data_api_client.find_frameworks().get('frameworks')
+    for framework_data in frameworks:
         if not framework_data['slug'] in application.config.get('DM_FRAMEWORK_CONTENT_MAP', {}):
             if framework_data['framework'] == 'g-cloud':
                 if framework_data['status'] != 'expired':
@@ -41,8 +43,11 @@ def create_app(config_name):
                 content_loader.load_manifest(framework_data['slug'], 'services', 'download_results')
             elif framework_data['framework'] == 'digital-outcomes-and-specialists':
                 content_loader.load_manifest(framework_data['slug'], 'briefs', 'display_brief')
-                if framework_data['slug'] == 'digital-outcomes-and-specialists-2':
-                    content_loader.load_manifest(framework_data['slug'], 'briefs', 'briefs_search_filters')
+                content_loader.load_manifest(
+                    get_latest_live_framework(frameworks, 'digital-outcomes-and-specialists')['slug'],
+                    'briefs',
+                    'briefs_search_filters',
+                )
 
     from .main import main as main_blueprint
     from .main import direct_award as direct_award_blueprint
