@@ -18,7 +18,7 @@
                         <path d="M0,1.29154519 L697.000031,1.29154519" id="Shape"></path>
                     </g>
                     <text id="Buyers-receive-on-av"  font-size="17" font-weight="normal" line-spacing="26" fill="#313131">
-                        <tspan x="142.187256" y="24">Buyers receive on average 12 responses per brief: November ‘17</tspan>
+                        <tspan x="142.187256" y="24">Buyers receive on average 12 responses per brief</tspan>
                     </text>
                     <path d="M27,53 L27,271.1875" id="Shape" stroke-opacity="0" stroke="#000000"></path>
                     <g id="Group" transform="translate(180.000000, 47.000000)">
