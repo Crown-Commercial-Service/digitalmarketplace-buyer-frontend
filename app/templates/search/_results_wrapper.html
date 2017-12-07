@@ -1,8 +1,4 @@
 <div id="js-dm-live-search-results" class="js-dm-live-search-fade">
-  {% if framework_family == 'g-cloud' %}
-    {% include 'search/_services_results.html' %}
-  {% elif framework_family == 'digital-outcomes-and-specialists' %}
-    {% include 'search/_briefs_results.html' %}
-  {% endif %}
+  {% include 'search/_{}_results.html'.format(doc_type) %}
   {% include 'search/_pagination.html' %}
 </div>

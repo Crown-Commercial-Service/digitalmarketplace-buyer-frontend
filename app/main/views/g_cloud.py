@@ -193,6 +193,7 @@ def search_services():
     # if there are multiple live g-cloud frameworks, we must assume the same filters work on them all
     all_frameworks = data_api_client.find_frameworks().get('frameworks')
     framework = framework_helpers.get_latest_live_framework(all_frameworks, 'g-cloud')
+    doc_type = 'services'
 
     lots_by_slug = framework_helpers.get_lots_by_slug(framework)
 
@@ -217,7 +218,7 @@ def search_services():
 
     search_api_response = search_api_client.search(
         index=framework['slug'],
-        doc_type='services',
+        doc_type=doc_type,
         **build_search_query(request.args, filters.values(), content_manifest, lots_by_slug)
     )
     search_results_obj = SearchResults(search_api_response, lots_by_slug)
@@ -243,7 +244,7 @@ def search_services():
 
     lots = framework['lots']
     selected_category_tree_filters = build_lots_and_categories_link_tree(
-        framework, lots, category_filter_group, request, content_manifest, 'services', framework['slug']
+        framework, lots, category_filter_group, request, content_manifest, doc_type, framework['slug']
     )
 
     # Filter form should also filter by lot, and by category, when any of those are selected.
@@ -267,24 +268,26 @@ def search_services():
     search_query = query_args_for_pagination(clean_request_query_params)
 
     template_args = dict(
-        view_name=view_name,
-        current_lot=current_lot,
-        framework_family=framework['framework'],
         category_tree_root=selected_category_tree_filters[0],
-        filter_form_hidden_fields=filter_form_hidden_fields_by_name.values(),
+        clear_filters_url=clear_filters_url,
+        current_lot=current_lot,
+        doc_type=doc_type,
         filters=filters.values(),
+        filter_form_hidden_fields=filter_form_hidden_fields_by_name.values(),
+        framework_family=framework['framework'],
+        gcloud_framework_description=framework_helpers.get_framework_description(data_api_client, 'g-cloud'),
         lots=lots,
         pagination=pagination_config,
+        search_count=search_api_response['meta']['total'],
         search_keywords=get_keywords_from_request(request),
         search_query=search_query,
         search_query_url=url_encode(search_query),  # for save-search form
-        search_count=search_api_response['meta']['total'],
         services=search_results_obj.search_results,
         summary=search_summary.markup(),
         title='Search results',
         total=search_results_obj.total,
-        gcloud_framework_description=framework_helpers.get_framework_description(data_api_client, 'g-cloud'),
-        clear_filters_url=clear_filters_url)
+        view_name=view_name,
+    )
 
     if request.args.get('live-results'):
         from flask import jsonify

@@ -161,6 +161,7 @@ def list_opportunities(framework_family):
         abort(404)
 
     index = 'briefs-digital-outcomes-and-specialists'
+    doc_type = 'briefs'
     updated_request_args = None
 
     if 'status' not in clean_request_query_params.keys():
@@ -170,7 +171,7 @@ def list_opportunities(framework_family):
 
     search_api_response = search_api_client.search(
         index=index,
-        doc_type='briefs',
+        doc_type=doc_type,
         **build_search_query(
             updated_request_args if updated_request_args else clean_request_query_params,
             filters.values(),
@@ -204,7 +205,7 @@ def list_opportunities(framework_family):
     lots = [lot for lot in framework['lots'] if lot['allowsBrief']]
 
     selected_category_tree_filters = build_lots_and_categories_link_tree(framework, lots, category_filter_group,
-                                                                         request, content_manifest, 'briefs', index)
+                                                                         request, content_manifest, doc_type, index)
 
     filter_form_hidden_fields_by_name = {f['name']: f for f in selected_category_tree_filters[1:]}
     current_lot = lots_by_slug.get(current_lot_slug)
@@ -227,6 +228,7 @@ def list_opportunities(framework_family):
         category_tree_root=selected_category_tree_filters[0],
         clear_filters_url=clear_filters_url,
         current_lot=current_lot,
+        doc_type=doc_type,
         filters=filters.values(),
         filter_form_hidden_fields=filter_form_hidden_fields_by_name.values(),
         framework=frameworks[-1],
