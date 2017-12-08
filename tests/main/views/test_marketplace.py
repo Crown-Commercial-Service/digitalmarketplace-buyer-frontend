@@ -1192,7 +1192,7 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
             "south west england": False,
             "northern ireland": False,
             "international (outside the uk)": False,
-            "off-site": False,
+            "offsite": False,
         }
 
         ss_elem = document.xpath("//p[@class='search-summary']")[0]
@@ -1275,7 +1275,7 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
             "south west england": False,
             "northern ireland": False,
             "international (outside the uk)": False,
-            "off-site": False,
+            "offsite": False,
         }
 
         parsed_original_url = urlparse(original_url)
@@ -1357,7 +1357,7 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
             "south west england": False,
             "northern ireland": False,
             "international (outside the uk)": False,
-            "off-site": False,
+            "offsite": False,
         }
 
         parsed_original_url = urlparse(original_url)
@@ -1555,19 +1555,6 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         lots = document.xpath('//div[@class="lot-filters"]//ul[@class="lot-filters--last-list"]//li/a')
         for lot in lots:
             assert 'location=london' in lot.get('href')
-
-    def test_all_category_link_drops_lot_specific_filters(self):
-        res = self.client.get(
-            '/digital-outcomes-and-specialists/opportunities?lot=digital-specialists&'
-            'location=scotland&specialistRole=agilecoach'
-        )
-        assert res.status_code == 200
-
-        document = html.fromstring(res.get_data(as_text=True))
-
-        lots = document.xpath('//div[@class="lot-filters"]/ul/li/a')
-        assert 'location=scotland' in lots[0].get('href')
-        assert 'specialistRole=agilecoach' not in lots[0].get('href')
 
     def test_lot_with_no_briefs_is_not_a_link(self):
         specialists_aggregation = self._get_dos_brief_search_api_aggregations_response_specialists_fixture_data()

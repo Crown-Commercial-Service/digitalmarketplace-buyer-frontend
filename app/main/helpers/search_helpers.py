@@ -49,10 +49,10 @@ def get_request_url_without_any_filters(request, filters, view_name, **kwargs):
     return url
 
 
-def get_filters_from_request(request):
-    """Returns the filters applied to a search from the request object"""
+def get_filters_from_request(cleaned_request_args):
+    """Returns the filters applied to a search from the request args"""
 
-    filters = MultiDict(request.args.copy())
+    filters = MultiDict(cleaned_request_args.copy())
     filters.poplist('q')
     filters.poplist('lot')
     filters.poplist('page')

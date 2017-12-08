@@ -315,8 +315,9 @@ class TestLotsAndCategoriesSelection(BaseApplicationTest):
               "&checkboxTreeExample=option+1&page=2"
         with self.app.test_request_context(url):
             selection = build_lots_and_categories_link_tree(self.framework, self.framework['lots'],
-                                                            self.category_filter_group, flask.request, g9_builder,
-                                                            'services', 'g-cloud-9')
+                                                            self.category_filter_group, flask.request,
+                                                            flask.request.args, g9_builder, 'services', 'g-cloud-9',
+                                                            Href(flask.url_for('.search_services')))
             assert len(selection) == 3  # all -> software -> option1
 
             tree_root = selection[0]
@@ -350,8 +351,9 @@ class TestLotsAndCategoriesSelection(BaseApplicationTest):
         url = "/g-cloud/search?q=&lot=cloud-software&otherfilter=somevalue&checkboxTreeExample=option+2.2"
         with self.app.test_request_context(url):
             selection = build_lots_and_categories_link_tree(self.framework, self.framework['lots'],
-                                                            self.category_filter_group, flask.request, g9_builder,
-                                                            'services', 'g-cloud-9')
+                                                            self.category_filter_group, flask.request,
+                                                            flask.request.args, g9_builder, 'services', 'g-cloud-9',
+                                                            Href(flask.url_for('.search_services')))
             assert len(selection) == 5  # all -> software -> option2 -> option2.2; option2 as a parent category filter
 
             tree_root = selection[0]

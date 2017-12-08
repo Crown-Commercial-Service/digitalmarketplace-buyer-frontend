@@ -219,7 +219,7 @@ def search_services():
     search_api_response = search_api_client.search(
         index=framework['slug'],
         doc_type=doc_type,
-        **build_search_query(request.args, filters.values(), content_manifest, lots_by_slug)
+        **build_search_query(clean_request_query_params, filters.values(), content_manifest, lots_by_slug)
     )
     search_results_obj = SearchResults(search_api_response, lots_by_slug)
 
@@ -244,7 +244,14 @@ def search_services():
 
     lots = framework['lots']
     selected_category_tree_filters = build_lots_and_categories_link_tree(
-        framework, lots, category_filter_group, request, content_manifest, doc_type, framework['slug']
+        framework,
+        lots,
+        category_filter_group,
+        request,
+        clean_request_query_params,
+        content_manifest,
+        doc_type,
+        framework['slug'],
     )
 
     # Filter form should also filter by lot, and by category, when any of those are selected.

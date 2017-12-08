@@ -43,11 +43,12 @@ def create_app(config_name):
                 content_loader.load_manifest(framework_data['slug'], 'services', 'download_results')
             elif framework_data['framework'] == 'digital-outcomes-and-specialists':
                 content_loader.load_manifest(framework_data['slug'], 'briefs', 'display_brief')
-                content_loader.load_manifest(
-                    get_latest_live_framework(frameworks, 'digital-outcomes-and-specialists')['slug'],
-                    'briefs',
-                    'briefs_search_filters',
-                )
+
+    content_loader.load_manifest(
+        get_latest_live_framework(frameworks, 'digital-outcomes-and-specialists')['slug'],
+        'briefs',
+        'briefs_search_filters',
+    )
 
     from .main import main as main_blueprint
     from .main import direct_award as direct_award_blueprint

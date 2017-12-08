@@ -205,8 +205,16 @@ def list_opportunities(framework_family):
     category_filter_group = filters.pop('categories') if 'categories' in filters else None
     lots = [lot for lot in framework['lots'] if lot['allowsBrief']]
 
-    selected_category_tree_filters = build_lots_and_categories_link_tree(framework, lots, category_filter_group,
-                                                                         request, content_manifest, doc_type, index)
+    selected_category_tree_filters = build_lots_and_categories_link_tree(
+        framework,
+        lots,
+        category_filter_group,
+        request,
+        updated_request_args if updated_request_args else clean_request_query_params,
+        content_manifest,
+        doc_type,
+        index
+    )
 
     filter_form_hidden_fields_by_name = {f['name']: f for f in selected_category_tree_filters[1:]}
     current_lot = lots_by_slug.get(current_lot_slug)
