@@ -5,7 +5,7 @@ class SearchResults(object):
     """Provides access to the search results information"""
 
     def __init__(self, response, lots_by_slug):
-        self.search_results = response['services']
+        self.search_results = response.get('documents') or response.get('services')
         self._lots = lots_by_slug
         self._annotate()
         self.total = response['meta']['total']
