@@ -50,6 +50,8 @@ def create_app(config_name):
         'briefs_search_filters',
     )
 
+
+
     from .main import main as main_blueprint
     from .main import direct_award as direct_award_blueprint
     from .external.views.external import external as external_blueprint
