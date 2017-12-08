@@ -5,7 +5,7 @@ from datetime import datetime
 from flask import abort, render_template, request, redirect, current_app, url_for, flash, Markup
 from flask_login import current_user
 import inflection
-from werkzeug.urls import url_encode, url_decode
+from werkzeug.urls import Href, url_encode, url_decode
 
 from dmcontent.formats import format_service_price
 from dmcontent.questions import Pricing
@@ -243,6 +243,7 @@ def search_services():
     category_filter_group = filters.pop('categories') if 'categories' in filters else None
 
     lots = framework['lots']
+    view_name = 'search_services'
     selected_category_tree_filters = build_lots_and_categories_link_tree(
         framework,
         lots,
@@ -252,6 +253,7 @@ def search_services():
         content_manifest,
         doc_type,
         framework['slug'],
+        Href(url_for('.{}'.format(view_name))),
     )
 
     # Filter form should also filter by lot, and by category, when any of those are selected.
@@ -270,7 +272,6 @@ def search_services():
             if 'label' in filter_instance:
                 filter_instance['label'] = capitalize_first(filter_instance['label'])
 
-    view_name = 'search_services'
     clear_filters_url = get_request_url_without_any_filters(request, filters, view_name)
     search_query = query_args_for_pagination(clean_request_query_params)
 

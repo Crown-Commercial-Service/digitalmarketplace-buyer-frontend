@@ -4,6 +4,7 @@ import itertools
 import mock
 from dmcontent.content_loader import ContentLoader
 from werkzeug.datastructures import MultiDict
+from werkzeug.urls import Href
 import flask
 
 from app.main.presenters.search_presenters import (

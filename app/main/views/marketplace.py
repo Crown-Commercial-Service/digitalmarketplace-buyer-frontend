@@ -2,9 +2,9 @@
 from __future__ import unicode_literals
 
 from flask_login import current_user
-from flask import abort, current_app, render_template, request
+from flask import abort, current_app, render_template, request, url_for
 
-# from werkzeug.urls import url_encode, url_decode
+from werkzeug.urls import Href
 from werkzeug.datastructures import MultiDict
 
 from dmapiclient import APIError
@@ -205,6 +205,7 @@ def list_opportunities(framework_family):
     category_filter_group = filters.pop('categories') if 'categories' in filters else None
     lots = [lot for lot in framework['lots'] if lot['allowsBrief']]
 
+    view_name = 'list_opportunities'
     selected_category_tree_filters = build_lots_and_categories_link_tree(
         framework,
         lots,
@@ -213,7 +214,8 @@ def list_opportunities(framework_family):
         updated_request_args if updated_request_args else clean_request_query_params,
         content_manifest,
         doc_type,
-        index
+        index,
+        Href(url_for('.{}'.format(view_name), framework_family=framework['framework'])),
     )
 
     filter_form_hidden_fields_by_name = {f['name']: f for f in selected_category_tree_filters[1:]}
@@ -226,7 +228,6 @@ def list_opportunities(framework_family):
             if 'label' in filter_instance:
                 filter_instance['label'] = capitalize_first(filter_instance['label'])
 
-    view_name = 'list_opportunities'
     clear_filters_url = get_request_url_without_any_filters(
         request, filters, view_name, framework_family=framework_family
     )

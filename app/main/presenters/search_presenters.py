@@ -1,8 +1,6 @@
 from collections import OrderedDict
 
-from flask import url_for
 from werkzeug.datastructures import MultiDict
-from werkzeug.urls import Href
 
 from ..helpers.framework_helpers import get_lots_by_slug
 from ..helpers.search_helpers import (
@@ -179,7 +177,8 @@ def _update_base_url_args_for_lot_and_category(url_args, keys_to_remove, lot_slu
 
 
 def build_lots_and_categories_link_tree(
-    framework, lots, category_filter_group, request, cleaned_request_args, content_manifest, doc_type, index
+    framework, lots, category_filter_group, request, cleaned_request_args,
+    content_manifest, doc_type, index, search_link_builder
 ):
     """
     Equivalent of set_filter_states but for where we are creating a tree of links i.e. the
@@ -195,17 +194,13 @@ def build_lots_and_categories_link_tree(
     :param request: the original request for creating links for nodes
     :param cleaned_request_args: current cleaned request args so that we can figure out selected lots and categories
     :param content_manifest: a ContentManifest instance for the frameworks search_filters.
+    :param search_link_builder: a werkzeug Href object for the view category tree links link to
     :return: list of selected category and lot filters, starting with the 'all categories' root node
     """
     current_lot_slug = get_lot_from_args(cleaned_request_args, [lot['slug'] for lot in lots])
 
     # Links in the tree should preserve all the filters, except those relating to this tree (i.e. lot
     # and category).
-    if framework['framework'] == 'g-cloud':
-        search_link_builder = Href(url_for('.search_services'))
-    else:
-        search_link_builder = Href(url_for('.list_opportunities', framework_family=framework['framework']))
-
     keys_to_remove = _get_category_filter_key_set(category_filter_group)
     keys_to_remove.add('page')
     preserved_request_args = MultiDict(
@@ -244,7 +239,8 @@ def build_lots_and_categories_link_tree(
         if lot_selected:
             selected_categories = _annotate_categories_with_selection(lot['slug'], categories, cleaned_request_args,
                                                                       url_args_for_lot, content_manifest, framework,
-                                                                      aggregations_by_lot[lot['slug']], keys_to_remove)
+                                                                      aggregations_by_lot[lot['slug']], keys_to_remove,
+                                                                      search_link_builder)
             selected_filters.append(lot_filter)
             selected_filters.extend(selected_categories)
 
@@ -264,7 +260,7 @@ def build_lots_and_categories_link_tree(
 
 
 def _annotate_categories_with_selection(lot_slug, category_filters, cleaned_request_args, url_args_for_lot,
-                                        content_manifest, framework, aggregations, keys_to_remove,
+                                        content_manifest, framework, aggregations, keys_to_remove, search_link_builder,
                                         parent_category=None):
     """
     Recursive setting of 'selected' state and adding of links to categories
@@ -277,12 +273,12 @@ def _annotate_categories_with_selection(lot_slug, category_filters, cleaned_requ
     :param framework: the latest G-Cloud framework from the API
     :param aggregations: A dict of aggregation results for categories, by lot slug.
     :param keys_to_remove: set of lot/category keys to remove from dicts when building links.
+    :param search_link_builder: a werkzeug Href object for the view category tree links link to
     :param parent_category: The name of the parent category; only set internally for recursion.
     :return: list of filters that were selected, if any; the last of which was directly selected
     """
     request_filters = get_filters_from_request(cleaned_request_args)
     selected_category_filters = []
-    search_link_builder = Href(url_for('.search_services'))
     selected_category_at_this_level = None
 
     for category in category_filters:
@@ -297,7 +293,8 @@ def _annotate_categories_with_selection(lot_slug, category_filters, cleaned_requ
 
         selected_descendants = _annotate_categories_with_selection(
             lot_slug, category.get('children', []), cleaned_request_args, url_args_for_lot,
-            content_manifest, framework, aggregations, keys_to_remove, parent_category=category['value'])
+            content_manifest, framework, aggregations, keys_to_remove, search_link_builder,
+            parent_category=category['value'])
 
         if selected_descendants:
             # If a parentCategory has been sent as a url query param, and it's this category...
