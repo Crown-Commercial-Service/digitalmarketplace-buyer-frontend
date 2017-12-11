@@ -197,7 +197,7 @@ describe("GOVUK.Analytics", function () {
     var filterTemplate = 
         '<form id="js-dm-live-search-form">' + 
             '<div class="dm-filters">' +
-              '<div class="options-container" id="example-filters-group">' +
+              '<div class="options-container" id="example-filters-group" data-framework="g-cloud" data-current-lot="test-lot">' +
                 '<div class="js-auto-height-inner">' +
                   '<label for="filter-option-1">' +
                     '<input name="filter-option-1" value="filter-option-1-value" id="filter-option-1" type="checkbox" aria-controls="">' +
@@ -248,8 +248,8 @@ describe("GOVUK.Analytics", function () {
       window.GOVUK.GDM.analytics.virtualPageViews.init();
       $('#filter-option-1').click();
       expect(window.ga.calls.first().args[2]).toEqual({
-        page: "/g-cloud/filters/example-filters-group/filter-option-1/filter-option-1-value/vpv", 
-        title: "Filter - example-filters-group - filter-option-1 - filter-option-1-value"
+        page: "/g-cloud/test-lot/filters/example-filters-group/filter-option-1/filter-option-1-value/vpv", 
+        title: "Filter - g-cloud - test-lot - example-filters-group - filter-option-1 - filter-option-1-value"
       });
     });
 

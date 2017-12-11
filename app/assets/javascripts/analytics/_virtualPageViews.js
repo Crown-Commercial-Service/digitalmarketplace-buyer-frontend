@@ -36,20 +36,22 @@
 
   };
 
-  VirtualPageViews.prototype.trackFilterAnalytics = function( group, key, value ) {
-
-    var filter_path = '/' + group + '/' + key + '/' + value;
-    var url = '/g-cloud/filters' + filter_path;
-    this.sendVirtualPageView( url, 'Filter' + filter_path.replace(/[/]/g, " - ") );
-
+  VirtualPageViews.prototype.trackFilterAnalytics = function( framework, lot, group, key, value ) {
+    var url = '/' + framework + '/' + lot + '/filters' + '/' + group + '/' + key + '/' + value;
+    var pageTitle = 'Filter' + url.replace('/filters/', '/').replace(/[/]/g, " - ");
+    this.sendVirtualPageView(url, pageTitle);
   };
 
   VirtualPageViews.prototype.filterSelected = function(){
     if(this.checked) {
+      var framework = $(this).closest('.options-container').attr('data-framework');
+      framework = framework ? framework : 'no-framework-given';
+      var lot = $(this).closest('.options-container').attr('data-current-lot');
+      lot = lot ? lot : 'no-lot-selected';
       var group = $(this).closest('.options-container').attr('id');
       var key = $(this).attr('name');
       var value = $(this).attr('value');
-      GOVUK.GDM.analytics.virtualPageViews.trackFilterAnalytics(group, key, value);
+      GOVUK.GDM.analytics.virtualPageViews.trackFilterAnalytics(framework, lot, group, key, value);
     }
   };
 
