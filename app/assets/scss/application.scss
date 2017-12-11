@@ -7,27 +7,25 @@
 // Path to assets for use with file-url()
 $path: "/static/images/";
 
-// govuk-elements styles
+// GOVUK elements styles (only import the files you need)
+// TODO: Bring any GOVUK elements we require into the DM Front end toolkit and import them from there instead
 @import "elements/_helpers.scss";
 @import "elements/_forms.scss";
 @import "elements/forms/_form-validation.scss";
 @import "elements/_panels.scss";
 
-// Note we DO NOT load the govuk-elements _reset.scss, only our own custom one, which is different
+// Digital Marketplace Front-end toolkit shared CSS placeholders used by other DM toolkit styles
+@import "toolkit/shared_placeholders/_temporary-messages.scss";
+@import "toolkit/shared_placeholders/_placeholders.scss";
+@import "toolkit/shared_placeholders/_dm-typography.scss";
 
-/* Digital Marketplace Front-end toolkit shared styles between multiple apps */
+// Digital Marketplace Front-end toolkit shared styles between multiple apps
 @import "toolkit/shared_scss/_reset.scss";
 @import "toolkit/shared_scss/_lists.scss";
 @import "toolkit/shared_scss/_dmspeak.scss";
 @import "toolkit/shared_scss/_conditionals2.scss";
 
-/* Digital Marketplace Front-end toolkit shared styles between multiple selectors */
-@import "toolkit/shared_placeholders/_temporary-messages.scss";
-@import "toolkit/shared_placeholders/_placeholders.scss";
-@import "toolkit/shared_placeholders/_dm-typography.scss";
-
-
-// Digital Marketplace Front-end toolkit styles
+// Digital Marketplace Front-end toolkit styles (only import the files you need)
 @import "toolkit/_breadcrumb.scss";
 @import "toolkit/_browse-list.scss";
 @import "toolkit/_buttons.scss";
@@ -56,14 +54,7 @@ $path: "/static/images/";
 @import "toolkit/forms/_validation.scss";
 @import "toolkit/search/_search-result.scss";
 
-
-#wrapper {
-  @extend %site-width-container;
-  padding-bottom: $gutter * 2;
-}
-
-
-// Buyers app styles
+// App specific styles
 @import "_atoz_navigation.scss";
 @import "_end-your-search-page.scss";
 @import "_error-pages.scss";
@@ -81,6 +72,13 @@ $path: "/static/images/";
 @import "_table.scss";
 @import "_text.scss";
 
+// Misc styles
+// TODO: Move misc styling into their own partial files or the Digital Marketplace FE Toolkit
+#wrapper {
+  @extend %site-width-container;
+  padding-bottom: $gutter * 2;
+}
+
 .return-to-top {
   display: block;
   @include core-19;
@@ -88,11 +86,11 @@ $path: "/static/images/";
 }
 
 .marketplace-paragraph {
-
   h2 {
     @include bold-27;
     padding-bottom: 10px;
   }
+
   p {
     padding-bottom: 30px;
   }
