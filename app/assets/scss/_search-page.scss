@@ -33,10 +33,6 @@
 
 @import "search/_search-result.scss";
 
-em.search-result-highlighted-text {
-  font-style: normal;
-}
-
 .search-page-filters {
 
   $lot-filters__gutter: 24px;
@@ -122,9 +118,11 @@ em.search-result-highlighted-text {
     display: block;
   }
 }
+
 .search-page-filters {
   padding-bottom: 15px;
 }
+
 .search-result-important-metadata {
   li {
     @include bold-19;
