@@ -59,6 +59,7 @@ $path: "/static/images/";
 @import "_end-your-search-page.scss";
 @import "_error-pages.scss";
 @import "_footer.scss";
+@import "_gcloud_browse_list.scss";
 @import "_index-page.scss";
 @import "_legal.scss";
 @import "_notice.scss";
@@ -97,9 +98,4 @@ $path: "/static/images/";
 .break-link {
   display: inline-block;
   word-break: break-all;
-}
-
-.framework-lots ul li ul {
-  list-style: disc;
-  margin: 0px 0px 0px 20px;
 }
