@@ -79,12 +79,6 @@ $path: "/static/images/";
   padding-bottom: $gutter * 2;
 }
 
-.return-to-top {
-  display: block;
-  @include core-19;
-  margin: (1.5 * $gutter) 0 (2 * $gutter);
-}
-
 .marketplace-paragraph {
   h2 {
     @include bold-27;
