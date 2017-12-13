@@ -152,6 +152,7 @@ class Production(Live):
     FEATURE_FLAGS_NEW_SUPPLIER_FLOW = enabled_since('2017-02-08')
     FEATURE_FLAGS_DIRECT_AWARD_PROJECTS = enabled_since('2017-10-26')
 
+
 configs = {
     'development': Development,
     'test': Test,

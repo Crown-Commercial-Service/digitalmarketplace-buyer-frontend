@@ -181,7 +181,7 @@ class SummaryRules(object):
         if hasattr(self, 'filter_rules_ids'):
             try:
                 index = self.filter_rules_ids.index(filter)
-            except:
+            except (AttributeError, TypeError, ValueError):
                 return None
             return self._rules['filterRules'][index]['preposition']
 
