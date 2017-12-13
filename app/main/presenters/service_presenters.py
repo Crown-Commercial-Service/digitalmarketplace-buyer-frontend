@@ -181,7 +181,10 @@ class Meta(object):
 
     def _get_document_extension(self, document_url):
         url_object = urlparse(document_url.replace(';', '%3B'))
-        return os.path.splitext(url_object.path)[1].split('.')[1]
+        try:
+            return os.path.splitext(url_object.path)[1].split('.')[1]
+        except IndexError:
+            raise ValueError("Missing file extension for document at URL {}".format(document_url))
 
     def _if_both_keys_or_either(self, service_data, keys=[], values={}):
         def is_not_false(key):
