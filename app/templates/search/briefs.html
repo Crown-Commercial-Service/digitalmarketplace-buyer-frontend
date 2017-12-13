@@ -1,7 +1,7 @@
 {% extends "_base_page.html" %}
 
 {% block page_title %}
-  Supplier opportunities – {{ framework.name }} – Digital Marketplace
+  Supplier opportunities – {{ framework_family_name }} – Digital Marketplace
 {% endblock %}
 
 {% block head %}
@@ -18,7 +18,7 @@
           "label": "Digital Marketplace"
         },
         {
-          "link": url_for('.list_opportunities', framework_family='digital-outcomes-and-specialists'),
+          "link": url_for('.{}'.format(view_name), framework_family=framework_family),
           "label": "Supplier opportunities"
         },
         {
@@ -32,7 +32,7 @@
           "label": "Digital Marketplace"
         },
         {
-          "link": url_for('.list_opportunities', framework_family='digital-outcomes-and-specialists'),
+          "link": url_for('.{}'.format(view_name), framework_family=framework_family),
           "label": "Supplier opportunities"
         }
       ] %}
@@ -44,7 +44,7 @@
 {% block main_content %}
 <div class="grid-row">
   <div class="column-two-thirds">
-    {% with heading="{} opportunities".format(framework.name) %}
+    {% with heading="{} opportunities".format(framework_family_name) %}
         {% include "toolkit/page-heading.html" %}
     {% endwith %}
     <div class="marketplace-paragraph">

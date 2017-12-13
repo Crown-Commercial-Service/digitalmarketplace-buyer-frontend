@@ -136,7 +136,6 @@ def get_brief_by_id(framework_framework, brief_id):
 def list_opportunities(framework_family):
     frameworks = data_api_client.find_frameworks()['frameworks']
     frameworks = [v for v in frameworks if v['framework'] == framework_family]
-    frameworks.sort(key=lambda x: x['id'], reverse=True)
     framework = get_latest_live_framework(frameworks, framework_family)
 
     if not framework:
@@ -242,6 +241,7 @@ def list_opportunities(framework_family):
         filter_form_hidden_fields=filter_form_hidden_fields_by_name.values(),
         framework=framework,
         framework_family=framework['framework'],
+        framework_family_name='Digital Outcomes and Specialists',
         lot_names=tuple(lot['name'] for lot in lots_by_slug.values() if lot['allowsBrief']),
         pagination=pagination_config,
         search_query=search_query,
