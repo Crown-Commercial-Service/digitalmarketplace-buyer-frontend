@@ -645,28 +645,3 @@ class TestDirectAwardDownloadResultsView(TestDirectAwardBase):
 
         res = self.client.get('/buyers/direct-award/g-cloud/projects/1/results/download?filetype=docx')
         assert res.status_code == 400
-
-
-class TestDirectAwardRedirect(TestDirectAwardBase):
-    def test_no_redirect_if_id_from_api_matches_original_id_from_url(self):
-        data_api_client.get_direct_award_project.return_value = self._get_direct_award_project_fixture(id=1)
-        data_api_client.find_direct_award_project_searches.return_value = \
-            self._get_direct_award_project_searches_fixture()
-
-        self.login_as_buyer()
-
-        res = self.client.get('/buyers/direct-award/g-cloud/projects/1')
-        assert res.status_code == 200
-
-    def test_redirect_if_id_from_api_doesnt_match_original_id_from_url(self):
-        data_api_client.get_direct_award_project.return_value = self._get_direct_award_project_fixture(
-            id=123456789012345
-        )
-        data_api_client.find_direct_award_project_searches.return_value = \
-            self._get_direct_award_project_searches_fixture()
-
-        self.login_as_buyer()
-
-        res = self.client.get('/buyers/direct-award/g-cloud/projects/1')
-        assert res.status_code == 302
-        assert res.location == 'http://localhost/buyers/direct-award/g-cloud/projects/123456789012345'
