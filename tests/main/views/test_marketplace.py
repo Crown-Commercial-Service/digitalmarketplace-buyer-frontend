@@ -1151,7 +1151,7 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         self._view_search_api_client.search.assert_called_once_with(
             index='briefs-digital-outcomes-and-specialists',
             doc_type='briefs',
-            status='live,closed,awarded,cancelled,unsuccessful'
+            status='live,closed'
         )
 
         heading = document.xpath('normalize-space(//h1/text())')
@@ -1170,8 +1170,7 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         assert len(document.xpath("//form[@method='get']//ul[@class='lot-filters--last-list']//strong")) == 0
 
         status_inputs = document.xpath("//form[@method='get']//input[@name='status']")
-        assert set(element.get("value") for element in status_inputs) == \
-            {"live", "closed", "awarded", "cancelled", "unsuccessful", "cancelled"}
+        assert set(element.get("value") for element in status_inputs) == {"live", "closed"}
         assert not any(element.get("checked") for element in status_inputs)
 
         location_inputs = document.xpath("//form[@method='get']//input[@name='location']")
@@ -1252,9 +1251,6 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         } == {
             "live": True,
             "closed": False,
-            "awarded": False,
-            "unsuccessful": False,
-            "cancelled": False
         }
 
         location_inputs = document.xpath("//form[@method='get']//input[@name='location']")
@@ -1291,7 +1287,7 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         assert self._normalize_whitespace(self._squashed_element_text(ss_elem)) == \
             "864 results found in Digital outcomes"
 
-    def test_catalogue_of_briefs_page_filtered_all_lots_selected(self):
+    def test_catalogue_of_briefs_page_filtered_all_lots_selected_chris(self):
         original_url = "/digital-outcomes-and-specialists/opportunities?lot=digital-outcomes&lot=digital-specialists"\
             "&lot=user-research-participants"
         res = self.client.get(original_url)
@@ -1303,7 +1299,7 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         self._view_search_api_client.search.assert_called_once_with(
             index='briefs-digital-outcomes-and-specialists',
             doc_type='briefs',
-            status='live,closed,awarded,cancelled,unsuccessful',
+            status='live,closed',
             lot='digital-outcomes',
         )
 
@@ -1334,9 +1330,6 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         } == {
             "live": False,
             "closed": False,
-            "awarded": False,
-            "unsuccessful": False,
-            "cancelled": False
         }
 
         location_inputs = document.xpath("//form[@method='get']//input[@name='location']")

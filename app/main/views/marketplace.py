@@ -165,8 +165,7 @@ def list_opportunities(framework_family):
     updated_request_args = None
 
     if 'status' not in clean_request_query_params.keys():
-        allowed_status_params = [('status', status) for status in PUBLISHED_BRIEF_STATUSES if status != 'withdrawn']
-        updated_request_args = MultiDict(allowed_status_params)
+        updated_request_args = MultiDict([('status', 'live'), ('status', 'closed')])
         updated_request_args.update(clean_request_query_params)
 
     search_api_response = search_api_client.search(
