@@ -51,6 +51,14 @@ class TestSearchResults(BaseApplicationTest):
         search_results_instance = SearchResults(self.fixture, self._lots_by_slug)
         assert hasattr(search_results_instance, 'search_results')
 
+    def test_search_results_handles_zero_results(self):
+        self.fixture['documents'] = []
+        self.fixture['meta']['total'] = 0
+
+        search_results_instance = SearchResults(self.fixture, self._lots_by_slug)
+        assert search_results_instance.search_results == []
+        assert search_results_instance.total == 0
+
     def test_search_results_total_is_set(self):
         search_results_instance = SearchResults(self.fixture, self._lots_by_slug)
         assert hasattr(search_results_instance, 'total')
