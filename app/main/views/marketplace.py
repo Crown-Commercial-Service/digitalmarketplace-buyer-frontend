@@ -240,7 +240,7 @@ def list_opportunities(framework_family):
         doc_type=doc_type,
         filters=filters.values(),
         filter_form_hidden_fields=filter_form_hidden_fields_by_name.values(),
-        framework=frameworks[-1],
+        framework=framework,
         framework_family=framework['framework'],
         lot_names=tuple(lot['name'] for lot in lots_by_slug.values() if lot['allowsBrief']),
         pagination=pagination_config,
