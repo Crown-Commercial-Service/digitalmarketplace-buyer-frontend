@@ -21,7 +21,7 @@ def find_0_results_suggestion(res_data):
 
 def get_0_results_search_response():
     return {
-        "services": [],
+        "documents": [],
         "meta": {
             "query": {},
             "total": 0,
@@ -174,7 +174,7 @@ class TestSearchResults(BaseApplicationTest):
 
     def test_should_not_render_suggestions_for_when_results_are_shown(self):
         self._search_api_client.search_services.return_value = {
-            "services": [],
+            "documents": [],
             "meta": {
                 "query": {},
                 "total": 2,
@@ -190,7 +190,7 @@ class TestSearchResults(BaseApplicationTest):
 
     def test_should_render_summary_for_1_result_in_cloud_software_no_keywords(self):
         return_value = self.search_results_multiple_page
-        return_value["services"] = [return_value["services"][0]]
+        return_value["documents"] = [return_value["documents"][0]]
         return_value["meta"]["total"] = 1
         self._search_api_client.search_services.return_value = return_value
 
@@ -201,7 +201,7 @@ class TestSearchResults(BaseApplicationTest):
 
     def test_should_render_summary_for_1_result_in_cloud_hosting_no_keywords(self):
         return_value = self.search_results_multiple_page
-        return_value["services"] = [return_value["services"][0]]
+        return_value["documents"] = [return_value["documents"][0]]
         return_value["meta"]["total"] = 1
         self._search_api_client.search_services.return_value = return_value
 
@@ -213,7 +213,7 @@ class TestSearchResults(BaseApplicationTest):
 
     def test_should_render_summary_for_1_result_in_cloud_software_with_keywords(self):
         return_value = self.search_results_multiple_page
-        return_value["services"] = [return_value["services"][0]]
+        return_value["documents"] = [return_value["documents"][0]]
         return_value["meta"]["total"] = 1
         self._search_api_client.search_services.return_value = return_value
 
@@ -226,7 +226,7 @@ class TestSearchResults(BaseApplicationTest):
 
     def test_should_render_summary_with_a_group_of_1_boolean_filter(self):
         return_value = self.search_results_multiple_page
-        return_value["services"] = [return_value["services"][0]]
+        return_value["documents"] = [return_value["documents"][0]]
         return_value["meta"]["total"] = 1
         self._search_api_client.search_services.return_value = return_value
 
@@ -241,7 +241,7 @@ class TestSearchResults(BaseApplicationTest):
 
     def test_should_render_summary_with_a_group_of_2_boolean_filters(self):
         return_value = self.search_results_multiple_page
-        return_value["services"] = [return_value["services"][0]]
+        return_value["documents"] = [return_value["documents"][0]]
         return_value["meta"]["total"] = 1
         self._search_api_client.search_services.return_value = return_value
 
@@ -258,7 +258,7 @@ class TestSearchResults(BaseApplicationTest):
 
     def test_should_render_summary_with_a_group_of_1_array_filter(self):
         return_value = self.search_results_multiple_page
-        return_value["services"] = [return_value["services"][0]]
+        return_value["documents"] = [return_value["documents"][0]]
         return_value["meta"]["total"] = 1
         self._search_api_client.search_services.return_value = return_value
 
@@ -274,7 +274,7 @@ class TestSearchResults(BaseApplicationTest):
 
     def test_should_render_summary_with_a_group_of_2_array_filters(self):
         return_value = self.search_results_multiple_page
-        return_value["services"] = [return_value["services"][0]]
+        return_value["documents"] = [return_value["documents"][0]]
         return_value["meta"]["total"] = 1
         self._search_api_client.search_services.return_value = return_value
 
@@ -291,7 +291,7 @@ class TestSearchResults(BaseApplicationTest):
 
     def test_should_render_summary_with_2_groups_of_filters(self):
         return_value = self.search_results_multiple_page
-        return_value["services"] = [return_value["services"][0]]
+        return_value["documents"] = [return_value["documents"][0]]
         return_value["meta"]["total"] = 1
         self._search_api_client.search_services.return_value = return_value
 
@@ -310,7 +310,7 @@ class TestSearchResults(BaseApplicationTest):
 
     def test_should_render_summary_with_3_groups_of_filters(self):
         return_value = self.search_results_multiple_page
-        return_value["services"] = [return_value["services"][0]]
+        return_value["documents"] = [return_value["documents"][0]]
         return_value["meta"]["total"] = 1
         self._search_api_client.search_services.return_value = return_value
 
@@ -331,7 +331,7 @@ class TestSearchResults(BaseApplicationTest):
 
     def test_should_ignore_unknown_arguments(self):
         return_value = self.search_results_multiple_page
-        return_value["services"] = [return_value["services"][0]]
+        return_value["documents"] = [return_value["documents"][0]]
         return_value["meta"]["total"] = 1
         self._search_api_client.search_services.return_value = return_value
 
@@ -343,7 +343,7 @@ class TestSearchResults(BaseApplicationTest):
 
     def test_query_text_is_escaped(self):
         return_value = self.search_results_multiple_page
-        return_value["services"] = [return_value["services"][0]]
+        return_value["documents"] = [return_value["documents"][0]]
         return_value["meta"]["total"] = 1
         self._search_api_client.search_services.return_value = return_value
 
@@ -355,7 +355,7 @@ class TestSearchResults(BaseApplicationTest):
 
     def test_summary_for_unicode_query_keywords(self):
         return_value = self.search_results_multiple_page
-        return_value["services"] = [return_value["services"][0]]
+        return_value["documents"] = [return_value["documents"][0]]
         return_value["meta"]["total"] = 1
         self._search_api_client.search_services.return_value = return_value
 

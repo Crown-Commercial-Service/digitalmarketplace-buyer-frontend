@@ -5,7 +5,7 @@ class SearchResults(object):
     """Provides access to the search results information"""
 
     def __init__(self, response, lots_by_slug):
-        self.search_results = response.get('documents') or response.get('services')
+        self.search_results = response['documents']
         self._lots = lots_by_slug
         self._annotate()
         self.total = response['meta']['total']
@@ -13,20 +13,20 @@ class SearchResults(object):
             self.page = response['meta']['query']['page']
 
     def _annotate(self):
-        for service in self.search_results:
-            self._replace_lot(service)
-            self._add_highlighting(service)
+        for document in self.search_results:
+            self._replace_lot(document)
+            self._add_highlighting(document)
 
-    def _replace_lot(self, service):
+    def _replace_lot(self, document):
         # replace lot slug with reference to dict containing all the relevant lot data
-        service['lot'] = self._lots.get(service['lot'])
+        document['lot'] = self._lots.get(document['lot'])
 
-    def _add_highlighting(self, service):
-        if 'highlight' in service:
+    def _add_highlighting(self, document):
+        if 'highlight' in document:
             for highlighted_field in ['serviceSummary', 'serviceDescription']:
-                if highlighted_field in service['highlight']:
-                    service[highlighted_field] = Markup(
-                        ''.join(service['highlight'][highlighted_field])
+                if highlighted_field in document['highlight']:
+                    document[highlighted_field] = Markup(
+                        ''.join(document['highlight'][highlighted_field])
                     )
 
 
