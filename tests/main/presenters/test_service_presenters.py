@@ -4,6 +4,7 @@ from app.main.presenters.service_presenters import (
     Service, Meta,
     chunk_string
 )
+import pytest
 from app import content_loader
 from app.main.helpers import framework_helpers
 
@@ -158,6 +159,16 @@ class TestMeta(object):
             assert documents[idx]['name'] == expected_information[idx]['name']
             assert documents[idx]['url'] == expected_information[idx]['url']
             assert documents[idx]['extension'] == 'pdf'
+
+    def test_get_documents_raises_error_if_no_file_extension(self):
+        bad_document_url = "https://assets.digitalmarketplace.service.gov.uk/documents/123456/noextension"
+        service_missing_file_extension = self.fixture.copy()
+        service_missing_file_extension["pricingDocumentURL"] = bad_document_url
+
+        with pytest.raises(ValueError) as exc:
+            self.meta.get_documents(service_missing_file_extension)
+
+        assert str(exc.value) == "Missing file extension for document at URL {}".format(bad_document_url)
 
     def test_vat_status_is_correct(self):
         # if VAT is not included
