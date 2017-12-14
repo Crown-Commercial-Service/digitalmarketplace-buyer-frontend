@@ -1,0 +1,157 @@
+{
+  "documents": [
+    {
+      "applicationsClosedAt": "2017-12-01T23:59:59.000000Z",
+      "highlight": {
+        "applicationsClosedAt": ["2017-12-01T23:59:59.000000Z"],
+        "id": ["5731"],
+        "location": ["London"],
+        "lot": ["user-research-participants"],
+        "organisation": ["Organisation one"],
+        "publishedAt": ["2017-11-17T13:18:06.871030Z"],
+        "status": ["live"],
+        "summary": ["Summary one"],
+        "title": ["Title one"]
+      },
+      "id": 5731,
+      "location": "London",
+      "lot": "user-research-participants",
+      "organisation": "Organisation one",
+      "publishedAt": "2017-11-17T13:18:06.871030Z",
+      "status": "live",
+      "summary": "Summary one",
+      "title": "Title one"
+    },
+    {
+      "applicationsClosedAt": "2016-05-13T23:59:59.000000Z",
+      "highlight": {
+        "applicationsClosedAt": ["2016-05-13T23:59:59.000000Z"],
+        "id": ["48"],
+        "location": ["London"],
+        "lot": ["digital-specialists"],
+        "organisation": ["Organisation two"],
+        "publishedAt": ["2016-04-29T10:43:41.416256Z"],
+        "specialistRole": ["developer"],
+        "status": ["closed"],
+        "summary": ["Summary two"],
+        "title": ["Title two"]
+      },
+      "id": 48,
+      "location": "London",
+      "lot": "digital-specialists",
+      "organisation": "Organisation two",
+      "publishedAt": "2016-04-29T10:43:41.416256Z",
+      "specialistRole": "developer",
+      "status": "closed",
+      "summary": "Summary two",
+      "title": "Title two"
+    },
+    {
+      "applicationsClosedAt": "2016-11-09T23:59:59.000000Z",
+      "highlight": {
+        "applicationsClosedAt": ["2016-11-09T23:59:59.000000Z"],
+        "id": ["1183"],
+        "location": ["Offsite"],
+        "lot": ["digital-outcomes"],
+        "organisation": ["Organisation three"],
+        "publishedAt": ["2016-10-26T17:51:02.556556Z"],
+        "status": ["unsuccessful"],
+        "summary": ["Summary three"],
+        "title": ["Title three"],
+        "unsuccessfulAt": ["2017-10-05T15:12:05.627158Z"]
+      },
+      "id": 1183,
+      "location": "Offsite",
+      "lot": "digital-outcomes",
+      "organisation": "Organisation three",
+      "publishedAt": "2016-10-26T17:51:02.556556Z",
+      "status": "unsuccessful",
+      "summary": "Summary three",
+      "title": "Title three",
+      "unsuccessfulAt": "2017-10-05T15:12:05.627158Z"
+    },
+    {
+      "applicationsClosedAt": "2016-06-29T23:59:59.000000Z",
+      "cancelledAt": "2017-10-05T10:34:09.783235Z",
+      "highlight": {
+        "applicationsClosedAt": ["2016-06-29T23:59:59.000000Z"],
+        "cancelledAt": ["2017-10-05T10:34:09.783235Z"],
+        "id": ["378"],
+        "location": ["East of England"],
+        "lot": ["digital-specialists"],
+        "organisation": ["Organisation four"],
+        "publishedAt": ["2016-06-15T12:45:55.121757Z"],
+        "specialistRole": ["technicalArchitect"],
+        "status": ["cancelled"],
+        "summary": ["Summary four"],
+        "title": ["Title four"]
+      },
+      "id": 378,
+      "location": "East of England",
+      "lot": "digital-specialists",
+      "organisation": "Organisation four",
+      "publishedAt": "2016-06-15T12:45:55.121757Z",
+      "specialistRole": "technicalArchitect",
+      "status": "cancelled",
+      "summary": "Summary four",
+      "title": "Title four"
+    },
+    {
+      "applicationsClosedAt": "2017-12-01T23:59:59.000000Z",
+      "highlight": {
+        "applicationsClosedAt": ["2017-12-01T23:59:59.000000Z"],
+        "id": ["5731"],
+        "location": ["London"],
+        "lot": ["user-research-participants"],
+        "organisation": ["Organisation five"],
+        "publishedAt": ["2017-11-17T13:18:06.871030Z"],
+        "status": ["live"],
+        "summary": ["Summary five"],
+        "title": ["Title five"]
+      },
+      "id": 5731,
+      "location": "London",
+      "lot": "user-research-participants",
+      "organisation": "Organisation five",
+      "publishedAt": "2017-11-17T13:18:06.871030Z",
+      "status": "live",
+      "summary": "Summary five",
+      "title": "Title five"
+    },
+    {
+      "applicationsClosedAt": "2017-03-13T23:59:59.000000Z",
+      "awardedBriefResponseId": 33846,
+      "highlight": {
+        "applicationsClosedAt": ["2017-03-13T23:59:59.000000Z"],
+        "awardedBriefResponseId": ["33846"],
+        "id": ["961"],
+        "location": ["East Midlands"],
+        "lot": ["digital-outcomes"],
+        "organisation": ["Organisation six"],
+        "publishedAt": ["2017-02-27T15:53:13.567794Z"],
+        "status": ["awarded"],
+        "summary": ["Summary six"],
+        "title": ["Title six"]
+      },
+      "id": 961,
+      "location": "East Midlands",
+      "lot": "digital-outcomes",
+      "organisation": "Organisation six",
+      "publishedAt": "2017-02-27T15:53:13.567794Z",
+      "status": "awarded",
+      "summary": "Summary six",
+      "title": "Title six"
+    }
+  ],
+  "links": {
+    "next": "http://localhost:5001/briefs-digital-outcomes-and-specialists/briefs/search?page=2&filter_status=live%2Cclosed%2Cunsuccessful%2Ccancelled"
+  },
+  "meta": {
+    "query": {
+      "filter_lot": "digital-specialists",
+      "filter_status": "live,closed,unsuccessful,cancelled"
+    },
+    "took": 7,
+    "total": 864
+  }
+}

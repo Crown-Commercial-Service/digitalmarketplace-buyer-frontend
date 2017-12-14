@@ -146,7 +146,7 @@ class TestBuildSearchQueryHelpers(BaseApplicationTest):
             'otherFilter': [1, 2],
         })
 
-        assert search_helpers.get_filters_from_request(request).to_dict(False) == {
+        assert search_helpers.get_filters_from_request(request.args).to_dict(False) == {
             'someFilter': ['filter'],
             'otherFilter': [1, 2],
         }

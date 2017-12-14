@@ -19,7 +19,7 @@ class TestDirectAwardBase(BaseApplicationTest):
         super(TestDirectAwardBase, self).setup_method(method)
         self._search_api_client_patch = mock.patch('app.main.views.g_cloud.search_api_client', autospec=True)
         self._search_api_client = self._search_api_client_patch.start()
-        self._search_api_client.aggregate_services.return_value = \
+        self._search_api_client.aggregate.return_value = \
             self._get_fixture_data('g9_aggregations_fixture.json')
 
         self._search_api_client.get_index_from_search_api_url.return_value = 'g-cloud-9'
@@ -94,7 +94,7 @@ class TestDirectAward(TestDirectAwardBase):
                 previous_date = current_date
 
     def test_renders_save_search_button(self):
-        self._search_api_client.search_services.return_value = self.g9_search_results
+        self._search_api_client.search.return_value = self.g9_search_results
 
         res = self.client.get(self.SEARCH_URL)
         assert res.status_code == 200
@@ -112,7 +112,7 @@ class TestDirectAward(TestDirectAwardBase):
 
     def test_save_search_renders_summary_on_page(self):
         self.login_as_buyer()
-        self._search_api_client.search_services.return_value = self.g9_search_results
+        self._search_api_client.search.return_value = self.g9_search_results
 
         res = self.client.get(self.SIMPLE_SAVE_SEARCH_URL)
 
@@ -123,7 +123,7 @@ class TestDirectAward(TestDirectAwardBase):
 
     def _save_search(self, name, save_search_selection="new_search"):
         self.login_as_buyer()
-        self._search_api_client.search_services.return_value = self.g9_search_results
+        self._search_api_client.search.return_value = self.g9_search_results
 
         data_api_client.create_direct_award_project = mock.Mock()
         data_api_client.create_direct_award_project.return_value = self._get_direct_award_project_fixture()
@@ -402,14 +402,14 @@ class TestDirectAwardURLGeneration(BaseApplicationTest):
                 mock.patch.object(data_api_client, 'find_direct_award_project_searches') as\
                 find_direct_award_project_searches_patch,\
                 mock.patch.object(data_api_client, 'find_frameworks') as find_frameworks_patch,\
-                mock.patch.object(search_api_client, 'search_services') as search_services_patch,\
+                mock.patch.object(search_api_client, 'search') as search_patch,\
                 mock.patch.object(search_api_client, '_get') as _get_patch:
 
             get_framework_patch.return_value = self._get_framework_fixture_data('g-cloud-9')
             get_direct_award_project_patch.return_value = self._get_direct_award_project_fixture()
             find_direct_award_project_searches_patch.return_value = self._get_direct_award_project_searches_fixture()
             find_frameworks_patch.return_value = self._get_frameworks_list_fixture_data()
-            search_services_patch.return_value = self.g9_search_results
+            search_patch.return_value = self.g9_search_results
             _get_patch.return_value = self._get_search_results_fixture_data()
 
             project_searches = data_api_client.find_direct_award_project_searches.return_value

@@ -38,7 +38,7 @@ class TestErrors(BaseApplicationTest):
 
         api_response = mock.Mock()
         api_response.status_code = 503
-        search_api_mock.search_services.side_effect = HTTPError(api_response)
+        search_api_mock.search.side_effect = HTTPError(api_response)
 
         res = self.client.get('/g-cloud/search?q=email')
         assert res.status_code == 503

@@ -5,7 +5,7 @@ from datetime import datetime
 from flask import abort, render_template, request, redirect, current_app, url_for, flash, Markup
 from flask_login import current_user
 import inflection
-from werkzeug.urls import url_encode, url_decode
+from werkzeug.urls import Href, url_encode, url_decode
 
 from dmcontent.formats import format_service_price
 from dmcontent.questions import Pricing
@@ -28,7 +28,7 @@ from ..presenters.service_presenters import Service
 from ..helpers.search_helpers import (
     get_keywords_from_request, pagination,
     get_page_from_request, query_args_for_pagination,
-    get_lot_from_args,
+    get_valid_lot_from_args_or_none,
     build_search_query,
     clean_request_args, get_request_url_without_any_filters,
 )
@@ -193,15 +193,15 @@ def search_services():
     # if there are multiple live g-cloud frameworks, we must assume the same filters work on them all
     all_frameworks = data_api_client.find_frameworks().get('frameworks')
     framework = framework_helpers.get_latest_live_framework(all_frameworks, 'g-cloud')
+    doc_type = 'services'
 
     lots_by_slug = framework_helpers.get_lots_by_slug(framework)
 
-    current_lot_slug = get_lot_from_args(request.args, lots_by_slug)
-
+    current_lot_slug = get_valid_lot_from_args_or_none(request.args, lots_by_slug)
     # the bulk of the possible filter parameters are defined through the content loader. they're all boolean and the
     # search api uses the same "question" labels as the content for its attributes, so we can really use those labels
     # verbatim. It also means we can use their human-readable names as defined in the content
-    content_manifest = content_loader.get_manifest(framework['slug'], 'search_filters')
+    content_manifest = content_loader.get_manifest(framework['slug'], 'services_search_filters')
     # filters - an OrderedDictionary of dicts describing each parameter group
     filters = filters_for_lot(
         current_lot_slug,
@@ -216,9 +216,10 @@ def search_services():
     except ValueError:
         abort(404)
 
-    search_api_response = search_api_client.search_services(
+    search_api_response = search_api_client.search(
         index=framework['slug'],
-        **build_search_query(request.args, filters.values(), content_manifest, lots_by_slug)
+        doc_type=doc_type,
+        **build_search_query(clean_request_query_params, filters.values(), content_manifest, lots_by_slug)
     )
     search_results_obj = SearchResults(search_api_response, lots_by_slug)
 
@@ -242,8 +243,18 @@ def search_services():
     category_filter_group = filters.pop('categories') if 'categories' in filters else None
 
     lots = framework['lots']
-    selected_category_tree_filters = build_lots_and_categories_link_tree(framework, lots, category_filter_group,
-                                                                         request, content_manifest)
+    view_name = 'search_services'
+    selected_category_tree_filters = build_lots_and_categories_link_tree(
+        framework,
+        lots,
+        category_filter_group,
+        request,
+        clean_request_query_params,
+        content_manifest,
+        doc_type,
+        framework['slug'],
+        Href(url_for('.{}'.format(view_name))),
+    )
 
     # Filter form should also filter by lot, and by category, when any of those are selected.
     # (If a sub-category is selected, we also need the parent category id, so that the correct part
@@ -261,27 +272,30 @@ def search_services():
             if 'label' in filter_instance:
                 filter_instance['label'] = capitalize_first(filter_instance['label'])
 
-    clear_filters_url = get_request_url_without_any_filters(request, filters)
+    clear_filters_url = get_request_url_without_any_filters(request, filters, view_name)
     search_query = query_args_for_pagination(clean_request_query_params)
 
     template_args = dict(
-        current_lot=current_lot,
-        framework_family=framework['framework'],
         category_tree_root=selected_category_tree_filters[0],
-        filter_form_hidden_fields=filter_form_hidden_fields_by_name.values(),
+        clear_filters_url=clear_filters_url,
+        current_lot=current_lot,
+        doc_type=doc_type,
         filters=filters.values(),
+        filter_form_hidden_fields=filter_form_hidden_fields_by_name.values(),
+        framework_family=framework['framework'],
+        gcloud_framework_description=framework_helpers.get_framework_description(data_api_client, 'g-cloud'),
         lots=lots,
         pagination=pagination_config,
+        search_count=search_api_response['meta']['total'],
         search_keywords=get_keywords_from_request(request),
         search_query=search_query,
         search_query_url=url_encode(search_query),  # for save-search form
-        search_count=search_api_response['meta']['total'],
         services=search_results_obj.search_results,
         summary=search_summary.markup(),
         title='Search results',
         total=search_results_obj.total,
-        gcloud_framework_description=framework_helpers.get_framework_description(data_api_client, 'g-cloud'),
-        clear_filters_url=clear_filters_url)
+        view_name=view_name,
+    )
 
     if request.args.get('live-results'):
         from flask import jsonify
@@ -289,15 +303,15 @@ def search_services():
         live_results_dict = {
             "results": {
                 "selector": "#js-dm-live-search-results",
-                "html": render_template("search/_services_results_wrapper.html", **template_args)
+                "html": render_template("search/_results_wrapper.html", **template_args)
             },
             "categories": {
                 "selector": "#js-dm-live-search-categories",
-                "html": render_template("search/_services_categories_wrapper.html", **template_args)
+                "html": render_template("search/_categories_wrapper.html", **template_args)
             },
             "summary": {
                 "selector": "#js-dm-live-search-summary",
-                "html": render_template("search/_services_summary.html", **template_args)
+                "html": render_template("search/_summary.html", **template_args)
             },
             "save-form": {
                 "selector": "#js-dm-live-save-search-form",
@@ -350,9 +364,9 @@ def save_search(framework_framework):
 
     search_query = url_decode(request.values.get('search_query'))
 
-    current_lot_slug = get_lot_from_args(search_query, lots_by_slug)
+    current_lot_slug = get_valid_lot_from_args_or_none(search_query, lots_by_slug)
 
-    content_manifest = content_loader.get_manifest(framework['slug'], 'search_filters')
+    content_manifest = content_loader.get_manifest(framework['slug'], 'services_search_filters')
     filters = filters_for_lot(current_lot_slug, content_manifest, all_lots=framework['lots'])
     clean_request_query_params = clean_request_args(search_query, filters.values(), lots_by_slug)
 
@@ -368,8 +382,9 @@ def save_search(framework_framework):
         projects.sort(key=lambda x: x['name'])
 
         # Retrieve results so we can display SearchSummary
-        search_api_response = search_api_client.search_services(
+        search_api_response = search_api_client.search(
             index=framework['slug'],
+            doc_type='services',
             **build_search_query(search_query, filters.values(), content_manifest, lots_by_slug)
         )
         search_summary = SearchSummary(search_api_response['meta']['total'], clean_request_query_params.copy(),

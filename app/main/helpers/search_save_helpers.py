@@ -17,7 +17,7 @@ class SearchMeta(object):
         # Get core data
         self.framework_slug = search_api_client.get_index_from_search_api_url(search_api_url)
         framework = frameworks_by_slug[self.framework_slug]
-        content_manifest = content_loader.get_manifest(self.framework_slug, 'search_filters')
+        content_manifest = content_loader.get_manifest(self.framework_slug, 'services_search_filters')
         lots_by_slug = get_lots_by_slug(framework)
 
         # We need to get buyer-frontend query params from our saved search API URL.

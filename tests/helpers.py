@@ -123,6 +123,22 @@ class BaseApplicationTest(object):
             return BaseApplicationTest._get_fixture_data('dos_brief_fixture.json')
 
     @staticmethod
+    def _get_dos_brief_search_api_response_fixture_data():
+        return BaseApplicationTest._get_fixture_data('dos_brief_search_api_response.json')
+
+    @staticmethod
+    def _get_dos_brief_search_api_aggregations_response_outcomes_fixture_data():
+        return BaseApplicationTest._get_fixture_data('dos_brief_search_api_aggregations_response_outcomes.json')
+
+    @staticmethod
+    def _get_dos_brief_search_api_aggregations_response_specialists_fixture_data():
+        return BaseApplicationTest._get_fixture_data('dos_brief_search_api_aggregations_response_specialists.json')
+
+    @staticmethod
+    def _get_dos_brief_search_api_aggregations_response_user_research_fixture_data():
+        return BaseApplicationTest._get_fixture_data('dos_brief_search_api_aggregations_response_user_research.json')
+
+    @staticmethod
     def _get_dos_brief_responses_fixture_data():
         return BaseApplicationTest._get_fixture_data('dos_brief_responses_fixture.json')
 
