@@ -230,11 +230,12 @@ def build_lots_and_categories_link_tree(
         selected_categories = []
         lot_selected = (lot['slug'] == current_lot_slug)
 
-        lot_filter = dict()
-        lot_filter['label'] = lot['name']
-        lot_filter['name'] = 'lot'  # a filter's "name" is its key for form submission purposes
-        lot_filter['value'] = lot['slug']
-        lot_filter['service_count'] = aggregations_by_lot[lot['slug']].results['lot'].get(lot['slug'], 0)
+        lot_filter = {
+            'label': lot['name'],
+            'name': 'lot',  # a filter's "name" is its key for form submission purposes
+            'value': lot['slug'],
+            'service_count': aggregations_by_lot[lot['slug']].results['lot'].get(lot['slug'], 0),
+        }
 
         url_args_for_lot = _build_base_url_args(preserved_request_args, content_manifest, framework, lot['slug'])
         categories = category_filter_group['filters'] if category_filter_group else []
