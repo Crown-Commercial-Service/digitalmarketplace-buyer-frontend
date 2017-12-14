@@ -194,7 +194,9 @@ def build_lots_and_categories_link_tree(
     :param request: the original request for creating links for nodes
     :param cleaned_request_args: current cleaned request args so that we can figure out selected lots and categories
     :param content_manifest: a ContentManifest instance for the frameworks search_filters.
-    :param search_link_builder: a werkzeug Href object for the view category tree links link to
+    :param search_link_builder: a werkzeug Href object instanciated with the view that the category tree links should
+                                link to as its base. It can be called with any number of positional and keyword
+                                arguments which than are used to assemble the full URL.
     :return: list of selected category and lot filters, starting with the 'all categories' root node
     """
     current_lot_slug = get_valid_lot_from_args_or_none(cleaned_request_args, [lot['slug'] for lot in lots])
