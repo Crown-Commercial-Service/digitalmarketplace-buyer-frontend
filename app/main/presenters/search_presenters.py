@@ -228,7 +228,7 @@ def build_lots_and_categories_link_tree(
 
     for lot in lots:
         selected_categories = []
-        lot_selected = (lot['slug'] == current_lot_slug)
+        lot_selected = lot['slug'] == current_lot_slug
 
         lot_filter = {
             'label': lot['name'],
