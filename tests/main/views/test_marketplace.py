@@ -1287,7 +1287,7 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         assert self._normalize_whitespace(self._squashed_element_text(ss_elem)) == \
             "864 results found in Digital outcomes"
 
-    def test_catalogue_of_briefs_page_filtered_all_lots_selected_chris(self):
+    def test_catalogue_of_briefs_page_filtered_all_lots_selected(self):
         original_url = "/digital-outcomes-and-specialists/opportunities?lot=digital-outcomes&lot=digital-specialists"\
             "&lot=user-research-participants"
         res = self.client.get(original_url)
@@ -1653,7 +1653,7 @@ class TestCatalogueOfBriefsFilterOnClick(BaseApplicationTest):
 
         assert urls == set(x[0][0] for x in render_template_patch.call_args_list)
 
-    def test_form_has_js_hidden_filter_button_chris(self):
+    def test_form_has_js_hidden_filter_button(self):
         res = self.client.get('/digital-outcomes-and-specialists/opportunities')
         assert res.status_code == 200
 
