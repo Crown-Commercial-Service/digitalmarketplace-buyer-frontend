@@ -211,12 +211,13 @@ def build_lots_and_categories_link_tree(
 
     selected_filters = list()
     # Create root node for the tree, always selected, which is the parent of the various lots.
-    root_node = dict()
-    root_node['label'] = 'All categories'
-    root_node['selected'] = True  # for consistency with lower levels
-    root_node['link'] = search_link_builder(_build_base_url_args(preserved_request_args, content_manifest, framework,
-                                                                 None))
-    root_node['children'] = list()
+    root_node = {
+        'label': 'All categories',
+        'selected': True,  # for consistency with lower levels
+        'link': search_link_builder(_build_base_url_args(preserved_request_args, content_manifest, framework, None)),
+        'children': [],
+    }
+
     selected_filters.append(root_node)
 
     aggregations_by_lot = {
