@@ -6,7 +6,7 @@ from werkzeug.urls import Href
 from flask import url_for
 
 
-def get_lot_from_args(args, all_lots):
+def get_valid_lot_from_args_or_none(args, all_lots):
     lot = args.get('lot', None)
     return lot if (not lot or lot in all_lots) else None
 

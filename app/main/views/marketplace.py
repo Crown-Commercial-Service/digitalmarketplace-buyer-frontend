@@ -18,7 +18,7 @@ from ..helpers.brief_helpers import (
     COMPLETED_BRIEF_RESPONSE_STATUSES, ALL_BRIEF_RESPONSE_STATUSES, PUBLISHED_BRIEF_STATUSES
 )
 from ..helpers.search_helpers import (
-    pagination, get_page_from_request, query_args_for_pagination, get_lot_from_args, build_search_query,
+    pagination, get_page_from_request, query_args_for_pagination, get_valid_lot_from_args_or_none, build_search_query,
     clean_request_args, get_request_url_without_any_filters,
 )
 from ..presenters.search_presenters import filters_for_lot, set_filter_states, build_lots_and_categories_link_tree
@@ -142,7 +142,7 @@ def list_opportunities(framework_family):
         abort(404, "No framework {}".format(framework_family))
 
     lots_by_slug = get_lots_by_slug(framework)
-    current_lot_slug = get_lot_from_args(request.args, lots_by_slug)
+    current_lot_slug = get_valid_lot_from_args_or_none(request.args, lots_by_slug)
     content_manifest = content_loader.get_manifest(framework['slug'], 'briefs_search_filters')
 
     filters = filters_for_lot(

@@ -5,7 +5,7 @@ from werkzeug.datastructures import MultiDict
 from ..helpers.framework_helpers import get_lots_by_slug
 from ..helpers.search_helpers import (
     get_filters_from_request,
-    get_lot_from_args,
+    get_valid_lot_from_args_or_none,
     get_filter_value_from_question_option,
     build_search_query,
     clean_request_args
@@ -197,7 +197,7 @@ def build_lots_and_categories_link_tree(
     :param search_link_builder: a werkzeug Href object for the view category tree links link to
     :return: list of selected category and lot filters, starting with the 'all categories' root node
     """
-    current_lot_slug = get_lot_from_args(cleaned_request_args, [lot['slug'] for lot in lots])
+    current_lot_slug = get_valid_lot_from_args_or_none(cleaned_request_args, [lot['slug'] for lot in lots])
 
     # Links in the tree should preserve all the filters, except those relating to this tree (i.e. lot
     # and category).

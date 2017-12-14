@@ -28,7 +28,7 @@ from ..presenters.service_presenters import Service
 from ..helpers.search_helpers import (
     get_keywords_from_request, pagination,
     get_page_from_request, query_args_for_pagination,
-    get_lot_from_args,
+    get_valid_lot_from_args_or_none,
     build_search_query,
     clean_request_args, get_request_url_without_any_filters,
 )
@@ -197,7 +197,7 @@ def search_services():
 
     lots_by_slug = framework_helpers.get_lots_by_slug(framework)
 
-    current_lot_slug = get_lot_from_args(request.args, lots_by_slug)
+    current_lot_slug = get_valid_lot_from_args_or_none(request.args, lots_by_slug)
     # the bulk of the possible filter parameters are defined through the content loader. they're all boolean and the
     # search api uses the same "question" labels as the content for its attributes, so we can really use those labels
     # verbatim. It also means we can use their human-readable names as defined in the content
@@ -364,7 +364,7 @@ def save_search(framework_framework):
 
     search_query = url_decode(request.values.get('search_query'))
 
-    current_lot_slug = get_lot_from_args(search_query, lots_by_slug)
+    current_lot_slug = get_valid_lot_from_args_or_none(search_query, lots_by_slug)
 
     content_manifest = content_loader.get_manifest(framework['slug'], 'services_search_filters')
     filters = filters_for_lot(current_lot_slug, content_manifest, all_lots=framework['lots'])
