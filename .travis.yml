@@ -6,7 +6,7 @@ before_install:
 install:
   - make requirements-dev npm-install
 script:
-  - PYTEST_ARGS='--cov=app --cov-report=term-missing -n auto' make test
+  - PYTEST_ARGS='--cov=app --cov-report=term-missing -n 2' make test
 after_success:
   - coveralls
 notifications:
