@@ -10,10 +10,14 @@
   <dd>{{ brief.publishedAt|dateformat }}</dd>
   <div class="hr"></div>
   <dt>Deadline for asking questions</dt>
-  <dd>{{ brief.clarificationQuestionsClosedAt|datetimeformat if brief.clarificationQuestionsClosedAt is defined }}</dd>
+  {% if brief.clarificationQuestionsClosedAt %}
+      <dd>{{ brief.clarificationQuestionsClosedAt|datetimeformat }}</dd>
+  {% endif %}
   <div class="hr"></div>
   <dt>Closing date for applications</dt>
-  <dd>{{ brief.applicationsClosedAt|datetimeformat if brief.applicationsClosedAt is defined }}</dd>
+  {% if brief.applicationsClosedAt %}
+    <dd>{{ brief.applicationsClosedAt|datetimeformat }}</dd>
+  {% endif %}
   <div class="hr"></div>
 </dl>
 {% endif %}

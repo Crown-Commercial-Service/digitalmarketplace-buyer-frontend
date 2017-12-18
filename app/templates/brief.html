@@ -29,7 +29,9 @@
     <div class="callout--info" role="alert">
       <p>
       <h2>This opportunity is closed for applications.</h2></p>
-      <p>The deadline was {{ brief.applicationsClosedAt|datetimeformat }}</p>
+      {% if brief.applicationsClosedAt %}
+        <p>The deadline was {{ brief.applicationsClosedAt|datetimeformat }}</p>
+      {% endif %}
       {{ action }}
     </div>
 
