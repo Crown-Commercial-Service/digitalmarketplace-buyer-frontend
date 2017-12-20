@@ -18,11 +18,11 @@
 //= include ../../../bower_components/digitalmarketplace-frontend-toolkit/toolkit/javascripts/report-a-problem.js
 //= include ../../../node_modules/govuk_frontend_toolkit/javascripts/govuk/selection-buttons.js
 //= include ../../../node_modules/govuk_frontend_toolkit/javascripts/govuk/shim-links-with-button-role.js
+//= include ../../../bower_components/digitalmarketplace-frontend-toolkit/toolkit/javascripts/shim-links-with-button-role.js
 //= include ../../../bower_components/digitalmarketplace-frontend-toolkit/toolkit/javascripts/show-hide-content.js
 //= include _analytics.js'
 //= include _onready.js'
 //= include _selection-buttons.js
-//= include _shim-links-with-button-role.js
 
 (function(GOVUK, GDM) {
 
