@@ -65,7 +65,6 @@ target/
 
 # Front end dependencies
 node_modules
-bower_components
 npm-debug.log
 app/assets/scss/toolkit
 app/templates/govuk

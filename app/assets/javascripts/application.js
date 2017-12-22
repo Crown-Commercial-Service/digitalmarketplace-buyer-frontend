@@ -5,21 +5,21 @@
   directives to concatenate multiple Javascript files into one.
 */
 //= include ../../../node_modules/govuk_frontend_toolkit/javascripts/vendor/polyfills/bind.js
-//= include ../../../bower_components/jquery/dist/jquery.js
-//= include ../../../bower_components/hogan/web/builds/3.0.2/hogan-3.0.2.js
-//= include ../../../bower_components/scrolldepth/jquery.scrolldepth.js
-//= include ../../../bower_components/digitalmarketplace-frontend-toolkit/toolkit/javascripts/option-select.js
-//= include ../../../bower_components/digitalmarketplace-frontend-toolkit/toolkit/javascripts/support.js
-//= include ../../../bower_components/digitalmarketplace-frontend-toolkit/toolkit/javascripts/live-search.js
-//= include ../../../bower_components/digitalmarketplace-frontend-toolkit/toolkit/javascripts/list-entry.js
-//= include ../../../bower_components/digitalmarketplace-frontend-toolkit/toolkit/javascripts/clear-filters.js
-//= include ../../../bower_components/digitalmarketplace-frontend-toolkit/toolkit/javascripts/word-counter.js
-//= include ../../../bower_components/digitalmarketplace-frontend-toolkit/toolkit/javascripts/validation.js
-//= include ../../../bower_components/digitalmarketplace-frontend-toolkit/toolkit/javascripts/report-a-problem.js
+//= include ../../../node_modules/jquery/dist/jquery.js
+//= include ../../../node_modules/hogan.js/web/builds/3.0.2/hogan-3.0.2.js
+//= include ../../../node_modules/scrolldepth/jquery.scrolldepth.js
+//= include ../../../node_modules/digitalmarketplace-frontend-toolkit/toolkit/javascripts/option-select.js
+//= include ../../../node_modules/digitalmarketplace-frontend-toolkit/toolkit/javascripts/support.js
+//= include ../../../node_modules/digitalmarketplace-frontend-toolkit/toolkit/javascripts/live-search.js
+//= include ../../../node_modules/digitalmarketplace-frontend-toolkit/toolkit/javascripts/list-entry.js
+//= include ../../../node_modules/digitalmarketplace-frontend-toolkit/toolkit/javascripts/clear-filters.js
+//= include ../../../node_modules/digitalmarketplace-frontend-toolkit/toolkit/javascripts/word-counter.js
+//= include ../../../node_modules/digitalmarketplace-frontend-toolkit/toolkit/javascripts/validation.js
+//= include ../../../node_modules/digitalmarketplace-frontend-toolkit/toolkit/javascripts/report-a-problem.js
 //= include ../../../node_modules/govuk_frontend_toolkit/javascripts/govuk/selection-buttons.js
 //= include ../../../node_modules/govuk_frontend_toolkit/javascripts/govuk/shim-links-with-button-role.js
-//= include ../../../bower_components/digitalmarketplace-frontend-toolkit/toolkit/javascripts/shim-links-with-button-role.js
-//= include ../../../bower_components/digitalmarketplace-frontend-toolkit/toolkit/javascripts/show-hide-content.js
+//= include ../../../node_modules/digitalmarketplace-frontend-toolkit/toolkit/javascripts/shim-links-with-button-role.js
+//= include ../../../node_modules/digitalmarketplace-frontend-toolkit/toolkit/javascripts/show-hide-content.js
 //= include _analytics.js'
 //= include _onready.js'
 //= include _selection-buttons.js
