@@ -51,21 +51,6 @@ TOO_MANY_RESULTS_MESSAGE = Markup("""
     You have too many results. Choose a category or add filters to refine your search.""")
 
 
-# TODO: Temporary redirect for direct_award internal IDs. Remove after external IDs have been out for a week - SW.
-@direct_award.before_request
-def redirect_internal_ids():
-    if 'project_id' in request.view_args:
-        project_id = request.view_args['project_id']
-
-        project = data_api_client.get_direct_award_project(project_id=project_id)['project']
-        if project and is_direct_award_project_accessible(project, current_user.id):
-            if project_id != project['id']:
-                view_args = request.view_args.copy()
-                view_args['project_id'] = project['id']
-
-                return redirect(url_for(request.endpoint, **view_args))
-
-
 @main.route('/g-cloud')
 def index_g_cloud():
     # if there are multiple live g-cloud frameworks, assume they all have the same lots
