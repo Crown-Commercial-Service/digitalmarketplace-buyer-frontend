@@ -12,3 +12,4 @@ coverage==3.7.1
 pytest-cov==2.5.1
 python-coveralls==2.5.0
 hypothesis==3.6.1
+pytest-xdist==1.20.1
