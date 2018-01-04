@@ -1,72 +1,82 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"' width="276px" height="170px" viewBox="0 0 276 170" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 47.1 (45422) - http://www.bohemiancoding.com/sketch -->
+<svg font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"' width="273px" height="176px" viewBox="0 0 273 176" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="background: #FFFFFF;">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
     <title>767 briefs by phase</title>
     <desc>Created with Sketch.</desc>
     <defs></defs>
-    <g id="Mocks" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Nov-monthly-report-less-than-767px" transform="translate(-23.000000, -2800.000000)">
-            <g id="767-briefs-by-phase" transform="translate(24.000000, 2793.000000)">
-                <text id="16%-Pre-discovery"  font-size="14" font-weight="bold" line-spacing="16" fill="#333333">
-                    <tspan x="0" y="50">16% </tspan>
-                    <tspan x="0.970703125" y="66.2939453"  font-weight="normal">Pre-discovery</tspan>
-                </text>
-                <text id="34%-Discovery"  font-size="14" font-weight="bold" line-spacing="16" fill="#333333">
-                    <tspan x="72.8242188" y="159">34% </tspan>
-                    <tspan x="56.5" y="175.293945"  font-weight="normal">Discovery</tspan>
-                </text>
-                <text id="14%-Alpha"  font-size="14" font-weight="bold" line-spacing="16" fill="#333333">
-                    <tspan x="139.411133" y="50">14% </tspan>
-                    <tspan x="136" y="66.2939453"  font-weight="normal">Alpha</tspan>
-                </text>
-                <text id="14%-Beta"  font-size="14" font-weight="bold" line-spacing="16" fill="#333333">
-                    <tspan x="176" y="159">14% </tspan>
-                    <tspan x="176.440918" y="175.293945"  font-weight="normal">Beta</tspan>
-                </text>
-                <text id="8%-Live"  font-size="14" font-weight="bold" line-spacing="16" fill="#333333">
-                    <tspan x="211.56543" y="50">8%</tspan>
-                    <tspan x="233.139648" y="50.2939453"  font-weight="normal"> </tspan>
-                    <tspan x="210" y="66.2939453"  font-weight="normal">Live</tspan>
-                </text>
-                <text id="15%-Other"  font-size="14" font-weight="bold" line-spacing="16" fill="#333333">
-                    <tspan x="236.73584" y="159">15% </tspan>
-                    <tspan x="277.635254" y="160.963867"  font-weight="normal"></tspan>
-                    <tspan x="233" y="175.293945"  font-weight="normal">Other</tspan>
-                </text>
-                <g id="Group-3" stroke-width="1" fill-rule="evenodd" transform="translate(192.500000, 129.000000) scale(1, -1) translate(-192.500000, -129.000000) translate(191.000000, 120.000000)" stroke="#224A61">
-                    <path d="M1.5,17.5 L1.5,1.47501561" id="Line-2-Copy-3" stroke-linecap="square" transform="translate(1.500000, 9.500000) scale(-1, -1) translate(-1.500000, -9.500000) "></path>
-                    <circle id="Oval-Copy-3" fill="#B9D6DC" transform="translate(1.500000, 1.500000) scale(-1, -1) translate(-1.500000, -1.500000) " cx="1.5" cy="1.5" r="1.5"></circle>
-                </g>
-                <g id="Group-3-Copy-2" stroke-width="1" fill-rule="evenodd" transform="translate(88.500000, 129.000000) scale(1, -1) translate(-88.500000, -129.000000) translate(87.000000, 120.000000)" stroke="#224A61">
-                    <path d="M1.5,17.5 L1.5,1.47501561" id="Line-2-Copy-3" stroke-linecap="square" transform="translate(1.500000, 9.500000) scale(-1, -1) translate(-1.500000, -9.500000) "></path>
-                    <circle id="Oval-Copy-3" fill="#B9D6DC" cx="1.5" cy="1.5" r="1.5"></circle>
-                </g>
-                <g id="Group-3-Copy" stroke-width="1" fill-rule="evenodd" transform="translate(252.500000, 129.000000) scale(1, -1) translate(-252.500000, -129.000000) translate(251.000000, 120.000000)" stroke="#224A61">
-                    <path d="M1.5,17.5 L1.5,1.47501561" id="Line-2-Copy-3" stroke-linecap="square" transform="translate(1.500000, 9.500000) scale(-1, -1) translate(-1.500000, -9.500000) "></path>
-                    <circle id="Oval-Copy-3" fill="#B9D6DC" transform="translate(1.500000, 1.500000) scale(-1, -1) translate(-1.500000, -1.500000) " cx="1.5" cy="1.5" r="1.5"></circle>
-                </g>
-                <g id="Group-6" stroke-width="1" fill-rule="evenodd" transform="translate(19.000000, 76.000000)" stroke="#224A61">
-                    <path d="M1.5,17.5 L1.5,1.47501561" id="Line-2" stroke-linecap="square"></path>
-                    <circle id="Oval" fill="#B9D6DC" cx="1.5" cy="1.5" r="1.5"></circle>
-                </g>
-                <g id="Group-4" stroke-width="1" fill-rule="evenodd" transform="translate(152.000000, 76.000000)" stroke="#224A61">
-                    <path d="M2.5,17.5 L2.5,1.47501561" id="Line-2-Copy" stroke-linecap="square"></path>
-                    <circle id="Oval-Copy" fill="#B9D6DC" cx="2.5" cy="1.5" r="1.5"></circle>
-                </g>
-                <g id="Group-5" stroke-width="1" fill-rule="evenodd" transform="translate(222.000000, 76.000000)" stroke="#224A61">
-                    <path d="M2.5,17.5 L2.5,1.47501561" id="Line-2-Copy-2" stroke-linecap="square"></path>
-                    <circle id="Oval-Copy-2" fill="#B9D6DC" cx="2.5" cy="1.5" r="1.5"></circle>
-                </g>
-                <rect id="Rectangle-9-Copy-13" stroke="#FFFFFF" stroke-width="1" fill="#C52A72" fill-rule="evenodd" x="135" y="89" width="38.2200012" height="35"></rect>
-                <rect id="Rectangle-9-Copy-14" stroke="#FFFFFF" stroke-width="1" fill="#912B87" fill-rule="evenodd" x="42" y="89" width="92.8199997" height="35"></rect>
-                <rect id="Rectangle-9-Copy-16" stroke="#FFFFFF" stroke-width="1" fill="#D8D8D8" fill-rule="evenodd" x="0" y="89" width="43.6800003" height="35"></rect>
-                <rect id="Rectangle-9-Copy-11" stroke="#FFFFFF" stroke-width="1" fill="#F48834" fill-rule="evenodd" x="173" y="89" width="38.2200012" height="35"></rect>
-                <rect id="Rectangle-9-Copy-12" stroke="#FFFFFF" stroke-width="1" fill="#59A94F" fill-rule="evenodd" x="211" y="89" width="21.8400002" height="35"></rect>
-                <rect id="Rectangle-9-Copy-15" stroke="#FFFFFF" stroke-width="1" fill="#D8D8D8" fill-rule="evenodd" x="233" y="89" width="40.9500008" height="35"></rect>
-                <text id="Briefs-by-phase"  font-size="17" font-weight="normal" line-spacing="28" fill="#313131">
-                    <tspan x="79" y="16">Briefs by phase</tspan>
-                </text>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="767-briefs-by-phase">
+            <text id="16%-Pre-discovery" font-size="14" font-weight="bold" line-spacing="16" fill="#333333">
+                <tspan x="0" y="50">16% </tspan>
+                <tspan x="0.970703125" y="66.2939453" font-weight="normal">Pre-discovery</tspan>
+            </text>
+            <text id="33%-Discovery" font-size="14" font-weight="bold" line-spacing="16" fill="#333333">
+                <tspan x="73.3242188" y="159">33% </tspan>
+                <tspan x="57" y="175.293945" font-weight="normal">Discovery</tspan>
+            </text>
+            <text id="14%-Alpha" font-size="14" font-weight="bold" line-spacing="16" fill="#333333">
+                <tspan x="136.411133" y="50">14% </tspan>
+                <tspan x="133" y="66.2939453" font-weight="normal">Alpha</tspan>
+            </text>
+            <text id="14%-Beta" font-size="14" font-weight="bold" line-spacing="16" fill="#333333">
+                <tspan x="173" y="159">14% </tspan>
+                <tspan x="173.440918" y="175.293945" font-weight="normal">Beta</tspan>
+            </text>
+            <text id="9%-Live" font-size="14" font-weight="bold" line-spacing="16" fill="#333333">
+                <tspan x="210.56543" y="50">9%</tspan>
+                <tspan x="232.139648" y="50.2939453" font-weight="normal"> </tspan>
+                <tspan x="209" y="66.2939453" font-weight="normal">Live</tspan>
+            </text>
+            <text id="15%-Other" font-size="14" font-weight="bold" line-spacing="16" fill="#333333">
+                <tspan x="237.73584" y="159">15% </tspan>
+                <tspan x="278.635254" y="160.963867" font-weight="normal"></tspan>
+                <tspan x="234" y="175.293945" font-weight="normal">Other</tspan>
+            </text>
+            <g id="Group-3" transform="translate(189.500000, 129.000000) scale(1, -1) translate(-189.500000, -129.000000) translate(188.000000, 120.000000)" stroke="#224A61">
+                <path d="M1.5,17.5 L1.5,1.47501561" id="Line-2-Copy-3" stroke-linecap="square" transform="translate(1.500000, 9.500000) scale(-1, -1) translate(-1.500000, -9.500000) "></path>
+                <circle id="Oval-Copy-3" fill="#B9D6DC" transform="translate(1.500000, 1.500000) scale(-1, -1) translate(-1.500000, -1.500000) " cx="1.5" cy="1.5" r="1.5"></circle>
             </g>
+            <g id="Group-3-Copy-2" transform="translate(88.500000, 129.000000) scale(1, -1) translate(-88.500000, -129.000000) translate(87.000000, 120.000000)" stroke="#224A61">
+                <path d="M1.5,17.5 L1.5,1.47501561" id="Line-2-Copy-3" stroke-linecap="square" transform="translate(1.500000, 9.500000) scale(-1, -1) translate(-1.500000, -9.500000) "></path>
+                <circle id="Oval-Copy-3" fill="#B9D6DC" cx="1.5" cy="1.5" r="1.5"></circle>
+            </g>
+            <g id="Group-3-Copy-3" transform="translate(21.500000, 80.000000) scale(1, -1) rotate(-180.000000) translate(-21.500000, -80.000000) translate(20.000000, 71.000000)" stroke="#224A61">
+                <path d="M1.5,17.5 L1.5,1.47501561" id="Line-2-Copy-3" stroke-linecap="square" transform="translate(1.500000, 9.500000) scale(-1, -1) translate(-1.500000, -9.500000) "></path>
+                <circle id="Oval-Copy-3" fill="#B9D6DC" cx="1.5" cy="1.5" r="1.5"></circle>
+            </g>
+            <g id="Group-3-Copy-4" transform="translate(151.500000, 80.000000) scale(1, -1) rotate(-180.000000) translate(-151.500000, -80.000000) translate(150.000000, 71.000000)" stroke="#224A61">
+                <path d="M1.5,17.5 L1.5,1.47501561" id="Line-2-Copy-3" stroke-linecap="square" transform="translate(1.500000, 9.500000) scale(-1, -1) translate(-1.500000, -9.500000) "></path>
+                <circle id="Oval-Copy-3" fill="#B9D6DC" cx="1.5" cy="1.5" r="1.5"></circle>
+            </g>
+            <g id="Group-3-Copy-5" transform="translate(220.500000, 80.000000) scale(1, -1) rotate(-180.000000) translate(-220.500000, -80.000000) translate(219.000000, 71.000000)" stroke="#224A61">
+                <path d="M1.5,17.5 L1.5,1.47501561" id="Line-2-Copy-3" stroke-linecap="square" transform="translate(1.500000, 9.500000) scale(-1, -1) translate(-1.500000, -9.500000) "></path>
+                <circle id="Oval-Copy-3" fill="#B9D6DC" cx="1.5" cy="1.5" r="1.5"></circle>
+            </g>
+            <g id="Group-3-Copy" transform="translate(252.500000, 129.000000) scale(1, -1) translate(-252.500000, -129.000000) translate(251.000000, 120.000000)" stroke="#224A61">
+                <path d="M1.5,17.5 L1.5,1.47501561" id="Line-2-Copy-3" stroke-linecap="square" transform="translate(1.500000, 9.500000) scale(-1, -1) translate(-1.500000, -9.500000) "></path>
+                <circle id="Oval-Copy-3" fill="#B9D6DC" transform="translate(1.500000, 1.500000) scale(-1, -1) translate(-1.500000, -1.500000) " cx="1.5" cy="1.5" r="1.5"></circle>
+            </g>
+            <g id="Group-6" transform="translate(19.000000, 93.000000)" stroke="#224A61">
+                <path d="M1.5,17.5 L1.5,1.47501561" id="Line-2" stroke-linecap="square"></path>
+                <circle id="Oval" fill="#B9D6DC" cx="1.5" cy="1.5" r="1.5"></circle>
+            </g>
+            <g id="Group-4" transform="translate(152.000000, 93.000000)" stroke="#224A61">
+                <path d="M2.5,17.5 L2.5,1.47501561" id="Line-2-Copy" stroke-linecap="square"></path>
+                <circle id="Oval-Copy" fill="#B9D6DC" cx="2.5" cy="1.5" r="1.5"></circle>
+            </g>
+            <g id="Group-5" transform="translate(222.000000, 93.000000)" stroke="#224A61">
+                <path d="M2.5,17.5 L2.5,1.47501561" id="Line-2-Copy-2" stroke-linecap="square"></path>
+                <circle id="Oval-Copy-2" fill="#B9D6DC" cx="2.5" cy="1.5" r="1.5"></circle>
+            </g>
+            <text id="Briefs-by-phase" font-size="17" font-weight="normal" line-spacing="28" fill="#313131">
+                <tspan x="79" y="16">Briefs by phase</tspan>
+            </text>
+            <rect id="Rectangle-9-Copy-16" stroke="#FFFFFF" fill="#D8D8D8" x="0" y="89" width="43.2000008" height="35"></rect>
+            <rect id="Rectangle-9-Copy-21" stroke="#FFFFFF" fill="#D8D8D8" x="232" y="89" width="40.5" height="35"></rect>
+            <rect id="Rectangle-9-Copy-17" stroke="#FFFFFF" fill="#912B87" x="43" y="89" width="89.0999985" height="35"></rect>
+            <rect id="Rectangle-9-Copy-18" stroke="#FFFFFF" fill="#C52A72" x="132" y="89" width="37.7999992" height="35"></rect>
+            <rect id="Rectangle-9-Copy-19" stroke="#FFFFFF" fill="#F48834" x="170" y="89" width="37.7999992" height="35"></rect>
+            <rect id="Rectangle-9-Copy-20" stroke="#FFFFFF" fill="#59A94F" x="208" y="89" width="24.2999992" height="35"></rect>
         </g>
     </g>
 </svg>
