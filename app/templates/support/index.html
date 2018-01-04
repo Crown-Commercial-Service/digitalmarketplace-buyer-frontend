@@ -1,0 +1,54 @@
+{% extends "_base_page.html" %}
+{% block page_title %}What do you need help with? - Digital Marketplace{% endblock %}
+
+{% block breadcrumb %}
+  {%
+    with
+    items = [
+      {
+          "link": url_for('main.index'),
+          "label": "Digital Marketplace"
+      }
+    ]
+  %}
+    {% include "toolkit/breadcrumb.html" %}
+  {% endwith %}
+{% endblock %}
+
+{% block main_content %}
+
+<div class="support-page">
+  
+
+  <div class="grid">
+    
+      {% with heading = "What do you need help with?" %} {% include "toolkit/page-heading.html" %} {% endwith %}
+  
+      <div class="dmspeak">
+        <h2 class="heading-large">Selling services</h2>
+      </div>
+      <p>
+        To get support with the selling process, for example, updating your prices, email:
+        <a href="mailto:cloud_digital@crowncommercial.gov.uk">cloud_digital@crowncommercial.gov.uk</a>
+      </p>
+
+      <div class="dmspeak">
+        <h2 class="heading-large">Buying services</h2>
+      </div>      
+      <p>
+        To get support with the buying process, for example, evaluating suppliers, email:
+        <a href="mailto:cloud_digital@crowncommercial.gov.uk">cloud_digital@crowncommercial.gov.uk</a>
+      </p>
+
+      <div class="dmspeak">
+        <h2 class="heading-large">Creating and updating</h2>
+      </div>
+      <p>
+        To make changes to your user account, for example, if you have trouble logging in, email:
+        <a href="mailto:enquiries@digitalmarketplace.service.gov.uk">enquiries@digitalmarketplace.service.gov.uk</a>
+      </p>
+    
+  </div>
+  
+</div>
+{% endblock %}
