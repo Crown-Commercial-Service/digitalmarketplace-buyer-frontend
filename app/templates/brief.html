@@ -130,7 +130,7 @@
   <div class="grid-row">
     <div class="column-one-third">
         {% with
-           url = url_for('external.brief_response_result', brief_id=brief.id),
+           url = url_for('external.view_response_result', brief_id=brief.id),
            text = "View your application"
         %}
           {% include "toolkit/secondary-action-link.html" %}
