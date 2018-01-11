@@ -196,12 +196,23 @@ def supplier_search():
 
     query.update(product_search_parameters)
 
+    products_requester = real_data_api_client.req.products().search()
+    casestudies_requester = real_data_api_client.req.casestudies().search()
+
     with ThreadPoolExecutor(max_workers=16) as executor:
         futures_to_result = {
             executor.submit(
                 data_api_client.find_suppliers,
                 data=query,
                 params=page_params): 'suppliers',
+            executor.submit(
+                products_requester.get,
+                data=query,
+                params=page_params): 'products',
+            executor.submit(
+                casestudies_requester.get,
+                data=query,
+                params=page_params): 'casestudies'
         }
         results = {}
 
@@ -209,7 +220,7 @@ def supplier_search():
             results[futures_to_result[future]] = future.result()
 
     response = results['suppliers']
-    products_response = results.get('products')
+    products_response = results['products']
     casestudies_response = results.get('casestudies')
 
     results = []
@@ -246,33 +257,32 @@ def supplier_search():
 
     products_results = []
 
-    if products_response:
-        for p in products_response['hits']['hits']:
-            details = p['_source']
+    for p in products_response['hits']['hits']:
+        details = p['_source']
 
-            supplier = dict()
-            supplier['name'] = details.get('supplierName')
+        supplier = dict()
+        supplier['name'] = details.get('supplierName')
 
-            supplier['profile_url'] = '/supplier/%s' % details['supplier_code']
-            supplier['support_url'] = details.get('support')
-            services = {}
-            result = {
-                'title': details['name'],
-                'description': details['summary'],
-                'link': details['website'],
-                'services': services,
-                'badges': details.get('seller_type', {}),
-                'supplier': supplier,
-                'pricing': details['pricing']
-            }
+        supplier['profile_url'] = '/supplier/%s' % details['supplier_code']
+        supplier['support_url'] = details.get('support')
+        services = {}
+        result = {
+            'title': details['name'],
+            'description': details['summary'],
+            'link': details['website'],
+            'services': services,
+            'badges': details.get('seller_type', {}),
+            'supplier': supplier,
+            'pricing': details['pricing']
+        }
 
-            products_results.append(result)
+        products_results.append(result)
 
-    num_products_results = products_response['hits']['total'] if products_response else 0
+    num_products_results = products_response['hits']['total']
 
     casestudies_results = None
 
-    if casestudies_response:
+    if current_user.is_authenticated and current_user.role == 'buyer':
         casestudies_results = []
         for p in casestudies_response['hits']['hits']:
             details = p['_source']
