@@ -60,10 +60,10 @@ Install new Python dependencies with pip
 
 ```pip install -r requirements-dev.txt```
 
-[Install frontend dependencies](https://github.com/alphagov/digitalmarketplace-buyer-frontend#front-end) with npm and gulp
+[Install frontend dependencies](https://github.com/alphagov/digitalmarketplace-buyer-frontend#front-end) with yarn and gulp
 
 ```
-npm install
+yarn
 ```
 
 ### Run the tests
@@ -77,7 +77,7 @@ make test
 To only run the JavaScript tests:
 
 ```
-npm test
+make test-javascript
 ```
 
 ### Run the development server
@@ -121,7 +121,8 @@ Front-end code (both development and production) is compiled using [Node](http:/
 
 ### Requirements
 
-You need Node (minimum version of 0.10.0, maximum version 0.12.x), which will also get you [NPM](npmjs.org), Node's package management tool. 
+You need Node (try to install the version we use in production -
+ see the [base docker image](https://github.com/alphagov/digitalmarketplace-docker-base/blob/master/base.docker)).
 
 To check the version you're running, type:
 
@@ -129,21 +130,20 @@ To check the version you're running, type:
 node --version
 ```
 
+You'll also need [yarn](https://yarnpkg.com/en/docs/install)
+
 ### Installation
 
 To install the required Node modules, type:
 
 ```
-npm install
+yarn
 ```
 
 ## Frontend tasks
 
-[NPM](https://www.npmjs.org/) is used for all frontend build tasks. The commands available are:
+[YARN](https://yarnpkg.com/en/) is used for all frontend build tasks. The commands available are:
 
-- `npm run frontend-build:development` (compile the frontend files for development)
-- `npm run frontend-build:production` (compile the frontend files for production)
-- `npm run frontend-build:watch` (watch all frontend+framework files & rebuild when anything changes)
-- `npm run frontend-install` (install all non-NPM dependencies)
-
-Note: `npm run frontend-install` is run automatically as a post-install task when you run `npm install`.
+- `yarn run frontend-build:development` (compile the frontend files for development)
+- `yarn run frontend-build:production` (compile the frontend files for production)
+- `yarn run frontend-build:watch` (watch all frontend+framework files & rebuild when anything changes)
