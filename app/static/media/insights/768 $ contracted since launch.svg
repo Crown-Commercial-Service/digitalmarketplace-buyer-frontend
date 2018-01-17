@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"' width="327px" height="196px" viewBox="0 0 327 196" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 47.1 (45422) - http://www.bohemiancoding.com/sketch -->
+<svg font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"' width="327px" height="196px" viewBox="0 0 327 196" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="background: #FFFFFF;">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
     <title>768 $ contracted since launch</title>
     <desc>Created with Sketch.</desc>
     <defs>
@@ -10,26 +10,26 @@
             <stop stop-color="#17788D" offset="100%"></stop>
         </linearGradient>
     </defs>
-    <g id="Mocks" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Nov-monthly-report-greater-than-768px" transform="translate(-711.000000, -1093.000000)">
-            <g id="768-$-contracted-since-launch" transform="translate(711.000000, 1093.000000)">
-                <g id="Group-10">
-                    <g id="Rectangle-Copy">
-                        <use fill="#FAFBFC" fill-rule="evenodd" xlink:href="#path-1"></use>
-                        <rect stroke="#BBBBBB" stroke-width="1" x="0.5" y="0.5" width="325.721509" height="194.212589"></rect>
-                    </g>
-                    <text id="$55.13M"  font-size="36" font-weight="bold" letter-spacing="-1.50000024" fill="#17788D">
-                        <tspan x="16" y="61">$55.13M</tspan>
-                    </text>
-                    <text id="Contracted-through-t"  font-size="17" font-weight="normal" line-spacing="28" fill="#313131">
-                        <tspan x="16" y="89">Contracted through the Marketplace </tspan>
-                        <tspan x="16" y="117">since 29 August 2016* </tspan>
-                    </text>
-                    <text id="$7.46M-this-month"  font-size="20" font-weight="bold" line-spacing="28" fill="#313131">
-                        <tspan x="16" y="161">$7.46M this month</tspan>
-                    </text>
-                    <polyline id="Shape" stroke="url(#linearGradient-2)" stroke-width="3" stroke-linecap="round" points="212 67.8388704 215.033389 67.7611296 216.045515 62.9038206 217.056146 62.0980066 218.066777 61.9440199 221.101661 61.9440199 222.112292 61.3340532 223.122924 56.1538206 224.13505 55.7710963 229.191196 55.7710963 230.201827 55.1925249 231.213953 54.6139535 232.224585 53.4074751 235.257973 53.4074751 236.2701 52.8887043 237.280731 52.6076412 238.292857 52.1710963 244.359635 52.1710963 245.370266 50.344186 246.382392 49.7342193 247.393023 49.7342193 250.426412 49.7342193 251.438538 49.1048173 252.449169 48.7639535 253.461296 48.7639535 255.482558 48.7639535 256.494684 48.269103 257.505316 48.269103 258.517442 45.0099668 259.528073 43.5583056 260.538704 43.5583056 262.561462 43.5583056 263.573588 43.320598 264.584219 42.3951827 265.59485 42.3951827 266.606977 41.6297342 267.617608 41.1408638 270.650997 41.1408638 271.663123 40.7342193 272.673754 40.7342193 273.68588 40.4083056 274.696512 36.3837209 275.707143 36.3837209 277.7299 36.3837209 278.742027 33.963289 283.798173 33.963289 284.808804 32.2141196 285.82093 32.2141196 286.831561 31.1451827 287.842193 30.1674419 288.854319 27.1789037 290.877076 27.1789037 291.887708 26.3865449 297.954485 26.2774086 298.966611 13.9300664 299.977243 12.2107973 300.989369 12 302 12"></polyline>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="768-$-contracted-since-launch">
+            <g id="Group-10">
+                <g id="Rectangle-Copy">
+                    <use fill="#FAFBFC" fill-rule="evenodd" xlink:href="#path-1"></use>
+                    <rect stroke="#BBBBBB" stroke-width="1" x="0.5" y="0.5" width="325.721509" height="194.212589"></rect>
                 </g>
+                <text id="$67.48M" font-size="36" font-weight="bold" fill="#17788D">
+                    <tspan x="16" y="61">$6</tspan>
+                    <tspan x="57.0976562" y="61" letter-spacing="-4.3">7</tspan>
+                    <tspan x="73.3464844" y="61">.48M</tspan>
+                </text>
+                <polyline id="Shape" stroke="url(#linearGradient-2)" stroke-width="3" points="212 67.8388704 213.010631 67.8388704 214.022757 66.3647841 215.033389 65.8714286 216.045515 65.8714286 219.078904 65.8714286 220.089535 65.3631229 221.101661 65.0880399 222.112292 65.0880399 224.13505 65.0880399 225.145681 64.6888704 226.157807 64.6888704 227.168439 62.0546512 228.17907 60.8825581 229.191196 60.8825581 231.213953 60.8825581 232.224585 60.691196 233.235216 59.9451827 234.247342 59.9451827 235.257973 59.3262458 236.2701 58.9315615 239.303488 58.9315615 240.31412 58.6026578 241.326246 58.6026578 242.336877 58.3395349 243.349003 55.0893688 244.359635 55.0893688 246.382392 55.0893688 247.393023 53.133887 252.449169 53.133887 253.461296 51.7210963 254.471927 51.7210963 255.482558 50.8584718 256.494684 50.067608 257.505316 47.6546512 259.528073 47.6546512 260.538704 47.0147841 266.606977 46.9265781 267.617608 36.9548173 268.629734 35.5659468 269.640365 35.395515 270.650997 35.395515 271.663123 33.9647841 273.68588 33.9647841 274.696512 33.1365449 275.707143 32.9317276 276.719269 32.9317276 277.7299 31.798505 278.742027 31.7671096 280.764784 31.7671096 281.775415 31.4247508 282.786047 28.8877076 283.798173 28.8877076 287.842193 28.8877076 288.854319 28.4646179 289.86495 28.4646179 290.877076 26.219103 291.887708 24.6179402 292.898339 12 302 12"></polyline>
+                <text id="Contracted-through-t" font-size="17" font-weight="normal" line-spacing="28" fill="#313131">
+                    <tspan x="16" y="91">Contracted through the </tspan>
+                    <tspan x="16" y="119">Marketplace since 29 August 2016* </tspan>
+                </text>
+                <text id="$12.35M-this-month" font-size="20" font-weight="bold" line-spacing="28" fill="#313131">
+                    <tspan x="16" y="161">$12.35M this month</tspan>
+                </text>
             </g>
         </g>
     </g>

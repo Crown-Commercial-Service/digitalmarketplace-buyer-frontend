@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"' width="327px" height="196px" viewBox="0 0 327 196" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 47.1 (45422) - http://www.bohemiancoding.com/sketch -->
+<svg font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"' width="327px" height="196px" viewBox="0 0 327 196" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="background: #FFFFFF;">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
     <title>768 total opportunities</title>
     <desc>Created with Sketch.</desc>
     <defs>
@@ -10,26 +10,24 @@
             <stop stop-color="#17788D" offset="100%"></stop>
         </linearGradient>
     </defs>
-    <g id="Mocks" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Nov-monthly-report-greater-than-768px" transform="translate(-711.000000, -1320.000000)">
-            <g id="768-total-opportunities" transform="translate(711.000000, 1320.000000)">
-                <g>
-                    <g id="Rectangle">
-                        <use fill="#FAFBFC" fill-rule="evenodd" xlink:href="#path-1"></use>
-                        <rect stroke="#BBBBBB" stroke-width="1" x="0.5" y="0.5" width="325.721509" height="194.212589"></rect>
-                    </g>
-                    <text id="374"  font-size="36" font-weight="bold" letter-spacing="-1.50000024" fill="#17788D">
-                        <tspan x="16" y="60">374</tspan>
-                    </text>
-                    <polyline id="Shape" stroke="url(#linearGradient-2)" stroke-width="3" stroke-linecap="round" points="213 70.8388704 214.010631 70.8388704 215.022757 70.348505 216.033389 69.3692691 217.045515 69.3692691 218.056146 68.3900332 219.066777 66.9204319 220.078904 66.4300664 221.089535 66.4300664 222.101661 66.4300664 223.112292 65.941196 224.122924 64.9604651 225.13505 64.4715947 226.145681 63.9812292 227.157807 63.9812292 228.168439 63.9812292 229.17907 63.4923588 230.191196 63.0019934 231.201827 61.532392 232.213953 61.0420266 233.224585 59.0835548 234.235216 59.0835548 235.247342 58.5931894 236.257973 58.5931894 237.2701 58.1043189 238.280731 56.6347176 239.292857 56.1443522 240.303488 55.1651163 241.31412 55.1651163 243.336877 55.1651163 244.349003 53.695515 246.370266 51.7355482 247.382392 51.2466777 248.393023 51.2466777 249.40515 50.7563123 250.415781 50.2659468 251.426412 50.2659468 252.438538 49.286711 253.449169 45.3682724 254.461296 45.3682724 255.471927 44.879402 256.482558 44.879402 257.494684 42.4290698 258.505316 41.9401993 259.517442 41.9401993 261.538704 39.9802326 262.550831 39.9802326 264.573588 39.0009967 265.584219 37.0410299 267.606977 36.061794 268.617608 34.5921927 270.640365 34.5921927 271.650997 33.6129568 272.663123 32.1433555 273.673754 31.65299 274.68588 29.6945183 275.696512 28.2249169 277.719269 28.2249169 278.7299 27.7345515 279.742027 26.2664452 280.752658 25.2857143 281.764784 24.3064784 282.775415 23.816113 284.798173 23.816113 285.808804 22.8368771 291.877076 22.8368771 292.887708 21.8576412 293.898339 20.3880399 294.910465 20.3880399 296.933223 19.408804 297.943854 19.408804 298.954485 18.9184385 299.966611 16.9599668 300.977243 16.9599668 301.989369 15.4903654 303 15"></polyline>
-                    <text id="Total-opportunities"  font-size="17" font-weight="normal" line-spacing="28" fill="#313131">
-                        <tspan x="16" y="89">Total opportunities </tspan>
-                        <tspan x="16" y="117">since 29 August 2016</tspan>
-                    </text>
-                    <text id="35-new-briefs-this-m"  font-size="20" font-weight="bold" line-spacing="28" fill="#313131">
-                        <tspan x="16" y="161">35 new briefs this month</tspan>
-                    </text>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="768-total-opportunities">
+            <g>
+                <g id="Rectangle">
+                    <use fill="#FAFBFC" fill-rule="evenodd" xlink:href="#path-1"></use>
+                    <rect stroke="#BBBBBB" stroke-width="1" x="0.5" y="0.5" width="325.721509" height="194.212589"></rect>
                 </g>
+                <text id="421" font-size="36" font-weight="bold" letter-spacing="-1.50000024" fill="#17788D">
+                    <tspan x="16" y="60">421</tspan>
+                </text>
+                <polyline id="Shape" stroke="url(#linearGradient-2)" stroke-width="3" points="213 70.8388704 215.022757 69.0657807 216.033389 68.6232558 217.045515 68.6232558 218.056146 68.1792359 219.066777 67.736711 220.078904 67.736711 221.089535 66.8501661 222.101661 63.3054817 223.112292 63.3054817 224.122924 62.8614618 225.13505 62.8614618 226.145681 60.6458472 227.157807 60.2033223 228.168439 60.2033223 230.191196 58.4302326 231.201827 58.4302326 233.224585 57.5436877 234.235216 55.770598 236.257973 54.8855482 237.2701 53.5549834 239.292857 53.5549834 240.303488 52.6684385 241.31412 51.3393688 242.326246 50.8968439 243.336877 49.1237542 244.349003 47.7946844 246.370266 47.7946844 247.382392 47.3506645 248.393023 46.0215947 249.40515 45.1350498 250.415781 44.248505 251.426412 43.8059801 253.449169 43.8059801 254.461296 42.9194352 260.528073 42.9194352 261.538704 42.4769103 262.550831 41.1463455 263.561462 41.1463455 264.573588 40.7038206 265.584219 39.8172757 266.59485 39.8172757 267.606977 39.3747508 268.617608 37.6016611 269.629734 37.6016611 270.640365 36.2725914 271.650997 34.0554817 272.663123 33.6129568 273.673754 33.6129568 274.68588 33.6129568 275.696512 31.3973422 276.707143 30.9533223 277.719269 26.966113 278.7299 26.522093 279.742027 25.1930233 282.775415 25.1930233 283.786047 23.4199336 284.798173 20.761794 285.808804 19.4312292 286.82093 18.1021595 287.831561 18.1021595 288.842193 18.1021595 289.854319 16.7730897 290.86495 16.7730897 291.877076 16.3290698 292.887708 15 293.898339 15 303 15"></polyline>
+                <text id="Total-opportunities" font-size="17" font-weight="normal" line-spacing="28" fill="#313131">
+                    <tspan x="16" y="91">Total opportunities </tspan>
+                    <tspan x="16" y="119">since 29 August 2016</tspan>
+                </text>
+                <text id="47-new-briefs-this-m" font-size="20" font-weight="bold" line-spacing="28" fill="#313131">
+                    <tspan x="16" y="161">47 new briefs this month</tspan>
+                </text>
             </g>
         </g>
     </g>
