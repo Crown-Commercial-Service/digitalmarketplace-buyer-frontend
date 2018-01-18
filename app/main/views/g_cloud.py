@@ -11,7 +11,7 @@ from dmcontent.formats import format_service_price
 from dmcontent.questions import Pricing
 
 from dmutils.ods import A as AnchorElement
-from dmutils.formats import dateformat, DATETIME_FORMAT, utcdatetimeformat
+from dmutils.formats import dateformat, DATETIME_FORMAT, datetimeformat
 from dmutils.filters import capitalize_first
 from dmutils.views import SimpleDownloadFileView
 from dmapiclient import HTTPError
@@ -617,7 +617,7 @@ class DownloadResultsView(SimpleDownloadFileView):
 
         locked_at = datetime.strptime(project['lockedAt'], DATETIME_FORMAT)
         filename = '{}-{}-results'.format(locked_at.strftime('%Y-%m-%d'), inflection.parameterize(project['name']))
-        locked_at = utcdatetimeformat(locked_at)
+        formatted_locked_at = datetimeformat(locked_at)
 
         services = self.data_api_client.get_direct_award_project_services_iter(project_id=project['id'],
                                                                                user_id=current_user.id,
@@ -641,7 +641,7 @@ class DownloadResultsView(SimpleDownloadFileView):
             'services': all_services,
             'filename': filename,
             "sheetname": "Search results",
-            'locked_at': locked_at,
+            'locked_at': formatted_locked_at,
             'search_summary': search_meta.search_summary.text_content(),
         }
 
