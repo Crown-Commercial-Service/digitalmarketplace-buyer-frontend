@@ -71,6 +71,11 @@ def index():
     )
 
 
+@main.route('/help')
+def help():
+    return render_template('help/index.html')
+
+
 @main.route('/cookies')
 def cookies():
     return render_template('content/cookies.html')
