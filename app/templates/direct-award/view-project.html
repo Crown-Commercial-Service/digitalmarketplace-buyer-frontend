@@ -61,7 +61,7 @@
             ] if not search_summary_sentence else [
               {"type": "text", "class": ["search-summary"], "text": search_summary_sentence},
               {"type": "text", "text": ''.join(["<a href=\"", buyer_search_page_url|e, "\">View results</a>"])|safe},
-              {"type": "box", "style": "complete", "label": ''.join(["Search saved on ", search.createdAt|utcdatetimeformat()])}
+              {"type": "box", "style": "complete", "label": ''.join(["Search saved on ", search.createdAt|datetimeformat()])}
             ]
           },
           {
@@ -76,7 +76,7 @@
             "custom_body_list": [
               {"type": "text", "text": "End your search to create a spreadsheet of the services you’ve found. You should only do this when you have finished searching for services."},
               {"type": "text", "text": "You cannot edit your search once it has ended."},
-              {"type": "box", "style": "inactive", "label": "Can't start yet"} if not search.createdAt else {"type": "action", "label": "End search", "href": url_for('direct_award.end_search', framework_framework=framework.framework, project_id=project.id), "analytics": "trackEvent", "analytics_category": "Direct Award", "analytics_action": "Internal Link"} if not search.searchedAt else {"type": "box", "style": "complete", "label": ''.join(["Search ended on ", search.searchedAt|utcdatetimeformat()])}
+              {"type": "box", "style": "inactive", "label": "Can't start yet"} if not search.createdAt else {"type": "action", "label": "End search", "href": url_for('direct_award.end_search', framework_framework=framework.framework, project_id=project.id), "analytics": "trackEvent", "analytics_category": "Direct Award", "analytics_action": "Internal Link"} if not search.searchedAt else {"type": "box", "style": "complete", "label": ''.join(["Search ended on ", search.searchedAt|datetimeformat()])}
             ]
           },
           {

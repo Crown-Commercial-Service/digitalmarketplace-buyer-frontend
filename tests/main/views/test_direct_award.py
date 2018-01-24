@@ -198,12 +198,13 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         return self._task_has_box(tasklist, task, style='inactive', text='Can\'t start yet')
 
     def _task_search_saved(self, tasklist, task):
+        # Localised time - British Summer Time applies in August
         return self._task_has_box(tasklist, task, style='complete', text='Search saved on Tuesday 29 August 2017'
-                                                                         ' at 7:00am GMT')
+                                                                         ' at 8:00am BST')
 
     def _task_search_ended(self, tasklist, task):
         return self._task_has_box(tasklist, task, style='complete', text='Search ended on Tuesday 29 August 2017'
-                                                                         ' at 7:00am GMT')
+                                                                         ' at 8:00am BST')
 
     def _task_search_downloaded(self, tasklist, task):
         return self._task_has_box(tasklist, task, style='complete', text='Search results downloaded')
@@ -587,7 +588,7 @@ class TestDirectAwardDownloadResultsView(TestDirectAwardBase):
         assert len(file_context['services']) == 1
         assert file_context['filename'] == '2017-09-08-my-procurement-project-results'
         assert file_context['sheetname'] == "Search results"
-        assert file_context['locked_at'] == 'Friday 8 September 2017 at 12:00am GMT'
+        assert file_context['locked_at'] == 'Friday 8 September 2017 at 1:00am BST'
         assert file_context['search_summary'] == Markup('1 result found in All categories')
 
     def test_get_file_data_and_column_styles(self):
