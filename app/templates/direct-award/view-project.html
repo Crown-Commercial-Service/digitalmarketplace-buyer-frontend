@@ -61,7 +61,7 @@
             ] if not search_summary_sentence else [
               {"type": "text", "class": ["search-summary"], "text": search_summary_sentence},
               {"type": "text", "text": ''.join(["<a href=\"", buyer_search_page_url|e, "\">View results</a>"])|safe},
-              {"type": "box", "style": "complete", "label": ''.join(["Search saved on ", search.createdAt|datetimeformat()])}
+              {"type": "box", "style": "complete", "label": ''.join(["Search saved on ", search.createdAt|datetimeformat])}
             ]
           },
           {
