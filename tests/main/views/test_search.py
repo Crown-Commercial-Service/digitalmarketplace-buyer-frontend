@@ -169,8 +169,16 @@ class TestSearchResults(BaseApplicationTest):
 
         res = self.client.get('/g-cloud/search?lot=cloud-software')
         assert res.status_code == 200
-        assert '<a id="dm-clear-all-filters" class="clear-filters-link" ' \
-            'href="/g-cloud/search?lot=cloud-software">Clear filters</a>' in res.get_data(as_text=True)
+
+        document = html.fromstring(res.get_data(as_text=True))
+
+        assert document.xpath(
+            "//a[@id=$i][contains(@class, $c)][normalize-space(string())=normalize-space($t)][@href=$h]",
+            i="dm-clear-all-filters",
+            c="clear-filters-link",
+            t="Clear filters",
+            h="/g-cloud/search?lot=cloud-software",
+        )
 
     def test_should_not_render_suggestions_for_when_results_are_shown(self):
         self._search_api_client.search.return_value = {

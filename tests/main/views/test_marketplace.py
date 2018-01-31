@@ -1240,9 +1240,13 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
             'User research participants (39)': 'a',
         }
 
-        assert '<a id="dm-clear-all-filters" class="clear-filters-link" ' \
-            'href="/digital-outcomes-and-specialists/opportunities?lot=digital-outcomes">Clear filters</a>' \
-            in res.get_data(as_text=True)
+        assert document.xpath(
+            "//a[@id=$i][contains(@class, $c)][normalize-space(string())=normalize-space($t)][@href=$h]",
+            i="dm-clear-all-filters",
+            c="clear-filters-link",
+            t="Clear filters",
+            h="/digital-outcomes-and-specialists/opportunities?lot=digital-outcomes",
+        )
 
         status_inputs = document.xpath("//form[@method='get']//input[@name='status']")
         assert {
