@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 from datetime import datetime
 from flask import abort, render_template, request, redirect, current_app, url_for, flash, Markup
 from flask_login import current_user

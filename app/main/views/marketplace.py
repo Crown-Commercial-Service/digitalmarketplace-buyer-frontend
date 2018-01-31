@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 from urllib.parse import urljoin
 
 from flask_login import current_user
