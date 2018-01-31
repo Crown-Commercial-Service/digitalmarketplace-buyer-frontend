@@ -50,6 +50,18 @@
     </section>
   </form>
   <section class="column-two-thirds" aria-label="Search results">
+    {#
+      the element referenced by an `aria-controls=` seems to need to be persistent -
+      at least I wasn't able to get it to work by just re-using a fragment of the
+      existing search summary text, as it gets removed and replaced wholesale by
+      the javascript when a new set of results is fetched.
+
+      instead, we have this dedicated (and more importantly, persistent) wrapper
+      element, which itself can be the target of `aria-controls=`
+    #}
+    <div id="search-summary-accessible-hint-wrapper" class="search-summary-accessible-hint-wrapper" aria-atomic="true" aria-live="polite" aria-relevant="all">
+      {% include 'search/_summary_accessible_hint.html' %}
+    </div>
     {% include 'search/_summary.html' %}
     {% include 'search/_services_save_search.html' %}
     {% include 'search/_results_wrapper.html' %}

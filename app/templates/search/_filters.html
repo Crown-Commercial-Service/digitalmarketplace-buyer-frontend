@@ -1,7 +1,7 @@
 <div class="dm-filters">
   <div class="dm-filter-title">
     <h2 class="apply-filters-title">Apply filters</h2>
-    <a id="dm-clear-all-filters" class="clear-filters-link" href="{{ clear_filters_url }}">Clear filters</a>
+    <a id="dm-clear-all-filters" class="clear-filters-link" href="{{ clear_filters_url }}" role="button">Clear filters</a>
   </div>
   <div>
     {% for filter in filters %}
@@ -9,11 +9,12 @@
         with
         label = filter.label,
         options_container_id = filter.slug,
-        options = filter.filters
+        options = filter.filters,
+        aria_controls="search-summary-accessible-hint-wrapper"
       %}
         {% include "toolkit/forms/option-select.html" %}
       {% endwith %}
     {% endfor %}
   </div>
-  <button class="button-save js-hidden js-dm-live-search" type="submit">Filter</button>
+  <button class="button-save js-hidden js-dm-live-search" type="submit" aria-controls="search-summary-accessible-hint-wrapper">Filter</button>
 </div>
