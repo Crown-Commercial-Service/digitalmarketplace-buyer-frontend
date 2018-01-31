@@ -1631,7 +1631,12 @@ class TestCatalogueOfBriefsFilterOnClick(BaseApplicationTest):
         res = self.client.get('/digital-outcomes-and-specialists/opportunities?live-results=true')
         data = json.loads(res.get_data(as_text=True))
 
-        assert set(data.keys()) == {'results', 'summary', 'categories'}
+        assert set(data.keys()) == {
+            'results',
+            'summary',
+            'summary-accessible-hint',
+            'categories',
+        }
 
         for k, v in data.items():
             assert set(v.keys()) == {'selector', 'html'}
@@ -1644,6 +1649,7 @@ class TestCatalogueOfBriefsFilterOnClick(BaseApplicationTest):
                               ('?live-results=true', {"search/_results_wrapper.html",
                                                       "search/_categories_wrapper.html",
                                                       "search/_summary.html",
+                                                      "search/_summary_accessible_hint.html",
                                                       })))
     @mock.patch('app.main.views.marketplace.render_template', autospec=True)
     def test_base_page_renders_search_services(self, render_template_patch, query_string, urls):

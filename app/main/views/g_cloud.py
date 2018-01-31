@@ -298,6 +298,10 @@ def search_services():
                 "selector": "#js-dm-live-search-summary",
                 "html": render_template("search/_summary.html", **template_args)
             },
+            "summary-accessible-hint": {
+                "selector": "#js-dm-live-search-summary-accessible-hint",
+                "html": render_template("search/_summary_accessible_hint.html", **template_args)
+            },
             "save-form": {
                 "selector": "#js-dm-live-save-search-form",
                 "html": render_template("search/_services_save_search.html", **template_args)

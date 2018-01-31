@@ -600,7 +600,13 @@ class TestSearchFilterOnClick(BaseApplicationTest):
         res = self.client.get('/g-cloud/search?live-results=true')
         data = json.loads(res.get_data(as_text=True))
 
-        assert set(data.keys()) == {'results', 'summary', 'categories', 'save-form'}
+        assert set(data.keys()) == {
+            'results',
+            'summary',
+            'summary-accessible-hint',
+            'categories',
+            'save-form',
+        }
 
         for k, v in data.items():
             assert set(v.keys()) == {'selector', 'html'}
@@ -613,6 +619,7 @@ class TestSearchFilterOnClick(BaseApplicationTest):
                               ('?live-results=true', {"search/_results_wrapper.html",
                                                       "search/_categories_wrapper.html",
                                                       "search/_summary.html",
+                                                      "search/_summary_accessible_hint.html",
                                                       "search/_services_save_search.html",
                                                       })))
     @mock.patch('app.main.views.g_cloud.render_template', autospec=True)
