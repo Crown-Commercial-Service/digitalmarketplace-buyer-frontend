@@ -1,6 +1,8 @@
 from flask import Blueprint
-from dmutils.user import User
 from flask_login import login_user
+
+from dmutils.user import User
+
 
 login_for_tests = Blueprint('login_for_tests', __name__)
 

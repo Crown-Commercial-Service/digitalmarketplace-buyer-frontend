@@ -2,8 +2,8 @@ import mock
 import pytest
 from werkzeug.datastructures import MultiDict
 
-from ...helpers import BaseApplicationTest
 from app.main.helpers import search_helpers, framework_helpers
+from ...helpers import BaseApplicationTest
 
 
 def test_should_hide_both_next_and_prev_if_no_services():

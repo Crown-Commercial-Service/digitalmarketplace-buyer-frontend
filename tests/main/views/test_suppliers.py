@@ -1,7 +1,9 @@
 # coding: utf-8
 import mock
-from ...helpers import BaseApplicationTest
+
 from dmapiclient import APIError
+
+from ...helpers import BaseApplicationTest
 
 
 class TestSuppliersPage(BaseApplicationTest):

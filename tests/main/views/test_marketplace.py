@@ -1,13 +1,14 @@
 # coding=utf-8
-
 import json
-from flask import current_app
-import mock
-from urllib.parse import urlparse, parse_qs
-from lxml import html
 import re
-from ...helpers import BaseApplicationTest
+from urllib.parse import urlparse, parse_qs
+
+from flask import current_app
+from lxml import html
+import mock
 import pytest
+
+from ...helpers import BaseApplicationTest
 
 
 class TestApplication(BaseApplicationTest):
