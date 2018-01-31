@@ -1,8 +1,9 @@
 # coding=utf-8
-
 from flask import render_template
-from . import main
+
 from dmapiclient import APIError
+
+from . import main
 
 
 @main.app_errorhandler(APIError)

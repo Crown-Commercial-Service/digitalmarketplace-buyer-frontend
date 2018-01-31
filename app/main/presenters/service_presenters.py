@@ -1,17 +1,10 @@
 import os
 import re
+from urllib.parse import unquote, urlparse
 
 from app import content_loader
 from dmcontent.errors import ContentNotFoundError
 from dmcontent.formats import format_service_price
-try:
-    from urllib.parse import urlparse
-except ImportError:
-    from urlparse import urlparse
-try:
-    from urllib import unquote
-except ImportError:
-    from urllib.parse import unquote
 
 
 def chunk_string(string, chunk_length):

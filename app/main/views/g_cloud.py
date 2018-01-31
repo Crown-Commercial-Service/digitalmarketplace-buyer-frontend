@@ -1,19 +1,34 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
+import inflection
+from operator import itemgetter
+
 from flask import abort, render_template, request, redirect, current_app, url_for, flash, Markup
 from flask_login import current_user
-import inflection
 from werkzeug.urls import Href, url_encode, url_decode
 
+from dmapiclient import HTTPError
 from dmcontent.formats import format_service_price
 from dmcontent.questions import Pricing
-
-from dmutils.ods import A as AnchorElement
 from dmutils.formats import dateformat, DATETIME_FORMAT, datetimeformat
 from dmutils.filters import capitalize_first
+from dmutils.ods import A as AnchorElement
 from dmutils.views import SimpleDownloadFileView
-from dmapiclient import HTTPError
 
+from app import search_api_client, data_api_client, content_loader
+from ..exceptions import AuthException
+from ..forms.direct_award_forms import CreateProjectForm
+from ..helpers.search_helpers import (
+    get_keywords_from_request, pagination,
+    get_page_from_request, query_args_for_pagination,
+    get_valid_lot_from_args_or_none,
+    build_search_query,
+    clean_request_args, get_request_url_without_any_filters,
+)
+from ..helpers import framework_helpers
+from ..helpers.direct_award_helpers import is_direct_award_project_accessible, get_direct_award_projects
+from ..helpers.search_save_helpers import SearchMeta
+from ..helpers.shared_helpers import get_fields_from_manifest, get_questions_from_manifest_by_id
 from ...main import main, direct_award
 from ..presenters.search_presenters import (
     filters_for_lot,
@@ -23,23 +38,6 @@ from ..presenters.search_presenters import (
 from ..presenters.search_results import SearchResults
 from ..presenters.search_summary import SearchSummary
 from ..presenters.service_presenters import Service
-from ..helpers.search_helpers import (
-    get_keywords_from_request, pagination,
-    get_page_from_request, query_args_for_pagination,
-    get_valid_lot_from_args_or_none,
-    build_search_query,
-    clean_request_args, get_request_url_without_any_filters,
-)
-from ..helpers import framework_helpers
-from ..helpers.search_save_helpers import SearchMeta
-from ..helpers.shared_helpers import get_fields_from_manifest, get_questions_from_manifest_by_id
-from ..forms.direct_award_forms import CreateProjectForm
-from operator import itemgetter
-
-from ..helpers.direct_award_helpers import is_direct_award_project_accessible, get_direct_award_projects
-
-from ..exceptions import AuthException
-from app import search_api_client, data_api_client, content_loader
 
 
 END_SEARCH_LIMIT = 100  # TODO: This should be done in the API.

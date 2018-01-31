@@ -1,5 +1,5 @@
-import hashlib
 import base64
+import hashlib
 
 
 def hash_email(email):

@@ -1,9 +1,9 @@
-from lxml.html import document_fromstring
+from collections import defaultdict
 import os
 import yaml
-from collections import defaultdict
 
 from flask import Markup, escape
+from lxml.html import document_fromstring
 
 
 class SearchSummary(object):

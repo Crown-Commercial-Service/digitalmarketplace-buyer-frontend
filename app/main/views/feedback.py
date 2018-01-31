@@ -1,9 +1,8 @@
 import requests
 
+from flask import current_app, request, redirect, flash, Markup
 from werkzeug.datastructures import MultiDict
 from werkzeug.urls import url_parse
-
-from flask import current_app, request, redirect, flash, Markup
 
 from .. import main
 

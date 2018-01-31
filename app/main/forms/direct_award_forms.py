@@ -1,5 +1,6 @@
 from flask_wtf import Form
 from wtforms.validators import Length, Optional
+
 from dmutils.forms import StripWhitespaceStringField
 
 
