@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from urllib.parse import urljoin
+
 from flask_login import current_user
 from flask import abort, current_app, render_template, request, url_for
+from lxml import html
 
 from werkzeug.urls import Href
 from werkzeug.datastructures import MultiDict
@@ -84,6 +87,22 @@ def cookies():
 @main.route('/terms-and-conditions')
 def terms_and_conditions():
     return render_template('content/terms-and-conditions.html')
+
+
+@main.route('/404')
+def external_404():
+    """
+    Our router app proxies errors (e.g. on an assets domain) to the frontend app's /404 page (i.e. this route).
+    Relative links in our normal 404 page will not work if the domain doesn't match, so here we ensure all links
+    in the page are absolute.
+    :return: Our usual 404 page, but with all relative links made absolute
+    """
+    document = html.fromstring(render_template('errors/404.html'))
+    relative_links = document.xpath('//a[starts-with(@href, "/")]')
+    for link in relative_links:
+        link.set("href", urljoin(request.url_root, link.get("href")))
+
+    return html.tostring(document), 404
 
 
 @main.route('/<framework_framework>/opportunities/<brief_id>')

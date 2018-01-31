@@ -340,6 +340,27 @@ class TestStaticMarketplacePages(BaseApplicationTest):
         assert res.status_code == 200
         assert '<h1>Termsandconditions</h1>' in self._strip_whitespace(res.get_data(as_text=True))
 
+    def test_external_404_makes_all_links_absolute(self):
+        # Get the normal 404 page and a list of the relative URLs it contains links to
+        response1 = self.client.get("/does-not-exist-404")
+        assert response1.status_code == 404
+        regular_404_document = html.fromstring(response1.get_data(as_text=True))
+        regular_relative_links = regular_404_document.xpath('//a[starts-with(@href, "/")]')
+        relative_hrefs = [link.get("href") for link in regular_relative_links]
+
+        # Get the "external" 404 page and check it doesn't contain any relative URLs
+        response2 = self.client.get("/404")
+        assert response2.status_code == 404
+        external_404_document = html.fromstring(response2.get_data(as_text=True))
+        external_relative_links = external_404_document.xpath('//a[starts-with(@href, "/")]')
+        assert len(external_relative_links) == 0
+
+        # Check that there is an absolute URL in the external 404 page for every relative URL in the normal 404 page
+        external_links = external_404_document.xpath('//a')
+        external_hrefs = [link.get("href") for link in external_links]
+        for relative_href in relative_hrefs:
+            assert "http://localhost{}".format(relative_href) in external_hrefs
+
 
 class BaseBriefPageTest(BaseApplicationTest):
     def setup_method(self, method):
