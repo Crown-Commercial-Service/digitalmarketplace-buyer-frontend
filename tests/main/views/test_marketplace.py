@@ -3,8 +3,7 @@
 import json
 from flask import current_app
 import mock
-from six import iteritems
-from six.moves.urllib.parse import urlparse, parse_qs
+from urllib.parse import urlparse, parse_qs
 from lxml import html
 import re
 from ...helpers import BaseApplicationTest
@@ -1160,7 +1159,7 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         self._presenters_search_api_client_patch.stop()
 
     def normalize_qs(self, qs):
-        return {k: set(v) for k, v in iteritems(parse_qs(qs)) if k != "page"}
+        return {k: set(v) for k, v in parse_qs(qs).items() if k != "page"}
 
     def test_catalogue_of_briefs_page(self):
         res = self.client.get('/digital-outcomes-and-specialists/opportunities')
