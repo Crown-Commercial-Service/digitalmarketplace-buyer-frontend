@@ -1,5 +1,6 @@
-from app import data_api_client
 from operator import itemgetter
+
+from app import data_api_client
 
 
 def is_direct_award_project_accessible(project, user_id):

@@ -1,7 +1,8 @@
-from lxml import html
 import json
-import mock
 import re
+
+from lxml import html
+import mock
 import pytest
 
 from ...helpers import BaseApplicationTest, data_api_client

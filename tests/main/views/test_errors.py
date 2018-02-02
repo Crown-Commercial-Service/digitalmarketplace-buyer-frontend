@@ -1,7 +1,8 @@
 # coding=utf-8
-
 import mock
+
 from dmapiclient import HTTPError
+
 from ...helpers import BaseApplicationTest
 
 

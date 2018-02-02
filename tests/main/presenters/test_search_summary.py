@@ -1,14 +1,15 @@
-import os
 import json
+import os
 
 from flask import Markup
 from mock import Mock
 from werkzeug.datastructures import MultiDict
+
+from app import content_loader
 from app.main.presenters.search_presenters import filters_for_lot
 from app.main.presenters.search_results import SearchResults
 from app.main.presenters.search_summary import SearchSummary, \
     SummaryRules, SummaryFragment
-from app import content_loader
 from app.main.helpers import framework_helpers
 from ...helpers import BaseApplicationTest
 

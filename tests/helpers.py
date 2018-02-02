@@ -1,17 +1,15 @@
-from __future__ import absolute_import
-
-import os
-import json
-import re
-import mock
-
-from app import create_app, data_api_client
-from tests import login_for_tests
 from datetime import datetime, timedelta
-from mock import patch
+import os
+import re
+
+import json
+import mock
 from werkzeug.http import parse_cookie
 
 from dmutils.formats import DATETIME_FORMAT
+
+from app import create_app, data_api_client
+from tests import login_for_tests
 
 
 class BaseApplicationTest(object):
@@ -216,11 +214,11 @@ class BaseApplicationTest(object):
             self.get_user_patch.stop()
 
     def login_as_supplier(self):
-        with patch('app.data_api_client') as login_api_client:
+        with mock.patch('app.data_api_client') as login_api_client:
             login_api_client.authenticate_user.return_value = self.user(
                 123, "email@email.com", 1234, u'Supplier NĀme', u'Năme')
 
-            self.get_user_patch = patch.object(
+            self.get_user_patch = mock.patch.object(
                 data_api_client,
                 'get_user',
                 return_value=self.user(123, "email@email.com", 1234, u'Supplier NĀme', u'Năme')
@@ -231,11 +229,11 @@ class BaseApplicationTest(object):
             assert response.status_code == 200
 
     def login_as_buyer(self, user_id=123):
-        with patch('app.data_api_client') as login_api_client:
+        with mock.patch('app.data_api_client') as login_api_client:
             login_api_client.authenticate_user.return_value = self.user(
                 user_id, "buyer@email.com", None, None, 'Ā Buyer', role='buyer')
 
-            self.get_user_patch = patch.object(
+            self.get_user_patch = mock.patch.object(
                 data_api_client,
                 'get_user',
                 return_value=self.user(user_id, "buyer@email.com", None, None, 'Buyer', role='buyer')
@@ -246,11 +244,11 @@ class BaseApplicationTest(object):
             assert response.status_code == 200
 
     def login_as_admin(self):
-        with patch('app.main.views.login.data_api_client') as login_api_client:
+        with mock.patch('app.main.views.login.data_api_client') as login_api_client:
             login_api_client.authenticate_user.return_value = self.user(
                 123, "admin@email.com", None, None, 'Name', role='admin')
 
-            self.get_user_patch = patch.object(
+            self.get_user_patch = mock.patch.object(
                 data_api_client,
                 'get_user',
                 return_value=self.user(123, "admin@email.com", None, None, 'Some Admin', role='admin')

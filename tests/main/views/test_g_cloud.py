@@ -1,4 +1,5 @@
 import mock
+
 from ...helpers import BaseApplicationTest
 
 

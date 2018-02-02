@@ -1,11 +1,11 @@
-import os
 import json
+import os
 
 from flask import Markup
-from app.main.presenters.search_results import SearchResults
 
-from ...helpers import BaseApplicationTest
 from app.main.helpers import framework_helpers
+from app.main.presenters.search_results import SearchResults
+from ...helpers import BaseApplicationTest
 
 
 def _get_fixture_data():

@@ -1,14 +1,16 @@
-from flask import Markup
-from lxml import html
-from html import escape as html_escape
-import mock
-import pytest
+from dateutil import parser
 import sys
 from urllib.parse import quote_plus, urlparse
+
+from flask import Markup
+from html import escape as html_escape
+from lxml import html
+import mock
+import pytest
 from werkzeug.exceptions import BadRequest, NotFound
-from dateutil import parser
 
 from dmcontent.content_loader import ContentLoader
+
 from app import data_api_client, search_api_client, content_loader
 from app.main.views.g_cloud import DownloadResultsView
 from ...helpers import BaseApplicationTest

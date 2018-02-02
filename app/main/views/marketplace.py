@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
+from urllib.parse import urljoin
 
 from flask_login import current_user
 from flask import abort, current_app, render_template, request, url_for
-
+from lxml import html
 from werkzeug.urls import Href
 from werkzeug.datastructures import MultiDict
 
@@ -11,22 +11,21 @@ from dmapiclient import APIError
 from dmcontent.content_loader import ContentNotFoundError
 from dmutils.filters import capitalize_first
 
-from ...main import main
-from ..helpers.shared_helpers import get_one_framework_by_status_in_order_of_preference
+from app import search_api_client, data_api_client, content_loader
 from ..helpers.brief_helpers import (
     count_brief_responses_by_size_and_status, format_winning_supplier_size,
     COMPLETED_BRIEF_RESPONSE_STATUSES, ALL_BRIEF_RESPONSE_STATUSES, PUBLISHED_BRIEF_STATUSES
 )
+from ..helpers.framework_helpers import get_latest_live_framework, get_framework_description, get_lots_by_slug
 from ..helpers.search_helpers import (
     pagination, get_page_from_request, query_args_for_pagination, get_valid_lot_from_args_or_none, build_search_query,
     clean_request_args, get_request_url_without_any_filters,
 )
+from ..helpers.shared_helpers import get_one_framework_by_status_in_order_of_preference
+from ...main import main
 from ..presenters.search_presenters import filters_for_lot, set_filter_states, build_lots_and_categories_link_tree
 from ..presenters.search_results import SearchResults
 from ..presenters.search_summary import SearchSummary
-from ..helpers.framework_helpers import get_latest_live_framework, get_framework_description, get_lots_by_slug
-
-from app import search_api_client, data_api_client, content_loader
 
 
 @main.route('/')
@@ -84,6 +83,22 @@ def cookies():
 @main.route('/terms-and-conditions')
 def terms_and_conditions():
     return render_template('content/terms-and-conditions.html')
+
+
+@main.route('/404')
+def external_404():
+    """
+    Our router app proxies errors (e.g. on an assets domain) to the frontend app's /404 page (i.e. this route).
+    Relative links in our normal 404 page will not work if the domain doesn't match, so here we ensure all links
+    in the page are absolute.
+    :return: Our usual 404 page, but with all relative links made absolute
+    """
+    document = html.fromstring(render_template('errors/404.html'))
+    relative_links = document.xpath('//a[starts-with(@href, "/")]')
+    for link in relative_links:
+        link.set("href", urljoin(request.url_root, link.get("href")))
+
+    return html.tostring(document), 404
 
 
 @main.route('/<framework_framework>/opportunities/<brief_id>')

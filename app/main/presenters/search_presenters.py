@@ -2,6 +2,7 @@ from collections import OrderedDict
 
 from werkzeug.datastructures import MultiDict
 
+from app import search_api_client
 from ..helpers.framework_helpers import get_lots_by_slug
 from ..helpers.search_helpers import (
     get_filters_from_request,
@@ -11,8 +12,6 @@ from ..helpers.search_helpers import (
     clean_request_args
 )
 from ..presenters.search_results import AggregationResults
-
-from app import search_api_client
 
 
 def sections_for_lot(lot, builder, all_lots=[]):

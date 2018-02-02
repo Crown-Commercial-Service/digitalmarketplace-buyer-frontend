@@ -1,18 +1,19 @@
-import os
-import json
 import itertools
+import json
+import os
+
+import flask
 import mock
-from dmcontent.content_loader import ContentLoader
 from werkzeug.datastructures import MultiDict
 from werkzeug.urls import Href
-import flask
+
+from dmcontent.content_loader import ContentLoader
 
 from app.main.presenters.search_presenters import (
     filters_for_lot,
     set_filter_states,
     build_lots_and_categories_link_tree,
 )
-
 from ...helpers import BaseApplicationTest
 
 content_loader = ContentLoader('tests/fixtures/content')

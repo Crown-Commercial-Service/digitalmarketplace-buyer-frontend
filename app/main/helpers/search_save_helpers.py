@@ -1,15 +1,13 @@
-from werkzeug.datastructures import MultiDict
 from flask import url_for
-
-from app.main.helpers.framework_helpers import get_lots_by_slug
-
-from app.main.presenters.search_presenters import filters_for_lot
-from app.main.presenters.search_summary import SearchSummary
-from app.main.helpers.search_helpers import clean_request_args
-from ..helpers.shared_helpers import construct_url_from_base_and_params
+from werkzeug.datastructures import MultiDict
 
 from app import search_api_client, content_loader
+from app.main.helpers.framework_helpers import get_lots_by_slug
+from app.main.helpers.search_helpers import clean_request_args
+from app.main.presenters.search_presenters import filters_for_lot
+from app.main.presenters.search_summary import SearchSummary
 from .search_helpers import ungroup_request_filters
+from ..helpers.shared_helpers import construct_url_from_base_and_params
 
 
 class SearchMeta(object):

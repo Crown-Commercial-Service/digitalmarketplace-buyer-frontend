@@ -1,7 +1,8 @@
 import json
-from ...helpers import BaseApplicationTest
 
 import mock
+
+from ...helpers import BaseApplicationTest
 
 
 class TestStatus(BaseApplicationTest):

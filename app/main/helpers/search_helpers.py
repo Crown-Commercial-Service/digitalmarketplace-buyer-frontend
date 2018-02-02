@@ -1,9 +1,9 @@
-import re
 from math import ceil
+import re
 
+from flask import url_for
 from werkzeug.datastructures import MultiDict
 from werkzeug.urls import Href
-from flask import url_for
 
 
 def get_valid_lot_from_args_or_none(args, all_lots):

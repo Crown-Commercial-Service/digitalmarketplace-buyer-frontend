@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 from flask import render_template, redirect
+
 from ...main import main
 
 

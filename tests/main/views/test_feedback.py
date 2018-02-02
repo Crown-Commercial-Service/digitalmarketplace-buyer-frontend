@@ -1,6 +1,6 @@
 from lxml import html
-
 import mock
+
 from ...helpers import BaseApplicationTest
 
 

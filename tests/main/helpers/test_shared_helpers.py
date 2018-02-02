@@ -1,4 +1,5 @@
 import pytest
+
 from app.main.helpers.shared_helpers import construct_url_from_base_and_params
 
 

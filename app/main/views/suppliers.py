@@ -1,12 +1,15 @@
 # coding=utf-8
+import re
 from string import ascii_uppercase
-from app.main import main
+
 from flask import render_template, request, abort
-from app import data_api_client
+
 from dmapiclient import APIError
+
+from app import data_api_client
+from app.main import main
 from ..helpers.shared_helpers import parse_link
 from ..helpers.framework_helpers import get_framework_description
-import re
 
 
 def process_prefix(prefix=None, format='view'):
