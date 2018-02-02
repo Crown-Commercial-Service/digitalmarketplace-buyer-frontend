@@ -82,3 +82,4 @@ app/static/*
 .idea/
 *.iml
 version_label
+**/src/
