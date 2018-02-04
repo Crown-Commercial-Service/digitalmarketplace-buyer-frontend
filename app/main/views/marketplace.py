@@ -96,7 +96,7 @@ def external_404():
     document = html.fromstring(render_template('errors/404.html'))
     relative_links = document.xpath('//a[starts-with(@href, "/")]')
     for link in relative_links:
-        link.set("href", urljoin(request.url_root, link.get("href")))
+        link.set("href", urljoin(current_app.config.get("DM_PATCH_FRONTEND_URL", ""), link.get("href")))
 
     return html.tostring(document), 404
 
