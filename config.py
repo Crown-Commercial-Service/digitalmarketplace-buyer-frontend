@@ -86,6 +86,8 @@ class Config(object):
         }
     }
 
+    GOOGLE_SITE_VERIFICATION = None
+
     @staticmethod
     def init_app(app):
         repo_root = os.path.abspath(os.path.dirname(__file__))
@@ -114,6 +116,8 @@ class Test(Config):
     FEATURE_FLAGS_NEW_SUPPLIER_FLOW = enabled_since('2016-11-29')
     FEATURE_FLAGS_DIRECT_AWARD_PROJECTS = enabled_since('2017-08-15')
 
+    GOOGLE_SITE_VERIFICATION = "NotARealVerificationKey"
+
 
 class Development(Config):
     DEBUG = True
@@ -132,6 +136,8 @@ class Development(Config):
 
     FEATURE_FLAGS_NEW_SUPPLIER_FLOW = enabled_since('2016-11-29')
     FEATURE_FLAGS_DIRECT_AWARD_PROJECTS = enabled_since('2017-08-15')
+
+    GOOGLE_SITE_VERIFICATION = "NotARealVerificationKey"
 
 
 class Live(Config):
@@ -157,6 +163,8 @@ class Production(Live):
     FEATURE_FLAGS_NEW_SUPPLIER_FLOW = enabled_since('2017-02-08')
     FEATURE_FLAGS_DIRECT_AWARD_PROJECTS = enabled_since('2017-10-26')
     DM_PATCH_FRONTEND_URL = 'https://www.digitalmarketplace.service.gov.uk/'
+
+    GOOGLE_SITE_VERIFICATION = "TKGSGZnfHpx1-lKOthI17ANtwk7fz3F4Sbr77I0ppO0"
 
 
 configs = {
