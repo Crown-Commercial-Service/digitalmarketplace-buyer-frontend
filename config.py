@@ -27,6 +27,9 @@ class Config(object):
     DM_SEARCH_API_AUTH_TOKEN = None
     DM_MANDRILL_API_KEY = None
 
+    # Used for generating absolute URLs from relative URLs when necessary
+    DM_PATCH_FRONTEND_URL = 'http://localhost/'
+
     # matches api(s)
     DM_SEARCH_PAGE_SIZE = 100
 
@@ -141,16 +144,19 @@ class Live(Config):
 class Preview(Live):
     FEATURE_FLAGS_NEW_SUPPLIER_FLOW = enabled_since('2017-02-06')
     FEATURE_FLAGS_DIRECT_AWARD_PROJECTS = enabled_since('2017-08-31')
+    DM_PATCH_FRONTEND_URL = 'https://www.preview.marketplace.team/'
 
 
 class Staging(Live):
     FEATURE_FLAGS_NEW_SUPPLIER_FLOW = enabled_since('2017-02-07')
     FEATURE_FLAGS_DIRECT_AWARD_PROJECTS = enabled_since('2017-10-25')
+    DM_PATCH_FRONTEND_URL = 'https://www.staging.marketplace.team/'
 
 
 class Production(Live):
     FEATURE_FLAGS_NEW_SUPPLIER_FLOW = enabled_since('2017-02-08')
     FEATURE_FLAGS_DIRECT_AWARD_PROJECTS = enabled_since('2017-10-26')
+    DM_PATCH_FRONTEND_URL = 'https://www.digitalmarketplace.service.gov.uk/'
 
 
 configs = {
