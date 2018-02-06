@@ -26,6 +26,11 @@ class TestApplication(BaseApplicationTest):
         assert '<p>GOV.UK uses cookies to make the site simpler. <a href="/cookies">' \
             'Find out more about cookies</a></p>' in res.get_data(as_text=True)
 
+    def test_google_verification_code_shown_on_homepage(self):
+        res = self.client.get('/')
+        assert res.status_code == 200
+        assert 'name="google-site-verification" content="NotARealVerificationKey"' in res.get_data(as_text=True)
+
 
 @mock.patch('app.main.views.marketplace.data_api_client', autospec=True)
 class TestHomepageAccountCreationVirtualPageViews(BaseApplicationTest):
