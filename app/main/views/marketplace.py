@@ -95,8 +95,13 @@ def external_404():
     """
     document = html.fromstring(render_template('errors/404.html'))
     relative_links = document.xpath('//a[starts-with(@href, "/")]')
+    forms_with_relative_actions = document.xpath('//form[starts-with(@action, "/")]')
+
     for link in relative_links:
         link.set("href", urljoin(current_app.config.get("DM_PATCH_FRONTEND_URL", ""), link.get("href")))
+
+    for form in forms_with_relative_actions:
+        form.set("action", urljoin(current_app.config.get("DM_PATCH_FRONTEND_URL", ""), form.get("action")))
 
     return html.tostring(document), 404
 
