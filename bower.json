@@ -8,6 +8,6 @@
     "jquery-details": "https://github.com/mathiasbynens/jquery-details/archive/v0.1.0.tar.gz",
     "digitalmarketplace-frontend-toolkit": "https://github.com/ausdto/dto-digitalmarketplace-frontend-toolkit.git#ff35231d91fd0c67d6de53cada74250cbe5bf711",
     "govuk_template": "https://github.com/alphagov/govuk_template/releases/download/v0.17.3/jinja_govuk_template-0.17.3.tgz",
-    "digitalmarketplace-frameworks": "https://github.com/ausdto/dto-digitalmarketplace-frameworks.git#dc528f99399d8f1db757d3d42120445cb5b683e6"
+    "digitalmarketplace-frameworks": "https://github.com/ausdto/dto-digitalmarketplace-frameworks.git#98798789d1c5cffb9c934c5cecafcee4f44b1561"
   }
 }
