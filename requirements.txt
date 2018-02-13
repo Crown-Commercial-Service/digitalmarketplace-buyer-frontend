@@ -23,6 +23,7 @@ docutils==0.13.1
 -e git+https://github.com/AusDTO/dto-digitalmarketplace-utils.git@f36910294bfe70ef6b0fd766b043a97469df06bf#egg=dto_digitalmarketplace_utils==whatever
 enum34==1.1.6
 et-xmlfile==1.0.1
+flake8==3.3.0
 Flask==0.12.1
 Flask-Cache==0.13.1
 Flask-FeatureFlags==0.6
