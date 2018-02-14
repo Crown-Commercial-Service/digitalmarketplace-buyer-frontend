@@ -2,6 +2,7 @@
   "documents": [
     {
       "applicationsClosedAt": "2017-12-01T23:59:59.000000Z",
+      "clarificationQuestionsClosedAt": "2017-11-26T23:59:59.000000Z",
       "highlight": {
         "applicationsClosedAt": ["2017-12-01T23:59:59.000000Z"],
         "id": ["5731"],
@@ -24,6 +25,7 @@
     },
     {
       "applicationsClosedAt": "2016-05-13T23:59:59.000000Z",
+      "clarificationQuestionsClosedAt": "2016-05-10T23:59:59.000000Z",
       "highlight": {
         "applicationsClosedAt": ["2016-05-13T23:59:59.000000Z"],
         "id": ["48"],
@@ -48,6 +50,7 @@
     },
     {
       "applicationsClosedAt": "2016-11-09T23:59:59.000000Z",
+      "clarificationQuestionsClosedAt": "2016-11-05T23:59:59.000000Z",
       "highlight": {
         "applicationsClosedAt": ["2016-11-09T23:59:59.000000Z"],
         "id": ["1183"],
@@ -73,6 +76,7 @@
     {
       "applicationsClosedAt": "2016-06-29T23:59:59.000000Z",
       "cancelledAt": "2017-10-05T10:34:09.783235Z",
+      "clarificationQuestionsClosedAt": "2016-06-23T23:59:59.000000Z",
       "highlight": {
         "applicationsClosedAt": ["2016-06-29T23:59:59.000000Z"],
         "cancelledAt": ["2017-10-05T10:34:09.783235Z"],
@@ -98,6 +102,7 @@
     },
     {
       "applicationsClosedAt": "2017-12-01T23:59:59.000000Z",
+      "clarificationQuestionsClosedAt": "2017-11-28T23:59:59.000000Z",
       "highlight": {
         "applicationsClosedAt": ["2017-12-01T23:59:59.000000Z"],
         "id": ["5731"],
@@ -120,6 +125,7 @@
     },
     {
       "applicationsClosedAt": "2017-03-13T23:59:59.000000Z",
+      "clarificationQuestionsClosedAt": "2017-03-10T23:59:59.000000Z",
       "awardedBriefResponseId": 33846,
       "highlight": {
         "applicationsClosedAt": ["2017-03-13T23:59:59.000000Z"],

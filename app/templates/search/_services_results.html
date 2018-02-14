@@ -12,10 +12,10 @@
         {{ service.serviceSummary or service.serviceDescription }} {# G-Cloud 9 uses serviceDescription, not serviceSummary. #}
     </p>
     <ul aria-label="tags" class="search-result-metadata">
-        <li class="search-result-metadata-item">
+        <li class="search-result-metadata-item-inline">
             {{ service.lot.name }}
         </li>
-        <li class="search-result-metadata-item">
+        <li class="search-result-metadata-item-inline">
             {{ service.frameworkName }}
         </li>
     </ul>

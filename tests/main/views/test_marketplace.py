@@ -1467,8 +1467,13 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
 
         live_opportunity_published_at = document.xpath(
             '//div[@class="search-result"][1]//li[@class="search-result-metadata-item"]'
-        )[-2].text_content().strip()
+        )[-3].text_content().strip()
         assert live_opportunity_published_at == "Published: Friday 17 November 2017"
+
+        live_opportunity_qs_closing_at = document.xpath(
+            '//div[@class="search-result"][1]//li[@class="search-result-metadata-item"]'
+        )[-2].text_content().strip()
+        assert live_opportunity_qs_closing_at == "Deadline for asking questions: Sunday 26 November 2017"
 
         live_opportunity_closing_at = document.xpath(
             '//div[@class="search-result"][1]//li[@class="search-result-metadata-item"]'

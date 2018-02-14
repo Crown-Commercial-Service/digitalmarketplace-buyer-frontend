@@ -14,11 +14,11 @@
     </ul>
 
     <ul class="search-result-metadata">
-        <li class="search-result-metadata-item">
+        <li class="search-result-metadata-item-inline">
             {{ brief.lot.name }}
         </li>
         {% if 'specialistRole' in brief %}
-        <li class="search-result-metadata-item">
+        <li class="search-result-metadata-item-inline">
             {{ brief.specialistRole | capitalize() }}
         </li>
         {% endif %}
@@ -32,6 +32,9 @@
         {% else %}
             <li class="search-result-metadata-item">
                 Published: {{ brief.publishedAt|dateformat }}
+            </li>
+            <li class="search-result-metadata-item">
+                Deadline for asking questions: {{ brief.clarificationQuestionsClosedAt|dateformat }}
             </li>
             <li class="search-result-metadata-item">
                 Closing: {{ brief.applicationsClosedAt|dateformat }}

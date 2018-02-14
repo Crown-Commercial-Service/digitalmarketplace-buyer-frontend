@@ -125,6 +125,7 @@
 
 .search-result-important-metadata {
   li {
-    @include bold-19;
+    @include bold-16;
+    color: $black;
   }
 }
