@@ -6,7 +6,7 @@
     <defs></defs>
     <g id="Jan-monthly-report-greater-than-768px" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-339.000000, -2586.000000)">
         <g id="768-average-seller-response" transform="translate(339.000000, 2580.000000)">
-            <text id="Buyers-receive-on-av" font-family="OpenSans, Open Sans" font-size="17" font-weight="normal" line-spacing="26" fill="#313131">
+            <text id="Buyers-receive-on-av" font-size="17" font-weight="normal" line-spacing="26" fill="#313131">
                 <tspan x="174.406738" y="18">Buyers receive on average 12 responses per brief</tspan>
             </text>
             <g id="Group-11" stroke-width="1" fill-rule="evenodd" transform="translate(0.000000, 47.000000)">
@@ -15,7 +15,7 @@
                     <path d="M0,1.29154519 L696.002892,1.29154519" id="Shape"></path>
                 </g>
                 <path d="M183,0.999942364 L183,223.085291" id="Line-3-Copy" stroke="#777777" stroke-width="2" stroke-linecap="square"></path>
-                <text id="12" font-family=".HelveticaNeueDeskInterface-Bold, SFNS Display" font-size="11" font-weight="bold" letter-spacing="0.100000001" fill="#224A61">
+                <text id="12" font-size="11" font-weight="bold" letter-spacing="0.100000001" fill="#224A61">
                     <tspan x="176" y="241">12</tspan>
                 </text>
                 <circle id="Oval-22-Copy" fill="#777777" cx="182.5" cy="222.5" r="3.5"></circle>

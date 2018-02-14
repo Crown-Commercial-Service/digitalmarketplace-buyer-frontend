@@ -17,16 +17,16 @@
                     <use fill="#FAFBFC" fill-rule="evenodd" xlink:href="#path-1"></use>
                     <rect stroke="#BBBBBB" stroke-width="1" x="0.5" y="0.5" width="271" height="220"></rect>
                 </g>
-                <text id="$76.31M" font-family="OpenSans-Bold, Open Sans" font-size="36" font-weight="bold" fill="#17788D">
+                <text id="$76.31M" font-size="36" font-weight="bold" fill="#17788D">
                     <tspan x="12" y="62">$76.31M</tspan>
                 </text>
                 <polyline id="Shape" stroke="url(#linearGradient-2)" stroke-width="3" points="169 68.8388704 172.033389 68.8388704 173.045515 67.273588 178.101661 67.273588 179.112292 66.1433555 180.122924 66.1433555 181.13505 65.4511628 182.145681 64.8187708 183.157807 62.8872093 185.17907 62.8872093 186.191196 62.3744186 192.257973 62.3041528 193.2701 54.3207641 194.280731 53.2084718 195.292857 53.0724252 196.303488 53.0724252 197.31412 51.9272425 199.336877 51.9272425 200.349003 51.2634551 201.359635 51.0990033 202.370266 51.0990033 203.382392 50.1915282 204.393023 50.167608 206.415781 50.167608 207.426412 49.8925249 208.438538 47.8622924 209.449169 47.8622924 213.494684 47.8622924 214.505316 47.5229236 215.517442 47.5229236 216.528073 45.489701 217.538704 44.2084718 218.550831 34.1066445 229.673754 34.1066445 230.68588 30.2958472 235.742027 30.2958472 236.752658 29.8862126 237.764784 29.8862126 238.775415 29.7217608 239.786047 29.195515 240.798173 29.195515 242.82093 29.195515 243.831561 28.7096346 244.842193 28.7096346 245.854319 27.9516611 246.86495 24.8704319 247.877076 24.8704319 248.887708 24.8704319 249.898339 23.6998339 250.910465 22.9807309 251.921096 22.5740864 252.933223 14.5607973 253.943854 14.5607973 256.977243 14.5607973 257.989369 13.1435216 259 13"></polyline>
-                <text id="Contracted-through-t" font-family="OpenSans, Open Sans" font-size="17" font-weight="normal" line-spacing="28" fill="#313131">
+                <text id="Contracted-through-t" font-size="17" font-weight="normal" line-spacing="28" fill="#313131">
                     <tspan x="12" y="91">Contracted through the </tspan>
                     <tspan x="12" y="119">Marketplace since 29 August </tspan>
                     <tspan x="12" y="147">2016* </tspan>
                 </text>
-                <text id="$8.83M-this-month" font-family="OpenSans-Bold, Open Sans" font-size="20" font-weight="bold" line-spacing="28" fill="#313131">
+                <text id="$8.83M-this-month" font-size="20" font-weight="bold" line-spacing="28" fill="#313131">
                     <tspan x="13" y="190">$8.83M this month</tspan>
                 </text>
             </g>

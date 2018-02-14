@@ -11,11 +11,11 @@
                 <g id="Group-7-Copy" transform="translate(0.000000, 286.000000)" stroke="#BBBBBB">
                     <path d="M0,1.29154519 L271.221757,1.29154519" id="Shape"></path>
                 </g>
-                <text id="Buyers-receive-on-av" font-family="OpenSans, Open Sans" font-size="17" font-weight="normal" line-spacing="26" fill="#313131">
+                <text id="Buyers-receive-on-av" font-size="17" font-weight="normal" line-spacing="26" fill="#313131">
                     <tspan x="33.1157227" y="18">Buyers receive on average </tspan>
                     <tspan x="47.9990234" y="44">12 responses per brief</tspan>
                 </text>
-                <text id="12" font-family=".HelveticaNeueDeskInterface-Bold, SFNS Display" font-size="11" font-weight="bold" letter-spacing="0.100000001" fill="#224A61">
+                <text id="12" font-size="11" font-weight="bold" letter-spacing="0.100000001" fill="#224A61">
                     <tspan x="65.3776824" y="306">12</tspan>
                 </text>
                 <path d="M71.4373761,65.9999424 L71.4373761,288.085291" id="Line-3-Copy" stroke="#777777" stroke-width="2" stroke-linecap="square"></path>

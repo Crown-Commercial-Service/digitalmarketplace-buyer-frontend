@@ -14,34 +14,34 @@
                 <rect id="Rectangle-9-Copy-32" fill="#59A94F" x="561" y="0" width="68" height="50"></rect>
                 <rect id="Rectangle-9-Copy-33" fill="#D8D8D8" x="627" y="0" width="112" height="50"></rect>
             </g>
-            <text id="15%-Pre-discovery" font-family="OpenSans-Bold, Open Sans" font-size="16" font-weight="bold" line-spacing="16" fill="#333333">
+            <text id="15%-Pre-discovery" font-size="16" font-weight="bold" line-spacing="16" fill="#333333">
                 <tspan x="37.8710938" y="64">15%</tspan>
-                <tspan x="71.6601562" y="64.3359375" font-family="OpenSans, Open Sans" font-weight="normal"> </tspan>
-                <tspan x="5" y="80.3359375" font-family="OpenSans, Open Sans" font-weight="normal">Pre-discovery</tspan>
+                <tspan x="71.6601562" y="64.3359375" font-weight="normal"> </tspan>
+                <tspan x="5" y="80.3359375" font-weight="normal">Pre-discovery</tspan>
             </text>
-            <text id="34%-Discovery" font-family="OpenSans-Bold, Open Sans" font-size="16" font-weight="bold" line-spacing="16" fill="#FFFFFF">
+            <text id="34%-Discovery" font-size="16" font-weight="bold" line-spacing="16" fill="#FFFFFF">
                 <tspan x="218.65625" y="64">34% </tspan>
-                <tspan x="265.398438" y="67.1015625" font-family="OpenSans, Open Sans" font-weight="normal"></tspan>
-                <tspan x="200" y="80.3359375" font-family="OpenSans, Open Sans" font-weight="normal">Discovery</tspan>
+                <tspan x="265.398438" y="67.1015625" font-weight="normal"></tspan>
+                <tspan x="200" y="80.3359375" font-weight="normal">Discovery</tspan>
             </text>
-            <text id="13%-Alpha" font-family="OpenSans-Bold, Open Sans" font-size="16" font-weight="bold" line-spacing="16" fill="#FFFFFF">
+            <text id="13%-Alpha" font-size="16" font-weight="bold" line-spacing="16" fill="#FFFFFF">
                 <tspan x="391.898438" y="64">13% </tspan>
-                <tspan x="388" y="80.3359375" font-family="OpenSans, Open Sans" font-weight="normal">Alpha</tspan>
+                <tspan x="388" y="80.3359375" font-weight="normal">Alpha</tspan>
             </text>
-            <text id="14%-Beta" font-family="OpenSans-Bold, Open Sans" font-size="16" font-weight="bold" line-spacing="16" fill="#FFFFFF">
+            <text id="14%-Beta" font-size="16" font-weight="bold" line-spacing="16" fill="#FFFFFF">
                 <tspan x="491" y="64">14% </tspan>
-                <tspan x="491.503906" y="80.3359375" font-family="OpenSans, Open Sans" font-weight="normal">Beta</tspan>
+                <tspan x="491.503906" y="80.3359375" font-weight="normal">Beta</tspan>
             </text>
-            <text id="9%-Live" font-family="OpenSans-Bold, Open Sans" font-size="16" font-weight="bold" line-spacing="16" fill="#FFFFFF">
+            <text id="9%-Live" font-size="16" font-weight="bold" line-spacing="16" fill="#FFFFFF">
                 <tspan x="581.789062" y="64">9% </tspan>
-                <tspan x="580" y="80.3359375" font-family="OpenSans, Open Sans" font-weight="normal">Live</tspan>
+                <tspan x="580" y="80.3359375" font-weight="normal">Live</tspan>
             </text>
-            <text id="15%-Other" font-family="OpenSans-Bold, Open Sans" font-size="16" font-weight="bold" line-spacing="16" fill="#333333">
+            <text id="15%-Other" font-size="16" font-weight="bold" line-spacing="16" fill="#333333">
                 <tspan x="665.269531" y="64">15% </tspan>
-                <tspan x="661" y="80.3359375" font-family="OpenSans, Open Sans" font-weight="normal">Other</tspan>
+                <tspan x="661" y="80.3359375" font-weight="normal">Other</tspan>
             </text>
             <rect id="Rectangle-16" fill="#FFFFFF" fill-rule="evenodd" x="325" y="0" width="85" height="29"></rect>
-            <text id="Briefs-by-phase-Copy" font-family=".HelveticaNeueDeskInterface-Regular, SFNS Display" font-size="17" font-weight="normal" line-spacing="28" fill="#313131">
+            <text id="Briefs-by-phase-Copy" font-size="17" font-weight="normal" line-spacing="28" fill="#313131">
                 <tspan x="308" y="16">Briefs by phase</tspan>
             </text>
         </g>

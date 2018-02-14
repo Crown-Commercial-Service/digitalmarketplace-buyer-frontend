@@ -13,34 +13,34 @@
                 <path d="M59.9546207,60.2856 L107.189793,96.9795429 C97.8966897,108.806743 86.2111724,115.9272 71.3925517,118.790057 L59.9546207,60.2856 Z" id="Fill-8" fill="#0C7B92"></path>
                 <path d="M59.9546207,60.2856 L59.9546207,0.685371429 C93.0601379,0.685371429 119.897379,27.3692571 119.897379,60.2856 C119.897379,74.3736 115.913931,85.8771429 107.189793,96.9795429 L59.9546207,60.2856 Z" id="Fill-10" fill="#C35D8E"></path>
             </g>
-            <text id="210-entities-have-re" font-family="OpenSans-Bold, Open Sans" font-size="16" font-weight="bold" line-spacing="22" fill="#4A4A4A">
+            <text id="210-entities-have-re" font-size="16" font-weight="bold" line-spacing="22" fill="#4A4A4A">
                 <tspan x="146" y="27">210 entities </tspan>
                 <tspan x="146" y="49">have registered,</tspan>
-                <tspan x="275.367188" y="49" font-family="OpenSans, Open Sans" font-weight="normal"> </tspan>
-                <tspan x="146" y="71" font-family="OpenSans, Open Sans" font-weight="normal">47% of which are </tspan>
-                <tspan x="146" y="93" font-family="OpenSans, Open Sans" font-weight="normal">Commonwealth </tspan>
-                <tspan x="146" y="115" font-family="OpenSans, Open Sans" font-weight="normal">government</tspan>
+                <tspan x="275.367188" y="49" font-weight="normal"> </tspan>
+                <tspan x="146" y="71" font-weight="normal">47% of which are </tspan>
+                <tspan x="146" y="93" font-weight="normal">Commonwealth </tspan>
+                <tspan x="146" y="115" font-weight="normal">government</tspan>
             </text>
             <path d="M132,62 L132,72" id="Line-Copy-15" stroke="#224A61" stroke-width="2" stroke-linecap="round" transform="translate(132.000000, 67.000000) rotate(-90.000000) translate(-132.000000, -67.000000) "></path>
-            <text id="Commonwealth-CCE" font-family=".HelveticaNeueDeskInterface-Regular, SFNS Display" font-size="14" font-weight="normal" fill="#808184">
+            <text id="Commonwealth-CCE" font-size="14" font-weight="normal" fill="#808184">
                 <tspan x="24" y="170">Commonwealth </tspan>
                 <tspan x="24" y="187">CCE</tspan>
             </text>
-            <text id="State-/-Territory-Copy-2" font-family=".HelveticaNeueDeskInterface-Regular, SFNS Display" font-size="14" font-weight="normal" fill="#808184">
+            <text id="State-/-Territory-Copy-2" font-size="14" font-weight="normal" fill="#808184">
                 <tspan x="24" y="220">State / Territory</tspan>
             </text>
-            <text id="Commonwealth-NCCE" font-family=".HelveticaNeueDeskInterface-Regular, SFNS Display" font-size="14" font-weight="normal" fill="#808184">
+            <text id="Commonwealth-NCCE" font-size="14" font-weight="normal" fill="#808184">
                 <tspan x="168" y="170">Commonwealth </tspan>
                 <tspan x="168" y="187">NCCE</tspan>
             </text>
-            <text id="Local-Copy" font-family=".HelveticaNeueDeskInterface-Regular, SFNS Display" font-size="14" font-weight="normal" fill="#808184">
+            <text id="Local-Copy" font-size="14" font-weight="normal" fill="#808184">
                 <tspan x="168" y="220">Local</tspan>
             </text>
             <rect id="Rectangle-3-Copy-11" fill="#0C7B92" fill-rule="evenodd" x="2" y="158" width="16" height="16"></rect>
             <rect id="Rectangle-3-Copy-12" fill="#6C81DA" fill-rule="evenodd" x="2" y="206" width="16" height="16"></rect>
             <rect id="Rectangle-3-Copy-13" fill="#C35D8E" fill-rule="evenodd" x="146" y="158" width="16" height="16"></rect>
             <rect id="Rectangle-3-Copy-14" fill="#F17465" fill-rule="evenodd" x="146" y="206" width="16" height="16"></rect>
-            <text id="Other-Copy-2" font-family=".HelveticaNeueDeskInterface-Regular, SFNS Display" font-size="14" font-weight="normal" fill="#808184">
+            <text id="Other-Copy-2" font-size="14" font-weight="normal" fill="#808184">
                 <tspan x="23" y="248">Other</tspan>
             </text>
             <rect id="Rectangle-3-Copy-15" fill="#4E9774" fill-rule="evenodd" x="2" y="234" width="16" height="16"></rect>

@@ -13,10 +13,10 @@
                     <use fill="#FAFBFC" fill-rule="evenodd" xlink:href="#path-1"></use>
                     <rect stroke="#BBBBBB" stroke-width="1" x="0.5" y="0.5" width="270.76835" height="157.942892"></rect>
                 </g>
-                <text id="20" font-family="OpenSans-Bold, Open Sans" font-size="36" font-weight="bold" fill="#17788D">
+                <text id="20" font-size="36" font-weight="bold" fill="#17788D">
                     <tspan x="13" y="52">20</tspan>
                 </text>
-                <text id="Briefs-have-been-con" font-family=".HelveticaNeueDeskInterface-Regular, SFNS Display" font-size="17" font-weight="normal" line-spacing="28" fill="#313131">
+                <text id="Briefs-have-been-con" font-size="17" font-weight="normal" line-spacing="28" fill="#313131">
                     <tspan x="13" y="79">Briefs have been </tspan>
                     <tspan x="13" y="107">contracted this month*</tspan>
                 </text>

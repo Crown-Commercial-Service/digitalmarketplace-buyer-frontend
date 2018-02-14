@@ -14,16 +14,16 @@
                     <rect stroke="#BBBBBB" stroke-width="1" x="0.5" y="0.5" width="325.721509" height="194.212589"></rect>
                 </g>
             </g>
-            <text id="72%" font-family="OpenSans-Bold, Open Sans" font-size="36" font-weight="bold" letter-spacing="-1.50000024" fill="#17788D">
+            <text id="72%" font-size="36" font-weight="bold" letter-spacing="-1.50000024" fill="#17788D">
                 <tspan x="16" y="60">72%</tspan>
             </text>
-            <text id="Of-the-dollar-value" font-family="OpenSans, Open Sans" font-size="17" font-weight="normal" line-spacing="28" fill="#313131">
+            <text id="Of-the-dollar-value" font-size="17" font-weight="normal" line-spacing="28" fill="#313131">
                 <tspan x="16" y="91">Of the </tspan>
-                <tspan x="69.8056641" y="91" font-family="OpenSans-Bold, Open Sans" font-weight="bold">dollar value</tspan>
+                <tspan x="69.8056641" y="91" font-weight="bold">dollar value</tspan>
                 <tspan x="170.211914" y="91"> contracted </tspan>
                 <tspan x="16" y="119">through the Marketplace since </tspan>
                 <tspan x="16" y="147">29 August 2016 has been </tspan>
-                <tspan x="16" y="175" font-family="OpenSans-Bold, Open Sans" font-weight="bold">awarded to SMEs*</tspan>
+                <tspan x="16" y="175" font-weight="bold">awarded to SMEs*</tspan>
                 <tspan x="169.730469" y="175"> </tspan>
             </text>
         </g>

@@ -6,10 +6,10 @@
     <defs></defs>
     <g id="Jan-monthly-report-greater-than-768px" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-737.000000, -903.000000)">
         <g id="56%-of-briefs-have-been-for-digital-specialists" transform="translate(738.000000, 897.000000)">
-            <text id="60%-of-briefs-have-b" font-family="OpenSans-Bold, Open Sans" font-size="16" font-weight="bold" line-spacing="22" fill="#333333">
+            <text id="60%-of-briefs-have-b" font-size="16" font-weight="bold" line-spacing="22" fill="#333333">
                 <tspan x="147" y="51">60% </tspan>
-                <tspan x="183.835938" y="51" font-family="OpenSans, Open Sans" font-weight="normal">of briefs </tspan>
-                <tspan x="147" y="73" font-family="OpenSans, Open Sans" font-weight="normal">have been for</tspan>
+                <tspan x="183.835938" y="51" font-weight="normal">of briefs </tspan>
+                <tspan x="147" y="73" font-weight="normal">have been for</tspan>
                 <tspan x="250.21875" y="73"> </tspan>
                 <tspan x="147" y="95">digital </tspan>
                 <tspan x="147" y="117">specialists</tspan>
@@ -27,10 +27,10 @@
                     <path d="M80.6954914,140.89313 C108.502454,133.522563 128.996736,108.183698 128.996736,78.0581376 C128.996736,42.1596288 99.8952451,13.0581376 63.9967364,13.0581376 C44.4443054,13.0581376 26.9082299,21.6911815 14.992346,35.3534332" id="Oval-4-Copy-2" transform="translate(71.994541, 76.975634) rotate(-165.000000) translate(-71.994541, -76.975634) "></path>
                 </g>
             </g>
-            <text id="Outcome-Copy-3" font-family=".HelveticaNeueDeskInterface-Bold, SFNS Display" font-size="11" font-weight="bold" fill="#808184">
+            <text id="Outcome-Copy-3" font-size="11" font-weight="bold" fill="#808184">
                 <tspan x="0" y="14">Outcome</tspan>
             </text>
-            <text id="Specialist-Copy-2" font-family=".HelveticaNeueDeskInterface-Bold, SFNS Display" font-size="11" font-weight="bold" fill="#808184">
+            <text id="Specialist-Copy-2" font-size="11" font-weight="bold" fill="#808184">
                 <tspan x="90" y="152">Specialist</tspan>
             </text>
         </g>

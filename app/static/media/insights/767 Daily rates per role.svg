@@ -6,14 +6,14 @@
     <defs></defs>
     <g id="Jan-monthly-report-less-than-767px" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-26.000000, -3031.000000)">
         <g id="767-seller-bids-per-role" transform="translate(24.000000, 3027.000000)">
-            <text id="Daily-rates-sellers" font-family=".HelveticaNeueDeskInterface-Regular, SFNS Display" font-size="17" font-weight="normal" line-spacing="26" fill="#313131">
+            <text id="Daily-rates-sellers" font-size="17" font-weight="normal" line-spacing="26" fill="#313131">
                 <tspan x="26.5666504" y="14">Daily rates sellers have bid for </tspan>
                 <tspan x="81.9536133" y="40">specialist roles</tspan>
             </text>
-            <text id="Daily-rate-inc-GST" font-family=".HelveticaNeueDeskInterface-Bold, SFNS Display" font-size="14" font-weight="bold" fill="#224A61">
+            <text id="Daily-rate-inc-GST" font-size="14" font-weight="bold" fill="#224A61">
                 <tspan x="79" y="340">Daily rate inc GST</tspan>
             </text>
-            <g id="Group-8" stroke-width="1" fill-rule="evenodd" transform="translate(0.000000, 61.000000)" fill="#224A61" font-family="OpenSans, Open Sans" font-size="11" font-weight="normal">
+            <g id="Group-8" stroke-width="1" fill-rule="evenodd" transform="translate(0.000000, 61.000000)" fill="#224A61" font-size="11" font-weight="normal">
                 <g id="Group-3" transform="translate(1.000000, 0.000000)">
                     <text id="User-research-and-de">
                         <tspan x="27.5316287" y="12">User research and </tspan>
@@ -54,13 +54,13 @@
             <g id="Group-2" stroke-width="1" fill-rule="evenodd" transform="translate(134.000000, 70.000000)">
                 <g id="Group-14" transform="translate(0.000000, 221.000000)">
                     <path d="M0,0 L137.361111,0" id="Shape-Copy" stroke="#BBBBBB" fill-opacity="0.300000012" fill="#001F5F" fill-rule="nonzero"></path>
-                    <text id="1000-copy" fill="#444444" font-family=".HelveticaNeueDeskInterface-Regular, SFNS Display" font-size="7" font-weight="normal">
+                    <text id="1000-copy" fill="#444444" font-size="7" font-weight="normal">
                         <tspan x="36.5" y="18">1000</tspan>
                     </text>
-                    <text id="2000-copy" fill="#444444" font-family=".HelveticaNeueDeskInterface-Regular, SFNS Display" font-size="7" font-weight="normal">
+                    <text id="2000-copy" fill="#444444" font-size="7" font-weight="normal">
                         <tspan x="81.2222222" y="18">2000</tspan>
                     </text>
-                    <text id="3000-copy" fill="#444444" font-family=".HelveticaNeueDeskInterface-Regular, SFNS Display" font-size="7" font-weight="normal">
+                    <text id="3000-copy" fill="#444444" font-size="7" font-weight="normal">
                         <tspan x="122.75" y="19">3000</tspan>
                     </text>
                 </g>

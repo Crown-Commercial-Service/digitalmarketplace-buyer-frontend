@@ -27,20 +27,20 @@
                 </g>
             </g>
             <path d="M138,74 L148,74" id="Line-Copy-15" stroke="#224A61" stroke-width="2" stroke-linecap="round" transform="translate(143.000000, 75.000000) scale(-1, 1) translate(-143.000000, -75.000000) "></path>
-            <text id="67%-of-all-briefs-ha" font-family="OpenSans-Bold, Open Sans" font-size="16" font-weight="bold" line-spacing="22" fill="#333333">
+            <text id="67%-of-all-briefs-ha" font-size="16" font-weight="bold" line-spacing="22" fill="#333333">
                 <tspan x="1" y="59">67% </tspan>
-                <tspan x="37.8359375" y="59" font-family="OpenSans, Open Sans" font-weight="normal">of all briefs </tspan>
-                <tspan x="1" y="81" font-family="OpenSans, Open Sans" font-weight="normal">have been</tspan>
+                <tspan x="37.8359375" y="59" font-weight="normal">of all briefs </tspan>
+                <tspan x="1" y="81" font-weight="normal">have been</tspan>
                 <tspan x="78.4453125" y="81"> open </tspan>
                 <tspan x="1" y="103">to all</tspan>
             </text>
-            <text id="One" font-family=".HelveticaNeueDeskInterface-Bold, SFNS Display" font-size="11" font-weight="bold" fill="#FFFFFF">
+            <text id="One" font-size="11" font-weight="bold" fill="#FFFFFF">
                 <tspan x="246" y="77">One</tspan>
             </text>
-            <text id="Some" font-family=".HelveticaNeueDeskInterface-Bold, SFNS Display" font-size="11" font-weight="bold" fill="#FFFFFF">
+            <text id="Some" font-size="11" font-weight="bold" fill="#FFFFFF">
                 <tspan x="220" y="40">Some</tspan>
             </text>
-            <text id="All" font-family=".HelveticaNeueDeskInterface-Bold, SFNS Display" font-size="11" font-weight="bold" fill="#FFFFFF">
+            <text id="All" font-size="11" font-weight="bold" fill="#FFFFFF">
                 <tspan x="166" y="77">All</tspan>
             </text>
             <path d="M228.445919,138.726192 C255.807052,131.25763 275.920221,106.226181 275.920221,76.4970501 C275.920221,40.8746837 247.042587,11.9970501 211.420221,11.9970501 C181.056703,11.9970501 155.593494,32.9777628 148.737083,61.2326971" id="Oval-3" stroke="#224A61" stroke-width="2" stroke-linecap="round" transform="translate(212.328652, 75.361621) rotate(-165.000000) translate(-212.328652, -75.361621) "></path>
