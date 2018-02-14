@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"' width="272px" height="339px" viewBox="0 0 272 339" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"' width="274px" height="343px" viewBox="0 0 274 343" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="background: #FFFFFF;">
     <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
     <title>767 seller bids per role</title>
     <desc>Created with Sketch.</desc>
     <defs></defs>
-    <g id="Jan-monthly-report-less-than-767px" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-26.000000, -3031.000000)">
-        <g id="767-seller-bids-per-role" transform="translate(24.000000, 3027.000000)">
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="767-seller-bids-per-role">
             <text id="Daily-rates-sellers" font-size="17" font-weight="normal" line-spacing="26" fill="#313131">
                 <tspan x="26.5666504" y="14">Daily rates sellers have bid for </tspan>
                 <tspan x="81.9536133" y="40">specialist roles</tspan>
@@ -13,7 +13,7 @@
             <text id="Daily-rate-inc-GST" font-size="14" font-weight="bold" fill="#224A61">
                 <tspan x="79" y="340">Daily rate inc GST</tspan>
             </text>
-            <g id="Group-8" stroke-width="1" fill-rule="evenodd" transform="translate(0.000000, 61.000000)" fill="#224A61" font-size="11" font-weight="normal">
+            <g id="Group-8" transform="translate(0.000000, 61.000000)" fill="#224A61" font-size="11" font-weight="normal">
                 <g id="Group-3" transform="translate(1.000000, 0.000000)">
                     <text id="User-research-and-de">
                         <tspan x="27.5316287" y="12">User research and </tspan>
@@ -51,7 +51,7 @@
                     </text>
                 </g>
             </g>
-            <g id="Group-2" stroke-width="1" fill-rule="evenodd" transform="translate(134.000000, 70.000000)">
+            <g id="Group-2" transform="translate(134.000000, 70.000000)">
                 <g id="Group-14" transform="translate(0.000000, 221.000000)">
                     <path d="M0,0 L137.361111,0" id="Shape-Copy" stroke="#BBBBBB" fill-opacity="0.300000012" fill="#001F5F" fill-rule="nonzero"></path>
                     <text id="1000-copy" fill="#444444" font-size="7" font-weight="normal">
