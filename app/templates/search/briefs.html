@@ -82,7 +82,12 @@ Opportunities – {{ framework.name }}
                 {{ brief.organisation }}
               </li>
               <li>
-                {{ brief.location|join(', ') }}
+                {% for l in brief.location %}
+                  {%- if not loop.first %}
+                    {%- if loop.last %} or{% else %},{% endif %}
+                  {% endif %} 
+                  {{ l }}
+                {%- endfor %}
               </li>
             </ul>
 
@@ -91,7 +96,7 @@ Opportunities – {{ framework.name }}
                 {{ brief.lotName }}
               </li>
             </ul>
-
+            
             {% if brief.areaOfExpertise %}
               <ul class="category">
                 <li>
