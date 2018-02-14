@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="274px" height="300px" viewBox="0 0 274 300" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>767 average # of responses per brief</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Jan-monthly-report-less-than-767px" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-24.000000, -4423.000000)">
+        <g id="767-average-#-of-responses-per-brief" transform="translate(24.000000, 4418.000000)">
+            <g id="Group" transform="translate(0.000000, -1.000000)">
+                <polyline id="Shape" stroke="#17788D" stroke-width="3" stroke-linecap="round" points="11 216.320145 26.3218272 159.205735 26.8334219 157.421446 32.963887 137.206651 33.4754817 135.662554 37.5595681 124.49359 38.0711628 123.266892 41.6436545 115.790892 42.1552492 114.890169 45.2204817 110.296482 45.7320764 109.665976 48.2857143 107.041012 48.797309 106.616386 51.3509468 104.973639 54.4161794 104 57.481412 104.042892 60.542309 105.055133 64.1191362 107.336964 64.6307309 107.753012 68.2075581 111.197205 68.7148173 111.767663 72.2916445 116.219807 72.8032392 116.931807 76.8873256 123.279759 77.3989203 124.167614 80.9757475 131.060289 81.4873422 132.149735 85.5714286 141.813205 86.0830233 143.138554 91.190299 157.528675 91.7018937 159.047036 100.381661 183.992771 100.893256 185.288096 104.470083 193.441783 104.981678 194.466892 108.554169 200.694747 109.065764 201.449639 112.130997 205.382795 112.642591 205.948964 116.215083 209.328819 116.726678 209.749157 121.833953 213.373494 130.006462 219.013735 130.518056 219.425494 134.606478 223.118458 135.113738 223.628867 140.221013 229.303422 140.732608 229.912482 154.012392 245.580771 154.523987 246.099759 159.119668 250.208771 159.631262 250.594795 163.20809 252.808 166.784917 254.176241 170.869003 254.84106 178.529917 254.849639 184.660382 255.184193 192.83289 256.543855 203.047442 258.122265 240.844751 262.021108 263.827492 263.972675 272 264.09706"></polyline>
+                <g id="Group-7-Copy" transform="translate(0.000000, 286.000000)" stroke="#BBBBBB">
+                    <path d="M0,1.29154519 L271.221757,1.29154519" id="Shape"></path>
+                </g>
+                <text id="Buyers-receive-on-av" font-family="OpenSans, Open Sans" font-size="17" font-weight="normal" line-spacing="26" fill="#313131">
+                    <tspan x="33.1157227" y="18">Buyers receive on average </tspan>
+                    <tspan x="47.9990234" y="44">12 responses per brief</tspan>
+                </text>
+                <text id="12" font-family=".HelveticaNeueDeskInterface-Bold, SFNS Display" font-size="11" font-weight="bold" letter-spacing="0.100000001" fill="#224A61">
+                    <tspan x="65.3776824" y="306">12</tspan>
+                </text>
+                <path d="M71.4373761,65.9999424 L71.4373761,288.085291" id="Line-3-Copy" stroke="#777777" stroke-width="2" stroke-linecap="square"></path>
+                <circle id="Oval-22-Copy" fill="#777777" cx="71.4341917" cy="287.5" r="3.5"></circle>
+            </g>
+        </g>
+    </g>
+</svg>
