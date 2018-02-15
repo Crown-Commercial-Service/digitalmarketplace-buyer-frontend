@@ -6,6 +6,7 @@ import dmapiclient
 from dmutils import init_app, flask_featureflags
 from dmcontent.content_loader import ContentLoader
 from dmutils.user import User
+from dmutils.external import external as external_blueprint
 
 from config import configs
 
@@ -52,7 +53,6 @@ def create_app(config_name):
 
     from .main import main as main_blueprint
     from .main import direct_award as direct_award_blueprint
-    from .external.views.external import external as external_blueprint
     from .status import status as status_blueprint
 
     application.register_blueprint(status_blueprint)
