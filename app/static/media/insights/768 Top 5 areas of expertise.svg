@@ -38,34 +38,34 @@
                 <text id="Cyber-security" font-size="11" font-weight="normal" fill="#224A61">
                     <tspan x="63.1518555" y="216">Cyber security</tspan>
                 </text>
-                <rect id="Rectangle-10-Copy-16" fill="#17788D" x="152" y="67" width="85.0999985" height="20"></rect>
+                <rect id="Rectangle-10-Copy-16" fill="#17788D" x="152" y="67" width="90.0149994" height="20"></rect>
                 <rect id="Rectangle-10-Copy-17" fill="#17788D" x="154" y="267" width="201.25" height="20"></rect>
                 <path d="M153.993849,299 L353.505639,299" id="Line-Copy" stroke="#BBBBBB" stroke-linecap="square"></path>
-                <rect id="Rectangle-10-Copy-18" fill="#17788D" x="152" y="101" width="69" height="20"></rect>
-                <rect id="Rectangle-10-Copy-19" fill="#17788D" x="152" y="134" width="52.9000015" height="20"></rect>
-                <rect id="Rectangle-10-Copy-20" fill="#17788D" x="152" y="233" width="43.7000008" height="20"></rect>
-                <rect id="Rectangle-10-Copy-21" fill="#17788D" x="152" y="168" width="16.1000004" height="20"></rect>
-                <rect id="Rectangle-10-Copy-22" fill="#17788D" x="152" y="201" width="16.1000004" height="20"></rect>
-                <text id="74" font-size="14" font-weight="bold" fill="#FFFFFF">
-                    <tspan x="216.017578" y="82">74</tspan>
+                <rect id="Rectangle-10-Copy-18" fill="#17788D" x="152" y="101" width="68.8300018" height="20"></rect>
+                <rect id="Rectangle-10-Copy-19" fill="#17788D" x="152" y="134" width="55.0699997" height="20"></rect>
+                <rect id="Rectangle-10-Copy-20" fill="#17788D" x="152" y="233" width="51.8899994" height="20"></rect>
+                <rect id="Rectangle-10-Copy-21" fill="#17788D" x="152" y="168" width="18" height="20"></rect>
+                <rect id="Rectangle-10-Copy-22" fill="#17788D" x="152" y="201" width="16.9400005" height="20"></rect>
+                <text id="85" font-size="14" font-weight="bold" fill="#FFFFFF">
+                    <tspan x="221.017578" y="82">85</tspan>
                 </text>
-                <text id="175" font-size="14" font-weight="bold" fill="#FFFFFF">
-                    <tspan x="324.026367" y="282">175</tspan>
+                <text id="190" font-size="14" font-weight="bold" fill="#FFFFFF">
+                    <tspan x="325.026367" y="282">190</tspan>
                 </text>
-                <text id="60" font-size="14" font-weight="bold" fill="#FFFFFF">
-                    <tspan x="200.017578" y="116">60</tspan>
+                <text id="65" font-size="14" font-weight="bold" fill="#FFFFFF">
+                    <tspan x="200.017578" y="116">65</tspan>
                 </text>
-                <text id="46" font-size="14" font-weight="bold" fill="#FFFFFF">
-                    <tspan x="184.017578" y="149">46</tspan>
+                <text id="52" font-size="14" font-weight="bold" fill="#FFFFFF">
+                    <tspan x="186.017578" y="149">52</tspan>
                 </text>
-                <text id="38" font-size="14" font-weight="bold" fill="#FFFFFF">
-                    <tspan x="173.017578" y="248">38</tspan>
+                <text id="49" font-size="14" font-weight="bold" fill="#FFFFFF">
+                    <tspan x="181.017578" y="248">49</tspan>
                 </text>
-                <text id="14" font-size="14" font-weight="bold" fill="#224A61">
-                    <tspan x="174.017578" y="183">14</tspan>
+                <text id="17" font-size="14" font-weight="bold" fill="#224A61">
+                    <tspan x="175.017578" y="183">17</tspan>
                 </text>
-                <text id="14" font-size="14" font-weight="bold" fill="#224A61">
-                    <tspan x="173.017578" y="216">14</tspan>
+                <text id="16" font-size="14" font-weight="bold" fill="#224A61">
+                    <tspan x="173.017578" y="216">16</tspan>
                 </text>
             </g>
         </g>

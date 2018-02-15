@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"' width="272px" height="193px" viewBox="0 0 272 193" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>767 # sellers</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="272" height="193"></rect>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-2">
+            <stop stop-color="#33B0C1" offset="0%"></stop>
+            <stop stop-color="#17788D" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Jan-monthly-report-less-than-767px" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-24.000000, -2262.000000)">
+        <g id="767-total-opportunities" transform="translate(24.000000, 2262.000000)">
+            <g>
+                <g id="Rectangle-Copy">
+                    <use fill="#FAFBFC" fill-rule="evenodd" xlink:href="#path-1"></use>
+                    <rect stroke="#BBBBBB" stroke-width="1" x="0.5" y="0.5" width="271" height="192"></rect>
+                </g>
+                <text id="787" font-size="36" font-weight="bold" letter-spacing="-1.50000024" fill="#17788D">
+                    <tspan x="12" y="60">787</tspan>
+                </text>
+                <polyline id="Shape" stroke="url(#linearGradient-2)" stroke-width="3" points="164 70.8388704 168.045515 70.8388704 169.056146 70.1496678 170.066777 68.0820598 171.078904 67.3913621 173.101661 67.3913621 174.112292 65.3237542 176.13505 61.1870432 177.145681 61.1870432 178.157807 61.1870432 179.168439 60.4978405 181.191196 59.1194352 182.201827 59.1194352 183.213953 59.1194352 184.224585 56.3626246 189.280731 56.3626246 190.292857 54.2935216 192.31412 52.9151163 193.326246 52.9151163 194.336877 50.1583056 195.349003 46.0215947 196.359635 45.332392 197.370266 45.332392 198.382392 43.9539867 199.393023 43.9539867 201.415781 43.9539867 202.426412 41.8848837 203.438538 41.8848837 204.449169 40.5064784 205.461296 39.8172757 206.471927 39.8172757 207.482558 38.4388704 208.494684 38.4388704 209.505316 37.7496678 210.517442 37.7496678 211.528073 36.3697674 212.538704 35.6805648 222.650997 35.6805648 223.663123 34.9913621 226.696512 32.9237542 227.707143 32.9237542 229.7299 32.9237542 230.742027 30.8561462 232.764784 26.7194352 233.775415 26.7194352 234.786047 26.0302326 235.798173 26.0302326 237.82093 24.6518272 238.831561 21.8935216 240.854319 21.8935216 241.86495 20.5151163 243.887708 20.5151163 244.898339 19.8259136 245.910465 18.4475083 246.921096 16.3784053 250.966611 16.3784053 251.977243 15 254 15"></polyline>
+                <text id="Sellers-registered-t" font-size="17" font-weight="normal" line-spacing="28" fill="#313131">
+                    <tspan x="12" y="89">Sellers registered to offer digital </tspan>
+                    <tspan x="12" y="117">and ICT services</tspan>
+                </text>
+                <text id="30-new-sellers-this" font-size="20" font-weight="bold" line-spacing="28" fill="#313131">
+                    <tspan x="13" y="162">30 new sellers this month</tspan>
+                </text>
+            </g>
+        </g>
+    </g>
+</svg>

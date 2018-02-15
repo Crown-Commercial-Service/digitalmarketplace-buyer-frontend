@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"' width="699px" height="290px" viewBox="0 0 699 290" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="background: #FFFFFF;">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>768 average seller response</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="768-average-seller-response">
+            <text id="Buyers-receive-on-av" font-size="17" font-weight="normal" line-spacing="26" fill="#313131">
+                <tspan x="174.406738" y="18">Buyers receive on average 12 responses per brief</tspan>
+            </text>
+            <g id="Group-11" transform="translate(0.000000, 47.000000)">
+                <polyline id="Shape" stroke="#17788D" stroke-width="3" stroke-linecap="round" points="28 151.25205 67.3318937 94.172266 68.6451827 92.3890586 84.382392 72.1865188 85.6956811 70.6433585 96.1797342 59.4811659 97.4930233 58.2552108 106.663787 50.7837432 107.977076 49.8835664 115.845681 45.2926646 117.15897 44.6625409 123.714286 42.0391684 125.027575 41.6147993 131.58289 39.9730483 139.451495 39 147.3201 39.0428656 155.177575 40.0544928 164.359468 42.3349408 165.672757 42.7507368 174.854651 46.1928415 176.156811 46.7629534 185.338704 51.2123989 186.651993 51.9239672 197.136047 58.2680705 198.449336 59.1553877 207.631229 66.0438836 208.944518 67.1326689 219.428571 76.7902802 220.74186 78.1148261 233.852492 92.4962225 235.165781 94.0136634 257.447176 118.944275 258.760465 120.238815 267.942359 128.387558 269.255648 129.412045 278.426412 135.636125 279.739701 136.390559 287.608306 140.321331 288.921595 140.887156 298.092359 144.264963 299.405648 144.685045 312.516279 148.307185 333.495515 153.944007 334.808804 154.355516 345.303987 158.046241 346.606146 158.556341 359.716777 164.227455 361.030066 164.836146 395.119934 180.494937 396.433223 181.01361 408.230565 185.120131 409.543854 185.505921 418.725748 187.717784 427.907641 189.085195 438.391694 189.749612 458.057641 189.758185 473.79485 190.092536 494.774086 191.451374 520.995349 193.028827 618.022924 196.925307 677.020764 198.87569 698 199"></polyline>
+                <g id="Group-7-Copy" transform="translate(0.000000, 221.000000)" stroke="#BBBBBB">
+                    <path d="M0,1.29154519 L696.002892,1.29154519" id="Shape"></path>
+                </g>
+                <path d="M183,0.999942364 L183,223.085291" id="Line-3-Copy" stroke="#777777" stroke-width="2" stroke-linecap="square"></path>
+                <text id="12" font-size="11" font-weight="bold" letter-spacing="0.100000001" fill="#224A61">
+                    <tspan x="176" y="241">12</tspan>
+                </text>
+                <circle id="Oval-22-Copy" fill="#777777" cx="182.5" cy="222.5" r="3.5"></circle>
+            </g>
+        </g>
+    </g>
+</svg>
