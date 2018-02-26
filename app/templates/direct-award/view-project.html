@@ -3,7 +3,15 @@
 {% block page_title %}{{ project.name }} - Digital Marketplace{% endblock %}
 
 {% block custom_meta %}
-  <meta name="ga_customDimension" data-id="8" data-value="{{ current_project_stage }}">
+  {% with custom_dimensions = [
+      {
+        "data_id": 8,
+        "data_value": current_project_stage
+      }
+    ]
+  %}
+    {% include "toolkit/custom-dimensions.html" %}
+  {% endwith%}
 {% endblock %}
 
 {% block breadcrumb %}

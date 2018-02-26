@@ -1,7 +1,7 @@
 {% extends "govuk/govuk_template.html" %}
 
 {% block head %} 
-  {% block custom_meta %}{% endblock %}
+  {% block custom_meta %}{% include "toolkit/custom-dimensions.html" %}{% endblock %}
   {% include "_stylesheets.html" %}
   {% include "_site_verification.html" %}
 {% endblock %}
