@@ -202,7 +202,14 @@ def search_services():
         doc_type=doc_type,
         **build_search_query(clean_request_query_params, filters.values(), content_manifest, lots_by_slug)
     )
-    search_results_obj = SearchResults(search_api_response, lots_by_slug)
+    search_results_obj = SearchResults(
+        search_api_response,
+        lots_by_slug,
+        highlight_fields=frozenset((
+            'serviceSummary',
+            'serviceDescription',
+        )),
+    )
 
     # the search api doesn't supply its own pagination information: use this `pagination` function to figure out what
     # links to show

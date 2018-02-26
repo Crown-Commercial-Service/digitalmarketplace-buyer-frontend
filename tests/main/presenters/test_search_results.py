@@ -73,8 +73,24 @@ class TestSearchResults(BaseApplicationTest):
         assert hasattr(search_results_instance, 'page')
         assert search_results_instance.page == "20"
 
+    def test_no_highlighting_if_no_fields_specified(self):
+        search_results_instance = SearchResults(
+            self.fixture,
+            self._lots_by_slug,
+        )
+        result_with_no_highlight = self._get_service_result_by_id(
+            search_results_instance.search_results, '4-G4-0871-001'
+        )
+        assert result_with_no_highlight['serviceSummary'].startswith(
+            u"Fastly CDN (Content Delivery Network) speeds up delivery of your website and its content to your users"
+        )
+
     def test_highlighting_for_one_line_summary(self):
-        search_results_instance = SearchResults(self.fixture, self._lots_by_slug)
+        search_results_instance = SearchResults(
+            self.fixture,
+            self._lots_by_slug,
+            highlight_fields=frozenset(("serviceSummary",)),
+        )
         result_with_one_line_highlight = self._get_service_result_by_id(
             search_results_instance.search_results, '4-G4-0871-001'
         )
@@ -83,7 +99,11 @@ class TestSearchResults(BaseApplicationTest):
         )
 
     def test_highlighting_for_multiple_line_summary(self):
-        search_results_instance = SearchResults(self.fixture, self._lots_by_slug)
+        search_results_instance = SearchResults(
+            self.fixture,
+            self._lots_by_slug,
+            highlight_fields=frozenset(("serviceSummary", "serviceDescription",)),
+        )
         result_with_multi_line_highlight = self._get_service_result_by_id(
             search_results_instance.search_results, '4-G1-0340-001'
         )

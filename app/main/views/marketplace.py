@@ -210,7 +210,13 @@ def list_opportunities(framework_family):
             brief['specialistRole'] = content.summary(brief).get_question('specialistRole').value
         brief['location'] = content.summary(brief).get_question('location').value
 
-    search_results_obj = SearchResults(search_api_response, lots_by_slug)
+    search_results_obj = SearchResults(
+        search_api_response,
+        lots_by_slug,
+        highlight_fields=frozenset((
+            'summary',
+        )),
+    )
 
     pagination_config = pagination(
         search_results_obj.total,
