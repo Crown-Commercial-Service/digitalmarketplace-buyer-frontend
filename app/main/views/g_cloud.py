@@ -2,6 +2,7 @@
 from datetime import datetime
 import inflection
 from operator import itemgetter
+from itertools import chain
 
 from flask import abort, render_template, request, redirect, current_app, url_for, flash, Markup
 from flask_login import current_user
@@ -244,10 +245,17 @@ def search_services():
         Href(url_for('.{}'.format(view_name))),
     )
 
-    # Filter form should also filter by lot, and by category, when any of those are selected.
-    # (If a sub-category is selected, we also need the parent category id, so that the correct part
-    # of the category tree is displayed when the sub-category appears under multiple parents.)
-    filter_form_hidden_fields_by_name = {f['name']: f for f in selected_category_tree_filters[1:]}
+    filter_form_hidden_fields_by_name = {
+        f["name"]: f
+        for f in chain(
+            # Filter form should also filter by lot, and by category, when any of those are selected.
+            # (If a sub-category is selected, we also need the parent category id, so that the correct part
+            # of the category tree is displayed when the sub-category appears under multiple parents.)
+            selected_category_tree_filters[1:],
+            # add "doc_type" to query string for analytics disambiguation
+            ({"name": "doc_type", "value": doc_type},),
+        )
+    }
 
     current_lot = lots_by_slug.get(current_lot_slug)
 

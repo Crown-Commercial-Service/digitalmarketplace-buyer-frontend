@@ -1617,6 +1617,7 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
 
         assert kv_pairs == {
             'lot': 'digital-outcomes',
+            'doc_type': 'briefs',
         }
 
 

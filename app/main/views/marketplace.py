@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from urllib.parse import urljoin
+from itertools import chain
 
 from flask_login import current_user
 from flask import abort, current_app, render_template, request, url_for
@@ -253,7 +254,14 @@ def list_opportunities(framework_family):
         Href(url_for('.{}'.format(view_name), framework_family=framework['framework'])),
     )
 
-    filter_form_hidden_fields_by_name = {f['name']: f for f in selected_category_tree_filters[1:]}
+    filter_form_hidden_fields_by_name = {
+        f["name"]: f
+        for f in chain(
+            selected_category_tree_filters[1:],
+            # add "doc_type" to query string for analytics disambiguation
+            ({"name": "doc_type", "value": doc_type},),
+        )
+    }
     current_lot = lots_by_slug.get(current_lot_slug)
 
     set_filter_states(filters.values(), request)
