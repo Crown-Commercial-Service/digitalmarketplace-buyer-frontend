@@ -20,6 +20,10 @@
   {% include "toolkit/proposition-header.html" %}
 {% endblock %}
 
+{% block after_header %}
+  {% include "toolkit/user-research-consent-banner.html" %}
+{% endblock %}
+
 {% block content %}
     {% block top_header %}
     {% endblock %}
