@@ -1224,6 +1224,9 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
             "offsite": False,
         }
 
+        q_inputs = document.xpath("//form[@method='get']//input[@name='q']")
+        assert tuple(element.get("value") for element in q_inputs) == ("",)
+
         ss_elem = document.xpath("//p[@class='search-summary']")[0]
         assert self._normalize_whitespace(self._squashed_element_text(ss_elem)) == "864 results found in All categories"
 
@@ -1308,6 +1311,9 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
             "offsite": False,
         }
 
+        q_inputs = document.xpath("//form[@method='get']//input[@name='q']")
+        assert tuple(element.get("value") for element in q_inputs) == ("",)
+
         parsed_original_url = urlparse(original_url)
         parsed_prev_url = urlparse(document.xpath("//li[@class='previous']/a/@href")[0])
         parsed_next_url = urlparse(document.xpath("//li[@class='next']/a/@href")[0])
@@ -1320,6 +1326,99 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         ss_elem = document.xpath("//p[@class='search-summary']")[0]
         assert self._normalize_whitespace(self._squashed_element_text(ss_elem)) == \
             "864 results found in Digital outcomes"
+
+    def test_catalogue_of_briefs_page_filtered_keyword_search(self):
+        original_url = "/digital-outcomes-and-specialists/opportunities?page=2&status=live&lot=digital-outcomes"\
+            "&location=offsite&q=Richie+Poldy"
+        res = self.client.get(original_url)
+        assert res.status_code == 200
+
+        document = html.fromstring(res.get_data(as_text=True))
+
+        self._data_api_client.find_frameworks.assert_called_once_with()
+        self._view_search_api_client.search.assert_called_once_with(
+            index='briefs-digital-outcomes-and-specialists',
+            doc_type='briefs',
+            status='live',
+            lot='digital-outcomes',
+            location='offsite',
+            page='2',
+            q='Richie Poldy',
+        )
+
+        heading = document.xpath('normalize-space(//h1/text())')
+        assert heading == "Digital Outcomes and Specialists opportunities"
+        assert ('View buyer requirements for digital outcomes, '
+                'digital specialists and user research participants') in document.xpath(
+            "normalize-space(//div[@class='marketplace-paragraph']/p/text())"
+        )
+
+        all_categories_return_link = document.xpath("//form[@method='get']//div[@class='lot-filters']/ul/li/a")[0]
+        assert all_categories_return_link.text == 'All categories'
+
+        lot_filters = document.xpath("//form[@method='get']//div[@class='lot-filters']//ul//ul/li/*[1]")
+        assert {
+            element.text: element.tag
+            for element in lot_filters
+        } == {
+            'Digital outcomes (629)': 'strong',
+            'Digital specialists (827)': 'a',
+            'User research participants (39)': 'a',
+        }
+
+        assert document.xpath(
+            "//a[@id=$i][contains(@class, $c)][normalize-space(string())=normalize-space($t)][@href=$h]",
+            i="dm-clear-all-filters",
+            c="clear-filters-link",
+            t="Clear filters",
+            h="/digital-outcomes-and-specialists/opportunities?lot=digital-outcomes&q=Richie+Poldy",
+        )
+
+        status_inputs = document.xpath("//form[@method='get']//input[@name='status']")
+        assert {
+            element.get("value"): bool(element.get("checked"))
+            for element in status_inputs
+        } == {
+            "live": True,
+            "closed": False,
+        }
+
+        location_inputs = document.xpath("//form[@method='get']//input[@name='location']")
+        assert {
+            element.get("value"): bool(element.get("checked"))
+            for element in location_inputs
+        } == {
+            "scotland": False,
+            "north east england": False,
+            "north west england": False,
+            "yorkshire and the humber": False,
+            "east midlands": False,
+            "west midlands": False,
+            "east of england": False,
+            "wales": False,
+            "london": False,
+            "south east england": False,
+            "south west england": False,
+            "northern ireland": False,
+            "international (outside the uk)": False,
+            "offsite": True,
+        }
+
+        q_inputs = document.xpath("//form[@method='get']//input[@name='q']")
+        assert tuple(element.get("value") for element in q_inputs) == ("Richie Poldy",)
+
+        parsed_original_url = urlparse(original_url)
+        parsed_prev_url = urlparse(document.xpath("//li[@class='previous']/a/@href")[0])
+        parsed_next_url = urlparse(document.xpath("//li[@class='next']/a/@href")[0])
+        assert parsed_original_url.path == parsed_prev_url.path == parsed_next_url.path
+
+        assert self.normalize_qs(parsed_original_url.query) == \
+            self.normalize_qs(parsed_next_url.query) == \
+            self.normalize_qs(parsed_prev_url.query)
+
+        ss_elem = document.xpath("//p[@class='search-summary']")[0]
+        assert self._normalize_whitespace(self._squashed_element_text(ss_elem)) == \
+            "864 results found containing Richie Poldy in Digital outcomes"
 
     def test_catalogue_of_briefs_page_filtered_all_lots_selected(self):
         original_url = "/digital-outcomes-and-specialists/opportunities?lot=digital-outcomes&lot=digital-specialists"\
@@ -1386,6 +1485,9 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
             "international (outside the uk)": False,
             "offsite": False,
         }
+
+        q_inputs = document.xpath("//form[@method='get']//input[@name='q']")
+        assert tuple(element.get("value") for element in q_inputs) == ("",)
 
         parsed_original_url = urlparse(original_url)
         parsed_next_url = urlparse(document.xpath("//li[@class='next']/a/@href")[0])
