@@ -570,7 +570,8 @@ class TestSearchResults(BaseApplicationTest):
         assert kv_pairs == {
             'lot': 'cloud-software',
             'serviceCategories': 'content management system (cms)',
-            'parentCategory': 'electronic document and records management (edrm)'
+            'parentCategory': 'electronic document and records management (edrm)',
+            'doc_type': 'services',
         }
 
 

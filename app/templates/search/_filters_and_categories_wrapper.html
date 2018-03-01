@@ -1,14 +1,12 @@
-{% if framework_family == 'g-cloud' %}
-  {%
-    with
-    id = "keywords",
-    name = "q",
-    label = "Keyword search",
-    value = search_keywords
-  %}
-    {% include "toolkit/forms/keyword-search.html" %}
-  {% endwith %}
-{%endif%}
+{%
+  with
+  id = "keywords",
+  name = "q",
+  label = "Keyword search",
+  value = search_keywords
+%}
+  {% include "toolkit/forms/keyword-search.html" %}
+{% endwith %}
 
 {% include 'search/_categories_wrapper.html' %}
 

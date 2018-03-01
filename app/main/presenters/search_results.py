@@ -4,9 +4,10 @@ from flask import Markup
 class SearchResults(object):
     """Provides access to the search results information"""
 
-    def __init__(self, response, lots_by_slug):
+    def __init__(self, response, lots_by_slug, highlight_fields=frozenset()):
         self.search_results = response['documents']
         self._lots = lots_by_slug
+        self._highlight_fields = highlight_fields
         self._annotate()
         self.total = response['meta']['total']
         if 'page' in response['meta']['query']:
@@ -23,7 +24,7 @@ class SearchResults(object):
 
     def _add_highlighting(self, document):
         if 'highlight' in document:
-            for highlighted_field in ['serviceSummary', 'serviceDescription']:
+            for highlighted_field in self._highlight_fields:
                 if highlighted_field in document['highlight']:
                     document[highlighted_field] = Markup(
                         ''.join(document['highlight'][highlighted_field])

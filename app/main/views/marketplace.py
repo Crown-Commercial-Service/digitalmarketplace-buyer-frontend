@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from urllib.parse import urljoin
+from itertools import chain
 
 from flask_login import current_user
 from flask import abort, current_app, render_template, request, url_for
@@ -18,8 +19,14 @@ from ..helpers.brief_helpers import (
 )
 from ..helpers.framework_helpers import get_latest_live_framework, get_framework_description, get_lots_by_slug
 from ..helpers.search_helpers import (
-    pagination, get_page_from_request, query_args_for_pagination, get_valid_lot_from_args_or_none, build_search_query,
-    clean_request_args, get_request_url_without_any_filters,
+    build_search_query,
+    clean_request_args,
+    get_keywords_from_request,
+    get_page_from_request,
+    get_request_url_without_any_filters,
+    get_valid_lot_from_args_or_none,
+    pagination,
+    query_args_for_pagination,
 )
 from ..helpers.shared_helpers import get_one_framework_by_status_in_order_of_preference
 from ...main import main
@@ -210,7 +217,13 @@ def list_opportunities(framework_family):
             brief['specialistRole'] = content.summary(brief).get_question('specialistRole').value
         brief['location'] = content.summary(brief).get_question('location').value
 
-    search_results_obj = SearchResults(search_api_response, lots_by_slug)
+    search_results_obj = SearchResults(
+        search_api_response,
+        lots_by_slug,
+        highlight_fields=frozenset((
+            'summary',
+        )),
+    )
 
     pagination_config = pagination(
         search_results_obj.total,
@@ -241,7 +254,14 @@ def list_opportunities(framework_family):
         Href(url_for('.{}'.format(view_name), framework_family=framework['framework'])),
     )
 
-    filter_form_hidden_fields_by_name = {f['name']: f for f in selected_category_tree_filters[1:]}
+    filter_form_hidden_fields_by_name = {
+        f["name"]: f
+        for f in chain(
+            selected_category_tree_filters[1:],
+            # add "doc_type" to query string for analytics disambiguation
+            ({"name": "doc_type", "value": doc_type},),
+        )
+    }
     current_lot = lots_by_slug.get(current_lot_slug)
 
     set_filter_states(filters.values(), request)
@@ -269,6 +289,7 @@ def list_opportunities(framework_family):
         framework_family_name='Digital Outcomes and Specialists',
         lot_names=tuple(lot['name'] for lot in lots_by_slug.values() if lot['allowsBrief']),
         pagination=pagination_config,
+        search_keywords=get_keywords_from_request(request),
         search_query=search_query,
         summary=search_summary.markup(),
         total=search_results_obj.total,
