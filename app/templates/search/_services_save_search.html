@@ -1,21 +1,19 @@
 <div id="js-dm-live-save-search-form">
-  {% if 'DIRECT_AWARD_PROJECTS' is active_feature %}
-    <form action="{{ url_for('direct_award.save_search', framework_framework=framework_family) }}">
-      <input type="hidden" name="search_query" value="{{ search_query_url }}">
-      <div class="button-save-wrapper grid-row">
-        <div class="save-summary-text column-three-quarters">
-          Save details of your search and download your search results.
-        </div>
-        <div class="save-button column-one-quarter">
-          <button id="save-search" class="button-save" role="button" type="submit"
-            data-analytics="trackEvent"
-            data-analytics-category="Direct Award"
-            data-analytics-action="Save search"
-            data-analytics-label="{{ search_count }}">
-            Save search
-          </button>
-        </div>
+  <form action="{{ url_for('direct_award.save_search', framework_framework=framework_family) }}">
+    <input type="hidden" name="search_query" value="{{ search_query_url }}">
+    <div class="button-save-wrapper grid-row">
+      <div class="save-summary-text column-three-quarters">
+        Save details of your search and download your search results.
       </div>
-    </form>
-  {% endif %}
+      <div class="save-button column-one-quarter">
+        <button id="save-search" class="button-save" role="button" type="submit"
+          data-analytics="trackEvent"
+          data-analytics-category="Direct Award"
+          data-analytics-action="Save search"
+          data-analytics-label="{{ search_count }}">
+          Save search
+        </button>
+      </div>
+    </div>
+  </form>
 </div>
