@@ -9,7 +9,6 @@ LOGIN_REQUIRED_MESSAGE = Markup("""You must log in with a buyer account to see t
 
 
 @direct_award.before_request
-@flask_featureflags.is_active_feature('DIRECT_AWARD_PROJECTS')
 @login_required
 def require_login():
     if current_user.is_authenticated() and current_user.role != 'buyer':
