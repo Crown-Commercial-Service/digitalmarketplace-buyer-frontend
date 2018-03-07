@@ -27,7 +27,7 @@
     <ul class="search-result-metadata">
         {% if brief.status in ['closed', 'awarded', 'cancelled', 'unsuccessful'] %}
             <li class="search-result-metadata-item">
-                {{ brief.status | capitalize() }}
+                Closed: {{ outcome[brief.status] }}
             </li>
         {% else %}
             <li class="search-result-metadata-item">
