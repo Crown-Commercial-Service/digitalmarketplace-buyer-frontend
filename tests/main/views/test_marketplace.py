@@ -297,6 +297,7 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
 
         assert 'View Digital Outcomes and Specialists opportunities' in sidebar_link_texts
         assert 'Become a supplier' in sidebar_link_texts
+        assert 'See Digital Marketplace sales figures' in sidebar_link_texts
 
     @mock.patch('app.main.views.marketplace.data_api_client', autospec=True)
     def test_homepage_sidebar_messages_when_logged_in(self, data_api_client):
