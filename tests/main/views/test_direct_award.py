@@ -497,8 +497,8 @@ class TestDirectAwardDownloadResultsView(TestDirectAwardBase):
 
         data_api_client.record_direct_award_project_download = mock.Mock()
 
-        data_api_client.get_direct_award_project_services_iter = mock.Mock()
-        data_api_client.get_direct_award_project_services_iter.return_value = \
+        data_api_client.find_direct_award_project_services_iter = mock.Mock()
+        data_api_client.find_direct_award_project_services_iter.return_value = \
             self._get_direct_award_project_services_fixture()['services']
 
         data_api_client.get_direct_award_project.return_value = self._get_direct_award_lock_project_fixture()

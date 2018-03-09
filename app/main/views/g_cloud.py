@@ -634,9 +634,11 @@ class DownloadResultsView(SimpleDownloadFileView):
         filename = '{}-{}-results'.format(locked_at.strftime('%Y-%m-%d'), inflection.parameterize(project['name']))
         formatted_locked_at = datetimeformat(locked_at)
 
-        services = self.data_api_client.get_direct_award_project_services_iter(project_id=project['id'],
-                                                                               user_id=current_user.id,
-                                                                               fields=required_fields)
+        services = self.data_api_client.find_direct_award_project_services_iter(
+            project_id=project['id'],
+            user_id=current_user.id,
+            fields=required_fields,
+        )
 
         all_services = []
 
