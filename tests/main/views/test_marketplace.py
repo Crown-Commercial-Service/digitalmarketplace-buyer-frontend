@@ -1586,22 +1586,22 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         closed_opportunity_status = document.xpath(
             '//div[@class="search-result"][2]//li[@class="search-result-metadata-item"]'
         )[-1].text_content().strip()
-        assert closed_opportunity_status == "Closed: awaiting outcome"
+        assert closed_opportunity_status == "Closed"
 
         unsuccessful_opportunity_status = document.xpath(
             '//div[@class="search-result"][3]//li[@class="search-result-metadata-item"]'
         )[-1].text_content().strip()
-        assert unsuccessful_opportunity_status == "Closed: no suitable suppliers"
+        assert unsuccessful_opportunity_status == "Unsuccessful"
 
         cancelled_opportunity_status = document.xpath(
             '//div[@class="search-result"][4]//li[@class="search-result-metadata-item"]'
         )[-1].text_content().strip()
-        assert cancelled_opportunity_status == "Closed: cancelled"
+        assert cancelled_opportunity_status == "Cancelled"
 
         awarded_opportunity_status = document.xpath(
             '//div[@class="search-result"][6]//li[@class="search-result-metadata-item"]'
         )[-1].text_content().strip()
-        assert awarded_opportunity_status == "Closed: awarded"
+        assert awarded_opportunity_status == "Awarded"
 
     def test_should_render_summary_for_0_results_in_all_lots(self):
         search_results = self._get_dos_brief_search_api_response_fixture_data()
