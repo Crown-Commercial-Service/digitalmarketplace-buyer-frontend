@@ -22,135 +22,136 @@
 {% endblock %}
 
 {% block main_content %}
-
-{% if brief.status == 'closed' %}
-<div class="grid-row">
-  <div class="column-one-whole">
-    {%
-      with
-      type = "temporary-message",
-      heading = "This opportunity is closed for applications",
-      message = "The deadline was {}".format(brief.applicationsClosedAt|dateformat)
-    %}
-      {% include "toolkit/notification-banner.html" %}
-    {% endwith %}
-  </div>
-</div>
-{% elif brief.status == 'withdrawn' %}
-<div class="grid-row">
-  <div class="column-one-whole">
-    {%
-      with
-      type = "temporary-message",
-      heading = "This opportunity was withdrawn on " + "{}".format(brief.withdrawnAt|dateformat)|nbsp,
-      message = "You can't apply for this opportunity now. The buyer may publish an " + "updated version"|nbsp + " on the " + "Digital Marketplace."|nbsp
-    %}
-      {% include "toolkit/notification-banner.html" %}
-    {% endwith %}
-  </div>
-</div>
-{% elif brief.status == 'cancelled' %}
-<div class="grid-row">
-  <div class="column-one-whole">
-    {%
-      with
-      type = "temporary-message",
-      heading = "This opportunity was cancelled",
-      message = "The buyer cancelled this opportunity, for example because they no longer have the budget. They may publish an updated version later."
-    %}
-      {% include "toolkit/notification-banner.html" %}
-    {% endwith %}
-  </div>
-</div>
-{% elif brief.status == 'unsuccessful' %}
-<div class="grid-row">
-  <div class="column-one-whole">
-    {%
-      with
-      type = "temporary-message",
-      heading = "No suitable suppliers applied",
-      message = "The buyer didn't award this contract because no suppliers met their requirements. They may publish an updated version later."
-    %}
-      {% include "toolkit/notification-banner.html" %}
-    {% endwith %}
-  </div>
-</div>
-{% elif brief.status == 'awarded' %}
-<div class="grid-row">
-  <div class="column-one-whole">
-    {% set brief_awarded_message %}
-      Start date: {}<br />
-      Value: &pound;{:,.2f}<br/>
-      Company size: {}
-    {% endset %}
-    {%
-      with
-      type = "temporary-message",
-      heading = "Awarded to {}".format(winning_response.supplierName),
-      message = brief_awarded_message.format((
-            winning_response.awardDetails.awardedContractStartDate + "T00:00:00.000000Z")|dateformat,
-            winning_response.awardDetails.awardedContractValue|float,
-            winning_supplier_size
-          ).replace(".00", "")
-    %}
-      {% include "toolkit/notification-banner.html" %}
-    {% endwith %}
-  </div>
-</div>
-{% endif %}
-
-<div class="grid-row">
-  <div class="column-two-thirds">
-    <header class="page-heading-smaller">
-      <p class="context">{{ brief.organisation }}</p>
-      <h1>{{ brief.title }}</h1>
-      <span data-lot="{{ brief.lotSlug }}"></span>
-    </header>
-  </div>
-</div>
-
-<div class="grid-row">
-  <div class="column-one-whole">
-    {% include '_brief_applications_stats.html' %}
-  </div>
-</div>
-
-<div class="grid-row">
-  <div class="column-one-whole">
-    {% include '_brief_attributes.html' %}
-  </div>
-</div>
-<div class="grid-row">
-  <div class="column-one-whole">
-    {% include '_brief_q_and_a.html' %}
-  </div>
-</div>
-
-{% if has_supplier_responded_to_brief %}
-  <div class="grid-row">
-    <div class="column-one-third">
-        {% with
-           url = url_for('external.view_response_result', brief_id=brief.id),
-           text = "View your application"
-        %}
-          {% include "toolkit/secondary-action-link.html" %}
-        {% endwith %}
-    </div>
-  </div>
-{% elif brief.status == 'live' %}
-  <div class="grid-row">
-    <div class="column-two-thirds">
-      <form action="{{ url_for('external.start_brief_response', brief_id=brief.id) }}" method="get">
+  <div class="brief-page">
+    {% if brief.status == 'closed' %}
+    <div class="grid-row">
+      <div class="column-one-whole">
         {%
           with
-          label="Apply for this opportunity",
-          type="save"
+          type = "temporary-message",
+          heading = "This opportunity is closed for applications",
+          message = "The deadline was {}".format(brief.applicationsClosedAt|dateformat)
         %}
-          {% include "toolkit/button.html" %}
+          {% include "toolkit/notification-banner.html" %}
         {% endwith %}
-      </form>
+      </div>
     </div>
+    {% elif brief.status == 'withdrawn' %}
+    <div class="grid-row">
+      <div class="column-one-whole">
+        {%
+          with
+          type = "temporary-message",
+          heading = "This opportunity was withdrawn on " + "{}".format(brief.withdrawnAt|dateformat)|nbsp,
+          message = "You can't apply for this opportunity now. The buyer may publish an " + "updated version"|nbsp + " on the " + "Digital Marketplace."|nbsp
+        %}
+          {% include "toolkit/notification-banner.html" %}
+        {% endwith %}
+      </div>
+    </div>
+    {% elif brief.status == 'cancelled' %}
+    <div class="grid-row">
+      <div class="column-one-whole">
+        {%
+          with
+          type = "temporary-message",
+          heading = "This opportunity was cancelled",
+          message = "The buyer cancelled this opportunity, for example because they no longer have the budget. They may publish an updated version later."
+        %}
+          {% include "toolkit/notification-banner.html" %}
+        {% endwith %}
+      </div>
+    </div>
+    {% elif brief.status == 'unsuccessful' %}
+    <div class="grid-row">
+      <div class="column-one-whole">
+        {%
+          with
+          type = "temporary-message",
+          heading = "No suitable suppliers applied",
+          message = "The buyer didn't award this contract because no suppliers met their requirements. They may publish an updated version later."
+        %}
+          {% include "toolkit/notification-banner.html" %}
+        {% endwith %}
+      </div>
+    </div>
+    {% elif brief.status == 'awarded' %}
+    <div class="grid-row">
+      <div class="column-one-whole">
+        {% set brief_awarded_message %}
+          Start date: {}<br />
+          Value: &pound;{:,.2f}<br/>
+          Company size: {}
+        {% endset %}
+        {%
+          with
+          type = "temporary-message",
+          heading = "Awarded to {}".format(winning_response.supplierName),
+          message = brief_awarded_message.format((
+                winning_response.awardDetails.awardedContractStartDate + "T00:00:00.000000Z")|dateformat,
+                winning_response.awardDetails.awardedContractValue|float,
+                winning_supplier_size
+              ).replace(".00", "")
+        %}
+          {% include "toolkit/notification-banner.html" %}
+        {% endwith %}
+      </div>
+    </div>
+    {% endif %}
+
+    <div class="grid-row">
+      <div class="column-two-thirds">
+        <header class="page-heading-smaller">
+          <p class="context">{{ brief.organisation }}</p>
+          <h1>{{ brief.title }}</h1>
+          <span data-lot="{{ brief.lotSlug }}"></span>
+        </header>
+      </div>
+    </div>
+
+    <div class="grid-row">
+      <div class="column-one-whole">
+        {% include '_brief_applications_stats.html' %}
+      </div>
+    </div>
+
+    <div class="grid-row">
+      <div class="column-one-whole">
+        {% include '_brief_attributes.html' %}
+      </div>
+    </div>
+    <div class="grid-row">
+      <div class="column-one-whole">
+        {% include '_brief_q_and_a.html' %}
+      </div>
+    </div>
+
+    {% if has_supplier_responded_to_brief %}
+      <div class="grid-row brief-action">
+        <div class="column-one-third">
+            {% with
+              url = url_for('external.view_response_result', brief_id=brief.id),
+              text = "View your application"
+            %}
+              {% include "toolkit/secondary-action-link.html" %}
+            {% endwith %}
+        </div>
+      </div>
+    {% elif brief.status == 'live' %}
+      <div class="grid-row brief-action">
+        <div class="column-two-thirds">
+          <form action="{{ url_for('external.start_brief_response', brief_id=brief.id) }}" method="get">
+            {%
+              with
+              label="Apply for this opportunity",
+              type="save"
+            %}
+              {% include "toolkit/button.html" %}
+            {% endwith %}
+          </form>
+        </div>
+      </div>
+    {% endif %}
   </div>
-{% endif %}
 
 {% endblock %}

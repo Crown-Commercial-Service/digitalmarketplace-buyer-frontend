@@ -1,0 +1,7 @@
+.brief-page {
+  .brief-action {
+    @include media(mobile) {
+      margin-top: 1.5em;
+    }
+  }
+}
