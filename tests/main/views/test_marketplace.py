@@ -1182,7 +1182,7 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         self._view_search_api_client.search.assert_called_once_with(
             index='briefs-digital-outcomes-and-specialists',
             doc_type='briefs',
-            status='live,closed'
+            statusOpenClosed='open,closed'
         )
 
         heading = document.xpath('normalize-space(//h1/text())')
@@ -1200,8 +1200,8 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         }
         assert len(document.xpath("//form[@method='get']//ul[@class='lot-filters--last-list']//strong")) == 0
 
-        status_inputs = document.xpath("//form[@method='get']//input[@name='status']")
-        assert set(element.get("value") for element in status_inputs) == {"live", "closed"}
+        status_inputs = document.xpath("//form[@method='get']//input[@name='statusOpenClosed']")
+        assert set(element.get("value") for element in status_inputs) == {"open", "closed"}
         assert not any(element.get("checked") for element in status_inputs)
 
         location_inputs = document.xpath("//form[@method='get']//input[@name='location']")
@@ -1237,8 +1237,8 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         assert specialist_role_labels[1].strip() == "Technical architect"
 
     def test_catalogue_of_briefs_page_filtered(self):
-        original_url = "/digital-outcomes-and-specialists/opportunities?page=2&status=live&lot=digital-outcomes"\
-            "&location=wales"
+        original_url = "/digital-outcomes-and-specialists/opportunities?page=2"\
+            "&statusOpenClosed=open&lot=digital-outcomes&location=wales"
         res = self.client.get(original_url)
         assert res.status_code == 200
 
@@ -1248,7 +1248,7 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         self._view_search_api_client.search.assert_called_once_with(
             index='briefs-digital-outcomes-and-specialists',
             doc_type='briefs',
-            status='live',
+            statusOpenClosed='open',
             lot='digital-outcomes',
             location='wales',
             page='2',
@@ -1282,12 +1282,12 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
             h="/digital-outcomes-and-specialists/opportunities?lot=digital-outcomes",
         )
 
-        status_inputs = document.xpath("//form[@method='get']//input[@name='status']")
+        status_inputs = document.xpath("//form[@method='get']//input[@name='statusOpenClosed']")
         assert {
             element.get("value"): bool(element.get("checked"))
             for element in status_inputs
         } == {
-            "live": True,
+            "open": True,
             "closed": False,
         }
 
@@ -1329,7 +1329,8 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
             "864 results found in Digital outcomes"
 
     def test_catalogue_of_briefs_page_filtered_keyword_search(self):
-        original_url = "/digital-outcomes-and-specialists/opportunities?page=2&status=live&lot=digital-outcomes"\
+        original_url = "/digital-outcomes-and-specialists/opportunities?page=2"\
+            "&statusOpenClosed=open&lot=digital-outcomes"\
             "&location=offsite&q=Richie+Poldy"
         res = self.client.get(original_url)
         assert res.status_code == 200
@@ -1340,7 +1341,7 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         self._view_search_api_client.search.assert_called_once_with(
             index='briefs-digital-outcomes-and-specialists',
             doc_type='briefs',
-            status='live',
+            statusOpenClosed='open',
             lot='digital-outcomes',
             location='offsite',
             page='2',
@@ -1375,12 +1376,12 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
             h="/digital-outcomes-and-specialists/opportunities?lot=digital-outcomes&q=Richie+Poldy",
         )
 
-        status_inputs = document.xpath("//form[@method='get']//input[@name='status']")
+        status_inputs = document.xpath("//form[@method='get']//input[@name='statusOpenClosed']")
         assert {
             element.get("value"): bool(element.get("checked"))
             for element in status_inputs
         } == {
-            "live": True,
+            "open": True,
             "closed": False,
         }
 
@@ -1433,7 +1434,7 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         self._view_search_api_client.search.assert_called_once_with(
             index='briefs-digital-outcomes-and-specialists',
             doc_type='briefs',
-            status='live,closed',
+            statusOpenClosed='open,closed',
             lot='digital-outcomes',
         )
 
@@ -1457,12 +1458,12 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
             'User research participants (39)': 'a',
         }
 
-        status_inputs = document.xpath("//form[@method='get']//input[@name='status']")
+        status_inputs = document.xpath("//form[@method='get']//input[@name='statusOpenClosed']")
         assert {
             element.get("value"): bool(element.get("checked"))
             for element in status_inputs
         } == {
-            "live": False,
+            "open": False,
             "closed": False,
         }
 

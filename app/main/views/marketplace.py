@@ -195,8 +195,11 @@ def list_opportunities(framework_family):
     doc_type = 'briefs'
     updated_request_args = None
 
-    if 'status' not in clean_request_query_params.keys():
-        updated_request_args = MultiDict([('status', 'live'), ('status', 'closed')])
+    # This will exclude anything with a 'withdrawn' status
+    if 'statusOpenClosed' not in clean_request_query_params.keys():
+        updated_request_args = MultiDict(
+            [('statusOpenClosed', 'open'), ('statusOpenClosed', 'closed')]
+        )
         updated_request_args.update(clean_request_query_params)
 
     search_api_response = search_api_client.search(
