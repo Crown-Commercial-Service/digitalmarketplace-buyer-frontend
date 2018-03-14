@@ -291,6 +291,12 @@ def list_opportunities(framework_family):
         framework_family=framework['framework'],
         framework_family_name='Digital Outcomes and Specialists',
         lot_names=tuple(lot['name'] for lot in lots_by_slug.values() if lot['allowsBrief']),
+        outcomes={
+            'awarded': 'awarded',
+            'cancelled': 'cancelled',
+            'closed': 'awaiting outcome',
+            'unsuccessful': 'no suitable suppliers'
+        },
         pagination=pagination_config,
         search_keywords=get_keywords_from_request(request),
         search_query=search_query,
