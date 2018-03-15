@@ -1,49 +1,47 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"' width="741px" height="90px" viewBox="0 0 741 90" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
-    <title>&gt;768 Briefs by phase</title>
+<svg font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"' width="739px" height="89px" viewBox="0 0 739 89" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="background: #FFFFFF;">
+    <!-- Generator: Sketch 49 (51002) - http://www.bohemiancoding.com/sketch -->
+    <title>768 Briefs by phase</title>
     <desc>Created with Sketch.</desc>
     <defs></defs>
-    <g id="Jan-monthly-report-greater-than-768px" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-319.000000, -1670.000000)">
-        <g id="&gt;768-Briefs-by-phase" transform="translate(320.000000, 1670.000000)">
-            <g id="Group" stroke-width="1" fill-rule="evenodd" transform="translate(0.000000, 39.000000)" stroke="#FFFFFF">
-                <rect id="Rectangle-9-Copy-28" fill="#D8D8D8" x="0" y="0" width="112" height="50"></rect>
-                <rect id="Rectangle-9-Copy-29" fill="#912B87" x="112" y="0" width="248" height="50"></rect>
-                <rect id="Rectangle-9-Copy-30" fill="#C52A72" x="360" y="0" width="98" height="50"></rect>
-                <rect id="Rectangle-9-Copy-31" fill="#F48834" x="456" y="0" width="107" height="50"></rect>
-                <rect id="Rectangle-9-Copy-32" fill="#59A94F" x="561" y="0" width="68" height="50"></rect>
-                <rect id="Rectangle-9-Copy-33" fill="#D8D8D8" x="627" y="0" width="112" height="50"></rect>
-            </g>
-            <text id="15%-Pre-discovery" font-size="16" font-weight="bold" line-spacing="16" fill="#333333">
-                <tspan x="37.8710938" y="64">15%</tspan>
-                <tspan x="71.6601562" y="64.3359375" font-weight="normal"> </tspan>
-                <tspan x="5" y="80.3359375" font-weight="normal">Pre-discovery</tspan>
-            </text>
-            <text id="34%-Discovery" font-size="16" font-weight="bold" line-spacing="16" fill="#FFFFFF">
-                <tspan x="218.65625" y="64">34% </tspan>
-                <tspan x="265.398438" y="67.1015625" font-weight="normal"></tspan>
-                <tspan x="200" y="80.3359375" font-weight="normal">Discovery</tspan>
-            </text>
-            <text id="13%-Alpha" font-size="16" font-weight="bold" line-spacing="16" fill="#FFFFFF">
-                <tspan x="391.898438" y="64">13% </tspan>
-                <tspan x="388" y="80.3359375" font-weight="normal">Alpha</tspan>
-            </text>
-            <text id="14%-Beta" font-size="16" font-weight="bold" line-spacing="16" fill="#FFFFFF">
-                <tspan x="491" y="64">14% </tspan>
-                <tspan x="491.503906" y="80.3359375" font-weight="normal">Beta</tspan>
-            </text>
-            <text id="9%-Live" font-size="16" font-weight="bold" line-spacing="16" fill="#FFFFFF">
-                <tspan x="581.789062" y="64">9% </tspan>
-                <tspan x="580" y="80.3359375" font-weight="normal">Live</tspan>
-            </text>
-            <text id="15%-Other" font-size="16" font-weight="bold" line-spacing="16" fill="#333333">
-                <tspan x="665.269531" y="64">15% </tspan>
-                <tspan x="661" y="80.3359375" font-weight="normal">Other</tspan>
-            </text>
-            <rect id="Rectangle-16" fill="#FFFFFF" fill-rule="evenodd" x="325" y="0" width="85" height="29"></rect>
-            <text id="Briefs-by-phase-Copy" font-size="17" font-weight="normal" line-spacing="28" fill="#313131">
-                <tspan x="308" y="16">Briefs by phase</tspan>
-            </text>
+    <g id="768-Briefs-by-phase" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group" transform="translate(0.000000, 39.000000)" stroke="#FFFFFF">
+            <rect id="Rectangle-9-Copy-28" fill="#D8D8D8" x="0" y="0" width="118.239998" height="50"></rect>
+            <rect id="Rectangle-9-Copy-29" fill="#912B87" x="118" y="0" width="251.259995" height="50"></rect>
+            <rect id="Rectangle-9-Copy-30" fill="#C52A72" x="369" y="0" width="96.0699997" height="50"></rect>
+            <rect id="Rectangle-9-Copy-31" fill="#F48834" x="465" y="0" width="96.0699997" height="50"></rect>
+            <rect id="Rectangle-9-Copy-32" fill="#59A94F" x="561" y="0" width="59.1199989" height="50"></rect>
+            <rect id="Rectangle-9-Copy-33" fill="#D8D8D8" x="620" y="0" width="118.239998" height="50"></rect>
         </g>
+        <text id="16%-Pre-discovery" font-size="16" font-weight="bold" line-spacing="16" fill="#333333">
+            <tspan x="41.8710938" y="64">16%</tspan>
+            <tspan x="75.6601562" y="64.3359375" font-weight="normal"> </tspan>
+            <tspan x="9" y="80.3359375" font-weight="normal">Pre-discovery</tspan>
+        </text>
+        <text id="34%-Discovery" font-size="16" font-weight="bold" line-spacing="16" fill="#FFFFFF">
+            <tspan x="225.65625" y="64">34% </tspan>
+            <tspan x="272.398438" y="67.1015625" font-weight="normal"></tspan>
+            <tspan x="207" y="80.3359375" font-weight="normal">Discovery</tspan>
+        </text>
+        <text id="13%-Alpha" font-size="16" font-weight="bold" line-spacing="16" fill="#FFFFFF">
+            <tspan x="399.898438" y="64">13% </tspan>
+            <tspan x="396" y="80.3359375" font-weight="normal">Alpha</tspan>
+        </text>
+        <text id="13%-Beta" font-size="16" font-weight="bold" line-spacing="16" fill="#FFFFFF">
+            <tspan x="495" y="64">13% </tspan>
+            <tspan x="495.503906" y="80.3359375" font-weight="normal">Beta</tspan>
+        </text>
+        <text id="8%-Live" font-size="16" font-weight="bold" line-spacing="16" fill="#FFFFFF">
+            <tspan x="577.789062" y="64">8% </tspan>
+            <tspan x="576" y="80.3359375" font-weight="normal">Live</tspan>
+        </text>
+        <text id="16%-Other" font-size="16" font-weight="bold" line-spacing="16" fill="#333333">
+            <tspan x="661.269531" y="64">16% </tspan>
+            <tspan x="657" y="80.3359375" font-weight="normal">Other</tspan>
+        </text>
+        <rect id="Rectangle-16" fill="#FFFFFF" x="325" y="0" width="85" height="29"></rect>
+        <text id="Briefs-by-phase-Copy" font-size="17" font-weight="normal" line-spacing="28" fill="#313131">
+            <tspan x="308" y="16">Briefs by phase</tspan>
+        </text>
     </g>
 </svg>
