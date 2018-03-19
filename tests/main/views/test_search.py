@@ -610,13 +610,14 @@ class TestSearchFilterOnClick(BaseApplicationTest):
         res = self.client.get('/g-cloud/search?live-results=true')
         data = json.loads(res.get_data(as_text=True))
 
-        assert set(data.keys()) == {
+        assert sorted(data.keys()) == sorted((
             'results',
             'summary',
             'summary-accessible-hint',
             'categories',
             'save-form',
-        }
+            'filter-title'
+        ))
 
         for k, v in data.items():
             assert set(v.keys()) == {'selector', 'html'}
@@ -624,21 +625,29 @@ class TestSearchFilterOnClick(BaseApplicationTest):
             # We want to enforce using css IDs to describe the nodes which should be replaced.
             assert v['selector'].startswith('#')
 
-    @pytest.mark.parametrize('query_string, urls',
-                             (('', {'search/services.html'}),
-                              ('?live-results=true', {"search/_results_wrapper.html",
-                                                      "search/_categories_wrapper.html",
-                                                      "search/_summary.html",
-                                                      "search/_summary_accessible_hint.html",
-                                                      "search/_services_save_search.html",
-                                                      })))
+    live_results_expected_templates = (
+        "search/_results_wrapper.html",
+        "search/_categories_wrapper.html",
+        "search/_summary.html",
+        "search/_summary_accessible_hint.html",
+        "search/_services_save_search.html",
+        "search/_filter_title.html"
+    )
+
+    @pytest.mark.parametrize(
+        ('query_string', 'urls'),
+        (
+            ('', ('search/services.html',)),
+            ('?live-results=true', live_results_expected_templates)
+        )
+    )
     @mock.patch('app.main.views.g_cloud.render_template', autospec=True)
     def test_base_page_renders_search_services(self, render_template_patch, query_string, urls):
         render_template_patch.return_value = '<p>some html</p>'
 
         self.client.get('/g-cloud/search{}'.format(query_string))
 
-        assert urls == set(x[0][0] for x in render_template_patch.call_args_list)
+        assert urls == tuple(x[0][0] for x in render_template_patch.call_args_list)
 
     def test_g_cloud_search_has_js_hidden_filter_button(self):
         res = self.client.get('/g-cloud/search')

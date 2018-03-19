@@ -317,6 +317,10 @@ def search_services():
                 "selector": "#js-dm-live-save-search-form",
                 "html": render_template("search/_services_save_search.html", **template_args)
             },
+            "filter-title": {
+                "selector": "#js-dm-live-filter-title",
+                "html": render_template("search/_filter_title.html", **template_args)
+            },
         }
 
         return jsonify(live_results_dict)

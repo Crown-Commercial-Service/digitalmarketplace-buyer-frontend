@@ -325,6 +325,10 @@ def list_opportunities(framework_family):
                 "selector": "#js-dm-live-search-summary-accessible-hint",
                 "html": render_template("search/_summary_accessible_hint.html", **template_args)
             },
+            "filter-title": {
+                "selector": "#js-dm-live-filter-title",
+                "html": render_template("search/_filter_title.html", **template_args)
+            },
         }
 
         return jsonify(live_results_dict)
