@@ -76,7 +76,7 @@ class TestStatus(BaseApplicationTest):
 
         assert "{}".format(json_data['status']) == "error"
         assert "{}".format(json_data['api_status']['status']) == "ok"
-        assert json_data.get('search_api_status') is None
+        assert json_data.get('search_api_status') == {'status': 'n/a'}
 
     def test_status_error_in_two_upstream_apis(self):
 
