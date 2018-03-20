@@ -1,38 +1,32 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"' width="251px" height="148px" viewBox="0 0 251 157" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
-    <title>56% of briefs have been for digital specialists</title>
+<svg font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"' width="251px" height="148px" viewBox="0 0 251 157" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="background: #FFFFFF;">
+    <!-- Generator: Sketch 49 (51002) - http://www.bohemiancoding.com/sketch -->
+    <title>Percentage of briefs for digital specialists</title>
     <desc>Created with Sketch.</desc>
     <defs></defs>
-    <g id="Jan-monthly-report-greater-than-768px" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-737.000000, -903.000000)">
-        <g id="56%-of-briefs-have-been-for-digital-specialists" transform="translate(738.000000, 897.000000)">
-            <text id="60%-of-briefs-have-b" font-size="16" font-weight="bold" line-spacing="22" fill="#333333">
-                <tspan x="147" y="51">60% </tspan>
-                <tspan x="183.835938" y="51" font-weight="normal">of briefs </tspan>
-                <tspan x="147" y="73" font-weight="normal">have been for</tspan>
-                <tspan x="250.21875" y="73"> </tspan>
-                <tspan x="147" y="95">digital </tspan>
-                <tspan x="147" y="117">specialists</tspan>
-            </text>
-            <g id="Group-2" stroke-width="1" fill-rule="evenodd" transform="translate(-3.000000, 1.000000)">
-                <g id="Group-13" transform="translate(64.000000, 78.000000) scale(-1, 1) rotate(1.000000) translate(-64.000000, -78.000000) translate(3.000000, 17.000000)">
-                    <g id="Group-12" transform="translate(61.000000, 61.000000) scale(-1, 1) translate(-61.000000, -61.000000) " stroke="#FFFFFF">
-                        <path d="M60.8562196,60.8515043 L25.0885141,110.081872 C-2.10101963,90.3283509 -8.12766994,52.2733325 11.6258515,25.0837988 C23.3206368,8.9880319 40.9604896,-0.000299386503 60.8562196,-0.000299386503 L60.8562196,60.8515043 Z" id="Fill-1" fill="#152D3B"></path>
-                        <path d="M60.8562196,60.8515043 L60.8562196,-0.000299386503 C94.4638515,-0.000299386503 121.708023,27.2446209 121.708023,60.8515043 C121.708023,94.4591362 94.4638515,121.704056 60.8562196,121.704056 C47.1443178,121.704056 36.1815325,118.141357 25.0885141,110.081872 L60.8562196,60.8515043 Z" id="Fill-4" fill="#00BFE9"></path>
-                    </g>
-                    <circle id="Oval-Copy-2" fill="#FFFFFF" cx="61" cy="61" r="25"></circle>
-                </g>
-                <g id="Group" transform="translate(72.000000, 77.000000) scale(-1, 1) translate(-72.000000, -77.000000) " stroke="#224A61" stroke-linecap="round" stroke-width="2">
-                    <path d="M4,78 L14,78" id="Line-Copy-15" transform="translate(9.000000, 79.000000) scale(-1, 1) translate(-9.000000, -79.000000) "></path>
-                    <path d="M80.6954914,140.89313 C108.502454,133.522563 128.996736,108.183698 128.996736,78.0581376 C128.996736,42.1596288 99.8952451,13.0581376 63.9967364,13.0581376 C44.4443054,13.0581376 26.9082299,21.6911815 14.992346,35.3534332" id="Oval-4-Copy-2" transform="translate(71.994541, 76.975634) rotate(-165.000000) translate(-71.994541, -76.975634) "></path>
-                </g>
+    <g id="Percentage-of-briefs-for-digital-specialists" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <text id="63%-of-briefs-have-b" font-size="16" font-weight="bold" line-spacing="22" fill="#333333">
+            <tspan x="147" y="51">63% </tspan>
+            <tspan x="183.835938" y="51" font-weight="normal">of briefs </tspan>
+            <tspan x="147" y="73" font-weight="normal">have been for</tspan>
+            <tspan x="250.21875" y="73"> </tspan>
+            <tspan x="147" y="95">digital </tspan>
+            <tspan x="147" y="117">specialists</tspan>
+        </text>
+        <g id="Group" transform="translate(1.000000, 20.000000)">
+            <g id="Group-22" stroke="#FFFFFF">
+                <path d="M59.9346928,59.9346405 L18.3007059,103.047843 C-5.51027451,80.0541176 -6.17249673,42.1113725 16.8212288,18.3006536 C28.5022745,6.20470588 43.1195294,0 59.9346928,0 L59.9346928,59.9346405 Z" id="Fill-1" fill="#152D3B"></path>
+                <path d="M59.9346928,59.9346405 L59.9346928,0 C93.0356078,0 119.869333,26.8337255 119.869333,59.9346405 C119.869333,93.0355556 93.0356078,119.869281 59.9346928,119.869281 C43.6821438,119.869281 29.9916863,114.338039 18.3007059,103.047843 L59.9346928,59.9346405 Z" id="Fill-3" fill="#00BFE9"></path>
             </g>
-            <text id="Outcome-Copy-3" font-size="11" font-weight="bold" fill="#808184">
-                <tspan x="0" y="14">Outcome</tspan>
-            </text>
-            <text id="Specialist-Copy-2" font-size="11" font-weight="bold" fill="#808184">
-                <tspan x="90" y="152">Specialist</tspan>
-            </text>
+            <circle id="Oval-Copy-2" fill="#FFFFFF" transform="translate(60.000000, 60.000000) scale(-1, 1) rotate(1.000000) translate(-60.000000, -60.000000) " cx="60" cy="60" r="25"></circle>
         </g>
+        <path d="M127,80 L137,80" id="Line-Copy-15" stroke="#224A61" stroke-width="2" stroke-linecap="round"></path>
+        <text id="Outcome-Copy-3" font-size="11" font-weight="bold" fill="#808184">
+            <tspan x="0" y="14">Outcome</tspan>
+        </text>
+        <text id="Specialist-Copy-2" font-size="11" font-weight="bold" fill="#808184">
+            <tspan x="90" y="152">Specialist</tspan>
+        </text>
+        <path d="M58.1832702,151.800187 C94.081779,151.800187 123.18327,122.698696 123.18327,86.8001872 C123.18327,50.9016785 94.081779,21.8001872 58.1832702,21.8001872 C40.333387,21.8001872 24.1639953,28.9952268 12.4171042,40.6432969" id="Oval-4-Copy-4" stroke="#224A61" stroke-width="2" stroke-linecap="round" transform="translate(67.800187, 86.800187) rotate(-315.000000) translate(-67.800187, -86.800187) "></path>
     </g>
 </svg>
