@@ -42,6 +42,7 @@ def get_request_url_without_any_filters(request, filters, view_name, **kwargs):
             all_request_filters.poplist(_filter['name'])
 
     all_request_filters.poplist('page')
+    all_request_filters.poplist('live-results')
 
     search_link_builder = Href(url_for('.{}'.format(view_name), **kwargs))
     url = search_link_builder(all_request_filters)
