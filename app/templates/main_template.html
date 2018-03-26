@@ -53,7 +53,7 @@
         <div class="user-nav">
           {% set dashboardText = 'Dashboard' %}
           {% if current_user.role == 'buyer' %}
-            {% set dashboardUrl = url_for('buyers.buyer_dashboard') %}
+            {% set dashboardUrl = '/2/buyer-dashboard' %}
           {% elif current_user.role == 'applicant'  %}
             {% set dashboardText = 'Continue application' %}
             {% set dashboardUrl = '/sellers/application' %}

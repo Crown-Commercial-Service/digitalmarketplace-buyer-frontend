@@ -676,7 +676,7 @@ def delete_a_brief(framework_slug, lot_slug, brief_id):
 
     data_api_client.delete_brief(brief_id, current_user.email_address)
     flash({"requirements_deleted": brief.get("title")})
-    return redirect(url_for('.buyer_dashboard'))
+    return redirect('/2/buyer-dashboard')
 
 
 @buyers.route(
