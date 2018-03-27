@@ -571,7 +571,6 @@ class TestSearchResults(BaseApplicationTest):
             'lot': 'cloud-software',
             'serviceCategories': 'content management system (cms)',
             'parentCategory': 'electronic document and records management (edrm)',
-            'doc_type': 'services',
         }
 
 

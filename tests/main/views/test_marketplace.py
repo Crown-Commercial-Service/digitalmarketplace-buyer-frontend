@@ -1719,10 +1719,7 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         hidden_inputs = document.xpath('//form[@id="js-dm-live-search-form"]//input[@type="hidden"]')
         kv_pairs = {input_el.get('name'): input_el.get('value') for input_el in hidden_inputs}
 
-        assert kv_pairs == {
-            'lot': 'digital-outcomes',
-            'doc_type': 'briefs',
-        }
+        assert kv_pairs == {'lot': 'digital-outcomes'}
 
 
 class TestCatalogueOfBriefsFilterOnClick(BaseApplicationTest):
