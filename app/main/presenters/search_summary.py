@@ -156,7 +156,7 @@ class SummaryRules(object):
     )):
 
         with open(manifest, 'r') as file:
-            summary_rules = yaml.load(file)
+            summary_rules = yaml.safe_load(file)
         SummaryRules._rules = {rule['id']: rule for rule in summary_rules}
         SummaryRules.loaded = True
 
