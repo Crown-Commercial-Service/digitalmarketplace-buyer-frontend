@@ -62,7 +62,7 @@ class TestLogin(BaseApplicationTest):
                 'csrf_token': FakeCsrf.valid_token,
             })
             assert res.status_code == 302
-            assert res.location == self.url_for('buyers.buyer_dashboard', _external=True)
+            assert res.location == 'http://localhost/2/buyer-dashboard'
             assert 'Secure;' in res.headers['Set-Cookie']
 
     @mock.patch('app.main.views.login.data_api_client')
@@ -90,7 +90,7 @@ class TestLogin(BaseApplicationTest):
         self.login_as_buyer()
         res = self.client.get(self.url_for('main.render_login'))
         assert res.status_code == 302
-        assert res.location == self.url_for('buyers.buyer_dashboard', _external=True)
+        assert res.location == 'http://localhost/2/buyer-dashboard'
 
     def test_should_strip_whitespace_surrounding_login_email_address_field(self):
         self.client.post(self.expand_path('/login'), data={
@@ -133,7 +133,7 @@ class TestLogin(BaseApplicationTest):
             }
             res = self.client.post(self.expand_path('/login?next=http://badness.com'), data=data)
         assert res.status_code == 302
-        assert res.location == self.url_for('buyers.buyer_dashboard', _external=True)
+        assert res.location == 'http://localhost/2/buyer-dashboard'
 
     def test_should_have_cookie_on_redirect(self):
         with self.app.app_context():
@@ -996,7 +996,7 @@ class TestCreateBuyer(BaseApplicationTest):
         )
 
         assert res.status_code == 302
-        assert res.location == self.url_for('buyers.buyer_dashboard', _external=True)
+        assert res.location == 'http://localhost/2/buyer-dashboard'
 
         data_api_client.create_user.assert_called_once_with({
             'role': 'buyer',

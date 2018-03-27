@@ -378,7 +378,7 @@ class TestEditBriefSubmission(BaseApplicationTest):
 
         breadcrumbs_we_expect = [
             ('Home', self.expand_path('/')),
-            ('Dashboard', self.expand_path('/buyers')),
+            ('Dashboard', self.expand_path('/2/buyer-dashboard')),
             ('Brief Overview',
              self.expand_path(
                  '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1234')),  # noqa
@@ -1292,7 +1292,7 @@ class TestDeleteBriefSubmission(BaseApplicationTest):
 
         assert res.status_code == 302
         assert data_api_client.delete_brief.called
-        assert res.location.endswith('/buyers')
+        assert res.location.endswith('/2/buyer-dashboard')
 
     def test_csrf_protection(self, data_api_client):
         self.login_as_buyer()

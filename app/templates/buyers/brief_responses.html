@@ -12,7 +12,7 @@
         "label": "Home"
       },
       {
-        "link": url_for(".buyer_dashboard"),
+        "link": "/2/buyer-dashboard",
         "label": "Dashboard"
       },
       {
@@ -85,7 +85,7 @@
     </div>
     {%
       with
-      url = url_for('buyers.buyer_dashboard'),
+      url = "/2/buyer-dashboard",
       text = "Back to your dashboard"
     %}
       {% include "toolkit/secondary-action-link.html" %}
