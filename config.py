@@ -144,8 +144,8 @@ class Live(Config):
 
     # use of invalid email addresses with live api keys annoys Notify
     DM_NOTIFY_REDIRECT_DOMAINS_TO_ADDRESS = {
-        "example.com": "simulate-delivered@notifications.service.gov.uk",
-        "example.gov.uk": "simulate-delivered-2@notifications.service.gov.uk",
+        "example.com": "success@simulator.amazonses.com",
+        "example.gov.uk": "success@simulator.amazonses.com",
     }
 
 
