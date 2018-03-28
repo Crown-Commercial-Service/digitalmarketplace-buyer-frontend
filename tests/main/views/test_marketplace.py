@@ -34,9 +34,9 @@ class TestApplication(BaseApplicationTest):
 
 @mock.patch('app.main.views.marketplace.data_api_client', autospec=True)
 class TestHomepageAccountCreationVirtualPageViews(BaseApplicationTest):
-    def test_data_analytics_track_page_view_is_shown_if_account_created_flag_flash_message(self, data_api_client):
+    def test_data_analytics_track_page_view_is_shown_if_account_created_flash_message(self, data_api_client):
         with self.client.session_transaction() as session:
-            session['_flashes'] = [('flag', 'account-created')]
+            session['_flashes'] = [('track-page-view', 'buyers?account-created=true')]
 
         res = self.client.get("/")
         data = res.get_data(as_text=True)
@@ -47,7 +47,7 @@ class TestHomepageAccountCreationVirtualPageViews(BaseApplicationTest):
         assert flash_banner_match is None, "Unexpected flash banner message '{}'.".format(
             flash_banner_match.groups()[0])
 
-    def test_data_analytics_track_page_view_not_shown_if_no_account_created_flag_flash_message(self, data_api_client):
+    def test_data_analytics_track_page_view_not_shown_if_no_account_created_flash_message(self, data_api_client):
         res = self.client.get("/")
         data = res.get_data(as_text=True)
 
