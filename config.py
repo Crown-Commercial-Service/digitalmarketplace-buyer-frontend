@@ -142,6 +142,12 @@ class Live(Config):
     DM_LOG_PATH = '/var/log/digitalmarketplace/application.log'
     DM_HTTP_PROTO = 'https'
 
+    # use of invalid email addresses with live api keys annoys Notify
+    DM_NOTIFY_REDIRECT_DOMAINS_TO_ADDRESS = {
+        "example.com": "simulate-delivered@notifications.service.gov.uk",
+        "example.gov.uk": "simulate-delivered-2@notifications.service.gov.uk",
+    }
+
 
 class Preview(Live):
     FEATURE_FLAGS_NEW_SUPPLIER_FLOW = enabled_since('2017-02-06')
