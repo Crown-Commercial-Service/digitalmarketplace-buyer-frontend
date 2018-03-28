@@ -22,7 +22,7 @@
 {% endblock %}
 
 {% block main_content %}
-
+<div class="brief-page">
 {% if brief.status == 'closed' %}
 <div class="grid-row">
   <div class="column-one-whole">
@@ -127,7 +127,7 @@
 </div>
 
 {% if has_supplier_responded_to_brief %}
-  <div class="grid-row">
+  <div class="grid-row brief-action">
     <div class="column-one-third">
         {% with
            url = url_for('external.view_response_result', brief_id=brief.id),
@@ -138,7 +138,7 @@
     </div>
   </div>
 {% elif brief.status == 'live' %}
-  <div class="grid-row">
+  <div class="grid-row brief-action">
     <div class="column-two-thirds">
       <form action="{{ url_for('external.start_brief_response', brief_id=brief.id) }}" method="get">
         {%
@@ -152,5 +152,6 @@
     </div>
   </div>
 {% endif %}
+</div>
 
 {% endblock %}
