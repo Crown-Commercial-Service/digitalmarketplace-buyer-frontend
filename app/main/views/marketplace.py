@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from urllib.parse import urljoin
-from itertools import chain
 
 from flask_login import current_user
 from flask import abort, current_app, render_template, request, url_for
@@ -258,12 +257,7 @@ def list_opportunities(framework_family):
     )
 
     filter_form_hidden_fields_by_name = {
-        f["name"]: f
-        for f in chain(
-            selected_category_tree_filters[1:],
-            # add "doc_type" to query string for analytics disambiguation
-            ({"name": "doc_type", "value": doc_type},),
-        )
+        f["name"]: f for f in selected_category_tree_filters[1:]
     }
     current_lot = lots_by_slug.get(current_lot_slug)
 
