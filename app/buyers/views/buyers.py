@@ -424,19 +424,23 @@ def prepared_response_contents_for_brief(brief, responses):
 
         answers.update({'Supplier': r.get('supplierName', 'UNKNOWN')})
         answers.update({'Contact': r.get('respondToEmailAddress', 'UNKNOWN')})
+        if brief['lotSlug'] == 'digital-professionals':
+            answers.update({'Specialist Name': r.get('specialistName', 'UNKNOWN')})
         answers.update({'Availability Date': r.get('availability', 'UNKNOWN')})
         answers.update({'Day rate': r.get('dayRate', '')})
         if brief['lotSlug'] == 'digital-professionals':
-            for i in range(0, 3):
-                answers.update({'Attached Document URL {}'.format(i+1): url_for('.download_brief_response_attachment',
-                                                                                framework_slug=brief['frameworkSlug'],
-                                                                                lot_slug=brief['lotSlug'],
-                                                                                brief_id=brief['id'],
-                                                                                response_id=r.get('id'),
-                                                                                attachment_id=i,
-                                                                                _external=True
-                                                                                )
-                                if i < len(r.get('attachedDocumentURL', [])) else ''})
+            attached_documents_count = len(r.get('attachedDocumentURL', []))
+            links = ''
+            for i in range(0, attached_documents_count):
+                links = ('{}\n{}'.format(links, url_for('.download_brief_response_attachment',
+                                         framework_slug=brief['frameworkSlug'],
+                                         lot_slug=brief['lotSlug'],
+                                         brief_id=brief['id'],
+                                         response_id=r.get('id'),
+                                         attachment_id=i,
+                                         _external=True)))
+
+            answers.update({'Attached Document URL': links})
         answers.update(zip(ess_req_names, ess_responses))
         answers.update(zip(nth_req_names, nth_responses))
 

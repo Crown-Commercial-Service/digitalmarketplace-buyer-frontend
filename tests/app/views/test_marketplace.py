@@ -11,6 +11,7 @@ from ...helpers import BaseApplicationTest
 
 from dmapiclient import api_stubs
 from dmutils.formats import DATETIME_FORMAT
+import pendulum
 
 
 class TestHomepageBrowseList(BaseApplicationTest):
@@ -465,7 +466,7 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
         choose_domain_url = document.xpath('//a')[10].get('href')
         assert_equal(choose_domain_url, "/sellers/application")
 
-    def test_has_brief_responses(self):
+    def test_has_brief_responses_outcome(self):
         self.login_as_supplier()
 
         self._data_api_client.find_brief_responses.return_value = {
@@ -473,6 +474,7 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
         }
         self.brief['status'] = 'live'
         self.brief['sellerSelector'] = 'not a restricted brief'
+        self.brief['lot'] = 'digital-outcome'
 
         res = self.client.get(
             self.expand_path('/digital-marketplace/opportunities/{}')
@@ -482,6 +484,47 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
         document = html.fromstring(res.get_data(as_text=True))
         assert_equal(
             document.xpath('//a')[10].text, 'View your application'
+        )
+
+    def test_has_brief_responses_specialists_view(self):
+        self.login_as_supplier()
+
+        self._data_api_client.find_brief_responses.return_value = {
+            'briefResponses': ['firstResponse', 'secondResponse', 'thirdResponse']
+        }
+        self.brief['status'] = 'live'
+        self.brief['sellerSelector'] = 'not a restricted brief'
+        self.brief['lot'] = 'digital-professionals'
+
+        res = self.client.get(
+            self.expand_path('/digital-marketplace/opportunities/{}')
+                .format(self.brief['id'])
+        )
+
+        document = html.fromstring(res.get_data(as_text=True))
+        assert_equal(
+            document.xpath('//a')[10].text, 'View your application'
+        )
+
+    def test_has_brief_responses_specialists_edit(self):
+        self.login_as_supplier()
+
+        self._data_api_client.find_brief_responses.return_value = {
+            'briefResponses': ['firstResponse']
+        }
+        self.brief['status'] = 'live'
+        self.brief['sellerSelector'] = 'not a restricted brief'
+        self.brief['lot'] = 'digital-professionals'
+        self.brief['dates']['published_date'] = '1/1/2019'
+
+        res = self.client.get(
+            self.expand_path('/digital-marketplace/opportunities/{}')
+                .format(self.brief['id'])
+        )
+
+        document = html.fromstring(res.get_data(as_text=True))
+        assert_equal(
+            document.xpath('//a')[10].text, 'Edit application'
         )
 
     def test_aoe_dp_no_casestudies(self):
@@ -823,6 +866,7 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
         self.supplier['supplier']['is_recruiter'] = 'true'
         self.brief['lot'] = 'digital-professionals'
         self.brief['areaOfExpertise'] = 'User research and design'
+        self.brief['dates']['published_date'] = '1/1/2019'
         self._data_api_client.req.assessments().supplier().get.return_value = {
             'unassessed': [],
             'assessed': [self.brief['areaOfExpertise'], ]
@@ -838,7 +882,7 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
         assert_equal(brief_scenario_button_text, 'Apply Now')
 
         response_create_url = document.xpath('//a')[10].get('href')
-        assert_equal(response_create_url, '/2/brief/{}/respond'.format(self.brief['id']))
+        assert_equal(response_create_url, '/2/brief/{}/specialist/respond'.format(self.brief['id']))
 
     def test_one_seller_restricted_brief(self):
         self.login_as_supplier()

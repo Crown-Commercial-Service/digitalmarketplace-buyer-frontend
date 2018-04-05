@@ -16,11 +16,10 @@ from openpyxl import load_workbook
 
 CSV_EXPECTED = """Supplier,Kev's Butties,Kev's Pies,Kev's Doughnuts,Kev's Fried Noodles,Kev's Pizza
 Contact,test1@email.com,test2@email.com,test3@email.com,test4@email.com,test5@email.com
+Specialist Name,Butties Kev's,Pies Kev's,Doughnuts Kev's,Fried Noodles Kev's,Pizza Kev's
 Availability Date,Next Tuesday,A week Friday,As soon as the sugar is delivered,After Christmas,Within the hour
 Day rate,¥1.49,&euro;3.50,10,12.35,£350
-Attached Document URL 1,,,,,
-Attached Document URL 2,,,,,
-Attached Document URL 3,,,,,
+Attached Document URL,,,,,
 E1,True,True,True,False,False
 E2,True,True,False,True,False
 Nice1,True,False,True,True,False
@@ -1926,6 +1925,7 @@ class TestDownloadBriefResponsesCsv(BaseApplicationTest):
         "briefResponses": [
             {
                 "supplierName": "Kev's Butties",
+                "specialistName": "Butties Kev's",
                 "availability": "Next Tuesday",
                 "dayRate": "¥1.49",
                 "essentialRequirements": [True, True],
@@ -1934,6 +1934,7 @@ class TestDownloadBriefResponsesCsv(BaseApplicationTest):
             },
             {
                 "supplierName": "Kev's Pies",
+                "specialistName": "Pies Kev's",
                 "availability": "A week Friday",
                 "dayRate": "&euro;3.50",
                 "essentialRequirements": [True, True],
@@ -1942,6 +1943,7 @@ class TestDownloadBriefResponsesCsv(BaseApplicationTest):
             },
             {
                 "supplierName": "Kev's Doughnuts",
+                "specialistName": "Doughnuts Kev's",
                 "availability": "As soon as the sugar is delivered",
                 "dayRate": "10",
                 "essentialRequirements": [True, False],
@@ -1950,6 +1952,7 @@ class TestDownloadBriefResponsesCsv(BaseApplicationTest):
             },
             {
                 "supplierName": "Kev's Fried Noodles",
+                "specialistName": "Fried Noodles Kev's",
                 "availability": "After Christmas",
                 "dayRate": "12.35",
                 "essentialRequirements": [False, True],
@@ -1958,12 +1961,13 @@ class TestDownloadBriefResponsesCsv(BaseApplicationTest):
             },
             {
                 "supplierName": "Kev's Pizza",
+                "specialistName": "Pizza Kev's",
                 "availability": "Within the hour",
                 "dayRate": "£350",
                 "essentialRequirements": [False, False],
                 "niceToHaveRequirements": [False, False, False],
                 "respondToEmailAddress": "test5@email.com",
-            },
+            }
         ]
     }
 
@@ -1971,6 +1975,7 @@ class TestDownloadBriefResponsesCsv(BaseApplicationTest):
         "briefResponses": [
             {
                 "supplierName": "K,ev’s \"Bu,tties",
+                "specialistName": "Bu,tties K,ev’s \"",
                 "availability": "❝Next — Tuesday❞",
                 "dayRate": "1.49",
                 "essentialRequirements": [True, True],
@@ -1979,6 +1984,7 @@ class TestDownloadBriefResponsesCsv(BaseApplicationTest):
             },
             {
                 "supplierName": "Kev\'s \'Pies",
+                "specialistName": "\'Pies Kev\'s",
                 "availability": "&quot;A week Friday&rdquot;",
                 "dayRate": "3.50",
                 "essentialRequirements": [True, True],
@@ -1987,6 +1993,7 @@ class TestDownloadBriefResponsesCsv(BaseApplicationTest):
             },
             {
                 "supplierName": "@SUM(1+1)*cmd|' /C calc'!A0",
+                "specialistName": "@SUM(1+1)*cmd|' /C calc'!A0",
                 "availability": "=cmd| '/c calc'!A0",
                 "dayRate": "3.50",
                 "essentialRequirements": [True, True],

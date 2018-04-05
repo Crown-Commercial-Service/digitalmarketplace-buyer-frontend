@@ -41,13 +41,26 @@
 {% if brief.status == 'live' and (not is_restricted_brief or selected_for_brief) %}
 
     {% if brief_responses %}
-        {% with
-        url = "{}/sellers/opportunities/{}/responses/result".format(config['URL_PREFIX'],
-        brief.id),
-        role = "button",
-        label = "View your application" %}
-            {% include "toolkit/link-button.html" %}
-        {% endwith %}
+        {% if brief.lot == 'digital-outcome' or (brief.lot == 'digital-professionals' and (brief_responses|length >= 3 or not application_specialist_submitted_url)) %}
+            {% with
+                url = "{}/sellers/opportunities/{}/responses/result".format(config['URL_PREFIX'],
+                brief.id),
+                role = "button",
+                label = "View your application" %}
+                    {% include "toolkit/link-button.html" %}
+            {% endwith %}
+        {% elif brief.lot == 'digital-professionals' %}
+            <h2>Interested in this opportunity?</h2>
+            <p>You have already started your application.</p>
+            <div class="brief-button-group" id="scen_24">
+            <span>
+            {% with
+                url = application_specialist_submitted_url,
+                role = "button",
+                label = "Edit application" %}
+                    {% include "toolkit/link-button.html" %}
+          {% endwith %}
+        {% endif %}
     {% else %}
 
     <p>
@@ -167,7 +180,7 @@
                     <div class="brief-button-group" id="scen_24">
                     <span>
                   {% with
-                    url = application_url,
+                    url = application_specialist_url,
                     role = "button",
                     label = "Apply Now" %}
                       {% include "toolkit/link-button.html" %}

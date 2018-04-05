@@ -1,6 +1,7 @@
 import os
 import hashlib
 from dmutils.status import enabled_since, get_version_label
+import pendulum
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -103,6 +104,8 @@ class Config(object):
     GENERIC_EMAIL_DOMAINS = ['gmail.com', 'bigpond.com', 'outlook.com', 'outlook.com.au', 'hotmail.com', 'yahoo.com',
                              'optusnet.com.au', 'msn.com', 'internode.on.net', 'iinet.net.au', 'ozemail.com.au',
                              'live.com.au', 'digital.gov.au', 'icloud.com']
+
+    MULTI_CANDIDATE_PUBLISHED_DATE = pendulum.create(2018, 4, 9)
 
 
 class Test(Config):

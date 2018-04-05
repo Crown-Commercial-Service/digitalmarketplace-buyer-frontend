@@ -24,6 +24,7 @@ from ..forms.brief_forms import BriefSearchForm
 from flask_weasyprint import render_pdf
 from dmapiclient.errors import HTTPError
 from app.api_client.error import APIError
+import pendulum
 
 
 @main.route('/')
@@ -126,7 +127,18 @@ def get_brief_by_id(framework_slug, brief_id):
 
     is_restricted_brief = brief.get('sellerSelector', '') in ('someSellers', 'oneSeller')
 
+    brief_published_date = brief['dates'].get('published_date', None)
+    feature_date = current_app.config['MULTI_CANDIDATE_PUBLISHED_DATE']
+
+    published_date = pendulum.parse(brief_published_date) if brief_published_date else feature_date.subtract(days=1)
     application_url = "/2/brief/{}/respond".format(brief['id'])
+    application_specialist_url = application_url
+    application_specialist_submitted_url = None
+
+    if published_date >= feature_date:
+        application_specialist_url = "/2/brief/{}/specialist/respond".format(brief['id'])
+        application_specialist_submitted_url = "/2/brief/{}/specialist/respond/submitted".format(brief['id'])
+
     add_case_study_url = None
 
     profile_application_status = None
@@ -197,6 +209,8 @@ def get_brief_by_id(framework_slug, brief_id):
         'brief.html',
         add_case_study_url=add_case_study_url,
         application_url=application_url,
+        application_specialist_url=application_specialist_url,
+        application_specialist_submitted_url=application_specialist_submitted_url,
         assessed_domains=assessed_domains,
         brief=brief,
         brief_responses=brief_responses,
