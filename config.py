@@ -105,7 +105,7 @@ class Config(object):
                              'optusnet.com.au', 'msn.com', 'internode.on.net', 'iinet.net.au', 'ozemail.com.au',
                              'live.com.au', 'digital.gov.au', 'icloud.com']
 
-    MULTI_CANDIDATE_PUBLISHED_DATE = pendulum.create(2018, 4, 9)
+    MULTI_CANDIDATE_PUBLISHED_DATE = pendulum.create(2018, 4, 17)
 
 
 class Test(Config):
