@@ -13,7 +13,10 @@ from ...helpers import BaseApplicationTest
 
 class TestApplication(BaseApplicationTest):
     def setup_method(self, method):
-        super(TestApplication, self).setup_method(method)
+        super().setup_method(method)
+
+    def teardown_method(self, method):
+        super().teardown_method(method)
 
     def test_analytics_code_should_be_in_javascript(self):
         res = self.client.get('/static/javascripts/application.js')
@@ -34,6 +37,13 @@ class TestApplication(BaseApplicationTest):
 
 @mock.patch('app.main.views.marketplace.data_api_client', autospec=True)
 class TestHomepageAccountCreationVirtualPageViews(BaseApplicationTest):
+
+    def setup_method(self, method):
+        super().setup_method(method)
+
+    def teardown_method(self, method):
+        super().teardown_method(method)
+
     def test_data_analytics_track_page_view_is_shown_if_account_created_flash_message(self, data_api_client):
         with self.client.session_transaction() as session:
             session['_flashes'] = [('track-page-view', 'buyers?account-created=true')]
@@ -77,6 +87,12 @@ class TestHomepageBrowseList(BaseApplicationTest):
         "status": "live",
         "id": 8
     }
+
+    def setup_method(self, method):
+        super().setup_method(method)
+
+    def teardown_method(self, method):
+        super().teardown_method(method)
 
     def test_dos_links_are_shown(self, data_api_client):
         data_api_client.find_frameworks.return_value = {
@@ -191,8 +207,12 @@ class TestHomepageBrowseList(BaseApplicationTest):
 
 
 class TestHomepageSidebarMessage(BaseApplicationTest):
+
     def setup_method(self, method):
-        super(TestHomepageSidebarMessage, self).setup_method(method)
+        super().setup_method(method)
+
+    def teardown_method(self, method):
+        super().teardown_method(method)
 
     @staticmethod
     def _find_frameworks(framework_slugs_and_statuses):
@@ -333,8 +353,12 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
 
 
 class TestStaticMarketplacePages(BaseApplicationTest):
+
     def setup_method(self, method):
-        super(TestStaticMarketplacePages, self).setup_method(method)
+        super().setup_method(method)
+
+    def teardown_method(self, method):
+        super().teardown_method(method)
 
     def test_cookie_page(self):
         res = self.client.get('/cookies')
@@ -374,7 +398,7 @@ class TestStaticMarketplacePages(BaseApplicationTest):
 
 class BaseBriefPageTest(BaseApplicationTest):
     def setup_method(self, method):
-        super(BaseBriefPageTest, self).setup_method(method)
+        super().setup_method(method)
 
         self._data_api_client_patch = mock.patch('app.main.views.marketplace.data_api_client', autospec=True)
         self._data_api_client = self._data_api_client_patch.start()
@@ -387,6 +411,7 @@ class BaseBriefPageTest(BaseApplicationTest):
 
     def teardown_method(self, method):
         self._data_api_client_patch.stop()
+        super().teardown_method(method)
 
 
 class TestBriefPage(BaseBriefPageTest):
@@ -818,7 +843,7 @@ class TestBriefPage(BaseBriefPageTest):
 class TestBriefPageQandASectionViewQandASessionDetails(BaseBriefPageTest):
 
     def setup_method(self, method):
-        super(TestBriefPageQandASectionViewQandASessionDetails, self).setup_method(method)
+        super().setup_method(method)
         self.brief['briefs']['questionAndAnswerSessionDetails'] = {'many': 'details'}
         self.brief['briefs']['clarificationQuestionsAreClosed'] = False
 
@@ -896,7 +921,7 @@ class TestBriefPageQandASectionViewQandASessionDetails(BaseBriefPageTest):
 class TestBriefPageQandASectionAskAQuestion(BaseBriefPageTest):
 
     def setup_method(self, method):
-        super(TestBriefPageQandASectionAskAQuestion, self).setup_method(method)
+        super().setup_method(method)
         self.brief['briefs']['clarificationQuestionsAreClosed'] = False
 
     def test_live_brief_ask_a_question(self):
@@ -967,7 +992,7 @@ class TestBriefPageQandASectionAskAQuestion(BaseBriefPageTest):
 
 class TestAwardedBriefPage(BaseBriefPageTest):
     def setup_method(self, method):
-        super(TestAwardedBriefPage, self).setup_method(method)
+        super().setup_method(method)
         self.brief['briefs']['status'] = 'awarded'
         self.brief['briefs']['awardedBriefResponseId'] = 14276
 
@@ -1010,7 +1035,7 @@ class TestAwardedBriefPage(BaseBriefPageTest):
 
 class TestCancelledBriefPage(BaseBriefPageTest):
     def setup_method(self, method):
-        super(TestCancelledBriefPage, self).setup_method(method)
+        super().setup_method(method)
         self.brief['briefs']['status'] = 'cancelled'
 
     def test_cancelled_banner_shown_on_cancelled_brief_page(self):
@@ -1032,7 +1057,7 @@ class TestCancelledBriefPage(BaseBriefPageTest):
 
 class TestUnsuccessfulBriefPage(BaseBriefPageTest):
     def setup_method(self, method):
-        super(TestUnsuccessfulBriefPage, self).setup_method(method)
+        super().setup_method(method)
         self.brief['briefs']['status'] = 'unsuccessful'
 
     def test_unsuccessful_banner_shown_on_unsuccessful_brief_page(self):
@@ -1054,7 +1079,7 @@ class TestUnsuccessfulBriefPage(BaseBriefPageTest):
 
 class TestWithdrawnSpecificBriefPage(BaseBriefPageTest):
     def setup_method(self, method):
-        super(TestWithdrawnSpecificBriefPage, self).setup_method(method)
+        super().setup_method(method)
         self.brief['briefs']['status'] = "withdrawn"
         self.brief['briefs']['withdrawnAt'] = "2016-11-25T10:47:23.126761Z"
 
@@ -1104,7 +1129,7 @@ class TestWithdrawnSpecificBriefPage(BaseBriefPageTest):
 
 class TestCatalogueOfBriefsPage(BaseApplicationTest):
     def setup_method(self, method):
-        super(TestCatalogueOfBriefsPage, self).setup_method(method)
+        super().setup_method(method)
 
         self._view_search_api_client_patch = mock.patch('app.main.views.marketplace.search_api_client', autospec=True)
         self._view_search_api_client = self._view_search_api_client_patch.start()
@@ -1168,6 +1193,7 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         self._data_api_client_patch.stop()
         self._view_search_api_client_patch.stop()
         self._presenters_search_api_client_patch.stop()
+        super().teardown_method(method)
 
     def normalize_qs(self, qs):
         return {k: set(v) for k, v in parse_qs(qs).items() if k != "page"}
@@ -1759,6 +1785,7 @@ class TestCatalogueOfBriefsFilterOnClick(BaseApplicationTest):
         self._data_api_client_patch.stop()
         self._view_search_api_client_patch.stop()
         self._presenters_search_api_client_patch.stop()
+        super().teardown_method(method)
 
     @pytest.mark.parametrize('query_string, content_type',
                              (('', 'text/html; charset=utf-8'),
@@ -1829,6 +1856,12 @@ class TestGCloudHomepageLinks(BaseApplicationTest):
         "status": "live",
         "id": 5
     }
+
+    def setup_method(self, method):
+        super().setup_method(method)
+
+    def teardown_method(self, method):
+        super().teardown_method(method)
 
     @pytest.mark.parametrize('framework_slug, gcloud_content',
                              (('g-cloud-8', 'Find cloud technology and support'),

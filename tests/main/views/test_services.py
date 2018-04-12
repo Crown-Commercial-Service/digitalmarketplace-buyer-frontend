@@ -29,7 +29,7 @@ class UnavailableBanner(object):
 class TestServicePage(BaseApplicationTest):
 
     def setup_method(self, method):
-        super(TestServicePage, self).setup_method(method)
+        super().setup_method(method)
 
         self.supplier = self._get_supplier_fixture_data()
 
@@ -43,6 +43,9 @@ class TestServicePage(BaseApplicationTest):
         self.lots = framework_helpers.get_lots_by_slug(
             self._get_framework_fixture_data('g-cloud-6')['frameworks']
         )
+
+    def teardown_method(self, method):
+        super().teardown_method(method)
 
     def _assert_contact_details(self, document):
 

@@ -8,7 +8,7 @@ from ...helpers import BaseApplicationTest
 class TestStatus(BaseApplicationTest):
 
     def setup_method(self, method):
-        super(TestStatus, self).setup_method(method)
+        super().setup_method(method)
 
         self._data_api_client_patch = mock.patch('app.status.views.data_api_client', autospec=True)
         self._data_api_client = self._data_api_client_patch.start()

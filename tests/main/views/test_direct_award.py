@@ -18,7 +18,7 @@ from ...helpers import BaseApplicationTest
 
 class TestDirectAwardBase(BaseApplicationTest):
     def setup_method(self, method):
-        super(TestDirectAwardBase, self).setup_method(method)
+        super().setup_method(method)
         self._search_api_client_patch = mock.patch('app.main.views.g_cloud.search_api_client', autospec=True)
         self._search_api_client = self._search_api_client_patch.start()
         self._search_api_client.aggregate.return_value = \
@@ -50,6 +50,7 @@ class TestDirectAwardBase(BaseApplicationTest):
         self._search_api_client_patch.stop()
         self._search_api_client_presenters_patch.stop()
         self._search_api_client_helpers_patch.stop()
+        super().teardown_method(method)
 
 
 class TestDirectAward(TestDirectAwardBase):
@@ -172,7 +173,7 @@ class TestDirectAward(TestDirectAwardBase):
 
 class TestDirectAwardProjectOverview(TestDirectAwardBase):
     def setup_method(self, method):
-        super(TestDirectAwardProjectOverview, self).setup_method(method)
+        super().setup_method(method)
 
         self._search_api_client.get_frontend_params_from_search_api_url.return_value = (('q', 'accelerator'), )
 
@@ -180,6 +181,9 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
 
         self.content_loader = ContentLoader('tests/fixtures/content')
         self.content_loader.load_messages('g9', ['urls'])
+
+    def teardown_method(self, method):
+        super().teardown_method(method)
 
     def _task_has_link(self, tasklist, task, link):
         """Task here refers to the tasklist item number rather than the zero-indexed python array. This feels easier to
@@ -374,12 +378,12 @@ class TestDirectAwardURLGeneration(BaseApplicationTest):
     """This class has been separated out from above because we only want to mock a couple of methods on the API clients,
     not all of them (like the class above)"""
     def setup_method(self, method):
-        super(TestDirectAwardURLGeneration, self).setup_method(method)
+        super().setup_method(method)
 
         self.g9_search_results = self._get_g9_search_results_fixture_data()
 
     def teardown_method(self, method):
-        super(TestDirectAwardURLGeneration, self).teardown_method(method)
+        super().teardown_method(method)
 
     @pytest.mark.parametrize('search_api_url, frontend_url',
                              (
@@ -484,7 +488,7 @@ class TestDirectAwardResultsPage(TestDirectAwardBase):
 
 class TestDirectAwardDownloadResultsView(TestDirectAwardBase):
     def setup_method(self, method):
-        super(TestDirectAwardDownloadResultsView, self).setup_method(method)
+        super().setup_method(method)
 
         self.project_id = 1
         self.kwargs = {'project_id': 1}
@@ -513,10 +517,9 @@ class TestDirectAwardDownloadResultsView(TestDirectAwardBase):
         self.view._init_hook()
 
     def teardown_method(self, method):
-        super(TestDirectAwardDownloadResultsView, self).teardown_method(method)
-
         self._request_patch.stop()
         self._current_user_patch.stop()
+        super().teardown_method(method)
 
     def test_init_hook(self):
         assert self.view.data_api_client is data_api_client

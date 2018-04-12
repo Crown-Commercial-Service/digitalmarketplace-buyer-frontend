@@ -34,7 +34,7 @@ def get_0_results_search_response():
 
 class TestSearchResults(BaseApplicationTest):
     def setup_method(self, method):
-        super(TestSearchResults, self).setup_method(method)
+        super().setup_method(method)
 
         self._search_api_client_patch = mock.patch('app.main.views.g_cloud.search_api_client', autospec=True)
         self._search_api_client = self._search_api_client_patch.start()
@@ -52,6 +52,7 @@ class TestSearchResults(BaseApplicationTest):
     def teardown_method(self, method):
         self._search_api_client_patch.stop()
         self._search_api_client_presenters_patch.stop()
+        super().teardown_method(method)
 
     def test_search_page_results_service_links(self):
         self._search_api_client.search.return_value = \
@@ -576,7 +577,7 @@ class TestSearchResults(BaseApplicationTest):
 
 class TestSearchFilterOnClick(BaseApplicationTest):
     def setup_method(self, method):
-        super(TestSearchFilterOnClick, self).setup_method(method)
+        super().setup_method(method)
 
         self._search_api_client_patch = mock.patch('app.main.views.g_cloud.search_api_client', autospec=True)
         self._search_api_client = self._search_api_client_patch.start()
@@ -596,6 +597,7 @@ class TestSearchFilterOnClick(BaseApplicationTest):
     def teardown_method(self, method):
         self._search_api_client_patch.stop()
         self._search_api_client_presenters_patch.stop()
+        super().teardown_method(method)
 
     @pytest.mark.parametrize('query_string, content_type',
                              (('', 'text/html; charset=utf-8'),

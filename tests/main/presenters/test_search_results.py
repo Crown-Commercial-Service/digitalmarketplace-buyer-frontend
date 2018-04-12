@@ -39,13 +39,16 @@ class TestSearchResults(BaseApplicationTest):
         return False
 
     def setup_method(self, method):
-        super(TestSearchResults, self).setup_method(method)
+        super().setup_method(method)
 
         self.fixture = _get_fixture_data()
         self.multiple_pages_fixture = _get_fixture_multiple_pages_data()
         self._lots_by_slug = framework_helpers.get_lots_by_slug(
             self._get_framework_fixture_data('g-cloud-6')['frameworks']
         )
+
+    def teardown_method(self, method):
+        super().teardown_method(method)
 
     def test_search_results_is_set(self):
         search_results_instance = SearchResults(self.fixture, self._lots_by_slug)

@@ -57,7 +57,7 @@ def _get_fixture_multiple_pages_data():
 
 class TestSearchSummary(BaseApplicationTest):
     def setup_method(self, method):
-        super(TestSearchSummary, self).setup_method(method)
+        super().setup_method(method)
 
         self._lots_by_slug = framework_helpers.get_lots_by_slug(
             self._get_framework_fixture_data('g-cloud-6')['frameworks']
@@ -73,6 +73,9 @@ class TestSearchSummary(BaseApplicationTest):
             ('lot', 'saas'),
             ('q', 'email'),
         ))
+
+    def teardown_method(self, method):
+        super().teardown_method(method)
 
     def test_write_list_as_sentence_with_one_item(self):
         assert SearchSummary.write_list_as_sentence(['item1'], 'and') == u"item1"
@@ -331,7 +334,7 @@ class TestSearchSummary(BaseApplicationTest):
         assert search_summary.markup() == Markup(u"5 results found with option1 and option2")
 
 
-class TestSummaryRules(object):
+class TestSummaryRules:
     def setup_method(self, method):
         if SummaryRules.loaded is False:
             SummaryRules.load_rules(manifest=os.path.join(
@@ -392,7 +395,7 @@ class TestSummaryRules(object):
         SummaryRules.loaded = False
 
 
-class TestSummaryFragment(object):
+class TestSummaryFragment:
     def _get_mock(self, key):
         return self.rules[key]
 

@@ -318,6 +318,7 @@ class TestLotsAndCategoriesSelection(BaseApplicationTest):
 
     def teardown_method(self, method):
         self.search_api_client_patch.stop()
+        super().teardown_method(method)
 
     def test_top_level_category_selection(self):
         url = "/g-cloud/search?q=&lot=cloud-software&otherfilter=somevalue&filterExample=option+1" \

@@ -8,6 +8,13 @@ from ...helpers import BaseApplicationTest
 
 @mock.patch('app.main.views.g_cloud.search_api_client', autospec=True)
 class TestErrors(BaseApplicationTest):
+
+    def setup_method(self, method):
+        super().setup_method(method)
+
+    def teardown_method(self, method):
+        super().teardown_method(method)
+
     def test_404(self, search_api_mock):
         res = self.client.get('/g-cloud/service/1234')
         assert res.status_code == 404
