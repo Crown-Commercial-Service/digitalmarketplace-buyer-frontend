@@ -2,6 +2,10 @@
 
 .index-page {
 
+  .flash-message-container {
+    margin-bottom: 40px; // adds in specific margin for index page due to layout of page
+  }
+
   h2 {
     @include bold-27;
     margin-bottom: $gutter;
