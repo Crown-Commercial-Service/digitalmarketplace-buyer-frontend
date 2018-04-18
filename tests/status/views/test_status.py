@@ -10,27 +10,27 @@ class TestStatus(BaseApplicationTest):
     def setup_method(self, method):
         super().setup_method(method)
 
-        self._data_api_client_patch = mock.patch('app.status.views.data_api_client', autospec=True)
-        self._data_api_client = self._data_api_client_patch.start()
+        self.data_api_client_patch = mock.patch('app.status.views.data_api_client', autospec=True)
+        self.data_api_client = self.data_api_client_patch.start()
 
-        self._search_api_client_patch = mock.patch('app.status.views.search_api_client', autospec=True)
-        self._search_api_client = self._search_api_client_patch.start()
+        self.search_api_client_patch = mock.patch('app.status.views.search_api_client', autospec=True)
+        self.search_api_client = self.search_api_client_patch.start()
 
     def teardown_method(self, method):
-        self._data_api_client_patch.stop()
-        self._search_api_client_patch.stop()
+        self.data_api_client_patch.stop()
+        self.search_api_client_patch.stop()
 
     def test_should_return_200_from_elb_status_check(self):
         status_response = self.client.get('/_status?ignore-dependencies')
         assert status_response.status_code == 200
-        assert self._data_api_client.called is False
+        assert self.data_api_client.called is False
 
     def test_status_ok(self):
-        self._data_api_client.get_status.return_value = {
+        self.data_api_client.get_status.return_value = {
             'status': 'ok'
         }
 
-        self._search_api_client.get_status.return_value = {
+        self.search_api_client.get_status.return_value = {
             'status': 'ok'
         }
 
@@ -42,13 +42,13 @@ class TestStatus(BaseApplicationTest):
         assert "{}".format(json_data['search_api_status']['status']) == "ok"
 
     def test_status_error_in_one_upstream_api(self):
-        self._data_api_client.get_status.return_value = {
+        self.data_api_client.get_status.return_value = {
             'status': 'error',
             'app_version': None,
             'message': 'Cannot connect to Database'
         }
 
-        self._search_api_client.get_status.return_value = {
+        self.search_api_client.get_status.return_value = {
             'status': 'ok'
         }
 
@@ -63,11 +63,11 @@ class TestStatus(BaseApplicationTest):
 
     def test_status_no_response_in_one_upstream_api(self):
 
-        self._data_api_client.get_status.return_value = {
+        self.data_api_client.get_status.return_value = {
             'status': 'ok'
         }
 
-        self._search_api_client.get_status.return_value = None
+        self.search_api_client.get_status.return_value = None
 
         response = self.client.get('/_status')
         assert response.status_code == 500
@@ -80,13 +80,13 @@ class TestStatus(BaseApplicationTest):
 
     def test_status_error_in_two_upstream_apis(self):
 
-        self._data_api_client.get_status.return_value = {
+        self.data_api_client.get_status.return_value = {
             'status': 'error',
             'app_version': None,
             'message': 'Cannot connect to Database'
         }
 
-        self._search_api_client.get_status.return_value = {
+        self.search_api_client.get_status.return_value = {
             'status': 'error',
             'app_version': None,
             'message': 'Cannot connect to elasticsearch'
