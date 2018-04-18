@@ -429,18 +429,40 @@ def prepared_response_contents_for_brief(brief, responses):
         answers.update({'Availability Date': r.get('availability', 'UNKNOWN')})
         answers.update({'Day rate': r.get('dayRate', '')})
         if brief['lotSlug'] == 'digital-professionals':
-            attached_documents_count = len(r.get('attachedDocumentURL', []))
-            links = ''
-            for i in range(0, attached_documents_count):
-                links = ('{}\n{}'.format(links, url_for('.download_brief_response_attachment',
-                                         framework_slug=brief['frameworkSlug'],
-                                         lot_slug=brief['lotSlug'],
-                                         brief_id=brief['id'],
-                                         response_id=r.get('id'),
-                                         attachment_id=i,
-                                         _external=True)))
+            brief_published_date = brief['dates'].get('published_date', None)
+            feature_date = current_app.config['MULTI_CANDIDATE_PUBLISHED_DATE']
+            if brief_published_date:
+                published_date = pendulum.parse(brief_published_date)
+            else:
+                published_date = feature_date.subtract(days=1)
+            if published_date >= feature_date:
+                attached_documents_count = len(r.get('attachedDocumentURL', []))
+                links = ''
+                for i in range(0, attached_documents_count):
+                    links = ('{}\n{}'.format(links, url_for('.download_brief_response_attachment',
+                                             framework_slug=brief['frameworkSlug'],
+                                             lot_slug=brief['lotSlug'],
+                                             brief_id=brief['id'],
+                                             response_id=r.get('id'),
+                                             attachment_id=i,
+                                             _external=True)))
 
-            answers.update({'Attached Document URL': links})
+                answers.update({'Attached Document URL': links})
+            else:
+                for i in range(0, 3):
+                    answers.update(
+                        {
+                            'Attached Document URL {}'.format(i+1): url_for(
+                                '.download_brief_response_attachment',
+                                framework_slug=brief['frameworkSlug'],
+                                lot_slug=brief['lotSlug'],
+                                brief_id=brief['id'],
+                                response_id=r.get('id'),
+                                attachment_id=i,
+                                _external=True
+                                ) if i < len(r.get('attachedDocumentURL', [])) else ''
+                        })
+
         answers.update(zip(ess_req_names, ess_responses))
         answers.update(zip(nth_req_names, nth_responses))
 
