@@ -3,7 +3,6 @@ import re
 from lxml import html
 import mock
 
-from app import data_api_client
 from app.main.helpers import framework_helpers
 from ...helpers import BaseApplicationTest
 
@@ -32,19 +31,22 @@ class TestServicePage(BaseApplicationTest):
         super().setup_method(method)
 
         self.supplier = self._get_supplier_fixture_data()
+        self.service = self._get_g6_service_fixture_data()
 
-        # must use singleton API Client, see BaseApplicationTest.setup_method
-        data_api_client.get_supplier = mock.Mock()
-        data_api_client.get_supplier.return_value = self.supplier
+        self.data_api_client_patch = mock.patch('app.main.views.g_cloud.data_api_client', autospec=True)
+        self.data_api_client = self.data_api_client_patch.start()
 
-        data_api_client.get_framework = mock.Mock()
-        data_api_client.get_service = mock.Mock()
+        self.data_api_client.get_supplier.return_value = self.supplier
+        self.data_api_client.find_frameworks.return_value = self._get_frameworks_list_fixture_data()
+        self.data_api_client.get_framework.return_value = self._get_framework_fixture_data('g-cloud-6')
+        self.data_api_client.get_service.return_value = self.service
 
         self.lots = framework_helpers.get_lots_by_slug(
             self._get_framework_fixture_data('g-cloud-6')['frameworks']
         )
 
     def teardown_method(self, method):
+        self.data_api_client_patch.stop()
         super().teardown_method(method)
 
     def _assert_contact_details(self, document):
@@ -182,24 +184,16 @@ class TestServicePage(BaseApplicationTest):
         return audit_event
 
     def test_g5_service_page_url(self):
-        data_api_client.get_framework.return_value = self._get_framework_fixture_data('g-cloud-5')
+        self.data_api_client.get_framework.return_value = self._get_framework_fixture_data('g-cloud-5')
         self.service = self._get_g5_service_fixture_data()
-        data_api_client.get_service.return_value = self.service
+        self.data_api_client.get_service.return_value = self.service
 
         self._assert_service_page_url()
 
     def test_g6_service_page_url(self):
-        data_api_client.get_framework.return_value = self._get_framework_fixture_data('g-cloud-6')
-        self.service = self._get_g6_service_fixture_data()
-        data_api_client.get_service.return_value = self.service
-
         self._assert_service_page_url()
 
     def test_published_service_doesnt_have_unavailable_banner(self):
-        self.service = self._get_g6_service_fixture_data()
-        data_api_client.get_service.return_value = self.service
-        data_api_client.get_framework.return_value = self._get_framework_fixture_data('g-cloud-6')
-
         service_id = self.service['services']['id']
         res = self.client.get('/g-cloud/services/{}'.format(service_id))
         assert res.status_code == 200
@@ -208,8 +202,6 @@ class TestServicePage(BaseApplicationTest):
         assert not unavailable_banner.exists
 
     def test_enabled_service_has_unavailable_banner(self):
-        self.service = self._get_g6_service_fixture_data()
-
         self.service['services']['status'] = 'enabled'
         self.service['serviceMadeUnavailableAuditEvent'] = \
             self._get_status_update_audit_event_for(
@@ -219,8 +211,7 @@ class TestServicePage(BaseApplicationTest):
                 timestamp='2016-01-05T17:01:07.649587Z',
                 service=self.service['services']
         )
-        data_api_client.get_service.return_value = self.service
-        data_api_client.get_framework.return_value = self._get_framework_fixture_data('g-cloud-6')
+        self.data_api_client.get_service.return_value = self.service
 
         service_id = self.service['services']['id']
         res = self.client.get('/g-cloud/services/{}'.format(service_id))
@@ -237,7 +228,6 @@ class TestServicePage(BaseApplicationTest):
         assert unavailable_banner.body_text() == 'Any existing contracts for this service are still valid.'
 
     def test_disabled_service_has_unavailable_banner(self):
-        self.service = self._get_g6_service_fixture_data()
         self.service['services']['status'] = 'disabled'
         self.service['serviceMadeUnavailableAuditEvent'] = \
             self._get_status_update_audit_event_for(
@@ -247,8 +237,7 @@ class TestServicePage(BaseApplicationTest):
                 timestamp='2016-01-05T17:01:07.649587Z',
                 service=self.service['services']
         )
-        data_api_client.get_service.return_value = self.service
-        data_api_client.get_framework.return_value = self._get_framework_fixture_data('g-cloud-6')
+        self.data_api_client.get_service.return_value = self.service
 
         service_id = self.service['services']['id']
         res = self.client.get('/g-cloud/services/{}'.format(service_id))
@@ -265,7 +254,6 @@ class TestServicePage(BaseApplicationTest):
         assert unavailable_banner.body_text() == 'Any existing contracts for this service are still valid.'
 
     def test_expired_framework_causes_service_to_have_unavailable_banner(self):
-        self.service = self._get_g6_service_fixture_data()
         self.service['services']['frameworkStatus'] = 'expired'
         self.service['serviceMadeUnavailableAuditEvent'] = \
             self._get_status_update_audit_event_for(
@@ -275,8 +263,7 @@ class TestServicePage(BaseApplicationTest):
                 timestamp='2016-01-05T17:01:07.649587Z',
                 service=self.service['services']
         )
-        data_api_client.get_service.return_value = self.service
-        data_api_client.get_framework.return_value = self._get_framework_fixture_data('g-cloud-6')
+        self.data_api_client.get_service.return_value = self.service
 
         service_id = self.service['services']['id']
         res = self.client.get('/g-cloud/services/{}'.format(service_id))
@@ -296,10 +283,8 @@ class TestServicePage(BaseApplicationTest):
         )
 
     def test_pre_live_framework_causes_404(self):
-        self.service = self._get_g6_service_fixture_data()
         self.service['services']['frameworkStatus'] = 'standstill'
-        data_api_client.get_service.return_value = self.service
-        data_api_client.get_framework.return_value = self._get_framework_fixture_data('g-cloud-6')
+        self.data_api_client.get_service.return_value = self.service
 
         service_id = self.service['services']['id']
 
@@ -308,10 +293,9 @@ class TestServicePage(BaseApplicationTest):
         assert res.status_code == 404
 
     def test_service_not_a_g_cloud_service_causes_404(self):
-        self.service = self._get_g6_service_fixture_data()
         self.service['services']['frameworkSlug'] = 'digital-outcomes-and-specialists'
-        data_api_client.get_service.return_value = self.service
-        data_api_client.get_framework.return_value = self._get_framework_fixture_data(
+        self.data_api_client.get_service.return_value = self.service
+        self.data_api_client.get_framework.return_value = self._get_framework_fixture_data(
             'digital-outcomes-and-specialists'
         )
 
@@ -323,10 +307,8 @@ class TestServicePage(BaseApplicationTest):
         assert res.status_code == 404
 
     def test_certifications_section_not_displayed_if_service_has_none(self):
-        self.service = self._get_g6_service_fixture_data()
         self.service['services']['vendorCertifications'] = []
-        data_api_client.get_service.return_value = self.service
-        data_api_client.get_framework.return_value = self._get_framework_fixture_data('g-cloud-6')
+        self.data_api_client.get_service.return_value = self.service
 
         service_id = self.service['services']['id']
 
