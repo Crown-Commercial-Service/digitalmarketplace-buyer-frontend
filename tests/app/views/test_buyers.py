@@ -19,7 +19,9 @@ Contact,test1@email.com,test2@email.com,test3@email.com,test4@email.com,test5@em
 Specialist Name,Butties Kev's,Pies Kev's,Doughnuts Kev's,Fried Noodles Kev's,Pizza Kev's
 Availability Date,Next Tuesday,A week Friday,As soon as the sugar is delivered,After Christmas,Within the hour
 Day rate,¥1.49,&euro;3.50,10,12.35,£350
-Attached Document URL,,,,,
+Attached Document URL 1,,,,,
+Attached Document URL 2,,,,,
+Attached Document URL 3,,,,,
 E1,True,True,True,False,False
 E2,True,True,False,True,False
 Nice1,True,False,True,True,False
