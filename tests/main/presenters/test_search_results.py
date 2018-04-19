@@ -47,9 +47,6 @@ class TestSearchResults(BaseApplicationTest):
             self._get_framework_fixture_data('g-cloud-6')['frameworks']
         )
 
-    def teardown_method(self, method):
-        super().teardown_method(method)
-
     def test_search_results_is_set(self):
         search_results_instance = SearchResults(self.fixture, self._lots_by_slug)
         assert hasattr(search_results_instance, 'search_results')

@@ -451,9 +451,7 @@ class TestSearchResults(BaseApplicationTest):
 
     def test_search_results_sends_aggregation_request_without_page_filter(self):
         self.data_api_client.find_frameworks.return_value = {
-            'frameworks': [
-                self._get_framework_fixture_data('g-cloud-9')['frameworks']
-            ]
+            'frameworks': [self._get_framework_fixture_data('g-cloud-9')['frameworks']]
         }
         self._search_api_client.search.return_value = self.search_results
 

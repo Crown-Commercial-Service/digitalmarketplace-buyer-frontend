@@ -12,11 +12,6 @@ from ...helpers import BaseApplicationTest
 
 
 class TestApplication(BaseApplicationTest):
-    def setup_method(self, method):
-        super().setup_method(method)
-
-    def teardown_method(self, method):
-        super().teardown_method(method)
 
     def test_analytics_code_should_be_in_javascript(self):
         res = self.client.get('/static/javascripts/application.js')
