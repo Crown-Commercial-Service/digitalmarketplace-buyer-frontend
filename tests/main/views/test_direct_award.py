@@ -11,14 +11,14 @@ from werkzeug.exceptions import BadRequest, NotFound
 
 from dmcontent.content_loader import ContentLoader
 
-from app import data_api_client, search_api_client, content_loader
+from app import search_api_client, content_loader
 from app.main.views.g_cloud import DownloadResultsView
 from ...helpers import BaseApplicationTest
 
 
 class TestDirectAwardBase(BaseApplicationTest):
     def setup_method(self, method):
-        super(TestDirectAwardBase, self).setup_method(method)
+        super().setup_method(method)
         self._search_api_client_patch = mock.patch('app.main.views.g_cloud.search_api_client', autospec=True)
         self._search_api_client = self._search_api_client_patch.start()
         self._search_api_client.aggregate.return_value = \
@@ -36,20 +36,24 @@ class TestDirectAwardBase(BaseApplicationTest):
 
         self.g9_search_results = self._get_g9_search_results_fixture_data()
 
-        data_api_client.get_direct_award_project = mock.Mock()
-        data_api_client.get_direct_award_project.return_value = self._get_direct_award_project_fixture()
+        self.data_api_client_patch = mock.patch('app.main.views.g_cloud.data_api_client', autospec=True)
+        self.data_api_client = self.data_api_client_patch.start()
 
-        data_api_client.get_framework = mock.Mock()
-        data_api_client.get_framework.return_value = self._get_framework_fixture_data('g-cloud-9')
+        self.data_api_client.find_frameworks.return_value = self._get_frameworks_list_fixture_data()
+        self.data_api_client.get_framework.return_value = self._get_framework_fixture_data('g-cloud-9')
 
-        data_api_client.find_direct_award_project_searches = mock.Mock()
-        data_api_client.find_direct_award_project_searches.return_value = \
+        self.data_api_client.get_direct_award_project.return_value = self._get_direct_award_project_fixture()
+        self.data_api_client.find_direct_award_projects.return_value = self._get_direct_award_project_list_fixture()
+        self.data_api_client.find_direct_award_project_searches.return_value = \
             self._get_direct_award_project_searches_fixture()
 
     def teardown_method(self, method):
         self._search_api_client_patch.stop()
         self._search_api_client_presenters_patch.stop()
         self._search_api_client_helpers_patch.stop()
+
+        self.data_api_client_patch.stop()
+        super().teardown_method(method)
 
 
 class TestDirectAward(TestDirectAwardBase):
@@ -64,9 +68,6 @@ class TestDirectAward(TestDirectAwardBase):
         cls.SIMPLE_SAVE_SEARCH_URL = '{}?search_query={}'.format(
             cls.SAVE_SEARCH_URL, quote_plus(cls.SIMPLE_SEARCH_PARAMS))
         cls.SEARCH_API_URL = 'g-cloud-9/services/search'
-
-        data_api_client.find_direct_award_projects = mock.Mock()
-        data_api_client.find_direct_award_projects.return_value = cls._get_direct_award_project_list_fixture()
 
     def test_renders_saved_search_overview(self):
         self.login_as_buyer()
@@ -126,12 +127,8 @@ class TestDirectAward(TestDirectAwardBase):
     def _save_search(self, name, save_search_selection="new_search"):
         self.login_as_buyer()
         self._search_api_client.search.return_value = self.g9_search_results
-
-        data_api_client.create_direct_award_project = mock.Mock()
-        data_api_client.create_direct_award_project.return_value = self._get_direct_award_project_fixture()
-
-        data_api_client.create_direct_award_project_search = mock.Mock()
-        data_api_client.create_direct_award_project_search.return_value = \
+        self.data_api_client.create_direct_award_project.return_value = self._get_direct_award_project_fixture()
+        self.data_api_client.create_direct_award_project_search.return_value = \
             self._get_direct_award_project_searches_fixture()['searches'][0]
 
         return self.client.post(self.SAVE_SEARCH_URL,
@@ -172,7 +169,7 @@ class TestDirectAward(TestDirectAwardBase):
 
 class TestDirectAwardProjectOverview(TestDirectAwardBase):
     def setup_method(self, method):
-        super(TestDirectAwardProjectOverview, self).setup_method(method)
+        super().setup_method(method)
 
         self._search_api_client.get_frontend_params_from_search_api_url.return_value = (('q', 'accelerator'), )
 
@@ -180,6 +177,9 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
 
         self.content_loader = ContentLoader('tests/fixtures/content')
         self.content_loader.load_messages('g9', ['urls'])
+
+    def teardown_method(self, method):
+        super().teardown_method(method)
 
     def _task_has_link(self, tasklist, task, link):
         """Task here refers to the tasklist item number rather than the zero-indexed python array. This feels easier to
@@ -284,7 +284,7 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
 
         searches['searches'] = []
 
-        data_api_client.find_direct_award_project_searches.return_value = searches
+        self.data_api_client.find_direct_award_project_searches.return_value = searches
 
         res = self.client.get('/buyers/direct-award/g-cloud/projects/1')
         assert res.status_code == 200
@@ -324,7 +324,7 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         for search in searches['searches']:
             search['searchedAt'] = search['createdAt']
 
-        data_api_client.find_direct_award_project_searches.return_value = searches
+        self.data_api_client.find_direct_award_project_searches.return_value = searches
 
         res = self.client.get('/buyers/direct-award/g-cloud/projects/1')
         assert res.status_code == 200
@@ -349,9 +349,9 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
 
         project = self._get_direct_award_project_fixture()
         project['project']['downloadedAt'] = project['project']['createdAt']
-        data_api_client.get_direct_award_project.return_value = project
+        self.data_api_client.get_direct_award_project.return_value = project
 
-        data_api_client.find_direct_award_project_searches.return_value = searches
+        self.data_api_client.find_direct_award_project_searches.return_value = searches
 
         res = self.client.get('/buyers/direct-award/g-cloud/projects/1')
         assert res.status_code == 200
@@ -374,12 +374,21 @@ class TestDirectAwardURLGeneration(BaseApplicationTest):
     """This class has been separated out from above because we only want to mock a couple of methods on the API clients,
     not all of them (like the class above)"""
     def setup_method(self, method):
-        super(TestDirectAwardURLGeneration, self).setup_method(method)
+        super().setup_method(method)
 
-        self.g9_search_results = self._get_g9_search_results_fixture_data()
+        self.data_api_client_patch = mock.patch('app.main.views.g_cloud.data_api_client', autospec=True)
+        self.data_api_client = self.data_api_client_patch.start()
+
+        self.data_api_client.find_frameworks.return_value = self._get_frameworks_list_fixture_data()
+        self.data_api_client.get_framework.return_value = self._get_framework_fixture_data('g-cloud-9')
+
+        self.data_api_client.get_direct_award_project.return_value = self._get_direct_award_project_fixture()
+        self.data_api_client.find_direct_award_project_searches.return_value = \
+            self._get_direct_award_project_searches_fixture()
 
     def teardown_method(self, method):
-        super(TestDirectAwardURLGeneration, self).teardown_method(method)
+        self.data_api_client_patch.stop()
+        super().teardown_method(method)
 
     @pytest.mark.parametrize('search_api_url, frontend_url',
                              (
@@ -400,22 +409,13 @@ class TestDirectAwardURLGeneration(BaseApplicationTest):
     def test_search_api_urls_convert_to_correct_frontend_urls(self, search_api_url, frontend_url):
         self.login_as_buyer()
 
-        with mock.patch.object(data_api_client, 'get_framework') as get_framework_patch,\
-                mock.patch.object(data_api_client, 'get_direct_award_project') as get_direct_award_project_patch,\
-                mock.patch.object(data_api_client, 'find_direct_award_project_searches') as\
-                find_direct_award_project_searches_patch,\
-                mock.patch.object(data_api_client, 'find_frameworks') as find_frameworks_patch,\
-                mock.patch.object(search_api_client, 'search') as search_patch,\
+        with mock.patch.object(search_api_client, 'search') as search_patch, \
                 mock.patch.object(search_api_client, '_get') as _get_patch:
 
-            get_framework_patch.return_value = self._get_framework_fixture_data('g-cloud-9')
-            get_direct_award_project_patch.return_value = self._get_direct_award_project_fixture()
-            find_direct_award_project_searches_patch.return_value = self._get_direct_award_project_searches_fixture()
-            find_frameworks_patch.return_value = self._get_frameworks_list_fixture_data()
-            search_patch.return_value = self.g9_search_results
+            search_patch.return_value = self._get_g9_search_results_fixture_data()
             _get_patch.return_value = self._get_search_results_fixture_data()
 
-            project_searches = data_api_client.find_direct_award_project_searches.return_value
+            project_searches = self.data_api_client.find_direct_award_project_searches.return_value
             project_searches['searches'][0]['searchUrl'] = search_api_url
 
             res = self.client.get('/buyers/direct-award/g-cloud/projects/1')
@@ -459,10 +459,9 @@ class TestDirectAwardEndSearch(TestDirectAwardBase):
     def test_end_search_redirects_to_project_page(self):
         self.login_as_buyer()
 
-        with mock.patch.object(data_api_client, 'lock_direct_award_project') as lock_direct_award_project_patch:
-            lock_direct_award_project_patch.return_value = self._get_direct_award_lock_project_fixture()
+        self.data_api_client.lock_direct_award_project.return_value = self._get_direct_award_lock_project_fixture()
 
-            res = self.client.post('/buyers/direct-award/g-cloud/projects/1/end-search')
+        res = self.client.post('/buyers/direct-award/g-cloud/projects/1/end-search')
 
         assert res.status_code == 302
         assert res.location.endswith('/buyers/direct-award/g-cloud/projects/1')
@@ -472,20 +471,19 @@ class TestDirectAwardResultsPage(TestDirectAwardBase):
     def test_results_page_download_links_work(self):
         self.login_as_buyer()
 
-        with self.app.app_context():
-            res = self.client.get('/buyers/direct-award/g-cloud/projects/1/results')
-            doc = html.fromstring(res.get_data(as_text=True))
+        res = self.client.get('/buyers/direct-award/g-cloud/projects/1/results')
+        doc = html.fromstring(res.get_data(as_text=True))
 
-            download_links = doc.xpath('//ul[@class="document-list"]//a[@class="document-link-with-icon"]/@href')
+        download_links = doc.xpath('//ul[@class="document-list"]//a[@class="document-link-with-icon"]/@href')
 
-            for download_link in download_links:
-                res = self.client.get(download_link)
-                assert res.status_code == 200
+        for download_link in download_links:
+            res = self.client.get(download_link)
+            assert res.status_code == 200
 
 
 class TestDirectAwardDownloadResultsView(TestDirectAwardBase):
     def setup_method(self, method):
-        super(TestDirectAwardDownloadResultsView, self).setup_method(method)
+        super().setup_method(method)
 
         self.project_id = 1
         self.kwargs = {'project_id': 1}
@@ -493,15 +491,13 @@ class TestDirectAwardDownloadResultsView(TestDirectAwardBase):
             'filename': 'test', 'sheetname': 'search results',
             'services': self._get_direct_award_project_services_fixture()['services'][:3],
         }
-        self.view = DownloadResultsView()
 
-        data_api_client.record_direct_award_project_download = mock.Mock()
-
-        data_api_client.find_direct_award_project_services_iter = mock.Mock()
-        data_api_client.find_direct_award_project_services_iter.return_value = \
+        self.data_api_client.find_direct_award_project_services_iter.return_value = \
             self._get_direct_award_project_services_fixture()['services']
 
-        data_api_client.get_direct_award_project.return_value = self._get_direct_award_lock_project_fixture()
+        self.data_api_client.get_direct_award_project.return_value = self._get_direct_award_lock_project_fixture()
+
+        self.view = DownloadResultsView()
 
         self._request_patch = mock.patch.object(self.view, 'request', autospec=False)
         self._request = self._request_patch.start()
@@ -514,13 +510,12 @@ class TestDirectAwardDownloadResultsView(TestDirectAwardBase):
         self.view._init_hook()
 
     def teardown_method(self, method):
-        super(TestDirectAwardDownloadResultsView, self).teardown_method(method)
-
         self._request_patch.stop()
         self._current_user_patch.stop()
+        super().teardown_method(method)
 
     def test_init_hook(self):
-        assert self.view.data_api_client is data_api_client
+        assert self.view.data_api_client is self.data_api_client
         assert self.view.search_api_client is self._search_api_client
         assert self.view.content_loader is content_loader
 
@@ -564,15 +559,15 @@ class TestDirectAwardDownloadResultsView(TestDirectAwardBase):
 
     def test_get_project_and_search_400s_for_unlocked_state(self):
         with pytest.raises(BadRequest):
-            data_api_client.get_direct_award_project.return_value = self._get_direct_award_project_fixture()
+            self.data_api_client.get_direct_award_project.return_value = self._get_direct_award_project_fixture()
             self.view.get_project_and_search(self.project_id)
 
     def test_get_project_and_search_400s_on_invalid_searches(self):
-        data_api_client.find_direct_award_project_searches.return_value = {}
+        self.data_api_client.find_direct_award_project_searches.return_value = {}
         with pytest.raises(BadRequest):
             self.view.get_project_and_search(self.project_id)
 
-        data_api_client.find_direct_award_project_searches.return_value = {'searches': []}
+            self.data_api_client.find_direct_award_project_searches.return_value = {'searches': []}
         with pytest.raises(BadRequest):
             self.view.get_project_and_search(self.project_id)
 
@@ -584,8 +579,9 @@ class TestDirectAwardDownloadResultsView(TestDirectAwardBase):
                                             'sheetname', 'locked_at', 'search_summary'}
 
         assert file_context['framework'] == 'G-Cloud 9'
-        assert file_context['search'] == data_api_client.find_direct_award_project_searches.return_value['searches'][0]
-        assert file_context['project'] == data_api_client.get_direct_award_project.return_value['project']
+        assert file_context['search'] == \
+            self.data_api_client.find_direct_award_project_searches.return_value['searches'][0]
+        assert file_context['project'] == self.data_api_client.get_direct_award_project.return_value['project']
         assert set(q.id for q in file_context['questions'].values()) == {'serviceName', 'serviceDescription', 'price'}
         assert len(file_context['services']) == 1
         assert file_context['filename'] == '2017-09-08-my-procurement-project-results'

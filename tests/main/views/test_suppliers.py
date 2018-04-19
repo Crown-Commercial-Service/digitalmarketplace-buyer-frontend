@@ -8,7 +8,7 @@ from ...helpers import BaseApplicationTest
 
 class TestSuppliersPage(BaseApplicationTest):
     def setup_method(self, method):
-        super(TestSuppliersPage, self).setup_method(method)
+        super().setup_method(method)
 
         self._data_api_client_patch = mock.patch('app.main.suppliers.data_api_client', autospec=True)
         self._data_api_client = self._data_api_client_patch.start()
@@ -26,6 +26,7 @@ class TestSuppliersPage(BaseApplicationTest):
 
     def teardown_method(self, method):
         self._data_api_client_patch.stop()
+        super().teardown_method(method)
 
     def test_should_call_api_with_correct_params(self):
         self.client.get('/g-cloud/suppliers')

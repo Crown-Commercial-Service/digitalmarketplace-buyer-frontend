@@ -39,7 +39,7 @@ class TestSearchResults(BaseApplicationTest):
         return False
 
     def setup_method(self, method):
-        super(TestSearchResults, self).setup_method(method)
+        super().setup_method(method)
 
         self.fixture = _get_fixture_data()
         self.multiple_pages_fixture = _get_fixture_multiple_pages_data()

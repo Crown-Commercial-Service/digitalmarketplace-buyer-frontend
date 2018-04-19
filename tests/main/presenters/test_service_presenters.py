@@ -32,7 +32,7 @@ def test_chunk_string():
 
 class TestService(BaseApplicationTest):
     def setup_method(self, method):
-        super(TestService, self).setup_method(method)
+        super().setup_method(method)
 
         self.fixture = _get_fixture_data()
         self.fixture = self.fixture['services']
@@ -43,6 +43,9 @@ class TestService(BaseApplicationTest):
         self.service = Service(
             self.fixture, content_loader.get_manifest('g-cloud-6', 'display_service'), self._lots_by_slug
         )
+
+    def teardown_method(self, method):
+        super().teardown_method(method)
 
     def test_title_attribute_is_set(self):
         assert self.service.title == self.fixture['serviceName']
@@ -90,7 +93,7 @@ class TestService(BaseApplicationTest):
         assert len(service.summary_manifest.sections[0].questions) == 5
 
 
-class TestMeta(object):
+class TestMeta:
     def setup_method(self, method):
         self.fixture = _get_fixture_data()['services']
         self.meta = Meta(self.fixture)

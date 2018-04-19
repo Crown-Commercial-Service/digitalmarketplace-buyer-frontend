@@ -5,7 +5,7 @@ from lxml import html
 import mock
 import pytest
 
-from ...helpers import BaseApplicationTest, data_api_client
+from ...helpers import BaseApplicationTest
 
 
 def find_pagination_links(res_data):
@@ -34,7 +34,12 @@ def get_0_results_search_response():
 
 class TestSearchResults(BaseApplicationTest):
     def setup_method(self, method):
-        super(TestSearchResults, self).setup_method(method)
+        super().setup_method(method)
+
+        self.data_api_client_patch = mock.patch('app.main.views.g_cloud.data_api_client', autospec=True)
+        self.data_api_client = self.data_api_client_patch.start()
+
+        self.data_api_client.find_frameworks.return_value = self._get_frameworks_list_fixture_data()
 
         self._search_api_client_patch = mock.patch('app.main.views.g_cloud.search_api_client', autospec=True)
         self._search_api_client = self._search_api_client_patch.start()
@@ -52,6 +57,8 @@ class TestSearchResults(BaseApplicationTest):
     def teardown_method(self, method):
         self._search_api_client_patch.stop()
         self._search_api_client_presenters_patch.stop()
+        self.data_api_client_patch.stop()
+        super().teardown_method(method)
 
     def test_search_page_results_service_links(self):
         self._search_api_client.search.return_value = \
@@ -443,8 +450,9 @@ class TestSearchResults(BaseApplicationTest):
             assert expected_lot_counts[category_name] == int(number_of_services)
 
     def test_search_results_sends_aggregation_request_without_page_filter(self):
-        data_api_client.find_frameworks.return_value = {'frameworks': [self._get_framework_fixture_data('g-cloud-9')
-                                                                       ['frameworks']]}
+        self.data_api_client.find_frameworks.return_value = {
+            'frameworks': [self._get_framework_fixture_data('g-cloud-9')['frameworks']]
+        }
         self._search_api_client.search.return_value = self.search_results
 
         res = self.client.get('/g-cloud/search?page=2')
@@ -576,7 +584,7 @@ class TestSearchResults(BaseApplicationTest):
 
 class TestSearchFilterOnClick(BaseApplicationTest):
     def setup_method(self, method):
-        super(TestSearchFilterOnClick, self).setup_method(method)
+        super().setup_method(method)
 
         self._search_api_client_patch = mock.patch('app.main.views.g_cloud.search_api_client', autospec=True)
         self._search_api_client = self._search_api_client_patch.start()
@@ -596,6 +604,7 @@ class TestSearchFilterOnClick(BaseApplicationTest):
     def teardown_method(self, method):
         self._search_api_client_patch.stop()
         self._search_api_client_presenters_patch.stop()
+        super().teardown_method(method)
 
     @pytest.mark.parametrize('query_string, content_type',
                              (('', 'text/html; charset=utf-8'),

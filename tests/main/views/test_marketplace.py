@@ -12,8 +12,6 @@ from ...helpers import BaseApplicationTest
 
 
 class TestApplication(BaseApplicationTest):
-    def setup_method(self, method):
-        super(TestApplication, self).setup_method(method)
 
     def test_analytics_code_should_be_in_javascript(self):
         res = self.client.get('/static/javascripts/application.js')
@@ -32,9 +30,18 @@ class TestApplication(BaseApplicationTest):
         assert 'name="google-site-verification" content="NotARealVerificationKey"' in res.get_data(as_text=True)
 
 
-@mock.patch('app.main.views.marketplace.data_api_client', autospec=True)
 class TestHomepageAccountCreationVirtualPageViews(BaseApplicationTest):
-    def test_data_analytics_track_page_view_is_shown_if_account_created_flash_message(self, data_api_client):
+
+    def setup_method(self, method):
+        super().setup_method(method)
+        self.data_api_client_patch = mock.patch('app.main.views.marketplace.data_api_client', autospec=True)
+        self.data_api_client = self.data_api_client_patch.start()
+
+    def teardown_method(self, method):
+        self.data_api_client_patch.stop()
+        super().teardown_method(method)
+
+    def test_data_analytics_track_page_view_is_shown_if_account_created_flash_message(self):
         with self.client.session_transaction() as session:
             session['_flashes'] = [('track-page-view', 'buyers?account-created=true')]
 
@@ -47,14 +54,13 @@ class TestHomepageAccountCreationVirtualPageViews(BaseApplicationTest):
         assert flash_banner_match is None, "Unexpected flash banner message '{}'.".format(
             flash_banner_match.groups()[0])
 
-    def test_data_analytics_track_page_view_not_shown_if_no_account_created_flash_message(self, data_api_client):
+    def test_data_analytics_track_page_view_not_shown_if_no_account_created_flash_message(self):
         res = self.client.get("/")
         data = res.get_data(as_text=True)
 
         assert 'data-analytics="trackPageView" data-url="buyers?account-created=true"' not in data
 
 
-@mock.patch('app.main.views.marketplace.data_api_client', autospec=True)
 class TestHomepageBrowseList(BaseApplicationTest):
 
     mock_live_dos_1_framework = {
@@ -78,8 +84,17 @@ class TestHomepageBrowseList(BaseApplicationTest):
         "id": 8
     }
 
-    def test_dos_links_are_shown(self, data_api_client):
-        data_api_client.find_frameworks.return_value = {
+    def setup_method(self, method):
+        super().setup_method(method)
+        self.data_api_client_patch = mock.patch('app.main.views.marketplace.data_api_client', autospec=True)
+        self.data_api_client = self.data_api_client_patch.start()
+
+    def teardown_method(self, method):
+        self.data_api_client_patch.stop()
+        super().teardown_method(method)
+
+    def test_dos_links_are_shown(self):
+        self.data_api_client.find_frameworks.return_value = {
             "frameworks": [
                 self.mock_live_dos_1_framework
             ]
@@ -95,11 +110,11 @@ class TestHomepageBrowseList(BaseApplicationTest):
         assert link_texts[-1] == "Buy physical datacentre space"
         assert "Find specialists to work on digital projects" not in link_texts
 
-    def test_links_are_for_existing_dos_framework_when_a_new_dos_framework_in_standstill_exists(self, data_api_client):
+    def test_links_are_for_existing_dos_framework_when_a_new_dos_framework_in_standstill_exists(self):
         mock_standstill_dos_2_framework = self.mock_live_dos_2_framework.copy()
         mock_standstill_dos_2_framework.update({"status": "standstill"})
 
-        data_api_client.find_frameworks.return_value = {
+        self.data_api_client.find_frameworks.return_value = {
             "frameworks": [
                 self.mock_live_dos_1_framework,
                 mock_standstill_dos_2_framework,
@@ -119,8 +134,8 @@ class TestHomepageBrowseList(BaseApplicationTest):
         for index, lot_slug in enumerate(lots):
             assert link_locations[index] == dos_base_path.format(lot_slug)
 
-    def test_links_are_for_the_newest_live_dos_framework_when_multiple_live_dos_frameworks_exist(self, data_api_client):
-        data_api_client.find_frameworks.return_value = {
+    def test_links_are_for_the_newest_live_dos_framework_when_multiple_live_dos_frameworks_exist(self):
+        self.data_api_client.find_frameworks.return_value = {
             "frameworks": [
                 self.mock_live_dos_1_framework,
                 self.mock_live_dos_2_framework,
@@ -140,11 +155,11 @@ class TestHomepageBrowseList(BaseApplicationTest):
         for index, lot_slug in enumerate(lots):
             assert link_locations[index] == dos2_base_path.format(lot_slug)
 
-    def test_links_are_for_live_dos_framework_when_expired_dos_framework_exists(self, data_api_client):
+    def test_links_are_for_live_dos_framework_when_expired_dos_framework_exists(self):
         mock_expired_dos_1_framework = self.mock_live_dos_1_framework.copy()
         mock_expired_dos_1_framework.update({"status": "expired"})
 
-        data_api_client.find_frameworks.return_value = {
+        self.data_api_client.find_frameworks.return_value = {
             "frameworks": [
                 mock_expired_dos_1_framework,
                 self.mock_live_dos_2_framework,
@@ -164,14 +179,14 @@ class TestHomepageBrowseList(BaseApplicationTest):
         for index, lot_slug in enumerate(lots):
             assert link_locations[index] == dos2_base_path.format(lot_slug)
 
-    def test_non_dos_links_are_shown_if_no_live_dos_framework(self, data_api_client):
+    def test_non_dos_links_are_shown_if_no_live_dos_framework(self):
         mock_expired_dos_1_framework = self.mock_live_dos_1_framework.copy()
         mock_expired_dos_1_framework.update({"status": "expired"})
         mock_expired_dos_2_framework = self.mock_live_dos_2_framework.copy()
         mock_expired_dos_2_framework.update({"status": "expired"})
         mock_g_cloud_9_framework = self.mock_live_g_cloud_9_framework.copy()
 
-        data_api_client.find_frameworks.return_value = {
+        self.data_api_client.find_frameworks.return_value = {
             "frameworks": [
                 mock_expired_dos_1_framework,
                 mock_expired_dos_2_framework,
@@ -191,8 +206,15 @@ class TestHomepageBrowseList(BaseApplicationTest):
 
 
 class TestHomepageSidebarMessage(BaseApplicationTest):
+
     def setup_method(self, method):
-        super(TestHomepageSidebarMessage, self).setup_method(method)
+        super().setup_method(method)
+        self.data_api_client_patch = mock.patch('app.main.views.marketplace.data_api_client', autospec=True)
+        self.data_api_client = self.data_api_client_patch.start()
+
+    def teardown_method(self, method):
+        self.data_api_client_patch.stop()
+        super().teardown_method(method)
 
     @staticmethod
     def _find_frameworks(framework_slugs_and_statuses):
@@ -226,9 +248,8 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
         assert len(message_container_contents) > 0
         assert message_container_contents[0].xpath('text()')[0].strip() == "Sell services"
 
-    @mock.patch('app.main.views.marketplace.data_api_client', autospec=True)
-    def _load_homepage(self, framework_slugs_and_statuses, framework_messages, data_api_client):
-        data_api_client.find_frameworks.return_value = self._find_frameworks(framework_slugs_and_statuses)
+    def _load_homepage(self, framework_slugs_and_statuses, framework_messages):
+        self.data_api_client.find_frameworks.return_value = self._find_frameworks(framework_slugs_and_statuses)
         res = self.client.get('/')
         assert res.status_code == 200
         response_data = res.get_data(as_text=True)
@@ -279,9 +300,8 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
 
         self._load_homepage(framework_slugs_and_statuses, framework_messages)
 
-    @mock.patch('app.main.views.marketplace.data_api_client', autospec=True)
-    def test_homepage_sidebar_messages_when_logged_out(self, data_api_client):
-        data_api_client.find_frameworks.return_value = self._find_frameworks([
+    def test_homepage_sidebar_messages_when_logged_out(self):
+        self.data_api_client.find_frameworks.return_value = self._find_frameworks([
             ('digital-outcomes-and-specialists', 'live')
         ])
         res = self.client.get('/')
@@ -299,9 +319,8 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
         assert 'Become a supplier' in sidebar_link_texts
         assert 'See Digital Marketplace sales figures' in sidebar_link_texts
 
-    @mock.patch('app.main.views.marketplace.data_api_client', autospec=True)
-    def test_homepage_sidebar_messages_when_logged_in(self, data_api_client):
-        data_api_client.find_frameworks.return_value = self._find_frameworks([
+    def test_homepage_sidebar_messages_when_logged_in(self):
+        self.data_api_client.find_frameworks.return_value = self._find_frameworks([
             ('digital-outcomes-and-specialists', 'live')
         ])
         self.login_as_supplier()
@@ -321,20 +340,23 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
         assert 'Become a supplier' not in sidebar_link_texts
 
     # here we've given an valid framework with a valid status but there is no message.yml file to read from
-    @mock.patch('app.main.views.marketplace.data_api_client', autospec=True)
-    def test_g_cloud_6_open_blows_up(self, data_api_client):
+    def test_g_cloud_6_open_blows_up(self):
         framework_slugs_and_statuses = [
             ('g-cloud-6', 'open')
         ]
 
-        data_api_client.find_frameworks.return_value = self._find_frameworks(framework_slugs_and_statuses)
+        self.data_api_client.find_frameworks.return_value = self._find_frameworks(framework_slugs_and_statuses)
         res = self.client.get('/')
         assert res.status_code == 500
 
 
 class TestStaticMarketplacePages(BaseApplicationTest):
+
     def setup_method(self, method):
-        super(TestStaticMarketplacePages, self).setup_method(method)
+        super().setup_method(method)
+
+    def teardown_method(self, method):
+        super().teardown_method(method)
 
     def test_cookie_page(self):
         res = self.client.get('/cookies')
@@ -374,19 +396,20 @@ class TestStaticMarketplacePages(BaseApplicationTest):
 
 class BaseBriefPageTest(BaseApplicationTest):
     def setup_method(self, method):
-        super(BaseBriefPageTest, self).setup_method(method)
+        super().setup_method(method)
 
-        self._data_api_client_patch = mock.patch('app.main.views.marketplace.data_api_client', autospec=True)
-        self._data_api_client = self._data_api_client_patch.start()
+        self.data_api_client_patch = mock.patch('app.main.views.marketplace.data_api_client', autospec=True)
+        self.data_api_client = self.data_api_client_patch.start()
 
         self.brief = self._get_dos_brief_fixture_data()
         self.brief_responses = self._get_dos_brief_responses_fixture_data()
         self.brief_id = self.brief['briefs']['id']
-        self._data_api_client.get_brief.return_value = self.brief
-        self._data_api_client.find_brief_responses.return_value = self.brief_responses
+        self.data_api_client.get_brief.return_value = self.brief
+        self.data_api_client.find_brief_responses.return_value = self.brief_responses
 
     def teardown_method(self, method):
-        self._data_api_client_patch.stop()
+        self.data_api_client_patch.stop()
+        super().teardown_method(method)
 
 
 class TestBriefPage(BaseBriefPageTest):
@@ -439,7 +462,7 @@ class TestBriefPage(BaseBriefPageTest):
 
     def test_application_stats_pluralised_correctly(self):
         brief_id = self.brief['briefs']['id']
-        self._data_api_client.find_brief_responses.return_value = {
+        self.data_api_client.find_brief_responses.return_value = {
             "briefResponses": [
                 {
                     "id": 14275,
@@ -479,7 +502,7 @@ class TestBriefPage(BaseBriefPageTest):
 
     def test_dos_brief_displays_application_stats_correctly_when_no_applications(self):
         brief_id = self.brief['briefs']['id']
-        self._data_api_client.find_brief_responses.return_value = {"briefResponses": []}
+        self.data_api_client.find_brief_responses.return_value = {"briefResponses": []}
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
         assert res.status_code == 200
 
@@ -623,7 +646,7 @@ class TestBriefPage(BaseBriefPageTest):
 
     def test_cannot_apply_to_awarded_brief(self):
         self.brief['briefs']['status'] = "awarded"
-        self._data_api_client.find_brief_responses.return_value = {
+        self.data_api_client.find_brief_responses.return_value = {
             "briefResponses": [
                 {
                     "awardDetails": {"awardedContractStartDate": "2017-08-21", "awardedContractValue": "20000.00"},
@@ -689,7 +712,7 @@ class TestBriefPage(BaseBriefPageTest):
     def test_supplier_start_application(self):
         self.login_as_supplier()
         # mocking that we haven't applied
-        self._data_api_client.find_brief_responses.return_value = {
+        self.data_api_client.find_brief_responses.return_value = {
             "briefResponses": []
         }
         brief_id = self.brief['briefs']['id']
@@ -724,7 +747,7 @@ class TestBriefPage(BaseBriefPageTest):
         self.login_as_supplier()
         self.brief['briefs']['status'] = 'awarded'
 
-        self._data_api_client.find_brief_responses.return_value = {
+        self.data_api_client.find_brief_responses.return_value = {
             "briefResponses": [
                 {
                     "awardDetails": {"awardedContractStartDate": "2017-08-21", "awardedContractValue": "20000.00"},
@@ -752,7 +775,7 @@ class TestBriefPage(BaseBriefPageTest):
         self.login_as_supplier()
         self.brief['briefs']['status'] = 'closed'
 
-        self._data_api_client.find_brief_responses.return_value = {
+        self.data_api_client.find_brief_responses.return_value = {
             "briefResponses": [
                 {
                     "awardDetails": {"pending": True},
@@ -779,7 +802,7 @@ class TestBriefPage(BaseBriefPageTest):
     def test_supplier_applied_view_application_for_opportunity_awarded_to_other_supplier(self):
         self.login_as_supplier()
 
-        self._data_api_client.find_brief_responses.return_value = {
+        self.data_api_client.find_brief_responses.return_value = {
             "briefResponses": [
                 {
                     "awardDetails": {"awardedContractStartDate": "2017-08-21", "awardedContractValue": "20000.00"},
@@ -818,7 +841,7 @@ class TestBriefPage(BaseBriefPageTest):
 class TestBriefPageQandASectionViewQandASessionDetails(BaseBriefPageTest):
 
     def setup_method(self, method):
-        super(TestBriefPageQandASectionViewQandASessionDetails, self).setup_method(method)
+        super().setup_method(method)
         self.brief['briefs']['questionAndAnswerSessionDetails'] = {'many': 'details'}
         self.brief['briefs']['clarificationQuestionsAreClosed'] = False
 
@@ -896,7 +919,7 @@ class TestBriefPageQandASectionViewQandASessionDetails(BaseBriefPageTest):
 class TestBriefPageQandASectionAskAQuestion(BaseBriefPageTest):
 
     def setup_method(self, method):
-        super(TestBriefPageQandASectionAskAQuestion, self).setup_method(method)
+        super().setup_method(method)
         self.brief['briefs']['clarificationQuestionsAreClosed'] = False
 
     def test_live_brief_ask_a_question(self):
@@ -967,7 +990,7 @@ class TestBriefPageQandASectionAskAQuestion(BaseBriefPageTest):
 
 class TestAwardedBriefPage(BaseBriefPageTest):
     def setup_method(self, method):
-        super(TestAwardedBriefPage, self).setup_method(method)
+        super().setup_method(method)
         self.brief['briefs']['status'] = 'awarded'
         self.brief['briefs']['awardedBriefResponseId'] = 14276
 
@@ -1010,7 +1033,7 @@ class TestAwardedBriefPage(BaseBriefPageTest):
 
 class TestCancelledBriefPage(BaseBriefPageTest):
     def setup_method(self, method):
-        super(TestCancelledBriefPage, self).setup_method(method)
+        super().setup_method(method)
         self.brief['briefs']['status'] = 'cancelled'
 
     def test_cancelled_banner_shown_on_cancelled_brief_page(self):
@@ -1032,7 +1055,7 @@ class TestCancelledBriefPage(BaseBriefPageTest):
 
 class TestUnsuccessfulBriefPage(BaseBriefPageTest):
     def setup_method(self, method):
-        super(TestUnsuccessfulBriefPage, self).setup_method(method)
+        super().setup_method(method)
         self.brief['briefs']['status'] = 'unsuccessful'
 
     def test_unsuccessful_banner_shown_on_unsuccessful_brief_page(self):
@@ -1054,7 +1077,7 @@ class TestUnsuccessfulBriefPage(BaseBriefPageTest):
 
 class TestWithdrawnSpecificBriefPage(BaseBriefPageTest):
     def setup_method(self, method):
-        super(TestWithdrawnSpecificBriefPage, self).setup_method(method)
+        super().setup_method(method)
         self.brief['briefs']['status'] = "withdrawn"
         self.brief['briefs']['withdrawnAt'] = "2016-11-25T10:47:23.126761Z"
 
@@ -1104,7 +1127,7 @@ class TestWithdrawnSpecificBriefPage(BaseBriefPageTest):
 
 class TestCatalogueOfBriefsPage(BaseApplicationTest):
     def setup_method(self, method):
-        super(TestCatalogueOfBriefsPage, self).setup_method(method)
+        super().setup_method(method)
 
         self._view_search_api_client_patch = mock.patch('app.main.views.marketplace.search_api_client', autospec=True)
         self._view_search_api_client = self._view_search_api_client_patch.start()
@@ -1120,9 +1143,9 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
             self._get_dos_brief_search_api_aggregations_response_user_research_fixture_data(),
         ]
 
-        self._data_api_client_patch = mock.patch('app.main.views.marketplace.data_api_client', autospec=True)
-        self._data_api_client = self._data_api_client_patch.start()
-        self._data_api_client.find_frameworks.return_value = {'frameworks': [
+        self.data_api_client_patch = mock.patch('app.main.views.marketplace.data_api_client', autospec=True)
+        self.data_api_client = self.data_api_client_patch.start()
+        self.data_api_client.find_frameworks.return_value = {'frameworks': [
             {
                 'id': 3,
                 'name': "Digital Outcomes and Specialists 2",
@@ -1165,9 +1188,10 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         ]}
 
     def teardown_method(self, method):
-        self._data_api_client_patch.stop()
+        self.data_api_client_patch.stop()
         self._view_search_api_client_patch.stop()
         self._presenters_search_api_client_patch.stop()
+        super().teardown_method(method)
 
     def normalize_qs(self, qs):
         return {k: set(v) for k, v in parse_qs(qs).items() if k != "page"}
@@ -1177,7 +1201,7 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         assert res.status_code == 200
         document = html.fromstring(res.get_data(as_text=True))
 
-        self._data_api_client.find_frameworks.assert_called_once_with()
+        self.data_api_client.find_frameworks.assert_called_once_with()
 
         self._view_search_api_client.search.assert_called_once_with(
             index='briefs-digital-outcomes-and-specialists',
@@ -1244,7 +1268,7 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
 
         document = html.fromstring(res.get_data(as_text=True))
 
-        self._data_api_client.find_frameworks.assert_called_once_with()
+        self.data_api_client.find_frameworks.assert_called_once_with()
         self._view_search_api_client.search.assert_called_once_with(
             index='briefs-digital-outcomes-and-specialists',
             doc_type='briefs',
@@ -1337,7 +1361,7 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
 
         document = html.fromstring(res.get_data(as_text=True))
 
-        self._data_api_client.find_frameworks.assert_called_once_with()
+        self.data_api_client.find_frameworks.assert_called_once_with()
         self._view_search_api_client.search.assert_called_once_with(
             index='briefs-digital-outcomes-and-specialists',
             doc_type='briefs',
@@ -1429,7 +1453,7 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         assert res.status_code == 200
         document = html.fromstring(res.get_data(as_text=True))
 
-        self._data_api_client.find_frameworks.assert_called_once_with()
+        self.data_api_client.find_frameworks.assert_called_once_with()
 
         self._view_search_api_client.search.assert_called_once_with(
             index='briefs-digital-outcomes-and-specialists',
@@ -1550,7 +1574,7 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         res = self.client.get('/digital-giraffes-and-monkeys/opportunities')
 
         assert res.status_code == 404
-        self._data_api_client.find_frameworks.assert_called_once_with()
+        self.data_api_client.find_frameworks.assert_called_once_with()
 
     def test_briefs_search_has_js_hidden_filter_button(self):
         res = self.client.get('/digital-outcomes-and-specialists/opportunities')
@@ -1740,9 +1764,9 @@ class TestCatalogueOfBriefsFilterOnClick(BaseApplicationTest):
             self._get_dos_brief_search_api_aggregations_response_user_research_fixture_data(),
         ]
 
-        self._data_api_client_patch = mock.patch('app.main.views.marketplace.data_api_client', autospec=True)
-        self._data_api_client = self._data_api_client_patch.start()
-        self._data_api_client.find_frameworks.return_value = {'frameworks': [
+        self.data_api_client_patch = mock.patch('app.main.views.marketplace.data_api_client', autospec=True)
+        self.data_api_client = self.data_api_client_patch.start()
+        self.data_api_client.find_frameworks.return_value = {'frameworks': [
             {
                 'id': 3,
                 'name': "Digital Outcomes and Specialists 2",
@@ -1756,9 +1780,10 @@ class TestCatalogueOfBriefsFilterOnClick(BaseApplicationTest):
         }
 
     def teardown_method(self, method):
-        self._data_api_client_patch.stop()
+        self.data_api_client_patch.stop()
         self._view_search_api_client_patch.stop()
         self._presenters_search_api_client_patch.stop()
+        super().teardown_method(method)
 
     @pytest.mark.parametrize('query_string, content_type',
                              (('', 'text/html; charset=utf-8'),
@@ -1820,7 +1845,6 @@ class TestCatalogueOfBriefsFilterOnClick(BaseApplicationTest):
         assert len(filter_button) == 1
 
 
-@mock.patch('app.main.views.marketplace.data_api_client', autospec=True)
 class TestGCloudHomepageLinks(BaseApplicationTest):
 
     mock_live_g_cloud_framework = {
@@ -1830,14 +1854,23 @@ class TestGCloudHomepageLinks(BaseApplicationTest):
         "id": 5
     }
 
+    def setup_method(self, method):
+        super().setup_method(method)
+        self.data_api_client_patch = mock.patch('app.main.views.marketplace.data_api_client', autospec=True)
+        self.data_api_client = self.data_api_client_patch.start()
+
+    def teardown_method(self, method):
+        self.data_api_client_patch.stop()
+        super().teardown_method(method)
+
     @pytest.mark.parametrize('framework_slug, gcloud_content',
                              (('g-cloud-8', 'Find cloud technology and support'),
                               ('g-cloud-9', 'Find cloud hosting, software and support')))
-    def test_g_cloud_homepage_content_is_correct(self, data_api_client, framework_slug, gcloud_content):
-        data_api_client.find_frameworks.return_value = {
+    def test_g_cloud_homepage_content_is_correct(self, framework_slug, gcloud_content):
+        self.data_api_client.find_frameworks.return_value = {
             "frameworks": [self.mock_live_g_cloud_framework.copy()]
         }
-        data_api_client.find_frameworks.return_value['frameworks'][0].update({'slug': framework_slug})
+        self.data_api_client.find_frameworks.return_value['frameworks'][0].update({'slug': framework_slug})
 
         res = self.client.get("/")
         document = html.fromstring(res.get_data(as_text=True))
