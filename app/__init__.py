@@ -1,6 +1,6 @@
 from flask import Flask, request, redirect, session, abort
 from flask_login import LoginManager
-from flask_wtf.csrf import CsrfProtect
+from flask_wtf.csrf import CSRFProtect, CSRFError
 
 import dmapiclient
 from dmutils import init_app, flask_featureflags
@@ -15,7 +15,7 @@ login_manager = LoginManager()
 data_api_client = dmapiclient.DataAPIClient()
 search_api_client = dmapiclient.SearchAPIClient()
 feature_flags = flask_featureflags.FeatureFlag()
-csrf = CsrfProtect()
+csrf = CSRFProtect()
 
 content_loader = ContentLoader('app/content')
 from .main.helpers.framework_helpers import get_latest_live_framework
@@ -67,7 +67,7 @@ def create_app(config_name):
     login_manager.login_message_category = "must_login"
     csrf.init_app(application)
 
-    @csrf.error_handler
+    @application.errorhandler(CSRFError)
     def csrf_handler(reason):
         if 'user_id' not in session:
             application.logger.info(
