@@ -43,14 +43,17 @@
         <h2>
           Preview only
         </h2>
-        <p class="banner-message">
-          This brief is not published yet. {% if brief_of_current_user %}
+        <p class="banner-message">{% if brief_of_current_user %}
+          <p>This brief is not yet published.</p> {% if unanswered_required > 0 %}
+          <p>Edit the brief to complete all mandatory questions.</p>
+          <a href={{ url_for('buyers.view_brief_overview', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id) }} class="button">Edit Brief</a>
+          {% else %}
           <form action="{{ url_for('buyers.publish_brief', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id) }}"
                 method="POST">
             {{ form.csrf_token }} {% with type = "save", role = "button", label = "Publish brief" %}
             {% include "toolkit/button.html"
             %} {% endwith %}
-          </form>
+          </form>{% endif %}
         {% endif %}
         </p>
       </div>

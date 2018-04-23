@@ -17,7 +17,7 @@ from app.main.utils import get_page_list
 from app import data_api_client, content_loader
 from app.main import main
 from app.helpers.terms_helpers import check_terms_acceptance, get_current_terms_version
-from app.helpers.buyers_helpers import get_framework_and_lot
+from app.helpers.buyers_helpers import get_framework_and_lot, count_unanswered_questions
 
 from ..forms.brief_forms import BriefSearchForm
 
@@ -121,6 +121,9 @@ def get_brief_by_id(framework_slug, brief_id):
         brief
     )
 
+    sections = brief_content.summary(brief)
+    unanswered_required, unanswered_optional = count_unanswered_questions(sections)
+
     brief_of_current_user = False
     if not current_user.is_anonymous and len(brief.get('users')) > 0:
         brief_of_current_user = brief['users'][0]['id'] == current_user.id
@@ -223,7 +226,8 @@ def get_brief_by_id(framework_slug, brief_id):
         profile_url=profile_url,
         unassessed_domains=unassessed_domains,
         supplier_assessments=supplier_assessments,
-        supplier_framework=supplier_framework
+        supplier_framework=supplier_framework,
+        unanswered_required=unanswered_required
     )
 
 
