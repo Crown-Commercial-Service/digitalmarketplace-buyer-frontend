@@ -7,5 +7,6 @@
     this.events.init();
     this.virtualPageViews.init();
     this.scrollTracking.init();
+    this.trackExternalLinks.init();
   };
 })(window);
