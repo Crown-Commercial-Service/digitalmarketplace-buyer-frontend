@@ -1,10 +1,12 @@
 // styles specific to index pages
 
-.index-page {
-
+.index-page-body {
   .flash-message-container {
     margin-bottom: 40px; // adds in specific margin for index page due to layout of page
   }
+}
+
+.index-page {
 
   h2 {
     @include bold-27;
