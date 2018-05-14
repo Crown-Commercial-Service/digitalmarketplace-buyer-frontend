@@ -46,7 +46,11 @@
         <p class="banner-message">{% if brief_of_current_user %}
           <p>This brief is not yet published.</p> {% if unanswered_required > 0 %}
           <p>Edit the brief to complete all mandatory questions.</p>
-          <a href={{ url_for('buyers.view_brief_overview', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id) }} class="button">Edit Brief</a>
+            {% if brief.lot == 'digital-outcome' %}
+              <a href={{ url_for('buyers.view_brief_overview', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id) }} class="button">Edit Brief</a>
+            {% else %}
+              <a href="{{ '/2/brief/%s/overview' % brief.id }}" class="button">Edit Brief</a>
+            {% endif %}
           {% else %}
           <form action="{{ url_for('buyers.publish_brief', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id) }}"
                 method="POST">
