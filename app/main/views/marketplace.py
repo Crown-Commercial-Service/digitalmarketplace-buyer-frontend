@@ -86,6 +86,11 @@ def cookies():
     return render_template('content/cookies.html')
 
 
+@main.route('/privacy-notice')
+def privacy_notice():
+    return render_template('content/privacy-notice.html')
+
+
 @main.route('/terms-and-conditions')
 def terms_and_conditions():
     return render_template('content/terms-and-conditions.html')
