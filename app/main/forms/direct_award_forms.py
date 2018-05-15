@@ -1,7 +1,14 @@
 from flask_wtf import FlaskForm
-from wtforms.fields import RadioField
-from wtforms.validators import Length, Optional, InputRequired
+
+from wtforms.fields import DecimalField, RadioField
+from wtforms.validators import DataRequired, Length, NumberRange, Optional, InputRequired
+
+from .fields import DMRadioField, DateField
+from .validators import GreaterThan, Y2K
+
 from dmutils.forms import StripWhitespaceStringField
+
+from decimal import Decimal
 
 
 class CreateProjectForm(FlaskForm):
@@ -11,17 +18,8 @@ class CreateProjectForm(FlaskForm):
             Length(min=1,
                    max=100,
                    message="Names must be between 1 and 100 characters"),
-            Optional()
-        ]
-    )
-
-
-# TODO: move this into dmutils.forms
-class DMRadioField(RadioField):
-    @property
-    def options(self):
-        """The RadioField choices in a format suitable for the frontend toolkit"""
-        return [{"label": label, "value": value} for value, label in self.choices]
+            Optional(),
+        ])
 
 
 class DidYouAwardAContractForm(FlaskForm):
@@ -35,9 +33,8 @@ class DidYouAwardAContractForm(FlaskForm):
         choices=[
             (YES, 'Yes'),
             (NO, 'No'),
-            (STILL_ASSESSING, 'We are still assessing services')
-        ]
-    )
+            (STILL_ASSESSING, 'We are still assessing services'),
+        ])
 
 
 class WhichServiceWonTheContractForm(FlaskForm):
@@ -58,6 +55,41 @@ class WhichServiceWonTheContractForm(FlaskForm):
             "value": service["id"],
             "description": service["supplier"]["name"]
         } for service in services['services']]
+
+
+class TellUsAboutContractForm(FlaskForm):
+    INPUT_REQUIRED_MESSAGE = "You need to answer this question."
+    INVALID_DATE_MESSAGE = "Your answer must be a valid date."
+    INVALID_VALUE_MESSAGE = "Enter your value in pounds and pence using numbers and decimals only" \
+                            ", for example 9900.05 for 9900 pounds and 5 pence."
+
+    start_date = DateField(
+        "Start date",
+        validators=[
+            InputRequired(INPUT_REQUIRED_MESSAGE),
+            DataRequired(INVALID_DATE_MESSAGE),
+            Y2K(INVALID_DATE_MESSAGE),
+        ])
+    end_date = DateField(
+        "End date",
+        validators=[
+            InputRequired(INPUT_REQUIRED_MESSAGE),
+            DataRequired(INVALID_DATE_MESSAGE),
+            Y2K(INVALID_DATE_MESSAGE),
+            GreaterThan("start_date", "Your end date must be later than the start date."),
+        ])
+    value_in_pounds = DecimalField(
+        "Value",
+        validators=[
+            InputRequired(INPUT_REQUIRED_MESSAGE),
+            DataRequired(INVALID_VALUE_MESSAGE),
+            NumberRange(min=Decimal('0.01'), message=INVALID_VALUE_MESSAGE),
+        ])
+    buying_organisation = StripWhitespaceStringField(
+        "Organisation buying the service",
+        validators=[
+            InputRequired(INPUT_REQUIRED_MESSAGE)
+        ])
 
 
 class WhyDidYouNotAwardForm(FlaskForm):
