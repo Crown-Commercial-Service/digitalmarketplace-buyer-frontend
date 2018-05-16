@@ -5,7 +5,11 @@
     {% if from == 'grandparent' %}
       {{ url_for('.edit_brief_question', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id, section_slug=section.slug, question_id=section.questions[0].id) }}
     {% else %}
-      {{ url_for('.view_brief_overview', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id) }}
+      {% if brief.lot == 'digital-professionals' %}
+        {{ '/2/brief/%s/overview' % brief.id }}
+      {% else %}
+        {{ url_for('.view_brief_overview', framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id) }}
+      {% endif %}
     {% endif %}
   {% endif %}
 {% endmacro %}
