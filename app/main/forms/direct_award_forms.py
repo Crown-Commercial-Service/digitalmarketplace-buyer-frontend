@@ -1,7 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms.fields import RadioField
 from wtforms.validators import Length, Optional, InputRequired
-
 from dmutils.forms import StripWhitespaceStringField
 
 
@@ -39,3 +38,23 @@ class DidYouAwardAContractForm(FlaskForm):
             (STILL_ASSESSING, 'We are still assessing services')
         ]
     )
+
+
+class WhichServiceWonTheContractForm(FlaskForm):
+    which_service_won_the_contract = RadioField(
+        "Which service won the contract?",
+        validators=[InputRequired(message="Please select the supplier which won the contract")],
+    )
+
+    def __init__(self, services, *args, **kwargs):
+        super(WhichServiceWonTheContractForm, self).__init__(*args, **kwargs)
+
+        self.which_service_won_the_contract.choices = [
+            (service["id"], service["data"]["serviceName"])
+            for service in services['services']]
+
+        self.which_service_won_the_contract.options = [{
+            "label": service["data"]["serviceName"],
+            "value": service["id"],
+            "description": service["supplier"]["name"]
+        } for service in services['services']]

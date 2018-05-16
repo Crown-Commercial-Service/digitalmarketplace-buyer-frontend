@@ -471,8 +471,11 @@ class TestDirectAwardEndSearch(TestDirectAwardBase):
 class TestDirectAwardAwardContract(TestDirectAwardBase):
     def setup_method(self, method):
         super().setup_method(method)
-        self.data_api_client.get_direct_award_project.return_value['project']['lockedAt'] = \
-            "2017-08-30T07:49:26.677778Z"
+        self.data_api_client.get_direct_award_project.return_value = self._get_direct_award_lock_project_fixture()
+        self.data_api_client.find_direct_award_project_services.return_value = \
+            self._get_direct_award_project_services_fixture()
+
+        self.data_api_client.get_direct_award_project.return_value = self._get_direct_award_lock_project_fixture()
 
     def test_award_contract_page_renders(self):
         self.login_as_buyer()
@@ -545,6 +548,48 @@ class TestDirectAwardAwardContract(TestDirectAwardBase):
         self.login_as_buyer()
 
         res = self.client.get('/buyers/direct-award/g-cloud/projects/1/did-you-award-contract')
+        assert res.status_code == 400
+
+    def test_which_service_did_you_award_page_renders(self):
+        self.login_as_buyer()
+
+        res = self.client.get(
+            '/buyers/direct-award/g-cloud/projects/1/which-service-won-contract')
+        assert res.status_code == 200
+
+        doc = html.fromstring(res.get_data(as_text=True))
+        assert len(doc.xpath(
+            '//h1[contains(normalize-space(), "Which service won the contract?")]')) == 1
+        assert len(doc.xpath(
+            '//input[@type="radio"][contains(following-sibling::label, "Service name")]')) == 1
+        assert len(doc.xpath(
+            '//p[contains(normalize-space(text()), "Supplier name")][contains(parent::label, "Service name")]')) == 1
+        assert len(
+            doc.xpath('//input[@type="submit"][@value="Save and continue"]')) == 1
+
+    def test_which_service_did_you_award_page_show_zero_state_message(self):
+        self.login_as_buyer()
+        self.data_api_client.find_direct_award_project_services.return_value = \
+            self._get_direct_award_project_services_zero_state_fixture()
+
+        res = self.client.get(
+            '/buyers/direct-award/g-cloud/projects/1/which-service-won-contract')
+        assert res.status_code == 200
+
+        html_string = res.get_data(as_text=True)
+
+        doc = html.fromstring(html_string)
+        assert len(doc.xpath(
+            '//h1[contains(normalize-space(), "Which service won the contract?")]')) == 1
+        assert "You cannot award this contract as there were no services matching your requirements." \
+            in html_string
+
+    def test_which_service_did_you_award_page_should_not_render_if_not_locked_renders(self):
+        self.login_as_buyer()
+        self.data_api_client.get_direct_award_project.return_value = self._get_direct_award_not_lock_project_fixture()
+
+        res = self.client.get(
+            '/buyers/direct-award/g-cloud/projects/1/which-service-won-contract')
         assert res.status_code == 400
 
 
