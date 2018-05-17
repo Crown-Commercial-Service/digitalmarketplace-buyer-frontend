@@ -555,29 +555,39 @@ def did_you_award_contract(framework_framework, project_id):
     # Get the requested Direct Award Project.
     project = data_api_client.get_direct_award_project(project_id=project_id)['project']
 
+    if not is_direct_award_project_accessible(project, current_user.id):
+        abort(404)
+
+    if not project['lockedAt']:
+        abort(400)
+
     form = DidYouAwardAContractForm()
-    form.did_you_award_a_contract.options = [{"label": label, "value": value}
-                                             for value, label in form.did_you_award_a_contract.choices]
 
     if form.validate_on_submit():
-        if form.did_you_award_a_contract.data == 'still-assessing':
+        if form.did_you_award_a_contract.data == form.STILL_ASSESSING:
             return redirect(url_for('.view_project',
                                     framework_framework=framework_framework,
                                     project_id=project_id))
-        elif form.did_you_award_a_contract.data == 'yes':
+        elif form.did_you_award_a_contract.data == form.YES:
             return redirect(url_for('.which_service_won_contract',
                                     framework_framework=framework_framework,
                                     project_id=project_id))
-        elif form.did_you_award_a_contract.data == 'no':
+        elif form.did_you_award_a_contract.data == form.NO:
             return redirect(url_for('.why_didnt_you_award_contract',
                                     framework_framework=framework_framework,
                                     project_id=project_id))
         else:
             abort(500)  # this should never be reached
 
+    errors = [{
+        'input_name': input_name,
+        'question': getattr(form, input_name).label,
+    } for input_name in form.errors.keys()]
+
     return render_template(
         'direct-award/did-you-award-contract.html',
         form=form,
+        errors=errors,
         project=project,
         framework=framework
     ), 200 if not form.errors else 400
@@ -588,7 +598,7 @@ def did_you_award_contract(framework_framework, project_id):
     methods=['GET']
 )
 def which_service_won_contract(framework_framework, project_id):
-    pass
+    abort(404)
 
 
 @direct_award.route(
@@ -596,7 +606,7 @@ def which_service_won_contract(framework_framework, project_id):
     methods=['GET']
 )
 def why_didnt_you_award_contract(framework_framework, project_id):
-    pass
+    abort(404)
 
 
 @direct_award.route('/<string:framework_framework>/projects/<int:project_id>/results')

@@ -17,13 +17,25 @@ class CreateProjectForm(FlaskForm):
     )
 
 
+# TODO: move this into dmutils.forms
+class DMRadioField(RadioField):
+    @property
+    def options(self):
+        """The RadioField choices in a format suitable for the frontend toolkit"""
+        return [{"label": label, "value": value} for value, label in self.choices]
+
+
 class DidYouAwardAContractForm(FlaskForm):
-    did_you_award_a_contract = RadioField(
+    YES = 'yes'
+    NO = 'no'
+    STILL_ASSESSING = 'still-assessing'
+
+    did_you_award_a_contract = DMRadioField(
         "Did you award a contract?",
         validators=[InputRequired(message="You need to answer this question.")],
         choices=[
-            ('yes', 'Yes'),
-            ('no', 'No'),
-            ('still-assessing', 'We are still assessing services')
+            (YES, 'Yes'),
+            (NO, 'No'),
+            (STILL_ASSESSING, 'We are still assessing services')
         ]
     )

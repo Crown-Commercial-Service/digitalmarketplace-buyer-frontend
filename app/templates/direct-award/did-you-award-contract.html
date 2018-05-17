@@ -30,12 +30,16 @@
 
 {% block main_content %}
 
+{% if errors %}
+  {% include "toolkit/forms/validation.html" %}
+{% endif %}
+
 <div class="did-you-award-contract-page">
   <div class="grid-row">
     <div class="column-two-thirds">
       <header class="page-heading">
         <h1>
-          Did you award a contract for '{{project.name}}'?
+          Did you award a contract for ‘{{project.name}}’?
         </h1>
       </header>
 
