@@ -467,6 +467,71 @@ class TestDirectAwardEndSearch(TestDirectAwardBase):
         assert res.location.endswith('/buyers/direct-award/g-cloud/projects/1')
 
 
+class TestDirectAwardAwardContract(TestDirectAwardBase):
+    def test_award_contract_page_renders(self):
+        self.login_as_buyer()
+
+        res = self.client.get('/buyers/direct-award/g-cloud/projects/1/did-you-award-contract')
+        assert res.status_code == 200
+
+        doc = html.fromstring(res.get_data(as_text=True))
+        assert len(doc.xpath(
+            '//h1[contains(normalize-space(), "Did you award a contract for \'My procurement project\'?")]')) == 1
+        assert len(doc.xpath('//input[@type="radio"][contains(following-sibling::label, "Yes")]')) == 1
+        assert len(doc.xpath('//input[@type="radio"][contains(following-sibling::label, "No")]')) == 1
+        assert len(doc.xpath(
+            '//input[@type="radio"][contains(following-sibling::label, "We are still assessing services")]')) == 1
+        assert len(doc.xpath('//input[@type="submit"][@value="Save and continue"]')) == 1
+
+    def test_award_contract_form_action_url_is_award_contract_url(self):
+        self.login_as_buyer()
+
+        url = '/buyers/direct-award/g-cloud/projects/1/did-you-award-contract'
+
+        res = self.client.get(url)
+        assert res.status_code == 200
+
+        doc = html.fromstring(res.get_data(as_text=True))
+        assert doc.xpath(f'boolean(//form[@action="{url}"])')
+
+    def test_award_contract_error_if_no_input(self):
+        self.login_as_buyer()
+
+        res = self.client.post('/buyers/direct-award/g-cloud/projects/1/did-you-award-contract')
+
+        assert res.status_code == 400
+
+        doc = html.fromstring(res.get_data(as_text=True))
+        assert len(doc.xpath('//legend[contains(normalize-space(), "You need to answer this question.")]')) == 1
+
+    def test_award_contract_we_are_still_assessing_redirects_to_project_page(self):
+        self.login_as_buyer()
+
+        res = self.client.post('/buyers/direct-award/g-cloud/projects/1/did-you-award-contract',
+                               data={'did_you_award_a_contract': 'still-assessing'})
+
+        assert res.status_code == 302
+        assert res.location.endswith('/buyers/direct-award/g-cloud/projects/1')
+
+    def test_award_contract_yes_redirects_to_which_service_won_contract(self):
+        self.login_as_buyer()
+
+        res = self.client.post('/buyers/direct-award/g-cloud/projects/1/did-you-award-contract',
+                               data={'did_you_award_a_contract': 'yes'})
+
+        assert res.status_code == 302
+        assert res.location.endswith('/buyers/direct-award/g-cloud/projects/1/which-service-won-contract')
+
+    def test_award_contract_no_redirects_to_why_didnt_you_award_contract(self):
+        self.login_as_buyer()
+
+        res = self.client.post('/buyers/direct-award/g-cloud/projects/1/did-you-award-contract',
+                               data={'did_you_award_a_contract': 'no'})
+
+        assert res.status_code == 302
+        assert res.location.endswith('/buyers/direct-award/g-cloud/projects/1/why-didnt-you-award-contract')
+
+
 class TestDirectAwardResultsPage(TestDirectAwardBase):
     def test_results_page_download_links_work(self):
         self.login_as_buyer()

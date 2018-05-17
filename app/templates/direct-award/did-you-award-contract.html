@@ -1,0 +1,70 @@
+{% extends "toolkit/layouts/_base_page.html" %}
+
+{% block page_title %}Did you award a contract? - Digital Marketplace{% endblock %}
+
+{% block breadcrumb %}
+  {%
+    with
+    items = [
+      {
+        "link": url_for('main.index'),
+        "label": "Digital Marketplace"
+      },
+      {
+        "link": url_for('external.buyer_dashboard'),
+        "label": "Your account"
+      },
+      {
+        "link": url_for('direct_award.saved_search_overview', framework_framework=framework.framework),
+        "label": "Your saved searches"
+      },
+      {
+        "link": url_for('direct_award.view_project', framework_framework=framework.framework, project_id=project.id),
+        "label": project.name
+      }
+    ]
+  %}
+    {% include "toolkit/breadcrumb.html" %}
+  {% endwith %}
+{% endblock %}
+
+{% block main_content %}
+
+<div class="did-you-award-contract-page">
+  <div class="grid-row">
+    <div class="column-two-thirds">
+      <header class="page-heading">
+        <h1>
+          Did you award a contract for '{{project.name}}'?
+        </h1>
+      </header>
+
+      <form method="POST" action="{{ url_for('direct_award.did_you_award_contract', framework_framework=framework.framework, project_id=project.id) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+        {%
+          with
+          name = "did_you_award_a_contract",
+          type = "radio",
+          value = form.did_you_award_a_contract.value,
+          error = form.did_you_award_a_contract.errors[0],
+          options = form.did_you_award_a_contract.options
+        %}
+          {% include "toolkit/forms/selection-buttons.html" %}
+        {% endwith %}
+
+        {%
+          with
+          type = "save",
+          label = "Save and continue"
+        %}
+          {% include "toolkit/button.html" %}
+        {% endwith %}
+      </form>
+
+      <p><a href="{{ url_for('direct_award.view_project', framework_framework=framework.framework, project_id=project.id) }}">Return to overview</a></p>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
