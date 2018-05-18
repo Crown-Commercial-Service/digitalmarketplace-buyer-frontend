@@ -445,7 +445,7 @@ class TestDirectAwardEndSearch(TestDirectAwardBase):
             "services": [],
             "meta": {
                 "query": {},
-                "total": 1000,
+                "total": 31,
                 "took": 3
             },
             "links": {}
