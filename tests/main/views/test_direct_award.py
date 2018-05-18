@@ -10,6 +10,7 @@ import pytest
 from werkzeug.exceptions import BadRequest, NotFound
 
 from dmcontent.content_loader import ContentLoader
+from dmapiclient import HTTPError
 
 from app import search_api_client, content_loader
 from app.main.views.g_cloud import DownloadResultsView
@@ -42,7 +43,20 @@ class TestDirectAwardBase(BaseApplicationTest):
         self.data_api_client.find_frameworks.return_value = self._get_frameworks_list_fixture_data()
         self.data_api_client.get_framework.return_value = self._get_framework_fixture_data('g-cloud-9')
 
+        def project_id_or_404(fixture):
+            project_id = int(fixture['project']['id'])
+
+            def f(*args, **kwargs):
+                if int(kwargs.get('project_id', None)) == project_id:
+                    return mock.DEFAULT
+                else:
+                    raise HTTPError(mock.Mock(status_code=404))
+
+            return f
+
         self.data_api_client.get_direct_award_project.return_value = self._get_direct_award_project_fixture()
+        self.data_api_client.get_direct_award_project.side_effect = \
+            project_id_or_404(self._get_direct_award_project_fixture())
         self.data_api_client.find_direct_award_projects.return_value = self._get_direct_award_project_list_fixture()
         self.data_api_client.find_direct_award_project_searches.return_value = \
             self._get_direct_award_project_searches_fixture()
@@ -54,6 +68,10 @@ class TestDirectAwardBase(BaseApplicationTest):
 
         self.data_api_client_patch.stop()
         super().teardown_method(method)
+
+    def test_get_direct_award_project_raise_404_for_invalid_project_id(self):
+        with pytest.raises(HTTPError):
+            self.data_api_client.get_direct_award_project(project_id=31415)
 
 
 class TestDirectAward(TestDirectAwardBase):
