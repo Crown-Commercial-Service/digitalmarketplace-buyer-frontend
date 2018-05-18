@@ -192,6 +192,14 @@ main {
         background: none;
       }
     }
+    /* hide optional */
+    #sellerEmailList .question-optional {
+      display: none
+    }
+    /* hide optional */
+    #sellerEmail .question-optional {
+      display: none
+    }
 }
 
 form {

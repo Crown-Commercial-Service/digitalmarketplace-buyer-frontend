@@ -218,8 +218,9 @@ span {
 
 .validation-message {
   display: block;
-  font-size: rem(17);
-  font-weight: $base-font-weight;
+  font-size: rem(17) !important;
+  font-weight: $bold-font-weight;
+  color: $error-colour;
 }
 
 .banner-warning-without-action {
