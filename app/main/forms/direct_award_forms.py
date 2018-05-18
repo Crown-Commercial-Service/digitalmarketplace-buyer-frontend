@@ -58,3 +58,29 @@ class WhichServiceWonTheContractForm(FlaskForm):
             "value": service["id"],
             "description": service["supplier"]["name"]
         } for service in services['services']]
+
+
+class WhyDidYouNotAwardForm(FlaskForm):
+    why_did_you_not_award_the_contract = RadioField(
+        "Why didn't you award the contract?",
+        validators=[InputRequired(message="Please select a reason for why you didn't award the contract")]
+    )
+
+    def __init__(self, *args, **kwargs):
+        super(WhyDidYouNotAwardForm, self).__init__(*args, **kwargs)
+
+        options = [
+            {
+                "label": "The work has been cancelled",
+                "value": "work_cancelled",
+                "description": "For example, because you no longer have the budget",
+            },
+            {
+                "label": "There were no suitable services",
+                "value": "no_suitable_services",
+                "description": "The services in your search results did not meet your requirements",
+            },
+        ]
+
+        self.why_did_you_not_award_the_contract.choices = [(option['value'], option['label']) for option in options]
+        self.why_did_you_not_award_the_contract.options = options

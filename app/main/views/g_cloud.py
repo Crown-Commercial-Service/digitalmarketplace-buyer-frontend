@@ -17,7 +17,7 @@ from dmutils.views import SimpleDownloadFileView
 
 from app import search_api_client, data_api_client, content_loader
 from ..exceptions import AuthException
-from ..forms.direct_award_forms import CreateProjectForm, DidYouAwardAContractForm, WhichServiceWonTheContractForm
+from ..forms.direct_award_forms import CreateProjectForm, DidYouAwardAContractForm, WhichServiceWonTheContractForm, WhyDidYouNotAwardForm
 from ..helpers.search_helpers import (
     get_keywords_from_request, pagination,
     get_page_from_request, query_args_for_pagination,
@@ -573,7 +573,7 @@ def did_you_award_contract(framework_family, project_id):
                                     framework_family=framework_family,
                                     project_id=project_id))
         elif form.did_you_award_a_contract.data == form.NO:
-            return redirect(url_for('.why_didnt_you_award_contract',
+            return redirect(url_for('.why_did_you_not_award_the_contract',
                                     framework_family=framework_family,
                                     project_id=project_id))
         else:
@@ -649,10 +649,39 @@ def which_service_won_contract(framework_family, project_id):
 
 @direct_award.route(
     '/<string:framework_family>/projects/<int:project_id>/why-didnt-you-award-contract',
-    methods=['GET']
+    methods=['GET', 'POST']
 )
-def why_didnt_you_award_contract(framework_family, project_id):
-    abort(404)
+def why_did_you_not_award_the_contract(framework_family, project_id):
+    all_frameworks = data_api_client.find_frameworks().get('frameworks')
+    framework = framework_helpers.get_latest_live_framework(
+        all_frameworks, framework_family)
+
+    project = data_api_client.get_direct_award_project(project_id=project_id)['project']
+
+    if not is_direct_award_project_accessible(project, current_user.id):
+        abort(404)
+
+    if not project['lockedAt']:
+        abort(400)
+
+    form = WhyDidYouNotAwardForm()
+
+    if request.method == "POST" and form.validate_on_submit():
+        flash('You’ve updated ‘' + project['name'] + '’')
+        return redirect(url_for('.view_project', framework_family=framework_family, project_id=project['id']))
+
+    errors = [{
+        'input_name': input_name,
+        'question': getattr(form, input_name).label,
+    } for input_name in form.errors.keys()]
+
+    return render_template(
+        'direct-award/why-didnt-you-award-contract.html',
+        project=project,
+        framework=framework,
+        form=form,
+        errors=errors,
+    ), 200
 
 
 @direct_award.route('/<string:framework_family>/projects/<int:project_id>/results')
