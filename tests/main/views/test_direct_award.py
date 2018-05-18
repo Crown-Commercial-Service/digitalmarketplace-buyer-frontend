@@ -12,7 +12,7 @@ from werkzeug.exceptions import BadRequest, NotFound
 from dmcontent.content_loader import ContentLoader
 
 from app import search_api_client, content_loader
-from app.main.views.g_cloud import DownloadResultsView
+from app.main.views.g_cloud import DownloadResultsView, END_SEARCH_LIMIT
 from ...helpers import BaseApplicationTest
 
 
@@ -445,7 +445,7 @@ class TestDirectAwardEndSearch(TestDirectAwardBase):
             "services": [],
             "meta": {
                 "query": {},
-                "total": 1000,
+                "total": END_SEARCH_LIMIT + 1,
                 "took": 3
             },
             "links": {}

@@ -40,7 +40,7 @@ from ..presenters.search_summary import SearchSummary
 from ..presenters.service_presenters import Service
 
 
-END_SEARCH_LIMIT = 100  # TODO: This should be done in the API.
+END_SEARCH_LIMIT = 30  # TODO: This should be done in the API.
 PROJECT_SAVED_MESSAGE = Markup("""Search saved.""")
 PROJECT_ENDED_MESSAGE = Markup("""Search ended. You can now download your search results.""")
 TOO_MANY_RESULTS_MESSAGE = Markup("""
