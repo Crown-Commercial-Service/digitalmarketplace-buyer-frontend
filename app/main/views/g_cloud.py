@@ -44,7 +44,7 @@ END_SEARCH_LIMIT = 30  # TODO: This should be done in the API.
 PROJECT_SAVED_MESSAGE = Markup("""Search saved.""")
 PROJECT_ENDED_MESSAGE = Markup("""Search ended. You can now download your search results.""")
 TOO_MANY_RESULTS_MESSAGE = Markup("""
-    You have too many results. Choose a category or add filters to refine your search.""")
+    You have too many services to review. Refine your search terms until you have no more than 30 results.""")
 
 
 @main.route('/g-cloud')
