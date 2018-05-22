@@ -9,6 +9,7 @@ import mock
 import pytest
 from werkzeug.exceptions import BadRequest, NotFound
 
+from dmapiclient import HTTPError
 from dmcontent.content_loader import ContentLoader
 
 from app import search_api_client, content_loader
@@ -465,6 +466,86 @@ class TestDirectAwardEndSearch(TestDirectAwardBase):
 
         assert res.status_code == 302
         assert res.location.endswith('/buyers/direct-award/g-cloud/projects/1')
+
+
+class TestDirectAwardAwardContract(TestDirectAwardBase):
+    def setup_method(self, method):
+        super().setup_method(method)
+        self.data_api_client.get_direct_award_project.return_value['project']['lockedAt'] = \
+            "2017-08-30T07:49:26.677778Z"
+
+    def test_award_contract_page_renders(self):
+        self.login_as_buyer()
+
+        res = self.client.get('/buyers/direct-award/g-cloud/projects/1/did-you-award-contract')
+        assert res.status_code == 200
+
+        doc = html.fromstring(res.get_data(as_text=True))
+        assert len(doc.xpath(
+            '//h1[contains(normalize-space(), "Did you award a contract for ‘My procurement project’?")]')) == 1
+        assert len(doc.xpath('//input[@type="radio"][contains(following-sibling::label, "Yes")]')) == 1
+        assert len(doc.xpath('//input[@type="radio"][contains(following-sibling::label, "No")]')) == 1
+        assert len(doc.xpath(
+            '//input[@type="radio"][contains(following-sibling::label, "We are still assessing services")]')) == 1
+        assert len(doc.xpath('//input[@type="submit"][@value="Save and continue"]')) == 1
+
+    def test_award_contract_form_action_url_is_award_contract_url(self):
+        self.login_as_buyer()
+
+        url = '/buyers/direct-award/g-cloud/projects/1/did-you-award-contract'
+
+        res = self.client.get(url)
+        assert res.status_code == 200
+
+        doc = html.fromstring(res.get_data(as_text=True))
+        assert doc.xpath(f'boolean(//form[@action="{url}"])')
+
+    def test_award_contract_error_if_no_input(self):
+        self.login_as_buyer()
+
+        res = self.client.post('/buyers/direct-award/g-cloud/projects/1/did-you-award-contract')
+
+        assert res.status_code == 400
+
+        doc = html.fromstring(res.get_data(as_text=True))
+        assert len(doc.xpath('//legend[contains(normalize-space(), "You need to answer this question.")]')) == 1
+        assert doc.xpath('boolean(//div[@class="validation-masthead"])')
+        assert doc.xpath('count(//div[@class="validation-masthead"]/a[@class="validation-masthead-link"])') == 1
+
+    @pytest.mark.parametrize('choice, expected_redirect',
+                             (('still-assessing', '/buyers/direct-award/g-cloud/projects/1'),
+                              ('yes', '/buyers/direct-award/g-cloud/projects/1/which-service-won-contract'),
+                              ('no', '/buyers/direct-award/g-cloud/projects/1/why-didnt-you-award-contract')))
+    def test_award_contract_we_are_still_assessing_redirects_on_post(self, choice, expected_redirect):
+        self.login_as_buyer()
+
+        res = self.client.post('/buyers/direct-award/g-cloud/projects/1/did-you-award-contract',
+                               data={'did_you_award_a_contract': choice})
+
+        assert res.status_code == 302
+        assert res.location.endswith(expected_redirect)
+
+    def test_award_contract_raises_404_if_project_is_not_accessible(self):
+        self.data_api_client.get_direct_award_project.side_effect = HTTPError(mock.Mock(status_code=404))
+        self.login_as_buyer()
+
+        res = self.client.get('/buyers/direct-award/g-cloud/projects/314159/did-you-award-contract')
+        assert res.status_code == 404
+
+    def test_award_contract_raises_404_if_user_is_not_in_project(self):
+        self.data_api_client.get_direct_award_project.return_value['project']['id'] = 314159
+        self.data_api_client.get_direct_award_project.return_value['project']['users'][0]['id'] = 321
+        self.login_as_buyer()
+
+        res = self.client.get('/buyers/direct-award/g-cloud/projects/314159/did-you-award-contract')
+        assert res.status_code == 404
+
+    def test_award_contract_raises_400_if_project_is_not_locked(self):
+        self.data_api_client.get_direct_award_project.return_value['project']['lockedAt'] = None
+        self.login_as_buyer()
+
+        res = self.client.get('/buyers/direct-award/g-cloud/projects/1/did-you-award-contract')
+        assert res.status_code == 400
 
 
 class TestDirectAwardResultsPage(TestDirectAwardBase):
