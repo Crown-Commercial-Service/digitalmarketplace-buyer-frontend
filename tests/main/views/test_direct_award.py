@@ -13,7 +13,7 @@ from dmapiclient import HTTPError
 from dmcontent.content_loader import ContentLoader
 
 from app import search_api_client, content_loader
-from app.main.views.g_cloud import DownloadResultsView, END_SEARCH_LIMIT
+from app.main.views.g_cloud import DownloadResultsView, END_SEARCH_LIMIT, TOO_MANY_RESULTS_MESSAGE
 from ...helpers import BaseApplicationTest
 
 
@@ -455,7 +455,7 @@ class TestDirectAwardEndSearch(TestDirectAwardBase):
         res = self.client.get('/buyers/direct-award/g-cloud/projects/1/end-search')
 
         assert res.status_code == 200
-        assert "You have too many results." in res.get_data(as_text=True)
+        assert TOO_MANY_RESULTS_MESSAGE in res.get_data(as_text=True)
 
     def test_end_search_redirects_to_project_page(self):
         self.login_as_buyer()
