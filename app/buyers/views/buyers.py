@@ -393,21 +393,6 @@ def update_brief_submission(framework_slug, lot_slug, brief_id, section_id, ques
 @buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/responses', methods=['GET'])
 def view_brief_responses(framework_slug, lot_slug, brief_id):
     return redirect('/2/brief/{}/download-responses'.format(brief_id))
-    get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
-    brief = data_api_client.get_brief(brief_id)["briefs"]
-
-    if not is_brief_correct(
-            brief, framework_slug, lot_slug, current_user.id
-    ):
-        abort(404)
-
-    failed_count, eligible_count = counts_for_failed_and_eligible_brief_responses(brief["id"], data_api_client)
-
-    return render_template(
-        "buyers/brief_responses.html",
-        response_counts={"failed": failed_count, "eligible": eligible_count},
-        brief=brief
-    ), 200
 
 
 def prepared_response_contents_for_brief(brief, responses):
