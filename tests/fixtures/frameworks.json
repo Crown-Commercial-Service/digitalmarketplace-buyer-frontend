@@ -50,7 +50,9 @@
       "name": "G-Cloud 7",
       "slug": "g-cloud-7",
       "status": "live",
-      "variations": {}
+      "variations": {},
+      "hasDirectAward": true,
+      "hasFurtherCompetition": false
     },
     {
       "allow_declaration_reuse": false,
@@ -102,7 +104,9 @@
       "name": "G-Cloud 6",
       "slug": "g-cloud-6",
       "status": "expired",
-      "variations": {}
+      "variations": {},
+      "hasDirectAward": true,
+      "hasFurtherCompetition": false
     },
     {
       "allow_declaration_reuse": true,
@@ -223,7 +227,9 @@
       "name": "G-Cloud 5",
       "slug": "g-cloud-5",
       "status": "expired",
-      "variations": {}
+      "variations": {},
+      "hasDirectAward": true,
+      "hasFurtherCompetition": false
     },
     {
       "allow_declaration_reuse": false,
@@ -275,7 +281,9 @@
       "name": "G-Cloud 4",
       "slug": "g-cloud-4",
       "status": "expired",
-      "variations": {}
+      "variations": {},
+      "hasDirectAward": true,
+      "hasFurtherCompetition": false
     },
     {
       "allow_declaration_reuse": true,
@@ -330,7 +338,9 @@
       "name": "Digital Outcomes and Specialists 2",
       "slug": "digital-outcomes-and-specialists-2",
       "status": "live",
-      "variations": {}
+      "variations": {},
+      "hasDirectAward": false,
+      "hasFurtherCompetition": true
     },
     {
       "allow_declaration_reuse": true,
@@ -382,7 +392,9 @@
       "name": "Digital Outcomes and Specialists",
       "slug": "digital-outcomes-and-specialists",
       "status": "live",
-      "variations": {}
+      "variations": {},
+      "hasDirectAward": false,
+      "hasFurtherCompetition": true
     },
     {
       "allow_declaration_reuse": false,
@@ -425,7 +437,9 @@
       "name": "G-Cloud 9",
       "slug": "g-cloud-9",
       "status": "live",
-      "variations": {}
+      "variations": {},
+      "hasDirectAward": true,
+      "hasFurtherCompetition": false
     }
   ]
 }

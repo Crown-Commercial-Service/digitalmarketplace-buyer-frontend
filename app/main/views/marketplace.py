@@ -16,7 +16,13 @@ from ..helpers.brief_helpers import (
     count_brief_responses_by_size_and_status, format_winning_supplier_size,
     COMPLETED_BRIEF_RESPONSE_STATUSES, ALL_BRIEF_RESPONSE_STATUSES, PUBLISHED_BRIEF_STATUSES
 )
-from ..helpers.framework_helpers import get_latest_live_framework, get_framework_description, get_lots_by_slug
+from ..helpers.framework_helpers import (
+    abort_if_not_further_competition_framework,
+    get_latest_live_framework,
+    get_latest_live_framework_or_404,
+    get_framework_description,
+    get_lots_by_slug
+)
 from ..helpers.search_helpers import (
     build_search_query,
     clean_request_args,
@@ -119,6 +125,12 @@ def external_404():
 
 @main.route('/<framework_family>/opportunities/<brief_id>')
 def get_brief_by_id(framework_family, brief_id):
+    frameworks = data_api_client.find_frameworks()['frameworks']
+    frameworks = [framework for framework in frameworks if framework['framework'] == framework_family]
+    framework = get_latest_live_framework_or_404(frameworks, framework_family)
+
+    abort_if_not_further_competition_framework(framework)
+
     briefs = data_api_client.get_brief(brief_id)
     brief = briefs.get('briefs')
 
@@ -172,10 +184,9 @@ def get_brief_by_id(framework_family, brief_id):
 def list_opportunities(framework_family):
     frameworks = data_api_client.find_frameworks()['frameworks']
     frameworks = [v for v in frameworks if v['framework'] == framework_family]
-    framework = get_latest_live_framework(frameworks, framework_family)
+    framework = get_latest_live_framework_or_404(frameworks, framework_family)
 
-    if not framework:
-        abort(404, "No framework {}".format(framework_family))
+    abort_if_not_further_competition_framework(framework)
 
     lots_by_slug = get_lots_by_slug(framework)
     current_lot_slug = get_valid_lot_from_args_or_none(request.args, lots_by_slug)

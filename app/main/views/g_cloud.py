@@ -584,10 +584,10 @@ def did_you_award_contract(framework_family, project_id):
         else:
             abort(500)  # this should never be reached
 
-    errors = [{
-        'input_name': input_name,
-        'question': getattr(form, input_name).label,
-    } for input_name in form.errors.keys()]
+    errors = {
+        input_name: {'input_name': input_name, 'question': getattr(form, input_name).label}
+        for input_name in form.errors.keys()
+    }
 
     return render_template(
         'direct-award/did-you-award-contract.html',
