@@ -62,8 +62,8 @@ class WhichServiceWonTheContractForm(FlaskForm):
 
 class WhyDidYouNotAwardForm(FlaskForm):
     why_did_you_not_award_the_contract = RadioField(
-        "Why didn't you award the contract?",
-        validators=[InputRequired(message="Please select a reason for why you didn't award the contract")]
+        "Why didn't you award a contract?",
+        validators=[InputRequired(message="Please select a reason why you didn't award a contract")]
     )
 
     def __init__(self, *args, **kwargs):
