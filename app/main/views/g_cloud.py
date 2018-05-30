@@ -17,7 +17,12 @@ from dmutils.views import SimpleDownloadFileView
 
 from app import search_api_client, data_api_client, content_loader
 from ..exceptions import AuthException
-from ..forms.direct_award_forms import CreateProjectForm, DidYouAwardAContractForm, WhichServiceWonTheContractForm, WhyDidYouNotAwardForm
+from ..forms.direct_award_forms import (
+    CreateProjectForm,
+    DidYouAwardAContractForm,
+    WhichServiceWonTheContractForm,
+    WhyDidYouNotAwardForm
+)
 from ..helpers.search_helpers import (
     get_keywords_from_request, pagination,
     get_page_from_request, query_args_for_pagination,
