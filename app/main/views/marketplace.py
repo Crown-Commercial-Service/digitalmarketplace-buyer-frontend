@@ -235,8 +235,13 @@ def get_brief_by_id(framework_slug, brief_id):
 def get_brief_response_preview_by_id(framework_slug, brief_id):
     briefs = data_api_client.get_brief(brief_id)
     brief = briefs.get('briefs')
-    application_url = url_for('main.index', _external=True) + "sellers/opportunities/{}/responses/create"\
-        .format(brief['id'])
+
+    application_url = url_for('main.index', _external=True) + '2/brief/{}'.format(brief['id'])
+    if brief['lotSlug'] == 'digital-outcome':
+        application_url += '/respond'
+    else:
+        application_url += '/specialist/respond'
+
     if brief['status'] not in ['live', 'closed']:
         if not current_user.is_authenticated or brief['users'][0]['id'] != current_user.id:
             abort(404, "Opportunity '{}' can not be found".format(brief_id))

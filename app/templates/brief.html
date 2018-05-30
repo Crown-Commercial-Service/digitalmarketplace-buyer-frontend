@@ -64,30 +64,41 @@
     </div>
   </div>
 {% endif %}
-
-  <div class="grid-row">
-    <div class="column-two-thirds">
-      <header class="page-heading-smaller">
-        <p class="context">{{ brief.organisation }}</p>
-        <h1>{{ brief.title }}</h1>
-      </header>
-    </div>
-  </div>
-
-  <div class="grid-row">
-    <div class="column-one-whole">
-      {% include '_brief_attributes.html' %}
-    </div>
-  </div>
-
-  {% if brief.status != 'draft' %}
+  {% if brief.status == 'withdrawn' %}
     <div class="grid-row">
-      <div class="q-and-a-section">
-        {% include '_brief_q_and_a.html' %}
+      <div class="column-one-whole">
+          <div class="callout--info" role="alert">
+              <h2>{{ brief.title }}</h2>
+              <br/>
+              <p>This opportunity has been withdrawn by the buyer.</p>
+          </div>
       </div>
     </div>
-  {% endif %}
+  {% else %}
+    <div class="grid-row">
+      <div class="column-two-thirds">
+        <header class="page-heading-smaller">
+          <p class="context">{{ brief.organisation }}</p>
+          <h1>{{ brief.title }}</h1>
+        </header>
+      </div>
+    </div>
 
- {% include '_brief_actions.html' %}
+    <div class="grid-row">
+      <div class="column-one-whole">
+        {% include '_brief_attributes.html' %}
+      </div>
+    </div>
+
+    {% if brief.status != 'draft' %}
+      <div class="grid-row">
+        <div class="q-and-a-section">
+          {% include '_brief_q_and_a.html' %}
+        </div>
+      </div>
+    {% endif %}
+
+    {% include '_brief_actions.html' %}
+  {% endif %}
 {% endblock %}
     
