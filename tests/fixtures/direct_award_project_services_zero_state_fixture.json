@@ -1,0 +1,10 @@
+{
+  "links": {
+    "self": "http://localhost:5000/direct-award/projects/1/services"
+  },
+  "meta": {
+    "total": 0
+  },
+  "services": [
+  ]
+}

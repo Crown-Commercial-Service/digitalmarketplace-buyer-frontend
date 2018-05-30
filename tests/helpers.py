@@ -180,6 +180,10 @@ class BaseApplicationTest(object):
         return BaseApplicationTest._get_direct_award_project_fixture(lockedAt="2017-09-08T00:00:00.000000Z")
 
     @staticmethod
+    def _get_direct_award_not_lock_project_fixture():
+        return BaseApplicationTest._get_direct_award_project_fixture(lockedAt=False)
+
+    @staticmethod
     def _get_direct_award_project_searches_fixture(only_active=False):
         searches = BaseApplicationTest._get_fixture_data('direct_award_project_searches_fixture.json')
 
@@ -191,6 +195,10 @@ class BaseApplicationTest(object):
     @staticmethod
     def _get_direct_award_project_services_fixture():
         return BaseApplicationTest._get_fixture_data('direct_award_project_services_fixture.json')
+
+    @staticmethod
+    def _get_direct_award_project_services_zero_state_fixture():
+        return BaseApplicationTest._get_fixture_data('direct_award_project_services_zero_state_fixture.json')
 
     @staticmethod
     def _strip_whitespace(whitespace_in_this):
