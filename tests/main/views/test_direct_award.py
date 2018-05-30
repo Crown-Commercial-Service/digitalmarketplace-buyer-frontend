@@ -593,6 +593,46 @@ class TestDirectAwardAwardContract(TestDirectAwardBase):
         assert res.status_code == 400
 
 
+class TestDirectAwardNonAwardContract(TestDirectAwardBase):
+    def setup_method(self, method):
+        super().setup_method(method)
+        self.data_api_client.find_direct_award_project_services_iter.return_value = \
+            self._get_direct_award_project_services_fixture()['services']
+
+        self.data_api_client.get_direct_award_project.return_value = self._get_direct_award_lock_project_fixture()
+
+    def test_which_service_did_you_award_page_renders(self):
+        self.login_as_buyer()
+
+        res = self.client.get(
+            '/buyers/direct-award/g-cloud/projects/1/why-didnt-you-award-contract')
+        assert res.status_code == 200
+
+        doc = html.fromstring(res.get_data(as_text=True))
+        assert len(doc.xpath(
+            '//h1[contains(normalize-space(), "Why didn’t you award a contract?")]')) == 1
+        assert len(doc.xpath(
+            '//input[@type="radio"][contains(following-sibling::label, "The work has been cancelled")]')) == 1
+        assert len(doc.xpath(
+            '//p[contains(normalize-space(text()), "For example, because you no longer have the budget")]\
+            [contains(parent::label, "The work has been cancelled")]')) == 1
+        assert len(doc.xpath(
+            '//input[@type="radio"][contains(following-sibling::label, "The work has been cancelled")]')) == 1
+        assert len(doc.xpath(
+            '//p[contains(normalize-space(text()), "The services in your search results did not meet your requirements")]\
+            [contains(parent::label, "There were no suitable services")]')) == 1
+        assert len(
+            doc.xpath('//input[@type="submit"][@value="Save and continue"]')) == 1
+
+    def test_which_service_did_you_award_page_should_not_render_if_not_locked_renders(self):
+        self.login_as_buyer()
+        self.data_api_client.get_direct_award_project.return_value = self._get_direct_award_not_lock_project_fixture()
+
+        res = self.client.get(
+            '/buyers/direct-award/g-cloud/projects/1/why-didnt-you-award-contract')
+        assert res.status_code == 400
+
+
 class TestDirectAwardResultsPage(TestDirectAwardBase):
     def test_results_page_download_links_work(self):
         self.login_as_buyer()
