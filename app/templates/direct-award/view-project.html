@@ -27,7 +27,7 @@
           "label": "Your account"
       },
       {
-          "link": url_for('direct_award.saved_search_overview', framework_framework=framework.framework),
+          "link": url_for('direct_award.saved_search_overview', framework_family=framework.framework),
           "label": "Your saved searches"
       }
     ]
@@ -84,7 +84,7 @@
             "custom_body_list": [
               {"type": "text", "text": "End your search to create a spreadsheet of the services you’ve found. You should only do this when you have finished searching for services."},
               {"type": "text", "text": "You cannot edit your search once it has ended."},
-              {"type": "box", "style": "inactive", "label": "Can't start yet"} if not search.createdAt else {"type": "action", "label": "End search", "href": url_for('direct_award.end_search', framework_framework=framework.framework, project_id=project.id), "analytics": "trackEvent", "analytics_category": "Direct Award", "analytics_action": "Internal Link"} if not search.searchedAt else {"type": "box", "style": "complete", "label": ''.join(["Search ended on ", search.searchedAt|datetimeformat()])}
+              {"type": "box", "style": "inactive", "label": "Can't start yet"} if not search.createdAt else {"type": "action", "label": "End search", "href": url_for('direct_award.end_search', framework_family=framework.framework, project_id=project.id), "analytics": "trackEvent", "analytics_category": "Direct Award", "analytics_action": "Internal Link"} if not search.searchedAt else {"type": "box", "style": "complete", "label": ''.join(["Search ended on ", search.searchedAt|datetimeformat()])}
             ]
           },
           {
@@ -95,8 +95,8 @@
                 data-analytics-category=\"Direct Award\"
                 data-analytics-action=\"External Link\"
                 >compare services</a>."])|safe},
-              {"type": "box", "style": "inactive", "label": "Can't start yet"} if not search.searchedAt else {"type": "action", "label": "Download search results", "href": url_for('direct_award.search_results', framework_framework=framework.framework, project_id=project.id), "analytics": "trackEvent", "analytics_category": "Direct Award", "analytics_action": "Internal Link"} if not project.downloadedAt else {"type": "box", "style": "complete", "label": "Search results downloaded"},
-              {"type": "text", "text": ''.join(["<a href=\"", url_for('direct_award.search_results', framework_framework=framework.framework, project_id=project.id)|e, "\"
+              {"type": "box", "style": "inactive", "label": "Can't start yet"} if not search.searchedAt else {"type": "action", "label": "Download search results", "href": url_for('direct_award.search_results', framework_family=framework.framework, project_id=project.id), "analytics": "trackEvent", "analytics_category": "Direct Award", "analytics_action": "Internal Link"} if not project.downloadedAt else {"type": "box", "style": "complete", "label": "Search results downloaded"},
+              {"type": "text", "text": ''.join(["<a href=\"", url_for('direct_award.search_results', framework_family=framework.framework, project_id=project.id)|e, "\"
                 data-analytics=\"trackEvent\"
                 data-analytics-category=\"Direct Award\"
                 data-analytics-action=\"Internal Link\"

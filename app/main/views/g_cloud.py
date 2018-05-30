@@ -325,10 +325,10 @@ def search_services():
     )
 
 
-@direct_award.route('/<string:framework_framework>', methods=['GET'])
-def saved_search_overview(framework_framework):
+@direct_award.route('/<string:framework_family>', methods=['GET'])
+def saved_search_overview(framework_family):
     all_frameworks = data_api_client.find_frameworks().get('frameworks')
-    framework = framework_helpers.get_latest_live_framework(all_frameworks, framework_framework)
+    framework = framework_helpers.get_latest_live_framework(all_frameworks, framework_family)
 
     if not framework:
         abort(404)
@@ -348,16 +348,16 @@ def saved_search_overview(framework_framework):
     )
 
 
-@direct_award.route('/<string:framework_framework>/projects', methods=['GET'])
-def view_projects(framework_framework):
-    return redirect(url_for('.saved_search_overview', framework_framework=framework_framework))
+@direct_award.route('/<string:framework_family>/projects', methods=['GET'])
+def view_projects(framework_family):
+    return redirect(url_for('.saved_search_overview', framework_family=framework_family))
 
 
-@direct_award.route('/<string:framework_framework>/save-search', methods=['GET', 'POST'])
-def save_search(framework_framework):
+@direct_award.route('/<string:framework_family>/save-search', methods=['GET', 'POST'])
+def save_search(framework_family):
     # Get core data
     all_frameworks = data_api_client.find_frameworks().get('frameworks')
-    framework = framework_helpers.get_latest_live_framework(all_frameworks, framework_framework)
+    framework = framework_helpers.get_latest_live_framework(all_frameworks, framework_family)
     lots_by_slug = framework_helpers.get_lots_by_slug(framework)
 
     search_query = url_decode(request.values.get('search_query'))
@@ -404,7 +404,7 @@ def save_search(framework_framework):
                                search_url=url_for('main.search_services', **search_query),
                                request=request,
                                projects=projects,
-                               framework_framework=framework_framework), 400 if request.method == 'POST' else 200
+                               framework_family=framework_family), 400 if request.method == 'POST' else 200
 
     elif save_search_selection == "new_search" and name:
         try:
@@ -437,13 +437,13 @@ def save_search(framework_framework):
     flash(PROJECT_SAVED_MESSAGE, 'success')
 
     return redirect(url_for('.view_project',
-                            framework_framework=framework_framework,
+                            framework_family=framework_family,
                             project_id=project['id']
                             ), code=303)
 
 
-@direct_award.route('/<string:framework_framework>/projects/<int:project_id>', methods=['GET'])
-def view_project(framework_framework, project_id):
+@direct_award.route('/<string:framework_family>/projects/<int:project_id>', methods=['GET'])
+def view_project(framework_family, project_id):
     frameworks_by_slug = framework_helpers.get_frameworks_by_slug(data_api_client)
     # Get the requested Direct Award Project.
     project = data_api_client.get_direct_award_project(project_id=project_id)['project']
@@ -496,10 +496,10 @@ def view_project(framework_framework, project_id):
                            customer_benefits_record_form_email=framework_urls['customer_benefits_record_form_email'])
 
 
-@direct_award.route('/<string:framework_framework>/projects/<int:project_id>/end-search', methods=['GET', 'POST'])
-def end_search(framework_framework, project_id):
+@direct_award.route('/<string:framework_family>/projects/<int:project_id>/end-search', methods=['GET', 'POST'])
+def end_search(framework_family, project_id):
     all_frameworks = data_api_client.find_frameworks().get('frameworks')
-    framework = framework_helpers.get_latest_live_framework(all_frameworks, framework_framework)
+    framework = framework_helpers.get_latest_live_framework(all_frameworks, framework_family)
     frameworks_by_slug = framework_helpers.get_frameworks_by_slug(data_api_client)
 
     # Get the requested Direct Award Project.
@@ -533,7 +533,7 @@ def end_search(framework_framework, project_id):
 
         flash(PROJECT_ENDED_MESSAGE, 'success')
 
-        return redirect(url_for('.view_project', framework_framework=framework_framework, project_id=project['id']))
+        return redirect(url_for('.view_project', framework_family=framework_family, project_id=project['id']))
 
     return render_template(
         'direct-award/end-search.html',
@@ -545,12 +545,12 @@ def end_search(framework_framework, project_id):
 
 
 @direct_award.route(
-    '/<string:framework_framework>/projects/<int:project_id>/did-you-award-contract',
+    '/<string:framework_family>/projects/<int:project_id>/did-you-award-contract',
     methods=['GET', 'POST']
 )
-def did_you_award_contract(framework_framework, project_id):
+def did_you_award_contract(framework_family, project_id):
     all_frameworks = data_api_client.find_frameworks().get('frameworks')
-    framework = framework_helpers.get_latest_live_framework(all_frameworks, framework_framework)
+    framework = framework_helpers.get_latest_live_framework(all_frameworks, framework_family)
 
     # Get the requested Direct Award Project.
     project = data_api_client.get_direct_award_project(project_id=project_id)['project']
@@ -566,15 +566,15 @@ def did_you_award_contract(framework_framework, project_id):
     if form.validate_on_submit():
         if form.did_you_award_a_contract.data == form.STILL_ASSESSING:
             return redirect(url_for('.view_project',
-                                    framework_framework=framework_framework,
+                                    framework_family=framework_family,
                                     project_id=project_id))
         elif form.did_you_award_a_contract.data == form.YES:
             return redirect(url_for('.which_service_won_contract',
-                                    framework_framework=framework_framework,
+                                    framework_family=framework_family,
                                     project_id=project_id))
         elif form.did_you_award_a_contract.data == form.NO:
             return redirect(url_for('.why_didnt_you_award_contract',
-                                    framework_framework=framework_framework,
+                                    framework_family=framework_family,
                                     project_id=project_id))
         else:
             abort(500)  # this should never be reached
@@ -594,23 +594,23 @@ def did_you_award_contract(framework_framework, project_id):
 
 
 @direct_award.route(
-    '/<string:framework_framework>/projects/<int:project_id>/which-service-won-contract',
+    '/<string:framework_family>/projects/<int:project_id>/which-service-won-contract',
     methods=['GET']
 )
-def which_service_won_contract(framework_framework, project_id):
+def which_service_won_contract(framework_family, project_id):
     abort(404)
 
 
 @direct_award.route(
-    '/<string:framework_framework>/projects/<int:project_id>/why-didnt-you-award-contract',
+    '/<string:framework_family>/projects/<int:project_id>/why-didnt-you-award-contract',
     methods=['GET']
 )
-def why_didnt_you_award_contract(framework_framework, project_id):
+def why_didnt_you_award_contract(framework_family, project_id):
     abort(404)
 
 
-@direct_award.route('/<string:framework_framework>/projects/<int:project_id>/results')
-def search_results(framework_framework, project_id):
+@direct_award.route('/<string:framework_family>/projects/<int:project_id>/results')
+def search_results(framework_family, project_id):
     # Get the requested Direct Award Project.
     project = data_api_client.get_direct_award_project(project_id=project_id)['project']
     if not is_direct_award_project_accessible(project, current_user.id):
@@ -794,6 +794,6 @@ class DownloadResultsView(SimpleDownloadFileView):
         return file_rows, column_styles
 
 
-direct_award.add_url_rule('/<string:framework_framework>/projects/<int:project_id>/results/download',
+direct_award.add_url_rule('/<string:framework_family>/projects/<int:project_id>/results/download',
                           view_func=DownloadResultsView.as_view(str('download_results')),
                           methods=['GET'])
