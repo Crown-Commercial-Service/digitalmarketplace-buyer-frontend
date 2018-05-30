@@ -15,15 +15,15 @@
         "label": "Your account"
       },
       {
-        "link": url_for('direct_award.saved_search_overview', framework_framework=framework.framework),
+        "link": url_for('direct_award.saved_search_overview', framework_family=framework.framework),
         "label": "Your saved searches"
       },
       {
-        "link": url_for('direct_award.view_project', framework_framework=framework.framework, project_id=project.id),
+        "link": url_for('direct_award.view_project', framework_family=framework.framework, project_id=project.id),
         "label": project.name
       },
       {
-        "link": url_for('direct_award.did_you_award_contract', framework_framework=framework.framework, project_id=project.id),
+        "link": url_for('direct_award.did_you_award_contract', framework_family=framework.framework, project_id=project.id),
         "label": "Did you award a contract?"
       }
     ]
@@ -49,7 +49,7 @@
 
       {% if form.which_service_won_the_contract.options %}
 
-      <form method="POST" action="{{ url_for('direct_award.which_service_won_contract', framework_framework=framework.framework, project_id=project.id) }}">
+      <form method="POST" action="{{ url_for('direct_award.which_service_won_contract', framework_family=framework.framework, project_id=project.id) }}">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
         {%
           with
@@ -77,7 +77,7 @@
         </div>
       {% endif %}
 
-      <p><a href="{{ url_for('direct_award.did_you_award_contract', framework_framework=framework.framework, project_id=project.id) }}">Previous page</a></p>
+      <p><a href="{{ url_for('direct_award.did_you_award_contract', framework_family=framework.framework, project_id=project.id) }}">Previous page</a></p>
     </div>
   </div>
 

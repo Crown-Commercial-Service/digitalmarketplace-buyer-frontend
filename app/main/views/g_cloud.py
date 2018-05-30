@@ -594,10 +594,10 @@ def did_you_award_contract(framework_family, project_id):
 
 
 @direct_award.route(
-    '/<string:framework_framework>/projects/<int:project_id>/which-service-won-contract',
+    '/<string:framework_family>/projects/<int:project_id>/which-service-won-contract',
     methods=['GET', 'POST']
 )
-def which_service_won_contract(framework_framework, project_id):
+def which_service_won_contract(framework_family, project_id):
     project = data_api_client.get_direct_award_project(project_id=project_id)[
         'project']
 
@@ -608,7 +608,7 @@ def which_service_won_contract(framework_framework, project_id):
 
     all_frameworks = data_api_client.find_frameworks().get('frameworks')
     framework = framework_helpers.get_latest_live_framework(
-        all_frameworks, framework_framework)
+        all_frameworks, framework_family)
 
     search = data_api_client.find_direct_award_project_searches(user_id=current_user.id,
                                                                 project_id=project['id'],
@@ -630,7 +630,7 @@ def which_service_won_contract(framework_framework, project_id):
 
     if request.method == "POST" and form.validate_on_submit():
         flash('Contract awarded.')
-        return redirect(url_for('.view_project', framework_framework=framework_framework, project_id=project['id']))
+        return redirect(url_for('.view_project', framework_family=framework_family, project_id=project['id']))
 
     errors = [{
         'input_name': input_name,
