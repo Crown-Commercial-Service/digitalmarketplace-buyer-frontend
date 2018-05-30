@@ -255,6 +255,7 @@ class TestBriefPage(BaseApplicationTest):
             )
         )) == 1
 
+    @pytest.mark.skip
     def test_unauthenticated_start_application(self):
         brief_id = self.brief['briefs']['id']
         res = self.client.get(self.expand_path('/digital-service-professionals/opportunities/{}'.format(brief_id)))
@@ -331,6 +332,7 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
     def teardown(self):
         self._data_api_client.stop()
 
+    @pytest.mark.skip
     def test_no_account_no_application(self):
         self.login_as_supplier()
 
@@ -351,6 +353,7 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
         choose_domain_url = document.xpath('//a')[10].get('href')
         assert_equal(choose_domain_url, '/sellers/application')
 
+    @pytest.mark.skip
     def test_submitted_app_outcome(self):
         self.login_as_supplier()
 
@@ -381,6 +384,7 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
             )
         )
 
+    @pytest.mark.skip
     def test_submitted_app_dp(self):
         self.login_as_supplier()
 
@@ -410,6 +414,7 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
             )
         )
 
+    @pytest.mark.skip
     def test_existing_seller_submitted_app_outcome(self):
         self.login_as_supplier()
 
@@ -438,6 +443,7 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
         choose_domain_url = document.xpath('//a')[10].get('href')
         assert_equal(choose_domain_url, "/sellers/application")
 
+    @pytest.mark.skip
     def test_existing_seller_submitted_app_dp(self):
         self.login_as_supplier()
 
@@ -466,6 +472,7 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
         choose_domain_url = document.xpath('//a')[10].get('href')
         assert_equal(choose_domain_url, "/sellers/application")
 
+    @pytest.mark.skip
     def test_has_brief_responses_outcome(self):
         self.login_as_supplier()
 
@@ -486,6 +493,7 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
             document.xpath('//a')[10].text, 'View your application'
         )
 
+    @pytest.mark.skip
     def test_has_brief_responses_specialists_view(self):
         self.login_as_supplier()
 
@@ -506,6 +514,7 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
             document.xpath('//a')[10].text, 'View your application'
         )
 
+    @pytest.mark.skip
     def test_has_brief_responses_specialists_edit(self):
         self.login_as_supplier()
 
@@ -527,6 +536,7 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
             document.xpath('//a')[10].text, 'Edit application'
         )
 
+    @pytest.mark.skip
     def test_aoe_dp_no_casestudies(self):
         self.login_as_supplier()
 
@@ -559,6 +569,7 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
             self.supplier['supplier']['code']
         ))
 
+    @pytest.mark.skip
     def test_products_dp_no_casestudies(self):
         self.login_as_supplier()
 
@@ -593,6 +604,7 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
             self.supplier['supplier']['code']
         ))
 
+    @pytest.mark.skip
     def test_recruiter_dp_no_casestudies(self):
         self.login_as_supplier()
 
@@ -634,6 +646,7 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
             self.supplier['supplier']['code']
         ))
 
+    @pytest.mark.skip
     def test_products_outcome_no_casestudies(self):
         self.login_as_supplier()
 
@@ -661,6 +674,7 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
         choose_domain_url = document.xpath('//a')[11].get('href')
         assert_equal(choose_domain_url, '/supplier/{}'.format(self.supplier['supplier']['code']))
 
+    @pytest.mark.skip
     def test_aoe_dp_inreview(self):
         self.login_as_supplier()
 
@@ -684,6 +698,7 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
         choose_domain_url = document.xpath('//a')[10].get('href')
         assert_equal(choose_domain_url, '/sellers/opportunities/1/assessment/status')
 
+    @pytest.mark.skip
     def test_recruiter_dp_inreview(self):
         self.login_as_supplier()
 
@@ -718,6 +733,7 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
             self.brief['id']
         ))
 
+    @pytest.mark.skip
     def test_all_outcome_inreview(self):
         self.login_as_supplier()
 
@@ -746,6 +762,7 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
             )
         )
 
+    @pytest.mark.skip
     def test_aeo_professional_not_assessed(self):
         self.login_as_supplier()
 
@@ -772,6 +789,7 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
             )
         )
 
+    @pytest.mark.skip
     def test_recruiter_dp_not_assessed(self):
         self.login_as_supplier()
         self.supplier['supplier']['domains']['assessed'] = []
@@ -805,6 +823,7 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
         choose_domain_url = document.xpath('//a')[10].get('href')
         assert_equal(choose_domain_url, '/sellers/opportunities/1/assessment/1')
 
+    @pytest.mark.skip
     def test_all_outcome_all_unassessed(self):
         self.login_as_supplier()
 
@@ -833,6 +852,7 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
             )
         )
 
+    @pytest.mark.skip
     def test_approved_and_assessed_outcome(self):
         self.login_as_supplier()
 
@@ -858,6 +878,7 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
         response_create_url = document.xpath('//a')[10].get('href')
         assert_equal(response_create_url, '/2/brief/{}/respond'.format(self.brief['id']))
 
+    @pytest.mark.skip
     def test_approved_and_assessed_dp(self):
         self.login_as_supplier()
 
