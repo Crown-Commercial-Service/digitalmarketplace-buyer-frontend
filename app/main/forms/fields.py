@@ -21,20 +21,33 @@ class DMRadioField(RadioField):
 
 class DateField(Field):
     '''
-    A field enclosure for a date entry fieldset
+    A date field(set) that uses a day, month and year field.
+
+    It behaves like a WTForms.FieldForm, but it can be used
+    with validators like a normal WTForms.Field.
 
     >>> from wtforms import Form
+    >>> from wtforms.validators import DataRequired
     >>> from werkzeug.datastructures import MultiDict
-    >>> class DateForm(Form):
-    ...     date = DateField()
-    >>> form = DateForm(MultiDict({
+    >>> formdata = MultiDict({
     ...     'date-day': '31',
     ...     'date-month': '12',
     ...     'date-year': '1999'}))
+    >>> class DateForm(Form):
+    ...     date = DateField(validators=[DataRequired()])
+    >>> form = DateForm(formdata)
     >>> form.date.data
     datetime.date(1999, 12, 31)
     '''
 
+    # An internal class that defines the fields that make up the DateField.
+    #
+    # Inheriting from wtforms.FormField has limitations on using validators.
+    #
+    # Instead, the DateField is composed of a wtforms.FormField that is used
+    # to turn the form data into integer values, and we then grab the data.
+    #
+    # The FormField instance is based on this class.
     class _DateForm(Form):
         day = IntegerField("Day")
         month = IntegerField("Month")
@@ -45,6 +58,11 @@ class DateField(Field):
         self.form_field = FormField(self._DateForm, separator=separator, **kwargs)
 
     def _value(self):
+        '''
+        Return the values that are used to display the form
+
+        Overrides wtforms.Field._value().
+        '''
         if self.raw_data:
             return self.raw_data[0]
         else:
@@ -54,7 +72,7 @@ class DateField(Field):
         '''
         Process incoming data.
 
-        Overrides wtforms.Field.process.
+        Overrides wtforms.Field.process().
 
         Filters, process_data and process_formdata are not supported.
         '''
@@ -70,6 +88,8 @@ class DateField(Field):
         if not any(raw_data.values()):
             # if all fields were empty we want raw_data to be None-ish
             raw_data = {}
+
+        # the WTForms.Field api expects .raw_data to be a list
         self.raw_data = [raw_data]
 
         try:
