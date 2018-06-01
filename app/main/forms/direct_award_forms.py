@@ -70,6 +70,7 @@ class TellUsAboutContractForm(FlaskForm):
             DataRequired(INVALID_DATE_MESSAGE),
             Y2K(INVALID_DATE_MESSAGE),
         ])
+
     end_date = DateField(
         "End date",
         validators=[
@@ -78,6 +79,7 @@ class TellUsAboutContractForm(FlaskForm):
             Y2K(INVALID_DATE_MESSAGE),
             GreaterThan("start_date", "Your end date must be later than the start date."),
         ])
+
     value_in_pounds = DecimalField(
         "Value",
         validators=[
@@ -85,6 +87,7 @@ class TellUsAboutContractForm(FlaskForm):
             DataRequired(INVALID_VALUE_MESSAGE),
             NumberRange(min=Decimal('0.01'), message=INVALID_VALUE_MESSAGE),
         ])
+
     buying_organisation = StripWhitespaceStringField(
         "Organisation buying the service",
         validators=[
