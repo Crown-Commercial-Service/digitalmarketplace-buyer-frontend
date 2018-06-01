@@ -9,16 +9,6 @@ from wtforms.utils import unset_value
 import datetime
 
 
-class DMFormField(FormField):
-    '''
-    A wrapper for `wtforms.FormField`
-    '''
-    @property
-    def errors(self):
-        '''The validation errors, in a format suitable for frontend-toolkit'''
-        return [e for errors in self.form.errors.values() for e in errors]
-
-
 class DMRadioField(RadioField):
     '''
     A wrapper for `wtforms.RadioField`
