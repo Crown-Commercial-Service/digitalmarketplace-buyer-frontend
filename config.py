@@ -101,9 +101,10 @@ class Config(object):
     S3_ENDPOINT_URL = 's3-ap-southeast-2.amazonaws.com'
     AWS_DEFAULT_REGION = None
 
-    GENERIC_EMAIL_DOMAINS = ['gmail.com', 'bigpond.com', 'outlook.com', 'outlook.com.au', 'hotmail.com', 'yahoo.com',
-                             'optusnet.com.au', 'msn.com', 'internode.on.net', 'iinet.net.au', 'ozemail.com.au',
-                             'live.com.au', 'digital.gov.au', 'icloud.com']
+    GENERIC_EMAIL_DOMAINS = ['bigpond.com', 'digital.gov.au', 'gmail.com', 'hotmail.com', 'icloud.com',
+                             'iinet.net.au', 'internode.on.net', 'live.com.au', 'me.com', 'msn.com',
+                             'optusnet.com.au', 'outlook.com', 'outlook.com.au', 'ozemail.com.au',
+                             'yahoo.com', 'yahoo.com.au']
 
     MULTI_CANDIDATE_PUBLISHED_DATE = pendulum.create(2018, 4, 17)
 
