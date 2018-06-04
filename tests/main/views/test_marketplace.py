@@ -1766,17 +1766,12 @@ class TestCatalogueOfBriefsFilterOnClick(BaseApplicationTest):
 
         self.data_api_client_patch = mock.patch('app.main.views.marketplace.data_api_client', autospec=True)
         self.data_api_client = self.data_api_client_patch.start()
-        self.data_api_client.find_frameworks.return_value = {'frameworks': [
-            {
-                'id': 3,
-                'name': "Digital Outcomes and Specialists 2",
-                'slug': "digital-outcomes-and-specialists-2",
-                'framework': "digital-outcomes-and-specialists",
-                'lots': [
-                    {'name': 'Digital outcomes', 'slug': 'digital-outcomes', 'allowsBrief': True}
-                ],
-                'status': 'live',
-            }]
+        self.data_api_client.find_frameworks.return_value = {
+            'frameworks': [
+                api_stubs.framework(framework_id=3, slug='digital-outcomes-and-specialists-2', status='live',
+                                    lots=[api_stubs.lot(slug='digital-outcomes', name='Digital outcomes',
+                                                        allows_brief=True)], has_further_competition=True)['frameworks']
+            ]
         }
 
     def teardown_method(self, method):
