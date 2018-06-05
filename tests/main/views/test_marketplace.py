@@ -10,6 +10,8 @@ import pytest
 
 from ...helpers import BaseApplicationTest
 
+from dmutils import api_stubs
+
 
 class TestApplication(BaseApplicationTest):
 
@@ -404,6 +406,7 @@ class BaseBriefPageTest(BaseApplicationTest):
         self.brief = self._get_dos_brief_fixture_data()
         self.brief_responses = self._get_dos_brief_responses_fixture_data()
         self.brief_id = self.brief['briefs']['id']
+        self.data_api_client.find_frameworks.return_value = self._get_frameworks_list_fixture_data()
         self.data_api_client.get_brief.return_value = self.brief
         self.data_api_client.find_brief_responses.return_value = self.brief_responses
 
@@ -413,6 +416,16 @@ class BaseBriefPageTest(BaseApplicationTest):
 
 
 class TestBriefPage(BaseBriefPageTest):
+
+    @pytest.mark.parametrize('framework_family, expected_status_code',
+                             (
+                                 ('digital-outcomes-and-specialists', 200),
+                                 ('g-cloud', 404),
+                             ))
+    def test_404_on_framework_that_does_not_support_further_competition(self, framework_family, expected_status_code):
+        brief_id = self.brief['briefs']['id']
+        res = self.client.get(f'/{framework_family}/opportunities/{brief_id}')
+        assert res.status_code == expected_status_code
 
     def test_dos_brief_404s_if_brief_is_draft(self):
         self.brief['briefs']['status'] = 'draft'
@@ -1145,46 +1158,24 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
 
         self.data_api_client_patch = mock.patch('app.main.views.marketplace.data_api_client', autospec=True)
         self.data_api_client = self.data_api_client_patch.start()
+
+        dos_lots = [api_stubs.lot(slug='digital-outcomes', name='Digital outcomes', allows_brief=True),
+                    api_stubs.lot(slug='digital-specialists', name='Digital specialists', allows_brief=True),
+                    api_stubs.lot(slug='user-research-participants', name='User research participants',
+                                  allows_brief=True),
+                    api_stubs.lot(slug='user-research-studios', name='User research studios', allows_brief=False)]
+
+        gcloud_lots = [api_stubs.lot(slug='cloud-hosting', allows_brief=True),
+                       api_stubs.lot(slug='cloud-software', allows_brief=False),
+                       api_stubs.lot(slug='cloud-support', allows_brief=True)]
+
         self.data_api_client.find_frameworks.return_value = {'frameworks': [
-            {
-                'id': 3,
-                'name': "Digital Outcomes and Specialists 2",
-                'slug': "digital-outcomes-and-specialists-2",
-                'framework': "digital-outcomes-and-specialists",
-                'lots': [
-                    {'name': 'Digital outcomes', 'slug': 'digital-outcomes', 'allowsBrief': True},
-                    {'name': 'Digital specialists', 'slug': 'digital-specialists', 'allowsBrief': True},
-                    {'name': 'User research participants', 'slug': 'user-research-participants', 'allowsBrief': True},
-                    {'name': 'User research studios', 'slug': 'user-research-studios', 'allowsBrief': False},
-                ],
-                'status': 'live',
-            },
-            {
-                'id': 1,
-                'name': "Digital Outcomes and Specialists",
-                'slug': "digital-outcomes-and-specialists",
-                'framework': "digital-outcomes-and-specialists",
-                'lots': [
-                    {'name': 'Lot 1', 'slug': 'lot-one', 'allowsBrief': True},
-                    {'name': 'Lot 2', 'slug': 'lot-two', 'allowsBrief': False},
-                    {'name': 'Lot 3', 'slug': 'lot-three', 'allowsBrief': True},
-                    {'name': 'Lot 4', 'slug': 'lot-four', 'allowsBrief': True},
-                ],
-                'status': 'expired',
-            },
-            {
-                'id': 2,
-                'name': "Foobar",
-                'slug': "foobar",
-                'framework': "foobar",
-                'lots': [
-                    {'name': 'Lot 1', 'slug': 'lot-one', 'allowsBrief': True},
-                    {'name': 'Lot 2', 'slug': 'lot-two', 'allowsBrief': False},
-                    {'name': 'Lot 3', 'slug': 'lot-three', 'allowsBrief': True},
-                    {'name': 'Lot 4', 'slug': 'lot-four', 'allowsBrief': True},
-                ],
-                'status': 'expired',
-            },
+            api_stubs.framework(framework_id=3, slug='digital-outcomes-and-specialists-2', status='live',
+                                lots=dos_lots, has_further_competition=True)['frameworks'],
+            api_stubs.framework(framework_id=1, slug='digital-outcomes-and-specialists', status='expired',
+                                lots=dos_lots, has_further_competition=True)['frameworks'],
+            api_stubs.framework(framework_id=2, slug='foobar', status='expired', lots=gcloud_lots)['frameworks'],
+            api_stubs.framework(framework_id=4, slug='g-cloud-9', status='live', lots=gcloud_lots)['frameworks']
         ]}
 
     def teardown_method(self, method):
@@ -1195,6 +1186,15 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
 
     def normalize_qs(self, qs):
         return {k: set(v) for k, v in parse_qs(qs).items() if k != "page"}
+
+    @pytest.mark.parametrize('framework_family, expected_status_code',
+                             (
+                                 ('digital-outcomes-and-specialists', 200),
+                                 ('g-cloud', 404),
+                             ))
+    def test_404_on_framework_that_does_not_support_further_competition(self, framework_family, expected_status_code):
+        res = self.client.get(f'/{framework_family}/opportunities')
+        assert res.status_code == expected_status_code
 
     def test_catalogue_of_briefs_page(self):
         res = self.client.get('/digital-outcomes-and-specialists/opportunities')
@@ -1766,17 +1766,12 @@ class TestCatalogueOfBriefsFilterOnClick(BaseApplicationTest):
 
         self.data_api_client_patch = mock.patch('app.main.views.marketplace.data_api_client', autospec=True)
         self.data_api_client = self.data_api_client_patch.start()
-        self.data_api_client.find_frameworks.return_value = {'frameworks': [
-            {
-                'id': 3,
-                'name': "Digital Outcomes and Specialists 2",
-                'slug': "digital-outcomes-and-specialists-2",
-                'framework': "digital-outcomes-and-specialists",
-                'lots': [
-                    {'name': 'Digital outcomes', 'slug': 'digital-outcomes', 'allowsBrief': True}
-                ],
-                'status': 'live',
-            }]
+        self.data_api_client.find_frameworks.return_value = {
+            'frameworks': [
+                api_stubs.framework(framework_id=3, slug='digital-outcomes-and-specialists-2', status='live',
+                                    lots=[api_stubs.lot(slug='digital-outcomes', name='Digital outcomes',
+                                                        allows_brief=True)], has_further_competition=True)['frameworks']
+            ]
         }
 
     def teardown_method(self, method):
