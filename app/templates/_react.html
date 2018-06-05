@@ -15,7 +15,7 @@
 {% block breadcrumb %}
   {% if breadcrumb_items|count > 0 %}
     {% with items = breadcrumb_items %}
-      {% include "_light_breadcrumb.html" %}
+      {% include "toolkit/breadcrumb.html" %}
     {% endwith %}
   {% endif %}
 {% endblock %}

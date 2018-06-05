@@ -4,7 +4,7 @@
   {% with items = [ { "link": url_for('.index'), "label":
     "Home" }, { "link": url_for('.list_opportunities', framework_slug=brief.frameworkSlug), "label": "Opportunities" },
     { "label":
-    "Opportunity details" } ] %} {% include "_light_breadcrumb.html" %} {% endwith %} {% endblock %}
+    "Opportunity details" } ] %} {% include "toolkit/breadcrumb.html" %} {% endwith %} {% endblock %}
 {% block main_content %}
     {% if is_restricted_brief and not selected_for_brief %}
         <div class="uikit-page-alerts uikit-page-alerts--warning">

@@ -15,7 +15,7 @@
   padding: $medium-spacing 0 ($base-spacing * 3);
   padding-bottom: $medium-spacing;
   margin-bottom: 0;
-  background-color: #18788d;
+  background-color: $aqua;
   color: $body-inverted-text-colour;
 
   @include media($tablet) {
@@ -56,6 +56,24 @@
     display: block;
     float: right;
     margin-left: $base-spacing;
+  }
+}
+
+.phase-banner {
+  background: #313131;
+  color: $non-white;
+  padding: $tiny-spacing 0;
+
+  p {
+    font-size: rem(14);
+    margin: 0;
+  }
+
+  a {
+    @include link-colours($non-white, $white, $navy);
+    text-decoration: none;
+    border-bottom: solid 1px #1B7991;
+    transition: background-color 0.1s ease-in-out, border-color 0.1s ease-in-out;
   }
 }
 
