@@ -1,7 +1,7 @@
 {% block top_of_page %}{% endblock %}
 <!DOCTYPE html>
 <!--[if lt IE 9]><html class="lte-ie8" lang="{{ html_lang|default('en') }}"><![endif]-->
-<!--[if gt IE 8]><!--><html class="js" lang="{{ html_lang|default('en') }}"><!--<![endif]-->
+<!--[if gt IE 8]><!--><html lang="{{ html_lang|default('en') }}"><!--<![endif]-->
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -24,7 +24,7 @@
 <!-- End of marketplace1 Zendesk Widget script -->
 </head>
 
-<body class="{% block body_classes %}{% endblock %} au-grid au-body">
+<body class="{% block body_classes %}{% endblock %}">
   <script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
 
   {% block body_start %}{% endblock %}
@@ -43,35 +43,46 @@
         </p>
       </div>
     </section>
-    <section>
-      {% set dashboardText = 'Dashboard' %}
-      {% if current_user.role == 'buyer' %}
-        {% set dashboardUrl = '/2/buyer-dashboard' %}
-      {% elif current_user.role == 'applicant'  %}
-        {% set dashboardText = 'Continue application' %}
-        {% set dashboardUrl = '/sellers/application' %}
-      {% else %}
-        {% set dashboardUrl = '/sellers' %}
-      {% endif %}
-      {% if 'SELLER_REGISTRATION' is active_feature %}
-        {% set registerUrl = '/2/signup' %}
-        {% set registerText = 'Join the Marketplace' %}
-      {% else %}
-        {% set registerUrl = url_for('main.buyer_signup') %}
-        {% set registerText = 'Register' %}
-      {% endif %}
-      {% set props = {
-      'registerUrl': registerUrl,
-      'registerText': registerText,
-      'loginUrl': url_for('main.render_login'),
-      'dashboardUrl': dashboardUrl,
-      'dashboardText': dashboardText,
-      'logoutUrl': url_for('main.logout'),
-      'isAuthenticated': current_user.is_authenticated
-      } %}
-      {% set auth_component = render_component('bundles/Header/AuthWidget.js', props, True) %}
-      {{ auth_component|as('react_bundle') }}
+    <section class="marketplace--header">
+      <div class="wrapper">
+        {% if url_for('main.index') != request.path %}
+        <div class="marketplace--logo">
+          <a href="{{ url_for('main.index') }}" title="{{ logo_link_title|default('Go to the Marketplace homepage') }}" class="logo">Digital Marketplace</a> <span class="badge--beta">BETA</span>
+        </div>
+        {% endif %}
+        <div class="user-nav">
+          {% set dashboardText = 'Dashboard' %}
+          {% if current_user.role == 'buyer' %}
+            {% set dashboardUrl = '/2/buyer-dashboard' %}
+          {% elif current_user.role == 'applicant'  %}
+            {% set dashboardText = 'Continue application' %}
+            {% set dashboardUrl = '/sellers/application' %}
+          {% else %}
+            {% set dashboardUrl = '/sellers' %}
+          {% endif %}
+          {% if 'SELLER_REGISTRATION' is active_feature %}
+            {% set registerUrl = '/2/signup' %}
+            {% set registerText = 'Join the Marketplace' %}
+          {% else %}
+            {% set registerUrl = url_for('main.buyer_signup') %}
+            {% set registerText = 'Register' %}
+          {% endif %}
+          {% set props = {
+          'registerUrl': registerUrl,
+          'registerText': registerText,
+          'loginUrl': url_for('main.render_login'),
+          'dashboardUrl': dashboardUrl,
+          'dashboardText': dashboardText,
+          'logoutUrl': url_for('main.logout'),
+          'isAuthenticated': current_user.is_authenticated
+          } %}
+          {% set auth_component = render_component('bundles/Header/AuthWidget.js', props, True) %}
+          {{ auth_component|as('react_bundle') }}
+        </div>
+      </div>
     </section>
+    {% block hero %}{% endblock %}
+
   </header>
 
   {% block breadcrumb %}{% endblock %}
@@ -86,8 +97,9 @@
 
   {% block content_sub %}{% endblock %}
 
-  <footer  class="au-footer footer au-body au-body--dark au-footer--dark">
+  <footer role="contentinfo">
     <div class="wrapper">
+      {% block footer_top %}{% endblock %}
       {% block footer %}{% endblock %}
     </div>
   </footer>
