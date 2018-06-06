@@ -488,10 +488,17 @@ def view_project(framework_family, project_id):
     else:
         current_project_stage = 'save_and_refine_search'
 
+    # custom dimension for google analytics
+    custom_dimensions = [{
+        "data_id": 8,
+        "data_value": current_project_stage
+    }]
+
     return render_template('direct-award/view-project.html',
                            framework=framework,
                            project=project,
                            current_project_stage=current_project_stage,
+                           custom_dimensions=custom_dimensions,
                            search=search,
                            buyer_search_page_url=buyer_search_page_url,
                            search_summary_sentence=search_summary_sentence,
