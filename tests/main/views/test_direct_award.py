@@ -340,7 +340,8 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         assert self._task_has_link(tasklist, 5,
                                    '/buyers/direct-award/g-cloud/projects/1/results') is True
 
-        assert self._cannot_start_from_task(tasklist, 6) is True
+        assert self._task_has_link(tasklist, 6,
+                                   '/buyers/direct-award/g-cloud/projects/1/did-you-award-contract') is True
 
     def test_overview_renders_specific_elements_for_search_downloaded_state(self):
         searches = self._get_direct_award_project_searches_fixture()
