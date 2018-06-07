@@ -498,7 +498,9 @@ def view_project(framework_family, project_id):
     # Current Project Stage
     current_project_stage = None
 
-    if project['downloadedAt']:
+    if project['outcome']:
+        current_project_stage = project['outcome']
+    elif project['downloadedAt']:
         current_project_stage = 'download_results'
     elif project['lockedAt']:
         current_project_stage = 'search_ended'

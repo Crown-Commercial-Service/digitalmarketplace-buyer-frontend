@@ -58,7 +58,11 @@
         {%
           with
           type = "save",
-          label = "Save and continue"
+          label = "Save and continue",
+          analytics= "trackEvent",
+          analytics_category = "why-didnt-you-award",
+          analytics_action = "Save and continue",
+          analytics_target = "input[name={}]:checked".format(form.why_did_you_not_award_the_contract.name)
         %}
           {% include "toolkit/button.html" %}
         {% endwith %}

@@ -100,7 +100,11 @@
         {%
           with
           type = "save",
-          label = "Submit"
+          label = "Submit",
+          analytics = "trackEvent",
+          analytics_category = "tell-us-about-your-contract",
+          analytics_action = "Submit",
+          analytics_label = "awarded"
         %}
           {% include "toolkit/button.html" %}
         {% endwith %}
