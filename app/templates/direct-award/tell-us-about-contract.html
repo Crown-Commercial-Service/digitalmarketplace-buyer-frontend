@@ -1,0 +1,115 @@
+{% extends "toolkit/layouts/_base_page.html" %}
+
+{% block page_title %}Tell us about your contract - Digital Marketplace{% endblock %}
+
+{% block breadcrumb %}
+  {%
+    with
+    items = [
+      {
+        "link": url_for('main.index'),
+        "label": "Digital Marketplace"
+      },
+      {
+        "link": url_for('external.buyer_dashboard'),
+        "label": "Your account"
+      },
+      {
+        "link": url_for('direct_award.saved_search_overview', framework_family=framework.framework),
+        "label": "Your saved searches"
+      },
+      {
+        "link": url_for('direct_award.view_project', framework_family=framework.framework, project_id=project.id),
+        "label": project.name
+      },
+      {
+        "link": url_for('direct_award.did_you_award_contract', framework_family=framework.framework, project_id=project.id),
+        "label": "Did you award a contract?"
+      },
+      {
+        "link": url_for('direct_award.which_service_won_contract', framework_family=framework.framework, project_id=project.id),
+        "label": "Which service won the contract?"
+      }
+    ]
+  %}
+    {% include "toolkit/breadcrumb.html" %}
+  {% endwith %}
+{% endblock %}
+
+{% block main_content %}
+
+{% include "toolkit/forms/validation.html" %}
+
+<div class="tell-us-about-contract-page">
+  <div class="grid-row">
+    <div class="column-two-thirds">
+      {% with heading="Tell us about your contract" %}
+        {% include "toolkit/page-heading.html" %}
+      {% endwith %}
+
+      <form method="POST" action="{{ url_for('direct_award.tell_us_about_contract', framework_family=framework.framework, project_id=project.id) }}" class="tell-us-about-contract-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+        {%
+          with
+          name = "start_date",
+          hint = "For example, 31 12 2020",
+          question = "Start date",
+          data = form.start_date._value(),
+          error = errors.get('start_date', {}).get('message', None)
+        %}
+          {% include "toolkit/forms/date.html" %}
+        {% endwith %}
+
+        {%
+          with
+          name = "end_date",
+          hint = "For example, 31 12 2020",
+          question = "End date",
+          data = form.end_date._value(),
+          error = errors.get('end_date', {}).get('message', None)
+        %}
+          {% include "toolkit/forms/date.html" %}
+        {% endwith %}
+
+        {%
+          with
+          question = "Value",
+          name = "value_in_pounds",
+          unit_in_full = "pounds",
+          unit = "£",
+          unit_position = "before",
+          hint = "For example, 9900.95 for 9900 pounds and 95 pence",
+          value = form.value_in_pounds._value(),
+          error = errors.get('value_in_pounds', {}).get('message', None)
+        %}
+          {% include "toolkit/forms/textbox.html" %}
+        {% endwith %}
+
+        {%
+          with
+          question = "Organisation buying the service",
+          name = "buying_organisation",
+          hint = "For example, National Audit Office or Lewisham Council",
+          value = form.buying_organisation._value(),
+          error = errors.get('buying_organisation', {}).get('message', None)
+        %}
+          {% include "toolkit/forms/textbox.html" %}
+        {% endwith %}
+
+        {%
+          with
+          type = "save",
+          label = "Submit"
+        %}
+          {% include "toolkit/button.html" %}
+        {% endwith %}
+
+      </form>
+
+      <p><a href="{{ url_for('direct_award.which_service_won_contract', framework_family=framework.framework, project_id=project.id) }}">Previous page</a></p>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

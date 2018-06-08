@@ -592,6 +592,124 @@ class TestDirectAwardAwardContract(TestDirectAwardBase):
             '/buyers/direct-award/g-cloud/projects/1/which-service-won-contract')
         assert res.status_code == 400
 
+    def test_which_service_did_you_award_should_redirect_to_tell_us_about_contract(self):
+        self.login_as_buyer()
+
+        res = self.client.post(
+            '/buyers/direct-award/g-cloud/projects/1/which-service-won-contract',
+            data={'which_service_won_the_contract': '123456789'})
+
+        assert res.status_code == 302
+        assert res.location.endswith('/buyers/direct-award/g-cloud/projects/1/tell-us-about-contract')
+
+
+class TestDirectAwardTellUsAboutContract(TestDirectAwardBase):
+    url = '/buyers/direct-award/g-cloud/projects/1/tell-us-about-contract'
+
+    @pytest.fixture
+    def client(self):
+        self.login_as_buyer()
+        return self.client
+
+    @pytest.fixture
+    def xpath(self, client):
+        res = client.get(self.url)
+        doc = html.fromstring(res.get_data(as_text=True))
+        return doc.xpath
+
+    @pytest.fixture
+    def data(self):
+        return {
+            'start_date-day': '31',
+            'start_date-month': '12',
+            'start_date-year': '2019',
+            'end_date-day': '1',
+            'end_date-month': '6',
+            'end_date-year': '2021',
+            'buying_organisation': 'Lewisham Council',
+            'value_in_pounds': '100.00'
+        }
+
+    def setup_method(self, method):
+        super().setup_method(method)
+        self.data_api_client.get_direct_award_project.return_value = self._get_direct_award_lock_project_fixture()
+
+    def test_tell_us_about_contract_exists(self, client):
+        assert client.get(self.url).status_code == 200
+
+    def test_tell_us_about_contract_renders(self, xpath):
+        assert xpath('boolean(//h1[contains(normalize-space(), "Tell us about your contract")])')
+
+    def test_tell_us_about_contract_form_fields(self, xpath):
+        assert xpath('count(//input[@type="text"][substring-after(@name, "start_date")])') == 3
+        assert xpath('count(//input[@type="text"][substring-after(@name, "end_date")])') == 3
+        assert xpath('boolean(//input[@type="text"][contains(@name, "value_in_pounds")])')
+        assert xpath('boolean(//input[@type="text"][contains(@name, "buying_organisation")])')
+        assert xpath('boolean(//input[@type="submit"][@value="Submit"])')
+
+    def test_previous_page_button_exists_and_points_to_previous_page(self, xpath):
+        assert xpath(
+            'boolean('
+            '//a[@href="/buyers/direct-award/g-cloud/projects/1/which-service-won-contract"]'
+            '[contains(normalize-space(), "Previous page")])')
+
+    def test_tell_us_about_contract_form_action_url_is_tell_us_about_contract_url(self, xpath):
+        assert xpath('//form[@class="tell-us-about-contract-form"]/@action')[0] == self.url
+
+    def test_tell_us_about_contract_raises_404_if_project_does_not_exist(self, client):
+        self.data_api_client.get_direct_award_project.side_effect = HTTPError(mock.Mock(status_code=404))
+
+        assert client.get('/buyers/direct-award/g-cloud/projects/31415/tell-us-about-contract').status_code == 404
+
+    def test_tell_us_about_contract_raises_404_if_project_is_not_accessible(self, client):
+        self.data_api_client.get_direct_award_project.return_value['project']['id'] = 314159
+        self.data_api_client.get_direct_award_project.return_value['project']['users'][0]['id'] = 321
+
+        assert client.get('/buyers/direct-award/g-cloud/projects/31415/tell-us-about-contract').status_code == 404
+
+    def test_tell_us_about_contract_successful_post_redirects_to_project_overview(self, client, data):
+        res = client.post(self.url, data=data)
+        assert res.status_code == 302
+        assert res.location.endswith('/buyers/direct-award/g-cloud/projects/1')
+        self.assert_flashes("You've updated 'My procurement project'", 'success')
+
+    def test_tell_us_about_contract_post_raises_400_and_shows_validation_messages_if_no_form_input(self, client):
+        res = client.post(self.url)
+        xpath = html.fromstring(res.get_data(as_text=True)).xpath
+        assert res.status_code == 400
+        assert xpath('boolean(//div[@class="validation-masthead"])')
+        assert xpath('count(//a[@class="validation-masthead-link"])') == 4
+        assert xpath('count(//span[@class="validation-message"])') == 4
+
+    @pytest.mark.parametrize('invalid_data', (
+        {'start_date-year': 'year', 'start_date-month': 'mo', 'start_date-day': 'da'},
+        {'end_date-year': 'year', 'end_date-month': 'mo', 'end_date-day': 'da'},
+        {'value_in_pounds': 'money'},
+        {'buying_organisation': ''},
+    ))
+    def test_invalid_data_raises_400_and_has_validation_messages_but_remains_in_form(self, client, data, invalid_data):
+        data.update(invalid_data)
+        res = client.post(self.url, data=data)
+        assert res.status_code == 400
+
+        xpath = html.fromstring(res.get_data(as_text=True)).xpath
+        assert xpath('count(//span[@class="validation-message"])') == 1
+        assert xpath('boolean(//div[@class="validation-masthead"])')
+        assert xpath('count(//a[@class="validation-masthead-link"])') == 1
+
+        for field, value in data.items():
+            assert xpath(f'//input[@name="{field}"]/@value')[0] == value
+
+    def test_if_end_date_is_before_start_date_raise_400_and_show_validation_message(self, client, data):
+        data.update({'end_date-year': str(int(data['start_date-year']) - 1)})
+        res = client.post(self.url, data=data)
+        assert res.status_code == 400
+
+        xpath = html.fromstring(res.get_data(as_text=True)).xpath
+        assert xpath('count(//span[@class="validation-message"])') == 1
+        assert xpath('boolean(//div[@class="validation-masthead"])')
+        assert xpath('count(//a[@class="validation-masthead-link"])') == 1
+
 
 class TestDirectAwardNonAwardContract(TestDirectAwardBase):
     def setup_method(self, method):

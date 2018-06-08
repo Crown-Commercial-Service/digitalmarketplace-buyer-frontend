@@ -21,6 +21,7 @@ from ..exceptions import AuthException
 from ..forms.direct_award_forms import (
     CreateProjectForm,
     DidYouAwardAContractForm,
+    TellUsAboutContractForm,
     WhichServiceWonTheContractForm,
     WhyDidYouNotAwardForm
 )
@@ -639,7 +640,7 @@ def which_service_won_contract(framework_family, project_id):
 
     if request.method == "POST" and form.validate_on_submit():
         flash('Contract awarded.')
-        return redirect(url_for('.view_project', framework_family=framework_family, project_id=project['id']))
+        return redirect(url_for('.tell_us_about_contract', framework_family=framework_family, project_id=project['id']))
 
     errors = get_errors_from_wtform(form)
 
@@ -650,6 +651,40 @@ def which_service_won_contract(framework_family, project_id):
         framework=framework,
         services=services,
         form=form,
+    ), 200 if not errors else 400
+
+
+@direct_award.route(
+    '/<string:framework_family>/projects/<int:project_id>/tell-us-about-contract',
+    methods=['GET', 'POST']
+)
+def tell_us_about_contract(framework_family, project_id):
+    all_frameworks = data_api_client.find_frameworks().get('frameworks')
+    framework = framework_helpers.get_latest_live_framework(all_frameworks, framework_family)
+
+    # Get the requested Direct Award Project.
+    project = data_api_client.get_direct_award_project(project_id=project_id)['project']
+
+    if not is_direct_award_project_accessible(project, current_user.id):
+        abort(404)
+
+    if not project['lockedAt']:
+        abort(400)
+
+    form = TellUsAboutContractForm()
+
+    if form.validate_on_submit():
+        flash(Markup(f"""You've updated '{project['name']}'"""), 'success')
+        return redirect(url_for('.view_project', framework_family=framework_family, project_id=project_id))
+
+    errors = get_errors_from_wtform(form)
+
+    return render_template(
+        'direct-award/tell-us-about-contract.html',
+        project=project,
+        framework=framework,
+        form=form,
+        errors=errors,
     ), 200 if not errors else 400
 
 
