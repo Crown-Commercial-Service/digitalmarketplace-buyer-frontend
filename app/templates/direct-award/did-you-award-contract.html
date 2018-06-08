@@ -29,19 +29,14 @@
 {% endblock %}
 
 {% block main_content %}
-
-{% if errors %}
-  {% include "toolkit/forms/validation.html" %}
-{% endif %}
+{% include "toolkit/forms/validation.html" %}
 
 <div class="did-you-award-contract-page">
   <div class="grid-row">
     <div class="column-two-thirds">
-      <header class="page-heading">
-        <h1>
-          Did you award a contract for ‘{{project.name}}’?
-        </h1>
-      </header>
+      {% with heading = ("Did you award a contract for ‘" + project.name + "’?") %}
+        {% include 'toolkit/page-heading.html' %}
+      {% endwith %}
 
       <form method="POST" action="{{ url_for('direct_award.did_you_award_contract', framework_family=framework.framework, project_id=project.id) }}">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
@@ -51,7 +46,7 @@
           name = "did_you_award_a_contract",
           type = "radio",
           value = form.did_you_award_a_contract.value,
-          error = form.did_you_award_a_contract.errors[0],
+          error = errors.get('did_you_award_a_contract', {}).get('message', None),
           options = form.did_you_award_a_contract.options
         %}
           {% include "toolkit/forms/selection-buttons.html" %}

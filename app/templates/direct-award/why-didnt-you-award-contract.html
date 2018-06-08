@@ -33,19 +33,14 @@
 {% endblock %}
 
 {% block main_content %}
-
-{% if errors %}
-  {% include "toolkit/forms/validation.html" %}
-{% endif %}
+{% include "toolkit/forms/validation.html" %}
 
 <div class="why-didnt-you-award-contract-page">
   <div class="grid-row">
     <div class="column-two-thirds">
-      <header class="page-heading">
-        <h1>
-          Why didn’t you award a contract?
-        </h1>
-      </header>
+      {% with heading = "Why didn’t you award a contract?" %}
+        {% include 'toolkit/page-heading.html' %}
+      {% endwith %}
 
       <form method="POST" action="{{ url_for('direct_award.why_did_you_not_award_the_contract', framework_family=framework.framework, project_id=project.id) }}">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
@@ -54,7 +49,7 @@
           name = form.why_did_you_not_award_the_contract.name,
           type = "radio",
           value = form.why_did_you_not_award_the_contract.value,
-          error = form.why_did_you_not_award_the_contract.errors[0],
+          error = errors.get('why_did_you_not_award_the_contract', {}).get('message', None),
           options = form.why_did_you_not_award_the_contract.options
         %}
           {% include "toolkit/forms/selection-buttons.html" %}
