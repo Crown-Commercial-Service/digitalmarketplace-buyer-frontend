@@ -10,6 +10,7 @@ from werkzeug.urls import Href, url_encode, url_decode
 from dmapiclient import HTTPError
 from dmcontent.formats import format_service_price
 from dmcontent.questions import Pricing
+from dmutils.forms import get_errors_from_wtform
 from dmutils.formats import dateformat, DATETIME_FORMAT, datetimeformat
 from dmutils.filters import capitalize_first
 from dmutils.ods import A as AnchorElement
@@ -574,7 +575,6 @@ def did_you_award_contract(framework_family, project_id):
         abort(400)
 
     form = DidYouAwardAContractForm()
-
     if form.validate_on_submit():
         if form.did_you_award_a_contract.data == form.STILL_ASSESSING:
             return redirect(url_for('.view_project',
@@ -591,10 +591,7 @@ def did_you_award_contract(framework_family, project_id):
         else:
             abort(500)  # this should never be reached
 
-    errors = {
-        input_name: {'input_name': input_name, 'question': getattr(form, input_name).label}
-        for input_name in form.errors.keys()
-    }
+    errors = get_errors_from_wtform(form)
 
     return render_template(
         'direct-award/did-you-award-contract.html',
@@ -602,7 +599,7 @@ def did_you_award_contract(framework_family, project_id):
         errors=errors,
         project=project,
         framework=framework
-    ), 200 if not form.errors else 400
+    ), 200 if not errors else 400
 
 
 @direct_award.route(
@@ -644,10 +641,7 @@ def which_service_won_contract(framework_family, project_id):
         flash('Contract awarded.')
         return redirect(url_for('.view_project', framework_family=framework_family, project_id=project['id']))
 
-    errors = [{
-        'input_name': input_name,
-        'question': getattr(form, input_name).label,
-    } for input_name in form.errors.keys()]
+    errors = get_errors_from_wtform(form)
 
     return render_template(
         'direct-award/which-service-won-contract.html',
@@ -656,7 +650,7 @@ def which_service_won_contract(framework_family, project_id):
         framework=framework,
         services=services,
         form=form,
-    ), 200
+    ), 200 if not errors else 400
 
 
 @direct_award.route(
@@ -678,14 +672,11 @@ def why_did_you_not_award_the_contract(framework_family, project_id):
 
     form = WhyDidYouNotAwardForm()
 
-    if request.method == "POST" and form.validate_on_submit():
+    if form.validate_on_submit():
         flash('You’ve updated ‘' + project['name'] + '’')
         return redirect(url_for('.view_project', framework_family=framework_family, project_id=project['id']))
 
-    errors = [{
-        'input_name': input_name,
-        'question': getattr(form, input_name).label,
-    } for input_name in form.errors.keys()]
+    errors = get_errors_from_wtform(form)
 
     return render_template(
         'direct-award/why-didnt-you-award-contract.html',
@@ -693,7 +684,7 @@ def why_did_you_not_award_the_contract(framework_family, project_id):
         framework=framework,
         form=form,
         errors=errors,
-    ), 200
+    ), 200 if not errors else 400
 
 
 @direct_award.route('/<string:framework_family>/projects/<int:project_id>/results')

@@ -33,19 +33,13 @@
 {% endblock %}
 
 {% block main_content %}
-
-{% if errors %}
-  {% include "toolkit/forms/validation.html" %}
-{% endif %}
+{% include "toolkit/forms/validation.html" %}
 
 <div class="which-service-won-contract-page">
   <div class="grid-row">
-    <div class="column-two-thirds">
-      <header class="page-heading">
-        <h1>
-          Which service won the contract?
-        </h1>
-      </header>
+    {% with heading = 'Which service won the contract?' %}
+      {% include 'toolkit/page-heading.html' %}
+    {% endwith %}
 
       {% if form.which_service_won_the_contract.options %}
 
@@ -56,7 +50,7 @@
           name = "which_service_won_the_contract",
           type = "radio",
           value = form.which_service_won_the_contract.value,
-          error = form.which_service_won_the_contract.errors[0],
+          error = errors.get('which_service_won_the_contract', {}).get('message', None),
           options = form.which_service_won_the_contract.options
         %}
           {% include "toolkit/forms/selection-buttons.html" %}
