@@ -592,6 +592,16 @@ class TestDirectAwardAwardContract(TestDirectAwardBase):
             '/buyers/direct-award/g-cloud/projects/1/which-service-won-contract')
         assert res.status_code == 400
 
+    def test_which_service_did_you_award_should_redirect_to_tell_us_about_contract(self):
+        self.login_as_buyer()
+
+        res = self.client.post(
+            '/buyers/direct-award/g-cloud/projects/1/which-service-won-contract',
+            data={'which_service_won_the_contract': '123456789'})
+
+        assert res.status_code == 302
+        assert res.location.endswith('/buyers/direct-award/g-cloud/projects/1/tell-us-about-contract')
+
 
 class TestDirectAwardTellUsAboutContract(TestDirectAwardBase):
     url = '/buyers/direct-award/g-cloud/projects/1/tell-us-about-contract'

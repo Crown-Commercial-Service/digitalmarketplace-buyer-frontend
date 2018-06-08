@@ -640,7 +640,7 @@ def which_service_won_contract(framework_family, project_id):
 
     if request.method == "POST" and form.validate_on_submit():
         flash('Contract awarded.')
-        return redirect(url_for('.view_project', framework_family=framework_family, project_id=project['id']))
+        return redirect(url_for('.tell_us_about_contract', framework_family=framework_family, project_id=project['id']))
 
     errors = get_errors_from_wtform(form)
 
