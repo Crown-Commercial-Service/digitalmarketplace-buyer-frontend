@@ -2,7 +2,6 @@ from dateutil import parser
 import sys
 from urllib.parse import quote_plus, urlparse
 
-from flask import Markup
 from html import escape as html_escape
 from lxml import html
 import mock
@@ -871,7 +870,7 @@ class TestDirectAwardDownloadResultsView(TestDirectAwardBase):
         assert file_context['filename'] == '2017-09-08-my-procurement-project-results'
         assert file_context['sheetname'] == "Search results"
         assert file_context['locked_at'] == 'Friday 8 September 2017 at 1:00am BST'
-        assert file_context['search_summary'] == Markup('1 result found in All categories')
+        assert file_context['search_summary'] == '1 result found in All categories'
 
     def test_get_file_data_and_column_styles(self):
         """This test will quite closely reproduce the implementation, but is the only way I can think of to tightly

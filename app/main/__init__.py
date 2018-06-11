@@ -5,7 +5,7 @@ import flask_featureflags
 main = Blueprint('main', __name__)
 direct_award = Blueprint('direct_award', __name__, url_prefix='/buyers/direct-award')
 
-LOGIN_REQUIRED_MESSAGE = Markup("""You must log in with a buyer account to see this page.""")
+LOGIN_REQUIRED_MESSAGE = "You must log in with a buyer account to see this page."
 
 
 @direct_award.before_request
