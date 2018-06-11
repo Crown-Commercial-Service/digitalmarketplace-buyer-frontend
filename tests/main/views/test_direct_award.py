@@ -82,7 +82,7 @@ class TestDirectAward(TestDirectAwardBase):
         assert page_header == "Your saved searches"
         assert page_header in doc.xpath('/html/head/title')[0].text.strip()
         assert doc.xpath('//*[@id="searching_table"]')[0].text.strip() == "Searching"
-        assert doc.xpath('//*[@id="search_ended_table"]')[0].text.strip() == "Search ended"
+        assert doc.xpath('//*[@id="search_ended_table"]')[0].text.strip() == "Results exported"
 
         tables = [
             doc.xpath('//*[@id="content"]/div/div/table[1]/tbody/tr'),
@@ -96,6 +96,28 @@ class TestDirectAward(TestDirectAwardBase):
                 if previous_date:
                     assert parser.parse(previous_date) >= parser.parse(current_date)
                 previous_date = current_date
+
+    def test_renders_outcome_column_for_search_ended(self):
+        self.login_as_buyer()
+        res = self.client.get(self.SAVE_SEARCH_OVERVIEW_URL)
+        assert res.status_code == 200
+
+        result_html = res.get_data(as_text=True)
+        doc = html.fromstring(result_html)
+
+        search_ended_table = doc.xpath('//*[@id="content"]/div/div/table[2]/tbody/tr')
+
+        for row in search_ended_table:
+            if row[2][0].xpath('a'):
+                assert row[2][0].xpath('a')[0].text in [
+                    "Tell us the outcome", "Download search results"
+                ]
+            else:
+                assert row[2][0].text in [
+                    "Awarded",
+                    "No suitable services found",
+                    "The work has been cancelled"
+                ]
 
     def test_renders_save_search_button(self):
         self._search_api_client.search.return_value = self.g9_search_results

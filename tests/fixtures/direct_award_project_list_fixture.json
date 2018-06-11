@@ -1,90 +1,455 @@
 {
-  "links": {
-      "self": "http://127.0.0.1:5000/direct-award/projects?latest-first=1"
-  },
-  "meta": {
-      "total": 10
-  },
-  "projects": [
-      {
-          "active": true,
-          "createdAt": "2017-10-18T11:22:04.840284Z",
-          "downloadedAt": null,
-          "id": 61,
-          "lockedAt": null,
-          "name": "fdsfdsfds"
-      },
-      {
-          "active": true,
-          "createdAt": "2017-10-18T11:21:45.619315Z",
-          "downloadedAt": null,
-          "id": 60,
-          "lockedAt": null,
-          "name": "zcczx"
-      },
-      {
-          "active": true,
-          "createdAt": "2017-10-17T09:18:26.953779Z",
-          "downloadedAt": null,
-          "id": 59,
-          "lockedAt": null,
-          "name": "rrewr"
-      },
-      {
-          "active": true,
-          "createdAt": "2017-10-12T16:13:27.336376Z",
-          "downloadedAt": null,
-          "id": 58,
-          "lockedAt": "2017-10-12T16:13:54.969422Z",
-          "name": "fgfdfds"
-      },
-      {
-          "active": true,
-          "createdAt": "2017-10-12T15:28:55.224286Z",
-          "downloadedAt": "2017-10-13T15:53:36.091384Z",
-          "id": 57,
-          "lockedAt": "2017-10-13T15:45:12.332316Z",
-          "name": "fsdfdsfd"
-      },
-      {
-          "active": true,
-          "createdAt": "2017-10-12T12:12:00.660057Z",
-          "downloadedAt": "2017-10-12T15:05:40.695771Z",
-          "id": 56,
-          "lockedAt": "2017-10-12T12:12:19.768680Z",
-          "name": "dsadsa"
-      },
-      {
-          "active": true,
-          "createdAt": "2017-10-11T14:29:38.460374Z",
-          "downloadedAt": null,
-          "id": 49,
-          "lockedAt": null,
-          "name": "my cloud project"
-      },
-      {
-          "active": true,
-          "createdAt": "2017-10-11T14:29:23.340801Z",
-          "downloadedAt": null,
-          "id": 48,
-          "lockedAt": null,
-          "name": "my cloud project"
-      },
-      {
-          "active": true,
-          "createdAt": "2017-10-11T14:28:44.620077Z",
-          "downloadedAt": null,
-          "id": 47,
-          "lockedAt": null,
-          "name": "my cloud project"
-      },
-      {
-          "active": true,
-          "createdAt": "2017-10-11T14:28:32.913715Z",
-          "downloadedAt": null,
-          "id": 46,
-          "lockedAt": null,
-          "name": "my cloud project"
-      }
-  ]
+    "links": {
+        "self": "http://localhost:5000/direct-award/projects?latest-first=1&user-id=19175"
+    },
+    "meta": {
+        "total": 20
+    },
+    "projects": [
+        {
+            "active": true,
+            "createdAt": "2018-06-22T10:41:31.281853Z",
+            "downloadedAt": null,
+            "id": 731851428862851,
+            "lockedAt": null,
+            "name": "gfgffd",
+            "outcome": null
+        },
+        {
+            "active": true,
+            "createdAt": "2018-06-19T13:36:37.557144Z",
+            "downloadedAt": "2018-06-19T13:37:30.849304Z",
+            "id": 272774709812396,
+            "lockedAt": "2018-06-19T13:37:03.176398Z",
+            "name": "22",
+            "outcome": {
+                "award": {
+                    "awardValue": "1234.00",
+                    "awardingOrganisationName": "123321",
+                    "endDate": "2020-12-12",
+                    "startDate": "2002-12-12"
+                },
+                "completed": true,
+                "completedAt": "2018-06-19T13:37:59.713497Z",
+                "id": 680306864633356,
+                "result": "awarded",
+                "resultOfDirectAward": {
+                    "archivedService": {
+                        "id": 266018,
+                        "service": {
+                            "id": "316684326093280"
+                        }
+                    },
+                    "project": {
+                        "id": 272774709812396
+                    },
+                    "search": {
+                        "id": 3706
+                    }
+                }
+            }
+        },
+        {
+            "active": true,
+            "createdAt": "2018-06-18T13:31:29.224123Z",
+            "downloadedAt": "2018-06-18T13:31:37.872389Z",
+            "id": 775976891996651,
+            "lockedAt": "2018-06-18T13:31:32.964841Z",
+            "name": "ffsdfds",
+            "outcome": {
+                "completed": true,
+                "completedAt": "2018-06-22T10:44:51.794561Z",
+                "id": 145577551555199,
+                "result": "none-suitable",
+                "resultOfDirectAward": {
+                    "project": {
+                        "id": 775976891996651
+                    }
+                }
+            }
+        },
+        {
+            "active": true,
+            "createdAt": "2018-06-18T13:25:50.904708Z",
+            "downloadedAt": "2018-06-18T13:26:05.865966Z",
+            "id": 815142480189020,
+            "lockedAt": "2018-06-18T13:25:57.345574Z",
+            "name": "test",
+            "outcome": {
+                "award": {
+                    "awardValue": "12321312.00",
+                    "awardingOrganisationName": "231312",
+                    "endDate": "2020-12-12",
+                    "startDate": "2020-01-12"
+                },
+                "completed": true,
+                "completedAt": "2018-06-18T13:26:46.489928Z",
+                "id": 788792086368549,
+                "result": "awarded",
+                "resultOfDirectAward": {
+                    "archivedService": {
+                        "id": 280364,
+                        "service": {
+                            "id": "129121823449847"
+                        }
+                    },
+                    "project": {
+                        "id": 815142480189020
+                    },
+                    "search": {
+                        "id": 3703
+                    }
+                }
+            }
+        },
+        {
+            "active": true,
+            "createdAt": "2018-06-18T11:36:02.115161Z",
+            "downloadedAt": "2018-06-18T13:22:10.636304Z",
+            "id": 268606220191818,
+            "lockedAt": "2018-06-18T11:36:22.884927Z",
+            "name": "tests",
+            "outcome": null
+        },
+        {
+            "active": true,
+            "createdAt": "2018-06-13T13:03:14.202837Z",
+            "downloadedAt": null,
+            "id": 370926404427435,
+            "lockedAt": "2018-06-13T13:03:18.894861Z",
+            "name": "fdsaf",
+            "outcome": {
+                "award": {
+                    "awardValue": "12345.00",
+                    "awardingOrganisationName": "241421421",
+                    "endDate": "2022-12-12",
+                    "startDate": "2020-12-12"
+                },
+                "completed": true,
+                "completedAt": "2018-06-13T13:15:25.373407Z",
+                "id": 925202150905373,
+                "result": "awarded",
+                "resultOfDirectAward": {
+                    "archivedService": {
+                        "id": 277880,
+                        "service": {
+                            "id": "385861074800862"
+                        }
+                    },
+                    "project": {
+                        "id": 370926404427435
+                    },
+                    "search": {
+                        "id": 3700
+                    }
+                }
+            }
+        },
+        {
+            "active": true,
+            "createdAt": "2018-06-13T12:02:46.691096Z",
+            "downloadedAt": null,
+            "id": 593972053423021,
+            "lockedAt": "2018-06-13T12:04:07.847282Z",
+            "name": "fsdfdsf",
+            "outcome": {
+                "completed": true,
+                "completedAt": "2018-06-13T12:04:20.827236Z",
+                "id": 545994680307999,
+                "result": "none-suitable",
+                "resultOfDirectAward": {
+                    "project": {
+                        "id": 593972053423021
+                    }
+                }
+            }
+        },
+        {
+            "active": true,
+            "createdAt": "2018-06-13T10:47:53.731719Z",
+            "downloadedAt": null,
+            "id": 227095350451575,
+            "lockedAt": "2018-06-13T10:51:51.523409Z",
+            "name": "www",
+            "outcome": {
+                "completed": true,
+                "completedAt": "2018-06-13T10:52:52.685831Z",
+                "id": 312301346958484,
+                "result": "cancelled",
+                "resultOfDirectAward": {
+                    "project": {
+                        "id": 227095350451575
+                    }
+                }
+            }
+        },
+        {
+            "active": true,
+            "createdAt": "2018-06-13T10:24:40.823515Z",
+            "downloadedAt": "2018-06-13T10:25:21.228995Z",
+            "id": 730286113278571,
+            "lockedAt": "2018-06-13T10:25:14.193930Z",
+            "name": "Show case",
+            "outcome": {
+                "completed": true,
+                "completedAt": "2018-06-13T10:40:27.093719Z",
+                "id": 816749299034928,
+                "result": "cancelled",
+                "resultOfDirectAward": {
+                    "project": {
+                        "id": 730286113278571
+                    }
+                }
+            }
+        },
+        {
+            "active": true,
+            "createdAt": "2018-06-13T10:19:36.764540Z",
+            "downloadedAt": "2018-06-13T10:21:13.544091Z",
+            "id": 144042085826852,
+            "lockedAt": "2018-06-13T10:21:08.400577Z",
+            "name": "test demo",
+            "outcome": {
+                "completed": true,
+                "completedAt": "2018-06-13T10:21:43.672052Z",
+                "id": 363115563590640,
+                "result": "none-suitable",
+                "resultOfDirectAward": {
+                    "project": {
+                        "id": 144042085826852
+                    }
+                }
+            }
+        },
+        {
+            "active": true,
+            "createdAt": "2018-06-13T10:19:15.442025Z",
+            "downloadedAt": null,
+            "id": 165117951600742,
+            "lockedAt": "2018-06-13T12:05:16.496730Z",
+            "name": "test",
+            "outcome": {
+                "completed": true,
+                "completedAt": "2018-06-13T12:05:27.620283Z",
+                "id": 948614767783239,
+                "result": "cancelled",
+                "resultOfDirectAward": {
+                    "project": {
+                        "id": 165117951600742
+                    }
+                }
+            }
+        },
+        {
+            "active": true,
+            "createdAt": "2018-06-13T10:10:16.885847Z",
+            "downloadedAt": "2018-06-13T10:10:24.689941Z",
+            "id": 574178156337956,
+            "lockedAt": "2018-06-13T10:10:19.994795Z",
+            "name": "tests",
+            "outcome": {
+                "award": {
+                    "awardValue": "30000.00",
+                    "awardingOrganisationName": "GDS",
+                    "endDate": "2022-12-12",
+                    "startDate": "2020-12-12"
+                },
+                "completed": true,
+                "completedAt": "2018-06-13T10:11:13.119766Z",
+                "id": 887416422646626,
+                "result": "awarded",
+                "resultOfDirectAward": {
+                    "archivedService": {
+                        "id": 290439,
+                        "service": {
+                            "id": "234641366819843"
+                        }
+                    },
+                    "project": {
+                        "id": 574178156337956
+                    },
+                    "search": {
+                        "id": 3691
+                    }
+                }
+            }
+        },
+        {
+            "active": true,
+            "createdAt": "2018-06-13T10:06:38.262590Z",
+            "downloadedAt": "2018-06-13T10:06:51.862170Z",
+            "id": 926231560227386,
+            "lockedAt": "2018-06-13T10:06:42.204796Z",
+            "name": "test demo",
+            "outcome": {
+                "completed": true,
+                "completedAt": "2018-06-13T10:08:43.750329Z",
+                "id": 972484188230473,
+                "result": "cancelled",
+                "resultOfDirectAward": {
+                    "project": {
+                        "id": 926231560227386
+                    }
+                }
+            }
+        },
+        {
+            "active": true,
+            "createdAt": "2018-06-12T13:21:08.894157Z",
+            "downloadedAt": null,
+            "id": 238699020615674,
+            "lockedAt": "2018-06-13T11:38:55.352146Z",
+            "name": "fdsfs",
+            "outcome": {
+                "award": {
+                    "awardValue": "312321.00",
+                    "awardingOrganisationName": "312312",
+                    "endDate": "2022-12-31",
+                    "startDate": "2020-12-31"
+                },
+                "completed": true,
+                "completedAt": "2018-06-13T11:39:35.604442Z",
+                "id": 318785505521659,
+                "result": "awarded",
+                "resultOfDirectAward": {
+                    "archivedService": {
+                        "id": 261368,
+                        "service": {
+                            "id": "243078288283071"
+                        }
+                    },
+                    "project": {
+                        "id": 238699020615674
+                    },
+                    "search": {
+                        "id": 3696
+                    }
+                }
+            }
+        },
+        {
+            "active": true,
+            "createdAt": "2018-06-11T13:33:33.456264Z",
+            "downloadedAt": "2018-06-11T13:46:13.726672Z",
+            "id": 883222647744645,
+            "lockedAt": "2018-06-11T13:34:43.351200Z",
+            "name": "testeste",
+            "outcome": {
+                "completed": true,
+                "completedAt": "2018-06-12T13:21:17.003408Z",
+                "id": 729859079137280,
+                "result": "none-suitable",
+                "resultOfDirectAward": {
+                    "project": {
+                        "id": 883222647744645
+                    }
+                }
+            }
+        },
+        {
+            "active": true,
+            "createdAt": "2018-06-11T11:25:30.682761Z",
+            "downloadedAt": null,
+            "id": 322775348397661,
+            "lockedAt": "2018-06-13T12:05:40.515822Z",
+            "name": "test",
+            "outcome": {
+                "award": {
+                    "awardValue": "1234.00",
+                    "awardingOrganisationName": "123321",
+                    "endDate": "2020-12-12",
+                    "startDate": "2012-12-12"
+                },
+                "completed": true,
+                "completedAt": "2018-06-13T12:06:05.703774Z",
+                "id": 378172500008168,
+                "result": "awarded",
+                "resultOfDirectAward": {
+                    "archivedService": {
+                        "id": 290439,
+                        "service": {
+                            "id": "234641366819843"
+                        }
+                    },
+                    "project": {
+                        "id": 322775348397661
+                    },
+                    "search": {
+                        "id": 3699
+                    }
+                }
+            }
+        },
+        {
+            "active": true,
+            "createdAt": "2018-06-11T11:17:13.851639Z",
+            "downloadedAt": "2018-06-11T11:17:23.967886Z",
+            "id": 379400377040928,
+            "lockedAt": "2018-06-11T11:17:19.220031Z",
+            "name": "db",
+            "outcome": {
+                "completed": true,
+                "completedAt": "2018-06-12T13:22:06.049400Z",
+                "id": 126269322275727,
+                "result": "cancelled",
+                "resultOfDirectAward": {
+                    "project": {
+                        "id": 379400377040928
+                    }
+                }
+            }
+        },
+        {
+            "active": true,
+            "createdAt": "2018-06-07T11:25:04.727593Z",
+            "downloadedAt": "2018-06-07T13:57:40.426018Z",
+            "id": 255107990746615,
+            "lockedAt": "2018-06-07T11:25:32.884392Z",
+            "name": "dfsfdsfda",
+            "outcome": null
+        },
+        {
+            "active": true,
+            "createdAt": "2018-06-05T11:28:55.824465Z",
+            "downloadedAt": "2018-06-07T14:09:20.588824Z",
+            "id": 606869699839590,
+            "lockedAt": "2018-06-07T14:09:16.255121Z",
+            "name": "fdsfs",
+            "outcome": {
+                "award": {
+                    "awardValue": "123.00",
+                    "awardingOrganisationName": "123",
+                    "endDate": "2022-12-12",
+                    "startDate": "2020-12-12"
+                },
+                "completed": true,
+                "completedAt": "2018-06-12T13:22:55.953150Z",
+                "id": 257742931727312,
+                "result": "awarded",
+                "resultOfDirectAward": {
+                    "archivedService": {
+                        "id": 273946,
+                        "service": {
+                            "id": "304481860979784"
+                        }
+                    },
+                    "project": {
+                        "id": 606869699839590
+                    },
+                    "search": {
+                        "id": 3685
+                    }
+                }
+            }
+        },
+        {
+            "active": true,
+            "createdAt": "2018-05-24T12:08:17.226976Z",
+            "downloadedAt": "2018-05-24T12:08:25.251541Z",
+            "id": 207198828251156,
+            "lockedAt": "2018-05-24T12:08:21.207534Z",
+            "name": "test",
+            "outcome": null
+        }
+    ]
 }
