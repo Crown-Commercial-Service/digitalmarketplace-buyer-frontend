@@ -3,7 +3,7 @@ from datetime import datetime
 import inflection
 from operator import itemgetter
 
-from flask import abort, render_template, request, redirect, current_app, url_for, flash, Markup
+from flask import abort, render_template, request, redirect, current_app, url_for, flash
 from flask_login import current_user
 from werkzeug.urls import Href, url_encode, url_decode
 
@@ -48,10 +48,10 @@ from ..presenters.service_presenters import Service
 
 
 END_SEARCH_LIMIT = 30  # TODO: This should be done in the API.
-PROJECT_SAVED_MESSAGE = Markup("Search saved.")
-PROJECT_ENDED_MESSAGE = Markup("Search ended. You can now download your search results.")
-TOO_MANY_RESULTS_MESSAGE = Markup(f"You have too many services to review. Refine your search until you have no more "
-                                  f"than {END_SEARCH_LIMIT} results.")
+PROJECT_SAVED_MESSAGE = "Search saved."
+PROJECT_ENDED_MESSAGE = "Search ended. You can now download your search results."
+TOO_MANY_RESULTS_MESSAGE = f"You have too many services to review. Refine your search until you have no more " \
+                           f"than {END_SEARCH_LIMIT} results."
 
 
 @main.route('/g-cloud')
@@ -674,7 +674,7 @@ def tell_us_about_contract(framework_family, project_id):
     form = TellUsAboutContractForm()
 
     if form.validate_on_submit():
-        flash(Markup(f"""You've updated '{project['name']}'"""), 'success')
+        flash(f"You've updated '{project['name']}'", 'success')
         return redirect(url_for('.view_project', framework_family=framework_family, project_id=project_id))
 
     errors = get_errors_from_wtform(form)
