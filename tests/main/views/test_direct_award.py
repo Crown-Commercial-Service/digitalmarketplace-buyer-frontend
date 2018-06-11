@@ -599,11 +599,11 @@ class TestDirectAwardAwardContract(TestDirectAwardBase):
             data={'which_service_won_the_contract': '123456789'})
 
         assert res.status_code == 302
-        assert res.location.endswith('/buyers/direct-award/g-cloud/projects/1/tell-us-about-contract')
+        assert res.location.endswith('/buyers/direct-award/g-cloud/projects/1/outcomes/1/tell-us-about-contract')
 
 
 class TestDirectAwardTellUsAboutContract(TestDirectAwardBase):
-    url = '/buyers/direct-award/g-cloud/projects/1/tell-us-about-contract'
+    url = '/buyers/direct-award/g-cloud/projects/1/outcomes/1/tell-us-about-contract'
 
     @pytest.fixture
     def client(self):

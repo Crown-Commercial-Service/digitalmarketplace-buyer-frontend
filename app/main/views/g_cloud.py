@@ -655,10 +655,10 @@ def which_service_won_contract(framework_family, project_id):
 
 
 @direct_award.route(
-    '/<string:framework_family>/projects/<int:project_id>/tell-us-about-contract',
+    '/<string:framework_family>/projects/<int:project_id>/outcomes/<int:outcome_id>/tell-us-about-contract',
     methods=['GET', 'POST']
 )
-def tell_us_about_contract(framework_family, project_id):
+def tell_us_about_contract(framework_family, project_id, outcome_id):
     all_frameworks = data_api_client.find_frameworks().get('frameworks')
     framework = framework_helpers.get_latest_live_framework(all_frameworks, framework_family)
 
@@ -681,10 +681,11 @@ def tell_us_about_contract(framework_family, project_id):
 
     return render_template(
         'direct-award/tell-us-about-contract.html',
-        project=project,
-        framework=framework,
-        form=form,
         errors=errors,
+        form=form,
+        framework=framework,
+        project=project,
+        outcome_id=outcome_id,
     ), 200 if not errors else 400
 
 

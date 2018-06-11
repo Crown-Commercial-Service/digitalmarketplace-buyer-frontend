@@ -47,7 +47,7 @@
         {% include "toolkit/page-heading.html" %}
       {% endwith %}
 
-      <form method="POST" action="{{ url_for('direct_award.tell_us_about_contract', framework_family=framework.framework, project_id=project.id) }}" class="tell-us-about-contract-form">
+      <form method="POST" action="{{ url_for('direct_award.tell_us_about_contract', framework_family=framework.framework, project_id=project.id, outcome_id=outcome_id) }}" class="tell-us-about-contract-form">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
 
         {%
