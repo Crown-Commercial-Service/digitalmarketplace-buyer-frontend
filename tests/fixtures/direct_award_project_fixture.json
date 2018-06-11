@@ -6,6 +6,7 @@
     "id": 1,
     "lockedAt": null,
     "name": "My procurement project",
+    "outcome": null,
     "users": [
       {
         "active": true,
