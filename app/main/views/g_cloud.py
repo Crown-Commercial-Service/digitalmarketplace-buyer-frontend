@@ -704,7 +704,7 @@ def tell_us_about_contract(framework_family, project_id, outcome_id):
             },
             user_email=current_user.email_address,
         )
-        flash("You've updated '{}'".format(project['name']), 'success')
+        flash("You’ve updated ‘{}’".format(project['name']), 'success')
         return redirect(url_for('.view_project', framework_family=framework_family, project_id=project_id))
 
     errors = get_errors_from_wtform(form)
@@ -750,7 +750,7 @@ def why_did_you_not_award_the_contract(framework_family, project_id):
             data_api_client.create_direct_award_project_outcome_none_suitable(
                 project_id=project_id,
                 user_email=current_user.email_address)
-        flash("You've updated {}".format(project['name']))
+        flash("You’ve updated ‘{}’".format(project['name']))
         return redirect(url_for('.view_project', framework_family=framework_family, project_id=project['id']))
 
     errors = get_errors_from_wtform(form)

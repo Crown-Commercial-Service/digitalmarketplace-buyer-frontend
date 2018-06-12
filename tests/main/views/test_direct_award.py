@@ -700,7 +700,7 @@ class TestDirectAwardTellUsAboutContract(TestDirectAwardBase):
         res = client.post(self.url, data=data)
         assert res.status_code == 302
         assert res.location.endswith('/buyers/direct-award/g-cloud/projects/1')
-        self.assert_flashes("You've updated 'My procurement project'", 'success')
+        self.assert_flashes("You’ve updated ‘My procurement project’", 'success')
 
     def test_tell_us_about_contract_post_raises_400_and_shows_validation_messages_if_no_form_input(self, client):
         res = client.post(self.url)
