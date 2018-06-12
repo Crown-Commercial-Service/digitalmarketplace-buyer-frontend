@@ -549,6 +549,14 @@ class TestDirectAwardAwardContract(TestDirectAwardBase):
         res = self.client.get('/buyers/direct-award/g-cloud/projects/1/did-you-award-contract')
         assert res.status_code == 400
 
+    def test_award_contract_raises_410_if_outcome_is_completed(self):
+        self.data_api_client.get_direct_award_project.return_value = \
+            self._get_direct_award_completed_project_fixture()
+        self.login_as_buyer()
+
+        res = self.client.get('/buyers/direct-award/g-cloud/projects/1/did-you-award-contract')
+        assert res.status_code == 410
+
     def test_which_service_did_you_award_page_renders(self):
         self.login_as_buyer()
 
@@ -591,6 +599,14 @@ class TestDirectAwardAwardContract(TestDirectAwardBase):
             '/buyers/direct-award/g-cloud/projects/1/which-service-won-contract')
         assert res.status_code == 400
 
+    def test_which_service_did_you_award_page_creates_direct_award_project_outcome(self):
+        self.login_as_buyer()
+        self.client.post(
+            '/buyers/direct-award/g-cloud/projects/1/which-service-won-contract',
+            data={'which_service_won_the_contract': '123456789'},
+        )
+        self.data_api_client.create_direct_award_project_outcome_award.assert_called_once()
+
     def test_which_service_did_you_award_should_redirect_to_tell_us_about_contract(self):
         self.login_as_buyer()
 
@@ -599,11 +615,19 @@ class TestDirectAwardAwardContract(TestDirectAwardBase):
             data={'which_service_won_the_contract': '123456789'})
 
         assert res.status_code == 302
-        assert res.location.endswith('/buyers/direct-award/g-cloud/projects/1/tell-us-about-contract')
+        assert res.location.endswith('/buyers/direct-award/g-cloud/projects/1/outcomes/1/tell-us-about-contract')
+
+    def test_which_service_raises_410_if_outcome_is_completed(self):
+        self.data_api_client.get_direct_award_project.return_value = \
+            self._get_direct_award_completed_project_fixture()
+        self.login_as_buyer()
+
+        res = self.client.get('/buyers/direct-award/g-cloud/projects/1/which-service-won-contract')
+        assert res.status_code == 410
 
 
 class TestDirectAwardTellUsAboutContract(TestDirectAwardBase):
-    url = '/buyers/direct-award/g-cloud/projects/1/tell-us-about-contract'
+    url = '/buyers/direct-award/g-cloud/projects/1/outcomes/1/tell-us-about-contract'
 
     @pytest.fixture
     def client(self):
@@ -632,6 +656,12 @@ class TestDirectAwardTellUsAboutContract(TestDirectAwardBase):
     def setup_method(self, method):
         super().setup_method(method)
         self.data_api_client.get_direct_award_project.return_value = self._get_direct_award_lock_project_fixture()
+        self.data_api_client.get_outcome.return_value = {
+            'outcome': {
+                'result': 'awarded',
+                'completed': False,
+            },
+        }
 
     def test_tell_us_about_contract_exists(self, client):
         assert client.get(self.url).status_code == 200
@@ -709,6 +739,12 @@ class TestDirectAwardTellUsAboutContract(TestDirectAwardBase):
         assert xpath('boolean(//div[@class="validation-masthead"])')
         assert xpath('count(//a[@class="validation-masthead-link"])') == 1
 
+    def test_raises_410_if_outcome_is_completed(self, client):
+        self.data_api_client.get_outcome.return_value['outcome']['completed'] = True
+
+        res = client.get(self.url)
+        assert res.status_code == 410
+
 
 class TestDirectAwardNonAwardContract(TestDirectAwardBase):
     def setup_method(self, method):
@@ -748,6 +784,30 @@ class TestDirectAwardNonAwardContract(TestDirectAwardBase):
         res = self.client.get(
             '/buyers/direct-award/g-cloud/projects/1/why-didnt-you-award-contract')
         assert res.status_code == 400
+
+    def test_why_did_you_not_award_page_creates_direct_award_project_outcome(self):
+        self.login_as_buyer()
+
+        self.client.post(
+            '/buyers/direct-award/g-cloud/projects/1/why-didnt-you-award-contract',
+            data={'why_did_you_not_award_the_contract': 'work_cancelled'}
+        )
+        self.data_api_client.create_direct_award_project_outcome_cancelled.assert_called_once()
+
+        self.client.post(
+            '/buyers/direct-award/g-cloud/projects/1/why-didnt-you-award-contract',
+            data={'why_did_you_not_award_the_contract': 'no_suitable_services'}
+        )
+        self.data_api_client.create_direct_award_project_outcome_none_suitable.assert_called_once()
+
+    def test_why_did_you_not_award_page_raises_410_if_outcome_is_completed(self):
+        self.login_as_buyer()
+        self.data_api_client.get_direct_award_project.return_value = \
+            self._get_direct_award_completed_project_fixture()
+
+        res = self.client.get(
+            '/buyers/direct-award/g-cloud/projects/1/why-didnt-you-award-contract')
+        assert res.status_code == 410
 
 
 class TestDirectAwardResultsPage(TestDirectAwardBase):

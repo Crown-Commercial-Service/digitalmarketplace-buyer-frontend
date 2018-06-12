@@ -223,6 +223,12 @@ class BaseApplicationTest(object):
         return BaseApplicationTest._get_direct_award_project_fixture(lockedAt=False)
 
     @staticmethod
+    def _get_direct_award_completed_project_fixture():
+        fixture = BaseApplicationTest._get_direct_award_lock_project_fixture()
+        fixture['project']['outcome'] = {'completed': True}
+        return fixture
+
+    @staticmethod
     def _get_direct_award_project_searches_fixture(only_active=False):
         searches = BaseApplicationTest._get_fixture_data('direct_award_project_searches_fixture.json')
 

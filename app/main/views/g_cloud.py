@@ -575,6 +575,9 @@ def did_you_award_contract(framework_family, project_id):
     if not project['lockedAt']:
         abort(400)
 
+    if project['outcome']:
+        abort(410)
+
     form = DidYouAwardAContractForm()
     if form.validate_on_submit():
         if form.did_you_award_a_contract.data == form.STILL_ASSESSING:
@@ -616,6 +619,9 @@ def which_service_won_contract(framework_family, project_id):
     if not project['lockedAt']:
         abort(400)
 
+    if project['outcome']:
+        abort(410)
+
     all_frameworks = data_api_client.find_frameworks().get('frameworks')
     framework = framework_helpers.get_latest_live_framework(
         all_frameworks, framework_family)
@@ -638,9 +644,15 @@ def which_service_won_contract(framework_family, project_id):
 
     form = WhichServiceWonTheContractForm(services)
 
-    if request.method == "POST" and form.validate_on_submit():
-        flash('Contract awarded.')
-        return redirect(url_for('.tell_us_about_contract', framework_family=framework_family, project_id=project['id']))
+    if form.validate_on_submit():
+        outcome = data_api_client.create_direct_award_project_outcome_award(
+            project_id=project_id,
+            awarded_service_id=form.which_service_won_the_contract.data,
+            user_email=current_user.email_address)
+        return redirect(url_for('.tell_us_about_contract',
+                                framework_family=framework_family,
+                                project_id=project['id'],
+                                outcome_id=outcome['outcome']['id']))
 
     errors = get_errors_from_wtform(form)
 
@@ -655,10 +667,10 @@ def which_service_won_contract(framework_family, project_id):
 
 
 @direct_award.route(
-    '/<string:framework_family>/projects/<int:project_id>/tell-us-about-contract',
+    '/<string:framework_family>/projects/<int:project_id>/outcomes/<int:outcome_id>/tell-us-about-contract',
     methods=['GET', 'POST']
 )
-def tell_us_about_contract(framework_family, project_id):
+def tell_us_about_contract(framework_family, project_id, outcome_id):
     all_frameworks = data_api_client.find_frameworks().get('frameworks')
     framework = framework_helpers.get_latest_live_framework(all_frameworks, framework_family)
 
@@ -671,20 +683,39 @@ def tell_us_about_contract(framework_family, project_id):
     if not project['lockedAt']:
         abort(400)
 
+    outcome = data_api_client.get_outcome(outcome_id)['outcome']
+    if outcome['completed']:
+        abort(410)
+
     form = TellUsAboutContractForm()
 
     if form.validate_on_submit():
-        flash(f"You've updated '{project['name']}'", 'success')
+        data_api_client.update_outcome(
+            outcome_id,
+            {
+                'award':
+                {
+                    'startDate': form.start_date.data.isoformat(),
+                    'endDate': form.end_date.data.isoformat(),
+                    'awardValue': str(form.value_in_pounds.data),
+                    'awardingOrganisationName': form.buying_organisation.data,
+                },
+                'completed': True,
+            },
+            user_email=current_user.email_address,
+        )
+        flash("You've updated '{}'".format(project['name']), 'success')
         return redirect(url_for('.view_project', framework_family=framework_family, project_id=project_id))
 
     errors = get_errors_from_wtform(form)
 
     return render_template(
         'direct-award/tell-us-about-contract.html',
-        project=project,
-        framework=framework,
-        form=form,
         errors=errors,
+        form=form,
+        framework=framework,
+        project=project,
+        outcome_id=outcome_id,
     ), 200 if not errors else 400
 
 
@@ -705,10 +736,21 @@ def why_did_you_not_award_the_contract(framework_family, project_id):
     if not project['lockedAt']:
         abort(400)
 
+    if project['outcome']:
+        abort(410)
+
     form = WhyDidYouNotAwardForm()
 
     if form.validate_on_submit():
-        flash('You’ve updated ‘' + project['name'] + '’')
+        if form.why_did_you_not_award_the_contract.data == 'work_cancelled':
+            data_api_client.create_direct_award_project_outcome_cancelled(
+                project_id=project_id,
+                user_email=current_user.email_address)
+        elif form.why_did_you_not_award_the_contract.data == 'no_suitable_services':
+            data_api_client.create_direct_award_project_outcome_none_suitable(
+                project_id=project_id,
+                user_email=current_user.email_address)
+        flash("You've updated {}".format(project['name']))
         return redirect(url_for('.view_project', framework_family=framework_family, project_id=project['id']))
 
     errors = get_errors_from_wtform(form)
