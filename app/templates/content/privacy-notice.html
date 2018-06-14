@@ -1,6 +1,6 @@
 {% extends "toolkit/layouts/_base_page.html" %}
 
-{% block page_title %}How your data is used (‘Privacy Notice’) - Digital Marketplace{% endblock %}
+{% block page_title %}How we use your data (‘privacy notice’) - Digital Marketplace{% endblock %}
 
 {% block breadcrumb %}
   {%
@@ -22,14 +22,14 @@
 
       
       <header class="page-heading">
-        <h1>How your data is used (‘Privacy Notice’)</h1>
+        <h1>How we use your data (‘privacy notice’)</h1>
       </header>
-      <p>The Digital Marketplace is built and run by the Government Digital Service (GDS).</p>
-      <p>We collect your personal data as part of our service. We use it when you create user accounts to buy or sell digital services. This is fully compliant with UK and EU law.</p>
+      <p>The Digital Marketplace is built and run by the Cabinet Office.</p>
+      <p>Cabinet Office is the data controller. A data controller determines how and why personal data can be processed. Check the Cabinet Office’s entry in the Data Protection Public Register for more information.</p>
 
 
       <div class="dmspeak">
-        <h2 class="heading-xmedium">What personal data we collect</h2>
+        <h2 class="heading-xmedium">What data we collect from you</h2>
       </div>
 
       <div class="check-list">
@@ -37,7 +37,8 @@
         <ul class="list-bullet">
           <li>email addresses and contact details (phone number and address)</li>
           <li>company name and contact information (suppliers only)</li>
-        </ul>
+          </ul>
+        <p>We use this data when you create user accounts to buy or sell digital services.</p> 
       </div>
 
       <h3>Your email address and contact details</h3>
@@ -64,21 +65,42 @@
       <h3>Cookies and analytics</h3>
       <p>You can read our <a href="{{ url_for('.cookies') }}">full cookie policy</a> to find out how we use cookies to track user journeys using Google Analytics.</p>
       <div class="dmspeak">
-        <h2 class="heading-xmedium">How we share your information</h2>
+        <h2 class="heading-xmedium">What we do with your data</h2>
       </div>
-      <p>We share some of your information with the Crown Commercial Service (CCS) so they can manage the live services or frameworks and make sure spend data is collected correctly.</p>
-      <p>We either share your data direct from our database or through the admin function of the Digital Marketplace, which gives staff access to the data they need to do their jobs.</p>
-
+      <p>Digital Marketplace staff have access to the data they need to manage the live services or frameworks, and make sure spend data is collected correctly.</p>
+      <div class="check-list">
+        <p class="lead">We will not:</p>
+        <ul class="list-bullet">
+          <li>sell or rent your data to third parties</li>
+          <li>share your data with third parties for marketing purposes</li>
+        </ul>
+      </div>
+      <p>We will share your data if we’re required to do so by law – for example, by court order, or to prevent fraud or other crime.</p>
 
       <div class="dmspeak">
-        <h2 class="heading-xmedium">How long your personal data is stored</h2>
+        <h2 class="heading-xmedium">How long we keep your data</h2>
       </div>
       <p>We’ll store your data in our database for as long as you have an active account on the Digital Marketplace.</p>
 
       <h3>If your account becomes inactive</h3>
-      <p>We’ll keep your data for 3 years. This includes your email, username and password, unless you ask us to delete it before then.</p>
+      <p>If your account becomes inactive, we’ll keep any data related to a framework agreement for 7 years.</p>
+      <p>Any data not related to a framework agreement, for example your email address or password, will be deleted after 3 years. If you prefer, you can ask us to delete this information earlier.</p>
 
 
+      <div class="dmspeak">
+        <h2 class="heading-xmedium">Where your data is processed and stored</h2>
+      </div>
+      <p>Your personal data may be transferred outside the European Economic Area (EEA). If this happens, we’ll make sure that you’re given the same level of legal protection as within the EEA.</p>
+
+
+      <div class="dmspeak">
+        <h2 class="heading-xmedium">How we protect your data and keep it secure</h2>
+      </div>
+      <p>We’re committed to doing all that we can to keep your data secure.</p>
+      <p>We set up systems and processes to prevent unauthorised access to or disclosure of the data we collect about you – for example, we protect your data using varying levels of encryption.</p>
+      <p>All third parties that process personal data for Cabinet Office are required to keep that data secure.</p>
+
+      
       <div class="dmspeak">
         <h2 class="heading-xmedium">Children’s privacy protection</h2>
       </div>
@@ -86,49 +108,36 @@
 
 
       <div class="dmspeak">
-        <h2 class="heading-xmedium">Where your data might go</h2>
-      </div>
-      <p>Your personal data may be transferred outside the European Economic Area (EEA). If this happens, we’ll make sure wherever possible that you’re given the same level of legal protection as within the EEA.</p>
-
-
-      <div class="dmspeak">
-        <h2 class="heading-xmedium">How we protect your data and keep it secure</h2>
-      </div>
-      <p>We follow industry standard best practices for keeping your personal data secure, and to prevent unauthorised access or disclosure.</p>
-      <p>We also make sure that any third parties we deal with have an obligation to keep all personal data they process on our behalf secure.</p>
-
-
-      <div class="dmspeak">
-        <h2 class="heading-xmedium">Who controls your data</h2>
-      </div>
-      <p>The data controller for your personal data is the Cabinet Office.</p>
-
-
-      <div class="dmspeak">
-        <h2 class="heading-xmedium">Changes to this notice</h2>
-      </div>
-      <p>We may modify or amend this privacy notice at any time. Any modification or amendment to this privacy notice will be applied to your data immediately. We encourage you to review this privacy notice regularly to stay informed about how we’re protecting your data.</p>
-
-
-      <div class="dmspeak">
-        <h2 class="heading-xmedium">What are your rights</h2>
+        <h2 class="heading-xmedium">Your rights</h2>
       </div>
       <div class="check-list">
-        <p class="lead">You have the right to ask for:</p>
+        <p class="lead">You have the right to:</p>
         <ul class="list-bullet">
-          <li>information about how your personal data is processed</li>
-          <li>a copy of all the personal data you’ve given to us</li>
-          <li>any mistakes in your personal data to be corrected</li>
-          <li>your personal data to be erased if we no longer need to hold it</li>
+          <li>ask for information about how your personal data is processed</li>
+          <li>ask for a copy of all the personal data you’ve given to us - this copy will be provided in a structured, commonly used and machine-readable format</li>
+          <li>ask for any mistakes in your personal data to be corrected</li>
+          <li>ask for your personal data to be erased if we no longer need to hold it</li>
+          <li>raise an objection about how your personal data is processed</li>
+          <li>ask that <a href="https://ico.org.uk/your-data-matters/your-right-to-limit-how-organisations-use-your-data/">we only process your data in certain circumstances</a></li>
+
         </ul>
       </div>
       <p>If your personal data is processed on the basis of consent, you can withdraw your consent at any time.</p>
 
 
       <div class="dmspeak">
-        <h2 class="heading-xmedium">How to contact us</h2>
+        <h2 class="heading-xmedium">Questions and complaints</h2>
       </div>
-      <p>If you have any questions, or if you believe your personal data has been misused or mishandled, you can contact the Cabinet Office Data Protection Officer (DPO).</p>
+      <p>Contact the Data Protection Officer (DPO) if you either:</p>
+      
+      <div class="check-list">
+        <p class="lead">You have the right to:</p>
+        <ul class="list-bullet">
+          <li>have any questions about anything in this notice</li>
+          <li>think that your personal data has been misused or mishandled</li>
+          <li>want to <a href="https://ico.org.uk/your-data-matters/your-right-of-access/">make a subject access request</a></li>
+        </ul>
+      </div>
 
       <h3>Email</h3>
       <p><a href="mailto:dpo@cabinetoffice.gov.uk">DPO@cabinetoffice.gov.uk</a></p>
@@ -151,7 +160,7 @@
       <h3>Email</h3>
       <p><a href="mailto:casework@ico.org.uk">casework@ico.org.uk</a></p>
 
-      <h3>Phone</h3>
+      <h3>Telephone</h3>
       <p><a href="tel:0303 123 1113">0303 123 1113</a></p>
 
       <h3>Post</h3>
@@ -162,7 +171,12 @@
         <li>Wilmslow</li>
         <li>Cheshire SK9 5AF</li>
       </ul>
-
     </div>
-  </div>
+    
+     <div class="dmspeak">
+        <h2 class="heading-xmedium">Changes to this notice</h2>
+      </div>
+      <p>We may modify or amend this privacy notice at any time. Any modification or amendment to this privacy notice will be applied to your data immediately. We encourage you to review this privacy notice regularly to stay informed about how we’re protecting your data.</p>
+  
+</div>
 {% endblock %}
