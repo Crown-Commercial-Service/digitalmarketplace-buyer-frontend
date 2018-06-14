@@ -480,6 +480,20 @@ def view_project(framework_family, project_id):
     content_loader.load_messages(framework['slug'], ['urls'])
     framework_urls = content_loader.get_message(framework['slug'], 'urls')
 
+    # Project outcome
+
+    project_outcome_label = None
+
+    if project['outcome'] and project['outcome']['result'] == "cancelled":
+        project_outcome_label = "The work has been cancelled"
+    elif project['outcome'] and project['outcome']['result'] == "none-suitable":
+        project_outcome_label = "No suitable services found"
+    elif project['outcome'] and project['outcome']['result'] == "awarded":
+        archived_service_id = project['outcome']['resultOfDirectAward']['archivedService']['id']
+        archived_service = data_api_client.get_archived_service(archived_service_id=archived_service_id)['services']
+        project_outcome_label = \
+            "Contract awarded to {}: {}".format(archived_service['supplierName'], archived_service['serviceName'])
+
     # Current Project Stage
     current_project_stage = None
 
@@ -507,7 +521,8 @@ def view_project(framework_family, project_id):
                            framework_urls=framework_urls,
                            call_off_contract_url=framework_urls['call_off_contract_url'],
                            customer_benefits_record_form_url=framework_urls['customer_benefits_record_form_url'],
-                           customer_benefits_record_form_email=framework_urls['customer_benefits_record_form_email'])
+                           customer_benefits_record_form_email=framework_urls['customer_benefits_record_form_email'],
+                           project_outcome_label=project_outcome_label)
 
 
 @direct_award.route('/<string:framework_family>/projects/<int:project_id>/end-search', methods=['GET', 'POST'])
