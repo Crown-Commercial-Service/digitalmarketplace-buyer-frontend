@@ -687,6 +687,9 @@ def tell_us_about_contract(framework_family, project_id, outcome_id):
     if outcome['completed']:
         abort(410)
 
+    if outcome['resultOfDirectAward']['project']['id'] != project_id:
+        abort(404)
+
     form = TellUsAboutContractForm()
 
     if form.validate_on_submit():
