@@ -740,6 +740,12 @@ class TestDirectAwardTellUsAboutContract(TestDirectAwardBase):
         res = client.get(self.url)
         assert res.status_code == 410
 
+    def test_raises_404_if_outcome_is_not_assigned_to_project(self, client):
+        self.data_api_client.get_outcome.return_value['outcome']['resultOfDirectAward']['project']['id'] = 314157
+
+        res = client.get(self.url)
+        assert res.status_code == 404
+
 
 class TestDirectAwardNonAwardContract(TestDirectAwardBase):
     def setup_method(self, method):
