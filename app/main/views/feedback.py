@@ -1,6 +1,6 @@
 import requests
 
-from flask import current_app, request, redirect, flash, Markup
+from flask import current_app, request, redirect, flash, Markup, url_for
 from werkzeug.datastructures import MultiDict
 from werkzeug.urls import url_parse
 
@@ -28,8 +28,9 @@ def send_feedback():
     flash(Markup(
         """Thank you for your message. If you have more detailed feedback, please email
         <a href="mailto:enquiries@digitalmarketplace.service.gov.uk">enquiries@digitalmarketplace.service.gov.uk</a> or
-        <a target="_blank" rel="external noopener noreferrer" href="https://airtable.com/shrkFM8L6Wfenzn5Q">take
+        <a target="_blank" rel="external noopener noreferrer"
+        href="{}">take
         part in our research</a>.
-        """))
+        """.format(url_for('external.user_research_consent'))))
 
     return redirect(replaced, code=303)
