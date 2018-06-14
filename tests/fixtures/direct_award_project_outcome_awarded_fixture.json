@@ -1,0 +1,11 @@
+{
+  "outcome": {
+    "result": "awarded",
+    "completed": false,
+    "resultOfDirectAward": {
+      "project": {
+        "id": 1
+      }
+    }
+  }
+}

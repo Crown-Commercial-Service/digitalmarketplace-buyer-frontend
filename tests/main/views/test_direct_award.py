@@ -551,7 +551,7 @@ class TestDirectAwardAwardContract(TestDirectAwardBase):
 
     def test_award_contract_raises_410_if_outcome_is_completed(self):
         self.data_api_client.get_direct_award_project.return_value = \
-            self._get_direct_award_completed_project_fixture()
+            self._get_direct_award_project_with_completed_outcome_awarded_fixture()
         self.login_as_buyer()
 
         res = self.client.get('/buyers/direct-award/g-cloud/projects/1/did-you-award-contract')
@@ -619,7 +619,7 @@ class TestDirectAwardAwardContract(TestDirectAwardBase):
 
     def test_which_service_raises_410_if_outcome_is_completed(self):
         self.data_api_client.get_direct_award_project.return_value = \
-            self._get_direct_award_completed_project_fixture()
+            self._get_direct_award_project_with_completed_outcome_awarded_fixture()
         self.login_as_buyer()
 
         res = self.client.get('/buyers/direct-award/g-cloud/projects/1/which-service-won-contract')
@@ -656,12 +656,7 @@ class TestDirectAwardTellUsAboutContract(TestDirectAwardBase):
     def setup_method(self, method):
         super().setup_method(method)
         self.data_api_client.get_direct_award_project.return_value = self._get_direct_award_lock_project_fixture()
-        self.data_api_client.get_outcome.return_value = {
-            'outcome': {
-                'result': 'awarded',
-                'completed': False,
-            },
-        }
+        self.data_api_client.get_outcome.return_value = self._get_direct_award_project_outcome_awarded_fixture()
 
     def test_tell_us_about_contract_exists(self, client):
         assert client.get(self.url).status_code == 200
@@ -803,7 +798,7 @@ class TestDirectAwardNonAwardContract(TestDirectAwardBase):
     def test_why_did_you_not_award_page_raises_410_if_outcome_is_completed(self):
         self.login_as_buyer()
         self.data_api_client.get_direct_award_project.return_value = \
-            self._get_direct_award_completed_project_fixture()
+            self._get_direct_award_project_with_completed_outcome_awarded_fixture()
 
         res = self.client.get(
             '/buyers/direct-award/g-cloud/projects/1/why-didnt-you-award-contract')
