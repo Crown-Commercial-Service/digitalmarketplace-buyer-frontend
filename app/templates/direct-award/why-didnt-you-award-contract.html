@@ -23,8 +23,8 @@
         "label": project.name
       },
       {
-        "link": url_for('direct_award.view_project', framework_family=framework.framework, project_id=project.id),
-        "label": "Did you award a contract"
+        "link": url_for('direct_award.did_you_award_contract', framework_family=framework.framework, project_id=project.id),
+        "label": "Did you award a contract?"
       }
     ]
   %}
@@ -64,7 +64,7 @@
         {% endwith %}
       </form>
 
-      <p><a href="{{ url_for('direct_award.view_project', framework_family=framework.framework, project_id=project.id) }}">Previous page</a></p>
+      <p><a href="{{ url_for('direct_award.did_you_award_contract', framework_family=framework.framework, project_id=project.id) }}">Previous page</a></p>
     </div>
   </div>
 
