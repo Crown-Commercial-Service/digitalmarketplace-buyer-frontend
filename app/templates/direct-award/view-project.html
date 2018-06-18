@@ -104,7 +104,7 @@
                 data-analytics-action=\"External Link\"
                 >how to award a contract when you buy services</a>."])|safe},
               {"type": "text", "text": ''.join(["The buyer and supplier must both sign a copy of the contract before the service can be used."])|safe},
-              {"type": "box", "style": "inactive", "label": "Can't start yet"} if not search.searchedAt
+              {"type": "box", "style": "inactive", "label": "Can't start yet"} if not project.downloadedAt
               else {"type": "box", "style": "complete", "label": project_outcome_label } if project.outcome
               else {"type": "action", "label": "Tell us the outcome", "href": url_for('direct_award.did_you_award_contract', framework_family=framework.framework, project_id=project.id), "analytics": "trackEvent", "analytics_category": "Direct Award", "analytics_action": "Internal Link"}
             ]
