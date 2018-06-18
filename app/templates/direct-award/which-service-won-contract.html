@@ -37,41 +37,45 @@
 
 <div class="which-service-won-contract-page">
   <div class="grid-row">
-    {% with heading = 'Which service won the contract?' %}
-      {% include 'toolkit/page-heading.html' %}
-    {% endwith %}
+    <div class="column-two-thirds">
 
-      {% if form.which_service_won_the_contract.options %}
+    
+      {% with heading = 'Which service won the contract?' %}
+        {% include 'toolkit/page-heading.html' %}
+      {% endwith %}
 
-      <form method="POST" action="{{ url_for('direct_award.which_service_won_contract', framework_family=framework.framework, project_id=project.id) }}">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-        {%
-          with
-          name = "which_service_won_the_contract",
-          type = "radio",
-          value = form.which_service_won_the_contract.value,
-          error = errors.get('which_service_won_the_contract', {}).get('message', None),
-          options = form.which_service_won_the_contract.options
-        %}
-          {% include "toolkit/forms/selection-buttons.html" %}
-        {% endwith %}
+        {% if form.which_service_won_the_contract.options %}
 
-        {%
-          with
-          type = "save",
-          label = "Save and continue"
-        %}
-          {% include "toolkit/button.html" %}
-        {% endwith %}
-      </form>
+        <form method="POST" action="{{ url_for('direct_award.which_service_won_contract', framework_family=framework.framework, project_id=project.id) }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+          {%
+            with
+            name = "which_service_won_the_contract",
+            type = "radio",
+            value = form.which_service_won_the_contract.value,
+            error = errors.get('which_service_won_the_contract', {}).get('message', None),
+            options = form.which_service_won_the_contract.options
+          %}
+            {% include "toolkit/forms/selection-buttons.html" %}
+          {% endwith %}
 
-      {% else %}
-        <div class="dmspeak">
-          <p>You cannot award this contract as there were no services matching your requirements.</p>
-        </div>
-      {% endif %}
+          {%
+            with
+            type = "save",
+            label = "Save and continue"
+          %}
+            {% include "toolkit/button.html" %}
+          {% endwith %}
+        </form>
 
-      <p><a href="{{ url_for('direct_award.did_you_award_contract', framework_family=framework.framework, project_id=project.id) }}">Previous page</a></p>
+        {% else %}
+          <div class="dmspeak">
+            <p>You cannot award this contract as there were no services matching your requirements.</p>
+          </div>
+        {% endif %}
+
+        <p><a href="{{ url_for('direct_award.did_you_award_contract', framework_family=framework.framework, project_id=project.id) }}">Previous page</a></p>
+      </div>
     </div>
   </div>
 

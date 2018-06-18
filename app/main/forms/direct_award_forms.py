@@ -61,7 +61,7 @@ class WhichServiceWonTheContractForm(FlaskForm):
         self.which_service_won_the_contract.options = [{
             "label": service["data"]["serviceName"],
             "value": service["id"],
-            "description": service["supplier"]["name"]
+            "hint": service["supplier"]["name"],
         } for service in services['services']]
 
 
@@ -114,12 +114,12 @@ class WhyDidYouNotAwardForm(FlaskForm):
             {
                 "label": "The work has been cancelled",
                 "value": "work_cancelled",
-                "description": "For example, because you no longer have the budget",
+                "hint": "For example, because you no longer have the budget",
             },
             {
                 "label": "There were no suitable services",
                 "value": "no_suitable_services",
-                "description": "The services in your search results did not meet your requirements",
+                "hint": "The services in your search results did not meet your requirements",
             },
         ]
 

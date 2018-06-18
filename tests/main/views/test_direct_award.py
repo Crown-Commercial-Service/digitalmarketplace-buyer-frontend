@@ -341,7 +341,7 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
                                    '/buyers/direct-award/g-cloud/projects/1/results') is True
 
         assert self._task_has_link(tasklist, 6,
-                                   '/buyers/direct-award/g-cloud/projects/1/did-you-award-contract') is True
+                                   '/buyers/direct-award/g-cloud/projects/1/did-you-award-contract') is False
 
     def test_overview_renders_specific_elements_for_search_downloaded_state(self):
         searches = self._get_direct_award_project_searches_fixture()
@@ -571,7 +571,7 @@ class TestDirectAwardAwardContract(TestDirectAwardBase):
         assert len(doc.xpath(
             '//input[@type="radio"][contains(following-sibling::label, "Service name")]')) == 1
         assert len(doc.xpath(
-            '//p[contains(normalize-space(text()), "Supplier name")][contains(parent::label, "Service name")]')) == 1
+            '//span[contains(normalize-space(text()), "Supplier name")][contains(parent::label, "Service name")]')) == 1
         assert len(
             doc.xpath('//input[@type="submit"][@value="Save and continue"]')) == 1
 
@@ -769,12 +769,12 @@ class TestDirectAwardNonAwardContract(TestDirectAwardBase):
         assert len(doc.xpath(
             '//input[@type="radio"][contains(following-sibling::label, "The work has been cancelled")]')) == 1
         assert len(doc.xpath(
-            '//p[contains(normalize-space(text()), "For example, because you no longer have the budget")]\
+            '//span[contains(normalize-space(text()), "For example, because you no longer have the budget")]\
             [contains(parent::label, "The work has been cancelled")]')) == 1
         assert len(doc.xpath(
             '//input[@type="radio"][contains(following-sibling::label, "The work has been cancelled")]')) == 1
         assert len(doc.xpath(
-            '//p[contains(normalize-space(text()), "The services in your search results did not meet your requirements")]\
+            '//span[contains(normalize-space(text()), "The services in your search results did not meet your requirements")]\
             [contains(parent::label, "There were no suitable services")]')) == 1
         assert len(
             doc.xpath('//input[@type="submit"][@value="Save and continue"]')) == 1
