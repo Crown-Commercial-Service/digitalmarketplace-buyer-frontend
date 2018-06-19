@@ -499,7 +499,7 @@ def view_project(framework_family, project_id):
     current_project_stage = None
 
     if project['outcome']:
-        current_project_stage = project['outcome']
+        current_project_stage = project['outcome']['result']
     elif project['downloadedAt']:
         current_project_stage = 'download_results'
     elif project['lockedAt']:
