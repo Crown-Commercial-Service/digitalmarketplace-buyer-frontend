@@ -38,6 +38,7 @@ describe("GOVUK.Analytics", function () {
       spyOn(window.GOVUK.GDM.analytics.events, 'init');
       spyOn(window.GOVUK.GDM.analytics.scrollTracking, 'init');
       spyOn(window.GOVUK.GDM.analytics.trackExternalLinks, 'init');
+      spyOn(window.GOVUK.GDM.analytics.buyerSpecificEvents, 'init');
 
       window.GOVUK.GDM.analytics.init();
 
@@ -46,6 +47,7 @@ describe("GOVUK.Analytics", function () {
       expect(window.GOVUK.GDM.analytics.events.init).toHaveBeenCalled();
       expect(window.GOVUK.GDM.analytics.scrollTracking.init).toHaveBeenCalled();
       expect(window.GOVUK.GDM.analytics.trackExternalLinks.init).toHaveBeenCalled();
+      expect(window.GOVUK.GDM.analytics.buyerSpecificEvents.init).toHaveBeenCalled();
     });
   });
 
@@ -82,7 +84,7 @@ describe("GOVUK.Analytics", function () {
 
       mockLink.appendChild(document.createTextNode('Download supplier responses to ‘Brief 1’'));
       mockLink.href = assetHost + '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1/responses/download';
-      GOVUK.GDM.analytics.events.supplierListDownload({ 'target': mockLink });
+      GOVUK.GDM.analytics.buyerSpecificEvents.supplierListDownload({ 'target': mockLink });
       expect(window.ga.calls.first().args).toEqual(['send', {
         'hitType': 'event',
         'eventCategory': 'download',
@@ -101,7 +103,7 @@ describe("GOVUK.Analytics", function () {
 
       mockLink.appendChild(document.createTextNode('Download supplier responses to ‘Brief 1’'));
       mockLink.href = assetHost + '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1/responses/download';
-      GOVUK.GDM.analytics.events.supplierListDownload({ 'target': mockLink });
+      GOVUK.GDM.analytics.buyerSpecificEvents.supplierListDownload({ 'target': mockLink });
       expect(window.ga.calls.first().args).toEqual(['send', {
         'hitType': 'event',
         'eventCategory': 'download',
@@ -132,7 +134,7 @@ describe("GOVUK.Analytics", function () {
       $(mockLink).append('<span class="document-icon">CSV</span><span> document:</span></span>');
       mockLink.appendChild(document.createTextNode('List of labs'));
       mockLink.href = assetHost + '/digital-outcomes-and-specialists/communications/catalogues/user-research-studios.csv';
-      GOVUK.GDM.analytics.events.supplierListDownload({ 'target': mockLink });
+      GOVUK.GDM.analytics.buyerSpecificEvents.supplierListDownload({ 'target': mockLink });
       expect(window.ga.calls.first().args).toEqual(['send', {
         'hitType': 'event',
         'eventCategory': 'download',
@@ -149,7 +151,7 @@ describe("GOVUK.Analytics", function () {
 
       mockLink.appendChild(document.createTextNode('Download list of suppliers.'));
       mockLink.href = assetHost + '/digital-outcomes-and-specialists/communications/catalogues/user-research-participants-suppliers.csv';
-      GOVUK.GDM.analytics.events.supplierListDownload({ 'target': mockLink });
+      GOVUK.GDM.analytics.buyerSpecificEvents.supplierListDownload({ 'target': mockLink });
       expect(window.ga.calls.first().args).toEqual(['send', {
         'hitType': 'event',
         'eventCategory': 'download',
@@ -166,7 +168,7 @@ describe("GOVUK.Analytics", function () {
 
       mockLink.appendChild(document.createTextNode('Download list of suppliers.'));
       mockLink.href = assetHost + '/digital-outcomes-and-specialists/communications/catalogues/digital-specialists-suppliers.csv';
-      GOVUK.GDM.analytics.events.supplierListDownload({ 'target': mockLink });
+      GOVUK.GDM.analytics.buyerSpecificEvents.supplierListDownload({ 'target': mockLink });
       expect(window.ga.calls.first().args).toEqual(['send', {
         'hitType': 'event',
         'eventCategory': 'download',
@@ -183,7 +185,7 @@ describe("GOVUK.Analytics", function () {
 
       mockLink.appendChild(document.createTextNode('Download list of suppliers.'));
       mockLink.href = assetHost + '/digital-outcomes-and-specialists/communications/catalogues/digital-outcomes-suppliers.csv';
-      GOVUK.GDM.analytics.events.supplierListDownload({ 'target': mockLink });
+      GOVUK.GDM.analytics.buyerSpecificEvents.supplierListDownload({ 'target': mockLink });
       expect(window.ga.calls.first().args).toEqual(['send', {
         'hitType': 'event',
         'eventCategory': 'download',

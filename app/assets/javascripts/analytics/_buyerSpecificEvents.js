@@ -89,7 +89,7 @@
 
   GOVUK.GDM.analytics.LinkClick = LinkClick;
 
-  GOVUK.GDM.analytics.events = {
+  GOVUK.GDM.analytics.buyerSpecificEvents = {
     'supplierListDownload': function (e) {
       var linkClick = new LinkClick(e);
       if (downloadLinkLabel(linkClick)) {
@@ -101,31 +101,10 @@
         }
       }
     },
-    trackEvent: function (e) {
-      var $target = $(e.target);
-      var category = $target.attr('data-analytics-category');
-      var action = $target.attr('data-analytics-action');
-      var label = $target.attr('data-analytics-label');
-      var href = $target.attr('href');
-      var text = $target.text();
-      
-      if ( !label && text ) label = text;
-      else if ( !label && !text && href ) label = href;
-
-      GOVUK.GDM.analytics.events.sendEvent(category, action, label);
-      
-    },
-    sendEvent: function (category, action, label) {
-      GOVUK.analytics.trackEvent(category, action, {
-        'label': label,
-        'transport': 'beacon'
-      });
-    },
     'init': function () {
       // TODO: this should be within a specific class and only initialised on the supplier list download page
       // Currently this is running on click of any <a> link!
       $('body').on('click', 'a', this.supplierListDownload);
-      $('body').on('click', '[data-analytics=trackEvent]', this.trackEvent);      
     }
   };
 })(window, window.GOVUK);

@@ -55,7 +55,11 @@
         {%
           with
           type = "save",
-          label = "Save and continue"
+          label = "Save and continue",
+          analytics= "trackEvent",
+          analytics_category = "did-you-award-a-contract",
+          analytics_action = "Save and continue",
+          analytics_target = "input[name=did_you_award_a_contract]:checked"
         %}
           {% include "toolkit/button.html" %}
         {% endwith %}
