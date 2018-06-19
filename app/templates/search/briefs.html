@@ -1,12 +1,7 @@
-{% extends "toolkit/layouts/_base_page.html" %}
+{% extends "search/_search_layout.html" %}
 
 {% block page_title %}
   Supplier opportunities – {{ framework_family_name }} – Digital Marketplace
-{% endblock %}
-
-{% block head %}
-  <meta name="robots" content="noindex">
-  {{ super() }}
 {% endblock %}
 
 {% block breadcrumb %}
@@ -41,7 +36,7 @@
   {% endwith %}
 {% endblock %}
 
-{% block main_content %}
+{% block page_heading %}
 <div class="grid-row">
   <div class="column-two-thirds">
     {% with heading="{} opportunities".format(framework_family_name) %}
@@ -52,30 +47,8 @@
     </div>
   </div>
 </div>
+{% endblock %}
 
-<div id="js-dm-live-search-wrapper" class="grid-row search-results-page">
-  <form action="{{ url_for('.list_opportunities', framework_family=framework_family) }}" method="get" id="js-dm-live-search-form">
-    <section class="column-one-third search-page-filters" aria-label="Search filters">
-          {% include 'search/_filters_and_categories_wrapper.html' %}
-          {% include 'search/_opportunity_data.html' %}
-    </section>
-  </form>
-  <section class="column-two-thirds" aria-label="Search results">
-    {#
-      the element referenced by an `aria-controls=` seems to need to be persistent -
-      at least I wasn't able to get it to work by just re-using a fragment of the
-      existing search summary text, as it gets removed and replaced wholesale by
-      the javascript when a new set of results is fetched.
-
-      instead, we have this dedicated (and more importantly, persistent) wrapper
-      element, which itself can be the target of `aria-controls=`
-    #}
-    <div id="search-summary-accessible-hint-wrapper" class="search-summary-accessible-hint-wrapper" aria-atomic="true" aria-live="polite" aria-relevant="additions text">
-      {% include 'search/_summary_accessible_hint.html' %}
-    </div>
-    {% include 'search/_summary.html' %}
-    {% include 'search/_results_wrapper.html' %}
-  </section>
-
-</div>
+{% block post_filters %}
+  {% include 'search/_opportunity_data.html' %}
 {% endblock %}

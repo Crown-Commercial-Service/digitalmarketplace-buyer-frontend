@@ -279,6 +279,7 @@ def search_services():
         doc_type=doc_type,
         filters=filters.values(),
         filter_form_hidden_fields=filter_form_hidden_fields_by_name.values(),
+        form_action=url_for('.search_services'),
         framework_family=framework['framework'],
         gcloud_framework_description=framework_helpers.get_framework_description(data_api_client, 'g-cloud'),
         lots=lots,

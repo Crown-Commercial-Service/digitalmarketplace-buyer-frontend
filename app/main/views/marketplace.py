@@ -297,6 +297,7 @@ def list_opportunities(framework_family):
         doc_type=doc_type,
         filters=filters.values(),
         filter_form_hidden_fields=filter_form_hidden_fields_by_name.values(),
+        form_action=url_for('.list_opportunities', framework_family=framework_family),
         framework=framework,
         framework_family=framework['framework'],
         framework_family_name='Digital Outcomes and Specialists',
