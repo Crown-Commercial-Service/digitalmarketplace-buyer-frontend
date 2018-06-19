@@ -516,7 +516,6 @@ def view_project(framework_family, project_id):
     return render_template('direct-award/view-project.html',
                            framework=framework,
                            project=project,
-                           current_project_stage=current_project_stage,
                            custom_dimensions=custom_dimensions,
                            search=search,
                            buyer_search_page_url=buyer_search_page_url,
