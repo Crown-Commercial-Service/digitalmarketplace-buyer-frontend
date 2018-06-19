@@ -499,7 +499,7 @@ def view_project(framework_family, project_id):
     current_project_stage = None
 
     if project['outcome']:
-        current_project_stage = project['outcome']
+        current_project_stage = project['outcome']['result']
     elif project['downloadedAt']:
         current_project_stage = 'download_results'
     elif project['lockedAt']:
@@ -516,7 +516,6 @@ def view_project(framework_family, project_id):
     return render_template('direct-award/view-project.html',
                            framework=framework,
                            project=project,
-                           current_project_stage=current_project_stage,
                            custom_dimensions=custom_dimensions,
                            search=search,
                            buyer_search_page_url=buyer_search_page_url,
