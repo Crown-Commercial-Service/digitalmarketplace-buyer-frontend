@@ -1,5 +1,9 @@
 @import "search/_search-summary.scss";
 
+#search-page-heading .page-heading {
+  margin-bottom: 10px;
+}
+
 .search-summary {
   padding: 0 0 $gutter-half;
 
@@ -9,10 +13,23 @@
   }
 }
 
+.column-one-whole .search-summary {
+  @include core-19;
+
+  .search-summary-count {
+    font-size: 30px;
+
+    margin-right: 2px;
+    padding: 0;
+
+    @include media(mobile) {
+      margin-right: 0;
+      font-size: inherit;
+    }
+  }
+}
+
 .button-save-wrapper {
-  border-top: 1px solid $border-colour;
-  border-bottom: 1px solid $border-colour;
-  padding-top: 20px;
   margin: 0px 0px 20px;
 
   .save-summary-text {
@@ -24,9 +41,10 @@
   }
 
   .save-button {
+    padding: 0;
+
     .button-save {
-      @include core-16;
-      width: 100%;
+      @include core-19;
     }
   }
 }
