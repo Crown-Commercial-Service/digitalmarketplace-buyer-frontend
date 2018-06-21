@@ -39,33 +39,19 @@
       {% block before_sections %}{% endblock %}
         {% with items = [
           {
-            "body": "Write a list of your requirements",
+            "body": "Save a search",
             "custom_body_list": [
-              {"type": "text", "text": "Work with buyers, someone who will use the service and technical experts to prepare a list of ‘must-haves’ and ‘wants’. These should inform your search category, keywords and filters."},
-              {"type": "text", "text": "You can also <a href=\"https://www.gov.uk/guidance/talking-to-suppliers-before-you-buy-digital-marketplace-services\" target=\"_blank\" rel=\"external noopener noreferrer\" 
+              {"type": "text", "text": "Save your search so you can export your results later. You must <a href=\"https://www.gov.uk/guidance/how-to-buy-digital-marketplace-services-fairly\" target=\"_blank\" rel=\"external noopener noreferrer\"
                 data-analytics=\"trackEvent\"
                 data-analytics-category=\"Direct Award\"
                 data-analytics-action=\"External Link\"
-                >talk to suppliers before you start</a> to help you refine your requirements."|safe}
-            ]
-          },
-          {
-            "body": "Save your search",
-            "custom_body_list": [
-              {"type": "text", "text": "Choose a category, then search for services using keywords and filters. You can save your search at any time."},
-              {"type": "action", "label": "Search", "href": url_for('main.search_services'), "analytics": "trackEvent", "analytics_category": "Direct Award", "analytics_action": "Internal Link"}
+                >buy fairly</a> and assess all the services that you find. Do not combine the results of more than one search."|safe}
+            ] + ([
+              {"type": "action", "label": "Start a new search", "href": url_for('main.search_services'), "analytics": "trackEvent", "analytics_category": "Direct Award", "analytics_action": "Internal Link"}
             ] if not search_summary_sentence else [
               {"type": "text", "class": ["search-summary"], "text": search_summary_sentence},
-              {"type": "text", "text": ''.join(["<a href=\"", buyer_search_page_url|e, "\">View results</a>"])|safe},
-              {"type": "box", "style": "complete", "label": ''.join(["Search saved on ", search.createdAt|datetimeformat])}
-            ]
-          },
-          {
-            "body": "Refine your search",
-            "custom_body_list": [
-              {"type": "text", "text": "If you need to, add filters to refine the results of your search. Save your search again to record any changes you make."},
-              {"type": "box", "style": "inactive", "label": "Can't start yet"} if not search.createdAt else {"type": "text", "text": ''.join(["<a href=\"", buyer_search_page_url|e, "\">Edit search</a>"])|safe} if not search.searchedAt else {}
-            ]
+              {"type": "text", "text": ''.join(["<a href=\"", buyer_search_page_url|e, "\">Edit your search and view results</a>"])|safe} if not search.searchedAt else {}
+            ])
           },
           {
             "body": "End your search",
@@ -137,7 +123,7 @@
             ]
           }
 
-        ], 
+        ],
          verbose = True
         %}
           {% include "toolkit/instruction-list.html" %}

@@ -199,11 +199,6 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
     def _task_cannot_start_yet(self, tasklist, task):
         return self._task_has_box(tasklist, task, style='inactive', text='Can\'t start yet')
 
-    def _task_search_saved(self, tasklist, task):
-        # Localised time - British Summer Time applies in August
-        return self._task_has_box(tasklist, task, style='complete', text='Search saved on Tuesday 29 August 2017'
-                                                                         ' at 8:00am BST')
-
     def _task_search_ended(self, tasklist, task):
         return self._task_has_box(tasklist, task, style='complete', text='Search ended on Tuesday 29 August 2017'
                                                                          ' at 8:00am BST')
@@ -235,9 +230,8 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         body = res.get_data(as_text=True)
         doc = html.fromstring(body)
 
-        item_headings = ['Write a list of your requirements', 'Save your search', 'Refine your search',
-                         'End your search', 'Download your search results', 'Award a contract',
-                         'Publish the contract', 'Complete the Customer Benefits Record form']
+        item_headings = ['Save a search', 'End your search', 'Download your search results',
+                         'Award a contract', 'Publish the contract', 'Complete the Customer Benefits Record form']
 
         tasklist = doc.xpath('//li[contains(@class, "instruction-list-item")]')
 
@@ -253,31 +247,31 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
 
         tasklist = doc.xpath('//li[contains(@class, "instruction-list-item")]')
 
-        # Step 1 should link to the guidance for preparing requirements.
-        assert self._task_has_link(tasklist, 1, 'https://www.gov.uk/guidance/talking-to-suppliers-before-you-buy-'
-                                                'digital-marketplace-services') is True
+        # Step 1 should link to the guidance for buying fairly.
+        assert self._task_has_link(tasklist, 1, 'https://www.gov.uk/guidance/how-to-buy-digital-marketplace-'
+                                                'services-fairly') is True
 
-        # Step 5 should link to guidance on comparing services.
+        # Step 3 should link to guidance on comparing services.
         buyer_guide_compare_services_url = self.content_loader.get_message('g9', 'urls',
                                                                            'buyers_guide_compare_services_url')
-        assert self._task_has_link(tasklist, 5, buyer_guide_compare_services_url) is True
+        assert self._task_has_link(tasklist, 3, buyer_guide_compare_services_url) is True
 
-        # Step 6 has links to downloading call-off contracts and how to award contracts.
+        # Step 4 has links to downloading call-off contracts and how to award contracts.
         call_off_contract_url = self.content_loader.get_message('g9', 'urls', 'call_off_contract_url')
-        assert self._task_has_link(tasklist, 6, call_off_contract_url) is True
-        assert self._task_has_link(tasklist, 6, "https://www.gov.uk/guidance/how-to-award-a-contract"
+        assert self._task_has_link(tasklist, 4, call_off_contract_url) is True
+        assert self._task_has_link(tasklist, 4, "https://www.gov.uk/guidance/how-to-award-a-contract"
                                                 "-when-you-buy-services") is True
 
-        # Step 7 has a link to Contracts Finder
-        assert self._task_has_link(tasklist, 7, "https://www.gov.uk/contracts-finder") is True
+        # Step 5 has a link to Contracts Finder
+        assert self._task_has_link(tasklist, 5, "https://www.gov.uk/contracts-finder") is True
 
-        # Step 8 has a link to framework customer benefits form and customer benefits form email address.
+        # Step 6 has a link to framework customer benefits form and customer benefits form email address.
         customer_benefits_record_form_url = self.content_loader.get_message('g9', 'urls',
                                                                             'customer_benefits_record_form_url')
         customer_benefits_record_form_email = self.content_loader.get_message('g9', 'urls',
                                                                               'customer_benefits_record_form_email')
-        assert self._task_has_link(tasklist, 8, customer_benefits_record_form_url) is True
-        assert self._task_has_link(tasklist, 8, 'mailto:{}'.format(customer_benefits_record_form_email)) is True
+        assert self._task_has_link(tasklist, 6, customer_benefits_record_form_url) is True
+        assert self._task_has_link(tasklist, 6, 'mailto:{}'.format(customer_benefits_record_form_email)) is True
 
     def test_overview_renders_specific_elements_for_no_search_state(self):
         searches = self._get_direct_award_project_searches_fixture()
@@ -294,11 +288,10 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
 
         tasklist = doc.xpath('//li[contains(@class, "instruction-list-item")]')
 
-        assert self._task_has_link(tasklist, 2, '/g-cloud/search') is True
-        assert self._task_has_link(tasklist, 3, '/g-cloud/search') is False
-        assert self._task_has_link(tasklist, 4, '/buyers/direct-award/g-cloud/projects/1/end-search') is False
+        assert self._task_has_link(tasklist, 1, '/g-cloud/search') is True
+        assert self._task_has_link(tasklist, 2, '/buyers/direct-award/g-cloud/projects/1/end-search') is False
 
-        assert self._cannot_start_from_task(tasklist, 3) is True
+        assert self._cannot_start_from_task(tasklist, 2) is True
 
     def test_overview_renders_specific_elements_for_search_created_state(self):
         res = self.client.get('/buyers/direct-award/g-cloud/projects/1')
@@ -309,15 +302,13 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
 
         tasklist = doc.xpath('//li[contains(@class, "instruction-list-item")]')
 
-        assert self._task_has_link(tasklist, 2, '/g-cloud/search?q=accelerator') is True
-        assert self._task_has_link(tasklist, 3, '/g-cloud/search?q=accelerator') is True
-        assert self._task_has_link(tasklist, 4, '/buyers/direct-award/g-cloud/projects/1/end-search') is True
+        assert self._task_has_link(tasklist, 1, '/g-cloud/search?q=accelerator') is True
+        assert self._task_has_link(tasklist, 2, '/buyers/direct-award/g-cloud/projects/1/end-search') is True
 
-        assert self._cannot_start_from_task(tasklist, 5) is True
+        assert self._cannot_start_from_task(tasklist, 3) is True
 
         assert doc.xpath('//p[contains(@class, "search-summary")]')[0].text_content() == '1 result found containing '\
                                                                                          'accelerator in All categories'
-        assert self._task_search_saved(tasklist, 2) is True
 
     def test_overview_renders_specific_elements_for_search_ended_state(self):
         searches = self._get_direct_award_project_searches_fixture()
@@ -334,13 +325,12 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
 
         tasklist = doc.xpath('//li[contains(@class, "instruction-list-item")]')
 
-        assert self._task_has_link(tasklist, 2, '/g-cloud/search?q=accelerator') is True
-        assert self._task_has_link(tasklist, 3, '/g-cloud/search?q=accelerator') is False
-        assert self._task_search_ended(tasklist, 4) is True
-        assert self._task_has_link(tasklist, 5,
+        assert self._task_has_link(tasklist, 1, '/g-cloud/search?q=accelerator') is False
+        assert self._task_search_ended(tasklist, 2) is True
+        assert self._task_has_link(tasklist, 3,
                                    '/buyers/direct-award/g-cloud/projects/1/results') is True
 
-        assert self._task_has_link(tasklist, 6,
+        assert self._task_has_link(tasklist, 4,
                                    '/buyers/direct-award/g-cloud/projects/1/did-you-award-contract') is False
 
     def test_overview_renders_specific_elements_for_search_downloaded_state(self):
@@ -362,13 +352,12 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
 
         tasklist = doc.xpath('//li[contains(@class, "instruction-list-item")]')
 
-        assert self._task_has_link(tasklist, 2, '/g-cloud/search?q=accelerator') is True
-        assert self._task_has_link(tasklist, 3, '/g-cloud/search?q=accelerator') is False
-        assert self._task_search_downloaded(tasklist, 5) is True
-        assert self._task_has_link(tasklist, 5,
+        assert self._task_has_link(tasklist, 1, '/g-cloud/search?q=accelerator') is False
+        assert self._task_search_downloaded(tasklist, 3) is True
+        assert self._task_has_link(tasklist, 3,
                                    '/buyers/direct-award/g-cloud/projects/1/results') is True
 
-        assert self._cannot_start_from_task(tasklist, 9) is True
+        assert self._cannot_start_from_task(tasklist, 7) is True
 
 
 class TestDirectAwardURLGeneration(BaseApplicationTest):
