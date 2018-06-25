@@ -1,5 +1,7 @@
 from flask import abort
 
+from dmapiclient import HTTPError
+
 from ... import content_loader
 
 
@@ -45,3 +47,19 @@ def get_framework_description(data_api_client, framework_family):
 def abort_if_not_further_competition_framework(framework):
     if not framework['hasFurtherCompetition']:
         abort(404, f"Framework `{framework}` does not support further competition.")
+
+
+def get_framework_or_500(client, framework_slug, logger=None):
+    """Return a 500 if a framework is not found that we explicitly expect to be there"""
+    try:
+        return client.get_framework(framework_slug)['frameworks']
+    except HTTPError as e:
+        if e.status_code == 404:
+            if logger:
+                logger.error(
+                    "Framework not found. Error: {error}, framework_slug: {framework_slug}",
+                    extra={'error': str(e), 'framework_slug': framework_slug}
+                )
+            abort(500, f'Framework not found: {framework_slug}')
+        else:
+            raise
