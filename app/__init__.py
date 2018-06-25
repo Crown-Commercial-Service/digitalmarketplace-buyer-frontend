@@ -37,8 +37,7 @@ def create_app(config_name):
     for framework_data in frameworks:
         if not framework_data['slug'] in application.config.get('DM_FRAMEWORK_CONTENT_MAP', {}):
             if framework_data['framework'] == 'g-cloud':
-                if framework_data['status'] != 'expired':
-                    content_loader.load_manifest(framework_data['slug'], 'services', 'services_search_filters')
+                content_loader.load_manifest(framework_data['slug'], 'services', 'services_search_filters')
                 # we need to be able to display old services, even on expired frameworks
                 content_loader.load_manifest(framework_data['slug'], 'services', 'display_service')
                 content_loader.load_manifest(framework_data['slug'], 'services', 'download_results')
