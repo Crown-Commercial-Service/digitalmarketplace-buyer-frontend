@@ -40,6 +40,11 @@
 </header>
 {% endblock %}
 
-{% block post_summary %}
-  {% include 'search/_services_save_search.html' %}
+{% block post_heading %}
+  <section class="column-one-whole" aria-label="Search summary">
+    {% include 'search/_summary.html' %}
+    {% include 'search/_services_save_search.html' %}
+  </section>
 {% endblock %}
+
+{% block pre_results %}{% endblock %}
