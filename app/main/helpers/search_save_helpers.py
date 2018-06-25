@@ -1,8 +1,11 @@
-from flask import url_for
+from flask import abort, current_app, url_for
 from werkzeug.datastructures import MultiDict
 
+from dmcontent.errors import ContentNotFoundError
+from dmutils.formats import dateformat
+
 from app import search_api_client, content_loader
-from app.main.helpers.framework_helpers import get_lots_by_slug
+from app.main.helpers.framework_helpers import get_framework_or_500, get_lots_by_slug
 from app.main.helpers.search_helpers import clean_request_args
 from app.main.presenters.search_presenters import filters_for_lot
 from app.main.presenters.search_summary import SearchSummary
@@ -38,3 +41,47 @@ class SearchMeta(object):
             filters.values(),
             lots_by_slug
         )
+
+
+def get_saved_search_temporary_message(data_api_client, _content_loader, framework, buyer_search_page_url, project):
+    try:
+        following_framework = get_framework_or_500(
+            data_api_client,
+            _content_loader.get_metadata(framework['slug'], 'following_framework', 'slug'),
+            current_app.logger,
+        )
+        temporary_messages_content = _content_loader.get_message(
+            framework['slug'], 'saved-search-temporary-messages'
+        ).filter({
+            'search_url': buyer_search_page_url,
+            'expiration_date': dateformat(framework['frameworkExpiresAtUTC'])
+        })
+    except ContentNotFoundError:
+        return None
+    else:
+        temporary_message = None
+        if not project['lockedAt']:
+            temporary_message = {'type': 'sidebar'}
+            if following_framework['status'] in ['coming', 'open', 'pending', 'standstill']:
+                temporary_message['content'] = temporary_messages_content['not_locked_pre_live']
+            elif following_framework['status'] in ['live', 'expired']:
+                temporary_message['content'] = temporary_messages_content['not_locked_post_live']
+        else:
+            temporary_message = {'type': 'banner'}
+            if following_framework['status'] in ['coming', 'open', 'pending', 'standstill']:
+                temporary_message['content'] = temporary_messages_content['locked_pre_live']
+            elif framework['status'] == 'live' and following_framework['status'] in ['live', 'expired']:
+                temporary_message['content'] = temporary_messages_content['locked_post_live_during_interim']
+            elif framework['status'] == 'expired' and following_framework['status'] in ['live', 'expired']:
+                temporary_message['content'] = temporary_messages_content['locked_post_live_post_interim']
+
+        if not temporary_message.get('content'):
+            current_app.logger.error(
+                "Saved search temporary messages not found, invalid frameworks state: "
+                "'{}' - '{}' and '{}' - '{}'".format(
+                    framework['slug'], framework['status'], following_framework['slug'], following_framework['status']
+                )
+            )
+            abort(500)  # this should never be reached
+
+        return temporary_message

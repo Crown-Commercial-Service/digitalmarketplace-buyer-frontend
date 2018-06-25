@@ -5,7 +5,7 @@ from dmapiclient import HTTPError
 from dmutils.api_stubs import framework
 
 from app.main.helpers.framework_helpers import get_framework_or_500, get_latest_live_framework, get_lots_by_slug
-from ...helpers import BaseApplicationTest
+from ...helpers import BaseApplicationTest, CustomAbortException
 
 
 class TestBuildSearchQueryHelpers(BaseApplicationTest):
@@ -26,11 +26,6 @@ class TestBuildSearchQueryHelpers(BaseApplicationTest):
         assert lots_by_slug['cloud-hosting'] == g_cloud_9_data['lots'][0]
         assert lots_by_slug['cloud-software'] == g_cloud_9_data['lots'][1]
         assert lots_by_slug['cloud-support'] == g_cloud_9_data['lots'][2]
-
-
-class CustomAbortException(Exception):
-    """Custom error for testing abort"""
-    pass
 
 
 class TestGetFrameworkOr500():
