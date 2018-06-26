@@ -11,10 +11,16 @@ from ...helpers import CustomAbortException
 class TestGetSavedSearchTemporaryMessage:
     def setup(self):
         self.content_loader = mock.Mock()
-        self.get_framework_or_500 = mock.patch('app.main.helpers.search_save_helpers.get_framework_or_500').start()
-        self.current_app = mock.patch('app.main.helpers.search_save_helpers.current_app').start()
+        self.get_framework_or_500_patch = mock.patch('app.main.helpers.search_save_helpers.get_framework_or_500')
+        self.get_framework_or_500 = self.get_framework_or_500_patch.start()
+        self.current_app_patch = mock.patch('app.main.helpers.search_save_helpers.current_app')
+        self.current_app = self.current_app_patch.start()
 
         self.get_framework_or_500.return_value = framework(status='live')['frameworks']
+
+    def teardown(self):
+        self.get_framework_or_500_patch.stop()
+        self.current_app_patch.stop()
 
     def test_returns_none_if_following_framework_metadata_not_found_for_framework(self):
         self.content_loader.get_metadata.side_effect = ContentNotFoundError()

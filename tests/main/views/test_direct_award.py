@@ -9,7 +9,8 @@ import pytest
 from werkzeug.exceptions import BadRequest, NotFound
 
 from dmapiclient import HTTPError
-from dmcontent.content_loader import ContentLoader
+from dmcontent.content_loader import ContentLoader, ContentNotFoundError
+from dmutils.api_stubs import framework
 
 from app import search_api_client, content_loader
 from app.main.views.g_cloud import DownloadResultsView, END_SEARCH_LIMIT, TOO_MANY_RESULTS_MESSAGE
@@ -176,7 +177,7 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         self.login_as_buyer()
 
         self.content_loader = ContentLoader('tests/fixtures/content')
-        self.content_loader.load_messages('g9', ['urls'])
+        self.content_loader.load_messages('g9', ['urls', 'saved-search-temporary-messages'])
 
     def teardown_method(self, method):
         super().teardown_method(method)
@@ -344,6 +345,79 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
                                    '/buyers/direct-award/g-cloud/projects/1/results')
 
         assert self._cannot_start_from_task(tasklist, 5)
+
+    @pytest.mark.parametrize(
+        ('framework_status', 'following_framework_status', 'locked_at', 'position', 'content'),
+        (
+            ('live', 'coming', None, 'sidebar', 'Not locked pre live temporary message'),
+            ('live', 'open', None, 'sidebar', 'Not locked pre live temporary message'),
+            ('live', 'pending', None, 'sidebar', 'Not locked pre live temporary message'),
+            ('live', 'standstill', None, 'sidebar', 'Not locked pre live temporary message'),
+            ('live', 'live', None, 'sidebar', 'Not locked post live temporary message'),
+            ('expired', 'live', None, 'sidebar', 'Not locked post live temporary message'),
+            ('live', 'coming', '2018-06-25T21:57:00.881261Z', 'banner', 'Locked pre live temporary message'),
+            ('live', 'open', '2018-06-25T21:57:00.881261Z', 'banner', 'Locked pre live temporary message'),
+            ('live', 'pending', '2018-06-25T21:57:00.881261Z', 'banner', 'Locked pre live temporary message'),
+            ('live', 'standstill', '2018-06-25T21:57:00.881261Z', 'banner', 'Locked pre live temporary message'),
+            ('live', 'live', '2018-06-25T21:57:00.881261Z', 'banner',
+                'Locked post live during interim temporary message'),
+            ('expired', 'live', '2018-06-25T21:57:00.881261Z', 'banner',
+                'Locked post live post interim temporary message'),
+        )
+    )
+    @mock.patch('app.main.views.g_cloud.content_loader')
+    def test_overview_displays_temporary_messages_correctly(
+        self, content_loader_mock, framework_status, following_framework_status, locked_at, position, content
+    ):
+        project = self._get_direct_award_project_fixture()
+        project['project']['lockedAt'] = locked_at
+        self.data_api_client.get_direct_award_project.return_value = project
+
+        self.data_api_client.find_frameworks.return_value = {
+            'frameworks': [framework(slug='g-cloud-9', status=framework_status)['frameworks']]
+        }
+        self.data_api_client.get_framework.side_effect = [
+            framework(slug='g-cloud-10', status=following_framework_status)
+        ]
+
+        message_mock = mock.Mock()
+        message_mock.filter.return_value = self.content_loader.get_message('g9', 'saved-search-temporary-messages')
+        content_loader_mock.get_message.side_effect = [
+            self.content_loader.get_message('g9', 'urls'),
+            message_mock,
+        ]
+
+        res = self.client.get('/buyers/direct-award/g-cloud/projects/1')
+        assert res.status_code == 200
+
+        body = res.get_data(as_text=True)
+        doc = html.fromstring(body)
+
+        if position == 'sidebar':
+            assert len(doc.xpath("//div[@class='temporary-message']")) == 1
+            assert not doc.xpath("//div[@class='temporary-message-banner']")
+        elif position == 'banner':
+            assert len(doc.xpath("//div[@class='temporary-message-banner']")) == 1
+            assert not doc.xpath("//div[@class='temporary-message']")
+
+        assert doc.xpath(f"//h3[@class='temporary-message-heading'][contains(normalize-space(), '{content} heading.')]")
+        assert doc.xpath(f"//p[@class='temporary-message-message'][contains(normalize-space(), '{content} content.')]")
+
+    @mock.patch('app.main.views.g_cloud.content_loader')
+    def test_temporary_messages_not_shown_if_no_content_to_load(self, content_loader_mock):
+        content_loader_mock.get_message.side_effect = [
+            self.content_loader.get_message('g9', 'urls'),
+            ContentNotFoundError()
+        ]
+
+        res = self.client.get('/buyers/direct-award/g-cloud/projects/1')
+        assert res.status_code == 200
+
+        body = res.get_data(as_text=True)
+        doc = html.fromstring(body)
+
+        assert not doc.xpath("//div[@class='temporary-message']")
+        assert not doc.xpath("//div[@class='temporary-message-banner']")
 
 
 class TestDirectAwardURLGeneration(BaseApplicationTest):

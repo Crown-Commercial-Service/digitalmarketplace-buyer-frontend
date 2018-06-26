@@ -5,6 +5,7 @@ from flask_wtf.csrf import CSRFProtect, CSRFError
 import dmapiclient
 from dmutils import init_app, flask_featureflags
 from dmcontent.content_loader import ContentLoader
+from dmcontent.utils import try_load_metadata, try_load_messages
 from dmutils.user import User
 from dmutils.external import external as external_blueprint
 
@@ -41,6 +42,8 @@ def create_app(config_name):
                 # we need to be able to display old services, even on expired frameworks
                 content_loader.load_manifest(framework_data['slug'], 'services', 'display_service')
                 content_loader.load_manifest(framework_data['slug'], 'services', 'download_results')
+                try_load_metadata(content_loader, application, framework_data, ['following_framework'])
+                try_load_messages(content_loader, application, framework_data, ['saved-search-temporary-messages'])
             elif framework_data['framework'] == 'digital-outcomes-and-specialists':
                 content_loader.load_manifest(framework_data['slug'], 'briefs', 'display_brief')
 

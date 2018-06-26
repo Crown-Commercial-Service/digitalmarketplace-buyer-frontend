@@ -1,0 +1,24 @@
+not_locked_pre_live:
+  heading: Not locked pre live temporary message heading.
+  messages:
+    -  Not locked pre live temporary message content.
+
+not_locked_post_live:
+  heading: Not locked post live temporary message heading.
+  messages:
+    - Not locked post live temporary message content.
+
+locked_pre_live:
+  heading: Locked pre live temporary message heading.
+  messages:
+    - Locked pre live temporary message content.
+
+locked_post_live_during_interim:
+  heading: Locked post live during interim temporary message heading.
+  messages:
+    - Locked post live during interim temporary message content.
+
+locked_post_live_post_interim:
+  heading: Locked post live post interim temporary message heading.
+  messages:
+    - Locked post live post interim temporary message content.

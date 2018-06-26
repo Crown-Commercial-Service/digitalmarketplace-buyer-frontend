@@ -75,13 +75,13 @@ def get_saved_search_temporary_message(data_api_client, _content_loader, framewo
             elif framework['status'] == 'expired' and following_framework['status'] in ['live', 'expired']:
                 temporary_message['content'] = temporary_messages_content['locked_post_live_post_interim']
 
-        if not temporary_message.get('content'):
+        if not temporary_message.get('content'):  # this should never be reached
             current_app.logger.error(
                 "Saved search temporary messages not found, invalid frameworks state: "
                 "'{}' - '{}' and '{}' - '{}'".format(
                     framework['slug'], framework['status'], following_framework['slug'], following_framework['status']
                 )
             )
-            abort(500)  # this should never be reached
+            abort(500)
 
         return temporary_message
