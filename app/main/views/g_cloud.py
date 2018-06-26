@@ -808,7 +808,10 @@ def search_results(framework_family, project_id):
     content_loader.load_messages(framework['slug'], ['descriptions', 'urls'])
     framework_urls = content_loader.get_message(framework['slug'], 'urls')
 
+    locked_at = datetime.strptime(project['lockedAt'], DATETIME_FORMAT)
+
     return render_template('direct-award/results.html',
+                           exported_at=locked_at,
                            framework=framework,
                            project=project,
                            framework_urls=framework_urls
