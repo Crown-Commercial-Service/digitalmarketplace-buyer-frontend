@@ -1,6 +1,8 @@
 {% extends "toolkit/layouts/_base_page.html" %}
 
-{% block page_title %}Choose where to save your search - Digital Marketplace{% endblock %}
+{% set page_name = "Save your search" %}
+
+{% block page_title %}{{ page_name }} - Digital Marketplace{% endblock %}
 
 {% block breadcrumb %}
   {%
@@ -15,7 +17,7 @@
           "label": "Search"
       },
       {
-          "label": "Choose where to save your search"
+          "label": page_name
       }
     ]
   %}
@@ -51,7 +53,7 @@
     <div class="column-two-thirds">
       <header class="page-heading-smaller page-heading-without-breadcrumb">
         <h1>
-          Choose where to save your search
+          {{ page_name }}
         </h1>
       </header>
     </div>
@@ -65,12 +67,7 @@
           {% endwith %}
         </div>
 
-       
-        
         <fieldset>
-          
-          
-
           <div{% if save_search_selection_error %} class="validation-wrapper"{% endif %}>
           
               {% if save_search_selection_error %}
@@ -80,9 +77,6 @@
               {% endif %}
 
               {% if projects %}
-
-              
-
               {% for project in projects %}
 
               <div class="multiple-choice">
@@ -99,14 +93,14 @@
               <div class="multiple-choice" data-target="new-search">
                 <input type="radio" name="save_search_selection" value="new_search" id="project-new" aria-required="true" 
                   {% if request.form.save_search_selection == 'new_search' or not projects %}checked="checked"{% endif %}>
-                <label for="project-new">Create a new saved search</label>
+                <label for="project-new">Save a new search</label>
               </div>
               <div class="panel panel-border-narrow js-hidden" id="new-search">
                 
                 <div{% if form.name.errors and not save_search_selection_error %} class="validation-wrapper"{% endif %}>
                   <div class="question" id="{{ form.name.name }}">
                     {{ form.name.label(class="question-heading") }}
-                    <p>Name your saved search. A reference number or short description of what you want to buy makes a good name.</p>
+                    <p>Name your search. A reference number or short description of what you want to buy makes a good name.</p>
                     <p class="hint">
                       100 characters maximum
                     </p>

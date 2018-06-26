@@ -1,6 +1,6 @@
 {% extends "toolkit/layouts/_base_page.html" %}
 
-{% block page_title %}Download your search results - Digital Marketplace{% endblock %}
+{% block page_title %}Download your results - Digital Marketplace{% endblock %}
 
 {% block breadcrumb %}
   {%
@@ -15,11 +15,11 @@
         "label": "Your account"
       },
       {
-        "link": url_for('direct_award.saved_search_overview', framework_family=framework.framework),
+        "link": url_for('direct_award.saved_search_overview', framework_family=framework.family),
         "label": "Your saved searches"
       },
       {
-        "link": url_for('direct_award.view_project', framework_family=framework.framework, project_id=project.id),
+        "link": url_for('direct_award.view_project', framework_family=framework.family, project_id=project.id),
         "label": project.name
       }
     ]
@@ -33,55 +33,48 @@
   <div class="column-two-thirds">
     <header class="page-heading">
       <h1>
-        Download your search results
+        Download your results
       </h1>
     </header>
   </div>
   <div class="column-two-thirds">
     <div class="marketplace-paragraph">
-      <p>Download your search results to help you track and record your decision-making.</p>
-    </div>
-    <div class="explanation-list">
-      <p class="lead">The spreadsheet includes:</p>
-      <ul class='list-bullet'>
-        <li>service names, descriptions and prices</li>
-        <li>links to detailed service description pages on the Digital Marketplace</li>
-        <li>supplier names and contact details</li>
-      </ul>
+      <p>Download a list of the services you’ve found to help you track and record your decision-making.</p>
+      <p>The files include suppliers’ service descriptions and contact information. Keep a copy for your records.</p>
     </div>
     <div class="marketplace-paragraph">
-      <br>
       {%
       with
       items = [
           {
-              "title": "Download search results as a spreadsheet",
-              "link": url_for('direct_award.download_results', framework_family=framework.framework, project_id=project.id, filetype='ods'),
-              "file_type": "ODS",
-              "analytics": "trackEvent",
-              "analytics_category": "Direct Award",
-              "analytics_action": "Download search results format",
-              "analytics_label": "ODS"
-          },
-          {
               "title": "Download search results as comma-separated values",
-              "link": url_for('direct_award.download_results', framework_family=framework.framework, project_id=project.id, filetype='csv'),
+              "link": url_for('direct_award.download_results', framework_family=framework.family, project_id=project.id, filetype='csv'),
               "file_type": "CSV",
               "analytics": "trackEvent",
               "analytics_category": "Direct Award",
               "analytics_action": "Download search results format",
               "analytics_label": "CSV"
+          },
+          {
+              "title": "Download search results as a spreadsheet",
+              "link": url_for('direct_award.download_results', framework_family=framework.family, project_id=project.id, filetype='ods'),
+              "file_type": "ODS",
+              "analytics": "trackEvent",
+              "analytics_category": "Direct Award",
+              "analytics_action": "Download search results format",
+              "analytics_label": "ODS"
           }
       ]
       %}
         {% include "toolkit/documents.html" %}
       {% endwith %}
     </div>
+    <div class="application-notice info-notice">
+      <p>Results exported on {{ exported_at|datetimeformat }}</p>
+    </div>
     <div class="marketplace-paragraph">
-    <h2>After you download your search results</h2>
-      <p>Review or compare services to find the cheapest or best value for money.<br>You can use the spreadsheet to help record your decisions.<br>Read the <a href="{{ framework_urls.buyers_guide_compare_services_url }}">{{ framework.framework|title }} Buyers' Guide</a> for details
-    of how to compare services.</p>
-      <p><a href="{{ url_for('direct_award.view_project', framework_family=framework.framework, project_id=project.id) }}">Return to overview</a></p>
+      <p>You can download your results again at any time.</p>
+      <p><a href="{{ url_for('direct_award.view_project', framework_family=framework.family, project_id=project.id) }}">Return to your tasklist</a></p>
     </div>
   </div>
 </div>
