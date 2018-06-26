@@ -15,11 +15,11 @@
         "label": "Your account"
       },
       {
-        "link": url_for('direct_award.saved_search_overview', framework_family=framework.framework),
+        "link": url_for('direct_award.saved_search_overview', framework_family=framework.family),
         "label": "Your saved searches"
       },
       {
-        "link": url_for('direct_award.view_project', framework_family=framework.framework, project_id=project.id),
+        "link": url_for('direct_award.view_project', framework_family=framework.family, project_id=project.id),
         "label": project.name
       }
     ]
@@ -48,7 +48,7 @@
       items = [
           {
               "title": "Download search results as comma-separated values",
-              "link": url_for('direct_award.download_results', framework_family=framework.framework, project_id=project.id, filetype='csv'),
+              "link": url_for('direct_award.download_results', framework_family=framework.family, project_id=project.id, filetype='csv'),
               "file_type": "CSV",
               "analytics": "trackEvent",
               "analytics_category": "Direct Award",
@@ -57,7 +57,7 @@
           },
           {
               "title": "Download search results as a spreadsheet",
-              "link": url_for('direct_award.download_results', framework_family=framework.framework, project_id=project.id, filetype='ods'),
+              "link": url_for('direct_award.download_results', framework_family=framework.family, project_id=project.id, filetype='ods'),
               "file_type": "ODS",
               "analytics": "trackEvent",
               "analytics_category": "Direct Award",
@@ -74,7 +74,7 @@
     </div>
     <div class="marketplace-paragraph">
       <p>You can download your results again at any time.</p>
-      <p><a href="{{ url_for('direct_award.view_project', framework_family=framework.framework, project_id=project.id) }}">Return to your tasklist</a></p>
+      <p><a href="{{ url_for('direct_award.view_project', framework_family=framework.family, project_id=project.id) }}">Return to your tasklist</a></p>
     </div>
   </div>
 </div>
