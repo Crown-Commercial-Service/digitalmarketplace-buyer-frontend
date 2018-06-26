@@ -230,8 +230,8 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         body = res.get_data(as_text=True)
         doc = html.fromstring(body)
 
-        item_headings = ['Save a search', 'End your search', 'Download your search results',
-                         'Award a contract', 'Publish the contract', 'Complete the Customer Benefits Record form']
+        item_headings = ['Save a search', 'Export your results', 'Download your search results',
+                         'Award a contract', 'Complete the Customer Benefits Record form']
 
         tasklist = doc.xpath('//li[contains(@class, "instruction-list-item")]')
 
