@@ -197,7 +197,7 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         return len(box) == 1
 
     def _task_cannot_start_yet(self, tasklist, task):
-        return self._task_has_box(tasklist, task, style='inactive', text='Can\'t start yet')
+        return self._task_has_box(tasklist, task, style='inactive', text='Can’t start yet')
 
     def _task_search_ended(self, tasklist, task):
         return self._task_has_box(tasklist, task, style='complete', text='Search ended on Tuesday 29 August 2017'
