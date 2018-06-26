@@ -256,22 +256,13 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
                                                                            'buyers_guide_compare_services_url')
         assert self._task_has_link(tasklist, 3, buyer_guide_compare_services_url) is True
 
-        # Step 4 has links to downloading call-off contracts and how to award contracts.
-        call_off_contract_url = self.content_loader.get_message('g9', 'urls', 'call_off_contract_url')
-        assert self._task_has_link(tasklist, 4, call_off_contract_url) is True
-        assert self._task_has_link(tasklist, 4, "https://www.gov.uk/guidance/how-to-award-a-contract"
-                                                "-when-you-buy-services") is True
-
-        # Step 5 has a link to Contracts Finder
-        assert self._task_has_link(tasklist, 5, "https://www.gov.uk/contracts-finder") is True
-
-        # Step 6 has a link to framework customer benefits form and customer benefits form email address.
+        # Step 5 has a link to framework customer benefits form and customer benefits form email address.
         customer_benefits_record_form_url = self.content_loader.get_message('g9', 'urls',
                                                                             'customer_benefits_record_form_url')
         customer_benefits_record_form_email = self.content_loader.get_message('g9', 'urls',
                                                                               'customer_benefits_record_form_email')
-        assert self._task_has_link(tasklist, 6, customer_benefits_record_form_url) is True
-        assert self._task_has_link(tasklist, 6, 'mailto:{}'.format(customer_benefits_record_form_email)) is True
+        assert self._task_has_link(tasklist, 5, customer_benefits_record_form_url) is True
+        assert self._task_has_link(tasklist, 5, 'mailto:{}'.format(customer_benefits_record_form_email)) is True
 
     def test_overview_renders_specific_elements_for_no_search_state(self):
         searches = self._get_direct_award_project_searches_fixture()
@@ -357,7 +348,7 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         assert self._task_has_link(tasklist, 3,
                                    '/buyers/direct-award/g-cloud/projects/1/results') is True
 
-        assert self._cannot_start_from_task(tasklist, 7) is True
+        assert self._cannot_start_from_task(tasklist, 5) is True
 
 
 class TestDirectAwardURLGeneration(BaseApplicationTest):
