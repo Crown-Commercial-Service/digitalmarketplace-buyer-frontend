@@ -17,8 +17,8 @@ class TestBuildSearchQueryHelpers(BaseApplicationTest):
 
     def test_get_latest_live_framework(self):
         latest_framework_when_fixture_updated = 'g-cloud-9'  # fixture set in base class
-        latest_framework_data = get_latest_live_framework(self.available_frameworks, 'g-cloud')
-        assert latest_framework_data['slug'] == latest_framework_when_fixture_updated
+        latest_live_framework = get_latest_live_framework(self.available_frameworks, 'g-cloud')
+        assert latest_live_framework['slug'] == latest_framework_when_fixture_updated
 
     def test_get_lots_by_slug(self):
         g_cloud_9_data = next((f for f in self.available_frameworks if f['slug'] == 'g-cloud-9'))

@@ -177,7 +177,7 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         self.login_as_buyer()
 
         self.content_loader = ContentLoader('tests/fixtures/content')
-        self.content_loader.load_messages('g9', ['urls', 'saved-search-temporary-messages'])
+        self.content_loader.load_messages('g9', ['urls'])
 
     def teardown_method(self, method):
         super().teardown_method(method)
@@ -206,6 +206,18 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
     def _cannot_start_from_task(self, tasklist, cannot_start_from):
         return all([self._task_cannot_start_yet(tasklist, task + 1) is ((task + 1) >= cannot_start_from)
                     for task in range(len(tasklist))])
+
+    def _set_project_locked_and_framework_states(self, locked_at, framework_status, following_framework_status):
+        project = self._get_direct_award_project_fixture()
+        project['project']['lockedAt'] = locked_at
+        self.data_api_client.get_direct_award_project.return_value = project
+
+        self.data_api_client.find_frameworks.return_value = {
+            'frameworks': [framework(slug='g-cloud-9', status=framework_status)['frameworks']]
+        }
+        self.data_api_client.get_framework.return_value = framework(
+            slug='g-cloud-10', status=following_framework_status
+        )
 
     def test_view_project_page_shows_title(self):
         res = self.client.get('/buyers/direct-award/g-cloud/projects/1')
@@ -347,45 +359,40 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         assert self._cannot_start_from_task(tasklist, 5)
 
     @pytest.mark.parametrize(
-        ('framework_status', 'following_framework_status', 'locked_at', 'position', 'content'),
+        ('framework_status', 'following_framework_status', 'locked_at', 'position', 'heading'),
         (
-            ('live', 'coming', None, 'sidebar', 'Not locked pre live temporary message'),
-            ('live', 'open', None, 'sidebar', 'Not locked pre live temporary message'),
-            ('live', 'pending', None, 'sidebar', 'Not locked pre live temporary message'),
-            ('live', 'standstill', None, 'sidebar', 'Not locked pre live temporary message'),
-            ('live', 'live', None, 'sidebar', 'Not locked post live temporary message'),
-            ('expired', 'live', None, 'sidebar', 'Not locked post live temporary message'),
-            ('live', 'coming', '2018-06-25T21:57:00.881261Z', 'banner', 'Locked pre live temporary message'),
-            ('live', 'open', '2018-06-25T21:57:00.881261Z', 'banner', 'Locked pre live temporary message'),
-            ('live', 'pending', '2018-06-25T21:57:00.881261Z', 'banner', 'Locked pre live temporary message'),
-            ('live', 'standstill', '2018-06-25T21:57:00.881261Z', 'banner', 'Locked pre live temporary message'),
+            ('live', 'coming', None, 'sidebar',
+                'G-Cloud\xa010 services will replace existing services on Wednesday 5 January 2000'),
+            ('live', 'open', None, 'sidebar',
+                'G-Cloud\xa010 services will replace existing services on Wednesday 5 January 2000'),
+            ('live', 'pending', None, 'sidebar',
+                'G-Cloud\xa010 services will replace existing services on Wednesday 5 January 2000'),
+            ('live', 'standstill', None, 'sidebar',
+                'G-Cloud\xa010 services will replace existing services on Wednesday 5 January 2000'),
+            ('live', 'live', None, 'sidebar',
+                'G-Cloud\xa010 services replaced G-Cloud\xa09 services on Wednesday 5 January 2000'),
+            ('expired', 'live', None, 'sidebar',
+                'G-Cloud\xa010 services replaced G-Cloud\xa09 services on Wednesday 5 January 2000'),
+            ('live', 'coming', '2018-06-25T21:57:00.881261Z', 'banner',
+                'The G-Cloud\xa09 services you found will expire soon'),
+            ('live', 'open', '2018-06-25T21:57:00.881261Z', 'banner',
+                'The G-Cloud\xa09 services you found will expire soon'),
+            ('live', 'pending', '2018-06-25T21:57:00.881261Z', 'banner',
+                'The G-Cloud\xa09 services you found will expire soon'),
+            ('live', 'standstill', '2018-06-25T21:57:00.881261Z', 'banner',
+                'The G-Cloud\xa09 services you found will expire soon'),
             ('live', 'live', '2018-06-25T21:57:00.881261Z', 'banner',
-                'Locked post live during interim temporary message'),
+                'The G-Cloud\xa09 services you found will expire soon'),
             ('expired', 'live', '2018-06-25T21:57:00.881261Z', 'banner',
-                'Locked post live post interim temporary message'),
+                'The G-Cloud\xa09 services you found have expired'),
         )
     )
     @mock.patch('app.main.views.g_cloud.content_loader')
-    def test_overview_displays_temporary_messages_correctly(
-        self, content_loader_mock, framework_status, following_framework_status, locked_at, position, content
+    def test_overview_displays_correct_temporary_message(
+        self, content_loader_mock, framework_status, following_framework_status, locked_at, position, heading
     ):
-        project = self._get_direct_award_project_fixture()
-        project['project']['lockedAt'] = locked_at
-        self.data_api_client.get_direct_award_project.return_value = project
-
-        self.data_api_client.find_frameworks.return_value = {
-            'frameworks': [framework(slug='g-cloud-9', status=framework_status)['frameworks']]
-        }
-        self.data_api_client.get_framework.side_effect = [
-            framework(slug='g-cloud-10', status=following_framework_status)
-        ]
-
-        message_mock = mock.Mock()
-        message_mock.filter.return_value = self.content_loader.get_message('g9', 'saved-search-temporary-messages')
-        content_loader_mock.get_message.side_effect = [
-            self.content_loader.get_message('g9', 'urls'),
-            message_mock,
-        ]
+        self._set_project_locked_and_framework_states(locked_at, framework_status, following_framework_status)
+        content_loader_mock.get_metadata.return_value = 'g-cloud-10'
 
         res = self.client.get('/buyers/direct-award/g-cloud/projects/1')
         assert res.status_code == 200
@@ -399,16 +406,14 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         elif position == 'banner':
             assert len(doc.xpath("//div[@class='temporary-message-banner']")) == 1
             assert not doc.xpath("//div[@class='temporary-message']")
+        else:
+            raise
 
-        assert doc.xpath(f"//h3[@class='temporary-message-heading'][contains(normalize-space(), '{content} heading.')]")
-        assert doc.xpath(f"//p[@class='temporary-message-message'][contains(normalize-space(), '{content} content.')]")
+        assert doc.xpath(f"//h3[@class='temporary-message-heading'][contains(normalize-space(), '{heading}')]")
 
     @mock.patch('app.main.views.g_cloud.content_loader')
-    def test_temporary_messages_not_shown_if_no_content_to_load(self, content_loader_mock):
-        content_loader_mock.get_message.side_effect = [
-            self.content_loader.get_message('g9', 'urls'),
-            ContentNotFoundError()
-        ]
+    def test_temporary_messages_not_shown_if_no_defined_following_framework(self, content_loader_mock):
+        content_loader_mock.get_metadata.side_effect = ContentNotFoundError()
 
         res = self.client.get('/buyers/direct-award/g-cloud/projects/1')
         assert res.status_code == 200
@@ -418,6 +423,58 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
 
         assert not doc.xpath("//div[@class='temporary-message']")
         assert not doc.xpath("//div[@class='temporary-message-banner']")
+
+    def test_returns_500_if_following_framework_not_found(self):
+        self.data_api_client.get_framework.side_effect = HTTPError(response=mock.Mock(status_code=404))
+
+        res = self.client.get('/buyers/direct-award/g-cloud/projects/1')
+        assert res.status_code == 500
+
+    @pytest.mark.parametrize(
+        ('framework_status', 'following_framework_status'),
+        (
+            ('live', 'live'),
+            ('expired', 'live'),
+        )
+    )
+    def test_temp_message_search_links_are_correctly_displayed(self, framework_status, following_framework_status):
+        self._set_project_locked_and_framework_states(
+            '2018-06-25T21:57:00.881261Z', framework_status, following_framework_status
+        )
+
+        res = self.client.get('/buyers/direct-award/g-cloud/projects/1')
+        assert res.status_code == 200
+
+        body = res.get_data(as_text=True)
+        doc = html.fromstring(body)
+
+        search_links = doc.xpath("//div[@class='temporary-message-banner']//a")
+        assert len(search_links) == 1
+        assert search_links[0].text == 'start a new search for G-Cloud\xa010 services'
+        assert search_links[0].values()[0] == '/g-cloud/search?q=accelerator'
+
+    @pytest.mark.parametrize(
+        ('locked_at', 'fwork_status', 'following_fwork_status', 'xpath', 'index', 'date'),
+        (
+            (None, 'live', 'standstill', '//h3[@class="temporary-message-heading"]', 0, 'Wednesday 5 January 2000'),
+            (None, 'live', 'standstill', '//p[@class="temporary-message-message"]', 1, 'before 5 January they'),
+            (None, 'live', 'live', '//h3[@class="temporary-message-heading"]', 0, 'Wednesday 5 January 2000'),
+            (True, 'live', 'standstill', '//ul[@class="list-bullet-small"]/li', 1, 'Wednesday 5 January 2000'),
+            (True, 'expired', 'live', '//p[@class="temporary-message-message"]', 0, 'Thursday 6 January 2000'),
+        )
+    )
+    def test_temp_message_dates_are_correctly_shown(
+        self, locked_at, fwork_status, following_fwork_status, xpath, index, date
+    ):
+        self._set_project_locked_and_framework_states(locked_at, fwork_status, following_fwork_status)
+
+        res = self.client.get('/buyers/direct-award/g-cloud/projects/1')
+        assert res.status_code == 200
+
+        body = res.get_data(as_text=True)
+        doc = html.fromstring(body)
+
+        assert date in doc.xpath(xpath)[index].text
 
 
 class TestDirectAwardURLGeneration(BaseApplicationTest):

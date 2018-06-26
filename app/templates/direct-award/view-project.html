@@ -25,16 +25,7 @@
 {% endblock %}
 
 {% block main_content %}
-  {% if temporary_message.type == 'banner' %}
-    {%
-      with
-      messages = temporary_message.content.messages,
-      heading = temporary_message.content.heading,
-      banner = True
-    %}
-      {% include "toolkit/temporary-message.html" %}
-    {% endwith %}
-  {% endif %}
+  {% include "direct-award/_saved-search-locked-project-temp-message.html" %}
   <div class="grid-row">
     <div class="column-two-thirds">
       {% with
@@ -141,17 +132,7 @@
           {% include "toolkit/instruction-list.html" %}
         {% endwith %}
     </div>
-    {% if temporary_message.type == 'sidebar' %}
-      <div class="column-one-third">
-        {%
-          with
-          messages = temporary_message.content.messages,
-          heading = temporary_message.content.heading
-        %}
-          {% include "toolkit/temporary-message.html" %}
-        {% endwith %}
-      </div>
-    {% endif %}
+    {% include "direct-award/_saved-search-not-locked-project-temp-message.html" %}
   </div>
   {% if not delete_requested %}
      <div class="grid-row">

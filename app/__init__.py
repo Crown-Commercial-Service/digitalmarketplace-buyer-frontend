@@ -43,7 +43,6 @@ def create_app(config_name):
                 content_loader.load_manifest(framework_data['slug'], 'services', 'display_service')
                 content_loader.load_manifest(framework_data['slug'], 'services', 'download_results')
                 try_load_metadata(content_loader, application, framework_data, ['following_framework'])
-                try_load_messages(content_loader, application, framework_data, ['saved-search-temporary-messages'])
             elif framework_data['framework'] == 'digital-outcomes-and-specialists':
                 content_loader.load_manifest(framework_data['slug'], 'briefs', 'display_brief')
 
