@@ -56,9 +56,9 @@
           {
             "body": "Export your results",
             "custom_body_list": [
-              {"type": "text", "text": "Export your results to keep a record of the services you've found."},
+              {"type": "text", "text": "Export your results to keep a record of the services you’ve found."},
               {"type": "text", "text": "You cannot edit your search once it has ended."},
-              {"type": "box", "style": "inactive", "label": "Can't start yet"} if not search.createdAt else {"type": "action", "label": "Export your results", "href": url_for('direct_award.end_search', framework_family=framework.framework, project_id=project.id), "analytics": "trackEvent", "analytics_category": "Direct Award", "analytics_action": "Internal Link"} if not search.searchedAt else {"type": "box", "style": "complete", "label": ''.join(["Search ended on ", search.searchedAt|datetimeformat()])}
+              {"type": "box", "style": "inactive", "label": "Can’t start yet"} if not search.createdAt else {"type": "action", "label": "Export your results", "href": url_for('direct_award.end_search', framework_family=framework.framework, project_id=project.id), "analytics": "trackEvent", "analytics_category": "Direct Award", "analytics_action": "Internal Link"} if not search.searchedAt else {"type": "box", "style": "complete", "label": ''.join(["Search ended on ", search.searchedAt|datetimeformat()])}
             ]
           },
           {
@@ -69,7 +69,7 @@
                 data-analytics-category=\"Direct Award\"
                 data-analytics-action=\"External Link\"
                 >compare services</a>."])|safe},
-              {"type": "box", "style": "inactive", "label": "Can't start yet"} if not search.searchedAt else {"type": "action", "label": "Download search results", "href": url_for('direct_award.search_results', framework_family=framework.framework, project_id=project.id), "analytics": "trackEvent", "analytics_category": "Direct Award", "analytics_action": "Internal Link"} if not project.downloadedAt else {"type": "box", "style": "complete", "label": "Search results downloaded"},
+              {"type": "box", "style": "inactive", "label": "Can’t start yet"} if not search.searchedAt else {"type": "action", "label": "Download search results", "href": url_for('direct_award.search_results', framework_family=framework.framework, project_id=project.id), "analytics": "trackEvent", "analytics_category": "Direct Award", "analytics_action": "Internal Link"} if not project.downloadedAt else {"type": "box", "style": "complete", "label": "Search results downloaded"},
               {"type": "text", "text": ''.join(["<a href=\"", url_for('direct_award.search_results', framework_family=framework.framework, project_id=project.id)|e, "\"
                 data-analytics=\"trackEvent\"
                 data-analytics-category=\"Direct Award\"
@@ -96,7 +96,7 @@
                                          data-analytics-action=\"External Link\"
                                         >publish the details on Contracts Finder</a>.
                  Whether or not you award a contract, tell us the outcome. This information helps us improve the Digital Marketplace."|safe},
-              {"type": "box", "style": "inactive", "label": "Can't start yet"} if not project.downloadedAt
+              {"type": "box", "style": "inactive", "label": "Can’t start yet"} if not project.downloadedAt
               else {"type": "box", "style": "complete", "label": project_outcome_label } if project.outcome
               else {"type": "action", "label": "Tell us the outcome", "href": url_for('direct_award.did_you_award_contract', framework_family=framework.framework, project_id=project.id), "analytics": "trackEvent", "analytics_category": "Direct Award", "analytics_action": "Internal Link"}
             ]
@@ -119,7 +119,7 @@
                                                                   >", customer_benefits_record_form_email|replace("-", "&#8209;"|safe), "</a>"]
                 )
               },
-              {"type": "box", "style": "inactive", "label": "Can't start yet"} if not project.outcome else {}
+              {"type": "box", "style": "inactive", "label": "Can’t start yet"} if not project.outcome else {}
             ]
           }
 
