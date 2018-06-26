@@ -522,8 +522,6 @@ def view_project(framework_family, project_id):
                            search_summary_sentence=search_summary_sentence,
                            framework_urls=framework_urls,
                            call_off_contract_url=framework_urls['call_off_contract_url'],
-                           customer_benefits_record_form_url=framework_urls['customer_benefits_record_form_url'],
-                           customer_benefits_record_form_email=framework_urls['customer_benefits_record_form_email'],
                            project_outcome_label=project_outcome_label)
 
 
