@@ -49,7 +49,7 @@
             ] + ([
               {"type": "action", "label": "Start a new search", "href": url_for('main.search_services'), "analytics": "trackEvent", "analytics_category": "Direct Award", "analytics_action": "Internal Link"}
             ] if not search_summary_sentence else [
-              {"type": "text", "class": ["search-summary"], "text": search_summary_sentence},
+              {"type": "text", "class": ["search-summary", "application-notice", "info-notice"], "text": search_summary_sentence},
               {"type": "text", "text": ''.join(["<a href=\"", buyer_search_page_url|e, "\">Edit your search and view results</a>"])|safe} if not search.searchedAt else {}
             ])
           },
