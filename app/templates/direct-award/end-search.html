@@ -1,6 +1,6 @@
 {% extends "toolkit/layouts/_base_page.html" %}
 
-{% block page_title %}End your search - Digital Marketplace{% endblock %}
+{% block page_title %}Export your results - Digital Marketplace{% endblock %}
 
 {% block breadcrumb %}
   {%
@@ -29,49 +29,61 @@
 {% endblock %}
 
 {% block main_content %}
+{% if errors %}
+  <div class="validation-masthead" aria-labelledby="validation-masthead-heading" aria-role="group" tabindex="-1">
+    <p class="validation-masthead-description">
+      You need to <a href="#user_understands">confirm that you’ve finished editing your search</a> before you
+      continue.
+    </p>
+  </div>
+{% endif %}
+
 
 <div class="end-search-page">
   <div class="grid-row">
-    <div class="column-two-thirds">
+    <div class="column-two-thirds dmspeak">
       <header class="page-heading">
         <h1>
-          End your search
+          Before you export your results
         </h1>
       </header>
       
-      <div class="dmspeak">
-        <h2 class="heading-xmedium">Before you end your search</h2>
-      </div>
-      <p>You should only continue when you have finished searching for cloud services.</p>
+      <p>Export your search results to keep a record of the services you’ve found.</p>
 
-      <br>
-      <p>You cannot edit your search once it has ended.</p>
-      <br>
+      <p>
+        You can download exported results as a spreadsheet or comma-separated values (CSV). Both file types include
+        suppliers’ service descriptions and contact details.
+      </p>
 
-      <div class="dmspeak">
-        <h2 class="heading-xmedium">After your search has ended</h2>
-      </div>
-      <p>Ending your search will create a spreadsheet of your search results.</p>
-      
-      <br>
-      <p>You can download the spreadsheet and use it to help you review or compare services.</p>
+      <p>Do not export your results if you still need to edit your search.</p>
 
-      <br>
       <form
         action="{{ url_for('direct_award.end_search', framework_family=framework.framework, project_id=project.id) }}"
         method="POST"
         >
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+        {%
+          with
+          name = form.user_understands.name,
+          type = "checkbox",
+          value = form.user_understands.value,
+          error = errors.get('user_understands', {}).get('message', None),
+          options = form.user_understands.options
+        %}
+          {% include "toolkit/forms/selection-buttons.html" %}
+        {% endwith %}
+
         <button class="button-save end-your-search-button"
           data-analytics="trackEvent"
           data-analytics-category="Direct Award"
           data-analytics-action="End search"
           data-analytics-label="{{ search_count }}"
           {% if disable_end_search_btn %}disabled="disabled"{% endif %}
-          >End search and continue</button>
+          >Export results and continue</button>
       </form>
       
-      <p><a href="{{ url_for('direct_award.view_project', framework_family=framework.framework, project_id=project.id) }}">Return to overview</a></p>
+      <p><a href="{{ url_for('direct_award.view_project', framework_family=framework.framework, project_id=project.id) }}">Return to your task list</a></p>
     </div>
   </div>
 

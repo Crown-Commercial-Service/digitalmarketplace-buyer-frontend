@@ -21,6 +21,7 @@ from app import search_api_client, data_api_client, content_loader
 from ..exceptions import AuthException
 from ..forms.direct_award_forms import (
     CreateProjectForm,
+    BeforeYouDownloadForm,
     DidYouAwardAContractForm,
     TellUsAboutContractForm,
     WhichServiceWonTheContractForm,
@@ -50,7 +51,7 @@ from ..presenters.service_presenters import Service
 
 END_SEARCH_LIMIT = 30  # TODO: This should be done in the API.
 PROJECT_SAVED_MESSAGE = "Search saved."
-PROJECT_ENDED_MESSAGE = "Search ended. You can now download your search results."
+PROJECT_ENDED_MESSAGE = "Results exported. Your files are ready to download."
 TOO_MANY_RESULTS_MESSAGE = f"You have too many services to review. Refine your search until you have no more " \
                            f"than {END_SEARCH_LIMIT} results."
 
@@ -571,7 +572,8 @@ def end_search(framework_family, project_id):
     if project['lockedAt']:
         abort(400)
 
-    if request.method == 'POST' and int(search_count) <= END_SEARCH_LIMIT:
+    form = BeforeYouDownloadForm()
+    if form.validate_on_submit() and int(search_count) <= END_SEARCH_LIMIT:
         try:
             data_api_client.lock_direct_award_project(user_email=current_user.email_address, project_id=project_id)
         except HTTPError as e:
@@ -579,15 +581,19 @@ def end_search(framework_family, project_id):
 
         flash(PROJECT_ENDED_MESSAGE, 'success')
 
-        return redirect(url_for('.view_project', framework_family=framework_family, project_id=project['id']))
+        return redirect(url_for('.search_results', framework_family=framework_family, project_id=project['id']))
+
+    errors = get_errors_from_wtform(form)
 
     return render_template(
         'direct-award/end-search.html',
         project=project,
         framework=framework,
+        form=form,
+        errors=errors,
         disable_end_search_btn=disable_end_search_btn,
         search_count=search_count,
-    )
+    ), 200 if not errors else 400
 
 
 @direct_award.route(

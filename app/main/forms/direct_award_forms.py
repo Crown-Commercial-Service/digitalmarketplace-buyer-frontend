@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 
-from wtforms.fields import DecimalField, RadioField
+from wtforms.fields import DecimalField, RadioField, BooleanField
 from wtforms.validators import DataRequired, Length, NumberRange, Optional, InputRequired
 
 from dmutils.forms.fields import DateField
@@ -28,6 +28,13 @@ class DMRadioField(RadioField):
     def options(self):
         """The RadioField choices in a format suitable for the frontend toolkit"""
         return [{"label": label, "value": value} for value, label in self.choices]
+
+
+class DMBooleanField(BooleanField):
+    @property
+    def options(self):
+        # Even single boolean fields are expected to be in an 'options' list
+        return [{"label": self.label.text, "value": self.data}]
 
 
 class DidYouAwardAContractForm(FlaskForm):
@@ -125,3 +132,10 @@ class WhyDidYouNotAwardForm(FlaskForm):
 
         self.why_did_you_not_award_the_contract.choices = [(option['value'], option['label']) for option in options]
         self.why_did_you_not_award_the_contract.options = options
+
+
+class BeforeYouDownloadForm(FlaskForm):
+    user_understands = DMBooleanField(
+        "I understand that I cannot edit my search again after I export my results",
+        validators=[InputRequired(message="Please confirm that you understand before you continue.")]
+    )
