@@ -9,6 +9,12 @@ from app.main.presenters.search_summary import SearchSummary
 from .search_helpers import ungroup_request_filters
 from ..helpers.shared_helpers import construct_url_from_base_and_params
 
+NOT_LOCKED_PRE_LIVE = 1
+NOT_LOCKED_POST_LIVE = 2
+LOCKED_PRE_LIVE = 3
+LOCKED_POST_LIVE_DURING_INTERIM = 4
+LOCKED_POST_LIVE_POST_INTERIM = 5
+
 
 class SearchMeta(object):
     def __init__(self, search_api_url, frameworks_by_slug, include_markup=False):
@@ -43,16 +49,16 @@ class SearchMeta(object):
 def get_saved_search_temporary_message_status(project, framework, following_framework):
     if not project['lockedAt']:
         if following_framework['status'] in ['coming', 'open', 'pending', 'standstill']:
-            return 'not_locked_pre_live'
+            return NOT_LOCKED_PRE_LIVE
         elif following_framework['status'] in ['live', 'expired']:
-            return 'not_locked_post_live'
+            return NOT_LOCKED_POST_LIVE
     else:
         if following_framework['status'] in ['coming', 'open', 'pending', 'standstill']:
-            return 'locked_pre_live'
+            return LOCKED_PRE_LIVE
         elif framework['status'] == 'live' and following_framework['status'] in ['live', 'expired']:
-            return 'locked_post_live_during_interim'
+            return LOCKED_POST_LIVE_DURING_INTERIM
         elif framework['status'] == 'expired' and following_framework['status'] in ['live', 'expired']:
-            return 'locked_post_live_post_interim'
+            return LOCKED_POST_LIVE_POST_INTERIM
 
     # this should never be reached
     current_app.logger.error(

@@ -20,6 +20,13 @@ csrf = CSRFProtect()
 
 content_loader = ContentLoader('app/content')
 from .main.helpers.framework_helpers import get_latest_live_framework
+from .main.helpers.search_save_helpers import (
+    NOT_LOCKED_PRE_LIVE,
+    NOT_LOCKED_POST_LIVE,
+    LOCKED_PRE_LIVE,
+    LOCKED_POST_LIVE_DURING_INTERIM,
+    LOCKED_POST_LIVE_POST_INTERIM,
+)
 
 
 def create_app(config_name):
@@ -101,6 +108,16 @@ def create_app(config_name):
     def refresh_session():
         session.permanent = True
         session.modified = True
+
+    @application.context_processor
+    def inject_saved_search_temp_message_statuses():
+        return dict(
+            NOT_LOCKED_PRE_LIVE=NOT_LOCKED_PRE_LIVE,
+            NOT_LOCKED_POST_LIVE=NOT_LOCKED_POST_LIVE,
+            LOCKED_PRE_LIVE=LOCKED_PRE_LIVE,
+            LOCKED_POST_LIVE_DURING_INTERIM=LOCKED_POST_LIVE_DURING_INTERIM,
+            LOCKED_POST_LIVE_POST_INTERIM=LOCKED_POST_LIVE_POST_INTERIM,
+        )
 
     return application
 

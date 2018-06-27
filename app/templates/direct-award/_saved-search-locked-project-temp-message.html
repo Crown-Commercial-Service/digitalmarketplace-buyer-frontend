@@ -1,5 +1,5 @@
 {% if project.lockedAt and following_framework %}
-  {% if temporary_message_status == 'locked_pre_live' %}
+  {% if temporary_message_status == LOCKED_PRE_LIVE %}
     {% set temp_heading = 'The ' + '{}'.format(framework.name)|nbsp + ' services you found will expire soon' %}
     {% set temp_messages = [
         'You can either:',
@@ -9,7 +9,7 @@
         'Any existing contracts for ' + '{}'.format(framework.name)|nbsp + ' services are still valid.'
       ]
     %}
-  {% elif temporary_message_status == 'locked_post_live_during_interim' %}
+  {% elif temporary_message_status == LOCKED_POST_LIVE_DURING_INTERIM %}
     {% set temp_heading = 'The ' + '{}'.format(framework.name)|nbsp + ' services you found will expire soon' %}
     {% set temp_messages = [
         'You can either:',
@@ -19,7 +19,7 @@
         'Any existing contracts for ' + '{}'.format(framework.name)|nbsp + ' services are still valid.'
       ]
     %}
-  {% elif temporary_message_status == 'locked_post_live_post_interim' %}
+  {% elif temporary_message_status == LOCKED_POST_LIVE_POST_INTERIM %}
     {% set temp_heading = 'The ' + '{}'.format(framework.name)|nbsp + ' services you found have expired' %}
     {% set temp_messages = [
         ('If you did not award a contract by {}, you need to <a href="{}">start a new search for '.format(framework.frameworkExpiresAtUTC|dateformat, buyer_search_page_url)|safe +
