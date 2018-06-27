@@ -15,11 +15,11 @@
         "label": "Your account"
       },
       {
-        "link": url_for('direct_award.saved_search_overview', framework_family=framework.framework),
+        "link": url_for('direct_award.saved_search_overview', framework_family=framework.family),
         "label": "Your saved searches"
       },
       {
-        "link": url_for('direct_award.view_project', framework_family=framework.framework, project_id=project.id),
+        "link": url_for('direct_award.view_project', framework_family=framework.family, project_id=project.id),
         "label": project.name
       }
     ]
@@ -58,7 +58,7 @@
       <p>Do not export your results if you still need to edit your search.</p>
 
       <form
-        action="{{ url_for('direct_award.end_search', framework_family=framework.framework, project_id=project.id) }}"
+        action="{{ url_for('direct_award.end_search', framework_family=framework.family, project_id=project.id) }}"
         method="POST"
         >
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
@@ -83,7 +83,7 @@
           >Export results and continue</button>
       </form>
       
-      <p><a href="{{ url_for('direct_award.view_project', framework_family=framework.framework, project_id=project.id) }}">Return to your task list</a></p>
+      <p><a href="{{ url_for('direct_award.view_project', framework_family=framework.family, project_id=project.id) }}">Return to your task list</a></p>
     </div>
   </div>
 
