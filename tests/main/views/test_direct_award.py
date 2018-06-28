@@ -199,12 +199,8 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
     def _task_cannot_start_yet(self, tasklist, task):
         return self._task_has_box(tasklist, task, style='inactive', text='Can’t start yet')
 
-    def _task_search_ended(self, tasklist, task):
-        return self._task_has_box(tasklist, task, style='complete', text='Search ended on Tuesday 29 August 2017'
-                                                                         ' at 8:00am BST')
-
-    def _task_search_downloaded(self, tasklist, task):
-        return self._task_has_box(tasklist, task, style='complete', text='Search results downloaded')
+    def _task_completed(self, tasklist, task):
+        return self._task_has_box(tasklist, task, style='complete', text='Completed')
 
     def _cannot_start_from_task(self, tasklist, cannot_start_from):
         return all([self._task_cannot_start_yet(tasklist, task + 1) is ((task + 1) >= cannot_start_from)
@@ -230,7 +226,7 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         body = res.get_data(as_text=True)
         doc = html.fromstring(body)
 
-        item_headings = ['Save a search', 'Export your results', 'Download your search results',
+        item_headings = ['Save a search', 'Export your results', 'Download and assess your results',
                          'Award a contract', 'Complete the Customer Benefits Record form']
 
         tasklist = doc.xpath('//li[contains(@class, "instruction-list-item")]')
@@ -248,8 +244,7 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         tasklist = doc.xpath('//li[contains(@class, "instruction-list-item")]')
 
         # Step 1 should link to the guidance for buying fairly.
-        assert self._task_has_link(tasklist, 1, 'https://www.gov.uk/guidance/how-to-buy-digital-marketplace-'
-                                                'services-fairly')
+        assert self._task_has_link(tasklist, 1, 'https://www.gov.uk/guidance/g-cloud-buyers-guide#fairness')
 
         # Step 3 should link to guidance on comparing services.
         buyer_guide_compare_services_url = self.content_loader.get_message('g9', 'urls',
@@ -317,7 +312,7 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         tasklist = doc.xpath('//li[contains(@class, "instruction-list-item")]')
 
         assert self._task_has_link(tasklist, 1, '/g-cloud/search?q=accelerator') is False
-        assert self._task_search_ended(tasklist, 2)
+        assert self._task_completed(tasklist, 2)
         assert self._task_has_link(tasklist, 3,
                                    '/buyers/direct-award/g-cloud/projects/1/results')
 
@@ -344,7 +339,7 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         tasklist = doc.xpath('//li[contains(@class, "instruction-list-item")]')
 
         assert self._task_has_link(tasklist, 1, '/g-cloud/search?q=accelerator') is False
-        assert self._task_search_downloaded(tasklist, 3)
+        assert self._task_completed(tasklist, 3)
         assert self._task_has_link(tasklist, 3,
                                    '/buyers/direct-award/g-cloud/projects/1/results')
 

@@ -41,7 +41,7 @@
           {
             "body": "Save a search",
             "custom_body_list": [
-              {"type": "text", "text": "Save your search so you can export your results later. You must <a href=\"https://www.gov.uk/guidance/how-to-buy-digital-marketplace-services-fairly\" target=\"_blank\" rel=\"external noopener noreferrer\"
+              {"type": "text", "text": "Save your search so you can export your results later. You must <a href=\"https://www.gov.uk/guidance/g-cloud-buyers-guide#fairness\" target=\"_blank\" rel=\"external noopener noreferrer\"
                 data-analytics=\"trackEvent\"
                 data-analytics-category=\"Direct Award\"
                 data-analytics-action=\"External Link\"
@@ -50,31 +50,31 @@
               {"type": "action", "label": "Start a new search", "href": url_for('main.search_services'), "analytics": "trackEvent", "analytics_category": "Direct Award", "analytics_action": "Internal Link"}
             ] if not search_summary_sentence else [
               {"type": "text", "class": ["search-summary", "application-notice", "info-notice"], "text": search_summary_sentence},
-              {"type": "text", "text": ''.join(["<a href=\"", buyer_search_page_url|e, "\">Edit your search and view results</a>"])|safe} if not search.searchedAt else {}
+              {"type": "text", "text": ''.join(["<a href=\"", buyer_search_page_url|e, "\">Edit your search and view results</a>"])|safe} if not search.searchedAt else {},
+              {"type": "box", "style": "complete", "label": "Completed"} if search.searchedAt else {}
             ])
           },
           {
             "body": "Export your results",
             "custom_body_list": [
-              {"type": "text", "text": "Export your results to keep a record of the services you’ve found."},
-              {"type": "text", "text": "You cannot edit your search once it has ended."},
-              {"type": "box", "style": "inactive", "label": "Can’t start yet"} if not search.createdAt else {"type": "action", "label": "Export your results", "href": url_for('direct_award.end_search', framework_family=framework.framework, project_id=project.id), "analytics": "trackEvent", "analytics_category": "Direct Award", "analytics_action": "Internal Link"} if not search.searchedAt else {"type": "box", "style": "complete", "label": ''.join(["Search ended on ", search.searchedAt|datetimeformat()])}
+              {"type": "text", "text": "Export your search results to keep a record of the services you’ve found. You should only complete this step when you're ready to start assessing services."},
+            {"type": "box", "style": "inactive", "label": "Can’t start yet"} if not search.createdAt else {"type": "action", "label": "Export your results", "href": url_for('direct_award.end_search', framework_family=framework.framework, project_id=project.id), "analytics": "trackEvent", "analytics_category": "Direct Award", "analytics_action": "Internal Link"} if not search.searchedAt else {"type": "box", "style": "complete", "label": "Completed"}
             ]
           },
           {
-            "body": "Download your search results",
+            "body": "Download and assess your results",
             "custom_body_list": [
-              {"type": "text", "text": ''.join(["Download a spreadsheet of your search results.<br>You can use the spreadsheet to help you review or <a href=\"", framework_urls.buyers_guide_compare_services_url|e, "\" target=\"_blank\" rel=\"external noopener noreferrer\"
+              {"type": "text", "text": ''.join(["Download a spreadsheet of suppliers’ service descriptions and contact details.", "Follow the <a href=\"", framework_urls.buyers_guide_compare_services_url|e, "\" target=\"_blank\" rel=\"external noopener noreferrer\"
                 data-analytics=\"trackEvent\"
                 data-analytics-category=\"Direct Award\"
                 data-analytics-action=\"External Link\"
-                >compare services</a>."])|safe},
-              {"type": "box", "style": "inactive", "label": "Can’t start yet"} if not search.searchedAt else {"type": "action", "label": "Download search results", "href": url_for('direct_award.search_results', framework_family=framework.framework, project_id=project.id), "analytics": "trackEvent", "analytics_category": "Direct Award", "analytics_action": "Internal Link"} if not project.downloadedAt else {"type": "box", "style": "complete", "label": "Search results downloaded"},
+                >guidance for assessing services</a>. Do not hold a competition to decide the winner."])|safe},
               {"type": "text", "text": ''.join(["<a href=\"", url_for('direct_award.search_results', framework_family=framework.framework, project_id=project.id)|e, "\"
                 data-analytics=\"trackEvent\"
                 data-analytics-category=\"Direct Award\"
                 data-analytics-action=\"Internal Link\"
-              >Download your results again.</a>"])|safe} if project.downloadedAt else {}
+              >Download your results again</a>"])|safe} if project.downloadedAt else {},
+              {"type": "box", "style": "inactive", "label": "Can’t start yet"} if not search.searchedAt else {"type": "action", "label": "Download search results", "href": url_for('direct_award.search_results', framework_family=framework.framework, project_id=project.id), "analytics": "trackEvent", "analytics_category": "Direct Award", "analytics_action": "Internal Link"} if not project.downloadedAt else {"type": "box", "style": "complete", "label": "Completed"}
             ]
           },
           {
