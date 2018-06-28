@@ -1,6 +1,6 @@
-{% if not project.lockedAt and following_framework %}
+{% if not project.lockedAt and temporary_message_status %}
   <div class="column-one-third">
-    {% if temporary_message_status == NOT_LOCKED_PRE_LIVE %}
+    {% if temporary_message_status == NOT_LOCKED_STANDSTILL %}
       {% set temp_heading =  '{}'.format(following_framework.name)|nbsp + ' services will replace existing services on {}'.format(following_framework.frameworkLiveAtUTC|dateformat) %}
       {% set temp_messages =  [
           'Your search results will update automatically.',

@@ -1,5 +1,5 @@
-{% if project.lockedAt and following_framework %}
-  {% if temporary_message_status == LOCKED_PRE_LIVE %}
+{% if project.lockedAt and temporary_message_status %}
+  {% if temporary_message_status == LOCKED_STANDSTILL %}
     {% set temp_heading = 'The ' + '{}'.format(framework.name)|nbsp + ' services you found will expire soon' %}
     {% set temp_messages = [
         'You can either:',

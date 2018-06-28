@@ -361,11 +361,11 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
     @pytest.mark.parametrize(
         ('framework_status', 'following_framework_status', 'locked_at', 'position', 'heading'),
         (
-            ('live', 'coming', None, 'sidebar',
+            ('live', 'coming', None, None,
                 'G-Cloud\xa010 services will replace existing services on Wednesday 5 January 2000'),
-            ('live', 'open', None, 'sidebar',
+            ('live', 'open', None, None,
                 'G-Cloud\xa010 services will replace existing services on Wednesday 5 January 2000'),
-            ('live', 'pending', None, 'sidebar',
+            ('live', 'pending', None, None,
                 'G-Cloud\xa010 services will replace existing services on Wednesday 5 January 2000'),
             ('live', 'standstill', None, 'sidebar',
                 'G-Cloud\xa010 services will replace existing services on Wednesday 5 January 2000'),
@@ -373,11 +373,11 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
                 'G-Cloud\xa010 services replaced G-Cloud\xa09 services on Wednesday 5 January 2000'),
             ('expired', 'live', None, 'sidebar',
                 'G-Cloud\xa010 services replaced G-Cloud\xa09 services on Wednesday 5 January 2000'),
-            ('live', 'coming', '2018-06-25T21:57:00.881261Z', 'banner',
+            ('live', 'coming', '2018-06-25T21:57:00.881261Z', None,
                 'The G-Cloud\xa09 services you found will expire soon'),
-            ('live', 'open', '2018-06-25T21:57:00.881261Z', 'banner',
+            ('live', 'open', '2018-06-25T21:57:00.881261Z', None,
                 'The G-Cloud\xa09 services you found will expire soon'),
-            ('live', 'pending', '2018-06-25T21:57:00.881261Z', 'banner',
+            ('live', 'pending', '2018-06-25T21:57:00.881261Z', None,
                 'The G-Cloud\xa09 services you found will expire soon'),
             ('live', 'standstill', '2018-06-25T21:57:00.881261Z', 'banner',
                 'The G-Cloud\xa09 services you found will expire soon'),
@@ -400,7 +400,10 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         body = res.get_data(as_text=True)
         doc = html.fromstring(body)
 
-        if position == 'sidebar':
+        if position is None:
+            assert not doc.xpath("//div[@class='temporary-message-banner']")
+            assert not doc.xpath("//div[@class='temporary-message']")
+        elif position == 'sidebar':
             assert len(doc.xpath("//div[@class='temporary-message']")) == 1
             assert not doc.xpath("//div[@class='temporary-message-banner']")
         elif position == 'banner':
@@ -409,7 +412,8 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         else:
             raise
 
-        assert doc.xpath(f"//h3[@class='temporary-message-heading'][contains(normalize-space(), '{heading}')]")
+        if position:
+            assert doc.xpath(f"//h3[@class='temporary-message-heading'][contains(normalize-space(), '{heading}')]")
 
     @mock.patch('app.main.views.g_cloud.content_loader')
     def test_temporary_messages_not_shown_if_no_defined_following_framework(self, content_loader_mock):
