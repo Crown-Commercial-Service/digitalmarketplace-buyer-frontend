@@ -663,7 +663,7 @@ class TestDirectAwardAwardContract(TestDirectAwardBase):
                              (('still-assessing', '/buyers/direct-award/g-cloud/projects/1'),
                               ('yes', '/buyers/direct-award/g-cloud/projects/1/which-service-won-contract'),
                               ('no', '/buyers/direct-award/g-cloud/projects/1/why-didnt-you-award-contract')))
-    def test_award_contract_we_are_still_assessing_redirects_on_post(self, choice, expected_redirect):
+    def test_did_you_award_contract_redirects_on_post(self, choice, expected_redirect):
         self.login_as_buyer()
 
         res = self.client.post('/buyers/direct-award/g-cloud/projects/1/did-you-award-contract',
@@ -671,6 +671,26 @@ class TestDirectAwardAwardContract(TestDirectAwardBase):
 
         assert res.status_code == 302
         assert res.location.endswith(expected_redirect)
+
+    def test_we_are_still_assessing_calls_api(self):
+        self.login_as_buyer()
+
+        self.client.post('/buyers/direct-award/g-cloud/projects/1/did-you-award-contract',
+                         data={'did_you_award_a_contract': 'still-assessing'})
+
+        self.data_api_client.mark_direct_award_project_as_still_assessing.assert_called_once()
+
+    def test_still_assessing_flashes(self):
+        self.login_as_buyer()
+
+        self.client.post('/buyers/direct-award/g-cloud/projects/1/did-you-award-contract',
+                         data={'did_you_award_a_contract': 'still-assessing'})
+
+        self.assert_flashes(
+            "Your response for ‘My procurement project’ has been saved.<br/>"
+            "You still need to tell us the outcome when you've finished assessing services",
+            'success'
+        )
 
     def test_award_contract_raises_404_if_project_is_not_accessible(self):
         self.data_api_client.get_direct_award_project.side_effect = HTTPError(mock.Mock(status_code=404))
