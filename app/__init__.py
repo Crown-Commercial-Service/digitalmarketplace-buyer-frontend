@@ -4,7 +4,7 @@ from flask_wtf.csrf import CSRFProtect, CSRFError
 
 import dmapiclient
 from dmutils import init_app, flask_featureflags
-from dmcontent.content_loader import ContentLoader
+from dmcontent.content_loader import ContentLoader, ContentNotFoundError
 from dmutils.user import User
 from dmutils.external import external as external_blueprint
 
@@ -45,11 +45,12 @@ def create_app(config_name):
             elif framework_data['framework'] == 'digital-outcomes-and-specialists':
                 content_loader.load_manifest(framework_data['slug'], 'briefs', 'display_brief')
 
-    content_loader.load_manifest(
-        get_latest_live_framework(frameworks, 'digital-outcomes-and-specialists')['slug'],
-        'briefs',
-        'briefs_search_filters',
-    )
+    for framework in filter(lambda x: x['framework'] == 'digital-outcomes-and-specialists', frameworks):
+        try:
+            content_loader.load_manifest(framework['slug'], 'briefs', 'briefs_search_filters')
+
+        except ContentNotFoundError:
+            pass
 
     from .main import main as main_blueprint
     from .main import direct_award as direct_award_blueprint
