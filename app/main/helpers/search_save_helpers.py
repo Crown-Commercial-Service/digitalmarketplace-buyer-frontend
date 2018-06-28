@@ -1,3 +1,5 @@
+from enum import Enum
+
 from flask import abort, current_app, url_for
 from werkzeug.datastructures import MultiDict
 
@@ -9,11 +11,13 @@ from app.main.presenters.search_summary import SearchSummary
 from .search_helpers import ungroup_request_filters
 from ..helpers.shared_helpers import construct_url_from_base_and_params
 
-NOT_LOCKED_PRE_LIVE = 1
-NOT_LOCKED_POST_LIVE = 2
-LOCKED_PRE_LIVE = 3
-LOCKED_POST_LIVE_DURING_INTERIM = 4
-LOCKED_POST_LIVE_POST_INTERIM = 5
+
+class SavedSearchStateEnum(Enum):
+    NOT_LOCKED_PRE_LIVE = 1
+    NOT_LOCKED_POST_LIVE = 2
+    LOCKED_PRE_LIVE = 3
+    LOCKED_POST_LIVE_DURING_INTERIM = 4
+    LOCKED_POST_LIVE_POST_INTERIM = 5
 
 
 class SearchMeta(object):
@@ -49,16 +53,16 @@ class SearchMeta(object):
 def get_saved_search_temporary_message_status(project, framework, following_framework):
     if not project['lockedAt']:
         if following_framework['status'] in ['coming', 'open', 'pending', 'standstill']:
-            return NOT_LOCKED_PRE_LIVE
+            return SavedSearchStateEnum.NOT_LOCKED_PRE_LIVE.value
         elif following_framework['status'] in ['live', 'expired']:
-            return NOT_LOCKED_POST_LIVE
+            return SavedSearchStateEnum.NOT_LOCKED_POST_LIVE.value
     else:
         if following_framework['status'] in ['coming', 'open', 'pending', 'standstill']:
-            return LOCKED_PRE_LIVE
+            return SavedSearchStateEnum.LOCKED_PRE_LIVE.value
         elif framework['status'] == 'live' and following_framework['status'] in ['live', 'expired']:
-            return LOCKED_POST_LIVE_DURING_INTERIM
+            return SavedSearchStateEnum.LOCKED_POST_LIVE_DURING_INTERIM.value
         elif framework['status'] == 'expired' and following_framework['status'] in ['live', 'expired']:
-            return LOCKED_POST_LIVE_POST_INTERIM
+            return SavedSearchStateEnum.LOCKED_POST_LIVE_POST_INTERIM.value
 
     # this should never be reached
     current_app.logger.error(
