@@ -1,4 +1,5 @@
 <div id="js-dm-live-search-results" class="js-dm-live-search-fade">
+  {% include 'search/_suggestions.html' %}
   {% include 'search/_{}_results.html'.format(doc_type) %}
   {% include 'search/_pagination.html' %}
 </div>
