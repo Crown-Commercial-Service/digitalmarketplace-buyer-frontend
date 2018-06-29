@@ -629,7 +629,7 @@ class TestDirectAwardAwardContract(TestDirectAwardBase):
 
         doc = html.fromstring(res.get_data(as_text=True))
         assert len(doc.xpath(
-            '//h1[contains(normalize-space(), "Did you award a contract for ‘My procurement project’?")]')) == 1
+            '//h1[contains(normalize-space(), "Did you award a contract for ‘My procurement project <’?")]')) == 1
         assert len(doc.xpath('//input[@type="radio"][contains(following-sibling::label, "Yes")]')) == 1
         assert len(doc.xpath('//input[@type="radio"][contains(following-sibling::label, "No")]')) == 1
         assert len(doc.xpath(
@@ -687,8 +687,8 @@ class TestDirectAwardAwardContract(TestDirectAwardBase):
                          data={'did_you_award_a_contract': 'still-assessing'})
 
         self.assert_flashes(
-            "Your response for ‘My procurement project’ has been saved.<br/>"
-            "You still need to tell us the outcome when you've finished assessing services",
+            "Your response for ‘My procurement project &lt;’ has been saved. "
+            "You still need to tell us the outcome when you’ve finished assessing services",
             'success'
         )
 
@@ -860,7 +860,7 @@ class TestDirectAwardTellUsAboutContract(TestDirectAwardBase):
         res = client.post(self.url, data=data)
         assert res.status_code == 302
         assert res.location.endswith('/buyers/direct-award/g-cloud/projects/1')
-        self.assert_flashes("You’ve updated ‘My procurement project’", 'success')
+        self.assert_flashes("You’ve updated ‘My procurement project &lt;’", 'success')
 
     def test_tell_us_about_contract_post_raises_400_and_shows_validation_messages_if_no_form_input(self, client):
         res = client.post(self.url)
