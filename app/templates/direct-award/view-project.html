@@ -25,6 +25,7 @@
 {% endblock %}
 
 {% block main_content %}
+  {% include "direct-award/_saved-search-locked-project-temp-message.html" %}
   <div class="grid-row">
     <div class="column-two-thirds">
       {% with
@@ -131,6 +132,7 @@
           {% include "toolkit/instruction-list.html" %}
         {% endwith %}
     </div>
+    {% include "direct-award/_saved-search-not-locked-project-temp-message.html" %}
   </div>
   {% if not delete_requested %}
      <div class="grid-row">

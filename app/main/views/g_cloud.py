@@ -8,6 +8,7 @@ from flask_login import current_user
 from werkzeug.urls import Href, url_encode, url_decode
 
 from dmapiclient import HTTPError
+from dmcontent.errors import ContentNotFoundError
 from dmcontent.formats import format_service_price
 from dmcontent.questions import Pricing
 from dmutils.forms import get_errors_from_wtform
@@ -34,7 +35,7 @@ from ..helpers.search_helpers import (
 )
 from ..helpers import framework_helpers
 from ..helpers.direct_award_helpers import is_direct_award_project_accessible, get_direct_award_projects
-from ..helpers.search_save_helpers import SearchMeta
+from ..helpers.search_save_helpers import get_saved_search_temporary_message_status, SearchMeta
 from ..helpers.shared_helpers import get_fields_from_manifest, get_questions_from_manifest_by_id
 from ...main import main, direct_award
 from ..presenters.search_presenters import (
@@ -464,7 +465,6 @@ def view_project(framework_family, project_id):
     if searches:
         # A Direct Award project has one 'active' search which is what we will display on this overview page.
         search = list(filter(lambda x: x['active'], searches))[0]
-
         search_meta = SearchMeta(search['searchUrl'], frameworks_by_slug)
 
         search_summary_sentence = search_meta.search_summary.markup()
@@ -513,16 +513,33 @@ def view_project(framework_family, project_id):
         "data_value": current_project_stage
     }]
 
-    return render_template('direct-award/view-project.html',
-                           framework=framework,
-                           project=project,
-                           custom_dimensions=custom_dimensions,
-                           search=search,
-                           buyer_search_page_url=buyer_search_page_url,
-                           search_summary_sentence=search_summary_sentence,
-                           framework_urls=framework_urls,
-                           call_off_contract_url=framework_urls['call_off_contract_url'],
-                           project_outcome_label=project_outcome_label)
+    try:
+        following_framework = framework_helpers.get_framework_or_500(
+            data_api_client,
+            content_loader.get_metadata(framework['slug'], 'following_framework', 'slug'),
+            current_app.logger,
+        )
+    except ContentNotFoundError:
+        following_framework = None
+
+    temporary_message_status = get_saved_search_temporary_message_status(
+        project, framework, following_framework
+    ) if following_framework else None
+
+    return render_template(
+        'direct-award/view-project.html',
+        framework=framework,
+        following_framework=following_framework,
+        project=project,
+        custom_dimensions=custom_dimensions,
+        search=search,
+        buyer_search_page_url=buyer_search_page_url,
+        search_summary_sentence=search_summary_sentence,
+        framework_urls=framework_urls,
+        call_off_contract_url=framework_urls['call_off_contract_url'],
+        project_outcome_label=project_outcome_label,
+        temporary_message_status=temporary_message_status,
+    )
 
 
 @direct_award.route('/<string:framework_family>/projects/<int:project_id>/end-search', methods=['GET', 'POST'])

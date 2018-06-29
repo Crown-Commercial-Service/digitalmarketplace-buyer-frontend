@@ -5,6 +5,7 @@ from flask_wtf.csrf import CSRFProtect, CSRFError
 import dmapiclient
 from dmutils import init_app, flask_featureflags
 from dmcontent.content_loader import ContentLoader
+from dmcontent.utils import try_load_metadata, try_load_messages
 from dmutils.user import User
 from dmutils.external import external as external_blueprint
 
@@ -19,6 +20,7 @@ csrf = CSRFProtect()
 
 content_loader = ContentLoader('app/content')
 from .main.helpers.framework_helpers import get_latest_live_framework
+from .main.helpers.search_save_helpers import SavedSearchStateEnum
 
 
 def create_app(config_name):
@@ -37,11 +39,11 @@ def create_app(config_name):
     for framework_data in frameworks:
         if not framework_data['slug'] in application.config.get('DM_FRAMEWORK_CONTENT_MAP', {}):
             if framework_data['framework'] == 'g-cloud':
-                if framework_data['status'] != 'expired':
-                    content_loader.load_manifest(framework_data['slug'], 'services', 'services_search_filters')
+                content_loader.load_manifest(framework_data['slug'], 'services', 'services_search_filters')
                 # we need to be able to display old services, even on expired frameworks
                 content_loader.load_manifest(framework_data['slug'], 'services', 'display_service')
                 content_loader.load_manifest(framework_data['slug'], 'services', 'download_results')
+                try_load_metadata(content_loader, application, framework_data, ['following_framework'])
             elif framework_data['framework'] == 'digital-outcomes-and-specialists':
                 content_loader.load_manifest(framework_data['slug'], 'briefs', 'display_brief')
 
@@ -100,6 +102,10 @@ def create_app(config_name):
     def refresh_session():
         session.permanent = True
         session.modified = True
+
+    @application.context_processor
+    def inject_saved_search_temp_message_statuses():
+        return {state.name: state.value for state in SavedSearchStateEnum}
 
     return application
 

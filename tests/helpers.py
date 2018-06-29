@@ -360,3 +360,8 @@ class BaseApplicationTest(object):
                 raise AssertionError('nothing flashed')
             assert expected_message in message
             assert expected_category == category
+
+
+class CustomAbortException(Exception):
+    """Custom error for testing abort"""
+    pass

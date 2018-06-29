@@ -1,4 +1,6 @@
-from flask import url_for
+from enum import Enum
+
+from flask import abort, current_app, url_for
 from werkzeug.datastructures import MultiDict
 
 from app import search_api_client, content_loader
@@ -8,6 +10,14 @@ from app.main.presenters.search_presenters import filters_for_lot
 from app.main.presenters.search_summary import SearchSummary
 from .search_helpers import ungroup_request_filters
 from ..helpers.shared_helpers import construct_url_from_base_and_params
+
+
+class SavedSearchStateEnum(Enum):
+    NOT_LOCKED_STANDSTILL = 1
+    NOT_LOCKED_POST_LIVE = 2
+    LOCKED_STANDSTILL = 3
+    LOCKED_POST_LIVE_DURING_INTERIM = 4
+    LOCKED_POST_LIVE_POST_INTERIM = 5
 
 
 class SearchMeta(object):
@@ -38,3 +48,30 @@ class SearchMeta(object):
             filters.values(),
             lots_by_slug
         )
+
+
+def get_saved_search_temporary_message_status(project, framework, following_framework):
+    if following_framework['status'] in ['coming', 'open', 'pending']:
+        return None
+
+    if not project['lockedAt']:
+        if following_framework['status'] == 'standstill':
+            return SavedSearchStateEnum.NOT_LOCKED_STANDSTILL.value
+        elif following_framework['status'] in ['live', 'expired']:
+            return SavedSearchStateEnum.NOT_LOCKED_POST_LIVE.value
+    else:
+        if following_framework['status'] == 'standstill':
+            return SavedSearchStateEnum.LOCKED_STANDSTILL.value
+        elif framework['status'] == 'live' and following_framework['status'] in ['live', 'expired']:
+            return SavedSearchStateEnum.LOCKED_POST_LIVE_DURING_INTERIM.value
+        elif framework['status'] == 'expired' and following_framework['status'] in ['live', 'expired']:
+            return SavedSearchStateEnum.LOCKED_POST_LIVE_POST_INTERIM.value
+
+    # this should never be reached
+    current_app.logger.error(
+        "Saved search temporary messages invalid frameworks state: "
+        "'{}' - '{}' and '{}' - '{}'".format(
+            framework['slug'], framework['status'], following_framework['slug'], following_framework['status']
+        )
+    )
+    abort(500)
