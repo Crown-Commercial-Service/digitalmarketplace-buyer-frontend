@@ -1,6 +1,6 @@
 {% extends "toolkit/layouts/_base_page.html" %}
 
-{% block page_title %}{{ project.name }} - Digital Marketplace{% endblock %}
+{% block page_title %}{{ project.name|default("Find cloud hosting, software and support") }} - Digital Marketplace{% endblock %}
 
 {% block breadcrumb %}
   {%
@@ -9,7 +9,8 @@
       {
           "link": url_for('main.index'),
           "label": "Digital Marketplace"
-      },
+      }
+    ] + ([
       {
           "link": url_for('external.buyer_dashboard'),
           "label": "Your account"
@@ -18,7 +19,11 @@
           "link": url_for('direct_award.saved_search_overview', framework_family=framework.framework),
           "label": "Your saved searches"
       }
-    ]
+    ] if project else [
+      {
+          "label": "Find cloud hosting, software and support"
+      }
+    ])
   %}
     {% include "toolkit/breadcrumb.html" %}
   {% endwith %}
@@ -29,12 +34,21 @@
   <div class="grid-row">
     <div class="column-two-thirds">
       {% with
-        heading = project.name
+        heading = project.name|default("Find cloud hosting, software and support")
       %}
         {% include "toolkit/page-heading.html" %}
       {% endwith %}
     </div>
   </div>
+  {% if not project %}
+    <p class="lede">
+      Before you start you should
+      <a href="https://www.gov.uk/guidance/g-cloud-buyers-guide#requirements">write a list of requirements</a>
+      and
+      <a href="https://www.gov.uk/service-manual/agile-delivery/spend-controls-check-if-you-need-approval-to-spend-money-on-a-service">check if you need approval</a>
+      to spend money on a service.
+    </p>
+  {% endif %}
   <div class="grid-row direct-award-project-overview-page">
     <div class="column-two-thirds">
       {% block before_sections %}{% endblock %}
@@ -48,7 +62,8 @@
                 data-analytics-action=\"External Link\"
                 >buy fairly</a> and assess all the services that you find. Do not combine the results of more than one search."|safe}
             ] + ([
-              {"type": "action", "label": "Start a new search", "href": url_for('main.search_services'), "analytics": "trackEvent", "analytics_category": "Direct Award", "analytics_action": "Internal Link"}
+              {"type": "action", "label": "Start a new search", "href": url_for('direct_award_public.choose_lot', framework_family=framework.family), "analytics": "trackEvent", "analytics_category": "Direct Award", "analytics_action": "Internal Link"},
+              {"type": "text", "text": ''.join(["<a href=\"", url_for('direct_award.saved_search_overview', framework_family=framework.family)|e, "\">See a list of your saved searches</a>"])|safe}
             ] if not search_summary_sentence else [
               {"type": "text", "class": ["search-summary", "application-notice", "info-notice"], "text": search_summary_sentence},
               {"type": "text", "text": ''.join(["<a href=\"", buyer_search_page_url|e, "\">Edit your search and view results</a>"])|safe} if not search.searchedAt else {},
@@ -58,9 +73,10 @@
           {
             "body": "Export your results",
             "custom_body_list": [
-              {"type": "text", "text": "Export your search results to keep a record of the services you’ve found. You should only complete this step when you're ready to start assessing services."},
-            {"type": "box", "style": "inactive", "label": "Can’t start yet"} if not search.createdAt else {"type": "action", "label": "Export your results", "href": url_for('direct_award.end_search', framework_family=framework.framework, project_id=project.id), "analytics": "trackEvent", "analytics_category": "Direct Award", "analytics_action": "Internal Link"} if not search.searchedAt else {"type": "box", "style": "complete", "label": "Completed"}
-            ]
+              {"type": "text", "text": "Export your search results to keep a record of the services you’ve found. You should only complete this step when you're ready to start assessing services."}
+            ] + ([
+              {"type": "box", "style": "inactive", "label": "Can’t start yet"} if not search.createdAt else {"type": "action", "label": "Export your results", "href": url_for('direct_award.end_search', framework_family=framework.framework, project_id=project.id), "analytics": "trackEvent", "analytics_category": "Direct Award", "analytics_action": "Internal Link"} if not search.searchedAt else {"type": "box", "style": "complete", "label": "Completed"}
+            ] if project else [])
           },
           {
             "body": "Download and assess your results",
@@ -74,9 +90,10 @@
                 data-analytics=\"trackEvent\"
                 data-analytics-category=\"Direct Award\"
                 data-analytics-action=\"Internal Link\"
-              >Download your results again</a>"])|safe} if project.downloadedAt else {},
+              >Download your results again</a>"])|safe} if project.downloadedAt else {}
+            ] + ([
               {"type": "box", "style": "inactive", "label": "Can’t start yet"} if not search.searchedAt else {"type": "action", "label": "Download search results", "href": url_for('direct_award.search_results', framework_family=framework.framework, project_id=project.id), "analytics": "trackEvent", "analytics_category": "Direct Award", "analytics_action": "Internal Link"} if not project.downloadedAt else {"type": "box", "style": "complete", "label": "Completed"}
-            ]
+            ] if project else [])
           },
           {
             "body": "Award a contract",
@@ -97,10 +114,11 @@
                                          data-analytics-action=\"External Link\"
                                         >publish the details on Contracts Finder</a>.
                  Whether or not you award a contract, tell us the outcome. This information helps us improve the Digital Marketplace."|safe},
+            ] + ([
               {"type": "box", "style": "inactive", "label": "Can’t start yet"} if not project.downloadedAt
               else {"type": "box", "style": "complete", "label": project_outcome_label } if project.outcome
               else {"type": "action", "label": "Tell us the outcome", "href": url_for('direct_award.did_you_award_contract', framework_family=framework.framework, project_id=project.id), "analytics": "trackEvent", "analytics_category": "Direct Award", "analytics_action": "Internal Link"}
-            ]
+            ] if project else [])
           },
           {
             "body": "Complete the Customer Benefits Record form",
@@ -121,9 +139,10 @@
                                                                   "<!-- use non-breaking dash TODO: do this in a better way -->",
                  " They will contact you if they find any issues with the supplier."]
                 )
-              },
+              }
+            ] + ([
               {"type": "box", "style": "inactive", "label": "Can’t start yet"} if not project.outcome else {}
-            ]
+            ] if project else [])
           }
 
         ],

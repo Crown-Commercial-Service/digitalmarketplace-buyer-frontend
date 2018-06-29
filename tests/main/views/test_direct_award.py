@@ -309,7 +309,7 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
 
         tasklist = doc.xpath('//li[contains(@class, "instruction-list-item")]')
 
-        assert self._task_has_link(tasklist, 1, '/g-cloud/search')
+        assert self._task_has_link(tasklist, 1, '/buyers/direct-award/g-cloud/choose-lot')
         assert self._task_has_link(tasklist, 2, '/buyers/direct-award/g-cloud/projects/1/end-search') is False
 
         assert self._cannot_start_from_task(tasklist, 2)
@@ -1153,3 +1153,59 @@ class TestDirectAwardDownloadResultsView(TestDirectAwardBase):
 
         res = self.client.get('/buyers/direct-award/g-cloud/projects/1/results/download?filetype=docx')
         assert res.status_code == 400
+
+
+class TestPreProjectTaskList(TestDirectAwardBase):
+    @pytest.mark.parametrize("logged_in_as", (None, "buyer", "supplier",))
+    def test_pre_project_task_list(self, logged_in_as):
+        if logged_in_as == "buyer":
+            self.login_as_buyer()
+        if logged_in_as == "supplier":
+            self.login_as_supplier()
+
+        res = self.client.get('/buyers/direct-award/g-cloud/start')
+        assert res.status_code == 200
+
+        doc = html.fromstring(res.get_data(as_text=True))
+
+        breadcrumbs = doc.xpath("//ol[@role='breadcrumbs']/li")
+        assert tuple(li.xpath("normalize-space(string())") for li in breadcrumbs) == (
+            "Digital Marketplace",
+            "Find cloud hosting, software and support",
+        )
+        assert tuple(li.xpath(".//a/@href") for li in breadcrumbs) == (
+            ["/"],
+            [],
+        )
+
+        assert doc.xpath("//h1[normalize-space(string())=$t]", t="Find cloud hosting, software and support")
+        assert doc.xpath(
+            "//head/title[starts-with(normalize-space(string()), $t)]",
+            t="Find cloud hosting, software and support",
+        )
+
+        assert doc.xpath("//p[starts-with(normalize-space(string()), $t)]", t="Before you start you should")
+
+        # there shouldn't be "Can't start yet" steps
+        assert not doc.xpath(
+            "//li[contains(@class, 'instruction-list-item')]"
+            "[.//*[contains(@class, 'instruction-list-item-box')][normalize-space(string())=$t]]",
+            t="Can’t start yet",
+        )
+
+        # but there should be more than one step shown
+        steps = doc.xpath("//li[contains(@class, 'instruction-list-item')]")
+        assert len(steps) > 1
+        active_step = steps[0]
+
+        assert active_step.xpath(
+            ".//a[@href=$u][contains(@class, 'button-save')][normalize-space(string())=$t]",
+            u="/buyers/direct-award/g-cloud/choose-lot",
+            t="Start a new search",
+        )
+
+        assert active_step.xpath(
+            ".//a[@href=$u][normalize-space(string())=$t]",
+            u="/buyers/direct-award/g-cloud",
+            t="See a list of your saved searches",
+        )
