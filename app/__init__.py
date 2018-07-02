@@ -55,11 +55,15 @@ def create_app(config_name):
 
     from .main import main as main_blueprint
     from .main import direct_award as direct_award_blueprint
+    from .main import direct_award_public as direct_award_public_blueprint
     from .status import status as status_blueprint
 
     application.register_blueprint(status_blueprint)
     application.register_blueprint(main_blueprint)
     application.register_blueprint(direct_award_blueprint)
+    # direct_award_blueprint and direct_award_public_blueprint cover the same url prefix - direct_award_blueprint takes
+    # precedence
+    application.register_blueprint(direct_award_public_blueprint)
 
     # Must be registered last so that any routes declared in the app are registered first (i.e. take precedence over
     # the external NotImplemented routes in the dm-utils external blueprint).

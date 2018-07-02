@@ -38,7 +38,7 @@ from ..helpers import framework_helpers
 from ..helpers.direct_award_helpers import is_direct_award_project_accessible, get_direct_award_projects
 from ..helpers.search_save_helpers import get_saved_search_temporary_message_status, SearchMeta
 from ..helpers.shared_helpers import get_fields_from_manifest, get_questions_from_manifest_by_id
-from ...main import main, direct_award
+from ...main import main, direct_award, direct_award_public
 from ..presenters.search_presenters import (
     filters_for_lot,
     set_filter_states,
@@ -58,9 +58,32 @@ TOO_MANY_RESULTS_MESSAGE = f"You have too many services to review. Refine your s
 
 @main.route('/g-cloud')
 def index_g_cloud():
+    return redirect(url_for("direct_award_public.pre_project_task_list", framework_family="g-cloud"), 301)
+
+
+@direct_award_public.route("/<string:framework_family>/start", methods=("GET",))
+def pre_project_task_list(framework_family):
+    frameworks_by_slug = framework_helpers.get_frameworks_by_slug(data_api_client)
+    framework = framework_helpers.get_latest_live_framework(frameworks_by_slug.values(), "g-cloud")
+
+    content_loader.load_messages(framework['slug'], ['urls'])
+    framework_urls = content_loader.get_message(framework['slug'], 'urls')
+
+    return render_template(
+        'direct-award/view-project.html',
+        project=None,
+        search=None,
+        framework=framework,
+        framework_urls=framework_urls,
+        call_off_contract_url=framework_urls['call_off_contract_url'],
+    )
+
+
+@direct_award_public.route('/<string:framework_family>/choose-lot')
+def choose_lot(framework_family):
     # if there are multiple live g-cloud frameworks, assume they all have the same lots
     all_frameworks = data_api_client.find_frameworks().get('frameworks')
-    framework = framework_helpers.get_latest_live_framework(all_frameworks, 'g-cloud')
+    framework = framework_helpers.get_latest_live_framework(all_frameworks, framework_family)
 
     content_loader.load_messages(framework['slug'], ['advice', 'descriptions'])
     gcloud_page_title = content_loader.get_message(framework['slug'], 'descriptions', 'framework')
@@ -70,7 +93,7 @@ def index_g_cloud():
     lot_browse_list_items = list()
     for lot in framework['lots']:
         lot_item = {
-            "link": url_for('.search_services', lot=lot['slug']),
+            "link": url_for('main.search_services', lot=lot['slug']),
             "title": lot['name'],
             "body": gcloud_lot_messages[lot['slug']]['body'],
             "subtext": gcloud_lot_messages[lot['slug']].get('advice'),

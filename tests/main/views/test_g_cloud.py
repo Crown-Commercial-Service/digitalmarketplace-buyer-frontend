@@ -1,5 +1,7 @@
 import mock
 
+from lxml import html
+
 from ...helpers import BaseApplicationTest
 
 
@@ -19,7 +21,12 @@ class TestGCloudIndexResults(BaseApplicationTest):
     def test_renders_correct_search_links(self):
         self._search_api_client.search.return_value = self.search_results
 
-        res = self.client.get('/g-cloud')
+        res = self.client.get("/buyers/direct-award/g-cloud/choose-lot")
         assert res.status_code == 200
-        assert 'form action="/g-cloud/search' in res.get_data(as_text=True)
-        assert '/g-cloud/search?lot=' in res.get_data(as_text=True)  # at least one link into a specific lot
+
+        body = res.get_data(as_text=True)
+        doc = html.fromstring(body)
+
+        assert doc.xpath("//form[@action=$u]", u="/g-cloud/search")
+        # at least one link into a specific lot
+        assert doc.xpath("//a[starts-with(@href, $u)]", u="/g-cloud/search?lot=")
