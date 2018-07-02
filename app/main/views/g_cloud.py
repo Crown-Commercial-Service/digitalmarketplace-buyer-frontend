@@ -608,7 +608,7 @@ def end_search(framework_family, project_id):
 
         flash(PROJECT_ENDED_MESSAGE, 'success')
 
-        return redirect(url_for('.view_project', framework_family=framework_family, project_id=project['id']))
+        return redirect(url_for('.search_results', framework_family=framework_family, project_id=project['id']))
 
     errors = get_errors_from_wtform(form)
 

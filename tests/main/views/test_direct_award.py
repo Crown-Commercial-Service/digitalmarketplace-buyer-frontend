@@ -630,7 +630,7 @@ class TestDirectAwardEndSearch(TestDirectAwardBase):
         doc = html.fromstring(res.get_data(as_text=True))
         assert doc.get_element_by_id('error-user_understands') is not None
 
-    def test_end_search_redirects_to_project_page(self):
+    def test_end_search_redirects_to_results_page(self):
         self.login_as_buyer()
 
         self.data_api_client.lock_direct_award_project.return_value = self._get_direct_award_lock_project_fixture()
@@ -638,7 +638,7 @@ class TestDirectAwardEndSearch(TestDirectAwardBase):
         res = self.client.post('/buyers/direct-award/g-cloud/projects/1/end-search', data={'user_understands': 'True'})
 
         assert res.status_code == 302
-        assert res.location.endswith('/buyers/direct-award/g-cloud/projects/1')
+        assert res.location.endswith('/buyers/direct-award/g-cloud/projects/1/results')
 
 
 class TestDirectAwardAwardContract(TestDirectAwardBase):
