@@ -272,8 +272,8 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         assert self._task_has_link(tasklist, 1, 'https://www.gov.uk/guidance/g-cloud-buyers-guide#fairness')
 
         # Step 3 should link to guidance on comparing services.
-        buyer_guide_compare_services_url = self.content_loader.get_message('g9', 'urls',
-                                                                           'buyers_guide_compare_services_url')
+        buyer_guide_compare_services_url = \
+            "https://www.gov.uk/guidance/g-cloud-buyers-guide#review-and-compare-services"
         assert self._task_has_link(tasklist, 3, buyer_guide_compare_services_url)
 
         # Step 5 has a link to framework customer benefits form and customer benefits form email address.
