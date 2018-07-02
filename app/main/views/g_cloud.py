@@ -619,6 +619,14 @@ def did_you_award_contract(framework_family, project_id):
     form = DidYouAwardAContractForm()
     if form.validate_on_submit():
         if form.did_you_award_a_contract.data == form.STILL_ASSESSING:
+            data_api_client.mark_direct_award_project_as_still_assessing(
+                project_id=project_id,
+                user_email=current_user.email_address)
+            flash(
+                f"Your response for ‘{project['name']}’ has been saved. "
+                "You still need to tell us the outcome when you’ve finished assessing services.",
+                'success'
+            )
             return redirect(url_for('.view_project',
                                     framework_family=framework_family,
                                     project_id=project_id))

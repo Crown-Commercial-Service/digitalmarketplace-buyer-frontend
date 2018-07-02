@@ -5,6 +5,7 @@ import re
 import json
 import mock
 from werkzeug.http import parse_cookie
+from markupsafe import escape
 
 from dmutils import api_stubs
 from dmutils.formats import DATETIME_FORMAT
@@ -352,13 +353,16 @@ class BaseApplicationTest(object):
         return re.findall(r'<span class="search-summary-count">.+</span>[^\n]+', res_data)
 
     # Method to test flashes taken from http://blog.paulopoiati.com/2013/02/22/testing-flash-messages-in-flask/
-    def assert_flashes(self, expected_message, expected_category='message'):
+    def assert_flashes(self, expected_message_markup, expected_category='message'):
         with self.client.session_transaction() as session:
             try:
                 category, message = session['_flashes'][0]
             except KeyError:
                 raise AssertionError('nothing flashed')
-            assert expected_message in message
+            # The code under test put `message` into the template, and jinja will call `escape` on it.
+            # We need to ensure we didn't wrap something unsafe in a `Markup` object, so should be checking the
+            # output markup, not the message that went in.
+            assert expected_message_markup in escape(message)
             assert expected_category == category
 
 

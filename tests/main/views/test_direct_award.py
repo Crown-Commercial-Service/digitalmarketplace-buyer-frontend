@@ -629,7 +629,7 @@ class TestDirectAwardAwardContract(TestDirectAwardBase):
 
         doc = html.fromstring(res.get_data(as_text=True))
         assert len(doc.xpath(
-            '//h1[contains(normalize-space(), "Did you award a contract for ‘My procurement project’?")]')) == 1
+            '//h1[contains(normalize-space(), "Did you award a contract for ‘My procurement project <’?")]')) == 1
         assert len(doc.xpath('//input[@type="radio"][contains(following-sibling::label, "Yes")]')) == 1
         assert len(doc.xpath('//input[@type="radio"][contains(following-sibling::label, "No")]')) == 1
         assert len(doc.xpath(
@@ -663,7 +663,7 @@ class TestDirectAwardAwardContract(TestDirectAwardBase):
                              (('still-assessing', '/buyers/direct-award/g-cloud/projects/1'),
                               ('yes', '/buyers/direct-award/g-cloud/projects/1/which-service-won-contract'),
                               ('no', '/buyers/direct-award/g-cloud/projects/1/why-didnt-you-award-contract')))
-    def test_award_contract_we_are_still_assessing_redirects_on_post(self, choice, expected_redirect):
+    def test_did_you_award_contract_redirects_on_post(self, choice, expected_redirect):
         self.login_as_buyer()
 
         res = self.client.post('/buyers/direct-award/g-cloud/projects/1/did-you-award-contract',
@@ -671,6 +671,26 @@ class TestDirectAwardAwardContract(TestDirectAwardBase):
 
         assert res.status_code == 302
         assert res.location.endswith(expected_redirect)
+
+    def test_we_are_still_assessing_calls_api(self):
+        self.login_as_buyer()
+
+        self.client.post('/buyers/direct-award/g-cloud/projects/1/did-you-award-contract',
+                         data={'did_you_award_a_contract': 'still-assessing'})
+
+        self.data_api_client.mark_direct_award_project_as_still_assessing.assert_called_once()
+
+    def test_still_assessing_flashes(self):
+        self.login_as_buyer()
+
+        self.client.post('/buyers/direct-award/g-cloud/projects/1/did-you-award-contract',
+                         data={'did_you_award_a_contract': 'still-assessing'})
+
+        self.assert_flashes(
+            "Your response for ‘My procurement project &lt;’ has been saved. "
+            "You still need to tell us the outcome when you’ve finished assessing services",
+            'success'
+        )
 
     def test_award_contract_raises_404_if_project_is_not_accessible(self):
         self.data_api_client.get_direct_award_project.side_effect = HTTPError(mock.Mock(status_code=404))
@@ -840,7 +860,7 @@ class TestDirectAwardTellUsAboutContract(TestDirectAwardBase):
         res = client.post(self.url, data=data)
         assert res.status_code == 302
         assert res.location.endswith('/buyers/direct-award/g-cloud/projects/1')
-        self.assert_flashes("You’ve updated ‘My procurement project’", 'success')
+        self.assert_flashes("You’ve updated ‘My procurement project &lt;’", 'success')
 
     def test_tell_us_about_contract_post_raises_400_and_shows_validation_messages_if_no_form_input(self, client):
         res = client.post(self.url)
