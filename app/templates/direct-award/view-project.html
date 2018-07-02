@@ -1,6 +1,8 @@
 {% extends "toolkit/layouts/_base_page.html" %}
 
-{% block page_title %}{{ project.name|default("Find cloud hosting, software and support") }} - Digital Marketplace{% endblock %}
+{% set page_title = project.name|default("Find cloud hosting, software and support") %}
+
+{% block page_title %}{{ page_title }} - Digital Marketplace{% endblock %}
 
 {% block breadcrumb %}
   {%
@@ -21,7 +23,7 @@
       }
     ] if project else [
       {
-          "label": "Find cloud hosting, software and support"
+          "label": page_title
       }
     ])
   %}
@@ -34,7 +36,7 @@
   <div class="grid-row">
     <div class="column-two-thirds">
       {% with
-        heading = project.name|default("Find cloud hosting, software and support")
+        heading = page_title
       %}
         {% include "toolkit/page-heading.html" %}
       {% endwith %}
