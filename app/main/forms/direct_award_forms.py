@@ -55,7 +55,7 @@ class DidYouAwardAContractForm(FlaskForm):
 class WhichServiceWonTheContractForm(FlaskForm):
     which_service_won_the_contract = RadioField(
         "Which service won the contract?",
-        validators=[InputRequired(message="Please select the supplier which won the contract")],
+        validators=[InputRequired(message="Please select the service that won the contract")],
     )
 
     def __init__(self, services, *args, **kwargs):
