@@ -65,7 +65,9 @@
   {% endif %}
   <div class="grid-row direct-award-project-overview-page">
     <div class="column-two-thirds">
-      {% block before_sections %}{% endblock %}
+      {% if project %}<form action="{{url_for('direct_award.update_project', framework_family=framework.framework, project_id=project.id)}}" method="post">{% endif %}
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        {% block before_sections %}{% endblock %}
         {% with items = [
           {
             "body": "Save a search",
@@ -81,33 +83,56 @@
             ] if not search_summary_sentence else [
               {"type": "text", "class": ["search-summary", "application-notice", "info-notice"], "text": search_summary_sentence},
               {"type": "text", "text": ''.join(["<a href=\"", buyer_search_page_url|e, "\">Edit your search and view results</a>"])|safe} if not search.searchedAt else {},
-              {"type": "box", "style": "complete", "label": "Completed"} if search.searchedAt or (search_summary_sentence and search_results_count < 30) else {}
+              {"type": "box", "style": "complete", "label": "Completed"} if search.searchedAt or (search_results_count and search_results_count < 30) else {}
             ])
           },
           {
             "body": "Export your results",
             "custom_body_list": [
-              {"type": "text", "text": "Export your search results to keep a record of the services you’ve found. You should only complete this step when you're ready to start assessing services."}
-            ] + ([
-              {"type": "box", "style": "inactive", "label": "Can’t start yet"} if not search.createdAt else {"type": "action", "label": "Export your results", "href": url_for('direct_award.end_search', framework_family=framework.framework, project_id=project.id), "analytics": "trackEvent", "analytics_category": "Direct Award", "analytics_action": "Internal Link"} if not search.searchedAt else {"type": "box", "style": "complete", "label": "Completed"}
-            ] if project else [])
+              {"type": "text", "text": '
+Export a list of the services you’ve found. Download suppliers’ service descriptions and contact details to help you
+assess services. Keep a copy for your records.'},
+              {"type": "box", "style": "inactive", "label": "Can’t start yet"} if project and not search.createdAt
+                else
+              {"type": "action", "label": "Export your results",
+               "href": url_for('direct_award.end_search', framework_family=framework.framework, project_id=project.id),
+               "analytics": "trackEvent", "analytics_category": "Direct Award",
+               "analytics_action": "Internal Link"} if project and not search.searchedAt
+                else
+              {"type": "text", "text": ''.join(['
+<a href="', url_for('direct_award.search_results', framework_family=framework.framework, project_id=project.id)|e, '"
+   data-analytics="trackEvent"
+   data-analytics-category="Direct Award"
+   data-analytics-action="Internal Link"
+>Download your results again</a>'])|safe} if project else {},
+              {"type": "box", "style": "complete", "label": "Completed"} if project and search.searchedAt else {}
+            ]
           },
           {
-            "body": "Download and assess your results",
+            "body": "Start assessing services",
             "custom_body_list": [
-              {"type": "text", "text": ''.join(["Download a spreadsheet of suppliers’ service descriptions and contact details. Follow the <a href=\"https://www.gov.uk/guidance/g-cloud-buyers-guide#review-and-compare-services\" target=\"_blank\" rel=\"external noopener noreferrer\"
-                data-analytics=\"trackEvent\"
-                data-analytics-category=\"Direct Award\"
-                data-analytics-action=\"External Link\"
-                >guidance for assessing services</a>. Do not hold a competition to decide the winner."])|safe},
-              {"type": "text", "text": ''.join(["<a href=\"", url_for('direct_award.search_results', framework_family=framework.framework, project_id=project.id)|e, "\"
-                data-analytics=\"trackEvent\"
-                data-analytics-category=\"Direct Award\"
-                data-analytics-action=\"Internal Link\"
-              >Download your results again</a>"])|safe} if project.downloadedAt else {}
-            ] + ([
-              {"type": "box", "style": "inactive", "label": "Can’t start yet"} if not search.searchedAt else {"type": "action", "label": "Download search results", "href": url_for('direct_award.search_results', framework_family=framework.framework, project_id=project.id), "analytics": "trackEvent", "analytics_category": "Direct Award", "analytics_action": "Internal Link"} if not project.downloadedAt else {"type": "box", "style": "complete", "label": "Completed"}
-            ] if project else [])
+              {"type": "text", "text": '
+Follow the <a href="https://www.gov.uk/guidance/g-cloud-buyers-guide#review-and-compare-services"
+              target="_blank" rel="external noopener noreferrer"
+              data-analytics="trackEvent"
+              data-analytics-category="Direct Award"
+              data-analytics-action="External Link">guidance for assessing services</a>. Choose the one that best meets
+your budget and requirements.Do not hold a competition to decide the winner. You can
+<a href="https://www.gov.uk/guidance/g-cloud-buyers-guide#what-to-do-if-you-have-a-question-for-the-suppliers
+   data-analytics="trackEvent"
+   data-analytics-category="Direct Award"
+   data-analytics-action="External Link">contact suppliers to ask clarification questions</a>, but you must not
+negotiate with them.'|safe},
+              {"type": "box", "style": "inactive", "label": "Can’t start yet"} if project and not search.searchedAt
+                else
+              {"type": "text", "text": '<button class="instruction-list-item-action button-save" id="ready-to-assess-button" name="readyToAssess"
+                                                value="true"
+                                                 data-analytics="trackEvent"
+                                                 data-analytics-category="Direct Award"
+                                                 data-analytics-action="Internal Link">Confirm you have read and
+understood how to assess services</button>'|safe} if project and not project.readyToAssessAt else {},
+              {"type": "box", "style": "complete", "label": "Completed"} if project and project.readyToAssessAt else {}
+            ]
           },
           {
             "body": "Award a contract",
@@ -129,7 +154,7 @@
                                         >publish the details on Contracts Finder</a>.
                  Whether or not you award a contract, tell us the outcome. This information helps us improve the Digital Marketplace."|safe},
             ] + ([
-              {"type": "box", "style": "inactive", "label": "Can’t start yet"} if not project.downloadedAt
+              {"type": "box", "style": "inactive", "label": "Can’t start yet"} if not project.readyToAssessAt
               else {"type": "box", "style": "complete", "label": project_outcome_label } if project.outcome
               else {"type": "action", "label": "Tell us the outcome", "href": url_for('direct_award.did_you_award_contract', framework_family=framework.framework, project_id=project.id), "analytics": "trackEvent", "analytics_category": "Direct Award", "analytics_action": "Internal Link"}
             ] if project else [])
@@ -164,6 +189,7 @@
         %}
           {% include "toolkit/instruction-list.html" %}
         {% endwith %}
+      {% if project %}</form>{% endif %}
     </div>
     {% include "direct-award/_saved-search-not-locked-project-temp-message.html" %}
   </div>

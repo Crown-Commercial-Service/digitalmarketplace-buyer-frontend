@@ -54,7 +54,7 @@ PROJECT_SAVED_MESSAGE = "Search saved."
 PROJECT_ENDED_MESSAGE = "Results exported. Your files are ready to download."
 TOO_MANY_RESULTS_MESSAGE = f"You have too many services to review. Refine your search until you have no more " \
                            f"than {END_SEARCH_LIMIT} results."
-
+CONFIRM_START_ASSESSING_MESSAGE = "You’ve confirmed that you have read and understood how to assess services."
 
 @main.route('/g-cloud')
 def index_g_cloud():
@@ -621,6 +621,31 @@ def end_search(framework_family, project_id):
         disable_end_search_btn=disable_end_search_btn,
         search_count=search_count,
     ), 200 if not errors else 400
+
+
+@direct_award.route('/<string:framework_family>/projects/<int:project_id>', methods=['POST'])
+def update_project(framework_family, project_id):
+    """Generic view for bits of the task list that need to POST stuff."""
+    project = data_api_client.get_direct_award_project(project_id=project_id)['project']
+    if not is_direct_award_project_accessible(project, current_user.id):
+        abort(404)
+
+    if request.form.get('readyToAssess'):
+        if not project['lockedAt']:
+            abort(400)
+
+        if project['outcome']:
+            abort(410)
+
+        data_api_client.update_direct_award_project(
+            project_id=project_id,
+            user_email=current_user.email_address,
+            project_data={'readyToAssess': True}
+        )
+        flash(CONFIRM_START_ASSESSING_MESSAGE)
+    return redirect(url_for('.view_project',
+                            framework_family=framework_family,
+                            project_id=project_id))
 
 
 @direct_award.route(
