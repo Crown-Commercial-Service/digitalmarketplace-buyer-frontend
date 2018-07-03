@@ -83,7 +83,7 @@
             ] if not search_summary_sentence else [
               {"type": "text", "class": ["search-summary", "application-notice", "info-notice"], "text": search_summary_sentence},
               {"type": "text", "text": ''.join(["<a href=\"", buyer_search_page_url|e, "\">Edit your search and view results</a>"])|safe} if not search.searchedAt else {},
-              {"type": "box", "style": "complete", "label": "Completed"} if search.searchedAt or (search_results_count and search_results_count < 30) else {}
+              {"type": "box", "style": "complete", "label": "Completed"} if search.searchedAt or can_end_search else {}
             ])
           },
           {
@@ -92,19 +92,22 @@
               {"type": "text", "text": '
 Export a list of the services you’ve found. Download suppliers’ service descriptions and contact details to help you
 assess services. Keep a copy for your records.'},
-              {"type": "box", "style": "inactive", "label": "Can’t start yet"} if project and not search.createdAt
+              {"type": "text", "text": '<p class="browse-list-item-status-angry"><strong>You have too many services to
+assess. Refine your search until you have no more than 30 results.</strong></p>'} if project and not can_end_search else {},
+              {"type": "box", "style": "inactive", "label": "Can’t start yet"} if project and not (search.searchedAt
+              or can_end_search)
                 else
               {"type": "action", "label": "Export your results",
                "href": url_for('direct_award.end_search', framework_family=framework.framework, project_id=project.id),
                "analytics": "trackEvent", "analytics_category": "Direct Award",
-               "analytics_action": "Internal Link"} if project and not search.searchedAt
+               "analytics_action": "Internal Link"} if project and not search.searchedAt and can_end_search
                 else
               {"type": "text", "text": ''.join(['
 <a href="', url_for('direct_award.search_results', framework_family=framework.framework, project_id=project.id)|e, '"
    data-analytics="trackEvent"
    data-analytics-category="Direct Award"
    data-analytics-action="Internal Link"
->Download your results</a>'])|safe} if project else {},
+>Download your results</a>'])|safe} if project and search.searchedAt else {},
               {"type": "box", "style": "complete", "label": "Completed"} if project and search.searchedAt else {}
             ]
           },

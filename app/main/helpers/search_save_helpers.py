@@ -49,6 +49,10 @@ class SearchMeta(object):
             lots_by_slug
         )
 
+    @property
+    def search_count(self):
+        return int(self.search_summary.count)
+
 
 def get_saved_search_temporary_message_status(project, framework, following_framework):
     if following_framework['status'] in ['coming', 'open', 'pending']:

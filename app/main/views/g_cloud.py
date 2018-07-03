@@ -493,7 +493,7 @@ def view_project(framework_family, project_id):
         search_meta = SearchMeta(search_api_client, search['searchUrl'], frameworks_by_slug)
 
         search_summary_sentence = search_meta.search_summary.markup()
-        search_results_count = int(search_meta.search_summary.count)
+        can_end_search = search_meta.search_count <= END_SEARCH_LIMIT
         framework = frameworks_by_slug[search_meta.framework_slug]
         buyer_search_page_url = search_meta.url
 
@@ -502,7 +502,7 @@ def view_project(framework_family, project_id):
 
         search = None
         buyer_search_page_url = None
-        search_results_count = None
+        can_end_search = None
         search_summary_sentence = None
 
     content_loader.load_messages(framework['slug'], ['urls'])
@@ -559,7 +559,7 @@ def view_project(framework_family, project_id):
         following_framework=following_framework,
         project=project,
         custom_dimensions=custom_dimensions,
-        search_results_count=search_results_count,
+        can_end_search=can_end_search,
         search=search,
         buyer_search_page_url=buyer_search_page_url,
         search_summary_sentence=search_summary_sentence,
@@ -589,7 +589,7 @@ def end_search(framework_family, project_id):
     search_count = search_meta.search_summary.count
     disable_end_search_btn = False
 
-    if int(search_count) > END_SEARCH_LIMIT:
+    if search_count > END_SEARCH_LIMIT:
         flash(TOO_MANY_RESULTS_MESSAGE, 'error')
         disable_end_search_btn = True
 
@@ -600,7 +600,7 @@ def end_search(framework_family, project_id):
         abort(400)
 
     form = BeforeYouDownloadForm()
-    if form.validate_on_submit() and int(search_count) <= END_SEARCH_LIMIT:
+    if form.validate_on_submit() and search_count <= END_SEARCH_LIMIT:
         try:
             data_api_client.lock_direct_award_project(user_email=current_user.email_address, project_id=project_id)
         except HTTPError as e:
