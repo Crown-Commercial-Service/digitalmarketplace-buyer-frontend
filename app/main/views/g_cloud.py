@@ -56,6 +56,11 @@ TOO_MANY_RESULTS_MESSAGE = f"You have too many services to review. Refine your s
                            f"than {END_SEARCH_LIMIT} results."
 CONFIRM_START_ASSESSING_MESSAGE = "You’ve confirmed that you have read and understood how to assess services."
 
+
+def _can_end_search(search_meta):
+    return search_meta.search_count <= END_SEARCH_LIMIT
+
+
 @main.route('/g-cloud')
 def index_g_cloud():
     return redirect(url_for("direct_award_public.pre_project_task_list", framework_family="g-cloud"), 301)
@@ -493,7 +498,7 @@ def view_project(framework_family, project_id):
         search_meta = SearchMeta(search_api_client, search['searchUrl'], frameworks_by_slug)
 
         search_summary_sentence = search_meta.search_summary.markup()
-        can_end_search = search_meta.search_count <= END_SEARCH_LIMIT
+        can_end_search = _can_end_search(search_meta)
         framework = frameworks_by_slug[search_meta.framework_slug]
         buyer_search_page_url = search_meta.url
 
@@ -586,10 +591,11 @@ def end_search(framework_family, project_id):
                                                                   only_active=True)['searches']
     search = searches[0]
     search_meta = SearchMeta(search_api_client, search['searchUrl'], frameworks_by_slug)
-    search_count = search_meta.search_summary.count
+    search_count = search_meta.search_count
+    can_end_search = _can_end_search(search_meta)
     disable_end_search_btn = False
 
-    if search_count > END_SEARCH_LIMIT:
+    if not can_end_search:
         flash(TOO_MANY_RESULTS_MESSAGE, 'error')
         disable_end_search_btn = True
 
@@ -600,7 +606,7 @@ def end_search(framework_family, project_id):
         abort(400)
 
     form = BeforeYouDownloadForm()
-    if form.validate_on_submit() and search_count <= END_SEARCH_LIMIT:
+    if form.validate_on_submit() and can_end_search:
         try:
             data_api_client.lock_direct_award_project(user_email=current_user.email_address, project_id=project_id)
         except HTTPError as e:
