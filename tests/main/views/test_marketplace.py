@@ -1671,14 +1671,16 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
 
         res = self.client.get('/digital-outcomes-and-specialists/opportunities')
         assert res.status_code == 200
-        suggestion = re.findall(r'<p>Suggestions:<\/p>', res.get_data(as_text=True))
-        assert len(suggestion) == 1
+
+        xpath = html.fromstring(res.get_data(as_text=True)).xpath
+        assert xpath('boolean(//div[contains(@class, "search-suggestion")])')
 
     def test_should_not_render_suggestions_when_results(self):
         res = self.client.get('/digital-outcomes-and-specialists/opportunities')
         assert res.status_code == 200
-        suggestion = re.findall(r'<p>Suggestions:<\/p>', res.get_data(as_text=True))
-        assert len(suggestion) == 0
+
+        xpath = html.fromstring(res.get_data(as_text=True)).xpath
+        assert not xpath('boolean(//div[contains(@class, "search-suggestion")])')
 
     def test_should_ignore_unknown_arguments(self):
         res = self.client.get('/digital-outcomes-and-specialists/opportunities?location=my-lovely-horse')

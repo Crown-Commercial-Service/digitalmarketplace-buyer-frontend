@@ -16,8 +16,8 @@ def find_pagination_links(res_data):
 
 
 def find_0_results_suggestion(res_data):
-    return re.findall(
-        r'<p>Suggestions:<\/p>', res_data)
+    xpath = html.fromstring(res_data).xpath
+    return xpath('//div[contains(@class, "search-suggestion")]')
 
 
 def get_0_results_search_response():
