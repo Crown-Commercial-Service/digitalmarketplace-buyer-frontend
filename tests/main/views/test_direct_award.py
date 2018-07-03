@@ -517,6 +517,31 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
 
         assert date in doc.xpath(xpath)[index].text
 
+    def test_search_completed_if_less_than_30_results(self):
+        res = self.client.get('/buyers/direct-award/g-cloud/projects/1')
+        assert res.status_code == 200
+
+        body = res.get_data(as_text=True)
+        doc = html.fromstring(body)
+
+        tasklist = doc.xpath('//li[contains(@class, "instruction-list-item")]')
+        assert self._task_completed(tasklist, 1)
+
+    def test_search_not_completed_if_more_than_30_results(self):
+        search_results = self.g9_search_results
+        search_results['meta']['total'] = 100
+
+        self._search_api_client._get.return_value = search_results
+
+        res = self.client.get('/buyers/direct-award/g-cloud/projects/1')
+        assert res.status_code == 200
+
+        body = res.get_data(as_text=True)
+        doc = html.fromstring(body)
+
+        tasklist = doc.xpath('//li[contains(@class, "instruction-list-item")]')
+        assert not self._task_completed(tasklist, 1)
+
 
 class TestDirectAwardURLGeneration(BaseApplicationTest):
     """This class has been separated out from above because we only want to mock a couple of methods on the API clients,
