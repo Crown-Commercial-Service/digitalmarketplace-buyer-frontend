@@ -539,6 +539,10 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
 
         tasklist = doc.xpath('//li[contains(@class, "instruction-list-item")]')
         assert not self._task_completed(tasklist, 1)
+        assert self._cannot_start_from_task(tasklist, 2)
+        assert len(doc.xpath(
+            '(//li[contains(@class, "instruction-list-item")])[2]/p[contains(normalize-space(),'
+            ' "You have too many services to assess.")]')) == 1
 
 
 class TestDirectAwardURLGeneration(BaseApplicationTest):
