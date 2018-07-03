@@ -492,6 +492,7 @@ def view_project(framework_family, project_id):
         search_meta = SearchMeta(search['searchUrl'], frameworks_by_slug)
 
         search_summary_sentence = search_meta.search_summary.markup()
+        search_results_count = int(search_meta.search_summary.count)
         framework = frameworks_by_slug[search_meta.framework_slug]
         buyer_search_page_url = search_meta.url
 
@@ -500,6 +501,7 @@ def view_project(framework_family, project_id):
 
         search = None
         buyer_search_page_url = None
+        search_results_count = None
         search_summary_sentence = None
 
     content_loader.load_messages(framework['slug'], ['urls'])
@@ -556,6 +558,7 @@ def view_project(framework_family, project_id):
         following_framework=following_framework,
         project=project,
         custom_dimensions=custom_dimensions,
+        search_results_count=search_results_count,
         search=search,
         buyer_search_page_url=buyer_search_page_url,
         search_summary_sentence=search_summary_sentence,
