@@ -35,6 +35,7 @@ from ..helpers.search_helpers import (
     clean_request_args, get_request_url_without_any_filters,
 )
 from ..helpers import framework_helpers
+from ..helpers import dm_google_analytics
 from ..helpers.direct_award_helpers import is_direct_award_project_accessible, get_direct_award_projects
 from ..helpers.search_save_helpers import get_saved_search_temporary_message_status, SearchMeta
 from ..helpers.shared_helpers import get_fields_from_manifest, get_questions_from_manifest_by_id
@@ -527,25 +528,19 @@ def view_project(framework_family, project_id):
         project_outcome_label = \
             "Contract awarded to {}: {}".format(archived_service['supplierName'], archived_service['serviceName'])
 
-    # Current Project Stage
-    current_project_stage = None
-
     if project['outcome']:
         current_project_stage = project['outcome']['result']
     elif project['readyToAssessAt']:
-        current_project_stage = 'ready_to_assess'
+        current_project_stage = dm_google_analytics.CurrentProjectStageEnum.READY_TO_ASSESS
     elif project['downloadedAt']:
-        current_project_stage = 'download_results'
+        current_project_stage = dm_google_analytics.CurrentProjectStageEnum.DOWNLOADED
     elif project['lockedAt']:
-        current_project_stage = 'search_ended'
+        current_project_stage = dm_google_analytics.CurrentProjectStageEnum.ENDED
     else:
-        current_project_stage = 'save_and_refine_search'
+        current_project_stage = dm_google_analytics.CurrentProjectStageEnum.SAVED
 
-    # custom dimension for google analytics
-    custom_dimensions = [{
-        "data_id": 8,
-        "data_value": current_project_stage
-    }]
+    custom_dimensions = [dm_google_analytics.custom_dimension(dm_google_analytics.CurrentProjectStageEnum,
+                                                              current_project_stage)]
 
     try:
         following_framework = framework_helpers.get_framework_or_500(
