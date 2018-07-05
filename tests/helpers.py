@@ -14,6 +14,41 @@ from app import create_app, data_api_client
 from tests import login_for_tests
 
 
+class BaseDataAPIClientMixin:
+    """
+    Mixin for patching the API client when imported for each view module.
+
+    Import this base class to the test module, and initialise with the path to the import:
+
+    :: test_marketplace.py
+    class DataAPIClientMixin(BaseDataAPIClientMixin):
+        data_api_client_patch_path = 'app.main.views.marketplace.data_api_client'
+
+    class TestMyView(DataAPIClientMixin, BaseApplicationTest):
+        ...
+
+    Multiple subclasses of the mixin can be created and passed into the test class if the API client
+    is patched in different places (hopefully this should be rare!).
+    """
+    data_api_client_patch_path = None
+    data_api_client_patch = None
+
+    @classmethod
+    def setup_class(cls):
+        if cls.data_api_client_patch_path:
+            cls.data_api_client_patch = mock.patch(cls.data_api_client_patch_path, autospec=True)
+
+    def setup_method(self, method):
+        super().setup_method(method)
+        if self.data_api_client_patch:
+            self.data_api_client = self.data_api_client_patch.start()
+
+    def teardown_method(self, method):
+        if self.data_api_client_patch:
+            self.data_api_client_patch.stop()
+        super().teardown_method(method)
+
+
 class BaseApplicationTest(object):
     def setup_method(self, method):
         # We need to mock the API client in create_app, however we can't use patch the constructor,
