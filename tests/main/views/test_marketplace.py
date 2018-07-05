@@ -1146,11 +1146,7 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         self._view_search_api_client = self._view_search_api_client_patch.start()
         self._view_search_api_client.search.return_value = self._get_dos_brief_search_api_response_fixture_data()
 
-        self._presenters_search_api_client_patch = mock.patch(
-            'app.main.presenters.search_presenters.search_api_client', autospec=True
-        )
-        self._presenters_search_api_client = self._presenters_search_api_client_patch.start()
-        self._presenters_search_api_client.aggregate.side_effect = [
+        self._view_search_api_client.aggregate.side_effect = [
             self._get_dos_brief_search_api_aggregations_response_outcomes_fixture_data(),
             self._get_dos_brief_search_api_aggregations_response_specialists_fixture_data(),
             self._get_dos_brief_search_api_aggregations_response_user_research_fixture_data(),
@@ -1181,7 +1177,6 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
     def teardown_method(self, method):
         self.data_api_client_patch.stop()
         self._view_search_api_client_patch.stop()
-        self._presenters_search_api_client_patch.stop()
         super().teardown_method(method)
 
     def normalize_qs(self, qs):
@@ -1721,7 +1716,7 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
     def test_lot_with_no_briefs_is_not_a_link(self):
         specialists_aggregation = self._get_dos_brief_search_api_aggregations_response_specialists_fixture_data()
         specialists_aggregation['aggregations']['lot']['digital-specialists'] = 0
-        self._presenters_search_api_client.aggregate.side_effect = [
+        self._view_search_api_client.aggregate.side_effect = [
             self._get_dos_brief_search_api_aggregations_response_outcomes_fixture_data(),
             specialists_aggregation,
             self._get_dos_brief_search_api_aggregations_response_user_research_fixture_data(),
@@ -1756,11 +1751,7 @@ class TestCatalogueOfBriefsFilterOnClick(BaseApplicationTest):
         self._view_search_api_client = self._view_search_api_client_patch.start()
         self._view_search_api_client.search.return_value = self._get_dos_brief_search_api_response_fixture_data()
 
-        self._presenters_search_api_client_patch = mock.patch(
-            'app.main.presenters.search_presenters.search_api_client', autospec=True
-        )
-        self._presenters_search_api_client = self._presenters_search_api_client_patch.start()
-        self._presenters_search_api_client.aggregate.side_effect = [
+        self._view_search_api_client.aggregate.side_effect = [
             self._get_dos_brief_search_api_aggregations_response_outcomes_fixture_data(),
             self._get_dos_brief_search_api_aggregations_response_specialists_fixture_data(),
             self._get_dos_brief_search_api_aggregations_response_user_research_fixture_data(),
@@ -1779,7 +1770,6 @@ class TestCatalogueOfBriefsFilterOnClick(BaseApplicationTest):
     def teardown_method(self, method):
         self.data_api_client_patch.stop()
         self._view_search_api_client_patch.stop()
-        self._presenters_search_api_client_patch.stop()
         super().teardown_method(method)
 
     @pytest.mark.parametrize('query_string, content_type',

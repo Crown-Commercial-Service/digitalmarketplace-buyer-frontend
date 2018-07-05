@@ -44,10 +44,7 @@ class TestSearchResults(BaseApplicationTest):
         self._search_api_client_patch = mock.patch('app.main.views.g_cloud.search_api_client', autospec=True)
         self._search_api_client = self._search_api_client_patch.start()
 
-        self._search_api_client_presenters_patch = mock.patch('app.main.presenters.search_presenters.search_api_client',
-                                                              autospec=True)
-        self._search_api_client_presenters = self._search_api_client_presenters_patch.start()
-        self._search_api_client_presenters.aggregate.return_value = \
+        self._search_api_client.aggregate.return_value = \
             self._get_fixture_data('g9_aggregations_fixture.json')
 
         self.search_results = self._get_search_results_fixture_data()
@@ -56,7 +53,6 @@ class TestSearchResults(BaseApplicationTest):
 
     def teardown_method(self, method):
         self._search_api_client_patch.stop()
-        self._search_api_client_presenters_patch.stop()
         self.data_api_client_patch.stop()
         super().teardown_method(method)
 
@@ -458,7 +454,7 @@ class TestSearchResults(BaseApplicationTest):
         res = self.client.get('/g-cloud/search?page=2')
         assert res.status_code == 200
 
-        self._search_api_client_presenters.aggregate.assert_called_with(
+        self._search_api_client.aggregate.assert_called_with(
             index='g-cloud-9',
             doc_type='services',
             lot='cloud-support',
@@ -589,10 +585,7 @@ class TestSearchFilterOnClick(BaseApplicationTest):
         self._search_api_client_patch = mock.patch('app.main.views.g_cloud.search_api_client', autospec=True)
         self._search_api_client = self._search_api_client_patch.start()
 
-        self._search_api_client_presenters_patch = mock.patch('app.main.presenters.search_presenters.search_api_client',
-                                                              autospec=True)
-        self._search_api_client_presenters = self._search_api_client_presenters_patch.start()
-        self._search_api_client_presenters.aggregate.return_value = \
+        self._search_api_client.aggregate.return_value = \
             self._get_fixture_data('g9_aggregations_fixture.json')
 
         self.search_results = self._get_search_results_fixture_data()
@@ -603,7 +596,6 @@ class TestSearchFilterOnClick(BaseApplicationTest):
 
     def teardown_method(self, method):
         self._search_api_client_patch.stop()
-        self._search_api_client_presenters_patch.stop()
         super().teardown_method(method)
 
     @pytest.mark.parametrize('query_string, content_type',

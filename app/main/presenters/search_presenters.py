@@ -2,7 +2,6 @@ from collections import OrderedDict
 
 from werkzeug.datastructures import MultiDict
 
-from app import search_api_client
 from ..helpers.framework_helpers import get_lots_by_slug
 from ..helpers.search_helpers import (
     get_filters_from_request,
@@ -113,7 +112,9 @@ def _get_category_filter_key_set(category_filter_group):
     return keys
 
 
-def _get_aggregations_for_lot_with_filters(lot, content_manifest, framework, cleaned_request_args, doc_type, index):
+def _get_aggregations_for_lot_with_filters(
+    lot, content_manifest, framework, cleaned_request_args, doc_type, index, search_api_client
+):
     filters = filters_for_lot(lot, content_manifest, all_lots=framework['lots'])
     lots_by_slug = get_lots_by_slug(framework)
 
@@ -177,7 +178,7 @@ def _update_base_url_args_for_lot_and_category(url_args, keys_to_remove, lot_slu
 
 def build_lots_and_categories_link_tree(
     framework, lots, category_filter_group, request, cleaned_request_args,
-    content_manifest, doc_type, index, search_link_builder
+    content_manifest, doc_type, index, search_link_builder, search_api_client
 ):
     """
     Equivalent of set_filter_states but for where we are creating a tree of links i.e. the
@@ -221,7 +222,7 @@ def build_lots_and_categories_link_tree(
 
     aggregations_by_lot = {
         lot['slug']: _get_aggregations_for_lot_with_filters(
-            lot['slug'], content_manifest, framework, cleaned_request_args, doc_type, index
+            lot['slug'], content_manifest, framework, cleaned_request_args, doc_type, index, search_api_client
         ) for lot in lots
     }
 

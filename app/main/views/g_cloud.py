@@ -274,6 +274,7 @@ def search_services():
         doc_type,
         framework['slug'],
         Href(url_for('.{}'.format(view_name))),
+        search_api_client
     )
 
     filter_form_hidden_fields_by_name = {

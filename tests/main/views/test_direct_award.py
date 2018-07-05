@@ -27,10 +27,6 @@ class TestDirectAwardBase(BaseApplicationTest):
 
         self._search_api_client.get_index_from_search_api_url.return_value = 'g-cloud-9'
 
-        self._search_api_client_presenters_patch = mock.patch('app.main.presenters.search_presenters.search_api_client',
-                                                              new=self._search_api_client)
-        self._search_api_client_presenters = self._search_api_client_presenters_patch.start()
-
         self._search_api_client_helpers_patch = \
             mock.patch('app.main.helpers.search_save_helpers.search_api_client', new=self._search_api_client)
         self._search_api_client_helpers = self._search_api_client_helpers_patch.start()
@@ -50,7 +46,6 @@ class TestDirectAwardBase(BaseApplicationTest):
 
     def teardown_method(self, method):
         self._search_api_client_patch.stop()
-        self._search_api_client_presenters_patch.stop()
         self._search_api_client_helpers_patch.stop()
 
         self.data_api_client_patch.stop()
