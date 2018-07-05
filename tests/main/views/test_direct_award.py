@@ -27,10 +27,6 @@ class TestDirectAwardBase(BaseApplicationTest):
 
         self._search_api_client.get_index_from_search_api_url.return_value = 'g-cloud-9'
 
-        self._search_api_client_helpers_patch = \
-            mock.patch('app.main.helpers.search_save_helpers.search_api_client', new=self._search_api_client)
-        self._search_api_client_helpers = self._search_api_client_helpers_patch.start()
-
         self.g9_search_results = self._get_g9_search_results_fixture_data()
 
         self.data_api_client_patch = mock.patch('app.main.views.g_cloud.data_api_client', autospec=True)
@@ -46,8 +42,6 @@ class TestDirectAwardBase(BaseApplicationTest):
 
     def teardown_method(self, method):
         self._search_api_client_patch.stop()
-        self._search_api_client_helpers_patch.stop()
-
         self.data_api_client_patch.stop()
         super().teardown_method(method)
 
@@ -609,7 +603,7 @@ class TestDirectAwardEndSearch(TestDirectAwardBase):
     def test_end_search_page_renders_error_when_results_more_than_limit(self):
         self.login_as_buyer()
 
-        self._search_api_client_helpers._get.return_value = {
+        self._search_api_client._get.return_value = {
             "services": [],
             "meta": {
                 "query": {},
