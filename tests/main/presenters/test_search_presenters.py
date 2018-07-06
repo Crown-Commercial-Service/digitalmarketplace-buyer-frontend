@@ -311,7 +311,7 @@ class TestLotsAndCategoriesSelection(BaseApplicationTest):
         # in these tests, the key 'category' key is 'checkboxTreeExample'
 
         self.search_api_client_patch = mock.patch(
-            'app.main.presenters.search_presenters.search_api_client', autospec=True
+            'app.main.views.g_cloud.search_api_client', autospec=True
         )
         self.search_api_client = self.search_api_client_patch.start()
         self.search_api_client.aggregate.return_value = _get_g9_aggregations_fixture_data()
@@ -324,10 +324,18 @@ class TestLotsAndCategoriesSelection(BaseApplicationTest):
         url = "/g-cloud/search?q=&lot=cloud-software&otherfilter=somevalue&filterExample=option+1" \
               "&checkboxTreeExample=option+1&page=2"
         with self.app.test_request_context(url):
-            selection = build_lots_and_categories_link_tree(self.framework, self.framework['lots'],
-                                                            self.category_filter_group, flask.request,
-                                                            flask.request.args, g9_builder, 'services', 'g-cloud-9',
-                                                            Href(flask.url_for('.search_services')))
+            selection = build_lots_and_categories_link_tree(
+                self.framework,
+                self.framework['lots'],
+                self.category_filter_group,
+                flask.request,
+                flask.request.args,
+                g9_builder,
+                'services',
+                'g-cloud-9',
+                Href(flask.url_for('.search_services')),
+                self.search_api_client
+            )
             assert len(selection) == 3  # all -> software -> option1
 
             tree_root = selection[0]
@@ -360,10 +368,18 @@ class TestLotsAndCategoriesSelection(BaseApplicationTest):
     def test_sub_category_selection(self):
         url = "/g-cloud/search?q=&lot=cloud-software&otherfilter=somevalue&checkboxTreeExample=option+2.2"
         with self.app.test_request_context(url):
-            selection = build_lots_and_categories_link_tree(self.framework, self.framework['lots'],
-                                                            self.category_filter_group, flask.request,
-                                                            flask.request.args, g9_builder, 'services', 'g-cloud-9',
-                                                            Href(flask.url_for('.search_services')))
+            selection = build_lots_and_categories_link_tree(
+                self.framework,
+                self.framework['lots'],
+                self.category_filter_group,
+                flask.request,
+                flask.request.args,
+                g9_builder,
+                'services',
+                'g-cloud-9',
+                Href(flask.url_for('.search_services')),
+                self.search_api_client
+            )
             assert len(selection) == 5  # all -> software -> option2 -> option2.2; option2 as a parent category filter
 
             tree_root = selection[0]
@@ -383,10 +399,18 @@ class TestLotsAndCategoriesSelection(BaseApplicationTest):
     def test_build_lots_and_categories_link_tree_with_no_categories_or_filters(self):
         url = "/g-cloud/search"
         with self.app.test_request_context(url):
-            tree = build_lots_and_categories_link_tree(self.framework, self.framework['lots'],
-                                                       self.category_filter_group, flask.request,
-                                                       flask.request.args, g9_builder, 'services', 'g-cloud-9',
-                                                       Href(flask.url_for('.search_services')))
+            tree = build_lots_and_categories_link_tree(
+                self.framework,
+                self.framework['lots'],
+                self.category_filter_group,
+                flask.request,
+                flask.request.args,
+                g9_builder,
+                'services',
+                'g-cloud-9',
+                Href(flask.url_for('.search_services')),
+                self.search_api_client
+            )
 
             assert tree == [
                 {
@@ -422,10 +446,18 @@ class TestLotsAndCategoriesSelection(BaseApplicationTest):
     def test_build_lots_and_categories_link_tree_with_lot(self):
         url = "/g-cloud/search?lot=cloud-software"
         with self.app.test_request_context(url):
-            tree = build_lots_and_categories_link_tree(self.framework, self.framework['lots'],
-                                                       self.category_filter_group, flask.request,
-                                                       flask.request.args, g9_builder, 'services', 'g-cloud-9',
-                                                       Href(flask.url_for('.search_services')))
+            tree = build_lots_and_categories_link_tree(
+                self.framework,
+                self.framework['lots'],
+                self.category_filter_group,
+                flask.request,
+                flask.request.args,
+                g9_builder,
+                'services',
+                'g-cloud-9',
+                Href(flask.url_for('.search_services')),
+                self.search_api_client
+            )
 
             assert tree == [
                 {
@@ -606,10 +638,18 @@ class TestLotsAndCategoriesSelection(BaseApplicationTest):
     def test_build_lots_and_categories_link_tree_with_lot_and_no_category_filters_has_all_lots_in_root_node(self):
         url = "/g-cloud/search?lot=cloud-software"
         with self.app.test_request_context(url):
-            tree = build_lots_and_categories_link_tree(self.framework, self.framework['lots'],
-                                                       None, flask.request,
-                                                       flask.request.args, g9_builder, 'services', 'g-cloud-9',
-                                                       Href(flask.url_for('.search_services')))
+            tree = build_lots_and_categories_link_tree(
+                self.framework,
+                self.framework['lots'],
+                None,
+                flask.request,
+                flask.request.args,
+                g9_builder,
+                'services',
+                'g-cloud-9',
+                Href(flask.url_for('.search_services')),
+                self.search_api_client
+            )
 
             assert tree[0] == {
                 'label': 'All categories',

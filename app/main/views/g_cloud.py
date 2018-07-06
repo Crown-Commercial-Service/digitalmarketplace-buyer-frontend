@@ -274,6 +274,7 @@ def search_services():
         doc_type,
         framework['slug'],
         Href(url_for('.{}'.format(view_name))),
+        search_api_client
     )
 
     filter_form_hidden_fields_by_name = {
@@ -489,7 +490,7 @@ def view_project(framework_family, project_id):
     if searches:
         # A Direct Award project has one 'active' search which is what we will display on this overview page.
         search = list(filter(lambda x: x['active'], searches))[0]
-        search_meta = SearchMeta(search['searchUrl'], frameworks_by_slug)
+        search_meta = SearchMeta(search_api_client, search['searchUrl'], frameworks_by_slug)
 
         search_summary_sentence = search_meta.search_summary.markup()
         search_results_count = int(search_meta.search_summary.count)
@@ -584,7 +585,7 @@ def end_search(framework_family, project_id):
                                                                   project_id=project['id'],
                                                                   only_active=True)['searches']
     search = searches[0]
-    search_meta = SearchMeta(search['searchUrl'], frameworks_by_slug)
+    search_meta = SearchMeta(search_api_client, search['searchUrl'], frameworks_by_slug)
     search_count = search_meta.search_summary.count
     disable_end_search_btn = False
 
@@ -944,7 +945,7 @@ class DownloadResultsView(SimpleDownloadFileView):
 
             all_services.append(service)
 
-        search_meta = SearchMeta(search['searchUrl'], frameworks_by_slug)
+        search_meta = SearchMeta(search_api_client, search['searchUrl'], frameworks_by_slug)
 
         file_context = {
             'framework': frameworks_by_slug[framework_slug]['name'],

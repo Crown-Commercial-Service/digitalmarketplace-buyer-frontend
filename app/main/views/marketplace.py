@@ -270,6 +270,7 @@ def list_opportunities(framework_family):
         doc_type,
         index,
         Href(url_for('.{}'.format(view_name), framework_family=framework['framework'])),
+        search_api_client
     )
 
     filter_form_hidden_fields_by_name = {

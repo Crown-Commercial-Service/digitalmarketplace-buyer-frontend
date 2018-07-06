@@ -3,7 +3,7 @@ from enum import Enum
 from flask import abort, current_app, url_for
 from werkzeug.datastructures import MultiDict
 
-from app import search_api_client, content_loader
+from app import content_loader
 from app.main.helpers.framework_helpers import get_lots_by_slug
 from app.main.helpers.search_helpers import clean_request_args
 from app.main.presenters.search_presenters import filters_for_lot
@@ -21,7 +21,7 @@ class SavedSearchStateEnum(Enum):
 
 
 class SearchMeta(object):
-    def __init__(self, search_api_url, frameworks_by_slug, include_markup=False):
+    def __init__(self, search_api_client, search_api_url, frameworks_by_slug, include_markup=False):
         # Get core data
         self.framework_slug = search_api_client.get_index_from_search_api_url(search_api_url)
         framework = frameworks_by_slug[self.framework_slug]
