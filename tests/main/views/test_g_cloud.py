@@ -1,6 +1,5 @@
 import mock
-
-from lxml import html
+import pytest
 
 from ...helpers import BaseApplicationTest
 
@@ -18,15 +17,19 @@ class TestGCloudIndexResults(BaseApplicationTest):
         self._search_api_client_patch.stop()
         super().teardown_method(method)
 
-    def test_renders_correct_search_links(self):
+    @pytest.mark.parametrize('lot', ('cloud-support', 'cloud-software', 'cloud-hosting', ''))
+    def test_posting_lot_redirects_to_search_with_lot(self, lot):
         self._search_api_client.search.return_value = self.search_results
+        self._search_api_client.aggregate.return_value = \
+            self._get_fixture_data('g9_aggregations_fixture.json')
 
-        res = self.client.get("/buyers/direct-award/g-cloud/choose-lot")
-        assert res.status_code == 200
+        res = self.client.post(
+            "/buyers/direct-award/g-cloud/choose-lot",
+            data={"lot": lot}
+        )
 
-        body = res.get_data(as_text=True)
-        doc = html.fromstring(body)
+        assert res.status_code == 302
+        assert res.location.endswith(f"/g-cloud/search?lot={lot}")
 
-        assert doc.xpath("//form[@action=$u]", u="/g-cloud/search")
-        # at least one link into a specific lot
-        assert doc.xpath("//a[starts-with(@href, $u)]", u="/g-cloud/search?lot=")
+        redirect = self.client.get(res.location)
+        assert redirect.status_code == 200
