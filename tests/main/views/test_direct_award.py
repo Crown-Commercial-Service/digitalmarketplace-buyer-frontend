@@ -393,6 +393,25 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         assert self._task_has_link(tasklist, 4,
                                    '/buyers/direct-award/g-cloud/projects/1/did-you-award-contract')
 
+    def test_assess_button_not_present_if_outcome_awarded(self):
+        searches = self._get_direct_award_project_searches_fixture()
+        for search in searches['searches']:
+            search['searchedAt'] = search['createdAt']
+
+        self.data_api_client.get_direct_award_project.return_value = \
+            self._get_direct_award_project_with_completed_outcome_awarded_fixture()
+
+        self.data_api_client.find_direct_award_project_searches.return_value = searches
+
+        res = self.client.get("/buyers/direct-award/g-cloud/projects/1")
+        assert res.status_code == 200
+
+        body = res.get_data(as_text=True)
+        doc = html.fromstring(body)
+        tasklist = doc.xpath('//li[contains(@class, "instruction-list-item")]')
+
+        assert not self._task_has_button(tasklist, 3, 'readyToAssess', 'true')
+
     @pytest.mark.parametrize(
         ('framework_status', 'following_framework_status', 'locked_at', 'position', 'heading'),
         (

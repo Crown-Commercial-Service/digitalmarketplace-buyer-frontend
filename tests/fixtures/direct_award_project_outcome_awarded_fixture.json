@@ -3,6 +3,9 @@
     "result": "awarded",
     "completed": false,
     "resultOfDirectAward": {
+      "archivedService" : {
+        "id": 123456789
+      },
       "project": {
         "id": 1
       }

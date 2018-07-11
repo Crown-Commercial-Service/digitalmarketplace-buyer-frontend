@@ -133,7 +133,7 @@ negotiate with them.'|safe},
                                                  data-analytics="trackEvent"
                                                  data-analytics-category="Direct Award"
                                                  data-analytics-action="Internal Link">Confirm you have read and
-understood how to assess services</button>'|safe} if project and not project.readyToAssessAt else {},
+understood how to assess services</button>'|safe} if project and not project.readyToAssessAt and not project.outcome else {},
               {"type": "box", "style": "complete", "label": "Completed"} if project and project.readyToAssessAt else {}
             ]
           },
@@ -157,8 +157,8 @@ understood how to assess services</button>'|safe} if project and not project.rea
                                         >publish the details on Contracts Finder</a>.
                  Whether or not you award a contract, tell us the outcome. This information helps us improve the Digital Marketplace."|safe},
             ] + ([
-              {"type": "box", "style": "inactive", "label": "Can’t start yet"} if not project.readyToAssessAt
-              else {"type": "box", "style": "complete", "label": project_outcome_label } if project.outcome
+              {"type": "box", "style": "complete", "label": project_outcome_label } if project.outcome
+              else {"type": "box", "style": "inactive", "label": "Can’t start yet"} if not project.readyToAssessAt
               else {"type": "action", "label": "Tell us the outcome", "href": url_for('direct_award.did_you_award_contract', framework_family=framework.framework, project_id=project.id), "analytics": "trackEvent", "analytics_category": "Direct Award", "analytics_action": "Internal Link"}
             ] if project else [])
           },
