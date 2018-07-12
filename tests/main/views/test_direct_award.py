@@ -12,25 +12,23 @@ from dmapiclient import HTTPError
 from dmcontent.content_loader import ContentLoader, ContentNotFoundError
 from dmutils.api_stubs import framework
 
-from app import search_api_client, content_loader
+from app import content_loader
 from app.main.views.g_cloud import (DownloadResultsView, END_SEARCH_LIMIT, TOO_MANY_RESULTS_MESSAGE,
                                     CONFIRM_START_ASSESSING_MESSAGE, )
 from ...helpers import BaseApplicationTest, BaseDataAPIClientMixin
 
 
-class DataAPIClientMixin(BaseDataAPIClientMixin):
+class APIClientMixin(BaseAPIClientMixin):
     data_api_client_patch_path = 'app.main.views.g_cloud.data_api_client'
+    search_api_client_patch_path = 'app.main.views.g_cloud.search_api_client'
 
 
-class TestDirectAwardBase(DataAPIClientMixin, BaseApplicationTest):
+class TestDirectAwardBase(APIClientMixin, BaseApplicationTest):
     def setup_method(self, method):
         super().setup_method(method)
-        self._search_api_client_patch = mock.patch('app.main.views.g_cloud.search_api_client', autospec=True)
-        self._search_api_client = self._search_api_client_patch.start()
-        self._search_api_client.aggregate.return_value = \
-            self._get_fixture_data('g9_aggregations_fixture.json')
+        self.search_api_client.aggregate.return_value = self._get_fixture_data('g9_aggregations_fixture.json')
 
-        self._search_api_client.get_index_from_search_api_url.return_value = 'g-cloud-9'
+        self.search_api_client.get_index_from_search_api_url.return_value = 'g-cloud-9'
 
         self.g9_search_results = self._get_g9_search_results_fixture_data()
 
@@ -43,7 +41,6 @@ class TestDirectAwardBase(DataAPIClientMixin, BaseApplicationTest):
             self._get_direct_award_project_searches_fixture()
 
     def teardown_method(self, method):
-        self._search_api_client_patch.stop()
         super().teardown_method(method)
 
 
@@ -111,7 +108,7 @@ class TestDirectAward(TestDirectAwardBase):
                 ]
 
     def test_renders_save_search_button(self):
-        self._search_api_client.search.return_value = self.g9_search_results
+        self.search_api_client.search.return_value = self.g9_search_results
 
         res = self.client.get(self.SEARCH_URL)
         assert res.status_code == 200
@@ -129,7 +126,7 @@ class TestDirectAward(TestDirectAwardBase):
 
     def test_save_search_renders_summary_on_page(self):
         self.login_as_buyer()
-        self._search_api_client.search.return_value = self.g9_search_results
+        self.search_api_client.search.return_value = self.g9_search_results
 
         res = self.client.get(self.SIMPLE_SAVE_SEARCH_URL)
 
@@ -140,7 +137,7 @@ class TestDirectAward(TestDirectAwardBase):
 
     def _save_search(self, name, save_search_selection="new_search"):
         self.login_as_buyer()
-        self._search_api_client.search.return_value = self.g9_search_results
+        self.search_api_client.search.return_value = self.g9_search_results
         self.data_api_client.create_direct_award_project.return_value = self._get_direct_award_project_fixture()
         self.data_api_client.create_direct_award_project_search.return_value = \
             self._get_direct_award_project_searches_fixture()['searches'][0]
@@ -185,7 +182,7 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
     def setup_method(self, method):
         super().setup_method(method)
 
-        self._search_api_client.get_frontend_params_from_search_api_url.return_value = (('q', 'accelerator'), )
+        self.search_api_client.get_frontend_params_from_search_api_url.return_value = (('q', 'accelerator'), )
 
         self.login_as_buyer()
 
@@ -549,7 +546,7 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         search_results = self.g9_search_results
         search_results['meta']['total'] = 100
 
-        self._search_api_client._get.return_value = search_results
+        self.search_api_client._get.return_value = search_results
 
         res = self.client.get('/buyers/direct-award/g-cloud/projects/1')
         assert res.status_code == 200
@@ -565,18 +562,38 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
             ' "You have too many services to assess.")]')) == 1
 
 
-class TestDirectAwardURLGeneration(DataAPIClientMixin, BaseApplicationTest):
-    """This class has been separated out from above because we only want to mock a couple of methods on the API clients,
-    not all of them (like the class above)"""
+class TestDirectAwardURLGeneration(BaseApplicationTest):
+    """
+    This class tests the effects of the search_api_client.get_index_from_search_api_url method, which we don't
+    want to patch. The .search() and ._get() methods need to be patched, however.
+
+    This means we can't use the APIClientMixin as per the other classes.
+    """
     def setup_method(self, method):
         super().setup_method(method)
 
+        self.data_api_client_patch = mock.patch('app.main.views.g_cloud.data_api_client', autospec=True)
+        self.data_api_client = self.data_api_client_patch.start()
         self.data_api_client.find_frameworks.return_value = self._get_frameworks_list_fixture_data()
         self.data_api_client.get_framework.return_value = self._get_framework_fixture_data('g-cloud-9')
 
         self.data_api_client.get_direct_award_project.return_value = self._get_direct_award_project_fixture()
         self.data_api_client.find_direct_award_project_searches.return_value = \
             self._get_direct_award_project_searches_fixture()
+
+        # Patch only the .search and ._get methods on the search_api_client
+        self.search_api_client_search_patch = mock.patch(
+            'app.main.views.g_cloud.search_api_client.search', autospec=True
+        )
+        self.search_api_client_search = self.search_api_client_search_patch.start()
+        self.search_api_client_get_patch = mock.patch('app.main.views.g_cloud.search_api_client._get', autospec=True)
+        self.search_api_client_get = self.search_api_client_get_patch.start()
+
+    def teardown_method(self, method):
+        self.search_api_client_get_patch.stop()
+        self.search_api_client_search_patch.stop()
+        self.data_api_client_patch.stop()
+        super().teardown_method(method)
 
     @pytest.mark.parametrize('search_api_url, frontend_url',
                              (
@@ -597,16 +614,13 @@ class TestDirectAwardURLGeneration(DataAPIClientMixin, BaseApplicationTest):
     def test_search_api_urls_convert_to_correct_frontend_urls(self, search_api_url, frontend_url):
         self.login_as_buyer()
 
-        with mock.patch.object(search_api_client, 'search') as search_patch, \
-                mock.patch.object(search_api_client, '_get') as _get_patch:
+        self.search_api_client_search.return_value = self._get_g9_search_results_fixture_data()
+        self.search_api_client_get.return_value = self._get_search_results_fixture_data()
 
-            search_patch.return_value = self._get_g9_search_results_fixture_data()
-            _get_patch.return_value = self._get_search_results_fixture_data()
+        project_searches = self.data_api_client.find_direct_award_project_searches.return_value
+        project_searches['searches'][0]['searchUrl'] = search_api_url
 
-            project_searches = self.data_api_client.find_direct_award_project_searches.return_value
-            project_searches['searches'][0]['searchUrl'] = search_api_url
-
-            res = self.client.get('/buyers/direct-award/g-cloud/projects/1')
+        res = self.client.get('/buyers/direct-award/g-cloud/projects/1')
 
         assert res.status_code == 200
 
@@ -629,7 +643,7 @@ class TestDirectAwardEndSearch(TestDirectAwardBase):
     def test_end_search_page_renders_error_when_results_more_than_limit(self):
         self.login_as_buyer()
 
-        self._search_api_client._get.return_value = {
+        self.search_api_client._get.return_value = {
             "services": [],
             "meta": {
                 "query": {},
@@ -1100,7 +1114,7 @@ class TestDirectAwardDownloadResultsView(TestDirectAwardBase):
 
     def test_init_hook(self):
         assert self.view.data_api_client is self.data_api_client
-        assert self.view.search_api_client is self._search_api_client
+        assert self.view.search_api_client is self.search_api_client
         assert self.view.content_loader is content_loader
 
     @pytest.mark.parametrize('status_code, call_count',

@@ -8,16 +8,17 @@ from lxml import html
 import mock
 import pytest
 
-from ...helpers import BaseApplicationTest, BaseDataAPIClientMixin
+from ...helpers import BaseApplicationTest, BaseAPIClientMixin
 
 from dmutils import api_stubs
 
 
-class DataAPIClientMixin(BaseDataAPIClientMixin):
+class APIClientMixin(BaseAPIClientMixin):
     data_api_client_patch_path = 'app.main.views.marketplace.data_api_client'
+    search_api_client_patch_path = 'app.main.views.marketplace.search_api_client'
 
 
-class TestApplication(DataAPIClientMixin, BaseApplicationTest):
+class TestApplication(APIClientMixin, BaseApplicationTest):
 
     def test_analytics_code_should_be_in_javascript(self):
         res = self.client.get('/static/javascripts/application.js')
@@ -38,7 +39,7 @@ class TestApplication(DataAPIClientMixin, BaseApplicationTest):
         assert len(self.data_api_client.find_frameworks.call_args_list) == 2
 
 
-class TestHomepageAccountCreationVirtualPageViews(DataAPIClientMixin, BaseApplicationTest):
+class TestHomepageAccountCreationVirtualPageViews(APIClientMixin, BaseApplicationTest):
 
     def test_data_analytics_track_page_view_is_shown_if_account_created_flash_message(self):
         with self.client.session_transaction() as session:
@@ -63,7 +64,7 @@ class TestHomepageAccountCreationVirtualPageViews(DataAPIClientMixin, BaseApplic
         assert len(self.data_api_client.find_frameworks.call_args_list) == 2
 
 
-class TestHomepageBrowseList(DataAPIClientMixin, BaseApplicationTest):
+class TestHomepageBrowseList(APIClientMixin, BaseApplicationTest):
 
     mock_live_dos_1_framework = {
         "framework": "digital-outcomes-and-specialists",
@@ -198,7 +199,7 @@ class TestHomepageBrowseList(DataAPIClientMixin, BaseApplicationTest):
         assert len(link_texts) == 2
 
 
-class TestHomepageSidebarMessage(DataAPIClientMixin, BaseApplicationTest):
+class TestHomepageSidebarMessage(APIClientMixin, BaseApplicationTest):
 
     @staticmethod
     def _find_frameworks(framework_slugs_and_statuses):
@@ -372,7 +373,7 @@ class TestStaticMarketplacePages(BaseApplicationTest):
             assert "http://localhost{}".format(relative_url) in external_urls
 
 
-class BaseBriefPageTest(DataAPIClientMixin, BaseApplicationTest):
+class BaseBriefPageTest(APIClientMixin, BaseApplicationTest):
     def setup_method(self, method):
         super().setup_method(method)
 
@@ -1107,16 +1108,14 @@ class TestWithdrawnSpecificBriefPage(BaseBriefPageTest):
         assert 'This opportunity was withdrawn on Friday&nbsp;25&nbsp;November&nbsp;2016' in page
 
 
-class TestCatalogueOfBriefsPage(DataAPIClientMixin, BaseApplicationTest):
+class TestCatalogueOfBriefsPage(APIClientMixin, BaseApplicationTest):
 
     def setup_method(self, method):
         super().setup_method(method)
 
-        self._view_search_api_client_patch = mock.patch('app.main.views.marketplace.search_api_client', autospec=True)
-        self._view_search_api_client = self._view_search_api_client_patch.start()
-        self._view_search_api_client.search.return_value = self._get_dos_brief_search_api_response_fixture_data()
+        self.search_api_client.search.return_value = self._get_dos_brief_search_api_response_fixture_data()
 
-        self._view_search_api_client.aggregate.side_effect = [
+        self.search_api_client.aggregate.side_effect = [
             self._get_dos_brief_search_api_aggregations_response_outcomes_fixture_data(),
             self._get_dos_brief_search_api_aggregations_response_specialists_fixture_data(),
             self._get_dos_brief_search_api_aggregations_response_user_research_fixture_data(),
@@ -1141,10 +1140,6 @@ class TestCatalogueOfBriefsPage(DataAPIClientMixin, BaseApplicationTest):
             api_stubs.framework(framework_id=4, slug='g-cloud-9', status='live', lots=gcloud_lots)['frameworks']
         ]}
 
-    def teardown_method(self, method):
-        self._view_search_api_client_patch.stop()
-        super().teardown_method(method)
-
     def normalize_qs(self, qs):
         return {k: set(v) for k, v in parse_qs(qs).items() if k != "page"}
 
@@ -1164,7 +1159,7 @@ class TestCatalogueOfBriefsPage(DataAPIClientMixin, BaseApplicationTest):
 
         self.data_api_client.find_frameworks.assert_called_once_with()
 
-        self._view_search_api_client.search.assert_called_once_with(
+        self.search_api_client.search.assert_called_once_with(
             index='briefs-digital-outcomes-and-specialists',
             doc_type='briefs',
             statusOpenClosed='open,closed'
@@ -1230,7 +1225,7 @@ class TestCatalogueOfBriefsPage(DataAPIClientMixin, BaseApplicationTest):
         document = html.fromstring(res.get_data(as_text=True))
 
         self.data_api_client.find_frameworks.assert_called_once_with()
-        self._view_search_api_client.search.assert_called_once_with(
+        self.search_api_client.search.assert_called_once_with(
             index='briefs-digital-outcomes-and-specialists',
             doc_type='briefs',
             statusOpenClosed='open',
@@ -1323,7 +1318,7 @@ class TestCatalogueOfBriefsPage(DataAPIClientMixin, BaseApplicationTest):
         document = html.fromstring(res.get_data(as_text=True))
 
         self.data_api_client.find_frameworks.assert_called_once_with()
-        self._view_search_api_client.search.assert_called_once_with(
+        self.search_api_client.search.assert_called_once_with(
             index='briefs-digital-outcomes-and-specialists',
             doc_type='briefs',
             statusOpenClosed='open',
@@ -1416,7 +1411,7 @@ class TestCatalogueOfBriefsPage(DataAPIClientMixin, BaseApplicationTest):
 
         self.data_api_client.find_frameworks.assert_called_once_with()
 
-        self._view_search_api_client.search.assert_called_once_with(
+        self.search_api_client.search.assert_called_once_with(
             index='briefs-digital-outcomes-and-specialists',
             doc_type='briefs',
             statusOpenClosed='open,closed',
@@ -1592,7 +1587,7 @@ class TestCatalogueOfBriefsPage(DataAPIClientMixin, BaseApplicationTest):
     def test_should_render_summary_for_0_results_in_all_lots(self):
         search_results = self._get_dos_brief_search_api_response_fixture_data()
         search_results['meta']['total'] = 0
-        self._view_search_api_client.search.return_value = search_results
+        self.search_api_client.search.return_value = search_results
 
         res = self.client.get('/digital-outcomes-and-specialists/opportunities')
         assert res.status_code == 200
@@ -1602,7 +1597,7 @@ class TestCatalogueOfBriefsPage(DataAPIClientMixin, BaseApplicationTest):
     def test_should_render_summary_for_0_results_in_particular_lot(self):
         search_results = self._get_dos_brief_search_api_response_fixture_data()
         search_results['meta']['total'] = 0
-        self._view_search_api_client.search.return_value = search_results
+        self.search_api_client.search.return_value = search_results
 
         res = self.client.get('/digital-outcomes-and-specialists/opportunities?lot=digital-outcomes')
         assert res.status_code == 200
@@ -1612,7 +1607,7 @@ class TestCatalogueOfBriefsPage(DataAPIClientMixin, BaseApplicationTest):
     def test_should_render_summary_for_1_result_found_in_all_lots(self):
         search_results = self._get_dos_brief_search_api_response_fixture_data()
         search_results['meta']['total'] = 1
-        self._view_search_api_client.search.return_value = search_results
+        self.search_api_client.search.return_value = search_results
 
         res = self.client.get('/digital-outcomes-and-specialists/opportunities')
         assert res.status_code == 200
@@ -1628,7 +1623,7 @@ class TestCatalogueOfBriefsPage(DataAPIClientMixin, BaseApplicationTest):
     def test_should_render_suggestions_for_0_results(self):
         search_results = self._get_dos_brief_search_api_response_fixture_data()
         search_results['meta']['total'] = 0
-        self._view_search_api_client.search.return_value = search_results
+        self.search_api_client.search.return_value = search_results
 
         res = self.client.get('/digital-outcomes-and-specialists/opportunities')
         assert res.status_code == 200
@@ -1682,7 +1677,7 @@ class TestCatalogueOfBriefsPage(DataAPIClientMixin, BaseApplicationTest):
     def test_lot_with_no_briefs_is_not_a_link(self):
         specialists_aggregation = self._get_dos_brief_search_api_aggregations_response_specialists_fixture_data()
         specialists_aggregation['aggregations']['lot']['digital-specialists'] = 0
-        self._view_search_api_client.aggregate.side_effect = [
+        self.search_api_client.aggregate.side_effect = [
             self._get_dos_brief_search_api_aggregations_response_outcomes_fixture_data(),
             specialists_aggregation,
             self._get_dos_brief_search_api_aggregations_response_user_research_fixture_data(),
@@ -1709,16 +1704,14 @@ class TestCatalogueOfBriefsPage(DataAPIClientMixin, BaseApplicationTest):
         assert kv_pairs == {'lot': 'digital-outcomes'}
 
 
-class TestCatalogueOfBriefsFilterOnClick(DataAPIClientMixin, BaseApplicationTest):
+class TestCatalogueOfBriefsFilterOnClick(APIClientMixin, BaseApplicationTest):
 
     def setup_method(self, method):
         super().setup_method(method)
 
-        self._view_search_api_client_patch = mock.patch('app.main.views.marketplace.search_api_client', autospec=True)
-        self._view_search_api_client = self._view_search_api_client_patch.start()
-        self._view_search_api_client.search.return_value = self._get_dos_brief_search_api_response_fixture_data()
+        self.search_api_client.search.return_value = self._get_dos_brief_search_api_response_fixture_data()
 
-        self._view_search_api_client.aggregate.side_effect = [
+        self.search_api_client.aggregate.side_effect = [
             self._get_dos_brief_search_api_aggregations_response_outcomes_fixture_data(),
             self._get_dos_brief_search_api_aggregations_response_specialists_fixture_data(),
             self._get_dos_brief_search_api_aggregations_response_user_research_fixture_data(),
@@ -1731,10 +1724,6 @@ class TestCatalogueOfBriefsFilterOnClick(DataAPIClientMixin, BaseApplicationTest
                                                         allows_brief=True)], has_further_competition=True)['frameworks']
             ]
         }
-
-    def teardown_method(self, method):
-        self._view_search_api_client_patch.stop()
-        super().teardown_method(method)
 
     @pytest.mark.parametrize('query_string, content_type',
                              (('', 'text/html; charset=utf-8'),
@@ -1796,7 +1785,7 @@ class TestCatalogueOfBriefsFilterOnClick(DataAPIClientMixin, BaseApplicationTest
         assert len(filter_button) == 1
 
 
-class TestGCloudHomepageLinks(DataAPIClientMixin, BaseApplicationTest):
+class TestGCloudHomepageLinks(APIClientMixin, BaseApplicationTest):
 
     mock_live_g_cloud_framework = {
         "framework": "g-cloud",

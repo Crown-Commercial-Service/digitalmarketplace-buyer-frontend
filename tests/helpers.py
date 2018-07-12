@@ -14,38 +14,51 @@ from app import create_app, data_api_client
 from tests import login_for_tests
 
 
-class BaseDataAPIClientMixin:
+class BaseAPIClientMixin:
     """
-    Mixin for patching the API client when imported for each view module.
+    Mixin for patching the API clients when imported for each view module.
 
     Import this base class to the test module, and initialise with the path to the import:
 
     :: test_marketplace.py
-    class DataAPIClientMixin(BaseDataAPIClientMixin):
+    class APIClientMixin(BaseAPIClientMixin):
         data_api_client_patch_path = 'app.main.views.marketplace.data_api_client'
+        search_api_client_patch_path = 'app.main.views.marketplace.search_api_client'
 
-    class TestMyView(DataAPIClientMixin, BaseApplicationTest):
-        ...
+    # Put the mixin before the BaseApplicationTest class:
+
+    class TestMyView(APIClientMixin, BaseApplicationTest):
+        def test_something(self):
+            self.search_api_client.search.return_value = {}
+            assert self.data_api_client.find_frameworks.call_args_list == []
 
     Multiple subclasses of the mixin can be created and passed into the test class if the API client
     is patched in different places (hopefully this should be rare!).
     """
     data_api_client_patch_path = None
     data_api_client_patch = None
+    search_api_client_patch_path = None
+    search_api_client_patch = None
 
     @classmethod
     def setup_class(cls):
         if cls.data_api_client_patch_path:
             cls.data_api_client_patch = mock.patch(cls.data_api_client_patch_path, autospec=True)
+        if cls.search_api_client_patch_path:
+            cls.search_api_client_patch = mock.patch(cls.search_api_client_patch_path, autospec=True)
 
     def setup_method(self, method):
         super().setup_method(method)
         if self.data_api_client_patch:
             self.data_api_client = self.data_api_client_patch.start()
+        if self.search_api_client_patch:
+            self.search_api_client = self.search_api_client_patch.start()
 
     def teardown_method(self, method):
         if self.data_api_client_patch:
             self.data_api_client_patch.stop()
+        if self.search_api_client_patch:
+            self.search_api_client_patch.stop()
         super().teardown_method(method)
 
 

@@ -1,7 +1,7 @@
-from .helpers import BaseApplicationTest, BaseDataAPIClientMixin
+from .helpers import BaseApplicationTest, BaseAPIClientMixin
 
 
-class DataAPIClientMixin(BaseDataAPIClientMixin):
+class DataAPIClientMixin(BaseAPIClientMixin):
     data_api_client_patch_path = 'app.main.views.marketplace.data_api_client'
 
 

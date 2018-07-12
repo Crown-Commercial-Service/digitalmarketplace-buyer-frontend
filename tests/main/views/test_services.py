@@ -1,13 +1,12 @@
 import re
 
 from lxml import html
-import mock
 
 from app.main.helpers import framework_helpers
-from ...helpers import BaseApplicationTest, BaseDataAPIClientMixin
+from ...helpers import BaseApplicationTest, BaseAPIClientMixin
 
 
-class DataAPIClientMixin(BaseDataAPIClientMixin):
+class DataAPIClientMixin(BaseAPIClientMixin):
     data_api_client_patch_path = 'app.main.views.g_cloud.data_api_client'
 
 
