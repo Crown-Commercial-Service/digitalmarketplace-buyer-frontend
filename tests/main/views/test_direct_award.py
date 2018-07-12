@@ -13,7 +13,8 @@ from dmcontent.content_loader import ContentLoader, ContentNotFoundError
 from dmutils.api_stubs import framework
 
 from app import search_api_client, content_loader
-from app.main.views.g_cloud import DownloadResultsView, END_SEARCH_LIMIT, TOO_MANY_RESULTS_MESSAGE
+from app.main.views.g_cloud import (DownloadResultsView, END_SEARCH_LIMIT, TOO_MANY_RESULTS_MESSAGE,
+                                    CONFIRM_START_ASSESSING_MESSAGE, )
 from ...helpers import BaseApplicationTest
 
 
@@ -200,6 +201,13 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
 
         return len(anchors) == 1
 
+    def _task_has_button(self, tasklist, task, name, value):
+        """Task here refers to the tasklist item number rather than the zero-indexed python array. This feels easier to
+        understand and amend in the context of the tasklist."""
+        anchors = tasklist[task - 1].xpath('.//button[@name="{}" and @value="{}"]'.format(name, value))
+
+        return len(anchors) == 1
+
     def _task_has_box(self, tasklist, task, style, text):
         if task <= 0:
             raise ValueError()
@@ -251,7 +259,7 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         body = res.get_data(as_text=True)
         doc = html.fromstring(body)
 
-        item_headings = ['Save a search', 'Export your results', 'Download and assess your results',
+        item_headings = ['Save a search', 'Export your results', 'Start assessing',
                          'Award a contract', 'Complete the Customer Benefits Record form']
 
         tasklist = doc.xpath('//li[contains(@class, "instruction-list-item")]')
@@ -272,8 +280,8 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         assert self._task_has_link(tasklist, 1, 'https://www.gov.uk/guidance/g-cloud-buyers-guide#fairness')
 
         # Step 3 should link to guidance on comparing services.
-        buyer_guide_compare_services_url = self.content_loader.get_message('g9', 'urls',
-                                                                           'buyers_guide_compare_services_url')
+        buyer_guide_compare_services_url = \
+            "https://www.gov.uk/guidance/g-cloud-buyers-guide#review-and-compare-services"
         assert self._task_has_link(tasklist, 3, buyer_guide_compare_services_url)
 
         # Step 5 has a link to framework customer benefits form and customer benefits form email address.
@@ -352,19 +360,19 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
 
         assert self._task_has_link(tasklist, 1, '/g-cloud/search?q=accelerator') is False
         assert self._task_completed(tasklist, 2)
-        assert self._task_has_link(tasklist, 3,
+        assert self._task_has_link(tasklist, 2,
                                    '/buyers/direct-award/g-cloud/projects/1/results')
-
+        assert self._task_has_button(tasklist, 3, 'readyToAssess', 'true')
         assert self._task_has_link(tasklist, 4,
                                    '/buyers/direct-award/g-cloud/projects/1/did-you-award-contract') is False
 
-    def test_overview_renders_specific_elements_for_search_downloaded_state(self):
+    def test_overview_renders_specific_elements_once_assessing_started(self):
         searches = self._get_direct_award_project_searches_fixture()
         for search in searches['searches']:
             search['searchedAt'] = search['createdAt']
 
         project = self._get_direct_award_project_fixture()
-        project['project']['downloadedAt'] = project['project']['createdAt']
+        project['project']['readyToAssessAt'] = project['project']['createdAt']
         self.data_api_client.get_direct_award_project.return_value = project
 
         self.data_api_client.find_direct_award_project_searches.return_value = searches
@@ -378,11 +386,31 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         tasklist = doc.xpath('//li[contains(@class, "instruction-list-item")]')
 
         assert self._task_has_link(tasklist, 1, '/g-cloud/search?q=accelerator') is False
-        assert self._task_completed(tasklist, 3)
-        assert self._task_has_link(tasklist, 3,
+        assert self._task_completed(tasklist, 2)
+        assert self._task_has_link(tasklist, 2,
                                    '/buyers/direct-award/g-cloud/projects/1/results')
+        assert self._task_completed(tasklist, 3)
+        assert self._task_has_link(tasklist, 4,
+                                   '/buyers/direct-award/g-cloud/projects/1/did-you-award-contract')
 
-        assert self._cannot_start_from_task(tasklist, 5)
+    def test_assess_button_not_present_if_outcome_awarded(self):
+        searches = self._get_direct_award_project_searches_fixture()
+        for search in searches['searches']:
+            search['searchedAt'] = search['createdAt']
+
+        self.data_api_client.get_direct_award_project.return_value = \
+            self._get_direct_award_project_with_completed_outcome_awarded_fixture()
+
+        self.data_api_client.find_direct_award_project_searches.return_value = searches
+
+        res = self.client.get("/buyers/direct-award/g-cloud/projects/1")
+        assert res.status_code == 200
+
+        body = res.get_data(as_text=True)
+        doc = html.fromstring(body)
+        tasklist = doc.xpath('//li[contains(@class, "instruction-list-item")]')
+
+        assert not self._task_has_button(tasklist, 3, 'readyToAssess', 'true')
 
     @pytest.mark.parametrize(
         ('framework_status', 'following_framework_status', 'locked_at', 'position', 'heading'),
@@ -530,6 +558,10 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
 
         tasklist = doc.xpath('//li[contains(@class, "instruction-list-item")]')
         assert not self._task_completed(tasklist, 1)
+        assert self._cannot_start_from_task(tasklist, 2)
+        assert len(doc.xpath(
+            '(//li[contains(@class, "instruction-list-item")])[2]/p[contains(normalize-space(),'
+            ' "You have too many services to assess.")]')) == 1
 
 
 class TestDirectAwardURLGeneration(BaseApplicationTest):
@@ -630,7 +662,7 @@ class TestDirectAwardEndSearch(TestDirectAwardBase):
         doc = html.fromstring(res.get_data(as_text=True))
         assert doc.get_element_by_id('error-user_understands') is not None
 
-    def test_end_search_redirects_to_project_page(self):
+    def test_end_search_redirects_to_results_page(self):
         self.login_as_buyer()
 
         self.data_api_client.lock_direct_award_project.return_value = self._get_direct_award_lock_project_fixture()
@@ -638,7 +670,27 @@ class TestDirectAwardEndSearch(TestDirectAwardBase):
         res = self.client.post('/buyers/direct-award/g-cloud/projects/1/end-search', data={'user_understands': 'True'})
 
         assert res.status_code == 302
+        assert res.location.endswith('/buyers/direct-award/g-cloud/projects/1/results')
+
+
+class TestDirectAwardReadyToAssess(TestDirectAwardBase):
+    def setup_method(self, method):
+        super().setup_method(method)
+        self.data_api_client.get_direct_award_project.return_value = self._get_direct_award_lock_project_fixture()
+        self.data_api_client.find_direct_award_project_services.return_value = \
+            self._get_direct_award_project_services_fixture()
+
+        self.data_api_client.get_direct_award_project.return_value = self._get_direct_award_lock_project_fixture()
+
+    def test_ready_button_does_something(self):
+        self.login_as_buyer()
+        res = self.client.post('/buyers/direct-award/g-cloud/projects/1', data={"readyToAssess": "true"})
+
+        assert res.status_code == 302
         assert res.location.endswith('/buyers/direct-award/g-cloud/projects/1')
+        self.data_api_client.update_direct_award_project.assert_called_once_with(
+            project_data={'readyToAssess': True}, project_id=1, user_email='buyer@email.com')
+        self.assert_flashes(html_escape(CONFIRM_START_ASSESSING_MESSAGE))
 
 
 class TestDirectAwardAwardContract(TestDirectAwardBase):

@@ -35,6 +35,7 @@ from ..helpers.search_helpers import (
     clean_request_args, get_request_url_without_any_filters,
 )
 from ..helpers import framework_helpers
+from ..helpers import dm_google_analytics
 from ..helpers.direct_award_helpers import is_direct_award_project_accessible, get_direct_award_projects
 from ..helpers.search_save_helpers import get_saved_search_temporary_message_status, SearchMeta
 from ..helpers.shared_helpers import get_fields_from_manifest, get_questions_from_manifest_by_id
@@ -54,6 +55,11 @@ PROJECT_SAVED_MESSAGE = "Search saved."
 PROJECT_ENDED_MESSAGE = "Results exported. Your files are ready to download."
 TOO_MANY_RESULTS_MESSAGE = f"You have too many services to review. Refine your search until you have no more " \
                            f"than {END_SEARCH_LIMIT} results."
+CONFIRM_START_ASSESSING_MESSAGE = "You’ve confirmed that you have read and understood how to assess services."
+
+
+def _can_end_search(search_meta):
+    return search_meta.search_count <= END_SEARCH_LIMIT
 
 
 @main.route('/g-cloud')
@@ -493,7 +499,7 @@ def view_project(framework_family, project_id):
         search_meta = SearchMeta(search_api_client, search['searchUrl'], frameworks_by_slug)
 
         search_summary_sentence = search_meta.search_summary.markup()
-        search_results_count = int(search_meta.search_summary.count)
+        can_end_search = _can_end_search(search_meta)
         framework = frameworks_by_slug[search_meta.framework_slug]
         buyer_search_page_url = search_meta.url
 
@@ -502,7 +508,7 @@ def view_project(framework_family, project_id):
 
         search = None
         buyer_search_page_url = None
-        search_results_count = None
+        can_end_search = None
         search_summary_sentence = None
 
     content_loader.load_messages(framework['slug'], ['urls'])
@@ -522,23 +528,19 @@ def view_project(framework_family, project_id):
         project_outcome_label = \
             "Contract awarded to {}: {}".format(archived_service['supplierName'], archived_service['serviceName'])
 
-    # Current Project Stage
-    current_project_stage = None
-
     if project['outcome']:
         current_project_stage = project['outcome']['result']
+    elif project['readyToAssessAt']:
+        current_project_stage = dm_google_analytics.CurrentProjectStageEnum.READY_TO_ASSESS
     elif project['downloadedAt']:
-        current_project_stage = 'download_results'
+        current_project_stage = dm_google_analytics.CurrentProjectStageEnum.DOWNLOADED
     elif project['lockedAt']:
-        current_project_stage = 'search_ended'
+        current_project_stage = dm_google_analytics.CurrentProjectStageEnum.ENDED
     else:
-        current_project_stage = 'save_and_refine_search'
+        current_project_stage = dm_google_analytics.CurrentProjectStageEnum.SAVED
 
-    # custom dimension for google analytics
-    custom_dimensions = [{
-        "data_id": 8,
-        "data_value": current_project_stage
-    }]
+    custom_dimensions = [dm_google_analytics.custom_dimension(dm_google_analytics.CurrentProjectStageEnum,
+                                                              current_project_stage)]
 
     try:
         following_framework = framework_helpers.get_framework_or_500(
@@ -559,7 +561,7 @@ def view_project(framework_family, project_id):
         following_framework=following_framework,
         project=project,
         custom_dimensions=custom_dimensions,
-        search_results_count=search_results_count,
+        can_end_search=can_end_search,
         search=search,
         buyer_search_page_url=buyer_search_page_url,
         search_summary_sentence=search_summary_sentence,
@@ -586,10 +588,11 @@ def end_search(framework_family, project_id):
                                                                   only_active=True)['searches']
     search = searches[0]
     search_meta = SearchMeta(search_api_client, search['searchUrl'], frameworks_by_slug)
-    search_count = search_meta.search_summary.count
+    search_count = search_meta.search_count
+    can_end_search = _can_end_search(search_meta)
     disable_end_search_btn = False
 
-    if int(search_count) > END_SEARCH_LIMIT:
+    if not can_end_search:
         flash(TOO_MANY_RESULTS_MESSAGE, 'error')
         disable_end_search_btn = True
 
@@ -600,7 +603,7 @@ def end_search(framework_family, project_id):
         abort(400)
 
     form = BeforeYouDownloadForm()
-    if form.validate_on_submit() and int(search_count) <= END_SEARCH_LIMIT:
+    if form.validate_on_submit() and can_end_search:
         try:
             data_api_client.lock_direct_award_project(user_email=current_user.email_address, project_id=project_id)
         except HTTPError as e:
@@ -608,7 +611,7 @@ def end_search(framework_family, project_id):
 
         flash(PROJECT_ENDED_MESSAGE, 'success')
 
-        return redirect(url_for('.view_project', framework_family=framework_family, project_id=project['id']))
+        return redirect(url_for('.search_results', framework_family=framework_family, project_id=project['id']))
 
     errors = get_errors_from_wtform(form)
 
@@ -621,6 +624,31 @@ def end_search(framework_family, project_id):
         disable_end_search_btn=disable_end_search_btn,
         search_count=search_count,
     ), 200 if not errors else 400
+
+
+@direct_award.route('/<string:framework_family>/projects/<int:project_id>', methods=['POST'])
+def update_project(framework_family, project_id):
+    """Generic view for bits of the task list that need to POST stuff."""
+    project = data_api_client.get_direct_award_project(project_id=project_id)['project']
+    if not is_direct_award_project_accessible(project, current_user.id):
+        abort(404)
+
+    if request.form.get('readyToAssess'):
+        if not project['lockedAt']:
+            abort(400)
+
+        if project['outcome']:
+            abort(410)
+
+        data_api_client.update_direct_award_project(
+            project_id=project_id,
+            user_email=current_user.email_address,
+            project_data={'readyToAssess': True}
+        )
+        flash(CONFIRM_START_ASSESSING_MESSAGE)
+    return redirect(url_for('.view_project',
+                            framework_family=framework_family,
+                            project_id=project_id))
 
 
 @direct_award.route(

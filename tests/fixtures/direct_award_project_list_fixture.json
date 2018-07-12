@@ -13,6 +13,7 @@
             "id": 731851428862851,
             "lockedAt": null,
             "name": "gfgffd",
+            "readyToAssessAt": null,
             "outcome": null
         },
         {
@@ -21,6 +22,7 @@
             "downloadedAt": "2018-06-19T13:37:30.849304Z",
             "id": 272774709812396,
             "lockedAt": "2018-06-19T13:37:03.176398Z",
+            "readyToAssessAt": "2018-06-22T10:41:31.281853Z",
             "name": "22",
             "outcome": {
                 "award": {
@@ -56,6 +58,7 @@
             "id": 775976891996651,
             "lockedAt": "2018-06-18T13:31:32.964841Z",
             "name": "ffsdfds",
+            "readyToAssessAt": "2018-06-22T10:41:31.281853Z",
             "outcome": {
                 "completed": true,
                 "completedAt": "2018-06-22T10:44:51.794561Z",
@@ -75,6 +78,7 @@
             "id": 815142480189020,
             "lockedAt": "2018-06-18T13:25:57.345574Z",
             "name": "test",
+            "readyToAssessAt": "2018-06-22T10:41:31.281853Z",
             "outcome": {
                 "award": {
                     "awardValue": "12321312.00",
@@ -109,6 +113,7 @@
             "id": 268606220191818,
             "lockedAt": "2018-06-18T11:36:22.884927Z",
             "name": "tests",
+            "readyToAssessAt": "2018-06-22T10:41:31.281853Z",
             "outcome": null
         },
         {
@@ -152,6 +157,7 @@
             "id": 593972053423021,
             "lockedAt": "2018-06-13T12:04:07.847282Z",
             "name": "fsdfdsf",
+            "readyToAssessAt": "2018-06-22T10:41:31.281853Z",
             "outcome": {
                 "completed": true,
                 "completedAt": "2018-06-13T12:04:20.827236Z",
@@ -171,6 +177,7 @@
             "id": 227095350451575,
             "lockedAt": "2018-06-13T10:51:51.523409Z",
             "name": "www",
+            "readyToAssessAt": "2018-06-22T10:41:31.281853Z",
             "outcome": {
                 "completed": true,
                 "completedAt": "2018-06-13T10:52:52.685831Z",
@@ -190,6 +197,7 @@
             "id": 730286113278571,
             "lockedAt": "2018-06-13T10:25:14.193930Z",
             "name": "Show case",
+            "readyToAssessAt": "2018-06-22T10:41:31.281853Z",
             "outcome": {
                 "completed": true,
                 "completedAt": "2018-06-13T10:40:27.093719Z",
@@ -209,6 +217,7 @@
             "id": 144042085826852,
             "lockedAt": "2018-06-13T10:21:08.400577Z",
             "name": "test demo",
+            "readyToAssessAt": "2018-06-22T10:41:31.281853Z",
             "outcome": {
                 "completed": true,
                 "completedAt": "2018-06-13T10:21:43.672052Z",
@@ -228,6 +237,7 @@
             "id": 165117951600742,
             "lockedAt": "2018-06-13T12:05:16.496730Z",
             "name": "test",
+            "readyToAssessAt": "2018-06-22T10:41:31.281853Z",
             "outcome": {
                 "completed": true,
                 "completedAt": "2018-06-13T12:05:27.620283Z",
@@ -247,6 +257,7 @@
             "id": 574178156337956,
             "lockedAt": "2018-06-13T10:10:19.994795Z",
             "name": "tests",
+            "readyToAssessAt": "2018-06-22T10:41:31.281853Z",
             "outcome": {
                 "award": {
                     "awardValue": "30000.00",
@@ -281,6 +292,7 @@
             "id": 926231560227386,
             "lockedAt": "2018-06-13T10:06:42.204796Z",
             "name": "test demo",
+            "readyToAssessAt": "2018-06-22T10:41:31.281853Z",
             "outcome": {
                 "completed": true,
                 "completedAt": "2018-06-13T10:08:43.750329Z",
@@ -300,6 +312,7 @@
             "id": 238699020615674,
             "lockedAt": "2018-06-13T11:38:55.352146Z",
             "name": "fdsfs",
+            "readyToAssessAt": "2018-06-22T10:41:31.281853Z",
             "outcome": {
                 "award": {
                     "awardValue": "312321.00",
@@ -334,6 +347,7 @@
             "id": 883222647744645,
             "lockedAt": "2018-06-11T13:34:43.351200Z",
             "name": "testeste",
+            "readyToAssessAt": "2018-06-22T10:41:31.281853Z",
             "outcome": {
                 "completed": true,
                 "completedAt": "2018-06-12T13:21:17.003408Z",
@@ -353,6 +367,7 @@
             "id": 322775348397661,
             "lockedAt": "2018-06-13T12:05:40.515822Z",
             "name": "test",
+            "readyToAssessAt": "2018-06-22T10:41:31.281853Z",
             "outcome": {
                 "award": {
                     "awardValue": "1234.00",
@@ -406,6 +421,7 @@
             "id": 255107990746615,
             "lockedAt": "2018-06-07T11:25:32.884392Z",
             "name": "dfsfdsfda",
+            "readyToAssessAt": "2018-06-22T10:41:31.281853Z",
             "outcome": null
         },
         {
@@ -415,6 +431,7 @@
             "id": 606869699839590,
             "lockedAt": "2018-06-07T14:09:16.255121Z",
             "name": "fdsfs",
+            "readyToAssessAt": "2018-06-22T10:41:31.281853Z",
             "outcome": {
                 "award": {
                     "awardValue": "123.00",
@@ -448,6 +465,7 @@
             "downloadedAt": "2018-05-24T12:08:25.251541Z",
             "id": 207198828251156,
             "lockedAt": "2018-05-24T12:08:21.207534Z",
+            "readyToAssessAt": "2018-06-22T10:41:31.281853Z",
             "name": "test",
             "outcome": null
         }
