@@ -15,7 +15,7 @@ from dmutils.api_stubs import framework
 from app import content_loader
 from app.main.views.g_cloud import (DownloadResultsView, END_SEARCH_LIMIT, TOO_MANY_RESULTS_MESSAGE,
                                     CONFIRM_START_ASSESSING_MESSAGE, )
-from ...helpers import BaseApplicationTest, BaseDataAPIClientMixin
+from ...helpers import BaseApplicationTest, BaseAPIClientMixin
 
 
 class APIClientMixin(BaseAPIClientMixin):
