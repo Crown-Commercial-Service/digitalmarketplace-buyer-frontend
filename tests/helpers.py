@@ -64,10 +64,15 @@ class BaseAPIClientMixin:
 
 class BaseApplicationTest(object):
     def setup_method(self, method):
-        # We need to mock the API client in create_app, however we can't use patch the constructor,
-        # as the DataAPIClient instance has already been created; nor can we temporarily replace app.data_api_client
-        # with a mock, because then the shared instance won't have been configured (done in create_app). Instead,
-        # just mock the one function that would make an API call in this case.
+        """
+        A data_api_client instance is required for `create_app`, so we need some careful patching to initialise
+        the Flask test client:
+         - patch the .find_frameworks() method of `app.data_api_client` with the fixture
+         - initialise the app with `create_app('test')`
+         - in the tests, use a subclass of `BaseAPIClientMixin` above, with the path to the imported data_api_client
+         - the .find_frameworks() return value will need to be provided separately in those tests, as the import
+           path will (hopefully!) be different there.
+        """
         data_api_client.find_frameworks = mock.Mock()
         data_api_client.find_frameworks.return_value = self._get_frameworks_list_fixture_data()
         self.app = create_app('test')
