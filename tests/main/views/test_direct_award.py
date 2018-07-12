@@ -15,10 +15,14 @@ from dmutils.api_stubs import framework
 from app import search_api_client, content_loader
 from app.main.views.g_cloud import (DownloadResultsView, END_SEARCH_LIMIT, TOO_MANY_RESULTS_MESSAGE,
                                     CONFIRM_START_ASSESSING_MESSAGE, )
-from ...helpers import BaseApplicationTest
+from ...helpers import BaseApplicationTest, BaseDataAPIClientMixin
 
 
-class TestDirectAwardBase(BaseApplicationTest):
+class DataAPIClientMixin(BaseDataAPIClientMixin):
+    data_api_client_patch_path = 'app.main.views.g_cloud.data_api_client'
+
+
+class TestDirectAwardBase(DataAPIClientMixin, BaseApplicationTest):
     def setup_method(self, method):
         super().setup_method(method)
         self._search_api_client_patch = mock.patch('app.main.views.g_cloud.search_api_client', autospec=True)
@@ -30,9 +34,6 @@ class TestDirectAwardBase(BaseApplicationTest):
 
         self.g9_search_results = self._get_g9_search_results_fixture_data()
 
-        self.data_api_client_patch = mock.patch('app.main.views.g_cloud.data_api_client', autospec=True)
-        self.data_api_client = self.data_api_client_patch.start()
-
         self.data_api_client.find_frameworks.return_value = self._get_frameworks_list_fixture_data()
         self.data_api_client.get_framework.return_value = self._get_framework_fixture_data('g-cloud-9')
 
@@ -43,13 +44,13 @@ class TestDirectAwardBase(BaseApplicationTest):
 
     def teardown_method(self, method):
         self._search_api_client_patch.stop()
-        self.data_api_client_patch.stop()
         super().teardown_method(method)
 
 
 class TestDirectAward(TestDirectAwardBase):
     @classmethod
     def setup_class(cls):
+        super().setup_class()
 
         cls.SAVE_SEARCH_OVERVIEW_URL = '/buyers/direct-award/g-cloud'
         cls.SAVE_SEARCH_URL = '/buyers/direct-award/g-cloud/save-search'
@@ -564,14 +565,11 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
             ' "You have too many services to assess.")]')) == 1
 
 
-class TestDirectAwardURLGeneration(BaseApplicationTest):
+class TestDirectAwardURLGeneration(DataAPIClientMixin, BaseApplicationTest):
     """This class has been separated out from above because we only want to mock a couple of methods on the API clients,
     not all of them (like the class above)"""
     def setup_method(self, method):
         super().setup_method(method)
-
-        self.data_api_client_patch = mock.patch('app.main.views.g_cloud.data_api_client', autospec=True)
-        self.data_api_client = self.data_api_client_patch.start()
 
         self.data_api_client.find_frameworks.return_value = self._get_frameworks_list_fixture_data()
         self.data_api_client.get_framework.return_value = self._get_framework_fixture_data('g-cloud-9')
@@ -579,10 +577,6 @@ class TestDirectAwardURLGeneration(BaseApplicationTest):
         self.data_api_client.get_direct_award_project.return_value = self._get_direct_award_project_fixture()
         self.data_api_client.find_direct_award_project_searches.return_value = \
             self._get_direct_award_project_searches_fixture()
-
-    def teardown_method(self, method):
-        self.data_api_client_patch.stop()
-        super().teardown_method(method)
 
     @pytest.mark.parametrize('search_api_url, frontend_url',
                              (

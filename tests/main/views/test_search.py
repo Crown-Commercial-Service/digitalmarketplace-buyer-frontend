@@ -5,7 +5,7 @@ from lxml import html
 import mock
 import pytest
 
-from ...helpers import BaseApplicationTest
+from ...helpers import BaseApplicationTest, BaseDataAPIClientMixin
 
 
 def find_pagination_links(res_data):
@@ -32,12 +32,13 @@ def get_0_results_search_response():
     }
 
 
-class TestSearchResults(BaseApplicationTest):
+class DataAPIClientMixin(BaseDataAPIClientMixin):
+    data_api_client_patch_path = 'app.main.views.g_cloud.data_api_client'
+
+
+class TestSearchResults(DataAPIClientMixin, BaseApplicationTest):
     def setup_method(self, method):
         super().setup_method(method)
-
-        self.data_api_client_patch = mock.patch('app.main.views.g_cloud.data_api_client', autospec=True)
-        self.data_api_client = self.data_api_client_patch.start()
 
         self.data_api_client.find_frameworks.return_value = self._get_frameworks_list_fixture_data()
 
@@ -53,7 +54,6 @@ class TestSearchResults(BaseApplicationTest):
 
     def teardown_method(self, method):
         self._search_api_client_patch.stop()
-        self.data_api_client_patch.stop()
         super().teardown_method(method)
 
     def test_search_page_results_service_links(self):

@@ -3,34 +3,31 @@ import mock
 
 from dmapiclient import APIError
 
-from ...helpers import BaseApplicationTest
+from ...helpers import BaseApplicationTest, BaseDataAPIClientMixin
 
 
-class TestSuppliersPage(BaseApplicationTest):
+class DataAPIClientMixin(BaseDataAPIClientMixin):
+    data_api_client_patch_path = 'app.main.views.suppliers.data_api_client'
+
+
+class TestSuppliersPage(DataAPIClientMixin, BaseApplicationTest):
     def setup_method(self, method):
         super().setup_method(method)
-
-        self._data_api_client_patch = mock.patch('app.main.suppliers.data_api_client', autospec=True)
-        self._data_api_client = self._data_api_client_patch.start()
 
         self.suppliers_by_prefix = self._get_suppliers_by_prefix_fixture_data()
         self.suppliers_by_prefix_page_2 = self._get_suppliers_by_prefix_fixture_data_page_2()
         self.suppliers_by_prefix_next_and_prev = self._get_suppliers_by_prefix_fixture_with_next_and_prev()
         self.supplier = self._get_supplier_fixture_data()
         self.supplier_with_minimum_data = self._get_supplier_with_minimum_fixture_data()
-        self._data_api_client.find_suppliers.return_value = self.suppliers_by_prefix
-        self._data_api_client.get_supplier.return_value = self.supplier
+        self.data_api_client.find_suppliers.return_value = self.suppliers_by_prefix
+        self.data_api_client.get_supplier.return_value = self.supplier
 
         gcloud9_framework = self._get_framework_fixture_data('g-cloud-9')['frameworks']
-        self._data_api_client.find_frameworks.return_value = {'frameworks': [gcloud9_framework]}
-
-    def teardown_method(self, method):
-        self._data_api_client_patch.stop()
-        super().teardown_method(method)
+        self.data_api_client.find_frameworks.return_value = {'frameworks': [gcloud9_framework]}
 
     def test_should_call_api_with_correct_params(self):
         self.client.get('/g-cloud/suppliers')
-        self._data_api_client.find_suppliers.assert_called_once_with('A', 1, 'g-cloud')
+        self.data_api_client.find_suppliers.assert_called_once_with('A', 1, 'g-cloud')
 
     def test_should_show_suppliers_prefixed_by_a_default(self):
         res = self.client.get('/g-cloud/suppliers')
@@ -41,7 +38,7 @@ class TestSuppliersPage(BaseApplicationTest):
 
     def test_should_show_suppliers_prefixed_by_a_param(self):
         res = self.client.get('/g-cloud/suppliers?prefix=M')
-        self._data_api_client.find_suppliers.assert_called_once_with('M', 1, 'g-cloud')
+        self.data_api_client.find_suppliers.assert_called_once_with('M', 1, 'g-cloud')
         assert res.status_code == 200
         assert self._strip_whitespace(
             '<li class="selected"><span class="visuallyhidden">Suppliers starting with </span><strong>M</strong></li>'
@@ -56,7 +53,7 @@ class TestSuppliersPage(BaseApplicationTest):
 
     def test_should_use_default_if_invalid(self):
         res = self.client.get('/g-cloud/suppliers?prefix=+')
-        self._data_api_client.find_suppliers.assert_called_once_with('A', 1, 'g-cloud')
+        self.data_api_client.find_suppliers.assert_called_once_with('A', 1, 'g-cloud')
 
         assert res.status_code == 200
         assert self._strip_whitespace(
@@ -65,7 +62,7 @@ class TestSuppliersPage(BaseApplicationTest):
 
     def test_should_use_default_if_multichar_prefix(self):
         res = self.client.get('/g-cloud/suppliers?prefix=Prefix')
-        self._data_api_client.find_suppliers.assert_called_once_with('A', 1, 'g-cloud')
+        self.data_api_client.find_suppliers.assert_called_once_with('A', 1, 'g-cloud')
 
         assert res.status_code == 200
 
@@ -75,7 +72,7 @@ class TestSuppliersPage(BaseApplicationTest):
 
     def test_should_use_number_range_prefix(self):
         res = self.client.get('/g-cloud/suppliers?prefix=other')
-        self._data_api_client.find_suppliers.assert_called_once_with(u'other', 1, 'g-cloud')
+        self.data_api_client.find_suppliers.assert_called_once_with(u'other', 1, 'g-cloud')
 
         assert res.status_code == 200
         assert self._strip_whitespace(
@@ -136,7 +133,7 @@ class TestSuppliersPage(BaseApplicationTest):
         assert supplier_html in self._strip_whitespace(res.get_data(as_text=True))
 
     def test_should_show_no_suppliers_page_if_api_returns_404(self):
-        self._data_api_client.find_suppliers.side_effect = APIError(mock.Mock(status_code=404))
+        self.data_api_client.find_suppliers.side_effect = APIError(mock.Mock(status_code=404))
 
         res = self.client.get('/g-cloud/suppliers')
         assert res.status_code == 404
@@ -155,9 +152,9 @@ class TestSuppliersPage(BaseApplicationTest):
         assert html_page in res.get_data(as_text=True)
 
     def test_should_show_next_nav_on_supplier_list(self):
-        self._data_api_client.find_suppliers.return_value = self.suppliers_by_prefix_page_2  # noqa
+        self.data_api_client.find_suppliers.return_value = self.suppliers_by_prefix_page_2  # noqa
         res = self.client.get('/g-cloud/suppliers?page=2')
-        self._data_api_client.find_suppliers.assert_called_once_with('A', 2, 'g-cloud')
+        self.data_api_client.find_suppliers.assert_called_once_with('A', 2, 'g-cloud')
 
         assert res.status_code == 200
         html_tag = '<li class="previous">'
@@ -170,7 +167,7 @@ class TestSuppliersPage(BaseApplicationTest):
         assert html_page in res.get_data(as_text=True)
 
     def test_should_show_next_and_prev_nav_on_supplier_list(self):
-        self._data_api_client.find_suppliers.return_value = self.suppliers_by_prefix_next_and_prev  # noqa
+        self.data_api_client.find_suppliers.return_value = self.suppliers_by_prefix_next_and_prev  # noqa
         res = self.client.get('/g-cloud/suppliers?page=2')
 
         assert res.status_code == 200
@@ -203,7 +200,7 @@ class TestSuppliersPage(BaseApplicationTest):
             "edge you literally won&#39;t be able to run any of it on your systems." in res.get_data(as_text=True)
 
     def test_should_show_supplier_with_no_desc_or_clients(self):
-        self._data_api_client.get_supplier.return_value = self.supplier_with_minimum_data  # noqa
+        self.data_api_client.get_supplier.return_value = self.supplier_with_minimum_data  # noqa
 
         res = self.client.get('/g-cloud/supplier/92191')
         assert res.status_code == 200
@@ -228,7 +225,7 @@ class TestSuppliersPage(BaseApplicationTest):
         assert self._strip_whitespace(email_html) in self._strip_whitespace(res.get_data(as_text=True))
 
     def test_should_have_minimum_supplier_contact_details_on_supplier_page(self):
-        self._data_api_client.get_supplier.return_value = self.supplier_with_minimum_data  # noqa
+        self.data_api_client.get_supplier.return_value = self.supplier_with_minimum_data  # noqa
 
         res = self.client.get('/g-cloud/supplier/92191')
 
@@ -250,7 +247,7 @@ class TestSuppliersPage(BaseApplicationTest):
     def test_should_not_show_supplier_without_services_on_framework(self):
         supplier_data = self.supplier.copy()
         supplier_data['suppliers']['service_counts']['G-Cloud 9'] = 0
-        self._data_api_client.get_supplier.return_value = supplier_data
+        self.data_api_client.get_supplier.return_value = supplier_data
 
         res = self.client.get('/g-cloud/supplier/92191')
         assert res.status_code == 404

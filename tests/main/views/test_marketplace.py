@@ -8,12 +8,16 @@ from lxml import html
 import mock
 import pytest
 
-from ...helpers import BaseApplicationTest
+from ...helpers import BaseApplicationTest, BaseDataAPIClientMixin
 
 from dmutils import api_stubs
 
 
-class TestApplication(BaseApplicationTest):
+class DataAPIClientMixin(BaseDataAPIClientMixin):
+    data_api_client_patch_path = 'app.main.views.marketplace.data_api_client'
+
+
+class TestApplication(DataAPIClientMixin, BaseApplicationTest):
 
     def test_analytics_code_should_be_in_javascript(self):
         res = self.client.get('/static/javascripts/application.js')
@@ -25,23 +29,16 @@ class TestApplication(BaseApplicationTest):
         assert res.status_code == 200
         assert '<p>GOV.UK uses cookies to make the site simpler. <a href="/cookies">' \
             'Find out more about cookies</a></p>' in res.get_data(as_text=True)
+        assert len(self.data_api_client.find_frameworks.call_args_list) == 2
 
     def test_google_verification_code_shown_on_homepage(self):
         res = self.client.get('/')
         assert res.status_code == 200
         assert 'name="google-site-verification" content="NotARealVerificationKey"' in res.get_data(as_text=True)
+        assert len(self.data_api_client.find_frameworks.call_args_list) == 2
 
 
-class TestHomepageAccountCreationVirtualPageViews(BaseApplicationTest):
-
-    def setup_method(self, method):
-        super().setup_method(method)
-        self.data_api_client_patch = mock.patch('app.main.views.marketplace.data_api_client', autospec=True)
-        self.data_api_client = self.data_api_client_patch.start()
-
-    def teardown_method(self, method):
-        self.data_api_client_patch.stop()
-        super().teardown_method(method)
+class TestHomepageAccountCreationVirtualPageViews(DataAPIClientMixin, BaseApplicationTest):
 
     def test_data_analytics_track_page_view_is_shown_if_account_created_flash_message(self):
         with self.client.session_transaction() as session:
@@ -56,14 +53,17 @@ class TestHomepageAccountCreationVirtualPageViews(BaseApplicationTest):
         assert flash_banner_match is None, "Unexpected flash banner message '{}'.".format(
             flash_banner_match.groups()[0])
 
+        assert len(self.data_api_client.find_frameworks.call_args_list) == 2
+
     def test_data_analytics_track_page_view_not_shown_if_no_account_created_flash_message(self):
         res = self.client.get("/")
         data = res.get_data(as_text=True)
 
         assert 'data-analytics="trackPageView" data-url="buyers?account-created=true"' not in data
+        assert len(self.data_api_client.find_frameworks.call_args_list) == 2
 
 
-class TestHomepageBrowseList(BaseApplicationTest):
+class TestHomepageBrowseList(DataAPIClientMixin, BaseApplicationTest):
 
     mock_live_dos_1_framework = {
         "framework": "digital-outcomes-and-specialists",
@@ -85,15 +85,6 @@ class TestHomepageBrowseList(BaseApplicationTest):
         "status": "live",
         "id": 8
     }
-
-    def setup_method(self, method):
-        super().setup_method(method)
-        self.data_api_client_patch = mock.patch('app.main.views.marketplace.data_api_client', autospec=True)
-        self.data_api_client = self.data_api_client_patch.start()
-
-    def teardown_method(self, method):
-        self.data_api_client_patch.stop()
-        super().teardown_method(method)
 
     def test_dos_links_are_shown(self):
         self.data_api_client.find_frameworks.return_value = {
@@ -207,16 +198,7 @@ class TestHomepageBrowseList(BaseApplicationTest):
         assert len(link_texts) == 2
 
 
-class TestHomepageSidebarMessage(BaseApplicationTest):
-
-    def setup_method(self, method):
-        super().setup_method(method)
-        self.data_api_client_patch = mock.patch('app.main.views.marketplace.data_api_client', autospec=True)
-        self.data_api_client = self.data_api_client_patch.start()
-
-    def teardown_method(self, method):
-        self.data_api_client_patch.stop()
-        super().teardown_method(method)
+class TestHomepageSidebarMessage(DataAPIClientMixin, BaseApplicationTest):
 
     @staticmethod
     def _find_frameworks(framework_slugs_and_statuses):
@@ -354,12 +336,6 @@ class TestHomepageSidebarMessage(BaseApplicationTest):
 
 class TestStaticMarketplacePages(BaseApplicationTest):
 
-    def setup_method(self, method):
-        super().setup_method(method)
-
-    def teardown_method(self, method):
-        super().teardown_method(method)
-
     def test_cookie_page(self):
         res = self.client.get('/cookies')
         assert res.status_code == 200
@@ -396,12 +372,9 @@ class TestStaticMarketplacePages(BaseApplicationTest):
             assert "http://localhost{}".format(relative_url) in external_urls
 
 
-class BaseBriefPageTest(BaseApplicationTest):
+class BaseBriefPageTest(DataAPIClientMixin, BaseApplicationTest):
     def setup_method(self, method):
         super().setup_method(method)
-
-        self.data_api_client_patch = mock.patch('app.main.views.marketplace.data_api_client', autospec=True)
-        self.data_api_client = self.data_api_client_patch.start()
 
         self.brief = self._get_dos_brief_fixture_data()
         self.brief_responses = self._get_dos_brief_responses_fixture_data()
@@ -409,10 +382,6 @@ class BaseBriefPageTest(BaseApplicationTest):
         self.data_api_client.find_frameworks.return_value = self._get_frameworks_list_fixture_data()
         self.data_api_client.get_brief.return_value = self.brief
         self.data_api_client.find_brief_responses.return_value = self.brief_responses
-
-    def teardown_method(self, method):
-        self.data_api_client_patch.stop()
-        super().teardown_method(method)
 
 
 class TestBriefPage(BaseBriefPageTest):
@@ -1138,7 +1107,8 @@ class TestWithdrawnSpecificBriefPage(BaseBriefPageTest):
         assert 'This opportunity was withdrawn on Friday&nbsp;25&nbsp;November&nbsp;2016' in page
 
 
-class TestCatalogueOfBriefsPage(BaseApplicationTest):
+class TestCatalogueOfBriefsPage(DataAPIClientMixin, BaseApplicationTest):
+
     def setup_method(self, method):
         super().setup_method(method)
 
@@ -1151,9 +1121,6 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
             self._get_dos_brief_search_api_aggregations_response_specialists_fixture_data(),
             self._get_dos_brief_search_api_aggregations_response_user_research_fixture_data(),
         ]
-
-        self.data_api_client_patch = mock.patch('app.main.views.marketplace.data_api_client', autospec=True)
-        self.data_api_client = self.data_api_client_patch.start()
 
         dos_lots = [api_stubs.lot(slug='digital-outcomes', name='Digital outcomes', allows_brief=True),
                     api_stubs.lot(slug='digital-specialists', name='Digital specialists', allows_brief=True),
@@ -1175,7 +1142,6 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         ]}
 
     def teardown_method(self, method):
-        self.data_api_client_patch.stop()
         self._view_search_api_client_patch.stop()
         super().teardown_method(method)
 
@@ -1743,7 +1709,8 @@ class TestCatalogueOfBriefsPage(BaseApplicationTest):
         assert kv_pairs == {'lot': 'digital-outcomes'}
 
 
-class TestCatalogueOfBriefsFilterOnClick(BaseApplicationTest):
+class TestCatalogueOfBriefsFilterOnClick(DataAPIClientMixin, BaseApplicationTest):
+
     def setup_method(self, method):
         super().setup_method(method)
 
@@ -1757,8 +1724,6 @@ class TestCatalogueOfBriefsFilterOnClick(BaseApplicationTest):
             self._get_dos_brief_search_api_aggregations_response_user_research_fixture_data(),
         ]
 
-        self.data_api_client_patch = mock.patch('app.main.views.marketplace.data_api_client', autospec=True)
-        self.data_api_client = self.data_api_client_patch.start()
         self.data_api_client.find_frameworks.return_value = {
             'frameworks': [
                 api_stubs.framework(framework_id=3, slug='digital-outcomes-and-specialists-2', status='live',
@@ -1768,7 +1733,6 @@ class TestCatalogueOfBriefsFilterOnClick(BaseApplicationTest):
         }
 
     def teardown_method(self, method):
-        self.data_api_client_patch.stop()
         self._view_search_api_client_patch.stop()
         super().teardown_method(method)
 
@@ -1832,7 +1796,7 @@ class TestCatalogueOfBriefsFilterOnClick(BaseApplicationTest):
         assert len(filter_button) == 1
 
 
-class TestGCloudHomepageLinks(BaseApplicationTest):
+class TestGCloudHomepageLinks(DataAPIClientMixin, BaseApplicationTest):
 
     mock_live_g_cloud_framework = {
         "framework": "g-cloud",
@@ -1840,15 +1804,6 @@ class TestGCloudHomepageLinks(BaseApplicationTest):
         "status": "live",
         "id": 5
     }
-
-    def setup_method(self, method):
-        super().setup_method(method)
-        self.data_api_client_patch = mock.patch('app.main.views.marketplace.data_api_client', autospec=True)
-        self.data_api_client = self.data_api_client_patch.start()
-
-    def teardown_method(self, method):
-        self.data_api_client_patch.stop()
-        super().teardown_method(method)
 
     @pytest.mark.parametrize('framework_slug, gcloud_content',
                              (('g-cloud-8', 'Find cloud technology and support'),
