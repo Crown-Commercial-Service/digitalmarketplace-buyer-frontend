@@ -41,8 +41,6 @@ class TestSearchResults(APIClientMixin, BaseApplicationTest):
     def setup_method(self, method):
         super().setup_method(method)
 
-        self.data_api_client.find_frameworks.return_value = self._get_frameworks_list_fixture_data()
-
         self.search_api_client.aggregate.return_value = self._get_fixture_data('g9_aggregations_fixture.json')
         self.search_results = self._get_search_results_fixture_data()
         self.g9_search_results = self._get_g9_search_results_fixture_data()
@@ -573,8 +571,6 @@ class TestSearchResults(APIClientMixin, BaseApplicationTest):
 class TestSearchFilterOnClick(APIClientMixin, BaseApplicationTest):
     def setup_method(self, method):
         super().setup_method(method)
-
-        self.data_api_client.find_frameworks.return_value = self._get_frameworks_list_fixture_data()
 
         self.search_api_client.aggregate.return_value = self._get_fixture_data('g9_aggregations_fixture.json')
 

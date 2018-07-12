@@ -37,7 +37,6 @@ class TestServicePage(DataAPIClientMixin, BaseApplicationTest):
         self.service = self._get_g6_service_fixture_data()
 
         self.data_api_client.get_supplier.return_value = self.supplier
-        self.data_api_client.find_frameworks.return_value = self._get_frameworks_list_fixture_data()
         self.data_api_client.get_framework.return_value = self._get_framework_fixture_data('g-cloud-6')
         self.data_api_client.get_service.return_value = self.service
 

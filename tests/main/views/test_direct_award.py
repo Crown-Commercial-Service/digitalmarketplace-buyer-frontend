@@ -32,7 +32,6 @@ class TestDirectAwardBase(APIClientMixin, BaseApplicationTest):
 
         self.g9_search_results = self._get_g9_search_results_fixture_data()
 
-        self.data_api_client.find_frameworks.return_value = self._get_frameworks_list_fixture_data()
         self.data_api_client.get_framework.return_value = self._get_framework_fixture_data('g-cloud-9')
 
         self.data_api_client.get_direct_award_project.return_value = self._get_direct_award_project_fixture()
