@@ -1,10 +1,15 @@
-from .helpers import BaseApplicationTest
+from .helpers import BaseApplicationTest, BaseAPIClientMixin
 
 
-class TestApplication(BaseApplicationTest):
+class DataAPIClientMixin(BaseAPIClientMixin):
+    data_api_client_patch_path = 'app.main.views.marketplace.data_api_client'
+
+
+class TestApplication(DataAPIClientMixin, BaseApplicationTest):
     def test_index(self):
         response = self.client.get('/')
         assert 200 == response.status_code
+        assert len(self.data_api_client.find_frameworks.call_args_list) == 2
 
     def test_404(self):
         response = self.client.get('/not-found')

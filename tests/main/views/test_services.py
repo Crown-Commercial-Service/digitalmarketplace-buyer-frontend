@@ -1,10 +1,13 @@
 import re
 
 from lxml import html
-import mock
 
 from app.main.helpers import framework_helpers
-from ...helpers import BaseApplicationTest
+from ...helpers import BaseApplicationTest, BaseAPIClientMixin
+
+
+class DataAPIClientMixin(BaseAPIClientMixin):
+    data_api_client_patch_path = 'app.main.views.g_cloud.data_api_client'
 
 
 class UnavailableBanner(object):
@@ -25,7 +28,7 @@ class UnavailableBanner(object):
         return self.banner[0].xpath('p[@class="banner-message"]/text()')[0].strip()
 
 
-class TestServicePage(BaseApplicationTest):
+class TestServicePage(DataAPIClientMixin, BaseApplicationTest):
 
     def setup_method(self, method):
         super().setup_method(method)
@@ -33,21 +36,13 @@ class TestServicePage(BaseApplicationTest):
         self.supplier = self._get_supplier_fixture_data()
         self.service = self._get_g6_service_fixture_data()
 
-        self.data_api_client_patch = mock.patch('app.main.views.g_cloud.data_api_client', autospec=True)
-        self.data_api_client = self.data_api_client_patch.start()
-
         self.data_api_client.get_supplier.return_value = self.supplier
-        self.data_api_client.find_frameworks.return_value = self._get_frameworks_list_fixture_data()
         self.data_api_client.get_framework.return_value = self._get_framework_fixture_data('g-cloud-6')
         self.data_api_client.get_service.return_value = self.service
 
         self.lots = framework_helpers.get_lots_by_slug(
             self._get_framework_fixture_data('g-cloud-6')['frameworks']
         )
-
-    def teardown_method(self, method):
-        self.data_api_client_patch.stop()
-        super().teardown_method(method)
 
     def _assert_contact_details(self, document):
 

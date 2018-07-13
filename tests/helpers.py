@@ -14,12 +14,109 @@ from app import create_app, data_api_client
 from tests import login_for_tests
 
 
+def get_frameworks_list_fixture_data():
+    old_gcloud_lots = [api_stubs.lot(lot_id=1, slug='saas', name='Software as a Service'),
+                       api_stubs.lot(lot_id=2, slug='paas', name='Platform as a Service'),
+                       api_stubs.lot(lot_id=3, slug='iaas', name='Infrastructure as a Service'),
+                       api_stubs.lot(lot_id=4, slug='scs', name='Specialist Cloud Services')]
+
+    new_gcloud_lots = [api_stubs.lot(lot_id=1, slug='cloud-hosting', name='Cloud hosting'),
+                       api_stubs.lot(lot_id=2, slug='cloud-software', name='Cloud software'),
+                       api_stubs.lot(lot_id=3, slug='cloud-support', name='Cloud support')]
+
+    dos_lots = [api_stubs.lot(lot_id=5, slug='digital-outcomes', name='Digital outcomes', allows_brief=True),
+                api_stubs.lot(lot_id=6, slug='digital-specialists', name='Digital specialists', allows_brief=True),
+                api_stubs.lot(lot_id=7, slug='user-research-studios', name='User research studios'),
+                api_stubs.lot(lot_id=8, slug='user-research-participants', name='User research participants',
+                              allows_brief=True)]
+
+    g_cloud_8_variation = {
+        "1": {
+            "countersignedAt": "2016-10-05T11:00:00.000000Z",
+            "countersignerName": "Dan Saxby",
+            "countersignerRole": "Category Director",
+            "createdAt": "2016-08-19T15:31:00.000000Z"
+        }
+    }
+
+    frameworks = [
+        api_stubs.framework(framework_id=4, slug='g-cloud-7', status='live', lots=old_gcloud_lots),
+        api_stubs.framework(framework_id=1, slug='g-cloud-6', status='expired', lots=old_gcloud_lots),
+        api_stubs.framework(framework_id=6, slug='g-cloud-8', status='live', lots=old_gcloud_lots,
+                            framework_agreement_version='v1.0', framework_variations=g_cloud_8_variation),
+        api_stubs.framework(framework_id=3, slug='g-cloud-5', status='expired', lots=old_gcloud_lots),
+        api_stubs.framework(framework_id=2, slug='g-cloud-4', status='expired', lots=old_gcloud_lots),
+        api_stubs.framework(framework_id=7, slug='digital-outcomes-and-specialists-2', status='live',
+                            lots=dos_lots, framework_agreement_version='v1.0', has_further_competition=True),
+        api_stubs.framework(framework_id=5, slug='digital-outcomes-and-specialists', status='live',
+                            lots=dos_lots, framework_agreement_version='v1.0', has_further_competition=True),
+        api_stubs.framework(framework_id=8, slug='g-cloud-9', status='live', lots=new_gcloud_lots),
+    ]
+
+    return {'frameworks': [framework['frameworks'] for framework in frameworks]}
+
+
+class BaseAPIClientMixin:
+    """
+    Mixin for patching the API clients when imported for each view module.
+
+    Import this base class to the test module, and initialise with the path to the import:
+
+    :: test_marketplace.py
+    class APIClientMixin(BaseAPIClientMixin):
+        data_api_client_patch_path = 'app.main.views.marketplace.data_api_client'
+        search_api_client_patch_path = 'app.main.views.marketplace.search_api_client'
+
+    # Put the mixin before the BaseApplicationTest class:
+
+    class TestMyView(APIClientMixin, BaseApplicationTest):
+        def test_something(self):
+            self.search_api_client.search.return_value = {}
+            assert self.data_api_client.find_frameworks.call_args_list == []
+
+    Multiple subclasses of the mixin can be created and passed into the test class if the API client
+    is patched in different places (hopefully this should be rare!).
+    """
+    data_api_client_patch_path = None
+    data_api_client_patch = None
+    search_api_client_patch_path = None
+    search_api_client_patch = None
+
+    @classmethod
+    def setup_class(cls):
+        if cls.data_api_client_patch_path:
+            cls.data_api_client_patch = mock.patch(cls.data_api_client_patch_path, autospec=True)
+        if cls.search_api_client_patch_path:
+            cls.search_api_client_patch = mock.patch(cls.search_api_client_patch_path, autospec=True)
+
+    def setup_method(self, method):
+        super().setup_method(method)
+        if self.data_api_client_patch:
+            self.data_api_client = self.data_api_client_patch.start()
+            # Default return values - can be overwritten at test level
+            self.data_api_client.find_frameworks.return_value = get_frameworks_list_fixture_data()
+        if self.search_api_client_patch:
+            self.search_api_client = self.search_api_client_patch.start()
+
+    def teardown_method(self, method):
+        if self.data_api_client_patch:
+            self.data_api_client_patch.stop()
+        if self.search_api_client_patch:
+            self.search_api_client_patch.stop()
+        super().teardown_method(method)
+
+
 class BaseApplicationTest(object):
     def setup_method(self, method):
-        # We need to mock the API client in create_app, however we can't use patch the constructor,
-        # as the DataAPIClient instance has already been created; nor can we temporarily replace app.data_api_client
-        # with a mock, because then the shared instance won't have been configured (done in create_app). Instead,
-        # just mock the one function that would make an API call in this case.
+        """
+        A data_api_client instance is required for `create_app`, so we need some careful patching to initialise
+        the Flask test client:
+         - patch the .find_frameworks() method of `app.data_api_client` with the fixture
+         - initialise the app with `create_app('test')`
+         - in the tests, use a subclass of `BaseAPIClientMixin` above, with the path to the imported data_api_client
+         - the .find_frameworks() return value will need to be provided separately in those tests, as the import
+           path will (hopefully!) be different there.
+        """
         data_api_client.find_frameworks = mock.Mock()
         data_api_client.find_frameworks.return_value = self._get_frameworks_list_fixture_data()
         self.app = create_app('test')
@@ -90,45 +187,7 @@ class BaseApplicationTest(object):
 
     @staticmethod
     def _get_frameworks_list_fixture_data():
-        old_gcloud_lots = [api_stubs.lot(lot_id=1, slug='saas', name='Software as a Service'),
-                           api_stubs.lot(lot_id=2, slug='paas', name='Platform as a Service'),
-                           api_stubs.lot(lot_id=3, slug='iaas', name='Infrastructure as a Service'),
-                           api_stubs.lot(lot_id=4, slug='scs', name='Specialist Cloud Services')]
-
-        new_gcloud_lots = [api_stubs.lot(lot_id=1, slug='cloud-hosting', name='Cloud hosting'),
-                           api_stubs.lot(lot_id=2, slug='cloud-software', name='Cloud software'),
-                           api_stubs.lot(lot_id=3, slug='cloud-support', name='Cloud support')]
-
-        dos_lots = [api_stubs.lot(lot_id=5, slug='digital-outcomes', name='Digital outcomes', allows_brief=True),
-                    api_stubs.lot(lot_id=6, slug='digital-specialists', name='Digital specialists', allows_brief=True),
-                    api_stubs.lot(lot_id=7, slug='user-research-studios', name='User research studios'),
-                    api_stubs.lot(lot_id=8, slug='user-research-participants', name='User research participants',
-                                  allows_brief=True)]
-
-        g_cloud_8_variation = {
-            "1": {
-                "countersignedAt": "2016-10-05T11:00:00.000000Z",
-                "countersignerName": "Dan Saxby",
-                "countersignerRole": "Category Director",
-                "createdAt": "2016-08-19T15:31:00.000000Z"
-            }
-        }
-
-        frameworks = [
-            api_stubs.framework(framework_id=4, slug='g-cloud-7', status='live', lots=old_gcloud_lots),
-            api_stubs.framework(framework_id=1, slug='g-cloud-6', status='expired', lots=old_gcloud_lots),
-            api_stubs.framework(framework_id=6, slug='g-cloud-8', status='live', lots=old_gcloud_lots,
-                                framework_agreement_version='v1.0', framework_variations=g_cloud_8_variation),
-            api_stubs.framework(framework_id=3, slug='g-cloud-5', status='expired', lots=old_gcloud_lots),
-            api_stubs.framework(framework_id=2, slug='g-cloud-4', status='expired', lots=old_gcloud_lots),
-            api_stubs.framework(framework_id=7, slug='digital-outcomes-and-specialists-2', status='live',
-                                lots=dos_lots, framework_agreement_version='v1.0', has_further_competition=True),
-            api_stubs.framework(framework_id=5, slug='digital-outcomes-and-specialists', status='live',
-                                lots=dos_lots, framework_agreement_version='v1.0', has_further_competition=True),
-            api_stubs.framework(framework_id=8, slug='g-cloud-9', status='live', lots=new_gcloud_lots),
-        ]
-
-        return {'frameworks': [framework['frameworks'] for framework in frameworks]}
+        return get_frameworks_list_fixture_data()
 
     @staticmethod
     def _get_g4_service_fixture_data():
