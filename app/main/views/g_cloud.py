@@ -116,7 +116,7 @@ def choose_lot(framework_family):
                 "message": "Please select a category to start your search"
             }
 
-    return render_template('index-g-cloud.html',
+    return render_template('choose-lot.html',
                            errors=errors,
                            framework_family=framework_family,
                            title="Choose a category",
