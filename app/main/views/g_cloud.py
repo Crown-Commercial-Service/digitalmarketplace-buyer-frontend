@@ -85,31 +85,42 @@ def pre_project_task_list(framework_family):
     )
 
 
-@direct_award_public.route('/<string:framework_family>/choose-lot')
+@direct_award_public.route('/<string:framework_family>/choose-lot', methods=("GET", "POST"))
 def choose_lot(framework_family):
     # if there are multiple live g-cloud frameworks, assume they all have the same lots
     all_frameworks = data_api_client.find_frameworks().get('frameworks')
     framework = framework_helpers.get_latest_live_framework(all_frameworks, framework_family)
 
     content_loader.load_messages(framework['slug'], ['advice', 'descriptions'])
-    gcloud_page_title = content_loader.get_message(framework['slug'], 'descriptions', 'framework')
     gcloud_lot_messages = content_loader.get_message(framework['slug'], 'advice', 'lots')
     gcloud_lot_messages = {x['slug']: x for x in gcloud_lot_messages}
 
-    lot_browse_list_items = list()
+    lots = list()
     for lot in framework['lots']:
         lot_item = {
-            "link": url_for('main.search_services', lot=lot['slug']),
-            "title": lot['name'],
-            "body": gcloud_lot_messages[lot['slug']]['body'],
-            "subtext": gcloud_lot_messages[lot['slug']].get('advice'),
+            "value": lot['slug'],
+            "label": lot['name'],
+            "description": gcloud_lot_messages[lot['slug']]['body'],
+            "hint": gcloud_lot_messages[lot['slug']].get('advice'),
         }
 
-        lot_browse_list_items.append(lot_item)
+        lots.append(lot_item)
 
-    return render_template('index-g-cloud.html',
-                           title=gcloud_page_title,
-                           lots=lot_browse_list_items)
+    errors = {}
+    if request.method == 'POST':
+        if "lot" in request.form:
+            return redirect(url_for("main.search_services", lot=request.form["lot"]))
+        else:
+            errors["lot"] = {
+                "question": "Choose a category",
+                "message": "Please select a category to start your search"
+            }
+
+    return render_template('choose-lot.html',
+                           errors=errors,
+                           framework_family=framework_family,
+                           title="Choose a category",
+                           lots=lots)
 
 
 @main.route('/g-cloud/framework')

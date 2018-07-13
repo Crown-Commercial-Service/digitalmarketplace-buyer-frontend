@@ -1,0 +1,78 @@
+{% extends "toolkit/layouts/_base_page.html" %}
+
+{% block page_title %}G-Cloud - Digital Marketplace{% endblock %}
+
+{% block breadcrumb %}
+  {%
+    with
+    items = [
+      {
+          "link": url_for('main.index'),
+          "label": "Digital Marketplace"
+      },
+      {
+        "link": url_for('direct_award_public.choose_lot', framework_family=framework_family),
+        "label": "Find cloud hosting, software and support"
+      },
+      {
+          "label": title|capitalize
+      }
+    ]
+  %}
+    {% include "toolkit/breadcrumb.html" %}
+  {% endwith %}
+{% endblock %}
+
+{% block main_content %}
+
+<div class="index-page">
+  <header class="page-heading">
+    <h1>
+      {{ title|capitalize }}
+    </h1>
+  </header>
+  <div class="grid-row">
+    <div class="column-two-thirds">
+      <form action="{{ url_for('direct_award_public.choose_lot', framework_family=framework_family)}}" method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+        {%
+           with
+           error = errors.get("lot", {}).get("message", None),
+           hint = "or",
+           hint_underneath = true,
+           name = "lot",
+           type = "radio",
+           options = lots
+        %}
+          {% include "toolkit/forms/selection-buttons.html" %}
+        {% endwith %}
+
+        <div class="question first-question">
+          {%
+            with
+            name = "lot",
+            id = "input-lot-100",
+            input_type = "radio",
+            input_value = "",
+            option = {
+              "label": "All categories"
+            }
+          %}
+            {% include "toolkit/forms/_selection-button.html" %}
+          {% endwith %}
+        </div>
+
+        {%
+          with
+          type = "save",
+          label = "Search for services"
+        %}
+          {% include "toolkit/button.html" %}
+        {% endwith %}
+
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
