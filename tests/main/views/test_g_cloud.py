@@ -29,7 +29,7 @@ class TestGCloudIndexResults(BaseApplicationTest):
         )
 
         assert res.status_code == 302
-        assert res.location.endswith(f"/g-cloud/search?lot={lot}")
+        assert res.location.endswith("/g-cloud/search" + f"?lot={lot}" if lot else "")
 
         redirect = self.client.get(res.location)
         assert redirect.status_code == 200
