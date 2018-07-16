@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-from flask import render_template, redirect
+from flask import redirect
+
+from dmutils.flask import timed_render_template as render_template
 
 from ...main import main
 
