@@ -2,7 +2,7 @@
 from urllib.parse import urljoin
 
 from flask_login import current_user
-from flask import abort, current_app, render_template, request, url_for
+from flask import abort, current_app, request, url_for
 from lxml import html
 from werkzeug.urls import Href
 from werkzeug.datastructures import MultiDict
@@ -10,6 +10,7 @@ from werkzeug.datastructures import MultiDict
 from dmapiclient import APIError
 from dmcontent.content_loader import ContentNotFoundError
 from dmutils.filters import capitalize_first
+from dmutils.flask import timed_render_template as render_template
 
 from app import search_api_client, data_api_client, content_loader
 from ..helpers.brief_helpers import (

@@ -3,7 +3,7 @@ from datetime import datetime
 import inflection
 from operator import itemgetter
 
-from flask import abort, render_template, request, redirect, current_app, url_for, flash
+from flask import abort, request, redirect, current_app, url_for, flash
 from flask_login import current_user
 from werkzeug.urls import Href, url_encode, url_decode
 
@@ -11,6 +11,7 @@ from dmapiclient import HTTPError
 from dmcontent.errors import ContentNotFoundError
 from dmcontent.formats import format_service_price
 from dmcontent.questions import Pricing
+from dmutils.flask import timed_render_template as render_template
 from dmutils.forms import get_errors_from_wtform
 from dmutils.formats import dateformat, DATETIME_FORMAT, datetimeformat
 from dmutils.filters import capitalize_first

@@ -2,9 +2,11 @@
 import re
 from string import ascii_uppercase
 
-from flask import render_template, request, abort
+from flask import request, abort
 
 from dmapiclient import APIError
+
+from dmutils.flask import timed_render_template as render_template
 
 from app import data_api_client
 from app.main import main
