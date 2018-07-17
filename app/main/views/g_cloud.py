@@ -110,7 +110,11 @@ def choose_lot(framework_family):
     errors = {}
     if request.method == 'POST':
         if "lot" in request.form:
-            return redirect(url_for("main.search_services", lot=request.form["lot"]))
+            if request.form["lot"]:
+                return redirect(url_for("main.search_services", lot=request.form["lot"]))
+            else:
+                # we don't want an empty query string
+                return redirect(url_for("main.search_services"))
         else:
             errors["lot"] = {
                 "question": "Choose a category",
