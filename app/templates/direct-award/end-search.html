@@ -63,15 +63,7 @@
         >
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
 
-        {%
-          with
-          name = form.user_understands.name,
-          type = "checkbox",
-          error = errors.get('user_understands', {}).get('message', None),
-          options = form.user_understands.options
-        %}
-          {% include "toolkit/forms/selection-buttons.html" %}
-        {% endwith %}
+        {{ form.user_understands }}
 
         <button class="button-save end-your-search-button"
           data-analytics="trackEvent"
