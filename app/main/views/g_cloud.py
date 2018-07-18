@@ -12,7 +12,7 @@ from dmcontent.errors import ContentNotFoundError
 from dmcontent.formats import format_service_price
 from dmcontent.questions import Pricing
 from dmutils.flask import timed_render_template as render_template
-from dmutils.forms import get_errors_from_wtform
+from dmutils.forms.helpers import get_errors_from_wtform
 from dmutils.formats import dateformat, DATETIME_FORMAT, datetimeformat
 from dmutils.filters import capitalize_first
 from dmutils.ods import A as AnchorElement
