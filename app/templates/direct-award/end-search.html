@@ -47,7 +47,7 @@
           Before you export your results
         </h1>
       </header>
-      
+
       <p>Export your search results to keep a record of the services you’ve found.</p>
 
       <p>
@@ -67,7 +67,6 @@
           with
           name = form.user_understands.name,
           type = "checkbox",
-          value = form.user_understands.value,
           error = errors.get('user_understands', {}).get('message', None),
           options = form.user_understands.options
         %}
@@ -82,7 +81,7 @@
           {% if disable_end_search_btn %}disabled="disabled"{% endif %}
           >Export results and continue</button>
       </form>
-      
+
       <p><a href="{{ url_for('direct_award.view_project', framework_family=framework.family, project_id=project.id) }}">Return to your task list</a></p>
     </div>
   </div>
@@ -95,8 +94,8 @@
   {% if disable_end_search_btn %}
     <script>
       GOVUK.GDM.analytics.virtualPageViews.sendVirtualPageView(
-        window.location.pathname + '/error', 
-        'End search error', 
+        window.location.pathname + '/error',
+        'End search error',
         [
           { id: 9, label: "{{ search_count }}" }
         ]
