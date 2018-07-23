@@ -13,7 +13,7 @@
         "label": "Dashboard"
       },
       {
-        "link": '/2/brief/%s/overview' % brief.id if brief.lot == 'digital-professionals' else url_for(".view_brief_overview", framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id),
+        "link": '/2/brief/%s/overview' % brief.id if brief.lot == 'digital-professionals' or brief.lot == 'training' else url_for(".view_brief_overview", framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id),
         "label": "Brief Overview"
       },
       {

@@ -16,6 +16,9 @@
 //= include _selection-buttons.js
 //= include _main.js
 //= include _specify_seller.js
+//= include _lds.js
+//= include _specify_training.js
+//= include _training_approach.js
 
 (function(GOVUK, GDM) {
 

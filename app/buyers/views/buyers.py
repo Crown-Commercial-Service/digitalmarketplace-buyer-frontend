@@ -22,10 +22,17 @@ from flask_login import current_user
 from app import data_api_client
 from .. import buyers, content_loader
 from app.helpers.buyers_helpers import (
-    all_essentials_are_true, counts_for_failed_and_eligible_brief_responses,
-    get_framework_and_lot, get_sorted_responses_for_brief, count_unanswered_questions,
-    brief_can_be_edited, add_unanswered_counts_to_briefs, is_brief_correct,
-    section_has_at_least_one_required_question, allowed_email_domain
+    all_essentials_are_true,
+    counts_for_failed_and_eligible_brief_responses,
+    get_framework_and_lot,
+    get_sorted_responses_for_brief,
+    count_unanswered_questions,
+    brief_can_be_edited,
+    add_unanswered_counts_to_briefs,
+    is_brief_correct,
+    section_has_at_least_one_required_question,
+    allowed_email_domain,
+    remove_non_cascade_fields
 )
 from dmutils.forms import render_template_with_csrf
 from dmutils.logging import notify_team
@@ -200,6 +207,10 @@ def create_new_brief(framework_slug, lot_slug):
             errors=errors
         )
 
+    response = __navigate_next(content, brief, lot_slug, section.id)
+    if response:
+        return response
+
     return redirect(
         url_for(".view_brief_overview",
                 framework_slug=framework_slug,
@@ -209,7 +220,7 @@ def create_new_brief(framework_slug, lot_slug):
 
 @buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>', methods=['GET'])
 def view_brief_overview(framework_slug, lot_slug, brief_id):
-    if lot_slug == 'digital-professionals':
+    if lot_slug == 'digital-professionals' or lot_slug == 'training':
         return redirect('/2/brief/{}/overview'.format(brief_id))
 
     framework, lot = get_framework_and_lot(
@@ -264,6 +275,8 @@ def view_brief_section_summary(framework_slug, lot_slug, brief_id, section_slug)
     sections = content.summary(brief)
     section = sections.get_section(section_slug)
 
+    remove_non_cascade_fields(brief, section, 'description-of-training')
+
     if not section:
         abort(404)
 
@@ -293,6 +306,8 @@ def edit_brief_question(framework_slug, lot_slug, brief_id, section_slug, questi
     section = content.get_section(section_slug)
     if section is None or not section.editable:
         abort(404)
+
+    remove_non_cascade_fields(brief, section, question_id)
 
     question = section.get_question(question_id)
     if not question:
@@ -329,6 +344,7 @@ def update_brief_submission(framework_slug, lot_slug, brief_id, section_id, ques
 
     update_data = question.get_data(request.form)
 
+    remove_non_cascade_fields(brief, section, question_id, update_data)
     question_ids = section.get_section_question_ids()
 
     question_id_index = None
@@ -359,26 +375,35 @@ def update_brief_submission(framework_slug, lot_slug, brief_id, section_id, ques
 
     if section.has_summary_page:
         # If there are more than 1 questions and it is not the last one.
-        if question_id_index is not None and len(question_ids) > 1 and question_id_index != len(question_ids) - 1:
+        if (question_id_index is not None and
+                len(question_ids) > 1 and
+                question_id_index != len(question_ids) - 1):
             return redirect(
-                url_for('.edit_brief_question',
-                        framework_slug=brief['frameworkSlug'],
-                        lot_slug=brief['lotSlug'],
-                        brief_id=brief['id'],
-                        section_slug=section.slug,
-                        # must be inside the current if statement to make sure it exists.
-                        question_id=question_ids[question_id_index + 1]
-                        )
-            )
+                url_for(
+                    '.edit_brief_question',
+                    framework_slug=brief['frameworkSlug'],
+                    lot_slug=brief['lotSlug'],
+                    brief_id=brief['id'],
+                    section_slug=section.slug,
+                    question_id=question_ids[question_id_index + 1]))
 
-        return redirect(
-            url_for(
-                ".view_brief_section_summary",
-                framework_slug=brief['frameworkSlug'],
-                lot_slug=brief['lotSlug'],
-                brief_id=brief['id'],
-                section_slug=section.slug)
-        )
+        response = __navigate_next(content, brief, lot_slug, section_id)
+        if response:
+            return response
+
+        if lot_slug != 'training':
+            return redirect(
+                url_for(
+                    ".view_brief_section_summary",
+                    framework_slug=brief['frameworkSlug'],
+                    lot_slug=brief['lotSlug'],
+                    brief_id=brief['id'],
+                    section_slug=section.slug))
+
+    else:
+        response = __navigate_next(content, brief, lot_slug, section_id)
+        if response:
+            return response
 
     return redirect(
         url_for(
@@ -388,6 +413,25 @@ def update_brief_submission(framework_slug, lot_slug, brief_id, section_id, ques
             brief_id=brief['id']
         )
     )
+
+
+def __navigate_next(content, brief, lot_slug, section_id):
+    if lot_slug == 'training':
+        # if it is the last one, go to the next section
+        next_section_id = content.get_next_editable_section_id(section_id)
+        if next_section_id:
+            next_section = content.get_section(next_section_id)
+            next_question_ids = next_section.get_section_question_ids()
+            return redirect(
+                url_for('.edit_brief_question',
+                        framework_slug=brief['frameworkSlug'],
+                        lot_slug=brief['lotSlug'],
+                        brief_id=brief['id'],
+                        section_slug=next_section.slug,
+                        # must be inside the current if statement to make sure it exists.
+                        question_id=next_question_ids[0]
+                        )
+            )
 
 
 @buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/responses', methods=['GET'])
@@ -428,13 +472,17 @@ def prepared_response_contents_for_brief(brief, responses):
                 attached_documents_count = len(r.get('attachedDocumentURL', []))
                 links = ''
                 for i in range(0, attached_documents_count):
-                    links = ('{}\n{}'.format(links, url_for('.download_brief_response_attachment',
-                                             framework_slug=brief['frameworkSlug'],
-                                             lot_slug=brief['lotSlug'],
-                                             brief_id=brief['id'],
-                                             response_id=r.get('id'),
-                                             attachment_id=i,
-                                             _external=True)))
+                    links = (
+                        '{}\n{}'.format(
+                            links,
+                            url_for(
+                                '.download_brief_response_attachment',
+                                framework_slug=brief['frameworkSlug'],
+                                lot_slug=brief['lotSlug'],
+                                brief_id=brief['id'],
+                                response_id=r.get('id'),
+                                attachment_id=i,
+                                _external=True)))
 
                 answers.update({'Attached Document URL': links})
             else:
@@ -449,7 +497,7 @@ def prepared_response_contents_for_brief(brief, responses):
                                 response_id=r.get('id'),
                                 attachment_id=i,
                                 _external=True
-                                ) if i < len(r.get('attachedDocumentURL', [])) else ''
+                            ) if i < len(r.get('attachedDocumentURL', [])) else ''
                         })
 
         answers.update(zip(ess_req_names, ess_responses))
@@ -620,6 +668,8 @@ def publish_brief(framework_slug, lot_slug, brief_id):
     for section in sections:
         if section.get_question('questionAndAnswerSessionDetails') == question_and_answers_content:
             question_and_answers['slug'] = section['id']
+        for question_id in section.get_section_question_ids():
+            remove_non_cascade_fields(brief, section, question_id)
 
     unanswered_required, unanswered_optional = count_unanswered_questions(sections)
 

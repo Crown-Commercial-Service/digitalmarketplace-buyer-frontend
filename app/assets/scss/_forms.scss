@@ -194,11 +194,19 @@ main {
     }
     /* hide optional */
     #sellerEmailList .question-optional {
-      display: none
+      display: none;
     }
     /* hide optional */
     #sellerEmail .question-optional {
-      display: none
+      display: none;
+    }
+
+    #trainingDetailType .question-optional {
+      display: none;
+    }
+
+    #trainingDetailCover .question-optional {
+      display: none;
     }
 }
 

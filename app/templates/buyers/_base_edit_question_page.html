@@ -46,6 +46,9 @@
               </span>
             {% endif %}
             {% for question in question.questions %}
+              {% if question.type != 'list' %}
+                <h3>{{question.name}}</h3>
+              {% endif %}
               {% if errors and errors[question.id] %}
                 {{ forms[question.type](question, brief, errors) }}
               {% else %}

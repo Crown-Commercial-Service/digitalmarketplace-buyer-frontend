@@ -6,9 +6,6 @@
   <dt>Opportunity ID</dt>
   <dd>{{ brief.id }}</dd>
   <div class="hr"></div>
-  <dt>Published</dt>
-  <dd>{{ brief.publishedAt|dateformat }}</dd>
-  <div class="hr"></div>
   <dt>Deadline for asking questions</dt>
   {% if brief.clarificationQuestionsClosedAt %}
       <dd>{{ brief.clarificationQuestionsClosedAt|datetimeformat }}</dd>
@@ -19,22 +16,37 @@
     <dd>{{ brief.applicationsClosedAt|datetimeformat }}</dd>
   {% endif %}
   <div class="hr"></div>
+  <dt>Published</dt>
+  <dd>{{ brief.publishedAt|dateformat }}</dd>
+  <div class="hr"></div>
 </dl>
 {% endif %}
 {% for section in content.summary(brief) %}
     {{ summary.heading(section.name, id="opportunity-attributes-{}".format(loop.index)) }}
      {% if section.summary_page_description %}
-          {{ summary.description(section.summary_page_description) }}
+          {{ summary.description(section.summary_page_description) | format_links }}
         {% endif %}
     <dl>
       {% for item in section.questions %}
-        <dt>{{ summary.field_name(item.label) }}</dt>
-        {% if item.type == 'textbox_large' %}
-            <dd>{{ summary[item.type](item.value) | format_links | nl2br}}</dd>
+        {% if brief.lot == 'training' %}
+          {% if item.value != [] or item.optional %}
+            <dt>{{ summary.field_name(item.label) }}</dt>
+            {% if item.type == 'textbox_large' %}
+                <dd>{{ summary[item.type](item.value) | format_links | nl2br}}</dd>
+            {% else %}
+                <dd>{{ summary[item.type](item.value) | format_links}}</dd>
+            {% endif %}
+            <div class="hr"></div>
+          {% endif %}
         {% else %}
-            <dd>{{ summary[item.type](item.value) | format_links}}</dd>
+          <dt>{{ summary.field_name(item.label) }}</dt>
+          {% if item.type == 'textbox_large' %}
+              <dd>{{ summary[item.type](item.value) | format_links | nl2br}}</dd>
+          {% else %}
+              <dd>{{ summary[item.type](item.value) | format_links}}</dd>
+          {% endif %}
+          <div class="hr"></div>
         {% endif %}
-        <div class="hr"></div>
       {% endfor %}
     </dl>
 {% endfor %}

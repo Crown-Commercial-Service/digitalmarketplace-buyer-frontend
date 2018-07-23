@@ -4,7 +4,7 @@
   {
     "digital-outcome": "Finding a team to provide an outcome",
     "digital-professionals": "Finding an individual specialist",
-    "user-research-participants": "Find user research participants",
+    "training": "Create a training brief",
   }[lot.slug]
   %}
 
@@ -36,50 +36,141 @@
       {% include 'toolkit/page-heading.html' %}
       {% endwith %}
 
-      <p>
-        {{
-          {
-            "digital-outcome": "To find a digital outcome, eg a booking system or an accessibility audit, you need to tell sellers about the situation or problem. They’ll then propose a solution to meet your needs.",
-            "digital-professionals": "",
-            "user-research-participants": "To find user research participants, you need to tell sellers about the types of participants you want to test your service with. They’ll then tell you what they can do and how much it will cost.",
-          }[lot.slug]
-        }}
-      </p>
-
-      <h2>Step 1. Research, write and publish your brief</h2>
-      {% if lot.slug == "digital-professionals" %}
-      <p>
-        Check the Marketplace can provide the specialist type you need, make sure you have budget approval, then write and publish your brief. When you’re ready to start, click the Create Brief button.
-      </p>
-      {% elif lot.slug == "digital-outcome" %}
-      <p>
-        As part of your research remember you can <a href="{{ url_for('.supplier_search') }}">contact sellers</a> for their input. Then, once you have budget approval, write and publish your brief. When you’re ready to start, click the Create Brief button.
-      </p>
+      {% if lot.slug == "digital-outcome" %}
+        <p>
+          To find a digital outcome, you’ll need to tell sellers about the situation, 
+          problem or opportunity.
+        </p>
+        <p>
+          For example, a booking system or an accessibility audit. They’ll then propose 
+          a solution to meet your needs.
+        </p>
+        <h2 class="au-display-lg">Before you start:</h2>
+        <ul>
+          <li>
+            To help prepare your brief offline, 
+            <a href="/static/media/documents/outcome_brief_draft_questions.xlsx">
+              download the draft questions (XLSX 27KB)
+            </a>.
+          </li>
+          <li>As part of your research remember you can 
+            <a href="/search/sellers">
+              contact sellers
+            </a> for their input.
+          </li>
+          <li>Make sure you have budget approval.</li>
+        </ul>
+        <h2 class="au-display-lg">While your brief is live:</h2>
+        <ul>
+          <li>
+            If sellers ask questions, the person who published the brief will receive them via email. 
+            Make sure they are available and can 
+            <a href="https://marketplace1.zendesk.com/hc/en-gb/articles/115011257447-Answer-questions">
+              respond
+            </a> within the required timeframes.
+          </li>
+        </ul>
+        <h2 class="au-display-lg">After your brief closes:</h2>
+        <ul>
+          <li>You will receive seller responses after 1 to 2 weeks. This includes your ‘essential and nice-to-have skills and experience’. You won’t receive proposals at this stage.</li>
+          <li>Use the seller responses to shortlist a group of sellers, then approach them to provide detailed proposals.</li>
+          <li>Evaluate the proposals using the criteria you set when creating the brief.</li>
+          <li>
+            <a href="https://marketplace1.zendesk.com/hc/en-gb/articles/115011257587-Award-a-contract">
+              Award the contract
+            </a> to the applicant who best meets your needs and represents value for money.
+          </li>
+        </ul>
+      {% elif lot.slug == "digital-professionals" %}
+        <h2 class="au-display-lg">Before you start:</h2>
+        <ul>
+          <li>
+            To help prepare your brief offline, 
+            <a href="/static/media/documents/specialist_brief_draft_questions.xlsx">
+              download the draft questions (XLSX 68KB)
+            </a>.
+          </li>
+          <li>
+            Check the Marketplace can provide the 
+            <a href="https://marketplace1.zendesk.com/hc/en-gb/articles/115011271567-What-you-can-buy">
+              specialist type
+            </a> you need.
+          </li>
+          <li>Make sure you have budget approval.</li>
+        </ul>
+        <h2 class="au-display-lg">While your brief is live:</h2>
+        <ul>
+          <li>
+            If sellers ask questions, the person who published the brief will receive them via email. 
+            Make sure they are available and can 
+            <a href="https://marketplace1.zendesk.com/hc/en-gb/articles/115011257447-Answer-questions">
+              respond
+            </a> within the required timeframes.
+          </li>
+        </ul>
+        <h2 class="au-display-lg">After your brief closes:</h2>
+        <ul>
+          <li>You will receive seller responses, including résumés after 1 to 2 weeks.</li>
+          <li>Evaluate the applicants using the criteria you set when creating the brief.</li>
+          <li>
+            <a href="https://marketplace1.zendesk.com/hc/en-gb/articles/115011257587-Award-a-contract">
+              Award the contract
+            </a> to the applicant who best meets your needs and represents value for money.
+          </li>
+        </ul>
+      {% elif lot.slug == "training" %}
+        <h2 class="au-display-lg">Before you start:</h2>
+        <ul>
+          <li>
+            To help prepare your brief offline, 
+            <a href="/static/media/documents/training_brief_draft_questions.docx">
+              download the draft questions (DOCX 391KB)
+            </a>.
+          </li>
+          <li>
+            For a step by step guide, please read the 
+            <a href="https://marketplace1.zendesk.com/hc/en-gb/articles/360000299476">
+              training guide
+            </a> or 
+            <a href="/contact-us">contact us</a>.
+          </li>
+          <li>
+            If you need an introduction in delivering digital services, agile delivery, 
+            user research or content design, use the 
+            <a href="https://govau.github.io/learning-design-standards/">
+              learning design standards
+            </a> to help structure your brief.
+          </li>
+        </ul>
+        <h2 class="au-display-lg">Writing your brief:</h2>
+        <ul>
+          <li>
+            Try not to be too specific in your training requirements. This will help sellers 
+            define the best training approach for you.
+          </li>
+          <li>You can contact sellers to discuss your requirements before publishing.</li>
+        </ul>
+        <h2 class="au-display-lg">While your brief is live:</h2>
+        <ul>
+          <li>
+            If sellers ask questions, the person who published the brief will receive them via email. 
+            Make sure they are available and can 
+            <a href="https://marketplace1.zendesk.com/hc/en-gb/articles/115011257447-Answer-questions">
+              respond
+            </a> within the required timeframes.</li>
+        </ul>
+        <h2 class="au-display-lg">After your brief closes:</h2>
+        <ul>
+          <li>You will receive seller responses, including proposals, costs and résumés after 1 to 2 weeks.</li>
+          <li>Evaluate the responses using the criteria you set when writing the brief.</li>
+          <li>
+            <a href="https://marketplace1.zendesk.com/hc/en-gb/articles/115011257587-Award-a-contract">
+              Award the contract
+            </a> to the applicant who best meets your needs and represents value for money.</li>
+        </ul>
       {% endif %}
 
-      <h2>Step 2. Respond to seller questions</h2>
-      {% if lot.slug == "digital-professionals" %}
-      <p>
-        After publishing your brief, sellers may ask questions via email. <a href="https://marketplace1.zendesk.com/hc/en-gb/articles/115011257447-Answer-questions">You must respond to their questions</a> by posting the question and your answer at the bottom of your brief, so all potential applicants can see the information.
-      </p>
-      {% elif lot.slug == "digital-outcome" %}
-      <p>
-        After publishing your brief, sellers may ask questions via email. <a href="https://marketplace1.zendesk.com/hc/en-gb/articles/115011257447-Answer-questions">You must respond to their questions</a> by posting the question and your answer at the bottom of your brief, so all potential applicants can see the information.
-      </p>
-      {% endif %}
-
-      <h2>Step 3. Evaluate applicants and award a contract</h2>
-      {% if lot.slug == "digital-professionals" %}
-      <p>
-        After your brief closes, evaluate the applicants using the criteria you set when creating the brief and <a href="https://marketplace1.zendesk.com/hc/en-gb/articles/115011257587-Award-a-contract">award the contract</a> to the applicant who best meets your needs and represents value for money.
-      </p>
-      {% elif lot.slug == "digital-outcome" %}
-      <p>
-        After your brief closes, evaluate the applicants using the criteria you set when creating the brief and <a href="https://marketplace1.zendesk.com/hc/en-gb/articles/115011257587-Award-a-contract">award the contract</a> to the applicant who best meets your needs and represents value for money.
-      </p>
-      {% endif %}
-
-      <br>
+      <br/>
       
       <form action="{{ url_for('buyers.start_new_brief', framework_slug=framework.slug, lot_slug=lot.slug) }}" method="get">
 

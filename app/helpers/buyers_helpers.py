@@ -99,3 +99,90 @@ def allowed_email_domain(current_user_id, brief, data_api_client=None):
     email_domain = current_user.get('email_address').split('@')[-1]
     brief_user_email = brief.get('users')[0].get('emailAddress').split('@')[-1]
     return email_domain == brief_user_email
+
+
+def remove_non_cascade_fields(brief, section, current_question_id, update_data=None):
+    if not brief.get('lot') == 'training':
+        return
+
+    all_lds = {
+        'Digital foundations': 'ldsDigitalFoundation',
+        'Agile delivery': 'ldsAgileDelivery',
+        'User research': 'ldsUserResearch',
+        'Content design': 'ldsContentDesign',
+        'Other': 'trainingDetail'
+    }
+
+    to_remove = []
+    if (current_question_id == 'description-of-training' or
+            current_question_id == 'whatTraining'):
+        for k, v in all_lds.iteritems():
+            if update_data:
+                what_training = update_data.get('whatTraining', [])
+                if what_training and k not in what_training:
+                    to_remove.append(v)
+            elif k not in brief.get('whatTraining', []):
+                to_remove.append(v)
+
+            update_cascaded_optional_fields(brief, section, v)
+
+    if current_question_id in all_lds.itervalues():
+        to_remove = []
+        for k, v in all_lds.iteritems():
+            if k not in brief.get('whatTraining', []):
+                to_remove.append(v)
+
+            update_cascaded_optional_fields(brief, section, v)
+
+    for tr in to_remove:
+        if any(q for q in section.questions if q.id == tr):
+            section.questions.remove(
+                next(q for q in section.questions if q.id == tr))
+
+
+def update_cascaded_optional_fields(brief, section, current_question_id):
+    lds_sub_fields = {
+        'ldsDigitalFoundation': [
+            'ldsDigitalFoundationProposalOrLds',
+            'ldsDigitalFoundationUnits',
+            'ldsDigitalFoundationTrainingNeeds'
+        ],
+        'ldsAgileDelivery': [
+            'ldsAgileDeliveryProposalOrLds',
+            'ldsAgileDeliveryUnits',
+            'ldsAgileDeliveryTrainingNeeds'
+        ],
+        'ldsUserResearch': [
+            'ldsUserResearchProposalOrLds',
+            'ldsUserResearchUnits',
+            'ldsUserResearchTrainingNeeds'
+        ],
+        'ldsContentDesign': [
+            'ldsContentDesignProposalOrLds',
+            'ldsContentDesignUnits',
+            'ldsContentDesignTrainingNeeds'
+        ],
+        'trainingDetail': [
+            'trainingDetailType',
+            'trainingDetailCover'
+        ]
+    }
+    field_names = []
+    lds_field = lds_sub_fields.get(current_question_id)
+    if current_question_id == 'trainingDetail':
+        field_names = lds_field
+    elif lds_field:
+        radio_name = lds_field[0]
+        radio_value = brief.get(radio_name, None)
+
+        if not radio_value:
+            field_names.append(radio_name)
+        elif radio_value == 'ldsUnits':
+            field_names.append(lds_field[1])
+        elif radio_value == 'specify':
+            field_names.append(lds_field[2])
+
+    for field_name in field_names:
+        field = section.get_question(field_name)
+        if field is not None:  # the question might be removed earlier
+            field.optional = False

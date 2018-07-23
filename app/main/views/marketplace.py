@@ -93,7 +93,7 @@ def _is_supplier_selected_for_brief(brief):
     if brief.get('sellerSelector', '') == 'oneSeller':
         return (current_user.email_address.lower() == brief.get('sellerEmail', '').lower() or
                 (current_user_domain.lower() == domain(brief.get('sellerEmail', '').lower())
-                if current_user_domain else False))
+                 if current_user_domain else False))
     return False
 
 
@@ -142,6 +142,8 @@ def get_brief_by_id(framework_slug, brief_id):
     if published_date >= feature_date:
         application_specialist_url = "/2/brief/{}/specialist/respond".format(brief['id'])
         application_specialist_submitted_url = "/2/brief/{}/specialist/respond/submitted".format(brief['id'])
+
+    application_training_url = "/2/brief/{}/training/respond".format(brief['id'])
 
     add_case_study_url = None
 
@@ -208,6 +210,8 @@ def get_brief_by_id(framework_slug, brief_id):
     if brief.get('areaOfExpertise'):
         current_domain = data_api_client.req.domain(brief['areaOfExpertise']).get()
         domain_id = current_domain['domain']['id']
+    elif brief['lotSlug'] == 'training':
+        domain_id = 15  # training
 
     return render_template_with_csrf(
         'brief.html',
@@ -215,6 +219,7 @@ def get_brief_by_id(framework_slug, brief_id):
         application_url=application_url,
         application_specialist_url=application_specialist_url,
         application_specialist_submitted_url=application_specialist_submitted_url,
+        application_training_url=application_training_url,
         assessed_domains=assessed_domains,
         brief=brief,
         brief_responses=brief_responses,
@@ -228,7 +233,8 @@ def get_brief_by_id(framework_slug, brief_id):
         unassessed_domains=unassessed_domains,
         supplier_assessments=supplier_assessments,
         supplier_framework=supplier_framework,
-        unanswered_required=unanswered_required
+        unanswered_required=unanswered_required,
+        training_domain_name='Training, Learning and Development'
     )
 
 

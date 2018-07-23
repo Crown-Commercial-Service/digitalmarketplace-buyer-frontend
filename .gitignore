@@ -83,3 +83,4 @@ app/static/*
 *.iml
 version_label
 **/src/
+.vscode/
