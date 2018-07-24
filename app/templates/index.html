@@ -24,7 +24,7 @@
             {% if briefs_count > 0 %}
               <a
                 aria-labelledby="opportunities__call-to-action"
-                href="{{ url_for('.list_opportunities', framework_slug=framework_slug, status='live') }}"
+                href="/2/opportunities"
                 class="card seller">
                 <p>
                   <span>{{ briefs_count }}</span>
@@ -101,7 +101,7 @@
       <ul class="list-horizontal">
         <li>
           <article>
-            <h3 id="collaborate__call-to-action"><a href="{{ url_for('.list_opportunities', framework_slug=framework_slug) }}">View the latest opportunities</a></h3>
+            <h3 id="collaborate__call-to-action"><a href="/2/opportunities">View the latest opportunities</a></h3>
             <p>Browse briefs that buyers have created for individuals and outcomes.</p>
           </article>
         </li>

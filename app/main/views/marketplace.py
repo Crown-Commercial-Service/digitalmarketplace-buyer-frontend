@@ -392,45 +392,7 @@ def get_brief_response_preview_by_id(framework_slug, brief_id):
 
 @main.route('/<framework_slug>/opportunities')
 def list_opportunities(framework_slug):
-    framework = data_api_client.get_framework(framework_slug)['frameworks']
-    if not framework:
-        abort(404, "No framework {}".format(framework_slug))
-
-    form = BriefSearchForm(request.args, framework=framework, data_api_client=data_api_client)
-    # disabling csrf protection as this should only ever be a GET request
-    del form.csrf_token
-    if not form.validate():
-        abort(400, "Invalid form data")
-
-    api_result = form.get_briefs()
-
-    briefs = api_result["briefs"]
-    meta = api_result['meta']
-
-    results_per_page = meta['per_page']
-    total_results = meta['total']
-    current_page = int(request.args.get('page', 1))
-
-    pages = get_page_list(results_per_page, total_results, current_page)
-
-    html = render_template('search/briefs.html',
-                           framework=framework,
-                           form=form,
-                           filters=form.get_filters(),
-                           filters_applied=form.filters_applied(),
-                           briefs=briefs,
-                           lot_names=tuple(label for id_, label in form.lot.choices),
-                           briefs_count=total_results,
-                           pages=pages,
-                           num_pages=pages[-1],
-                           current_page=current_page,
-                           link_args=request.args,
-                           )
-    response = make_response(html)
-    if current_user.is_authenticated and current_user.has_role('buyer'):
-        # Buyers can create new briefs and want to see their updates more quickly.
-        response.cache_control.max_age = min(300, current_app.config['DM_DEFAULT_CACHE_MAX_AGE'])
-    return response
+    return redirect('/2/opportunities', 301)
 
 
 @main.route('/collaborate')

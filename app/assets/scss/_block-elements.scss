@@ -132,7 +132,11 @@ main {
 }
 
 .q-and-a-section {
-  margin-bottom: 4em;
+  margin: 3rem 0;
+
+  h2 {
+    margin-bottom: 1.5rem;
+  }
 }
 
 .cta-heading-wrap {

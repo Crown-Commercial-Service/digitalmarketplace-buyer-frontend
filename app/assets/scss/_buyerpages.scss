@@ -210,21 +210,36 @@ ol.bold-numbers {
     display: none;
     border: 0;
   }
+
   ul {
     padding-left: 1.4em;
   }
 
-  dt {
+  article.content-main {
+    dd {
+      border-left: none;
+      margin-top: 0;
+    }
 
-    margin-bottom: 0;
-  }
-  dd {
-    padding: 0;
-    margin: 0;
-    margin-bottom: 1.2em;
+    dt {
+      margin: 0;
+    }
   }
 }
 
+@include media($mobile) {
+  .brief-content {
+    article.content-main {
+      dd {
+        padding-left: 0;
+      }
+    }
+  }
+
+  .multiquestion p {
+    margin-bottom: 1.2rem;
+  }
+}
 
 @include media($tablet) {
   .briefs-filter {
@@ -265,4 +280,16 @@ ol.bold-numbers {
       border-bottom: 1px solid #bebebe;
     }
   }
+}
+
+.training-brief-list {
+  margin: 0;
+}
+
+.training-brief-list:last-of-type {
+  margin-bottom: 1.2rem;
+}
+
+.training-brief-heading:first-of-type {
+  margin-top: 0;
 }

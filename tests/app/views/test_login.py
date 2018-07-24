@@ -83,7 +83,7 @@ class TestLogin(BaseApplicationTest):
             })
             assert res.status_code == 302
             assert res.location == 'http://localhost' + \
-                                   self.expand_path('/digital-marketplace/opportunities?status=live')
+                                   self.expand_path('/2/opportunities')
             assert 'Secure;' in res.headers['Set-Cookie']
 
     def test_should_redirect_logged_in_buyer(self):

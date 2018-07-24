@@ -23,7 +23,7 @@ def redirect_logged_in_user(next_url=None):
             return redirect('/2/buyer-dashboard')
 
         if current_user.role == 'supplier':
-            return redirect(url_for('.list_opportunities', framework_slug='digital-marketplace', status='live'))
+            return redirect('/2/opportunities')
 
         if current_user.role == 'applicant':
             return redirect('/sellers/application')

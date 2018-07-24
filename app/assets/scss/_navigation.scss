@@ -41,7 +41,7 @@
 
     a {
       padding-left: .2rem;
-      
+
       &:focus,
       &:hover {
         background-color: $white;
@@ -51,7 +51,7 @@
       }
     }
 
-  }  
+  }
 }
 
 .marketplace--header {
@@ -110,9 +110,12 @@
     margin-right: -16.5em;
   }
 }
+
 .tou-section {
+  margin-bottom: 3rem;
   max-width: 600px;
 }
+
 .tou-section p {
   clear: both
 }

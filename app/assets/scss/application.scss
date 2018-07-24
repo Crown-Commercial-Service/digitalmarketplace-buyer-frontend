@@ -29,13 +29,8 @@ $path: "/static/images/";
 @import 'print';
 @import 'helpers';
 @import 'search';
-// @import 'breadcrumbs';
 @import 'buyerpages';
 @import 'cards';
-
-// Neat grid boilerplate
-@import 'neat-grid';
-
-// Things that use the grid!
 @import 'case-study';
 @import 'maps';
+@import 'callouts';

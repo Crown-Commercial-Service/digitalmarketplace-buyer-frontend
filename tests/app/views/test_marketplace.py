@@ -938,6 +938,8 @@ class TestBriefApplicationScenarios(BaseApplicationTest):
 
 class TestCatalogueOfBriefsPage(BaseApplicationTest):
     def setup(self):
+        pytest.skip('/opportunities has been redirected to /2/opportunities')
+
         super(TestCatalogueOfBriefsPage, self).setup()
 
         self._data_api_client = mock.patch(

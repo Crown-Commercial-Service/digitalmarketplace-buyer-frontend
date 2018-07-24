@@ -40,7 +40,7 @@
   }
 
   label {
-
+    font-weight: bold;
 
     & + input {
       margin-top: $tiny-spacing;
@@ -226,12 +226,26 @@ form {
 
     .word-count-counter {
       color: $input-count-colour;
+      margin: 0 0 1.2rem 0;
       text-align: right;
       width: 100%;
     }
 
     .question-heading, legend {
       font-weight: $bold-font-weight;
+    }
+
+    .question .question-advice {
+      ul {
+        margin-bottom: 1.2rem;
+      }
+    }
+
+    .question,
+    .question-advice {
+      p {
+        margin: 0 0 1.2rem 0;
+      }
     }
 
     fieldset {
