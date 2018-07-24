@@ -9,7 +9,7 @@ def test_view_briefs(client):
     go_home(client)
     link = client.find_element('id', 'opportunities__call-to-action')
     link.click()
-    Wait(client, timeout=timeout).until(expected.elements_present('class name', 'search-summary-count'))
+    Wait(client, timeout=timeout).until(expected.elements_present('class name', 'opportunities-page'))
 
 
 def test_view_catalogue(client):
