@@ -8,7 +8,6 @@
     "clarificationQuestionsAreClosed": true,
     "clarificationQuestionsClosedAt": "2016-12-07T11:09:28.054129Z",
     "clarificationQuestionsPublishedBy": "2017-06-10T23:59:59.000000Z",
-    "contractLength": "Up to 24 months or completion of the services.",
     "contractLength": "4 weeks",
     "createdAt": "2016-11-25T10:47:23.126761Z",
     "culturalFitCriteria": [
@@ -24,6 +23,12 @@
       "provide a case study or evidence of previous work"
     ],
     "existingTeam": "Key stakeholders within Border Force",
+    "framework": {
+      "family": "digital-outcomes-and-specialists",
+      "name": "Digital Outcomes and Specialists 2",
+      "slug": "digital-outcomes-and-specialists-2",
+      "status": "live"
+    },
     "frameworkFramework": "digital-outcomes-and-specialists",
     "frameworkName": "Digital Outcomes and Specialists 2",
     "frameworkSlug": "digital-outcomes-and-specialists-2",

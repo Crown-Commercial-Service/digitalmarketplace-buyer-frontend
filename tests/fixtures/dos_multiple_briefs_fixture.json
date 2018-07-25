@@ -15,6 +15,12 @@
       "evaluationType": [
         "Interview"
       ],
+      "framework": {
+      "family": "digital-outcomes-and-specialists",
+      "name": "Digital Outcomes and Specialists",
+      "slug": "digital-outcomes-and-specialists",
+      "status": "live"
+    },
       "frameworkFramework":"digital-outcomes-and-specialists",
       "frameworkName":"Digital Outcomes and Specialists",
       "frameworkSlug":"digital-outcomes-and-specialists",
@@ -70,6 +76,12 @@
         "provide a case study or evidence of previous work",
         "presentation"
       ],
+      "framework": {
+        "family": "digital-outcomes-and-specialists",
+        "name": "Digital Outcomes and Specialists 2",
+        "slug": "digital-outcomes-and-specialists-2",
+        "status": "live"
+      },
       "frameworkFramework":"digital-outcomes-and-specialists",
       "frameworkName":"Digital Outcomes and Specialists 2",
       "frameworkSlug":"digital-outcomes-and-specialists-2",
@@ -117,6 +129,12 @@
       "evaluationType": [
         "Interview"
       ],
+      "framework": {
+        "family": "digital-outcomes-and-specialists",
+        "name": "Digital Outcomes and Specialists",
+        "slug": "digital-outcomes-and-specialists",
+        "status": "live"
+      },
       "frameworkFramework":"digital-outcomes-and-specialists",
       "frameworkName":"Digital Outcomes and Specialists",
       "frameworkSlug":"digital-outcomes-and-specialists",
@@ -157,6 +175,12 @@
       "evaluationType": [
         "Interview"
       ],
+      "framework": {
+        "family": "digital-outcomes-and-specialists",
+        "name": "Digital Outcomes and Specialists",
+        "slug": "digital-outcomes-and-specialists",
+        "status": "live"
+      },
       "frameworkFramework":"digital-outcomes-and-specialists",
       "frameworkName":"Digital Outcomes and Specialists",
       "frameworkSlug":"digital-outcomes-and-specialists",
@@ -197,6 +221,12 @@
       "evaluationType": [
         "Interview"
       ],
+      "framework": {
+        "family": "digital-outcomes-and-specialists",
+        "name": "Digital Outcomes and Specialists",
+        "slug": "digital-outcomes-and-specialists",
+        "status": "live"
+      },
       "frameworkFramework":"digital-outcomes-and-specialists",
       "frameworkName":"Digital Outcomes and Specialists",
       "frameworkSlug":"digital-outcomes-and-specialists",
@@ -237,6 +267,12 @@
       "evaluationType": [
         "Interview"
       ],
+      "framework": {
+        "family": "digital-outcomes-and-specialists",
+        "name": "Digital Outcomes and Specialists",
+        "slug": "digital-outcomes-and-specialists",
+        "status": "live"
+      },
       "frameworkFramework":"digital-outcomes-and-specialists",
       "frameworkName":"Digital Outcomes and Specialists",
       "frameworkSlug":"digital-outcomes-and-specialists",
