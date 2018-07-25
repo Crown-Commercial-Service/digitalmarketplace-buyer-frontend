@@ -18,7 +18,7 @@
           "label": "Your account"
       },
       {
-          "link": url_for('direct_award.saved_search_overview', framework_family=framework.framework),
+          "link": url_for('direct_award.saved_search_overview', framework_family=framework.family),
           "label": "Your saved searches"
       }
     ] if project else [
@@ -65,7 +65,7 @@
   {% endif %}
   <div class="grid-row direct-award-project-overview-page">
     <div class="column-two-thirds">
-      {% if project %}<form action="{{url_for('direct_award.update_project', framework_family=framework.framework, project_id=project.id)}}" method="post">{% endif %}
+      {% if project %}<form action="{{url_for('direct_award.update_project', framework_family=framework.family, project_id=project.id)}}" method="post">{% endif %}
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         {% block before_sections %}{% endblock %}
         {% with items = [
@@ -98,12 +98,12 @@ assess. Refine your search until you have no more than 30 results.</strong></p>'
               or can_end_search)
                 else
               {"type": "action", "label": "Export your results",
-               "href": url_for('direct_award.end_search', framework_family=framework.framework, project_id=project.id),
+               "href": url_for('direct_award.end_search', framework_family=framework.family, project_id=project.id),
                "analytics": "trackEvent", "analytics_category": "Direct Award",
                "analytics_action": "Internal Link"} if project and not search.searchedAt and can_end_search
                 else
               {"type": "text", "text": ''.join(['
-<a href="', url_for('direct_award.search_results', framework_family=framework.framework, project_id=project.id)|e, '"
+<a href="', url_for('direct_award.search_results', framework_family=framework.family, project_id=project.id)|e, '"
    data-analytics="trackEvent"
    data-analytics-category="Direct Award"
    data-analytics-action="Internal Link"
@@ -159,7 +159,7 @@ understood how to assess services</button>'|safe} if project and not project.rea
             ] + ([
               {"type": "box", "style": "complete", "label": project_outcome_label } if project.outcome
               else {"type": "box", "style": "inactive", "label": "Can’t start yet"} if not project.readyToAssessAt
-              else {"type": "action", "label": "Tell us the outcome", "href": url_for('direct_award.did_you_award_contract', framework_family=framework.framework, project_id=project.id), "analytics": "trackEvent", "analytics_category": "Direct Award", "analytics_action": "Internal Link"}
+              else {"type": "action", "label": "Tell us the outcome", "href": url_for('direct_award.did_you_award_contract', framework_family=framework.family, project_id=project.id), "analytics": "trackEvent", "analytics_category": "Direct Award", "analytics_action": "Internal Link"}
             ] if project else [])
           },
           {

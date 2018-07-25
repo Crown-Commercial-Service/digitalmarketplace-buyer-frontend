@@ -135,7 +135,7 @@ def get_brief_by_id(framework_family, brief_id):
     briefs = data_api_client.get_brief(brief_id)
     brief = briefs.get('briefs')
 
-    if brief['status'] not in PUBLISHED_BRIEF_STATUSES or brief['frameworkFramework'] != framework_family:
+    if brief['status'] not in PUBLISHED_BRIEF_STATUSES or brief['framework']['family'] != framework_family:
         abort(404, "Opportunity '{}' can not be found".format(brief_id))
 
     brief_responses = data_api_client.find_brief_responses(
@@ -152,7 +152,7 @@ def get_brief_by_id(framework_family, brief_id):
 
     brief_responses_stats = count_brief_responses_by_size_and_status(brief_responses)
 
-    if brief['status'] not in PUBLISHED_BRIEF_STATUSES or brief['frameworkFramework'] != framework_family:
+    if brief['status'] not in PUBLISHED_BRIEF_STATUSES or brief['framework']['family'] != framework_family:
         abort(404, "Opportunity '{}' can not be found".format(brief_id))
     try:
         has_supplier_responded_to_brief = (
