@@ -41,7 +41,7 @@
       field_headings_visible=True
     ) %}
       {% call summary.row() %}
-        {{ summary.service_link(item.name, url_for('direct_award.view_project', framework_family=framework.framework, project_id=item.id)) }}
+        {{ summary.service_link(item.name, url_for('direct_award.view_project', framework_family=framework.family, project_id=item.id)) }}
         {{ summary.text(item.createdAt | datetimeformat ) }}
       {% endcall %}
     {% endcall %}
@@ -58,14 +58,14 @@
       field_headings_visible=True
     ) %}
       {% call summary.row() %}
-        {{ summary.service_link(item.name, url_for('direct_award.view_project', framework_family=framework.framework, project_id=item.id), wide=False) }}
+        {{ summary.service_link(item.name, url_for('direct_award.view_project', framework_family=framework.family, project_id=item.id), wide=False) }}
         {{ summary.text(item.lockedAt | datetimeformat ) }}
         {{ 
           summary.text("Awarded") if item.outcome and item.outcome.result == "awarded"
           else summary.text("The work has been cancelled") if item.outcome and item.outcome.result == "cancelled"
           else summary.text("No suitable services found") if item.outcome and item.outcome.result == "none-suitable"
-          else summary.service_link("Download results", url_for('direct_award.search_results', framework_family=framework.framework, project_id=item.id), wide=False) if not item.downloadedAt
-          else summary.service_link("Tell us the outcome", url_for('direct_award.did_you_award_contract', framework_family=framework.framework, project_id=item.id), wide=False) }}
+          else summary.service_link("Download results", url_for('direct_award.search_results', framework_family=framework.family, project_id=item.id), wide=False) if not item.downloadedAt
+          else summary.service_link("Tell us the outcome", url_for('direct_award.did_you_award_contract', framework_family=framework.family, project_id=item.id), wide=False) }}
       {% endcall %}
     {% endcall %}
     
