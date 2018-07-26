@@ -119,7 +119,8 @@ def supplier_search():
     real_data_api_client.init_app(current_app)
 
     roles = get_all_domains(data_api_client)
-
+    if 'Change, Training and Transformation' in roles:
+        roles.remove('Change, Training and Transformation')  # remove from filter
     role_filters = {role: role in selected_roles for role in roles}
 
     sort_queries = []
