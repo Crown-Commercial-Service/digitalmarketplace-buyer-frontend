@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 
 from wtforms.fields import DecimalField, RadioField, BooleanField
-from wtforms.validators import DataRequired, Length, NumberRange, Optional, InputRequired
+from wtforms.validators import DataRequired, Length, NumberRange, InputRequired, ValidationError
 
 from dmutils.forms.fields import DateField
 from dmutils.forms.validators import GreaterThan
@@ -12,14 +12,43 @@ from decimal import Decimal
 
 
 class CreateProjectForm(FlaskForm):
-    name = StripWhitespaceStringField(
-        'Name your search', id="project_name",
+    save_search_selection = RadioField(
         validators=[
-            Length(min=1,
-                   max=100,
-                   message="Names must be between 1 and 100 characters"),
-            Optional(),
-        ])
+            InputRequired("Please choose where to save your search")
+        ]
+    )
+    name = StripWhitespaceStringField(
+        "Name your search. A reference number or short description of what you want to buy makes a good name.",
+    )
+
+    def __init__(self, projects, **kwargs):
+        super().__init__(**kwargs)
+
+        self.save_search_selection.options = [{
+            "label": project["name"] or f"Untitled project {project['id']}",
+            "value": str(project["id"]),
+        } for project in projects]
+        self.save_search_selection.options.append({
+            "label": "Save a new search",
+            "value": "new_search",
+            "reveal": {
+                "question": self.name.label.text,
+                "hint": "100 characters maximum",
+                "name": self.name.name,
+            }
+        })
+
+        self.save_search_selection.choices = [
+            (option["value"], option["label"]) for option in self.save_search_selection.options
+        ]
+
+    def validate_name(form, field):
+        if form.save_search_selection.data == "new_search":
+            try:
+                Length(min=1, max=100, message="Names must be between 1 and 100 characters")(form, field)
+            except ValidationError as e:
+                form.save_search_selection.options[-1]["reveal"]["error"] = e.args[0]
+                raise
 
 
 # TODO: move this into dmutils.forms
