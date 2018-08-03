@@ -7,7 +7,7 @@ from lxml import html
 
 def find_pagination_links(res_data):
     return re.findall(
-        '<li class="[next|previous]+">[^<]+<a\ href="(/g-cloud/search\?[^"]+)',
+        r'<li class="[next|previous]+">[^<]+<a\ href="(/g-cloud/search\?[^"]+)',
         res_data,
         re.MULTILINE)
 

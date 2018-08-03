@@ -23,6 +23,7 @@ def require_login():
         flash('buyer-role-required', 'error')
         return current_app.login_manager.unauthorized()
 
+
 from ..main import errors  # noqa
 from .views import buyers as buyers_views  # noqa
 from .views import work_orders  # noqa

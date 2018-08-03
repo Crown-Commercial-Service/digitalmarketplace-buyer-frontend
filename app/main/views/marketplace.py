@@ -62,7 +62,7 @@ def content(template_name):
                         code=301)
     try:
         return render_template('content/{}.html'.format(template_name))
-    except:
+    except:  # noqa
         abort(404)
 
 

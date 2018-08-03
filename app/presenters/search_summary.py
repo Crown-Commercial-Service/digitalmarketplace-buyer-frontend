@@ -190,7 +190,7 @@ class SummaryRules(object):
         if hasattr(self, 'filter_rules_ids'):
             try:
                 index = self.filter_rules_ids.index(filter)
-            except:
+            except:  # noqa
                 return None
             return self._rules['filterRules'][index]['preposition']
 
