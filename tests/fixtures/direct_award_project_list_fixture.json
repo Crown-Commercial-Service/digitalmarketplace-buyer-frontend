@@ -17,6 +17,25 @@
             "outcome": null
         },
         {
+          "active": true,
+          "createdAt": "2017-08-29T07:49:26.677778Z",
+          "downloadedAt": null,
+          "id": 1,
+          "lockedAt": null,
+          "name": "My procurement project <",
+          "readyToAssessAt": null,
+          "outcome": null,
+          "users": [
+            {
+              "active": true,
+              "email": "buyer@example.com",
+              "id": 123,
+              "name": "A Buyer",
+              "role": "buyer"
+            }
+          ]
+        },
+        {
             "active": true,
             "createdAt": "2018-06-19T13:36:37.557144Z",
             "downloadedAt": "2018-06-19T13:37:30.849304Z",

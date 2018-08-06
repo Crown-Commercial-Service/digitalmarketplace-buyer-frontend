@@ -424,17 +424,48 @@ def save_search(framework_family):
     filters = filters_for_lot(current_lot_slug, content_manifest, all_lots=framework['lots'])
     clean_request_query_params = clean_request_args(search_query, filters.values(), lots_by_slug)
 
-    form = CreateProjectForm()
-    name = form.name.data
+    projects = get_direct_award_projects(data_api_client, current_user.id, 'open_projects', 'name')
+    projects.sort(key=lambda x: x['name'])
 
-    save_search_selection = request.form.get('save_search_selection', None)
+    default_selection = {"save_search_selection": "new_search"} if not projects else {}
+    form = CreateProjectForm(projects, data=default_selection)
 
-    name_is_invalid = save_search_selection == "new_search" and not name
+    if form.validate_on_submit():
+        if form.save_search_selection.data == "new_search":
+            try:
+                api_project = data_api_client.create_direct_award_project(user_id=current_user.id,
+                                                                          user_email=current_user.email_address,
+                                                                          project_name=form.name.data)
+            except HTTPError as e:
+                abort(e.status_code)
 
-    if request.method == 'GET' or not form.validate_on_submit() or not save_search_selection or name_is_invalid:
-        projects = get_direct_award_projects(data_api_client, current_user.id, 'open_projects', 'name')
-        projects.sort(key=lambda x: x['name'])
+            project = api_project['project']
+        else:
+            project = data_api_client.get_direct_award_project(project_id=form.save_search_selection.data)['project']
+            if not project or not is_direct_award_project_accessible(project, current_user.id):
+                abort(404)
 
+        search_api_url = search_api_client.get_search_url(
+            index=framework['slug'],
+            **build_search_query(search_query, filters.values(), content_manifest, lots_by_slug)
+        )
+        try:
+            data_api_client.create_direct_award_project_search(user_id=current_user.id,
+                                                               user_email=current_user.email_address,
+                                                               project_id=project['id'],
+                                                               search_url=search_api_url)
+
+        except HTTPError as e:
+            abort(e.status_code)
+
+        flash(PROJECT_SAVED_MESSAGE, 'success')
+
+        return redirect(url_for('.view_project',
+                                framework_family=framework_family,
+                                project_id=project['id']
+                                ), code=303)
+
+    else:
         # Retrieve results so we can display SearchSummary
         search_api_response = search_api_client.search(
             index=framework['slug'],
@@ -444,58 +475,13 @@ def save_search(framework_family):
         search_summary = SearchSummary(search_api_response['meta']['total'], clean_request_query_params.copy(),
                                        filters.values(), lots_by_slug)
 
-        if not name and request.method == 'POST':
-            form.name.errors = ["Names must be between 1 and 100 characters"]
-
-        if not save_search_selection and request.method == "POST":
-            save_search_selection_error = "Please choose where to save your search"
-        else:
-            save_search_selection_error = None
-
         return render_template('direct-award/save-search.html',
+                               errors=get_errors_from_wtform(form),
                                form=form,
-                               save_search_selection_error=save_search_selection_error,
                                search_summary_sentence=search_summary.markup(),
                                search_query=url_encode(search_query),
                                search_url=url_for('main.search_services', **search_query),
-                               request=request,
-                               projects=projects,
                                framework_family=framework_family), 400 if request.method == 'POST' else 200
-
-    elif save_search_selection == "new_search" and name:
-        try:
-            api_project = data_api_client.create_direct_award_project(user_id=current_user.id,
-                                                                      user_email=current_user.email_address,
-                                                                      project_name=name)
-        except HTTPError as e:
-            abort(e.status_code)
-
-        project = api_project['project']
-
-    elif save_search_selection:
-        project = data_api_client.get_direct_award_project(project_id=save_search_selection)['project']
-        if not project or not is_direct_award_project_accessible(project, current_user.id):
-            abort(404)
-
-    search_api_url = search_api_client.get_search_url(
-        index=framework['slug'],
-        **build_search_query(search_query, filters.values(), content_manifest, lots_by_slug)
-    )
-    try:
-        data_api_client.create_direct_award_project_search(user_id=current_user.id,
-                                                           user_email=current_user.email_address,
-                                                           project_id=project['id'],
-                                                           search_url=search_api_url)
-
-    except HTTPError as e:
-        abort(e.status_code)
-
-    flash(PROJECT_SAVED_MESSAGE, 'success')
-
-    return redirect(url_for('.view_project',
-                            framework_family=framework_family,
-                            project_id=project['id']
-                            ), code=303)
 
 
 @direct_award.route('/<string:framework_family>/projects/<int:project_id>', methods=['GET'])

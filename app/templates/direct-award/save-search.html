@@ -30,7 +30,11 @@
 <div class="single-question-page save-search-page">
   <div class="grid-row">
     <div class="column-one-whole">
-        {% if form.name.errors or save_search_selection_error %}
+        {#
+          we cannot use the toolkit/forms/validation.html template here,
+          as this page was designed with a govuk style error summary banner
+        #}
+        {% if errors %}
         <div class="error-summary" role="alert" aria-labelledby="saving-search-error" tabindex="-1">
 
           <div class="dmspeak">
@@ -38,13 +42,13 @@
           </div>
 
           <ul class="error-summary-list">
-              {% if save_search_selection_error %}
-                <li><a href="#select-where-to-save-error">{{ save_search_selection_error }}</a></li>
-              {% elif form.name.errors and not save_search_selection_error %}
-                {% for error in form.name.errors %}<li><a href="#name-your-search-error">{{ error }}</a></li>{% endfor %}
-              {% endif %}
+            {% for error in errors.values() %}
+              <li>
+                <a href="#{{ error.input_name }}-error">{{ error.message }}</a>
+              </li>
+            {% endfor %}
           </ul>
-    
+
         </div>
         {% endif %}
     </div>
@@ -67,56 +71,17 @@
           {% endwith %}
         </div>
 
-        <fieldset>
-          <div{% if save_search_selection_error %} class="validation-wrapper"{% endif %}>
-          
-              {% if save_search_selection_error %}
-              <p class="validation-message" id="select-where-to-save-error">
-                {{ save_search_selection_error }}
-              </p>
-              {% endif %}
-
-              {% if projects %}
-              {% for project in projects %}
-
-              <div class="multiple-choice">
-                <input type="radio" name="save_search_selection" value="{{ project.id }}" id="project-{{ project.id }}"{% if request.form.save_search_selection == project.id %}checked="checked"{% endif %}>
-                <label for="project-{{ project.id }}">{{ project.name or "Untitled project {}".format(project.id) }}</label>
-              </div>
-
-              {% endfor %}
-
-              <p class="form-block">or</p>
-
-              {% endif %}
-
-              <div class="multiple-choice" data-target="new-search">
-                <input type="radio" name="save_search_selection" value="new_search" id="project-new" aria-required="true" 
-                  {% if request.form.save_search_selection == 'new_search' or not projects %}checked="checked"{% endif %}>
-                <label for="project-new">Save a new search</label>
-              </div>
-              <div class="panel panel-border-narrow js-hidden" id="new-search">
-                
-                <div{% if form.name.errors and not save_search_selection_error %} class="validation-wrapper"{% endif %}>
-                  <div class="question" id="{{ form.name.name }}">
-                    {{ form.name.label(class="question-heading") }}
-                    <p>Name your search. A reference number or short description of what you want to buy makes a good name.</p>
-                    <p class="hint">
-                      100 characters maximum
-                    </p>
-                    {% if form.name.errors and not save_search_selection_error %}
-                    <p class="validation-message" id="name-your-search-error">
-                      {% for error in form.name.errors %}{{ error }}{% endfor %}
-                    </p>
-                    {% endif %}
-                    {{ form.name(class="text-box") }}
-                  </div>
-                </div>
-              </div>
-
-
-          </div>
-        </fieldset>
+        {%
+          with
+          type = "radio",
+          name = form.save_search_selection.name,
+          finally = "or",
+          value = form.save_search_selection.data,
+          options = form.save_search_selection.options,
+          error = form.save_search_selection.errors[0]
+        %}
+          {% include "toolkit/forms/selection-buttons.html" %}
+        {% endwith %}
 
         <br>
 
