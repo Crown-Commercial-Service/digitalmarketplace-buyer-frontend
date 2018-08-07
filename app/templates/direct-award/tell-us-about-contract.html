@@ -50,52 +50,13 @@
       <form method="POST" action="{{ url_for('direct_award.tell_us_about_contract', framework_family=framework.family, project_id=project.id, outcome_id=outcome_id) }}" class="tell-us-about-contract-form">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
 
-        {%
-          with
-          name = "start_date",
-          hint = "For example, 31 12 2020",
-          question = "Start date",
-          data = form.start_date._value(),
-          error = errors.get('start_date', {}).get('message', None)
-        %}
-          {% include "toolkit/forms/date.html" %}
-        {% endwith %}
+        {{ form.start_date}}
 
-        {%
-          with
-          name = "end_date",
-          hint = "For example, 31 12 2020",
-          question = "End date",
-          data = form.end_date._value(),
-          error = errors.get('end_date', {}).get('message', None)
-        %}
-          {% include "toolkit/forms/date.html" %}
-        {% endwith %}
+        {{ form.end_date }}
 
-        {%
-          with
-          question = "Value",
-          name = "value_in_pounds",
-          unit_in_full = "pounds",
-          unit = "£",
-          unit_position = "before",
-          hint = "For example, 9900.95 for 9900 pounds and 95 pence",
-          value = form.value_in_pounds._value(),
-          error = errors.get('value_in_pounds', {}).get('message', None)
-        %}
-          {% include "toolkit/forms/textbox.html" %}
-        {% endwith %}
+        {{ form.value_in_pounds }}
 
-        {%
-          with
-          question = "Organisation buying the service",
-          name = "buying_organisation",
-          hint = "For example, National Audit Office or Lewisham Council",
-          value = form.buying_organisation._value(),
-          error = errors.get('buying_organisation', {}).get('message', None)
-        %}
-          {% include "toolkit/forms/textbox.html" %}
-        {% endwith %}
+        {{ form.buying_organisation }}
 
         {%
           with

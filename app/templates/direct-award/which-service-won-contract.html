@@ -48,16 +48,8 @@
 
         <form method="POST" action="{{ url_for('direct_award.which_service_won_contract', framework_family=framework.family, project_id=project.id) }}">
           <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-          {%
-            with
-            name = "which_service_won_the_contract",
-            type = "radio",
-            value = form.which_service_won_the_contract.value,
-            error = errors.get('which_service_won_the_contract', {}).get('message', None),
-            options = form.which_service_won_the_contract.options
-          %}
-            {% include "toolkit/forms/selection-buttons.html" %}
-          {% endwith %}
+
+          {{ form.which_service_won_the_contract }}
 
           {%
             with
