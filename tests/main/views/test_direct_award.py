@@ -781,7 +781,7 @@ class TestDirectAwardAwardContract(TestDirectAwardBase):
         )
 
     def test_award_contract_raises_404_if_project_is_not_accessible(self):
-        self.data_api_client.get_direct_award_project.side_effect = HTTPError(mock.Mock(status_code=404))
+        self.data_api_client.get_direct_award_project.side_effect = NotFound()
         self.login_as_buyer()
 
         res = self.client.get('/buyers/direct-award/g-cloud/projects/314159/did-you-award-contract')
