@@ -1,0 +1,53 @@
+h2.seller-instruction-list-item-body {
+  padding-top: 1em;
+  padding-left: 1.625em;
+
+  &:first-of-type {
+    border: none;
+    padding-top: 0;
+  }
+
+  span.step-number {
+    position: absolute;
+    margin-left: -1.625em;
+  }
+}
+
+ol.seller-instruction-list {
+  margin-left: 0;
+  padding-left: 0;
+  padding-bottom: 0;
+
+  >li {
+    list-style: none;
+    font-size: .875rem;
+    margin-left: 1.35em;
+
+    &.divider {
+      border-bottom: 1px solid $light-grey;
+      padding-bottom: 1.5em;
+    }
+
+    span.tick {
+      position: absolute;
+      margin-left: -1.35em;
+      margin-top: 0.25em;
+    }  
+
+    p {
+      &.seller-instruction-list-item-top {
+        margin-bottom: 0;
+        padding-left: 2.3em;
+      }
+    }
+
+    ul {
+      li {
+        list-style: none;
+        margin-bottom: 0.2em;
+        padding-left: 0.1em;
+      }
+    }
+  }
+}
+

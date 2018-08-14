@@ -10,7 +10,7 @@
                 {% with
                   url = "/login?next=/{}/opportunities/{}".format(brief.frameworkSlug, brief.id),
                   role = "button",
-                  label = "Sign in to continue" %}
+                  label = "Log in to continue" %}
                     {% include "toolkit/link-button.html" %}
                 {% endwith %}
             </span>
@@ -18,23 +18,39 @@
     </div>
 {% elif not current_user.is_authenticated %}
     <h2>Interested in this opportunity?</h2>
+    <p>
+        Before you can apply for this opportunity, you need to:
+    </p>
+    <p>
+        <ol class="seller-instruction-list steps">
+            <li>Register to join the Marketplace.</li>
+            <li>Complete your profile with up-to-date documents, case studies and/or pricing.</li>
+            {% if brief.lot == 'digital-outcome' %}
+            <li>Request an assessment of your chosen case study.</li>
+            {% elif brief.lot == 'training' %}
+            <li>Request an assessment of your case study for {{ training_domain_name }}.</li>
+            {% elif brief.lot == 'digital-professionals' %}
+            <li>Request an assessment of your case study for {{ brief.areaOfExpertise }}.</li>
+            {% endif %}
+        </ol>
+    </p>
     <div class="brief-button-group">
     <span>
-    {% with
-      url = "/login?next=/{}/opportunities/{}".format(brief.frameworkSlug, brief.id),
-      role = "button",
-      label = "Sign in to continue" %}
-        {% include "toolkit/link-button.html" %}
-    {% endwith %}
-  </span>
-        <span>
-    {% with
-  url = "/2/signup",
-  role = "button",
-  label = "Create an account" %}
-        {% include "toolkit/link-button.html" %}
-    {% endwith %}
-  </span>
+        {% with
+            url = "/2/signup",
+            role = "button",
+            label = "Create an account" %}
+            {% include "toolkit/link-button.html" %}
+        {% endwith %}
+    </span>
+    <span>
+        {% with
+            url = "/login?next=/{}/opportunities/{}".format(brief.frameworkSlug, brief.id),
+            role = "button",
+            label = "Log in" %}
+            {% include "toolkit/link-button.html" %}
+        {% endwith %}
+    </span>
     </div>
 {% endif %}
 
@@ -53,6 +69,31 @@
             {% endwith %}
         {% elif brief.lot == 'digital-professionals' %}
             <h2>Interested in this opportunity?</h2>
+            <p>
+                Before you can apply for this opportunity, you need to:
+            </p>
+            <p>
+                <ol class="seller-instruction-list steps">
+                    <li>
+                        <span class="tick">
+                            <img src="{{ asset_path }}svg/green-tick.svg" alt="done" width="15" height="14" />
+                        </span>
+                        Register to join the Marketplace.
+                    </li>
+                    <li>
+                        <span class="tick">
+                            <img src="{{ asset_path }}svg/green-tick.svg" alt="done" width="15" height="14" />
+                        </span>
+                        Complete your profile with up-to-date documents, case studies and/or pricing.
+                    </li>
+                    <li>
+                        <span class="tick">
+                            <img src="{{ asset_path }}svg/green-tick.svg" alt="done" width="15" height="14" />
+                        </span>
+                        Request an assessment of your case study for {{ brief.areaOfExpertise }}
+                    </li>
+                </ol>
+            </p>
             <p>You have already started your application.</p>
             <div class="brief-button-group" id="scen_24">
             <span>
@@ -95,6 +136,32 @@
 
         {% elif profile_application_status == 'submitted' and supplier_framework == 'digital-marketplace' %}
             <h2>Interested in this opportunity?</h2>
+            <p>
+                Before you can apply for this opportunity, you need to:
+            </p>
+            <p>
+                <ol class="seller-instruction-list steps">
+                    <li>
+                        <span class="tick">
+                            <img src="{{ asset_path }}svg/green-tick.svg" alt="done" width="15" height="14" />
+                        </span>
+                        Register to join the Marketplace.
+                    </li>
+                    <li>
+                        <span class="tick">
+                            <img src="{{ asset_path }}svg/green-tick.svg" alt="done" width="15" height="14" />
+                        </span>
+                        Complete your profile with up-to-date documents, case studies and/or pricing.
+                    </li>
+                    {% if brief.lot == 'digital-outcome' %}
+                    <li>Request an assessment of your chosen case study.</li>
+                    {% elif brief.lot == 'training' %}
+                    <li>Request an assessment of your case study for {{ training_domain_name }}.</li>
+                    {% elif brief.lot == 'digital-professionals' %}
+                    <li>Request an assessment of your case study for {{ brief.areaOfExpertise }}.</li>
+                    {% endif %}
+                </ol>
+            </p>
             <div class="brief-button-group">
                 <span>
                   {% with
@@ -153,6 +220,26 @@
             and brief.areaOfExpertise not in supplier_assessments.unassessed
             and brief.areaOfExpertise not in supplier_assessments.assessed %}
                     <h2>Interested in this opportunity?</h2>
+                    <p>
+                        Before you can apply for this opportunity, you need to:
+                    </p>
+                    <p>
+                        <ol class="seller-instruction-list steps">
+                            <li>
+                                <span class="tick">
+                                    <img src="{{ asset_path }}svg/green-tick.svg" alt="done" width="15" height="14" />
+                                </span>
+                                Register to join the Marketplace.
+                            </li>
+                            <li>
+                                <span class="tick">
+                                    <img src="{{ asset_path }}svg/green-tick.svg" alt="done" width="15" height="14" />
+                                </span>
+                                Complete your profile with up-to-date documents, case studies and/or pricing.
+                            </li>
+                            <li>Request an assessment of your case study for {{ brief.areaOfExpertise }}.</li>
+                        </ol>
+                    </p>
                     <div class="brief-button-group">
                     <span>
                         {% with
@@ -167,6 +254,26 @@
             and brief.areaOfExpertise in supplier_assessments.unassessed
             and brief.areaOfExpertise not in supplier_assessments.assessed %}
                     <h2>Interested in this opportunity?</h2>
+                    <p>
+                        Before you can apply for this opportunity, you need to:
+                    </p>
+                    <p>
+                        <ol class="seller-instruction-list steps">
+                            <li>
+                                <span class="tick">
+                                    <img src="{{ asset_path }}svg/green-tick.svg" alt="done" width="15" height="14" />
+                                </span>
+                                Register to join the Marketplace.
+                            </li>
+                            <li>
+                                <span class="tick">
+                                    <img src="{{ asset_path }}svg/green-tick.svg" alt="done" width="15" height="14" />
+                                </span>
+                                Complete your profile with up-to-date documents, case studies and/or pricing.
+                            </li>
+                            <li>Request an assessment of your case study for {{ brief.areaOfExpertise }}.</li>
+                        </ol>
+                    </p>
                     <div class="brief-button-group">
                     <span>
                     {% with
@@ -179,6 +286,31 @@
                     </div>
                 {% elif brief.areaOfExpertise in supplier_assessments.assessed or brief.areaOfExpertise in assessed_domains %}
                     <h2>Interested in this opportunity?</h2>
+                    <p>
+                        Before you can apply for this opportunity, you need to:
+                    </p>
+                    <p>
+                        <ol class="seller-instruction-list steps">
+                            <li>
+                                <span class="tick">
+                                    <img src="{{ asset_path }}svg/green-tick.svg" alt="done" width="15" height="14" />
+                                </span>
+                                Register to join the Marketplace.
+                            </li>
+                            <li>
+                                <span class="tick">
+                                    <img src="{{ asset_path }}svg/green-tick.svg" alt="done" width="15" height="14" />
+                                </span>
+                                Complete your profile with up-to-date documents, case studies and/or pricing.
+                            </li>
+                            <li>
+                                <span class="tick">
+                                    <img src="{{ asset_path }}svg/green-tick.svg" alt="done" width="15" height="14" />
+                                </span>
+                                Request an assessment of your case study for {{ brief.areaOfExpertise }}.
+                            </li>
+                        </ol>
+                    </p>
                     <div class="brief-button-group" id="scen_24">
                     <span>
                   {% with
@@ -219,6 +351,26 @@
                 {% elif assessed_domains|length == 0 and 
                         supplier_assessments.unassessed|length > 0 %}
                     <h2>Interested in this opportunity?</h2>
+                    <p>
+                        Before you can apply for this opportunity, you need to:
+                    </p>
+                    <p>
+                        <ol class="seller-instruction-list steps">
+                            <li>
+                                <span class="tick">
+                                    <img src="{{ asset_path }}svg/green-tick.svg" alt="done" width="15" height="14" />
+                                </span>
+                                Register to join the Marketplace.
+                            </li>
+                            <li>
+                                <span class="tick">
+                                    <img src="{{ asset_path }}svg/green-tick.svg" alt="done" width="15" height="14" />
+                                </span>
+                                Complete your profile with up-to-date documents, case studies and/or pricing.
+                            </li>
+                            <li>Request an assessment of your chosen case study.</li>
+                        </ol>
+                    </p>
                     <div class="brief-button-group">
                       <span>
                       {% with
@@ -232,6 +384,26 @@
                 {% elif assessed_domains|length == 0 and
                         supplier_assessments.unassessed|length == 0 %}
                     <h2>Interested in this opportunity?</h2>
+                    <p>
+                        Before you can apply for this opportunity, you need to:
+                    </p>
+                    <p>
+                        <ol class="seller-instruction-list steps">
+                            <li>
+                                <span class="tick">
+                                    <img src="{{ asset_path }}svg/green-tick.svg" alt="done" width="15" height="14" />
+                                </span>
+                                Register to join the Marketplace.
+                            </li>
+                            <li>
+                                <span class="tick">
+                                    <img src="{{ asset_path }}svg/green-tick.svg" alt="done" width="15" height="14" />
+                                </span>
+                                Complete your profile with up-to-date documents, case studies and/or pricing.
+                            </li>
+                            <li>Request an assessment of your chosen case study.</li>
+                        </ol>
+                    </p>
                     <div class="brief-button-group">
                       <span>
                     {% with
@@ -246,6 +418,31 @@
                 {% elif supplier_assessments.assessed|length > 0 or 
                         assessed_domains|length > 0 %}
                     <h2>Interested in this opportunity?</h2>
+                    <p>
+                        Before you can apply for this opportunity, you need to:
+                    </p>
+                    <p>
+                        <ol class="seller-instruction-list steps">
+                            <li>
+                                <span class="tick">
+                                    <img src="{{ asset_path }}svg/green-tick.svg" alt="done" width="15" height="14" />
+                                </span>
+                                Register to join the Marketplace.
+                            </li>
+                            <li>
+                                <span class="tick">
+                                    <img src="{{ asset_path }}svg/green-tick.svg" alt="done" width="15" height="14" />
+                                </span>
+                                Complete your profile with up-to-date documents, case studies and/or pricing.
+                            </li>
+                            <li>
+                                <span class="tick">
+                                    <img src="{{ asset_path }}svg/green-tick.svg" alt="done" width="15" height="14" />
+                                </span>
+                                Request an assessment of your chosen case study.
+                            </li>
+                        </ol>
+                    </p>
                     <div class="brief-button-group">
                       <span>
                         {% with
@@ -288,6 +485,26 @@
                         training_domain_name not in supplier_assessments.unassessed and
                         training_domain_name not in supplier_assessments.assessed %}
                             <h2>Interested in this opportunity?</h2>
+                            <p>
+                                Before you can apply for this opportunity, you need to:
+                            </p>
+                            <p>
+                                <ol class="seller-instruction-list steps">
+                                    <li>
+                                        <span class="tick">
+                                            <img src="{{ asset_path }}svg/green-tick.svg" alt="done" width="15" height="14" />
+                                        </span>
+                                        Register to join the Marketplace.
+                                    </li>
+                                    <li>
+                                        <span class="tick">
+                                            <img src="{{ asset_path }}svg/green-tick.svg" alt="done" width="15" height="14" />
+                                        </span>
+                                        Complete your profile with up-to-date documents, case studies and/or pricing.
+                                    </li>
+                                    <li>Request an assessment of your case study for {{ training_domain_name }}.</li>
+                                </ol>
+                            </p>
                             <div class="brief-button-group">
                             <span>
                                 {% with
@@ -302,6 +519,26 @@
                         training_domain_name in supplier_assessments.unassessed and
                         training_domain_name not in supplier_assessments.assessed %}
                             <h2>Interested in this opportunity?</h2>
+                            <p>
+                                Before you can apply for this opportunity, you need to:
+                            </p>
+                            <p>
+                                <ol class="seller-instruction-list steps">
+                                    <li>
+                                        <span class="tick">
+                                            <img src="{{ asset_path }}svg/green-tick.svg" alt="done" width="15" height="14" />
+                                        </span>
+                                        Register to join the Marketplace.
+                                    </li>
+                                    <li>
+                                        <span class="tick">
+                                            <img src="{{ asset_path }}svg/green-tick.svg" alt="done" width="15" height="14" />
+                                        </span>
+                                        Complete your profile with up-to-date documents, case studies and/or pricing.
+                                    </li>
+                                    <li>Request an assessment of your case study for {{ training_domain_name }}.</li>
+                                </ol>
+                            </p>
                             <div class="brief-button-group">
                             <span>
                             {% with
@@ -315,6 +552,31 @@
                 {% elif training_domain_name in supplier_assessments.assessed or 
                         training_domain_name in assessed_domains %}
                     <h2>Interested in this opportunity?</h2>
+                    <p>
+                        Before you can apply for this opportunity, you need to:
+                    </p>
+                    <p>
+                        <ol class="seller-instruction-list steps">
+                            <li>
+                                <span class="tick">
+                                    <img src="{{ asset_path }}svg/green-tick.svg" alt="done" width="15" height="14" />
+                                </span>
+                                Register to join the Marketplace.
+                            </li>
+                            <li>
+                                <span class="tick">
+                                    <img src="{{ asset_path }}svg/green-tick.svg" alt="done" width="15" height="14" />
+                                </span>
+                                Complete your profile with up-to-date documents, case studies and/or pricing.
+                            </li>
+                            <li>
+                                <span class="tick">
+                                    <img src="{{ asset_path }}svg/green-tick.svg" alt="done" width="15" height="14" />
+                                </span>
+                                Request an assessment of your case study for {{ training_domain_name }}.
+                            </li>
+                        </ol>
+                    </p>
                     <div class="brief-button-group">
                         <span>
                             {% with
