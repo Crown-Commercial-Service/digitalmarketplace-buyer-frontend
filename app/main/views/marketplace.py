@@ -245,12 +245,7 @@ def get_brief_by_id(framework_slug, brief_id):
 def get_brief_response_preview_by_id(framework_slug, brief_id):
     briefs = data_api_client.get_brief(brief_id)
     brief = briefs.get('briefs')
-
-    application_url = url_for('main.index', _external=True) + '2/brief/{}'.format(brief['id'])
-    if brief['lotSlug'] == 'digital-outcome':
-        application_url += '/respond'
-    else:
-        application_url += '/specialist/respond'
+    brief_url = url_for('main.index', _external=True) + '{}/opportunities/{}'.format(framework_slug, brief['id'])
 
     if brief['status'] not in ['live', 'closed']:
         if not current_user.is_authenticated or brief['users'][0]['id'] != current_user.id:
@@ -297,12 +292,12 @@ def get_brief_response_preview_by_id(framework_slug, brief_id):
     sheet.set_column('A:A', 30)
 
     sheet.merge_range(0, 0, 0, 2, '',  italic_header)
-    sheet.write_url('A1', application_url)
+    sheet.write_url('A1', brief_url)
     sheet.write_rich_string('A1',  italic_header,
                             'Use this template if you are waiting to be assessed, or want to collaborate '
                             'with others, before submitting your response to this brief.\n'
                             'If you have been assessed and are ready to submit, you will need to '
-                            'copy and paste your answers from this template into \n', link, application_url)
+                            'copy and paste your answers from this template into \n', link, brief_url)
     sheet.write_string('D1', '', right_border_question)
 
     df = DateFormatter(current_app.config['DM_TIMEZONE'])
@@ -380,7 +375,7 @@ def get_brief_response_preview_by_id(framework_slug, brief_id):
     sheet.write_string('C'+str(n+4), '', question)
     sheet.write_string('D'+str(n+4), '', right_border_question)
     sheet.write_string('C'+str(n+5), 'Ready to apply?', bold_cta)
-    sheet.write_url('C'+str(n+6), application_url, cta, application_url)
+    sheet.write_url('C'+str(n+6), brief_url, cta, brief_url)
     workbook.close()
 
     return Response(
