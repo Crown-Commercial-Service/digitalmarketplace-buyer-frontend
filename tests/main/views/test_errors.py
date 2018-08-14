@@ -2,7 +2,7 @@
 import mock
 import pytest
 from wtforms import ValidationError
-from werkzeug.exceptions import BadRequest, ServiceUnavailable, InternalServerError, ImATeapot
+from werkzeug.exceptions import BadRequest, ServiceUnavailable, InternalServerError
 
 from ...helpers import BaseApplicationTest
 
