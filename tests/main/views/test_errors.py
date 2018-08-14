@@ -2,7 +2,7 @@
 import mock
 import pytest
 from wtforms import ValidationError
-from werkzeug.exceptions import BadRequest, ServiceUnavailable, InternalServerError
+from werkzeug.exceptions import BadRequest, ServiceUnavailable, InternalServerError, ImATeapot
 
 from ...helpers import BaseApplicationTest
 
@@ -52,15 +52,6 @@ class TestErrors(BaseApplicationTest):
         assert "Sorry, we’re experiencing technical difficulties" in res.get_data(as_text=True)
         assert "Try again later." in res.get_data(as_text=True)
 
-    def test_500_with_error_message_context(self):
-        self.app.config['DEBUG'] = False
-        self.search_api_client.search.side_effect = InternalServerError(response='General apocalypse')
-
-        res = self.client.get('/g-cloud/search?q=email')
-        assert res.status_code == 500
-        assert "General apocalypse" in res.get_data(as_text=True)
-        assert "Try again later." not in res.get_data(as_text=True)
-
     def test_non_csrf_400(self):
         self.search_api_client.search.side_effect = BadRequest()
 
@@ -69,7 +60,6 @@ class TestErrors(BaseApplicationTest):
         assert res.status_code == 400
         assert "Sorry, there was a problem with your request" in res.get_data(as_text=True)
         assert "Please do not attempt the same request again." in res.get_data(as_text=True)
-
 
     @mock.patch('flask_wtf.csrf.validate_csrf', autospec=True)
     def test_csrf_handler_redirects_to_login(self, validate_csrf):
