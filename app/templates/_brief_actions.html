@@ -24,14 +24,24 @@
     <p>
         <ol class="seller-instruction-list steps">
             <li class="default-list-style">Register to join the Marketplace.</li>
-            <li class="default-list-style">Complete your profile with up-to-date documents, case studies and/or pricing.</li>
-            {% if brief.lot == 'digital-outcome' %}
-            <li class="default-list-style">Request an assessment of your chosen case study.</li>
-            {% elif brief.lot == 'training' %}
-            <li class="default-list-style">Request an assessment of your case study for {{ training_domain_name }}.</li>
-            {% elif brief.lot == 'digital-professionals' %}
-            <li class="default-list-style">Request an assessment of your case study for {{ brief.areaOfExpertise }}.</li>
-            {% endif %}
+            <li class="default-list-style">
+                {% if brief.lot == 'digital-outcome' %}
+                    Submit a case study and pricing and check your documents are up-to-date.
+                {% elif brief.lot == 'training' %}
+                    Submit a case study and pricing for {{ training_domain_name }} and check your documents are up-to-date.
+                {% elif brief.lot == 'digital-professionals' %}
+                    Submit a case study and pricing for {{ brief.areaOfExpertise }} and check your documents are up-to-date.
+                {% endif %}
+            </li>
+            <li class="default-list-style">
+                {% if brief.lot == 'digital-outcome' %}
+                    Request an assessment of your chosen case study.
+                {% elif brief.lot == 'training' %}
+                    Request an assessment of your case study for {{ training_domain_name }}.
+                {% elif brief.lot == 'digital-professionals' %}
+                    Request an assessment of your case study for {{ brief.areaOfExpertise }}.
+                {% endif %}
+            </li>
         </ol>
     </p>
     <div class="brief-button-group">
@@ -84,7 +94,7 @@
                         <span class="tick">
                             <img src="{{ asset_path }}svg/green-tick.svg" alt="done" width="15" height="14" />
                         </span>
-                        Complete your profile with up-to-date documents, case studies and/or pricing.
+                        Submit a case study and pricing for {{ brief.areaOfExpertise }} and check your documents are up-to-date.
                     </li>
                     <li>
                         <span class="tick">
@@ -121,14 +131,24 @@
                         </span>
                         Register to join the Marketplace.
                     </li>
-                    <li class="default-list-style">Complete your profile with up-to-date documents, case studies and/or pricing.</li>
-                    {% if brief.lot == 'digital-outcome' %}
-                    <li class="default-list-style">Request an assessment of your chosen case study.</li>
-                    {% elif brief.lot == 'training' %}
-                    <li class="default-list-style">Request an assessment of your case study for {{ training_domain_name }}.</li>
-                    {% elif brief.lot == 'digital-professionals' %}
-                    <li class="default-list-style">Request an assessment of your case study for {{ brief.areaOfExpertise }}.</li>
-                    {% endif %}
+                    <li>
+                        {% if brief.lot == 'digital-outcome' %}
+                            Submit a case study and pricing and check your documents are up-to-date.
+                        {% elif brief.lot == 'training' %}
+                            Submit a case study and pricing for {{ training_domain_name }} and check your documents are up-to-date.
+                        {% elif brief.lot == 'digital-professionals' %}
+                            Submit a case study and pricing for {{ brief.areaOfExpertise }} and check your documents are up-to-date.
+                        {% endif %}
+                    </li>
+                    <li>
+                        {% if brief.lot == 'digital-outcome' %}
+                            Request an assessment of your chosen case study.
+                        {% elif brief.lot == 'training' %}
+                            Request an assessment of your case study for {{ training_domain_name }}.
+                        {% elif brief.lot == 'digital-professionals' %}
+                            Request an assessment of your case study for {{ brief.areaOfExpertise }}.
+                        {% endif %}
+                    </li>
                 </ol>
             </p>
             <div class="brief-button-group">
@@ -172,15 +192,23 @@
                         <span class="tick">
                             <img src="{{ asset_path }}svg/green-tick.svg" alt="done" width="15" height="14" />
                         </span>
-                        Complete your profile with up-to-date documents, case studies and/or pricing.
+                        {% if brief.lot == 'digital-outcome' %}
+                            Submit a case study and pricing and check your documents are up-to-date.
+                        {% elif brief.lot == 'training' %}
+                            Submit a case study and pricing for {{ training_domain_name }} and check your documents are up-to-date.
+                        {% elif brief.lot == 'digital-professionals' %}
+                            Submit a case study and pricing for {{ brief.areaOfExpertise }} and check your documents are up-to-date.
+                        {% endif %}
                     </li>
-                    {% if brief.lot == 'digital-outcome' %}
-                    <li class="default-list-style">Request an assessment of your chosen case study.</li>
-                    {% elif brief.lot == 'training' %}
-                    <li class="default-list-style">Request an assessment of your case study for {{ training_domain_name }}.</li>
-                    {% elif brief.lot == 'digital-professionals' %}
-                    <li class="default-list-style">Request an assessment of your case study for {{ brief.areaOfExpertise }}.</li>
-                    {% endif %}
+                    <li>
+                        {% if brief.lot == 'digital-outcome' %}
+                            Request an assessment of your chosen case study.
+                        {% elif brief.lot == 'training' %}
+                            Request an assessment of your case study for {{ training_domain_name }}.
+                        {% elif brief.lot == 'digital-professionals' %}
+                            Request an assessment of your case study for {{ brief.areaOfExpertise }}.
+                        {% endif %}
+                    </li>
                 </ol>
             </p>
             <div class="brief-button-group">
@@ -207,14 +235,24 @@
                         </span>
                         Register to join the Marketplace.
                     </li>
-                    <li class="default-list-style">Complete your profile with up-to-date documents, case studies and/or pricing.</li>
-                    {% if brief.lot == 'digital-outcome' %}
-                    <li class="default-list-style">Request an assessment of your chosen case study.</li>
-                    {% elif brief.lot == 'training' %}
-                    <li class="default-list-style">Request an assessment of your case study for {{ training_domain_name }}.</li>
-                    {% elif brief.lot == 'digital-professionals' %}
-                    <li class="default-list-style">Request an assessment of your case study for {{ brief.areaOfExpertise }}.</li>
-                    {% endif %}
+                    <li>
+                        {% if brief.lot == 'digital-outcome' %}
+                            Submit a case study and pricing and check your documents are up-to-date.
+                        {% elif brief.lot == 'training' %}
+                            Submit a case study and pricing for {{ training_domain_name }} and check your documents are up-to-date.
+                        {% elif brief.lot == 'digital-professionals' %}
+                            Submit a case study and pricing for {{ brief.areaOfExpertise }} and check your documents are up-to-date.
+                        {% endif %}
+                    </li>
+                    <li>
+                        {% if brief.lot == 'digital-outcome' %}
+                            Request an assessment of your chosen case study.
+                        {% elif brief.lot == 'training' %}
+                            Request an assessment of your case study for {{ training_domain_name }}.
+                        {% elif brief.lot == 'digital-professionals' %}
+                            Request an assessment of your case study for {{ brief.areaOfExpertise }}.
+                        {% endif %}
+                    </li>
                 </ol>
             </p>
             <div class="brief-button-group">
@@ -236,19 +274,6 @@
             brief.areaOfExpertise not in supplier_assessments.assessed %}
                     <h2>Have you got expertise in {{ brief.areaOfExpertise }}?</h2>
                     <p>
-                        Before you can apply for this opportunity you need to provide a case
-                        study and reference that meets our <a href="/assessment-criteria">
-                        assessment criteria.
-                    </a>
-                    </p>
-                    <p>
-                        If we can confirm your expertise before the opportunity closes we will invite you to apply.
-                    </p>
-                    <p>
-                        If successful you can apply for {{ brief.areaOfExpertise }} opportunities in
-                        future without the need for further assessment.
-                    </p>
-                    <p>
                         Before you can apply for this opportunity, you need to:
                     </p>
                     <p>
@@ -259,8 +284,8 @@
                                 </span>
                                 Register to join the Marketplace.
                             </li>
-                            <li class="default-list-style">Complete your profile with up-to-date documents, case studies and/or pricing.</li>
-                            <li class="default-list-style">Request an assessment of your case study for {{ brief.areaOfExpertise }}.</li>
+                            <li>Submit a case study and pricing for {{ brief.areaOfExpertise }} and check your documents are up-to-date.</li>
+                            <li>Request an assessment of your case study for {{ brief.areaOfExpertise }}.</li>
                         </ol>
                     </p>
                     <div class="brief-button-group">
@@ -292,9 +317,9 @@
                                 <span class="tick">
                                     <img src="{{ asset_path }}svg/green-tick.svg" alt="done" width="15" height="14" />
                                 </span>
-                                Complete your profile with up-to-date documents, case studies and/or pricing.
+                                Submit a case study and pricing for {{ brief.areaOfExpertise }} and check your documents are up-to-date.
                             </li>
-                            <li class="default-list-style">Request an assessment of your case study for {{ brief.areaOfExpertise }}.</li>
+                            <li>Request an assessment of your case study for {{ brief.areaOfExpertise }}.</li>
                         </ol>
                     </p>
                     <div class="brief-button-group">
@@ -326,9 +351,9 @@
                                 <span class="tick">
                                     <img src="{{ asset_path }}svg/green-tick.svg" alt="done" width="15" height="14" />
                                 </span>
-                                Complete your profile with up-to-date documents, case studies and/or pricing.
+                                Submit a case study and pricing for {{ brief.areaOfExpertise }} and check your documents are up-to-date.
                             </li>
-                            <li class="default-list-style">Request an assessment of your case study for {{ brief.areaOfExpertise }}.</li>
+                            <li>Request an assessment of your case study for {{ brief.areaOfExpertise }}.</li>
                         </ol>
                     </p>
                     <div class="brief-button-group">
@@ -358,7 +383,7 @@
                                 <span class="tick">
                                     <img src="{{ asset_path }}svg/green-tick.svg" alt="done" width="15" height="14" />
                                 </span>
-                                Complete your profile with up-to-date documents, case studies and/or pricing.
+                                Submit a case study and pricing for {{ brief.areaOfExpertise }} and check your documents are up-to-date.
                             </li>
                             <li>
                                 <span class="tick">
@@ -384,17 +409,6 @@
                 {% if unassessed_domains|length == 0 and assessed_domains|length == 0 %}
                     <h2>What services do you offer?</h2>
                     <p>
-                        Before you can apply for this opportunity you need to select an area of expertise and
-                        provide a case study and reference that meets our <a href="/assessment-criteria"> assessment
-                        criteria</a>.
-                    </p>
-                    <p>
-                        If we can confirm your expertise before the opportunity closes we will invite you to apply.
-                    </p>
-                    <p>
-                        If successful you can apply for opportunities in future without the need for further assessment.
-                    </p>
-                    <p>
                         Before you can apply for this opportunity, you need to:
                     </p>
                     <p>
@@ -405,8 +419,8 @@
                                 </span>
                                 Register to join the Marketplace.
                             </li>
-                            <li class="default-list-style">Complete your profile with up-to-date documents, case studies and/or pricing.</li>
-                            <li class="default-list-style">Request an assessment of your chosen case study.</li>
+                            <li>Submit a case study and pricing and check your documents are up-to-date.</li>
+                            <li>Request an assessment of your chosen case study.</li>
                         </ol>
                     </p>
                     <div class="brief-button-group">
@@ -438,9 +452,9 @@
                                 <span class="tick">
                                     <img src="{{ asset_path }}svg/green-tick.svg" alt="done" width="15" height="14" />
                                 </span>
-                                Complete your profile with up-to-date documents, case studies and/or pricing.
+                                Submit a case study and pricing and check your documents are up-to-date.
                             </li>
-                            <li class="default-list-style">Request an assessment of your chosen case study.</li>
+                            <li>Request an assessment of your chosen case study.</li>
                         </ol>
                     </p>
                     <div class="brief-button-group">
@@ -471,9 +485,9 @@
                                 <span class="tick">
                                     <img src="{{ asset_path }}svg/green-tick.svg" alt="done" width="15" height="14" />
                                 </span>
-                                Complete your profile with up-to-date documents, case studies and/or pricing.
+                                Submit a case study and pricing and check your documents are up-to-date.
                             </li>
-                            <li class="default-list-style">Request an assessment of your chosen case study.</li>
+                            <li>Request an assessment of your chosen case study.</li>
                         </ol>
                     </p>
                     <div class="brief-button-group">
@@ -505,7 +519,7 @@
                                 <span class="tick">
                                     <img src="{{ asset_path }}svg/green-tick.svg" alt="done" width="15" height="14" />
                                 </span>
-                                Complete your profile with up-to-date documents, case studies and/or pricing.
+                                Submit a case study and pricing and check your documents are up-to-date.
                             </li>
                             <li>
                                 <span class="tick">
@@ -533,17 +547,6 @@
                       training_domain_name not in supplier_assessments.assessed %}
                     <h2>What services do you offer?</h2>
                     <p>
-                        Before you can apply for this opportunity you need to select an area of expertise and
-                        provide a case study and reference that meets our <a href="/assessment-criteria"> assessment
-                        criteria</a>.
-                    </p>
-                    <p>
-                        If we can confirm your expertise before the opportunity closes we will invite you to apply.
-                    </p>
-                    <p>
-                        If successful you can apply for opportunities in future without the need for further assessment.
-                    </p>
-                    <p>
                         Before you can apply for this opportunity, you need to:
                     </p>
                     <p>
@@ -554,8 +557,8 @@
                                 </span>
                                 Register to join the Marketplace.
                             </li>
-                            <li class="default-list-style">Complete your profile with up-to-date documents, case studies and/or pricing.</li>
-                            <li class="default-list-style">Request an assessment of your case study for {{ training_domain_name }}.</li>
+                            <li>Submit a case study and pricing for {{ training_domain_name }} and check your documents are up-to-date.</li>
+                            <li>Request an assessment of your case study for {{ training_domain_name }}.</li>
                         </ol>
                     </p>
                     <div class="brief-button-group">
@@ -587,9 +590,9 @@
                                         <span class="tick">
                                             <img src="{{ asset_path }}svg/green-tick.svg" alt="done" width="15" height="14" />
                                         </span>
-                                        Complete your profile with up-to-date documents, case studies and/or pricing.
+                                        Submit a case study and pricing for {{ training_domain_name }} and check your documents are up-to-date.
                                     </li>
-                                    <li class="default-list-style">Request an assessment of your case study for {{ training_domain_name }}.</li>
+                                    <li>Request an assessment of your case study for {{ training_domain_name }}.</li>
                                 </ol>
                             </p>
                             <div class="brief-button-group">
@@ -621,9 +624,9 @@
                                         <span class="tick">
                                             <img src="{{ asset_path }}svg/green-tick.svg" alt="done" width="15" height="14" />
                                         </span>
-                                        Complete your profile with up-to-date documents, case studies and/or pricing.
+                                        Submit a case study and pricing for {{ training_domain_name }} and check your documents are up-to-date.
                                     </li>
-                                    <li class="default-list-style">Request an assessment of your case study for {{ training_domain_name }}.</li>
+                                    <li>Request an assessment of your case study for {{ training_domain_name }}.</li>
                                 </ol>
                             </p>
                             <div class="brief-button-group">
@@ -654,7 +657,7 @@
                                 <span class="tick">
                                     <img src="{{ asset_path }}svg/green-tick.svg" alt="done" width="15" height="14" />
                                 </span>
-                                Complete your profile with up-to-date documents, case studies and/or pricing.
+                                Submit a case study and pricing for {{ training_domain_name }} and check your documents are up-to-date.
                             </li>
                             <li>
                                 <span class="tick">
