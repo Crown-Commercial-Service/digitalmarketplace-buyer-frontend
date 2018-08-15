@@ -1,0 +1,14 @@
+applications:
+- name: dm-pc-buyer
+  command: ./scripts/cf_run_app.sh
+  buildpack: python_buildpack
+  memory: 1G
+  disk_quota: 1G
+  instances: 1
+  routes:
+  - route: dm-pc.apps.y.cld.gov.au
+  - route: dm-pc-buyer.apps.y.cld.gov.au
+  services:
+  - ups-secret-service
+  - ups-dm-pc-common
+  - ups-dm-pc-buyer
