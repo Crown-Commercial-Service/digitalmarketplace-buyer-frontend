@@ -111,7 +111,7 @@ def external_404():
     in the page are absolute.
     :return: Our usual 404 page, but with all relative links made absolute
     """
-    document = html.fromstring(render_template('errors/404.html'))
+    document = html.fromstring(render_template('toolkit/errors/404.html'))
     relative_links = document.xpath('//a[starts-with(@href, "/")]')
     forms_with_relative_actions = document.xpath('//form[starts-with(@action, "/")]')
 
