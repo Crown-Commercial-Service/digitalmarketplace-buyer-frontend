@@ -9,9 +9,9 @@ from . import main
 
 @main.app_errorhandler(APIError)
 def api_error_handler(e):
-    return render_error_page(e.status_code)
+    return render_error_page(status_code=e.status_code)
 
 
 @main.app_errorhandler(QuestionNotFoundError)
 def content_loader_error_handler(e):
-    return render_error_page(400)
+    return render_error_page(status_code=400)
