@@ -107,6 +107,11 @@ main {
     margin: 0;
     max-width: none;
   }
+
+  .row.home-lists > div {
+    padding-left: 0;
+    padding-right: 0;
+  }
 }
 
 .super,
