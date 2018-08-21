@@ -20,8 +20,14 @@
     <div class="content-main super">
       <div class="wrapper">
         <nav role="navigation">
-          <h2>Digital services for all levels of Government</h2>
-            {% if briefs_count > 0 %}
+          <div class="row">
+            <div class="col-xs-12">
+              <h2>Digital services for all levels of Government</h2>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-4 col-md-3">
+              {% if briefs_count > 0 %}
               <a
                 aria-labelledby="opportunities__call-to-action"
                 href="/2/opportunities"
@@ -32,17 +38,33 @@
                 </p>
                 <p id="opportunities__call-to-action">View the latest briefs</p>
               </a>
-            {% endif %}
-            <a
-                    aria-labelledby="insight__call-to-action"
-                    href="/2/insights"
-                    class="card buyer">
-                <p>
-                    <span id="total_contracted">$230m</span>
-                    <strong>Total contracted</strong>
-                </p>
-                <p id="insight__call-to-action">View Marketplace insights</p>
-            </a>
+              {% endif %}
+            </div>
+            <div class="col-sm-4 col-md-3">
+              <a
+                      aria-labelledby="insight__call-to-action"
+                      href="/2/insights"
+                      class="card buyer">
+                  <p>
+                      <span id="total_contracted">$230m</span>
+                      <strong>Total contracted</strong>
+                  </p>
+                  <p id="insight__call-to-action">View Marketplace insights</p>
+              </a>
+            </div>
+            <div class="col-md-6">
+              <form class="seller_search" method="get" action="/search/sellers">
+                <input type="hidden" name="sort_by" value="a-z" />
+                <input type="hidden" name="view" value="sellers" />
+                <div class="col-xs-9 col-lg-10">
+                  <input class="au-text-input" type="text" name="keyword" placeholder="Search sellers" />
+                </div>
+                <div class="col-xs-3 col-lg-2">
+                  <button class="au-btn">Search</button>
+                </div>
+              </form>
+            </div>
+          </div>
         </nav>
       </div>
     </div>
