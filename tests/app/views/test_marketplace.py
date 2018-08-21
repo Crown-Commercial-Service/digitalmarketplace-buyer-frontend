@@ -46,9 +46,8 @@ class TestHomepageBrowseList(BaseApplicationTest):
         ]
 
         assert headers == [
-            'Buyers',
-            'Sellers',
-            'Collaborate'
+            'Source digital products, services and expertise',
+            'How it works'
         ]
 
     @mock.patch('app.main.views.marketplace.data_api_client')
