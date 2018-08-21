@@ -1,18 +1,15 @@
 a.card {
-  box-shadow: 0 2px 6px 0 rgba(0,0,0,0.10);
   position: relative;
   display: inline-block;
   margin-bottom: 1.5rem;
+  margin-top: rem(18);
   margin-right: 0;
-  padding: rem(13) rem(16);
-  background-color: $white;
-  border: 1px solid $light-grey;
+  border: 0;
   width: 100%;
 
   @include media($tablet) {
     margin-bottom: 0.75rem;
     margin-right: rem(8);
-    padding: rem(18);
     width: 47%;
   }
 
@@ -24,8 +21,7 @@ a.card {
   &:active,
   &:focus,
   &:hover {
-    box-shadow: 0 2px 6px 0 rgba(0,0,0,0.30);
-    background-color: $white;
+    background-color: transparent;
 
     p:last-of-type {
       display: inline-block;
@@ -50,7 +46,6 @@ font-size: 0.9em;
     &:first-of-type {
       font-size: rem(20);
       font-weight: $bold-font-weight;
-      margin-bottom: 0.5em;
     }
 
     span {

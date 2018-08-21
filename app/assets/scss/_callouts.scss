@@ -3,3 +3,12 @@ div {
         margin: 1.2rem 0;
     }
 }
+
+.home {
+    @include media($tablet) {
+        .list-callout {
+            border-left: 1px solid #e6e6e6;
+            padding-left: 1.5rem;
+        }
+    }
+}
