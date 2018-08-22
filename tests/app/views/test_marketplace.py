@@ -47,7 +47,7 @@ class TestHomepageBrowseList(BaseApplicationTest):
 
         assert headers == [
             'Use the Marketplace to:',
-            'Use Government arrangements to buy:',
+            'Use Government arrangements to source:',
             'How it works'
         ]
 
