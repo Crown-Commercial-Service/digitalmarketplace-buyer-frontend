@@ -36,6 +36,12 @@ main {
 
   .content-main {
 
+    @include media(max-width 991px) {
+      h2 {
+        margin-top: 1em;
+      }
+    }
+
     @include media($tablet) {
       @include span-columns(10 of 12);
     }
