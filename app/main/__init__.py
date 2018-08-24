@@ -1,6 +1,5 @@
 from flask import Blueprint, flash, Markup, current_app
 from flask_login import login_required, current_user
-import flask_featureflags
 
 main = Blueprint('main', __name__)
 direct_award = Blueprint('direct_award', __name__, url_prefix='/buyers/direct-award')

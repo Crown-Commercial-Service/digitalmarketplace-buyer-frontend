@@ -1,6 +1,6 @@
 import os
 import jinja2
-from dmutils.status import enabled_since, get_version_label
+from dmutils.status import get_version_label
 from dmutils.asset_fingerprint import AssetFingerprinter
 
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -55,10 +55,6 @@ class Config(object):
         'asset_fingerprinter': AssetFingerprinter(asset_root=ASSET_PATH)
     }
 
-    # Feature Flags
-    RAISE_ERROR_ON_MISSING_FEATURES = True
-    FEATURE_FLAGS_NEW_SUPPLIER_FLOW = False
-
     # LOGGING
     DM_LOG_LEVEL = 'DEBUG'
     DM_PLAIN_TEXT_LOGS = False
@@ -111,8 +107,6 @@ class Test(Config):
     SHARED_EMAIL_KEY = "KEY"
     SECRET_KEY = "KEY"
 
-    FEATURE_FLAGS_NEW_SUPPLIER_FLOW = enabled_since('2016-11-29')
-
     GOOGLE_SITE_VERIFICATION = "NotARealVerificationKey"
 
 
@@ -130,8 +124,6 @@ class Development(Config):
     DM_MANDRILL_API_KEY = "not_a_real_key"
     SECRET_KEY = "verySecretKey"
     SHARED_EMAIL_KEY = "very_secret"
-
-    FEATURE_FLAGS_NEW_SUPPLIER_FLOW = enabled_since('2016-11-29')
 
     GOOGLE_SITE_VERIFICATION = "NotARealVerificationKey"
 
@@ -151,17 +143,14 @@ class Live(Config):
 
 
 class Preview(Live):
-    FEATURE_FLAGS_NEW_SUPPLIER_FLOW = enabled_since('2017-02-06')
     DM_PATCH_FRONTEND_URL = 'https://www.preview.marketplace.team/'
 
 
 class Staging(Live):
-    FEATURE_FLAGS_NEW_SUPPLIER_FLOW = enabled_since('2017-02-07')
     DM_PATCH_FRONTEND_URL = 'https://www.staging.marketplace.team/'
 
 
 class Production(Live):
-    FEATURE_FLAGS_NEW_SUPPLIER_FLOW = enabled_since('2017-02-08')
     DM_PATCH_FRONTEND_URL = 'https://www.digitalmarketplace.service.gov.uk/'
 
     GOOGLE_SITE_VERIFICATION = "TKGSGZnfHpx1-lKOthI17ANtwk7fz3F4Sbr77I0ppO0"
