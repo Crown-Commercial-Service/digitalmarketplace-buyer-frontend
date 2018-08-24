@@ -3,7 +3,7 @@ from flask_login import LoginManager
 from flask_wtf.csrf import CSRFProtect, CSRFError
 
 import dmapiclient
-from dmutils import init_app, flask_featureflags
+from dmutils import init_app
 from dmcontent.content_loader import ContentLoader
 from dmcontent.utils import try_load_manifest, try_load_metadata, try_load_messages
 from dmutils.user import User
@@ -15,7 +15,6 @@ from config import configs
 login_manager = LoginManager()
 data_api_client = dmapiclient.DataAPIClient()
 search_api_client = dmapiclient.SearchAPIClient()
-feature_flags = flask_featureflags.FeatureFlag()
 csrf = CSRFProtect()
 
 content_loader = ContentLoader('app/content')
@@ -30,9 +29,8 @@ def create_app(config_name):
         application,
         configs[config_name],
         data_api_client=data_api_client,
-        feature_flags=feature_flags,
         login_manager=login_manager,
-        search_api_client=search_api_client
+        search_api_client=search_api_client,
     )
 
     frameworks = data_api_client.find_frameworks().get('frameworks')
