@@ -11,7 +11,7 @@ LOGIN_REQUIRED_MESSAGE = "You must log in with a buyer account to see this page.
 @direct_award.before_request
 @login_required
 def require_login():
-    if current_user.is_authenticated() and current_user.role != 'buyer':
+    if current_user.is_authenticated and current_user.role != 'buyer':
         flash(LOGIN_REQUIRED_MESSAGE, 'error')
         return current_app.login_manager.unauthorized()
 
