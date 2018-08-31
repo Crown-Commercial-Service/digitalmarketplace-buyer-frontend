@@ -19,11 +19,11 @@ class TestFeedbackForm(BaseApplicationTest):
         assert "Thank you for your message" in new_page.get_data(as_text=True)
 
     @mock.patch('requests.post')
-    @mock.patch('flask.Flask.logger')
-    def test_google_gone_logs_problem(self, logger, external_requests_post):
+    @mock.patch('app.main.views.feedback.current_app')
+    def test_google_gone_logs_problem(self, current_app, external_requests_post):
         external_requests_post.return_value.status_code = 404
         self._check_success(self._post())
-        logger.warning.assert_called_once_with(
+        current_app.logger.warning.assert_called_once_with(
             'Feedback message was not correctly recorded: test:some-uri / what doing text / what happened text')
 
     @mock.patch('requests.post')
