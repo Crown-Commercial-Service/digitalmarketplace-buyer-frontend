@@ -9,23 +9,12 @@ Frontend buyer application for the digital marketplace.
 
 ## Quickstart
 
-Install [Virtualenv](https://virtualenv.pypa.io/en/latest/)
-```
-sudo easy_install virtualenv
-```
-
 Install dependencies, run migrations and run the app
 ```
 make run-all
 ````
 
 ## Setup
-
-Install [Virtualenv](https://virtualenv.pypa.io/en/latest/)
-
-```
-sudo easy_install virtualenv
-```
 
 The buyer frontend app requires access to both the API (for service pages) and
 to the search API (for search results). The location and access tokens for 
@@ -50,7 +39,7 @@ is a token accepted by the Search API instance pointed to by `DM_SEARCH_API_URL`
 ### Create and activate the virtual environment
 
 ```
-virtualenv -p python3 ./venv
+python3 -m venv ./venv
 source ./venv/bin/activate
 ```
 
