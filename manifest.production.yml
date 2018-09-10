@@ -1,8 +1,8 @@
 command: scripts/cf_run_app.sh
 buildpack: python_buildpack
 memory: 1G
-disk_quota: 1G
-instances: 2
+disk_quota: 512M
+instances: 5
 routes:
 - route: marketplace.service.gov.au
 - route: dm-buyer.apps.b.cld.gov.au
