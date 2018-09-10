@@ -99,11 +99,6 @@ make freeze-requirements
 
 `requirements.txt` should be commited alongside `requirements-app.txt` changes.
 
-### Using FeatureFlags
-
-To use feature flags, check out the documentation in (the README of)
-[digitalmarketplace-utils](https://github.com/alphagov/digitalmarketplace-utils#using-featureflags).
-
 ## Front-end
 
 Front-end code (both development and production) is compiled using [Node](http://nodejs.org/) and [Gulp](http://gulpjs.com/).
