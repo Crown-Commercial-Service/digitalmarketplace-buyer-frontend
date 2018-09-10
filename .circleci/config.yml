@@ -15,10 +15,9 @@ references:
         cf -v
   deploy_docker: &deploy_docker
     docker:
-      - image: circleci/python:2.7.15-stretch-node-browsers
+      - image: circleci/python:2.7.15-stretch-node
         environment:
           TZ: "/usr/share/zoneinfo/Australia/Sydney"
-          NODE_VERSION: "9.4.0"
   attach_workspace_root: &attach_workspace_root
     at: .
   persist_workspace_root: &persist_workspace_root
