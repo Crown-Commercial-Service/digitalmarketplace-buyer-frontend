@@ -21,7 +21,7 @@
       <div class="wrapper">
         <nav role="navigation">
           <div class="row">
-            <div class="col-sm-4 col-md-3">
+            <div class="col-sm-4">
               {% if briefs_count > 0 %}
               <a
                 aria-labelledby="opportunities__call-to-action"
@@ -31,11 +31,29 @@
                   <span>{{ briefs_count }}</span>
                   <strong>Total opportunities</strong>
                 </p>
+                {% if briefs_live_count > 0 %}
+                <p id="opportunities__call-to-action">View {{ briefs_live_count }} open opportunities</p>
+                {% else %}
                 <p id="opportunities__call-to-action">View opportunities</p>
+                {% endif %}
               </a>
               {% endif %}
             </div>
-            <div class="col-sm-4 col-md-3">
+            <div class="col-sm-4">
+              {% if suppliers_count > 0 and supplier_sme_percentage > 0 %}
+              <a
+                aria-labelledby="sellers__call-to-action"
+                href="/search/sellers"
+                class="card seller">
+                <p>
+                  <span>{{ supplier_sme_percentage }}%</span>
+                  <strong>Awarded to SMEs</strong>
+                </p>
+                <p id="sellers__call-to-action">Search seller catalogue</p>
+              </a>
+              {% endif %}
+            </div>
+            <div class="col-sm-4">
               <a
                 aria-labelledby="insight__call-to-action"
                 href="/2/insights"
@@ -46,21 +64,6 @@
                   </p>
                   <p id="insight__call-to-action">View Marketplace insights</p>
               </a>
-            </div>
-            <div class="col-md-6">
-              <form class="seller_search" method="get" action="/search/sellers">
-                <input type="hidden" name="sort_by" value="a-z" />
-                <input type="hidden" name="view" value="sellers" />
-                <div class="col-xs-12">
-                  <label for="seller_search">Find a seller</label>
-                </div>
-                <div class="col-xs-9 col-lg-9">
-                  <input id="seller_search" class="au-text-input" type="text" name="keyword" placeholder="Search from {{ suppliers_count }} sellers" />
-                </div>
-                <div class="col-xs-3 col-lg-2">
-                  <button class="au-btn">Search</button>
-                </div>
-              </form>
             </div>
           </div>
         </nav>
@@ -75,12 +78,15 @@
       {% set framework_slug='digital-service-professionals' %}
     {% endif %}
   <div class="row home-lists">
-    <div class="col-md-4">
-      <div class="col-xs-12">
-        <h2>Use the Marketplace to:</h2>
-      </div>
-      <div class="col-xs-12">
-        <div class="list-callout">
+    <div class="col-md-6">
+      <div class="col-xs-12 list-callout">
+        <div class="col-xs-12">
+          <h2>Using the Marketplace</h2>
+        </div>
+        <div class="col-xs-12 col-md-6">
+          <h3>
+            What you can buy
+          </h3>
           <ul class="au-link-list">
             <li>
               <a href="/buyers/frameworks/digital-marketplace/requirements/digital-outcome">Deliver a project or outcome</a>
@@ -91,45 +97,53 @@
             <li>
               <a href="https://marketplace1.zendesk.com/hc/en-gb/articles/360000299476-Publish-a-training-opportunity">Build digital skills (training)</a>
             </li>
+            <li>
+              <a href="/about-us">About the panel</a>
+            </li>
           </ul>
         </div>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="col-xs-12">
-        <h2>How the Marketplace works</h2>
-      </div>
-      <div class="col-xs-12">
-        <div class="list-callout">
+        <div class="col-xs-12 col-md-6">
+          <h3>
+            Support
+          </h3>
           <ul class="au-link-list">
             <li>
-              <a href="/about-us">About us</a>
+              <a href="https://marketplace1.zendesk.com/hc/en-gb/requests/new">Request a buyer demo</a>
             </li>
             <li>
               <a href="https://marketplace1.zendesk.com/hc/en-gb/categories/115001542047-Buyer-guide-and-FAQs">Buyers guide</a>
             </li>
             <li>
-              <a href="https://marketplace1.zendesk.com/hc/en-gb/categories/115001540368-Seller-guide-and-FAQs">Sellers guide</a>
+              <a href="https://marketplace1.zendesk.com/hc/en-gb/articles/115011214027-Deed-SON-Master-Agreement-templates">Panel documents</a>
             </li>
             <li>
-              <a href="https://marketplace1.zendesk.com/hc/en-gb/requests/new">Request sourcing advice</a>
+              <a href="https://marketplace1.zendesk.com/hc/en-gb/requests/new">Procurement advice</a>
             </li>
             <li>
-              <a href="https://marketplace1.zendesk.com/hc/en-gb/requests/new">Request a demo</a>
+              <a href="">Become a seller</a>
             </li>
           </ul>
         </div>
       </div>
     </div>
-    <div class="col-md-4">
-      <div class="col-xs-12">
-        <h2>Use Government arrangements to source:</h2>
-      </div>
-      <div class="col-xs-12">
-        <div class="list-callout">
+    <div class="col-md-6">
+      <div class="col-xs-12 list-callout">
+        <div class="col-xs-12">
+          <h2>More panels and arrangements</h2>
+        </div>
+        <div class="col-xs-12 col-md-6">
+          <h3>
+            Panels
+          </h3>
           <ul class="au-link-list">
             <li>
               <a href="https://beta.dta.gov.au/help-and-advice/ict-procurement/ict-panels-and-arrangements/buying-computer-hardware" rel="external">Hardware</a>
+            </li>
+            <li>
+              <a href="https://beta.dta.gov.au/news/new-suppliers-commercial-shelf-software-and-services" rel="external">Software</a>
+            </li>
+            <li>
+              <a href="https://beta.dta.gov.au/help-and-advice/ict-procurement/ict-panels-and-arrangements/buying-mobile-products-and-services" rel="external">Mobile</a>
             </li>
             <li>
               <a href="https://beta.dta.gov.au/help-and-advice/ict-procurement/tools-sourcing-digital-products-and-services/ict-panels-and-arrangements/buying-cloud-services" rel="external">Cloud</a>
@@ -140,14 +154,24 @@
             <li>
               <a href="https://beta.dta.gov.au/help-and-advice/ict-procurement/ict-panels-and-arrangements/buying-telecommunications-services" rel="external">Telecommunications</a>
             </li>
+          </ul>
+        </div>
+        <div class="col-xs-12 col-md-6">
+          <h3>
+            Volume sourcing
+          </h3>
+          <ul class="au-link-list">
             <li>
-              <a href="https://beta.dta.gov.au/help-and-advice/ict-procurement/buying-digital-products-and-services-government#volume-sourcing-arrangements" rel="external">Volume sourcing arrangements</a>
+              <a href="https://beta.dta.gov.au/node/237" rel="external">Microsoft</a>
             </li>
             <li>
-              <a href="https://beta.dta.gov.au/help-and-advice/ict-procurement/ict-panels-and-arrangements/buying-mobile-products-and-services" rel="external">Mobile</a>
+              <a href="https://beta.dta.gov.au/node/238" rel="external">SAP and Concur</a>
             </li>
             <li>
-              <a href="https://beta.dta.gov.au/news/new-suppliers-commercial-shelf-software-and-services" rel="external">Software</a>
+              <a href="https://beta.dta.gov.au/node/472" rel="external">IBM</a>
+            </li>
+            <li>
+              <a href="https://beta.dta.gov.au/our-projects/google-analytics-government" rel="external">Google Analytics</a>
             </li>
           </ul>
         </div>
