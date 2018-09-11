@@ -15,7 +15,7 @@ references:
         cf -v
   deploy_docker: &deploy_docker
     docker:
-      - image: circleci/python:2.7.15-stretch-node
+      - image: circleci/python@sha256:4a89a031beecca074592ee0f76e00fc3c286de43d520c3a5ff5dfbd9cac73dca
         environment:
           TZ: "/usr/share/zoneinfo/Australia/Sydney"
   attach_workspace_root: &attach_workspace_root
