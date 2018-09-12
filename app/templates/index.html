@@ -31,8 +31,10 @@
                   <span>{{ briefs_count }}</span>
                   <strong>Total opportunities</strong>
                 </p>
-                {% if briefs_live_count > 0 %}
+                {% if briefs_live_count > 1 %}
                 <p id="opportunities__call-to-action">View {{ briefs_live_count }} open opportunities</p>
+                {% elif briefs_live_count == 1 %}
+                <p id="opportunities__call-to-action">View 1 open opportunity</p>
                 {% else %}
                 <p id="opportunities__call-to-action">View opportunities</p>
                 {% endif %}
