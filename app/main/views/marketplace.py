@@ -35,13 +35,11 @@ def index():
         suppliers_count = metrics['supplier_count']['value']
         briefs_count = metrics['briefs_total']['value']
         briefs_live_count = metrics['briefs_live']['value']
-        supplier_sme_percentage = metrics['supplier_sme_percentage']['value']
     except Exception as e:
         buyers_count = 0
         suppliers_count = 0
         briefs_count = 0
         briefs_live_count = 0
-        supplier_sme_percentage = 0
         current_app.logger.error(e)
 
     check_terms_acceptance()
@@ -50,8 +48,7 @@ def index():
         buyers_count=buyers_count,
         suppliers_count=suppliers_count,
         briefs_count=briefs_count,
-        briefs_live_count=briefs_live_count,
-        supplier_sme_percentage=supplier_sme_percentage
+        briefs_live_count=briefs_live_count
     )
 
 
