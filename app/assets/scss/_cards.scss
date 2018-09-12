@@ -44,7 +44,8 @@ a.card {
 
   p {
     margin-bottom: 0;
-font-size: 0.9em;
+    font-size: 0.9em;
+    margin-top: 0.5em;
     &:first-of-type {
       font-size: rem(20);
       font-weight: $bold-font-weight;
@@ -99,6 +100,7 @@ font-size: 0.9em;
     margin-bottom: 0;
     margin-right: 0;
     @include media ($tablet) {
+      margin-top: 1.5rem;
       margin-bottom: 1.5rem;
     }
   }
