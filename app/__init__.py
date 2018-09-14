@@ -1,11 +1,12 @@
 import os
 
-from flask import Flask
+from flask import Flask, request
 from flask_cache import Cache
 from flask_login import LoginManager
 
 import dmapiclient
 from dmutils import init_app, init_frontend_app
+from dmutils.user import User
 from dmcontent.content_loader import ContentLoader
 
 from config import configs
@@ -50,6 +51,13 @@ def create_app(config_name):
     login_manager.login_message_category = "must_login"
 
     init_frontend_app(application, data_api_client, login_manager)
+
+    @login_manager.user_loader
+    def load_user(user_id):
+        if request.path.startswith(asset_path):
+            return
+        return User.load_user(data_api_client, user_id)
+
     terms_manager = TermsManager()
     terms_manager.init_app(application)
 
