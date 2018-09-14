@@ -360,7 +360,20 @@ def update_brief_submission(framework_slug, lot_slug, brief_id, section_id, ques
         )
     except HTTPError as e:
         update_data = section.unformat_data(update_data)
-        errors = section.get_error_messages(e.message)
+        mapped = {}
+        for k, v in e.message.iteritems():
+            if ((k == 'sellerEmailList' or k == 'sellerEmail')
+                    and v.startswith('email_not_found~')):
+                mapped[k] = v.split('~')[0]
+            else:
+                mapped[k] = v
+
+        errors = section.get_error_messages(mapped)
+
+        for k, v in errors.iteritems():
+            if ((k == 'sellerEmailList' or k == 'sellerEmail')
+                    and e.message[k].startswith('email_not_found~')):
+                v['message'] = '{} {}'.format(e.message[k].split('~')[1], v['message'])
 
         # we need the brief_id to build breadcrumbs and the update_data to fill in the form.
         brief.update(update_data)
