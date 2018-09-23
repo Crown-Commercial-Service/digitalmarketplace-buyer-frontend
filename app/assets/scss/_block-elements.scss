@@ -36,6 +36,12 @@ main {
 
   .content-main {
 
+    @include media(max-width 991px) {
+      h2 {
+        margin-top: 1em;
+      }
+    }
+
     @include media($tablet) {
       @include span-columns(10 of 12);
     }
@@ -113,7 +119,7 @@ main {
 .sub {
   background: $non-white;
   margin-top: $base-spacing;
-  padding: $base-spacing*2 0;
+  padding: $base-spacing 0;
 
   .wrapper {
     & > div, & > nav {

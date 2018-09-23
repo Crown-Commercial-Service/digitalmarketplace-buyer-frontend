@@ -3,3 +3,21 @@ div {
         margin: 1.2rem 0;
     }
 }
+
+.home {
+    @include media($sm-desktop) {
+        .list-callout {
+            border-left: 1px solid #e6e6e6;
+            padding-left: 1.5rem;
+        }
+    }
+
+    .list-callout a[rel~=external]::after {
+        margin: 0;
+    }
+
+    .list-callout h3 {
+        font-size: 1rem;
+        margin-top: $base-spacing/2;
+    }
+}
