@@ -519,9 +519,9 @@ detect-file@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/detect-file/-/detect-file-1.0.0.tgz#f0d66d03672a825cb1b73bdb3fe62310c8e552b7"
 
-"digitalmarketplace-frameworks@https://github.com/alphagov/digitalmarketplace-frameworks.git#13.5.0":
-  version "13.5.0"
-  resolved "https://github.com/alphagov/digitalmarketplace-frameworks.git#2180697c690a7b871e2a61a899b14c4784168f92"
+"digitalmarketplace-frameworks@https://github.com/alphagov/digitalmarketplace-frameworks.git#13.6.2":
+  version "13.6.2"
+  resolved "https://github.com/alphagov/digitalmarketplace-frameworks.git#6522745d6bb66192de1af51bfcde9505a663de1e"
 
 "digitalmarketplace-frontend-toolkit@https://github.com/alphagov/digitalmarketplace-frontend-toolkit.git#v31.8.0":
   version "31.8.0"
