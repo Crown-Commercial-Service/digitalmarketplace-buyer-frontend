@@ -1121,11 +1121,12 @@ class TestCatalogueOfBriefsPage(APIClientMixin, BaseApplicationTest):
             self._get_dos_brief_search_api_aggregations_response_user_research_fixture_data(),
         ]
 
-        dos_lots = [api_stubs.lot(slug='digital-outcomes', name='Digital outcomes', allows_brief=True),
-                    api_stubs.lot(slug='digital-specialists', name='Digital specialists', allows_brief=True),
-                    api_stubs.lot(slug='user-research-participants', name='User research participants',
-                                  allows_brief=True),
-                    api_stubs.lot(slug='user-research-studios', name='User research studios', allows_brief=False)]
+        self.dos_lots = [
+            api_stubs.lot(slug='digital-outcomes', name='Digital outcomes', allows_brief=True),
+            api_stubs.lot(slug='digital-specialists', name='Digital specialists', allows_brief=True),
+            api_stubs.lot(slug='user-research-participants', name='User research participants', allows_brief=True),
+            api_stubs.lot(slug='user-research-studios', name='User research studios', allows_brief=False)
+        ]
 
         gcloud_lots = [api_stubs.lot(slug='cloud-hosting', allows_brief=True),
                        api_stubs.lot(slug='cloud-software', allows_brief=False),
@@ -1133,9 +1134,9 @@ class TestCatalogueOfBriefsPage(APIClientMixin, BaseApplicationTest):
 
         self.data_api_client.find_frameworks.return_value = {'frameworks': [
             api_stubs.framework(framework_id=3, slug='digital-outcomes-and-specialists-2', status='live',
-                                lots=dos_lots, has_further_competition=True)['frameworks'],
+                                lots=self.dos_lots, has_further_competition=True)['frameworks'],
             api_stubs.framework(framework_id=1, slug='digital-outcomes-and-specialists', status='expired',
-                                lots=dos_lots, has_further_competition=True)['frameworks'],
+                                lots=self.dos_lots, has_further_competition=True)['frameworks'],
             api_stubs.framework(framework_id=2, slug='foobar', status='expired', lots=gcloud_lots)['frameworks'],
             api_stubs.framework(framework_id=4, slug='g-cloud-9', status='live', lots=gcloud_lots)['frameworks']
         ]}
@@ -1481,7 +1482,23 @@ class TestCatalogueOfBriefsPage(APIClientMixin, BaseApplicationTest):
         assert self._normalize_whitespace(self._squashed_element_text(ss_elem)) == \
             "864 results found in Digital outcomes"
 
-    def test_opportunity_data_download_info_and_link_visible_on_catalogue_page(self):
+    @pytest.mark.parametrize(
+        ('dos_status', 'dos2_status', 'expected_url_slug_suffix'),
+        (
+            ('live', 'standstill', ''),
+            ('expired', 'live', '-2'),
+        )
+    )
+    @mock.patch('app.main.views.marketplace.content_loader')
+    def test_opportunity_data_download_info_and_link_visible_on_catalogue_page(
+        self, content_loader, dos_status, dos2_status, expected_url_slug_suffix
+    ):
+        self.data_api_client.find_frameworks.return_value = {'frameworks': [
+            api_stubs.framework(framework_id=3, slug='digital-outcomes-and-specialists-2', status=dos2_status,
+                                lots=self.dos_lots, has_further_competition=True)['frameworks'],
+            api_stubs.framework(framework_id=1, slug='digital-outcomes-and-specialists', status=dos_status,
+                                lots=self.dos_lots, has_further_competition=True)['frameworks']
+        ]}
         res = self.client.get('/digital-outcomes-and-specialists/opportunities')
         assert res.status_code == 200
         document = html.fromstring(res.get_data(as_text=True))
@@ -1493,7 +1510,7 @@ class TestCatalogueOfBriefsPage(APIClientMixin, BaseApplicationTest):
         link = document.xpath("//a[@class='document-link-with-icon']")[0].values()
         expected_link = (
             "https://assets.digitalmarketplace.service.gov.uk"
-            + "/digital-outcomes-and-specialists-2/communications/data/opportunity-data.csv"
+            + f"/digital-outcomes-and-specialists{expected_url_slug_suffix}/communications/data/opportunity-data.csv"
         )
 
         assert "Opportunity data" in header
