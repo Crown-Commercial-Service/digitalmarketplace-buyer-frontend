@@ -35,14 +35,6 @@
   </div>
 
   <header role="banner" class="{% block header_class %}{% endblock %}">
-
-    <section class="phase-banner">
-      <div class="wrapper">
-        <p>
-          This is a beta. For support please <a href="/contact-us">contact us</a>.
-        </p>
-      </div>
-    </section>
     <section>
       {% set dashboardText = 'Dashboard' %}
       {% if current_user.role == 'buyer' %}
