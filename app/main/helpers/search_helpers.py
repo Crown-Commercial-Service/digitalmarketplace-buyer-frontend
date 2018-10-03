@@ -103,6 +103,7 @@ def clean_request_args(request_args, lot_filters, lots_by_slug, for_aggregation=
 
     if not for_aggregation:
         restore_keys.append('page')
+        restore_keys.append('parentCategory')
 
     if request_args.get('lot') in lots_by_slug:
         restore_keys.append('lot')
