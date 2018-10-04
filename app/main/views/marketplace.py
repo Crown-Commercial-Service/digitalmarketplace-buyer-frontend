@@ -31,24 +31,23 @@ import pendulum
 def index():
     try:
         metrics = data_api_client.get_metrics()
-        buyers_count = metrics['buyer_count']['value']
-        suppliers_count = metrics['supplier_count']['value']
-        briefs_count = metrics['briefs_total']['value']
-        briefs_live_count = metrics['briefs_live']['value']
     except Exception as e:
-        buyers_count = 0
-        suppliers_count = 0
-        briefs_count = 0
-        briefs_live_count = 0
         current_app.logger.error(e)
+
+    suppliers_count = metrics.get('supplier_count', {"value": "0"})['value']
+    briefs_count = metrics.get('briefs_total', {"value": "0"})['value']
+    briefs_live_count = metrics.get('briefs_live', {"value": "0"})['value']
+    awarded_to_smes = metrics.get('awarded_to_smes', {"value": "0"})['value']
+    total_contracted = metrics.get('total_contracted', {"value": "0"})['value']
 
     check_terms_acceptance()
     return render_template(
         'index.html',
-        buyers_count=buyers_count,
         suppliers_count=suppliers_count,
         briefs_count=briefs_count,
-        briefs_live_count=briefs_live_count
+        briefs_live_count=briefs_live_count,
+        awarded_to_smes=awarded_to_smes,
+        total_contracted=total_contracted
     )
 
 
