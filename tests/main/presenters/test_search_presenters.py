@@ -4,6 +4,7 @@ import os
 
 import flask
 import mock
+import pytest
 from werkzeug.datastructures import MultiDict
 from werkzeug.urls import Href
 
@@ -502,7 +503,7 @@ class TestLotsAndCategoriesSelection(BaseApplicationTest):
                                         {
                                             'id': 'checkboxTreeExample-option-2.2',
                                             'label': 'Option 2.2',
-                                            'link': '/g-cloud/search?parentCategory=option+2&lot=cloud-software&checkboxTreeExample=option+2.2',  # NOQA
+                                            'link': '/g-cloud/search?lot=cloud-software&checkboxTreeExample=option+2.2&parentCategory=option+2',  # NOQA
                                             'name': 'checkboxTreeExample',
                                             'selected': False,
                                             'service_count': 0,
@@ -587,7 +588,7 @@ class TestLotsAndCategoriesSelection(BaseApplicationTest):
                                 {
                                     'id': 'checkboxTreeExample-option-2.2',
                                     'label': 'Option 2.2',
-                                    'link': '/g-cloud/search?parentCategory=option+2&lot=cloud-software&checkboxTreeExample=option+2.2',  # NOQA
+                                    'link': '/g-cloud/search?lot=cloud-software&checkboxTreeExample=option+2.2&parentCategory=option+2',  # NOQA
                                     'name': 'checkboxTreeExample',
                                     'selected': False,
                                     'service_count': 0,
@@ -680,3 +681,256 @@ class TestLotsAndCategoriesSelection(BaseApplicationTest):
                     }
                 ]
             }
+
+    @property
+    def tree_with_cloud_software__option_2__option_2_1__selected(self):
+        return [
+            {
+                'label': 'All categories',
+                'selected': True,
+                'link': '/g-cloud/search',
+                'children': [
+                    {
+                        'label': 'Cloud software',
+                        'name': 'lot',
+                        'value': 'cloud-software',
+                        'service_count': 500,
+                        'children': [
+                            {
+                                'label': 'Option 2',
+                                'name': 'checkboxTreeExample',
+                                'id': 'checkboxTreeExample-option-2',
+                                'value': 'option 2',
+                                'children': [
+                                    {
+                                        'label': 'Option 2.1',
+                                        'name': 'checkboxTreeExample',
+                                        'id': 'checkboxTreeExample-option-2.1',
+                                        'value': 'option 2.1',
+                                        'selected': True,
+                                        'service_count': 0
+                                    }, {
+                                        'label': 'Option 2.2',
+                                        'name': 'checkboxTreeExample',
+                                        'id': 'checkboxTreeExample-option-2.2',
+                                        'value': 'option 2.2',
+                                        'selected': False,
+                                        'service_count': 0,
+                                        'link': (
+                                            '/g-cloud/search?lot=cloud-software&checkboxTreeExample=option+2.2'
+                                            '&parentCategory=option+2'
+                                        )
+                                    }
+                                ],
+                                'selected': True,
+                                'service_count': 0,
+                                'link': '/g-cloud/search?lot=cloud-software&checkboxTreeExample=option+2'
+                            }
+                        ],
+                        'selected': True,
+                        'link': '/g-cloud/search?lot=cloud-software'
+                    }
+                ]
+            }, {
+                'label': 'Cloud software',
+                'name': 'lot',
+                'value': 'cloud-software',
+                'service_count': 500,
+                'children': [
+                    {
+                        'label': 'Option 2',
+                        'name': 'checkboxTreeExample',
+                        'id': 'checkboxTreeExample-option-2',
+                        'value': 'option 2',
+                        'children': [
+                            {
+                                'label': 'Option 2.1',
+                                'name': 'checkboxTreeExample',
+                                'id': 'checkboxTreeExample-option-2.1',
+                                'value': 'option 2.1',
+                                'selected': True,
+                                'service_count': 0
+                            }, {
+                                'label': 'Option 2.2',
+                                'name': 'checkboxTreeExample',
+                                'id': 'checkboxTreeExample-option-2.2',
+                                'value': 'option 2.2',
+                                'selected': False,
+                                'service_count': 0,
+                                'link': (
+                                    '/g-cloud/search?lot=cloud-software&checkboxTreeExample=option+2.2'
+                                    '&parentCategory=option+2'
+                                )
+                            }
+                        ],
+                        'selected': True,
+                        'service_count': 0,
+                        'link': '/g-cloud/search?lot=cloud-software&checkboxTreeExample=option+2'
+                    }
+                ],
+                'selected': True,
+                'link': '/g-cloud/search?lot=cloud-software'
+            }, {
+                'name': 'parentCategory',
+                'value': 'option 2'
+            }, {
+                'label': 'Option 2',
+                'name': 'checkboxTreeExample',
+                'id': 'checkboxTreeExample-option-2',
+                'value': 'option 2',
+                'children': [
+                    {
+                        'label': 'Option 2.1',
+                        'name': 'checkboxTreeExample',
+                        'id': 'checkboxTreeExample-option-2.1',
+                        'value': 'option 2.1',
+                        'selected': True,
+                        'service_count': 0
+                    }, {
+                        'label': 'Option 2.2',
+                        'name': 'checkboxTreeExample',
+                        'id': 'checkboxTreeExample-option-2.2',
+                        'value': 'option 2.2',
+                        'selected': False,
+                        'service_count': 0,
+                        'link': (
+                            '/g-cloud/search?lot=cloud-software&checkboxTreeExample=option+2.2&parentCategory=option+2'
+                        )
+                    }
+                ],
+                'selected': True,
+                'service_count': 0,
+                'link': '/g-cloud/search?lot=cloud-software&checkboxTreeExample=option+2'
+            }, {
+                'label': 'Option 2.1',
+                'name': 'checkboxTreeExample',
+                'id': 'checkboxTreeExample-option-2.1',
+                'value': 'option 2.1',
+                'selected': True,
+                'service_count': 0
+            }
+        ]
+
+    @pytest.mark.parametrize(
+        'url', (
+            "/g-cloud/search?lot=cloud-software&checkboxTreeExample=option+2.1",
+            "/g-cloud/search?lot=cloud-software&checkboxTreeExample=option+2.1&parentCategory=option+2"
+        )
+    )
+    def test_build_lots_and_categories_link_tree_with_lot_and_filter_selected(self, url):
+        with self.app.test_request_context(url):
+            tree = build_lots_and_categories_link_tree(
+                self.framework,
+                self.framework['lots'],
+                self.category_filter_group.copy(),
+                flask.request,
+                flask.request.args,
+                g9_builder,
+                'services',
+                'g-cloud-9',
+                Href(flask.url_for('.search_services')),
+                self.search_api_client
+            )
+
+        assert tree == self.tree_with_cloud_software__option_2__option_2_1__selected
+        # Assert, as per the url, that only our specified filter is 'selected' in the output
+        assert(
+            [(child['id'], child['selected']) for child in tree[0]['children'][0]['children'][0]['children']] ==
+            [('checkboxTreeExample-option-2.1', True), ('checkboxTreeExample-option-2.2', False)]
+        )
+
+    def test_build_lots_and_categories_link_tree_with_lot_and_filter_and_same_named_filter_in_tree(self):
+        url = "/g-cloud/search?lot=cloud-software&checkboxTreeExample=option+2.1&parentCategory=option+2"
+
+        self.category_filter_group['filters'] += [
+            {
+                'label': 'Option 7',
+                'name': 'checkboxTreeExample',
+                'id': 'checkboxTreeExample-option-7',
+                'value': 'option 7',
+                'children': [
+                    {
+                        'label': 'Option 2.1',
+                        'name': 'checkboxTreeExample',
+                        'id': 'checkboxTreeExample-option-2.1',
+                        'value': 'option 2.1'
+                    }, {
+                        'label': 'Option 7.1',
+                        'name': 'checkboxTreeExample',
+                        'id': 'checkboxTreeExample-option-7.1',
+                        'value': 'option 7.1'
+                    }
+                ]
+            }
+        ]
+        with self.app.test_request_context(url):
+            tree = build_lots_and_categories_link_tree(
+                self.framework,
+                self.framework['lots'],
+                self.category_filter_group.copy(),
+                flask.request,
+                flask.request.args,
+                g9_builder,
+                'services',
+                'g-cloud-9',
+                Href(flask.url_for('.search_services')),
+                self.search_api_client
+            )
+
+        assert tree == self.tree_with_cloud_software__option_2__option_2_1__selected
+        assert(
+            [(child['id'], child['selected']) for child in tree[0]['children'][0]['children'][0]['children']] ==
+            [('checkboxTreeExample-option-2.1', True), ('checkboxTreeExample-option-2.2', False)]
+        )
+
+        tree_child_value_lists = [[child.get('id') for child in node.get('children', [])] for node in tree]
+        tree_child_values = [item for sublist in tree_child_value_lists for item in sublist]
+
+        assert 'checkboxTreeExample-option-7.1' not in tree_child_values
+        assert tree_child_values.count('checkboxTreeExample-option-2.1') == 1
+
+    def test_build_lots_and_categories_link_tree_with_lot_and_filter_and_same_named_filter_in_tree_with_no_parent(self):
+        url = "/g-cloud/search?lot=cloud-software&checkboxTreeExample=option+2.1"
+
+        self.category_filter_group['filters'] += [
+            {
+                'label': 'Option 7',
+                'name': 'checkboxTreeExample',
+                'id': 'checkboxTreeExample-option-7',
+                'value': 'option 7',
+                'children': [
+                    {
+                        'label': 'Option 2.1',
+                        'name': 'checkboxTreeExample',
+                        'id': 'checkboxTreeExample-option-2.1',
+                        'value': 'option 2.1'
+                    }, {
+                        'label': 'Option 7.1',
+                        'name': 'checkboxTreeExample',
+                        'id': 'checkboxTreeExample-option-7.1',
+                        'value': 'option 7.1'
+                    }
+                ]
+            }
+        ]
+        with self.app.test_request_context(url):
+            tree = build_lots_and_categories_link_tree(
+                self.framework,
+                self.framework['lots'],
+                self.category_filter_group.copy(),
+                flask.request,
+                flask.request.args,
+                g9_builder,
+                'services',
+                'g-cloud-9',
+                Href(flask.url_for('.search_services')),
+                self.search_api_client
+            )
+
+        tree_child_value_selected_lists = [
+            [(child.get('id'), child['selected']) for child in node.get('children', [])] for node in tree
+        ]
+        tree_child_value_selected = [item for sublist in tree_child_value_selected_lists for item in sublist]
+
+        assert ('checkboxTreeExample-option-7.1', False) in tree_child_value_selected
+        assert tree_child_value_selected.count(('checkboxTreeExample-option-2.1', True)) == 2

@@ -214,7 +214,6 @@ class TestBuildSearchQueryHelpers(BaseApplicationTest):
             'lot': 'saas',
         })
 
-
     def test_clean_request_args_incorrect_lot(self):
         filters = MultiDict({
             'lot': 'saaspaas',
