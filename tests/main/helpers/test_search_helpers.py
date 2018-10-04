@@ -175,6 +175,7 @@ class TestBuildSearchQueryHelpers(BaseApplicationTest):
             'lot': 'saas',
             'q': 'email',
             'page': 9,
+            'parentCategory': 'collaborative working',
             'unknown': 'key',
         })
 
@@ -183,9 +184,36 @@ class TestBuildSearchQueryHelpers(BaseApplicationTest):
             'question2': 'true',
             'question3': ['option1', 'option2'],
             'q': 'email',
+            'parentCategory': 'collaborative working',
             'lot': 'saas',
             'page': 9,
         })
+
+    def test_clean_request_args_strips_args_for_aggregation(self):
+        """With the for_aggregation kwarg set the clean_request_args method should strip parentCategory and page keys"""
+
+        filters = MultiDict({
+            'question1': 'true',
+            'question2': ['true', 'false', 1],
+            'question3': ['option1', 'true', 'option5', 'option2', 2, None],
+            'question6': '',
+            'question4': 'false',
+            'lot': 'saas',
+            'q': 'email',
+            'page': 9,
+            'parentCategory': 'collaborative working',
+            'unknown': 'key',
+        })
+
+        results = search_helpers.clean_request_args(filters, self.lot_filters, self._lots_by_slug, for_aggregation=True)
+        assert results == MultiDict({
+            'question1': 'true',
+            'question2': 'true',
+            'question3': ['option1', 'option2'],
+            'q': 'email',
+            'lot': 'saas',
+        })
+
 
     def test_clean_request_args_incorrect_lot(self):
         filters = MultiDict({
