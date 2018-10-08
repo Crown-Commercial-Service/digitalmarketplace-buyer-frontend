@@ -205,7 +205,6 @@ def build_lots_and_categories_link_tree(
     # and category).
     keys_to_remove = _get_category_filter_key_set(category_filter_group)
     keys_to_remove.add('page')
-    keys_to_remove.add('parentCategory')
     preserved_request_args = MultiDict(
         (k, v) for (k, v) in request.args.items(multi=True) if k not in keys_to_remove
     )

@@ -184,7 +184,6 @@ class TestBuildSearchQueryHelpers(BaseApplicationTest):
             'question2': 'true',
             'question3': ['option1', 'option2'],
             'q': 'email',
-            'parentCategory': 'collaborative working',
             'lot': 'saas',
             'page': 9,
         })
