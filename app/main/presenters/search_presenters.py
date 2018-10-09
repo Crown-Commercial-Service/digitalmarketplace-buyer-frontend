@@ -205,6 +205,7 @@ def build_lots_and_categories_link_tree(
     # and category).
     keys_to_remove = _get_category_filter_key_set(category_filter_group)
     keys_to_remove.add('page')
+    keys_to_remove.add('parentCategory')
     preserved_request_args = MultiDict(
         (k, v) for (k, v) in request.args.items(multi=True) if k not in keys_to_remove
     )
@@ -241,10 +242,11 @@ def build_lots_and_categories_link_tree(
         categories = category_filter_group['filters'] if category_filter_group else []
 
         if lot_selected:
-            selected_categories = _annotate_categories_with_selection(lot['slug'], categories, cleaned_request_args,
-                                                                      url_args_for_lot, content_manifest, framework,
-                                                                      aggregations_by_lot[lot['slug']], keys_to_remove,
-                                                                      search_link_builder)
+            selected_categories = _annotate_categories_with_selection(
+                lot['slug'], categories, cleaned_request_args, url_args_for_lot, content_manifest, framework,
+                aggregations_by_lot[lot['slug']], keys_to_remove, search_link_builder,
+                parent_category=request.args.get('parentCategory', None)
+            )
             selected_filters.append(lot_filter)
             selected_filters.extend(selected_categories)
 
@@ -304,7 +306,7 @@ def _annotate_categories_with_selection(lot_slug, category_filters, cleaned_requ
             # If a parentCategory has been sent as a url query param, and it's this category...
             # (Note: `get` fallback is for if there are selected descendants but no parent category is set, which is
             # not expected, but could happen if constructing URLs by hand.)
-            if cleaned_request_args.get('parentCategory', category['value']) == category['value']:
+            if (parent_category or category['value']) == category['value']:
                 # ... then ensure this choice survives as a hidden field for the filters form
                 parent_category_filter = dict()
                 parent_category_filter['name'] = 'parentCategory'
@@ -325,11 +327,13 @@ def _annotate_categories_with_selection(lot_slug, category_filters, cleaned_requ
         # If we're showing it as 'selected' because one of its children is selected, then the link is
         # useful as a kind of breadcrumb, to return to showing all services in that overall category.
         if not directly_selected:
-            url_args = _update_base_url_args_for_lot_and_category(url_args_for_lot,
-                                                                  keys_to_remove,
-                                                                  lot_slug=lot_slug,
-                                                                  category=category,
-                                                                  parent_category=parent_category)
+            url_args = _update_base_url_args_for_lot_and_category(
+                url_args_for_lot,
+                keys_to_remove,
+                lot_slug=lot_slug,
+                category=category,
+                parent_category=parent_category if parent_category != category['value'] else None
+            )
             category['link'] = search_link_builder(url_args)
 
     # When there's a selection, and the selected category has children, remove sibling subcategories,
