@@ -243,9 +243,16 @@ def build_lots_and_categories_link_tree(
 
         if lot_selected:
             selected_categories = _annotate_categories_with_selection(
-                lot['slug'], categories, cleaned_request_args, url_args_for_lot, content_manifest, framework,
-                aggregations_by_lot[lot['slug']], keys_to_remove, search_link_builder,
-                parent_category=request.args.get('parentCategory', None)
+                lot['slug'],
+                categories,
+                cleaned_request_args,
+                url_args_for_lot,
+                content_manifest,
+                framework,
+                aggregations_by_lot[lot['slug']],
+                keys_to_remove,
+                search_link_builder,
+                parent_category=request.args.get('parentCategory', None),
             )
             selected_filters.append(lot_filter)
             selected_filters.extend(selected_categories)
