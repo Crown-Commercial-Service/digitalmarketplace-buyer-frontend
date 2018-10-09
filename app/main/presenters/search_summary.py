@@ -131,7 +131,7 @@ class SearchSummary(object):
 
         groups = defaultdict(list)
         for filter_name, filter_values in request_args.lists():
-            if filter_name in ('lot', 'q', 'page', 'parentCategory'):
+            if filter_name in ('lot', 'q', 'page'):
                 continue
 
             for filter_value in filter_values:

@@ -251,18 +251,10 @@ def search_services():
     except ValueError:
         abort(404)
 
-    search_query_kwargs = build_search_query(
-        clean_request_query_params,
-        filters.values(),
-        content_manifest,
-        lots_by_slug,
-        for_aggregation=True
-    )
-
     search_api_response = search_api_client.search(
         index=framework['slug'],
         doc_type=doc_type,
-        **search_query_kwargs
+        **build_search_query(clean_request_query_params, filters.values(), content_manifest, lots_by_slug)
     )
     search_results_obj = SearchResults(
         search_api_response,
