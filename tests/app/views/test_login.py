@@ -146,7 +146,6 @@ class TestLogin(BaseApplicationTest):
             })
             cookie_value = self.get_cookie_by_name(res, 'dm_session')
             assert cookie_value['dm_session'] is not None
-            assert cookie_value['Secure; HttpOnly; Path'] == '/'
             assert cookie_value["Domain"] == "127.0.0.1"
 
     def test_should_redirect_to_login_on_logout(self):

@@ -1,7 +1,7 @@
 import os
 
 from flask import Flask, request
-from flask_cache import Cache
+from flask_caching import Cache
 from flask_login import LoginManager
 
 import dmapiclient
