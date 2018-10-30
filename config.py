@@ -146,6 +146,7 @@ class Development(Config):
 
     SECRET_KEY = 'DevKeyDevKeyDevKeyDevKeyDevKeyDevKeyDevKeyX='
     SHARED_EMAIL_KEY = SECRET_KEY
+    DM_SEND_EMAIL_TO_STDERR = True
 
 
 class Live(Config):
