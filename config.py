@@ -91,7 +91,7 @@ class Config(object):
     DM_LOG_LEVEL = 'DEBUG'
     DM_LOG_PATH = None
     DM_APP_NAME = 'buyer-frontend'
-    DM_DOWNSTREAM_REQUEST_ID_HEADER = 'X-Amz-Cf-Id'
+    DM_DOWNSTREAM_REQUEST_ID_HEADER = 'X-Vcap-Request-Id'
 
     REACT_BUNDLE_URL = 'https://dm-dev-frontend.apps.y.cld.gov.au/bundle/'
     REACT_RENDER_URL = 'https://dm-dev-frontend.apps.y.cld.gov.au/render'
