@@ -47,10 +47,10 @@ def process_login():
     form = auth_forms.LoginForm(request.form)
     next_url = request.args.get('next')
     if form.validate():
-        user_json = data_api_client.authenticate_user(
+        result = data_api_client.authenticate_user(
             form.email_address.data,
             form.password.data)
-        if not user_json:
+        if not result:
             current_app.logger.info(
                 "login.fail: failed to sign in {email_hash}",
                 extra={'email_hash': hash_email(form.email_address.data)})
@@ -61,12 +61,12 @@ def process_login():
                 form=form,
                 next=next_url)
 
-        user = User.from_json(user_json)
+        user = User.from_json(result)
 
         login_user(user)
         current_app.logger.info('login.success: {user}', extra={'user': user_logging_string(user)})
         check_terms_acceptance()
-        return redirect_logged_in_user(next_url)
+        return redirect_logged_in_user(next_url, result.get('validation_result', None))
 
     else:
         return render_template_with_csrf(

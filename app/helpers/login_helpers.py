@@ -2,6 +2,8 @@ import six
 import rollbar
 import urlparse
 
+from werkzeug.urls import url_encode
+
 from flask_login import current_user
 from flask import current_app, redirect, render_template, session, url_for
 import flask_featureflags as feature
@@ -11,18 +13,29 @@ from dmutils.email import (
 )
 
 
-def redirect_logged_in_user(next_url=None):
+def redirect_logged_in_user(next_url=None, validation_result=None):
     site_url_prefix = current_app.config['URL_PREFIX']
     if not site_url_prefix:
         site_url_prefix = '/'
     if current_user.is_authenticated:
-        if next_url and next_url.startswith(site_url_prefix):
+        has_messages = True if (
+            validation_result and
+            (validation_result.get('errors') or validation_result.get('warnings'))
+        ) else False
+
+        if has_messages is False and next_url and next_url.startswith(site_url_prefix):
             return redirect(next_url)
 
         if current_user.role == 'buyer':
             return redirect('/2/buyer-dashboard')
 
         if current_user.role == 'supplier':
+            if has_messages:
+                return redirect('/2/messages?{}'.format(url_encode({
+                    "next": next_url if next_url else '/2/opportunities',
+                    "supplierCode": current_user.supplier_code
+                })))
+
             return redirect('/2/opportunities')
 
         if current_user.role == 'applicant':
