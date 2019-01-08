@@ -222,6 +222,8 @@ def create_new_brief(framework_slug, lot_slug):
 def view_brief_overview(framework_slug, lot_slug, brief_id):
     if lot_slug == 'digital-professionals' or lot_slug == 'training':
         return redirect('/2/brief/{}/overview'.format(brief_id))
+    if lot_slug == 'rfx':
+        return redirect('/2/brief/{}/overview/rfx'.format(brief_id))
 
     framework, lot = get_framework_and_lot(
         framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)
