@@ -1433,8 +1433,7 @@ class TestBriefSummaryPage(BaseApplicationTest):
 
             assert (document.xpath('//h1')[0]).text_content().strip() == "I need a thing to do a thing"
             assert [e.text_content() for e in document.xpath('//*[@id="content"]//ul[@class="instruction-list-item-top"]/li/a')] == [  # noqa
-                'View question and answer dates',
-                'View your published requirements'
+                'Answer seller questions'
             ]
 
             assert not document.xpath('//a[contains(text(), "Delete")]')
@@ -1465,7 +1464,7 @@ class TestBriefSummaryPage(BaseApplicationTest):
 
             assert (document.xpath('//h1')[0]).text_content().strip() == "I need a thing to do a thing"
             assert [e.text_content() for e in document.xpath('//*[@id="content"]//ul[@class="instruction-list-item-top"]/li/a')] == [  # noqa
-                'View your published requirements'
+                'View your published requirements', 'Download responses', 'Create work order'
             ]
 
             assert not document.xpath('//a[contains(text(), "Delete")]')

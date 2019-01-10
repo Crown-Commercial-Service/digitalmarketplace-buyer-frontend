@@ -90,8 +90,8 @@
               'title': 'Publish your brief',
               'description': {
                 'draft': '',
-                'live': 'Your requirements are open for applications until {} at 6PM (in Canberra).'.format(brief.applicationsClosedAt | dateformat if brief.applicationsClosedAt),
-                'closed': 'Your requirements closed for applications on {} at 6PM (in Canberra).'.format(brief.applicationsClosedAt | dateformat if brief.applicationsClosedAt),
+                'live': 'Done',
+                'closed': 'Done',
               },
               'links': [
                 {
@@ -100,14 +100,54 @@
                   'allowed_statuses': ['draft']
                 },
                 {
-                  'href': url_for(".view_brief_timeline",framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id),
-                  'text': 'View question and answer dates',
-                  'allowed_statuses': ['live']
-                },
-                {
                   'href': url_for("main.get_brief_by_id", framework_slug=brief.frameworkSlug, brief_id=brief.id),
                   'text': 'View your published requirements',
-                  'allowed_statuses': ['live', 'closed']
+                  'allowed_statuses': ['closed']
+                }
+              ]
+            },
+            {
+              'title': 'Answer seller questions',
+              'description': {
+                'draft': '',
+                'live': '',
+                'closed': 'Done'
+              },
+              'links': [
+                {
+                  'href': url_for(".add_supplier_question", framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id),
+                  'text': 'Answer seller questions',
+                  'allowed_statuses': ['live']
+                }
+              ]
+            },
+            {
+              'title': 'Download responses',
+              'description': {
+                'draft': '',
+                'live': '',
+                'closed': ''
+              },
+              'links': [
+                {
+                  'href': '/2/brief/' + brief.id|string + '/download-responses',
+                  'text': 'Download responses',
+                  'allowed_statuses': ['closed']
+                }
+              ]
+            },
+            {
+              'title': 'Create work order',
+              'description': {
+                'draft': '',
+                'live': '',
+                'closed': ''
+              },
+              'links': [
+                {
+                  'href': url_for(".select_seller_for_work_order", framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id),
+                  'text': 'Create work order',
+                  'allowed_statuses': ['closed']
                 }
               ]
             }
@@ -229,17 +269,6 @@
         {% endfor %}
         {% endwith %}
       </ol>
-      <h2>After publishing</h2>
-      <p>
-        While your brief is live you must answer seller questions. After the brief closes, shortlist the sellers who applied. Then evaluate your shortlist using the methods you set when writing the brief and award a contract to the chosen seller.
-      </p>
-      <h2>Useful links</h2>
-      <ul>
-        <li><a  href="https://marketplace1.zendesk.com/hc/en-gb/articles/115011257447-Answer-questions">How to answer seller questions</a></li>
-        <li><a href="https://marketplace1.zendesk.com/hc/en-gb/articles/115011257487-Shortlist-responses">How to shortlist sellers</a></li>
-        <li><a href="https://marketplace1.zendesk.com/hc/en-gb/articles/115011406768-Evaluate-proposals">How to evaluate sellers</a></li>
-        <li><a href="https://marketplace1.zendesk.com/hc/en-gb/articles/115011257587-Award-a-contract">How to award a contract</a></li>
-      </ul>
     </div>
   </div>
   {% if not delete_requested %}
