@@ -1,7 +1,7 @@
 import mock
 import pytest
 
-from dmutils.api_stubs import framework
+from dmtestutils.api_model_stubs import FrameworkStub
 
 from app.main.helpers.search_save_helpers import get_saved_search_temporary_message_status, SavedSearchStateEnum
 
@@ -38,8 +38,8 @@ class TestGetSavedSearchTemporaryMessageStatus:
 
         temp_message_status = get_saved_search_temporary_message_status(
             {'lockedAt': project_locked_at},
-            framework(slug='B-Cloud-1', status=fwork_status)['frameworks'],
-            framework(slug='B-Cloud-2', status=following_fwork_status)['frameworks'],
+            FrameworkStub(slug='B-Cloud-1', status=fwork_status).response(),
+            FrameworkStub(slug='B-Cloud-2', status=following_fwork_status).response(),
         )
 
         assert temp_message_status == status
@@ -51,13 +51,13 @@ class TestGetSavedSearchTemporaryMessageStatus:
         with pytest.raises(CustomAbortException):
             get_saved_search_temporary_message_status(
                 {'lockedAt': '2018-06-25T13:39:54.167852Z'},
-                framework(slug='B-Cloud-1', status='some-new-status')['frameworks'],
-                framework(status='live')['frameworks'],
+                FrameworkStub(slug='B-Cloud-1', status='some-new-status').response(),
+                FrameworkStub(status='live').response(),
             )
 
         assert self.current_app.logger.error.call_args_list == [
             mock.call(
                 "Saved search temporary messages invalid frameworks state: "
-                "'B-Cloud-1' - 'some-new-status' and 'g-cloud-7' - 'live'"
+                "'B-Cloud-1' - 'some-new-status' and 'g-cloud-10' - 'live'"
             )
         ]

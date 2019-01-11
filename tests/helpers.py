@@ -7,7 +7,8 @@ import mock
 from werkzeug.http import parse_cookie
 from markupsafe import escape
 
-from dmutils import api_stubs
+from dmtestutils.api_model_stubs import FrameworkStub
+from dmtestutils.api_model_stubs.lot import dos_lots, as_a_service_lots, cloud_lots
 from dmutils.formats import DATETIME_FORMAT
 
 from app import create_app, data_api_client
@@ -15,21 +16,6 @@ from tests import login_for_tests
 
 
 def get_frameworks_list_fixture_data():
-    old_gcloud_lots = [api_stubs.lot(lot_id=1, slug='saas', name='Software as a Service'),
-                       api_stubs.lot(lot_id=2, slug='paas', name='Platform as a Service'),
-                       api_stubs.lot(lot_id=3, slug='iaas', name='Infrastructure as a Service'),
-                       api_stubs.lot(lot_id=4, slug='scs', name='Specialist Cloud Services')]
-
-    new_gcloud_lots = [api_stubs.lot(lot_id=1, slug='cloud-hosting', name='Cloud hosting'),
-                       api_stubs.lot(lot_id=2, slug='cloud-software', name='Cloud software'),
-                       api_stubs.lot(lot_id=3, slug='cloud-support', name='Cloud support')]
-
-    dos_lots = [api_stubs.lot(lot_id=5, slug='digital-outcomes', name='Digital outcomes', allows_brief=True),
-                api_stubs.lot(lot_id=6, slug='digital-specialists', name='Digital specialists', allows_brief=True),
-                api_stubs.lot(lot_id=7, slug='user-research-studios', name='User research studios'),
-                api_stubs.lot(lot_id=8, slug='user-research-participants', name='User research participants',
-                              allows_brief=True)]
-
     g_cloud_8_variation = {
         "1": {
             "countersignedAt": "2016-10-05T11:00:00.000000Z",
@@ -40,17 +26,33 @@ def get_frameworks_list_fixture_data():
     }
 
     frameworks = [
-        api_stubs.framework(framework_id=4, slug='g-cloud-7', status='live', lots=old_gcloud_lots),
-        api_stubs.framework(framework_id=1, slug='g-cloud-6', status='expired', lots=old_gcloud_lots),
-        api_stubs.framework(framework_id=6, slug='g-cloud-8', status='live', lots=old_gcloud_lots,
-                            framework_agreement_version='v1.0', framework_variations=g_cloud_8_variation),
-        api_stubs.framework(framework_id=3, slug='g-cloud-5', status='expired', lots=old_gcloud_lots),
-        api_stubs.framework(framework_id=2, slug='g-cloud-4', status='expired', lots=old_gcloud_lots),
-        api_stubs.framework(framework_id=7, slug='digital-outcomes-and-specialists-2', status='live',
-                            lots=dos_lots, framework_agreement_version='v1.0', has_further_competition=True),
-        api_stubs.framework(framework_id=5, slug='digital-outcomes-and-specialists', status='live',
-                            lots=dos_lots, framework_agreement_version='v1.0', has_further_competition=True),
-        api_stubs.framework(framework_id=8, slug='g-cloud-9', status='live', lots=new_gcloud_lots),
+        FrameworkStub(
+            id=4, slug='g-cloud-7', status='live', lots=as_a_service_lots()
+        ).single_result_response(),
+        FrameworkStub(
+            id=1, slug='g-cloud-6', status='expired', lots=as_a_service_lots()
+        ).single_result_response(),
+        FrameworkStub(
+            id=6, slug='g-cloud-8', status='live', lots=as_a_service_lots(),
+            framework_agreement_version='v1.0', framework_variations=g_cloud_8_variation
+        ).single_result_response(),
+        FrameworkStub(
+            id=3, slug='g-cloud-5', status='expired', lots=as_a_service_lots()
+        ).single_result_response(),
+        FrameworkStub(
+            id=2, slug='g-cloud-4', status='expired', lots=as_a_service_lots()
+        ).single_result_response(),
+        FrameworkStub(
+            id=7, slug='digital-outcomes-and-specialists-2', status='live',
+            lots=dos_lots(), framework_agreement_version='v1.0', has_further_competition=True
+        ).single_result_response(),
+        FrameworkStub(
+            id=5, slug='digital-outcomes-and-specialists', status='live',
+            lots=dos_lots(), framework_agreement_version='v1.0', has_further_competition=True
+        ).single_result_response(),
+        FrameworkStub(
+            id=8, slug='g-cloud-9', status='live', lots=cloud_lots()
+        ).single_result_response(),
     ]
 
     return {'frameworks': [framework['frameworks'] for framework in frameworks]}

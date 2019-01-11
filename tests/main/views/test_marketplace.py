@@ -10,7 +10,8 @@ import pytest
 
 from ...helpers import BaseApplicationTest, BaseAPIClientMixin
 
-from dmutils import api_stubs
+from dmtestutils.api_model_stubs import FrameworkStub
+from dmtestutils.api_model_stubs.lot import dos_lots, cloud_lots
 
 
 class APIClientMixin(BaseAPIClientMixin):
@@ -1121,24 +1122,21 @@ class TestCatalogueOfBriefsPage(APIClientMixin, BaseApplicationTest):
             self._get_dos_brief_search_api_aggregations_response_user_research_fixture_data(),
         ]
 
-        self.dos_lots = [
-            api_stubs.lot(slug='digital-outcomes', name='Digital outcomes', allows_brief=True),
-            api_stubs.lot(slug='digital-specialists', name='Digital specialists', allows_brief=True),
-            api_stubs.lot(slug='user-research-participants', name='User research participants', allows_brief=True),
-            api_stubs.lot(slug='user-research-studios', name='User research studios', allows_brief=False)
-        ]
-
-        gcloud_lots = [api_stubs.lot(slug='cloud-hosting', allows_brief=True),
-                       api_stubs.lot(slug='cloud-software', allows_brief=False),
-                       api_stubs.lot(slug='cloud-support', allows_brief=True)]
-
         self.data_api_client.find_frameworks.return_value = {'frameworks': [
-            api_stubs.framework(framework_id=3, slug='digital-outcomes-and-specialists-2', status='live',
-                                lots=self.dos_lots, has_further_competition=True)['frameworks'],
-            api_stubs.framework(framework_id=1, slug='digital-outcomes-and-specialists', status='expired',
-                                lots=self.dos_lots, has_further_competition=True)['frameworks'],
-            api_stubs.framework(framework_id=2, slug='foobar', status='expired', lots=gcloud_lots)['frameworks'],
-            api_stubs.framework(framework_id=4, slug='g-cloud-9', status='live', lots=gcloud_lots)['frameworks']
+            FrameworkStub(
+                id=3, slug='digital-outcomes-and-specialists-2', status='live', lots=dos_lots(),
+                has_further_competition=True
+            ).response(),
+            FrameworkStub(
+                id=1, slug='digital-outcomes-and-specialists', status='expired', lots=dos_lots(),
+                has_further_competition=True
+            ).response(),
+            FrameworkStub(
+                id=2, slug='foobar', status='expired', lots=cloud_lots()
+            ).response(),
+            FrameworkStub(
+                id=4, slug='g-cloud-9', status='live', lots=cloud_lots()
+            ).response()
         ]}
 
     def normalize_qs(self, qs):
@@ -1494,10 +1492,14 @@ class TestCatalogueOfBriefsPage(APIClientMixin, BaseApplicationTest):
         self, content_loader, dos_status, dos2_status, expected_url_slug_suffix
     ):
         self.data_api_client.find_frameworks.return_value = {'frameworks': [
-            api_stubs.framework(framework_id=3, slug='digital-outcomes-and-specialists-2', status=dos2_status,
-                                lots=self.dos_lots, has_further_competition=True)['frameworks'],
-            api_stubs.framework(framework_id=1, slug='digital-outcomes-and-specialists', status=dos_status,
-                                lots=self.dos_lots, has_further_competition=True)['frameworks']
+            FrameworkStub(
+                id=3, slug='digital-outcomes-and-specialists-2', status=dos2_status,
+                lots=dos_lots(), has_further_competition=True
+            ).response(),
+            FrameworkStub(
+                id=1, slug='digital-outcomes-and-specialists', status=dos_status,
+                lots=dos_lots(), has_further_competition=True
+            ).response()
         ]}
         res = self.client.get('/digital-outcomes-and-specialists/opportunities')
         assert res.status_code == 200
@@ -1736,9 +1738,10 @@ class TestCatalogueOfBriefsFilterOnClick(APIClientMixin, BaseApplicationTest):
 
         self.data_api_client.find_frameworks.return_value = {
             'frameworks': [
-                api_stubs.framework(framework_id=3, slug='digital-outcomes-and-specialists-2', status='live',
-                                    lots=[api_stubs.lot(slug='digital-outcomes', name='Digital outcomes',
-                                                        allows_brief=True)], has_further_competition=True)['frameworks']
+                FrameworkStub(
+                    id=3, slug='digital-outcomes-and-specialists-2', status='live',
+                    lots=dos_lots(), has_further_competition=True
+                ).response()
             ]
         }
 
