@@ -10,7 +10,7 @@ from werkzeug.exceptions import BadRequest, NotFound
 
 from dmapiclient import HTTPError
 from dmcontent.content_loader import ContentLoader, ContentNotFoundError
-from dmutils.api_stubs import framework
+from dmtestutils.api_model_stubs import FrameworkStub
 
 from app import content_loader
 from app.main.views.g_cloud import (DownloadResultsView, END_SEARCH_LIMIT, TOO_MANY_RESULTS_MESSAGE,
@@ -229,11 +229,15 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         self.data_api_client.get_direct_award_project.return_value = project
 
         self.data_api_client.find_frameworks.return_value = {
-            'frameworks': [framework(slug='g-cloud-9', status=framework_status)['frameworks']]
+            "frameworks": [
+                FrameworkStub(
+                    slug='g-cloud-9', status=framework_status
+                ).response()
+            ]
         }
-        self.data_api_client.get_framework.return_value = framework(
+        self.data_api_client.get_framework.return_value = FrameworkStub(
             slug='g-cloud-10', status=following_framework_status
-        )
+        ).single_result_response()
 
     def test_view_project_page_shows_title(self):
         res = self.client.get('/buyers/direct-award/g-cloud/projects/1')

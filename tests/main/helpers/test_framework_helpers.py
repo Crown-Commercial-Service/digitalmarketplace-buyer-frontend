@@ -2,7 +2,7 @@ import mock
 import pytest
 
 from dmapiclient import HTTPError
-from dmutils.api_stubs import framework
+from dmtestutils.api_model_stubs import FrameworkStub
 
 from app.main.helpers.framework_helpers import get_framework_or_500, get_latest_live_framework, get_lots_by_slug
 from ...helpers import BaseApplicationTest, CustomAbortException
@@ -31,9 +31,9 @@ class TestBuildSearchQueryHelpers(BaseApplicationTest):
 class TestGetFrameworkOr500():
     def test_returns_framework(self):
         data_api_client_mock = mock.Mock()
-        data_api_client_mock.get_framework.return_value = framework()
+        data_api_client_mock.get_framework.return_value = FrameworkStub().single_result_response()
 
-        assert get_framework_or_500(data_api_client_mock, 'g-cloud-7')['slug'] == 'g-cloud-7'
+        assert get_framework_or_500(data_api_client_mock, 'g-cloud-10')['slug'] == 'g-cloud-10'
 
     @mock.patch('app.main.helpers.framework_helpers.abort')
     def test_aborts_with_500_if_framework_not_found(self, abort):
