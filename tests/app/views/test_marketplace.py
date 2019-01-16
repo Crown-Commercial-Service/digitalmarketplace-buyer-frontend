@@ -32,7 +32,7 @@ class TestHomepageBrowseList(BaseApplicationTest):
                 ))
             assert res.status_code == 200
             document = html.fromstring(res.get_data(as_text=True))
-            assert document.xpath('//h1')[0].text_content().strip() == "Finding an individual specialist"
+            assert document.xpath('//h1')[0].text_content().strip() == "Hire a digital specialist"
 
     @mock.patch('app.main.views.marketplace.data_api_client')
     def test_homepage_headers(self, data_api_client):
