@@ -137,7 +137,7 @@
               ]
             },
             {
-              'title': 'Create work order',
+              'title': 'Create work order' if not brief.work_order_id else 'Edit work order',
               'description': {
                 'draft': '',
                 'live': '',
@@ -145,8 +145,8 @@
               },
               'links': [
                 {
-                  'href': url_for(".select_seller_for_work_order", framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id),
-                  'text': 'Create work order',
+                  'href': url_for(".select_seller_for_work_order", framework_slug=brief.frameworkSlug, lot_slug=brief.lotSlug, brief_id=brief.id) if not brief.work_order_id else url_for(".get_work_order", work_order_id=brief.work_order_id),
+                  'text': 'Create work order' if not brief.work_order_id else 'Edit work order',
                   'allowed_statuses': ['closed']
                 }
               ]
