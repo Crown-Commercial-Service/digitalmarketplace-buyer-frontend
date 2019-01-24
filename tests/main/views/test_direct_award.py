@@ -57,6 +57,11 @@ class TestDirectAward(TestDirectAwardBase):
             cls.SAVE_SEARCH_URL, quote_plus(cls.SIMPLE_SEARCH_PARAMS))
         cls.SEARCH_API_URL = 'g-cloud-9/services/search'
 
+    def test_invalid_framework_family(self):
+        self.login_as_buyer()
+        res = self.client.get("/buyers/direct-award/shakespeare")
+        assert res.status_code == 404
+
     def test_renders_saved_search_overview(self):
         self.login_as_buyer()
         res = self.client.get(self.SAVE_SEARCH_OVERVIEW_URL)
@@ -175,6 +180,12 @@ class TestDirectAward(TestDirectAwardBase):
     def test_save_search_submit_name_too_long(self):
         res = self._save_search('x' * 101)
         self._asserts_for_create_project_failure(res)
+
+    @pytest.mark.parametrize("method", ("GET", "POST"))
+    def test_save_search_invalid_framework_family(self, method):
+        self.login_as_buyer()
+        res = self.client.open("/buyers/direct-award/shakespeare/save-search", method=method)
+        assert res.status_code == 404
 
 
 class TestDirectAwardProjectOverview(TestDirectAwardBase):
@@ -643,6 +654,12 @@ class TestDirectAwardEndSearch(TestDirectAwardBase):
         doc = html.fromstring(res.get_data(as_text=True))
         assert len(doc.xpath('//h1[contains(normalize-space(), "Before you export your results")]')) == 1
 
+    @pytest.mark.parametrize("method", ("GET", "POST"))
+    def test_invalid_framework_family(self, method):
+        self.login_as_buyer()
+        res = self.client.open('/buyers/direct-award/shakespeare/projects/1/end-search', method=method)
+        assert res.status_code == 404
+
     def test_end_search_page_renders_error_when_results_more_than_limit(self):
         self.login_as_buyer()
 
@@ -784,6 +801,13 @@ class TestDirectAwardAwardContract(TestDirectAwardBase):
             'success'
         )
 
+    @pytest.mark.parametrize("method", ("GET", "POST"))
+    def test_invalid_framework_family(self, method):
+        self.login_as_buyer()
+
+        res = self.client.open('/buyers/direct-award/shakespeare/projects/1/did-you-award-contract', method=method)
+        assert res.status_code == 404
+
     def test_award_contract_raises_404_if_project_is_not_accessible(self):
         self.data_api_client.get_direct_award_project.side_effect = NotFound()
         self.login_as_buyer()
@@ -830,6 +854,16 @@ class TestDirectAwardAwardContract(TestDirectAwardBase):
             '//span[contains(normalize-space(text()), "Supplier name")][contains(parent::label, "Service name")]')) == 1
         assert len(
             doc.xpath('//input[@type="submit"][@value="Save and continue"]')) == 1
+
+    @pytest.mark.parametrize("method", ("GET", "POST"))
+    def test_which_service_did_you_award_page_invalid_framework_family(self, method):
+        self.login_as_buyer()
+
+        res = self.client.open(
+            "/buyers/direct-award/shakespeare/projects/1/which-service-won-contract",
+            method=method,
+        )
+        assert res.status_code == 404
 
     def test_which_service_did_you_award_page_show_zero_state_message(self):
         self.login_as_buyer()
@@ -947,6 +981,16 @@ class TestDirectAwardTellUsAboutContract(TestDirectAwardBase):
         self.data_api_client.get_direct_award_project.return_value['project']['users'][0]['id'] = 321
 
         assert client.get('/buyers/direct-award/g-cloud/projects/31415/tell-us-about-contract').status_code == 404
+
+    @pytest.mark.parametrize("method", ("GET", "POST"))
+    def test_invalid_framework_family(self, method):
+        self.login_as_buyer()
+
+        res = self.client.open(
+            "/buyers/direct-award/shakespeare/projects/1/tell-us-about-contract",
+            method=method,
+        )
+        assert res.status_code == 404
 
     def test_tell_us_about_contract_successful_post_redirects_to_project_overview(self, client, data):
         res = client.post(self.url, data=data)
@@ -1066,6 +1110,16 @@ class TestDirectAwardNonAwardContract(TestDirectAwardBase):
         res = self.client.get(
             '/buyers/direct-award/g-cloud/projects/1/why-didnt-you-award-contract')
         assert res.status_code == 410
+
+    @pytest.mark.parametrize("method", ("GET", "POST"))
+    def test_invalid_framework_family(self, method):
+        self.login_as_buyer()
+
+        res = self.client.open(
+            "/buyers/direct-award/shakespeare/projects/1/why-didnt-you-award-contract",
+            method=method,
+        )
+        assert res.status_code == 404
 
 
 class TestDirectAwardResultsPage(TestDirectAwardBase):
@@ -1301,3 +1355,7 @@ class TestPreProjectTaskList(TestDirectAwardBase):
             u="/buyers/direct-award/g-cloud",
             t="See a list of your saved searches",
         )
+
+    def test_invalid_framework_family(self):
+        res = self.client.get('/buyers/direct-award/shakespeare/start')
+        assert res.status_code == 404

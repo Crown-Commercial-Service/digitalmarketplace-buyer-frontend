@@ -70,6 +70,8 @@ def index_g_cloud():
 
 @direct_award_public.route("/<string:framework_family>/start", methods=("GET",))
 def pre_project_task_list(framework_family):
+    if framework_family != "g-cloud":
+        abort(404)
     frameworks_by_slug = framework_helpers.get_frameworks_by_slug(data_api_client)
     framework = framework_helpers.get_latest_live_framework(frameworks_by_slug.values(), "g-cloud")
 
@@ -90,7 +92,7 @@ def pre_project_task_list(framework_family):
 def choose_lot(framework_family):
     # if there are multiple live g-cloud frameworks, assume they all have the same lots
     all_frameworks = data_api_client.find_frameworks().get('frameworks')
-    framework = framework_helpers.get_latest_live_framework(all_frameworks, framework_family)
+    framework = framework_helpers.get_latest_live_framework_or_404(all_frameworks, framework_family)
 
     content_loader.load_messages(framework['slug'], ['advice', 'descriptions'])
     gcloud_lot_messages = content_loader.get_message(framework['slug'], 'advice', 'lots')
@@ -384,10 +386,7 @@ def search_services():
 @direct_award.route('/<string:framework_family>', methods=['GET'])
 def saved_search_overview(framework_family):
     all_frameworks = data_api_client.find_frameworks().get('frameworks')
-    framework = framework_helpers.get_latest_live_framework(all_frameworks, framework_family)
-
-    if not framework:
-        abort(404)
+    framework = framework_helpers.get_latest_live_framework_or_404(all_frameworks, framework_family)
 
     content_loader.load_messages(framework['slug'], ['descriptions', 'urls'])
     framework_short_description = content_loader.get_message(framework['slug'], 'descriptions', 'framework_short')
@@ -413,7 +412,7 @@ def view_projects(framework_family):
 def save_search(framework_family):
     # Get core data
     all_frameworks = data_api_client.find_frameworks().get('frameworks')
-    framework = framework_helpers.get_latest_live_framework(all_frameworks, framework_family)
+    framework = framework_helpers.get_latest_live_framework_or_404(all_frameworks, framework_family)
     lots_by_slug = framework_helpers.get_lots_by_slug(framework)
 
     search_query = url_decode(request.values.get('search_query'))
@@ -577,7 +576,7 @@ def view_project(framework_family, project_id):
 @direct_award.route('/<string:framework_family>/projects/<int:project_id>/end-search', methods=['GET', 'POST'])
 def end_search(framework_family, project_id):
     all_frameworks = data_api_client.find_frameworks().get('frameworks')
-    framework = framework_helpers.get_latest_live_framework(all_frameworks, framework_family)
+    framework = framework_helpers.get_latest_live_framework_or_404(all_frameworks, framework_family)
     frameworks_by_slug = framework_helpers.get_frameworks_by_slug(data_api_client)
 
     # Get the requested Direct Award Project.
@@ -659,7 +658,7 @@ def update_project(framework_family, project_id):
 )
 def did_you_award_contract(framework_family, project_id):
     all_frameworks = data_api_client.find_frameworks().get('frameworks')
-    framework = framework_helpers.get_latest_live_framework(all_frameworks, framework_family)
+    framework = framework_helpers.get_latest_live_framework_or_404(all_frameworks, framework_family)
 
     # Get the requested Direct Award Project.
     project = data_api_client.get_direct_award_project(project_id=project_id)['project']
@@ -726,7 +725,7 @@ def which_service_won_contract(framework_family, project_id):
         abort(410)
 
     all_frameworks = data_api_client.find_frameworks().get('frameworks')
-    framework = framework_helpers.get_latest_live_framework(
+    framework = framework_helpers.get_latest_live_framework_or_404(
         all_frameworks, framework_family)
 
     search = data_api_client.find_direct_award_project_searches(user_id=current_user.id,
@@ -775,7 +774,7 @@ def which_service_won_contract(framework_family, project_id):
 )
 def tell_us_about_contract(framework_family, project_id, outcome_id):
     all_frameworks = data_api_client.find_frameworks().get('frameworks')
-    framework = framework_helpers.get_latest_live_framework(all_frameworks, framework_family)
+    framework = framework_helpers.get_latest_live_framework_or_404(all_frameworks, framework_family)
 
     # Get the requested Direct Award Project.
     project = data_api_client.get_direct_award_project(project_id=project_id)['project']
@@ -831,7 +830,7 @@ def tell_us_about_contract(framework_family, project_id, outcome_id):
 )
 def why_did_you_not_award_the_contract(framework_family, project_id):
     all_frameworks = data_api_client.find_frameworks().get('frameworks')
-    framework = framework_helpers.get_latest_live_framework(
+    framework = framework_helpers.get_latest_live_framework_or_404(
         all_frameworks, framework_family)
 
     project = data_api_client.get_direct_award_project(project_id=project_id)['project']
