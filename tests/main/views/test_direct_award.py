@@ -453,12 +453,12 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
                 'The G-Cloud\xa09 services you found have expired'),
         )
     )
-    @mock.patch('app.main.views.g_cloud.content_loader')
+    @mock.patch('app.main.helpers.framework_helpers.content_loader')
     def test_overview_displays_correct_temporary_message(
         self, content_loader_mock, framework_status, following_framework_status, locked_at, position, heading
     ):
         self._set_project_locked_and_framework_states(locked_at, framework_status, following_framework_status)
-        content_loader_mock.get_metadata.return_value = 'g-cloud-10'
+        content_loader_mock.get_metadata.return_value = {'slug': 'g-cloud-11'}
 
         res = self.client.get('/buyers/direct-award/g-cloud/projects/1')
         assert res.status_code == 200
@@ -481,7 +481,7 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         if position:
             assert doc.xpath(f"//h3[@class='temporary-message-heading'][contains(normalize-space(), '{heading}')]")
 
-    @mock.patch('app.main.views.g_cloud.content_loader')
+    @mock.patch('app.main.helpers.framework_helpers.content_loader')
     def test_temporary_messages_not_shown_if_no_defined_following_framework(self, content_loader_mock):
         content_loader_mock.get_metadata.side_effect = ContentNotFoundError()
 
@@ -494,11 +494,17 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         assert not doc.xpath("//div[@class='temporary-message']")
         assert not doc.xpath("//div[@class='temporary-message-banner']")
 
-    def test_returns_500_if_following_framework_not_found(self):
+    @mock.patch('app.main.helpers.framework_helpers.content_loader')
+    def test_temporary_messages_not_shown_if_following_framework_not_found(self, content_loader_mock):
         self.data_api_client.get_framework.side_effect = HTTPError(response=mock.Mock(status_code=404))
+        content_loader_mock.get_metadata.return_value = {'slug': 'g-cloud-11'}
 
         res = self.client.get('/buyers/direct-award/g-cloud/projects/1')
-        assert res.status_code == 500
+        assert res.status_code == 200
+
+        doc = html.fromstring(res.get_data(as_text=True))
+        assert not doc.xpath("//div[@class='temporary-message']")
+        assert not doc.xpath("//div[@class='temporary-message-banner']")
 
     @pytest.mark.parametrize(
         ('framework_status', 'following_framework_status'),
@@ -507,10 +513,14 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
             ('expired', 'live'),
         )
     )
-    def test_temp_message_search_links_are_correctly_displayed(self, framework_status, following_framework_status):
+    @mock.patch('app.main.helpers.framework_helpers.content_loader')
+    def test_temp_message_search_links_are_correctly_displayed(
+        self, content_loader_mock, framework_status, following_framework_status
+    ):
         self._set_project_locked_and_framework_states(
             '2018-06-25T21:57:00.881261Z', framework_status, following_framework_status
         )
+        content_loader_mock.get_metadata.return_value = {'slug': 'g-cloud-11'}
 
         res = self.client.get('/buyers/direct-award/g-cloud/projects/1')
         assert res.status_code == 200
@@ -533,10 +543,12 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
             (True, 'expired', 'live', '//p[@class="temporary-message-message"]', 0, 'Thursday 6 January 2000'),
         )
     )
+    @mock.patch('app.main.helpers.framework_helpers.content_loader')
     def test_temp_message_dates_are_correctly_shown(
-        self, locked_at, fwork_status, following_fwork_status, xpath, index, date
+        self, content_loader_mock, locked_at, fwork_status, following_fwork_status, xpath, index, date
     ):
         self._set_project_locked_and_framework_states(locked_at, fwork_status, following_fwork_status)
+        content_loader_mock.get_metadata.return_value = {'slug': 'g-cloud-11'}
 
         res = self.client.get('/buyers/direct-award/g-cloud/projects/1')
         assert res.status_code == 200
@@ -625,8 +637,10 @@ class TestDirectAwardURLGeneration(BaseApplicationTest):
                                   '/g-cloud/search?lot=cloud-hosting&serviceCategories=firewall&governmentSecurityCl'
                                   'earances=dv&governmentSecurityClearances=sc')
                              ))
-    def test_search_api_urls_convert_to_correct_frontend_urls(self, search_api_url, frontend_url):
+    @mock.patch('app.main.helpers.framework_helpers.content_loader')
+    def test_search_api_urls_convert_to_correct_frontend_urls(self, content_loader_mock, search_api_url, frontend_url):
         self.login_as_buyer()
+        content_loader_mock.get_metadata.return_value = {'slug': 'g-cloud-11'}
 
         self.search_api_client_search.return_value = self._get_g9_search_results_fixture_data()
         self.search_api_client_get.return_value = self._get_search_results_fixture_data()

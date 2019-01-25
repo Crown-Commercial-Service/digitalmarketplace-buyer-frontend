@@ -8,7 +8,6 @@ from flask_login import current_user
 from werkzeug.urls import Href, url_encode, url_decode
 
 from dmapiclient import HTTPError
-from dmcontent.errors import ContentNotFoundError
 from dmcontent.formats import format_service_price
 from dmcontent.questions import Pricing
 from dmutils.flask import timed_render_template as render_template
@@ -543,15 +542,9 @@ def view_project(framework_family, project_id):
     custom_dimensions = [dm_google_analytics.custom_dimension(dm_google_analytics.CurrentProjectStageEnum,
                                                               current_project_stage)]
 
-    try:
-        following_framework = framework_helpers.get_framework_or_500(
-            data_api_client,
-            content_loader.get_metadata(framework['slug'], 'following_framework', 'slug'),
-            current_app.logger,
-        )
-    except ContentNotFoundError:
-        following_framework = None
-
+    following_framework = framework_helpers.get_following_framework(
+        data_api_client, framework, current_app.logger
+    )
     temporary_message_status = get_saved_search_temporary_message_status(
         project, framework, following_framework
     ) if following_framework else None

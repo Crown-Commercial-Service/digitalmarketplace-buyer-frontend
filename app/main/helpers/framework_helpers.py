@@ -1,6 +1,7 @@
 from flask import abort
 
 from dmapiclient import HTTPError
+from dmcontent.errors import ContentNotFoundError
 
 from ... import content_loader
 
@@ -63,3 +64,35 @@ def get_framework_or_500(client, framework_slug, logger=None):
             abort(500, f'Framework not found: {framework_slug}')
         else:
             raise
+
+
+def get_following_framework(client, current_framework, logger):
+    """
+    Check for 1) a database entry for the following framework 2) the content metadata for the following framework
+    Return None if either or both are missing.
+    """
+    try:
+        following_framework_content = content_loader.get_metadata(
+            current_framework['slug'], 'following_framework', 'framework'
+        )
+        if following_framework_content:
+            try:
+                return client.get_framework(following_framework_content['slug'])['frameworks']
+            except HTTPError as e:
+                if e.status_code == 404:
+                    if logger:
+                        logger.info(
+                            "Framework not found: {error}, framework_slug: {framework_slug}",
+                            extra={'error': str(e), 'framework_slug': following_framework_content['slug']}
+                        )
+                    return None
+                else:
+                    raise
+
+    except ContentNotFoundError as e:
+        if logger:
+            logger.info(
+                "Following framework content not found for {framework_slug}: {error}",
+                extra={'error': str(e), 'framework_slug': current_framework['slug']}
+            )
+        return None
