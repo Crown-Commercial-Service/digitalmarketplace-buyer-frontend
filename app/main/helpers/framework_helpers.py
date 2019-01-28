@@ -68,27 +68,14 @@ def get_framework_or_500(client, framework_slug, logger=None):
 
 def get_following_framework(client, current_framework, logger):
     """
-    Check for 1) a database entry for the following framework 2) the content metadata for the following framework
+    1) Fetch the 'following_framework' metadata for the current framework
+    2) Look up the 'following_framework' in the database
     Return None if either or both are missing.
     """
     try:
         following_framework_content = content_loader.get_metadata(
             current_framework['slug'], 'following_framework', 'framework'
         )
-        if following_framework_content:
-            try:
-                return client.get_framework(following_framework_content['slug'])['frameworks']
-            except HTTPError as e:
-                if e.status_code == 404:
-                    if logger:
-                        logger.info(
-                            "Framework not found: {error}, framework_slug: {framework_slug}",
-                            extra={'error': str(e), 'framework_slug': following_framework_content['slug']}
-                        )
-                    return None
-                else:
-                    raise
-
     except ContentNotFoundError as e:
         if logger:
             logger.info(
@@ -96,3 +83,18 @@ def get_following_framework(client, current_framework, logger):
                 extra={'error': str(e), 'framework_slug': current_framework['slug']}
             )
         return None
+
+    if following_framework_content:
+        try:
+            return client.get_framework(following_framework_content['slug'])['frameworks']
+        except HTTPError as e:
+            if e.status_code == 404:
+                if logger:
+                    logger.info(
+                        "Framework not found: {error}, framework_slug: {framework_slug}",
+                        extra={'error': str(e), 'framework_slug': following_framework_content['slug']}
+                    )
+                return None
+            raise
+
+    return None

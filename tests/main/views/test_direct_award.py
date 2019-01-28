@@ -506,6 +506,14 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         assert not doc.xpath("//div[@class='temporary-message']")
         assert not doc.xpath("//div[@class='temporary-message-banner']")
 
+    @mock.patch('app.main.helpers.framework_helpers.content_loader')
+    def test_following_framework_still_raises_on_api_error(self, content_loader_mock):
+        self.data_api_client.get_framework.side_effect = HTTPError(response=mock.Mock(status_code=500))
+        content_loader_mock.get_metadata.return_value = {'slug': 'g-cloud-11'}
+
+        res = self.client.get('/buyers/direct-award/g-cloud/projects/1')
+        assert res.status_code == 500
+
     @pytest.mark.parametrize(
         ('framework_status', 'following_framework_status'),
         (
