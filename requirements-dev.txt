@@ -5,7 +5,7 @@ pytest==4.2.1
 flake8==3.7.5
 flake8-per-file-ignores==0.8.1
 mock==2.0.0
-cssselect==0.9.1
+cssselect==1.0.3
 watchdog==0.8.3
 
 coverage==3.7.1
