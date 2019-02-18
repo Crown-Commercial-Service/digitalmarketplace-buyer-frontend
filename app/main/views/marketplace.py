@@ -106,7 +106,7 @@ def _is_supplier_selected_for_brief(brief):
 def get_brief_by_id(framework_slug, brief_id):
     briefs = data_api_client.get_brief(brief_id)
     brief = briefs.get('briefs')
-    if brief['lotSlug'] == 'rfx':
+    if brief['lotSlug'] in ['rfx', 'atm']:
         return redirect('/2/%s/opportunities/%s' % (framework_slug, brief_id), 301)
     if brief['status'] not in ['live', 'closed']:
         if not current_user.is_authenticated or brief['users'][0]['id'] != current_user.id:
