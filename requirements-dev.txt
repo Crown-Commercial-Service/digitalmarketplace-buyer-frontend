@@ -3,7 +3,7 @@
 #Required for testing
 pytest==4.2.1
 flake8==3.7.5
-flake8-per-file-ignores==0.4.0
+flake8-per-file-ignores==0.8.1
 mock==2.0.0
 cssselect==0.9.1
 watchdog==0.8.3
