@@ -11,6 +11,6 @@ watchdog==0.9.0
 coverage==4.5.2
 pytest-cov==2.6.1
 python-coveralls==2.9.1
-hypothesis==3.6.1
+hypothesis==4.6.0
 
 git+https://github.com/alphagov/digitalmarketplace-test-utils.git@2.1.2#egg=digitalmarketplace-test-utils==2.1.2
