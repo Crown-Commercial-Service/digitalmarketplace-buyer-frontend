@@ -4,6 +4,7 @@
 # F401: 'identifier' imported but unused
 # E402: module level import not at top of file
 # W503: line break before binary operator
+# W504: line break after binary operator
 exclude = venv*,__pycache__,node_modules,app/content
 ignore = D203,W503,W504
 max-complexity = 12

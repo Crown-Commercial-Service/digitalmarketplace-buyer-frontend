@@ -96,8 +96,8 @@ class TestServicePage(DataAPIClientMixin, BaseApplicationTest):
                 )
 
     def _replace_whitespace(self, string, replacement_substring):
-            # Replace all runs of whitespace with replacement_substring
-            return re.sub(r"\s+", replacement_substring, string)
+        # Replace all runs of whitespace with replacement_substring
+        return re.sub(r"\s+", replacement_substring, string)
 
     def _assert_breadcrumbs(self, document, lot):
         # check links exist back to
@@ -158,7 +158,7 @@ class TestServicePage(DataAPIClientMixin, BaseApplicationTest):
             "createdAt": timestamp
         }
 
-        if update_type is 'update_service_status':
+        if update_type == 'update_service_status':
             audit_event["data"] = {
                 "supplierId": service["supplierId"],
                 "newArchivedServiceId": 2,
@@ -168,7 +168,7 @@ class TestServicePage(DataAPIClientMixin, BaseApplicationTest):
                 "old_status": old_status,
                 "oldArchivedServiceId": 1
             }
-        elif update_type is "framework_update":
+        elif update_type == "framework_update":
             audit_event["data"] = {
                 "update": {
                     "status": new_status,

@@ -10,7 +10,7 @@ from ...helpers import BaseApplicationTest, BaseAPIClientMixin
 
 def find_pagination_links(res_data):
     return re.findall(
-        '<li class="[next|previous]+">[^<]+<a\ href="(/g-cloud/search\?[^"]+)',
+        r'<li class="[next|previous]+">[^<]+<a\ href="(/g-cloud/search\?[^"]+)',
         res_data,
         re.MULTILINE)
 
@@ -426,7 +426,7 @@ class TestSearchResults(APIClientMixin, BaseApplicationTest):
 
         document = html.fromstring(res.get_data(as_text=True))
 
-        category_matcher = re.compile('(.+) \((\d+)\)')
+        category_matcher = re.compile(r'(.+) \((\d+)\)')
         expected_lot_counts = self._get_fixture_data('g9_aggregations_fixture.json')['aggregations']['service'
                                                                                                      'Categories']
 
@@ -476,7 +476,7 @@ class TestSearchResults(APIClientMixin, BaseApplicationTest):
 
         document = html.fromstring(res.get_data(as_text=True))
 
-        category_matcher = re.compile('(.+) \((\d+)\)')
+        category_matcher = re.compile(r'(.+) \((\d+)\)')
         expected_lot_counts = self._get_fixture_data('g9_aggregations_fixture.json')['aggregations']['service'
                                                                                                      'Categories']
 

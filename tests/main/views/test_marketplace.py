@@ -51,7 +51,7 @@ class TestHomepageAccountCreationVirtualPageViews(APIClientMixin, BaseApplicatio
 
         assert 'data-analytics="trackPageView" data-url="buyers?account-created=true"' in data
         # however this should not be shown as a regular flash message
-        flash_banner_match = re.search('<p class="banner-message">\s*(.*)', data, re.MULTILINE)
+        flash_banner_match = re.search(r'<p class="banner-message">\s*(.*)', data, re.MULTILINE)
         assert flash_banner_match is None, "Unexpected flash banner message '{}'.".format(
             flash_banner_match.groups()[0])
 
