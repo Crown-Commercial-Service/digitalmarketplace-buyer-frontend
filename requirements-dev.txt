@@ -7,7 +7,7 @@ mock==2.0.0
 cssselect==0.9.1
 watchdog==0.8.3
 
-coverage==3.7.1
+coverage==4.5.2
 coveralls==1.6.0
 pytest-cov==2.6.1
 hypothesis==3.6.1
