@@ -71,7 +71,7 @@ class Meta(object):
                 'urls',
                 'framework_url'
             ) or None
-        except ContentNotFoundError as e:
+        except ContentNotFoundError:
             # If no urls.yml exists then we don't have a URL for the framework
             return None
 
