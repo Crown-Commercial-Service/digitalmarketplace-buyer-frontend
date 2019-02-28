@@ -85,7 +85,7 @@
   <p>
   {%
     with
-    url = url_for('.request_password_reset'),
+    url = "/2/reset-password",
     text = "Forgot your password?"
   %}
     {% include "toolkit/secondary-action-link.html" %}
