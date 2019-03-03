@@ -29,6 +29,7 @@ import pendulum
 
 @main.route('/')
 def index():
+    metrics = {}
     try:
         metrics = data_api_client.get_metrics()
     except Exception as e:
