@@ -148,7 +148,8 @@ def buyer_overview():
 
 @buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/create', methods=['GET'])
 def start_new_brief(framework_slug, lot_slug):
-
+    if lot_slug == 'digital-outcome':
+        abort(404)
     framework, lot = get_framework_and_lot(framework_slug, lot_slug, data_api_client,
                                            status='live', must_allow_brief=True)
 
@@ -170,7 +171,8 @@ def start_new_brief(framework_slug, lot_slug):
 
 @buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/create', methods=['POST'])
 def create_new_brief(framework_slug, lot_slug):
-
+    if lot_slug == 'digital-outcome':
+        abort(404)
     framework, lot = get_framework_and_lot(framework_slug, lot_slug, data_api_client,
                                            status='live', must_allow_brief=True)
 
@@ -661,6 +663,8 @@ def download_brief_responses_xlsx(framework_slug, lot_slug, brief_id):
 
 @buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/publish', methods=['GET', 'POST'])
 def publish_brief(framework_slug, lot_slug, brief_id):
+    if lot_slug == 'digital-outcome':
+        abort(404)
     TZ = current_app.config['DM_TIMEZONE']
 
     get_framework_and_lot(framework_slug, lot_slug, data_api_client, status='live', must_allow_brief=True)

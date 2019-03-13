@@ -533,6 +533,8 @@ def collaborate_view_project(id):
 
 @main.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>', methods=['GET'])
 def info_page_for_starting_a_brief(framework_slug, lot_slug):
+    if lot_slug == 'digital-outcome':
+        abort(404)
     framework, lot = get_framework_and_lot(framework_slug, lot_slug, data_api_client,
                                            status='live', must_allow_brief=True)
     return render_template(
