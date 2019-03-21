@@ -111,6 +111,16 @@ jobs:
             # xvfb-run -a firefox -marionette
             # py.test -x ./tests/integration/marionette
 
+  slack_approval:
+    <<: *deploy_docker
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Slack about to go live
+          command: |
+            ./scripts/ci-notify-approval.sh
+
   deploy_to_rc:
     <<: *deploy_docker
     steps:
@@ -189,6 +199,22 @@ workflows:
               ignore: /.*/
             branches:
               only: master
+      - slack_approval:
+          <<: *required_for_deploy
+          filters:
+            tags:
+              only: /release-.*/
+            branches:
+              ignore: /.*/
+      - approval:
+          type: approval
+          requires:
+            - slack_approval
+          filters:
+            tags:
+              only: /release-.*/
+            branches:
+              ignore: /.*/
       - deploy_to_rc:
           <<: *required_for_deploy
           filters:
@@ -204,14 +230,16 @@ workflows:
             branches:
               only: master
       - deploy_to_production:
-          <<: *required_for_deploy
+          requires:
+            - approval
           filters:
             tags:
               only: /release-.*/
             branches:
               ignore: /.*/
       - deploy_to_production_clone:
-          <<: *required_for_deploy
+          requires:
+            - approval
           filters:
             tags:
               only: /release-.*/
