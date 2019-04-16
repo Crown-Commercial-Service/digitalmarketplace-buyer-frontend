@@ -17,7 +17,7 @@ class TestApplication(DataAPIClientMixin, BaseApplicationTest):
 
     def test_trailing_slashes(self):
         response = self.client.get('')
-        assert 301 == response.status_code
+        assert 308 == response.status_code
         assert "http://localhost/" == response.location
         response = self.client.get('/trailing/')
         assert 301 == response.status_code
