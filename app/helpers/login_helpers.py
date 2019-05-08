@@ -31,10 +31,7 @@ def redirect_logged_in_user(next_url=None, validation_result=None):
 
         if current_user.role == 'supplier':
             if has_messages:
-                return redirect('/2/messages?{}'.format(url_encode({
-                    "next": next_url if next_url else '/2/opportunities',
-                    "supplierCode": current_user.supplier_code
-                })))
+                return redirect('/2/seller-dashboard/notifications')
 
             return redirect('/2/opportunities')
 

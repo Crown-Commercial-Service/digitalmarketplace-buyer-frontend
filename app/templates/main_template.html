@@ -37,13 +37,16 @@
   <header role="banner" class="{% block header_class %}{% endblock %}">
     <section>
       {% set dashboardText = 'Dashboard' %}
+      {% set dashboardUrl = '' %}
+      {% set notification_count = '' %}
       {% if current_user.role == 'buyer' %}
         {% set dashboardUrl = '/2/buyer-dashboard' %}
       {% elif current_user.role == 'applicant'  %}
         {% set dashboardText = 'Continue application' %}
         {% set dashboardUrl = '/sellers/application' %}
-      {% else %}
-        {% set dashboardUrl = '/sellers' %}
+      {% elif current_user.role == 'supplier' %}
+        {% set dashboardUrl = '/2/seller-dashboard' %}
+        {% set notification_count = current_user.notification_count %}
       {% endif %}
       {% if 'SELLER_REGISTRATION' is active_feature %}
         {% set registerUrl = '/2/signup' %}
@@ -57,6 +60,7 @@
       'registerText': registerText,
       'loginUrl': url_for('main.render_login'),
       'dashboardUrl': dashboardUrl,
+      'notificationCount': notification_count,
       'dashboardText': dashboardText,
       'logoutUrl': url_for('main.logout'),
       'isAuthenticated': current_user.is_authenticated
