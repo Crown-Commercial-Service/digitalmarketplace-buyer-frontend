@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import re
-from mock import patch
 
 from tests.helpers import BaseApplicationTest
 
@@ -9,19 +8,7 @@ def load_prometheus_metrics(response_bytes):
     return dict(re.findall(rb"(\w+{.+?}) (\d+)", response_bytes))
 
 
-class BaseMetricsTest(BaseApplicationTest):
-
-    def setup_method(self, *args, **kwargs):
-        self.app_env_var_mock = patch.dict('gds_metrics.os.environ', {'PROMETHEUS_METRICS_PATH': '/_metrics'})
-        self.app_env_var_mock.start()
-        super(BaseMetricsTest, self).setup_method(args, **kwargs)
-
-    def teardown_method(self, *args, **kwargs):
-        super(BaseMetricsTest, self).teardown_method(args, **kwargs)
-        self.app_env_var_mock.stop()
-
-
-class TestMetricsPage(BaseMetricsTest):
+class TestMetricsPage(BaseApplicationTest):
 
     def test_metrics_page_accessible(self):
         metrics_response = self.client.get('/_metrics')
@@ -36,7 +23,7 @@ class TestMetricsPage(BaseMetricsTest):
         ) in results
 
 
-class TestMetricsPageRegistersPageViews(BaseMetricsTest):
+class TestMetricsPageRegistersPageViews(BaseApplicationTest):
 
     def test_metrics_page_registers_page_views(self):
         expected_metric_name = (

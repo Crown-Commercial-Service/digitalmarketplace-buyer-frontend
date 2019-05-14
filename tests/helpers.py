@@ -119,8 +119,11 @@ class BaseApplicationTest(object):
          - the .find_frameworks() return value will need to be provided separately in those tests, as the import
            path will (hopefully!) be different there.
         """
+        self.app_env_var_mock = mock.patch.dict('gds_metrics.os.environ', {'PROMETHEUS_METRICS_PATH': '/_metrics'})
+        self.app_env_var_mock.start()
         data_api_client.find_frameworks = mock.Mock()
         data_api_client.find_frameworks.return_value = self._get_frameworks_list_fixture_data()
+
         self.app = create_app('test')
         self.app.register_blueprint(login_for_tests)
         self.client = self.app.test_client()
@@ -128,6 +131,7 @@ class BaseApplicationTest(object):
 
     def teardown_method(self, method):
         self.teardown_login()
+        self.app_env_var_mock.stop()
 
     @staticmethod
     def user(id, email_address, supplier_id, supplier_name, name,
