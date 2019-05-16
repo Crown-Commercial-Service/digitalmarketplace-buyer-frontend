@@ -317,70 +317,169 @@ def get_brief_response_preview_by_id(framework_slug, brief_id):
     sheet.write_string('B2', 'Question', bold_question)
     sheet.write_string('C2', 'Answer', bold_question)
     sheet.write_string('D2', '', right_border_question)
-    sheet.write_string('A3', '', header)
+    sheet.write_string('A3', '')
     sheet.write_string('B3', 'Essential skills and experience', bold_header)
     sheet.write_string('D3', '', right_border_question)
 
-    e_start = 4
-    e = 4
+    b_count = 4
+    e_start = 2
     for essential in brief['essentialRequirements']:
-        sheet.write_string('B'+str(e),  essential,  question)
-        sheet.write_string('C'+str(e),  '150 words', italic_lightgrey)
-        sheet.write_string('D'+str(e), '', right_border_question)
-        e += 1
-    sheet.merge_range(e_start-1, 0, e-2, 0, 'Essential skills and experience\n'
-                                            'As a guide to answering the skills and experience criteria, '
-                                            'you could explain:\n'
-                                            '- What the situation was\n'
-                                            '- The work the specialist or team completed\n'
-                                            '- What the results were \n'
-                                            'You can reuse examples if you wish. \n'
-                                            '\n'
-                                            'You must have all essential skills and experience '
-                                            'to apply for this opportunity.\n'
-                                            '150 words max ', italic_darkgrey_question)
-    sheet.write_string('A'+str(e), '', header)
-    sheet.write_string('B'+str(e), 'Nice to have skills and experience', bold_header)
-    sheet.write_string('D'+str(e), '', right_border_question)
-    n_start = e+1
-    n = e+1
-    for nice in brief['niceToHaveRequirements']:
-        sheet.write_string('B'+str(n),  nice,  question)
-        sheet.write_string('C'+str(n),  '150 words', italic_lightgrey)
-        sheet.write_string('D'+str(n), '', right_border_question)
-        n += 1
-    sheet.merge_range(n_start-1, 0, n-2, 0, '', question)
+        sheet.write_string('D'+str(b_count), '', right_border_question)
+        if brief['lotSlug'] == 'digital-professionals':
+            sheet.write_string('B'+str(b_count),  essential,  question)
+        else:
+            sheet.write_string('B'+str(b_count),  essential['criteria'],  question)
+        sheet.write_string('C'+str(b_count), '')
+        sheet.write_string('D'+str(b_count), '', right_border_question)
+        b_count += 1
+    sheet.write_string('A'+str(b_count), '')
+    sheet.write_string('D'+str(b_count), '', right_border_question)
+    sheet.write_string('B'+str(b_count), 'Nice to have skills and experience', bold_header)
+    b_count += 1
 
-    sheet.write_string('A'+str(n), '', question)
-    sheet.write_string('B'+str(n), '', question)
-    sheet.write_string('D'+str(n), '',  right_border_question)
-    sheet.write_string('A'+str(n+1), '', question)
-    sheet.write_string('B'+str(n+1), "When can you start?", bold_question)
-    sheet.write_string('D'+str(n+1), '', right_border_question)
+    for nice in brief['niceToHaveRequirements']:
+        if brief['lotSlug'] == 'digital-professionals':
+            sheet.write_string('B'+str(b_count), nice, question)
+        else:
+            sheet.write_string('B'+str(b_count), nice['criteria'], question)
+        sheet.write_string('C'+str(b_count), '')
+        sheet.write_string('D'+str(b_count), '', right_border_question)
+        b_count += 1
+
+    sheet.merge_range(
+        e_start,
+        0,
+        b_count - 2,
+        0,
+        'Skills and experience\n'
+        'As a guide to answering the skills and experience criteria, '
+        'you could explain:\n'
+        '- What the situation was\n'
+        '- The work the specialist or team completed\n'
+        '- What the results were \n'
+        'You can reuse examples if you wish. \n'
+        '\n'
+        'You must have all essential skills and experience '
+        'to apply for this opportunity.\n'
+        '150 words max ',
+        italic_darkgrey_question
+    )
+
+    sheet.write_string('A'+str(b_count), '')
+    sheet.write_string('D'+str(b_count), '', right_border_question)
+    sheet.write_string('B'+str(b_count), '')
+    b_count += 1
+
     if brief['lotSlug'] == 'digital-professionals':
-        sheet.write_string('A'+str(n+2), '', question)
-        sheet.write_string('B'+str(n+2), "What is your daily rate, including GST?", bold_question)
-        sheet.write_string('D'+str(n+2), '', right_border_question)
-        sheet.write_string('A'+str(n+3), '', question)
-        sheet.write_rich_string('B'+str(n+3), bold_question, "Attach a resume ",
+        sheet.write_string('A'+str(b_count), '')
+        sheet.write_string('D'+str(b_count), '', right_border_question)
+        sheet.write_string('B'+str(b_count), "When can you start?", bold_question)
+        b_count += 1
+
+        sheet.write_string('A'+str(b_count), '')
+        sheet.write_string('D'+str(b_count), '', right_border_question)
+        sheet.write_string('B'+str(b_count), "What is your daily rate, including GST?", bold_question)
+        b_count += 1
+        sheet.write_string('A'+str(b_count), '')
+        sheet.write_string('D'+str(b_count), '', right_border_question)
+        sheet.write_rich_string('B'+str(b_count), bold_question, "Attach a resume\n",
                                 question, "Use an Open Document Format (ODF) or PDF/A (eg. .pdf, .odt). "
                                           "The maximum file size of each document is 5MB. "
                                           "You can upload a maximum of 3 candidate CVs.", question)
-        sheet.write_string('D'+str(n+3), '', right_border_question)
-        n = n + 2
-    sheet.write_string('A'+str(n+2), '', question)
-    sheet.write_string('B'+str(n+2), '', question)
-    sheet.write_string('D'+str(n+2), '', right_border_question)
-    sheet.write_string('A'+str(n+3), "All communication about your application will be sent to this address",
+        b_count += 1
+
+    if brief['lotSlug'] == 'specialist':
+        sheet.write_string('A'+str(b_count), '')
+        sheet.write_string('D'+str(b_count), '', right_border_question)
+        sheet.write_rich_string(
+            'B'+str(b_count),
+            bold_question, "When can you start?\n",
+            question, '{} has requested {}'.format(brief['organisation'], df.dateformat(brief['startDate'])),
+            question
+        )
+
+        b_count += 1
+
+        sheet.write_string('A'+str(b_count), '')
+        sheet.write_string('D'+str(b_count), '', right_border_question)
+        preferred_format_for_rates = brief['preferredFormatForRates']
+        if preferred_format_for_rates == 'dailyRate':
+            sheet.write_string('B'+str(b_count), "What is your daily rate, excluding GST?", bold_question)
+        elif preferred_format_for_rates == 'hourlyRate':
+            sheet.write_string('B'+str(b_count), "What is your hourly rate, excluding GST?", bold_question)
+        b_count += 1
+
+        if brief['securityClearance'] == 'mustHave':
+            security_clearance_label = ''
+            if brief['securityClearanceCurrent'] == 'baseline':
+                security_clearance_label = 'baseline'
+            elif brief['securityClearanceCurrent'] == 'nv1':
+                security_clearance_label = 'negative vetting level 1'
+            elif brief['securityClearanceCurrent'] == 'nv2':
+                security_clearance_label = 'negative vetting level 1'
+            elif brief['securityClearanceCurrent'] == 'pv':
+                security_clearance_label = 'positive vetting'
+            sheet.write_string('A'+str(b_count), '')
+            sheet.write_string('D'+str(b_count), '', right_border_question)
+            sheet.write_string('C'+str(b_count), 'Yes/No')
+            sheet.write_string(
+                'B'+str(b_count),
+                "Do you have {} security clearance?".format(security_clearance_label),
+                bold_question
+            )
+            b_count += 1
+
+        sheet.write_string('A'+str(b_count), '')
+        sheet.write_string('D'+str(b_count), '', right_border_question)
+        sheet.write_string('C'+str(b_count), 'Yes/No')
+        sheet.write_string('B'+str(b_count), "What is your eligibility to work in Australia?", bold_question)
+        b_count += 1
+
+        sheet.write_string('A'+str(b_count), '')
+        sheet.write_string('D'+str(b_count), '', right_border_question)
+        sheet.write_string('C'+str(b_count), 'Yes/No')
+        sheet.write_string(
+            'B'+str(b_count),
+            "Have you previously worked for {}?".format(brief['organisation']),
+            bold_question
+        )
+        b_count += 1
+
+        sheet.write_string('A'+str(b_count), '')
+        sheet.write_string('D'+str(b_count), '', right_border_question)
+        sheet.write_rich_string('B'+str(b_count), bold_question, "Attach a resume\n",
+                                question, "Use an Open Document Format (ODF) or PDF/A (eg. .pdf, .odt). "
+                                          "The maximum file size of each document is 5MB. ", question)
+        b_count += 1
+        sheet.write_string('A'+str(b_count), '')
+        sheet.write_string('D'+str(b_count), '', right_border_question)
+        sheet.write_rich_string('B'+str(b_count), bold_question, "Other documents (optional)\n",
+                                question, "Use an Open Document Format (ODF) or PDF/A (eg. .pdf, .odt). "
+                                          "The maximum file size of each document is 5MB. "
+                                          "If requested by the buyer, you can upload additional documents", question)
+        b_count += 1
+
+    sheet.write_string('A'+str(b_count), '')
+    sheet.write_string('D'+str(b_count), '', right_border_question)
+    sheet.write_string('B'+str(b_count), '', question)
+    b_count += 1
+
+    sheet.write_string('A'+str(b_count), "All communication about your application will be sent to this address",
                        italic_darkgrey_question)
-    sheet.write_string('B'+str(n+3), "Contact email:", bold_question)
-    sheet.write_string('D'+str(n+3), '', right_border_question)
-    sheet.write_string('A'+str(n+4), '', question)
-    sheet.write_string('B'+str(n+4), '', question)
-    sheet.write_string('C'+str(n+4), '', question)
-    sheet.write_string('D'+str(n+4), '', right_border_question)
-    sheet.write_string('C'+str(n+5), 'Ready to apply?', bold_cta)
-    sheet.write_url('C'+str(n+6), brief_url, cta, brief_url)
+    sheet.write_string('D'+str(b_count), '', right_border_question)
+    sheet.write_string('B'+str(b_count), "Contact email:", bold_question)
+    b_count += 1
+
+    sheet.write_string('A'+str(b_count), '')
+    sheet.write_string('B'+str(b_count), '')
+    sheet.write_string('C'+str(b_count), '')
+    sheet.write_string('D'+str(b_count), '')
+    b_count += 1
+
+    sheet.write_string('C'+str(b_count), 'Ready to apply?', bold_cta)
+    b_count += 1
+
+    sheet.write_url('C'+str(b_count), brief_url, cta, brief_url)
     workbook.close()
 
     return Response(
