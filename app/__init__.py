@@ -46,11 +46,13 @@ def create_app(config_name):
                 content_loader.load_manifest(framework_data['slug'], 'briefs', 'display_brief')
                 try_load_manifest(content_loader, application, framework_data, 'briefs', 'briefs_search_filters')
 
+    from .metrics import metrics as metrics_blueprint, gds_metrics
     from .main import main as main_blueprint
     from .main import direct_award as direct_award_blueprint
     from .main import direct_award_public as direct_award_public_blueprint
     from .status import status as status_blueprint
 
+    application.register_blueprint(metrics_blueprint)
     application.register_blueprint(status_blueprint)
     application.register_blueprint(main_blueprint)
     application.register_blueprint(direct_award_blueprint)
@@ -64,6 +66,7 @@ def create_app(config_name):
 
     login_manager.login_view = '/user/login'
     login_manager.login_message_category = "must_login"
+    gds_metrics.init_app(application)
     csrf.init_app(application)
 
     @application.before_request
