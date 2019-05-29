@@ -17,7 +17,18 @@ class WorkOrderSellerForm(DmForm):
         super(WorkOrderSellerForm, self).__init__(*args, **kwargs)
 
         responses = data_api_client.find_brief_responses(brief_id)
-        self.seller.choices = [(br['supplierCode'], br['supplierName']) for br in responses['briefResponses']]
+        choices = []
+        supplier_codes = []
+        for br in responses['briefResponses']:
+            supplier_code = br['supplierCode']
+            if supplier_code not in supplier_codes:
+                choices.append({
+                    'supplier_code': supplier_code,
+                    'supplier_name': br['supplierName']
+                })
+                supplier_codes.append(supplier_code)
+
+        self.seller.choices = [(br['supplier_code'], br['supplier_name']) for br in choices]
 
 
 def FormFactory(slug, formdata=None):

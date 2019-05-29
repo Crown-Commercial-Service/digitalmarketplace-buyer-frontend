@@ -5,7 +5,17 @@
 {% block body_classes %}brief-builder{% endblock %}
 
 {% block main_content %}
-
+  {% if brief and brief.lot == 'digital-professionals' and brief.status == 'draft' %}
+    <div class="au-page-alerts au-page-alerts--warning">
+        <h2>
+            This page has been retired.
+        </h2>
+        <p class="banner-message">
+              Use the <a href="/2/buyer-specialist/create">new specialist approach</a> to publish this opportunity.
+        </p>
+    </div>
+    <br />
+  {% endif%}
   {% if question.type != 'multiquestion' %}
     <div class="single-question-page">
   {% endif %}

@@ -148,7 +148,7 @@ def buyer_overview():
 
 @buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/create', methods=['GET'])
 def start_new_brief(framework_slug, lot_slug):
-    if lot_slug == 'digital-outcome':
+    if lot_slug in ['digital-outcome', 'digital-professionals']:
         abort(404)
     framework, lot = get_framework_and_lot(framework_slug, lot_slug, data_api_client,
                                            status='live', must_allow_brief=True)
@@ -171,7 +171,7 @@ def start_new_brief(framework_slug, lot_slug):
 
 @buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/create', methods=['POST'])
 def create_new_brief(framework_slug, lot_slug):
-    if lot_slug == 'digital-outcome':
+    if lot_slug in ['digital-outcome', 'digital-professionals']:
         abort(404)
     framework, lot = get_framework_and_lot(framework_slug, lot_slug, data_api_client,
                                            status='live', must_allow_brief=True)
@@ -224,7 +224,7 @@ def create_new_brief(framework_slug, lot_slug):
 def view_brief_overview(framework_slug, lot_slug, brief_id):
     if lot_slug == 'digital-professionals' or lot_slug == 'training':
         return redirect('/2/brief/{}/overview'.format(brief_id))
-    if lot_slug in ['rfx', 'atm']:
+    if lot_slug in ['rfx', 'atm', 'specialist']:
         return redirect('/2/brief/{}/overview/{}'.format(brief_id, lot_slug))
 
     framework, lot = get_framework_and_lot(
@@ -663,7 +663,7 @@ def download_brief_responses_xlsx(framework_slug, lot_slug, brief_id):
 
 @buyers.route('/buyers/frameworks/<framework_slug>/requirements/<lot_slug>/<brief_id>/publish', methods=['GET', 'POST'])
 def publish_brief(framework_slug, lot_slug, brief_id):
-    if lot_slug == 'digital-outcome':
+    if lot_slug in ['digital-outcome', 'digital-professionals']:
         abort(404)
     TZ = current_app.config['DM_TIMEZONE']
 
