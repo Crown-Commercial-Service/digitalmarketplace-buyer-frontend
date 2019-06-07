@@ -1,10 +1,23 @@
 import os
 import re
+from collections import OrderedDict
 from urllib.parse import unquote, urlparse
 
 from app import content_loader
 from dmcontent.errors import ContentNotFoundError
 from dmcontent.formats import format_service_price
+
+DECLARATION_DOCUMENT_KEYS = [
+    ('modernSlaveryStatement', 'modernSlaveryStatementURL'),
+    ('modernSlaveryStatementOptional', 'modernSlaveryStatementURL')
+]
+DOCUMENT_NAMES = OrderedDict([
+    ('pricingDocumentURL', 'Pricing'),
+    ('sfiaRateDocumentURL', 'SFIA rate card'),
+    ('serviceDefinitionDocumentURL', 'Service definition'),
+    ('termsAndConditionsDocumentURL', 'Terms and conditions'),
+    ('modernSlaveryStatementURL', 'Modern Slavery statement')
+])
 
 
 def chunk_string(string, chunk_length):
@@ -16,7 +29,7 @@ class Service(object):
         if key[0] in service_data:
             setattr(self, key[1], service_data[key[0]])
 
-    def __init__(self, service_data, manifest, lots_by_slug):
+    def __init__(self, service_data, manifest, lots_by_slug, declaration=None):
         self.summary_manifest = manifest.summary(service_data)
         # required attributes directly mapped to service_data values
         self.title = service_data['serviceName']
@@ -30,14 +43,14 @@ class Service(object):
             ('serviceBenefits', 'benefits')
         ]:
             self._add_as_attribute_if_key_exists(key, service_data)
-        self.meta = self._get_service_meta(service_data)
+        self.meta = self._get_service_meta(service_data, declaration)
 
-    def _get_service_meta(self, service_data):
-        return Meta(service_data)
+    def _get_service_meta(self, service_data, declaration=None):
+        return Meta(service_data, declaration)
 
 
 class Meta(object):
-    def __init__(self, service_data):
+    def __init__(self, service_data, declaration=None):
         self.price = format_service_price(service_data)
         self.contact = {
             'name': 'Contact name',
@@ -46,6 +59,7 @@ class Meta(object):
         }
         self.priceCaveats = self.get_price_caveats(service_data)
         self.serviceId = self.get_service_id(service_data)
+        self.declaration = declaration or {}
         self.documents = self.get_documents(service_data)
         self.externalFrameworkUrl = self.get_external_framework_url(service_data)
 
@@ -75,31 +89,35 @@ class Meta(object):
             # If no urls.yml exists then we don't have a URL for the framework
             return None
 
+    def _add_declaration_documents_to_service_data(self, service_data):
+        # Check if the supplier has provided a declaration document, and add it to the service data.
+        # The Service presenter will add it to the other documents ready for display
+        for document_key, target_key in DECLARATION_DOCUMENT_KEYS:
+            if document_key in self.declaration:
+                supplier_document_url = self.declaration[document_key]
+                # Convert supplier-facing url to public assets domain
+                # TODO: change declaration upload functionality to store it on assets.* in the first place?
+                public_document_url = supplier_document_url.replace(
+                    'https://www.digitalmarketplace.service.gov.uk/suppliers/assets',
+                    'https://assets.digitalmarketplace.service.gov.uk'
+                )
+                service_data[target_key] = public_document_url
+
     def get_documents(self, service_data):
-        url_keys = [
-            'pricingDocumentURL',
-            'sfiaRateDocumentURL',
-            'serviceDefinitionDocumentURL',
-            'termsAndConditionsDocumentURL'
-        ]
-        names = [
-            'Pricing',
-            'SFIA rate card',
-            'Service definition',
-            'Terms and conditions'
-        ]
+        self._add_declaration_documents_to_service_data(service_data)
+
         documents = []
-        for index, url_key in enumerate(url_keys):
+        for url_key, document_name in DOCUMENT_NAMES.items():
             if url_key in service_data:
                 url = service_data[url_key]
                 extension = self._get_document_extension(url)
                 documents.append({
-                    'name': names[index],
+                    'name': DOCUMENT_NAMES[url_key],
                     'url': url,
                     'extension': extension
                 })
 
-        # get additional documents, if they exist
+        # get additional documents, if they exist (not used since G-Cloud 5)
         if 'additionalDocumentURLs' in service_data:
             for index, url in enumerate(service_data['additionalDocumentURLs'], 1):
                 extension = self._get_document_extension(url)
