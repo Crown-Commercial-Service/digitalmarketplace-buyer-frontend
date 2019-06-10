@@ -1,4 +1,3 @@
-from lxml import html
 import mock
 
 from ...helpers import BaseApplicationTest
@@ -30,9 +29,3 @@ class TestFeedbackForm(BaseApplicationTest):
     def test_feedback_submission(self, external_requests_post):
         external_requests_post.return_value.status_code = 200
         self._check_success(self._post())
-
-    def test_feedback_form_has_csrf(self):
-        res = self.client.get("/")
-        document = html.fromstring(res.get_data(as_text=True))
-
-        assert len(document.cssselect('.report-a-problem-container form input[name="csrf_token"]')) == 1
