@@ -766,9 +766,9 @@ detect-libc@^1.0.2:
   version "15.4.5"
   resolved "https://github.com/alphagov/digitalmarketplace-frameworks.git#1f4fe5f6ecfbbeb50b8d4af53a2c7604a5518065"
 
-"digitalmarketplace-frontend-toolkit@https://github.com/alphagov/digitalmarketplace-frontend-toolkit.git#v32.0.3":
-  version "32.0.3"
-  resolved "https://github.com/alphagov/digitalmarketplace-frontend-toolkit.git#149d71876d967fece162cb310468142799608171"
+"digitalmarketplace-frontend-toolkit@https://github.com/alphagov/digitalmarketplace-frontend-toolkit.git#v33.0.0":
+  version "33.0.0"
+  resolved "https://github.com/alphagov/digitalmarketplace-frontend-toolkit.git#87b965996196069d3ae7aeb55cc6cb9e3bcb0127"
   dependencies:
     del "^4.1.0"
     govuk-elements-sass "3.0.3"
