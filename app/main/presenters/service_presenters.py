@@ -12,9 +12,9 @@ DECLARATION_DOCUMENT_KEYS = [
     ('modernSlaveryStatementOptional', 'modernSlaveryStatementURL')
 ]
 DOCUMENT_NAMES = OrderedDict([
-    ('pricingDocumentURL', 'Pricing'),
-    ('sfiaRateDocumentURL', 'SFIA rate card'),
-    ('serviceDefinitionDocumentURL', 'Service definition'),
+    ('pricingDocumentURL', 'Pricing document'),
+    ('sfiaRateDocumentURL', 'Skills Framework for the Information Age rate card'),
+    ('serviceDefinitionDocumentURL', 'Service definition document'),
     ('termsAndConditionsDocumentURL', 'Terms and conditions'),
     ('modernSlaveryStatementURL', 'Modern Slavery statement')
 ])

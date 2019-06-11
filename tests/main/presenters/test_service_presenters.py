@@ -128,21 +128,21 @@ class TestMeta:
     def test_get_documents_returns_the_correct_document_information(self):
         expected_information = [
             {
-                'name': 'Pricing',
+                'name': 'Pricing document',
                 'url': (
                     'https://assets.digitalmarketplace.service.gov.uk/' +
                     'documents/123456/1234567890123456-pricing-document.pdf'
                 )
             },
             {
-                'name': 'SFIA rate card',
+                'name': 'Skills Framework for the Information Age rate card',
                 'url': (
                     'https://assets.digitalmarketplace.service.gov.uk/' +
                     'documents/123456/1234567890123456-sfia-rate-card.pdf'
                 )
             },
             {
-                'name': 'Service definition',
+                'name': 'Service definition document',
                 'url': (
                     'https://assets.digitalmarketplace.service.gov.uk/' +
                     'documents/' +
