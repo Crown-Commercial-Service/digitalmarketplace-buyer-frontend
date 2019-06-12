@@ -82,6 +82,17 @@ class TestService(BaseApplicationTest):
         assert hasattr(self.service, 'benefits')
         assert len(self.service.benefits) == 6
 
+    @pytest.mark.parametrize('declaration, expected', [(None, {}), ({'foo': 'bar'}, {'foo': 'bar'})])
+    def test_declaration_attribute_is_correctly_set_on_meta(self, declaration, expected):
+        service = Service(
+            self.fixture,
+            content_loader.get_manifest('g-cloud-6', 'display_service'),
+            self._lots_by_slug,
+            declaration=declaration
+        )
+        assert hasattr(service.meta, 'declaration')
+        assert service.meta.declaration == expected
+
     def test_service_properties_available_via_summary_manifest(self):
         service = Service(
             self.fixture,
@@ -128,21 +139,21 @@ class TestMeta:
     def test_get_documents_returns_the_correct_document_information(self):
         expected_information = [
             {
-                'name': 'Pricing',
+                'name': 'Pricing document',
                 'url': (
                     'https://assets.digitalmarketplace.service.gov.uk/' +
                     'documents/123456/1234567890123456-pricing-document.pdf'
                 )
             },
             {
-                'name': 'SFIA rate card',
+                'name': 'Skills Framework for the Information Age rate card',
                 'url': (
                     'https://assets.digitalmarketplace.service.gov.uk/' +
                     'documents/123456/1234567890123456-sfia-rate-card.pdf'
                 )
             },
             {
-                'name': 'Service definition',
+                'name': 'Service definition document',
                 'url': (
                     'https://assets.digitalmarketplace.service.gov.uk/' +
                     'documents/' +
@@ -163,6 +174,19 @@ class TestMeta:
             assert documents[idx]['name'] == expected_information[idx]['name']
             assert documents[idx]['url'] == expected_information[idx]['url']
             assert documents[idx]['extension'] == 'pdf'
+
+    @pytest.mark.parametrize("document_key", ['modernSlaveryStatement', 'modernSlaveryStatementOptional'])
+    def test_get_documents_includes_declaration_documents(self, document_key):
+        meta = Meta(
+            self.fixture,
+            declaration={
+                document_key: "https://www.digitalmarketplace.service.gov.uk/suppliers/assets/not/a/real/path.pdf"
+            }
+        )
+        documents = meta.get_documents(self.fixture)
+        assert documents[4]['name'] == 'Modern Slavery statement'
+        assert documents[4]['url'] == 'https://assets.digitalmarketplace.service.gov.uk/not/a/real/path.pdf'
+        assert documents[4]['extension'] == 'pdf'
 
     def test_get_documents_raises_error_if_no_file_extension(self):
         bad_document_url = "https://assets.digitalmarketplace.service.gov.uk/documents/123456/noextension"

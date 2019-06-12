@@ -1,0 +1,17 @@
+{% import "toolkit/summary-table.html" as summary %}
+{{ summary.heading("Service documents", id="service-documents") }}
+
+{% call(document) summary.list_table(
+    service.meta.documents,
+    caption="Service documents",
+    field_headings_visible=False
+  ) %}
+
+  {% call summary.row() %}
+    <a href="{{ document.url }}" class="document-link-with-icon">
+        <span class='document-icon'>{{ document.extension }}<span> document:</span></span>
+        {{ document.name }}
+    </a>
+  {% endcall %}
+
+{% endcall %}
