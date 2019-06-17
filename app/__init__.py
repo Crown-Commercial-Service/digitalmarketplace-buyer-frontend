@@ -52,6 +52,12 @@ def create_app(config_name):
 
     init_frontend_app(application, data_api_client, login_manager)
 
+    @application.after_request
+    def allow_iframe(response):
+        if '/static/media/documents/digital-marketplace-master-agreement' in request.path:
+            response.headers["X-Frame-Options"] = "SAMEORIGIN"
+        return response
+
     @login_manager.user_loader
     def load_user(user_id):
         if request.path.startswith(asset_path):
