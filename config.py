@@ -39,7 +39,7 @@ class Config(object):
     DEBUG = False
 
     RESET_PASSWORD_EMAIL_NAME = 'Digital Marketplace Admin'
-    RESET_PASSWORD_EMAIL_FROM = 'enquiries@digitalmarketplace.service.gov.uk'
+    RESET_PASSWORD_EMAIL_FROM = 'cloud_digital@crowncommercial.gov.uk'
     RESET_PASSWORD_EMAIL_SUBJECT = 'Reset your Digital Marketplace password'
 
     CREATE_USER_SUBJECT = 'Create your Digital Marketplace account'
