@@ -8,6 +8,7 @@
 //= require ../../../node_modules/jquery/dist/jquery.js
 //= require ../../../node_modules/hogan.js/web/builds/3.0.2/hogan-3.0.2.js
 //= require ../../../node_modules/scrolldepth/jquery.scrolldepth.js
+//= require ../../../node_modules/digitalmarketplace-frontend-toolkit/toolkit/javascripts/xhr-semaphore.js
 //= require ../../../node_modules/digitalmarketplace-frontend-toolkit/toolkit/javascripts/option-select.js
 //= require ../../../node_modules/digitalmarketplace-frontend-toolkit/toolkit/javascripts/support.js
 //= require ../../../node_modules/digitalmarketplace-frontend-toolkit/toolkit/javascripts/live-search.js
