@@ -25,6 +25,7 @@
     "gulp-sourcemaps": "1.5.2",
     "gulp-svg2png": "^2.0.2",
     "gulp-uglify": "1.4.0",
+    "node-sass": "^3.13.1",
     "phantomjs-prebuilt": "2.1.7",
     "run-sequence": "^1.2.2",
     "smoothscroll": "^0.2.2"
