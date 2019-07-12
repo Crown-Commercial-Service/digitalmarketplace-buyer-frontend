@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from functools import partial
 import os
 import re
 
@@ -7,11 +8,12 @@ import mock
 from werkzeug.http import parse_cookie
 from markupsafe import escape
 
+from dmcontent import ContentLoader
 from dmtestutils.api_model_stubs import FrameworkStub
 from dmtestutils.api_model_stubs.lot import dos_lots, as_a_service_lots, cloud_lots
 from dmutils.formats import DATETIME_FORMAT
 
-from app import create_app, data_api_client
+from app import create_app, data_api_client, _make_content_loader_factory
 from tests import login_for_tests
 
 
@@ -109,6 +111,8 @@ class BaseAPIClientMixin:
 
 
 class BaseApplicationTest(object):
+    injected_content_loader = ContentLoader('app/content')
+
     def setup_method(self, method):
         """
         A data_api_client instance is required for `create_app`, so we need some careful patching to initialise
@@ -121,8 +125,22 @@ class BaseApplicationTest(object):
         """
         self.app_env_var_mock = mock.patch.dict('gds_metrics.os.environ', {'PROMETHEUS_METRICS_PATH': '/_metrics'})
         self.app_env_var_mock.start()
+
         data_api_client.find_frameworks = mock.Mock()
         data_api_client.find_frameworks.return_value = self._get_frameworks_list_fixture_data()
+
+        # if we don't make this tweak, the content loader will get re-built for every test, which is incredibly slow.
+        # instead we replace the `_make_content_loader_factory` with a variant which injects `injected_content_loader`
+        # as the `initial_instance` argument, which we keep as a class attribute. `_make_content_loader_factory` still
+        # executes inside `create_app`, but all the content it asks to be loaded should already be present in the
+        # content_loader it is operating on, so it effectively does nothing.
+        # a test that needed a "clean" content loader for some reason would be able to override a test instance's
+        # injected_content_loader early in the setup_method process (e.g. with None)
+        self.make_content_loader_factory_mock = mock.patch("app._make_content_loader_factory")
+        self.make_content_loader_factory_mock.start().side_effect = partial(
+            _make_content_loader_factory,
+            initial_instance=self.injected_content_loader,
+        )
 
         self.app = create_app('test')
         self.app.register_blueprint(login_for_tests)
@@ -131,6 +149,7 @@ class BaseApplicationTest(object):
 
     def teardown_method(self, method):
         self.teardown_login()
+        self.make_content_loader_factory_mock.stop()
         self.app_env_var_mock.stop()
 
     @staticmethod
