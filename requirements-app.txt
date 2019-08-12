@@ -5,7 +5,7 @@ Flask==1.0.3
 Flask-Login==0.4.1
 Flask-WTF==0.14.2
 itsdangerous==0.24 # pyup: ignore
-lxml==4.4.0
+lxml==4.4.1
 
 git+https://github.com/alphagov/digitalmarketplace-utils.git@48.2.0#egg=digitalmarketplace-utils==48.2.0
 git+https://github.com/alphagov/digitalmarketplace-content-loader.git@6.0.0#egg=digitalmarketplace-content-loader==6.0.0
