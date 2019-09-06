@@ -6,6 +6,6 @@
 !config.py
 !gulpfile.js
 !package.json
+!package-lock.json
 !requirements.txt
 !scripts/build.sh
-!yarn.lock
