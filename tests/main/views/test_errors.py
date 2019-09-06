@@ -66,6 +66,11 @@ class TestErrors(BaseApplicationTest):
         self.login_as_buyer()
         with self.app.app_context():
             self.app.config['WTF_CSRF_ENABLED'] = True
+            self.client.set_cookie(
+                "localhost",
+                self.app.config['DM_COOKIE_PROBE_COOKIE_NAME'],
+                self.app.config['DM_COOKIE_PROBE_COOKIE_VALUE'],
+            )
 
             # This will raise a CSRFError for us when the form is validated
             validate_csrf.side_effect = ValidationError('The CSRF session token is missing.')
