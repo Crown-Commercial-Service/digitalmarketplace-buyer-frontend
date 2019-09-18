@@ -63,6 +63,18 @@ describe("GOVUK.Analytics", function () {
       expect(universalSetupArguments[0]).toEqual(['create', 'UA-49258698-1', {
         'cookieDomain': document.domain
       }]);
+      expect(universalSetupArguments[9]).toEqual(['send', 'pageview']);
+    });
+    it('configures a cross domain tracker', function() {
+      expect(universalSetupArguments[2]).toEqual(['create', 'UA-145652997-1', 'auto', {
+        'name': 'govuk_shared'
+      }]);
+      expect(universalSetupArguments[3]).toEqual(['require', 'linker']);
+      expect(universalSetupArguments[4]).toEqual(['govuk_shared.require', 'linker']);
+      expect(universalSetupArguments[5]).toEqual(['linker:autoLink', [ 'www.gov.uk' ]]);
+      expect(universalSetupArguments[6]).toEqual(['govuk_shared.linker:autoLink', [ 'www.gov.uk' ]]);
+      expect(universalSetupArguments[7]).toEqual(['govuk_shared.set', 'anonymizeIp', true ]);
+      expect(universalSetupArguments[8]).toEqual(['govuk_shared.send', 'pageview']);
     });
   });
 
