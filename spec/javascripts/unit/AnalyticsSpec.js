@@ -60,21 +60,21 @@ describe("GOVUK.Analytics", function () {
     });
 
     it('configures a universal tracker', function() {
-      expect(universalSetupArguments[0]).toEqual(['create', 'UA-49258698-1', {
+      expect(universalSetupArguments).toContain(['create', 'UA-49258698-1', {
         'cookieDomain': document.domain
       }]);
-      expect(universalSetupArguments[9]).toEqual(['send', 'pageview']);
+      expect(universalSetupArguments).toContain(['send', 'pageview']);
     });
     it('configures a cross domain tracker', function() {
-      expect(universalSetupArguments[2]).toEqual(['create', 'UA-145652997-1', 'auto', {
+      expect(universalSetupArguments).toContain(['create', 'UA-145652997-1', 'auto', {
         'name': 'govuk_shared'
       }]);
-      expect(universalSetupArguments[3]).toEqual(['require', 'linker']);
-      expect(universalSetupArguments[4]).toEqual(['govuk_shared.require', 'linker']);
-      expect(universalSetupArguments[5]).toEqual(['linker:autoLink', [ 'www.gov.uk' ]]);
-      expect(universalSetupArguments[6]).toEqual(['govuk_shared.linker:autoLink', [ 'www.gov.uk' ]]);
-      expect(universalSetupArguments[7]).toEqual(['govuk_shared.set', 'anonymizeIp', true ]);
-      expect(universalSetupArguments[8]).toEqual(['govuk_shared.send', 'pageview']);
+      expect(universalSetupArguments).toContain(['require', 'linker']);
+      expect(universalSetupArguments).toContain(['govuk_shared.require', 'linker']);
+      expect(universalSetupArguments).toContain(['linker:autoLink', [ 'www.gov.uk' ]]);
+      expect(universalSetupArguments).toContain(['govuk_shared.linker:autoLink', [ 'www.gov.uk' ]]);
+      expect(universalSetupArguments).toContain(['govuk_shared.set', 'anonymizeIp', true ]);
+      expect(universalSetupArguments).toContain(['govuk_shared.send', 'pageview']);
     });
   });
 
@@ -97,7 +97,7 @@ describe("GOVUK.Analytics", function () {
       mockLink.appendChild(document.createTextNode('Download supplier responses to ‘Brief 1’'));
       mockLink.href = assetHost + '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-outcomes/1/responses/download';
       GOVUK.GDM.analytics.buyerSpecificEvents.supplierListDownload({ 'target': mockLink });
-      expect(window.ga.calls.first().args).toEqual(['send', {
+      expect(window.ga.calls.allArgs()).toContain(['send', {
         'hitType': 'event',
         'eventCategory': 'download',
         'eventAction': 'csv',
@@ -116,7 +116,7 @@ describe("GOVUK.Analytics", function () {
       mockLink.appendChild(document.createTextNode('Download supplier responses to ‘Brief 1’'));
       mockLink.href = assetHost + '/buyers/frameworks/digital-outcomes-and-specialists/requirements/digital-specialists/1/responses/download';
       GOVUK.GDM.analytics.buyerSpecificEvents.supplierListDownload({ 'target': mockLink });
-      expect(window.ga.calls.first().args).toEqual(['send', {
+      expect(window.ga.calls.allArgs()).toContain(['send', {
         'hitType': 'event',
         'eventCategory': 'download',
         'eventAction': 'csv',
@@ -129,7 +129,7 @@ describe("GOVUK.Analytics", function () {
       $(document.body).append('<a id="opportunity-data" data-analytics="trackEvent" data-analytics-category="opportunity-data-csv" data-analytics-action="download CSV" data-analytics-label="Opportunity Data CSV" href="https://assets.digitalmarketplace.service.gov.uk/digital-outcomes-and-specialists-2/communications/data/opportunity-data.csv">Download data</a>');
       GOVUK.GDM.analytics.events.init();
       $('#opportunity-data').click();
-      expect(window.ga.calls.first().args).toEqual(['send', {
+      expect(window.ga.calls.allArgs()).toContain(['send', {
         'hitType': 'event',
         'eventCategory': "opportunity-data-csv",
         'eventAction': "download CSV",
@@ -147,7 +147,7 @@ describe("GOVUK.Analytics", function () {
       mockLink.appendChild(document.createTextNode('List of labs'));
       mockLink.href = assetHost + '/digital-outcomes-and-specialists/communications/catalogues/user-research-studios.csv';
       GOVUK.GDM.analytics.buyerSpecificEvents.supplierListDownload({ 'target': mockLink });
-      expect(window.ga.calls.first().args).toEqual(['send', {
+      expect(window.ga.calls.allArgs()).toContain(['send', {
         'hitType': 'event',
         'eventCategory': 'download',
         'eventAction': 'csv',
@@ -164,7 +164,7 @@ describe("GOVUK.Analytics", function () {
       mockLink.appendChild(document.createTextNode('Download list of suppliers.'));
       mockLink.href = assetHost + '/digital-outcomes-and-specialists/communications/catalogues/user-research-participants-suppliers.csv';
       GOVUK.GDM.analytics.buyerSpecificEvents.supplierListDownload({ 'target': mockLink });
-      expect(window.ga.calls.first().args).toEqual(['send', {
+      expect(window.ga.calls.allArgs()).toContain(['send', {
         'hitType': 'event',
         'eventCategory': 'download',
         'eventAction': 'csv',
@@ -181,7 +181,7 @@ describe("GOVUK.Analytics", function () {
       mockLink.appendChild(document.createTextNode('Download list of suppliers.'));
       mockLink.href = assetHost + '/digital-outcomes-and-specialists/communications/catalogues/digital-specialists-suppliers.csv';
       GOVUK.GDM.analytics.buyerSpecificEvents.supplierListDownload({ 'target': mockLink });
-      expect(window.ga.calls.first().args).toEqual(['send', {
+      expect(window.ga.calls.allArgs()).toContain(['send', {
         'hitType': 'event',
         'eventCategory': 'download',
         'eventAction': 'csv',
@@ -198,7 +198,7 @@ describe("GOVUK.Analytics", function () {
       mockLink.appendChild(document.createTextNode('Download list of suppliers.'));
       mockLink.href = assetHost + '/digital-outcomes-and-specialists/communications/catalogues/digital-outcomes-suppliers.csv';
       GOVUK.GDM.analytics.buyerSpecificEvents.supplierListDownload({ 'target': mockLink });
-      expect(window.ga.calls.first().args).toEqual(['send', {
+      expect(window.ga.calls.allArgs()).toContain(['send', {
         'hitType': 'event',
         'eventCategory': 'download',
         'eventAction': 'csv',
@@ -239,8 +239,7 @@ describe("GOVUK.Analytics", function () {
       $analyticsString = $("<div data-analytics='trackPageView' data-url='http://example.com'/>");
       $(document.body).append($analyticsString);
       window.GOVUK.GDM.analytics.virtualPageViews.init();
-      expect(window.ga.calls.first().args).toEqual([ 'send', 'pageview', { page: 'http://example.com/vpv' } ]);
-      expect(window.ga.calls.count()).toEqual(1);
+      expect(window.ga.calls.allArgs()).toContain([ 'send', 'pageview', { page: 'http://example.com/vpv' } ]);
     });
 
 
@@ -248,14 +247,14 @@ describe("GOVUK.Analytics", function () {
       $analyticsString = $('<div data-analytics="trackPageView" data-url="http:/testing.co.uk/testrubbs?sweet"/>');
       $(document.body).append($analyticsString);
       window.GOVUK.GDM.analytics.virtualPageViews.init();
-      expect(window.ga.calls.first().args[2]).toEqual({page: "http:/testing.co.uk/testrubbs/vpv?sweet"});
+      expect(window.ga.calls.allArgs()).toContain([ 'send', 'pageview', {page: "http:/testing.co.uk/testrubbs/vpv?sweet"} ]);
     });
 
     it("Should add '/vpv/' to url at the end if no question mark", function () {
       $analyticsString = $("<div data-analytics='trackPageView' data-url='http://example.com'/>");
       $(document.body).append($analyticsString);
       window.GOVUK.GDM.analytics.virtualPageViews.init();
-      expect(window.ga.calls.first().args[2]).toEqual({page: "http://example.com/vpv"});
+      expect(window.ga.calls.allArgs()).toContain([ 'send', 'pageview', {page: "http://example.com/vpv"} ]);
     });
 
     it("Should trigger virtual page view on filter selection", function () {
@@ -263,10 +262,10 @@ describe("GOVUK.Analytics", function () {
       $(document.body).append($analyticsString);
       window.GOVUK.GDM.analytics.virtualPageViews.init();
       $('#filter-option-1').click();
-      expect(window.ga.calls.first().args[2]).toEqual({
+      expect(window.ga.calls.allArgs()).toContain([ 'send', 'pageview', {
         page: "/g-cloud/test-lot/filters/example-filters-group/filter-option-1/filter-option-1-value/vpv", 
         title: "Filter - g-cloud - test-lot - example-filters-group - filter-option-1 - filter-option-1-value"
-      });
+      }]);
     });
 
     it("Should not trigger virtual page view if a user is removing a filter", function () {
@@ -305,70 +304,70 @@ describe("GOVUK.Analytics", function () {
     it('should send the number of results as a custom dimension', function() {
       window.GOVUK.GDM.analytics.pageViews.init();
 
-      expect(window.ga.calls.first().args).toEqual(['set', 'dimension21', '32']);
+      expect(window.ga.calls.allArgs()).toContain(['set', 'dimension21', '32']);
     });
 
     it('should send the category filters as a custom dimension if only one', function() {
       setupQueryString('?lot=digital-outcomes');
 
-      expect(window.ga.calls.all()[1].args).toEqual(['set', 'dimension23', 'digital-outcomes']);
+      expect(window.ga.calls.allArgs()).toContain(['set', 'dimension23', 'digital-outcomes']);
     });
 
     it('should send the category filters as a custom dimension if multiple', function() {
       setupQueryString('?lot=digital-outcomes&lot=digital-specialists');
 
-      expect(window.ga.calls.all()[1].args).toEqual(['set', 'dimension23', 'digital-outcomes|digital-specialists']);
+      expect(window.ga.calls.allArgs()).toContain(['set', 'dimension23', 'digital-outcomes|digital-specialists']);
     });
 
     it('should send the category filters as a custom dimension if multiple and in wrong order', function() {
       setupQueryString('?lot=digital-specialists&lot=digital-outcomes');
 
-      expect(window.ga.calls.all()[1].args).toEqual(['set', 'dimension23', 'digital-outcomes|digital-specialists']);
+      expect(window.ga.calls.allArgs()).toContain(['set', 'dimension23', 'digital-outcomes|digital-specialists']);
     });
 
     it('should send the status filters as a custom dimension if only one', function() {
       setupQueryString('?status=closed');
 
-      expect(window.ga.calls.all()[1].args).toEqual(['set', 'dimension24', 'closed']);
+      expect(window.ga.calls.allArgs()).toContain(['set', 'dimension24', 'closed']);
     });
 
     it('should send the status filters as a custom dimension if multiple', function() {
       setupQueryString('?status=closed&status=live');
 
-      expect(window.ga.calls.all()[1].args).toEqual(['set', 'dimension24', 'closed|live']);
+      expect(window.ga.calls.allArgs()).toContain(['set', 'dimension24', 'closed|live']);
     });
 
     it('should send the status filters as a custom dimension if multiple and in wrong order', function() {
       setupQueryString('?status=live&status=closed');
 
-      expect(window.ga.calls.all()[1].args).toEqual(['set', 'dimension24', 'closed|live']);
+      expect(window.ga.calls.allArgs()).toContain(['set', 'dimension24', 'closed|live']);
     });
 
     it('should send the filter groups as a custom dimension if one', function() {
       setupQueryString('?status=closed');
 
-      expect(window.ga.calls.all()[2].args).toEqual(['set', 'dimension22', 'status']);
+      expect(window.ga.calls.allArgs()).toContain(['set', 'dimension22', 'status']);
     });
 
     it('should send the filter groups as a custom dimension if multiple', function() {
       setupQueryString('?status=closed&lot=digital-specialists');
 
-      expect(window.ga.calls.all()[3].args).toEqual(['set', 'dimension22', 'lot|status']);
+      expect(window.ga.calls.allArgs()).toContain(['set', 'dimension22', 'lot|status']);
     });
 
     it('should send the filter groups as a custom dimension if multiple and wrong order', function() {
       setupQueryString('?lot=digital-specialists&status=closed');
 
-      expect(window.ga.calls.all()[3].args).toEqual(['set', 'dimension22', 'lot|status']);
+      expect(window.ga.calls.allArgs()).toContain(['set', 'dimension22', 'lot|status']);
     });
 
     it('should send the correct custom dimension if all filters are used', function() {
       setupQueryString('?lot=digital-specialists&status=closed&lot=digital-outcomes&status=live&lot=user-research-participants');
 
-      expect(window.ga.calls.first().args).toEqual(['set', 'dimension21', '32']);
-      expect(window.ga.calls.all()[1].args).toEqual(['set', 'dimension24', 'closed|live']);
-      expect(window.ga.calls.all()[2].args).toEqual(['set', 'dimension23', 'digital-outcomes|digital-specialists|user-research-participants']);
-      expect(window.ga.calls.all()[3].args).toEqual(['set', 'dimension22', 'lot|status']);
+      expect(window.ga.calls.allArgs()).toContain(['set', 'dimension21', '32']);
+      expect(window.ga.calls.allArgs()).toContain(['set', 'dimension24', 'closed|live']);
+      expect(window.ga.calls.allArgs()).toContain(['set', 'dimension23', 'digital-outcomes|digital-specialists|user-research-participants']);
+      expect(window.ga.calls.allArgs()).toContain(['set', 'dimension22', 'lot|status']);
     });
 
   });
