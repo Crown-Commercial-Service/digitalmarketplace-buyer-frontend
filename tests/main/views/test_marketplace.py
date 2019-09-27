@@ -398,11 +398,20 @@ class TestBriefPage(BaseBriefPageTest):
         res = self.client.get(f'/{framework_family}/opportunities/{brief_id}')
         assert res.status_code == expected_status_code
 
+        assert self.data_api_client.find_frameworks.mock_calls == [
+            mock.call(),
+        ]
+
     def test_dos_brief_404s_if_brief_is_draft(self):
         self.brief['briefs']['status'] = 'draft'
         brief_id = self.brief['briefs']['id']
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))
         assert res.status_code == 404
+
+        assert self.data_api_client.mock_calls == [
+            mock.call.find_frameworks(),
+            mock.call.get_brief(str(brief_id)),
+        ]
 
     def test_dos_brief_has_correct_title(self):
         brief_id = self.brief['briefs']['id']
@@ -415,6 +424,16 @@ class TestBriefPage(BaseBriefPageTest):
         assert page_heading.xpath('h1/text()')[0] == self.brief['briefs']['title']
         assert page_heading.xpath('p[@class="context"]/text()')[0] == self.brief['briefs']['organisation']
 
+    def _assert_all_normal_api_calls(self):
+        assert self.data_api_client.mock_calls == [
+            mock.call.find_frameworks(),
+            mock.call.get_brief(str(self.brief_id)),
+            mock.call.find_brief_responses(
+                brief_id=str(self.brief_id),
+                status='draft,submitted,pending-awarded,awarded',
+            ),
+        ]
+
     @pytest.mark.parametrize('status', ['closed', 'unsuccessful', 'cancelled', 'awarded'])
     def test_only_one_banner_at_once_brief_page(self, status):
         self.brief['briefs']['status'] = status
@@ -425,6 +444,8 @@ class TestBriefPage(BaseBriefPageTest):
         number_of_banners = len(document.xpath('//div[@class="banner-temporary-message-without-action"]'))
 
         assert number_of_banners == 1
+
+        self._assert_all_normal_api_calls()
 
     def test_dos_brief_displays_application_stats(self):
         brief_id = self.brief['briefs']['id']
@@ -443,6 +464,8 @@ class TestBriefPage(BaseBriefPageTest):
         assert completed_responses_section.xpath('div[@class="big-statistic"]/text()')[0] == '5'
         assert completed_responses_section.xpath('div[@class="statistic-name"]/text()')[0] == "Completed applications"
         assert completed_responses_section.xpath('div[@class="statistic-description"]/text()')[0] == "4 SME, 1 large"
+
+        self._assert_all_normal_api_calls()
 
     def test_application_stats_pluralised_correctly(self):
         brief_id = self.brief['briefs']['id']
@@ -727,6 +750,8 @@ class TestBriefPage(BaseBriefPageTest):
 
         self._assert_view_application(document, brief_id)
 
+        self._assert_all_normal_api_calls()
+
     def test_supplier_applied_view_application_for_opportunity_awarded_to_logged_in_supplier(self):
         self.login_as_supplier()
         self.brief['briefs']['status'] = 'awarded'
@@ -755,6 +780,8 @@ class TestBriefPage(BaseBriefPageTest):
 
         self._assert_view_application(document, brief_id)
 
+        self._assert_all_normal_api_calls()
+
     def test_supplier_applied_view_application_for_opportunity_pending_awarded_to_logged_in_supplier(self):
         self.login_as_supplier()
         self.brief['briefs']['status'] = 'closed'
@@ -782,6 +809,8 @@ class TestBriefPage(BaseBriefPageTest):
         document = html.fromstring(res.get_data(as_text=True))
 
         self._assert_view_application(document, brief_id)
+
+        self._assert_all_normal_api_calls()
 
     def test_supplier_applied_view_application_for_opportunity_awarded_to_other_supplier(self):
         self.login_as_supplier()
@@ -820,6 +849,8 @@ class TestBriefPage(BaseBriefPageTest):
         document = html.fromstring(res.get_data(as_text=True))
 
         self._assert_view_application(document, brief_id)
+
+        self._assert_all_normal_api_calls()
 
 
 class TestBriefPageQandASectionViewQandASessionDetails(BaseBriefPageTest):
