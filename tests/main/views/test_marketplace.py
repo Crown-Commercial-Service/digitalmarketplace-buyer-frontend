@@ -431,6 +431,7 @@ class TestBriefPage(BaseBriefPageTest):
             mock.call.find_brief_responses(
                 brief_id=str(self.brief_id),
                 status='draft,submitted,pending-awarded,awarded',
+                with_data=False,
             ),
         ]
 
