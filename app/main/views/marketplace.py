@@ -140,7 +140,8 @@ def get_brief_by_id(framework_family, brief_id):
 
     brief_responses = data_api_client.find_brief_responses(
         brief_id=brief_id,
-        status=",".join(ALL_BRIEF_RESPONSE_STATUSES)
+        status=",".join(ALL_BRIEF_RESPONSE_STATUSES),
+        with_data=False,
     ).get('briefResponses')
 
     winning_response, winning_supplier_size = None, None
