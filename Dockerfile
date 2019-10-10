@@ -1,1 +1,1 @@
-FROM digitalmarketplace/base-frontend:7.0.0
+FROM digitalmarketplace/base-frontend:ris-static-cache-control
