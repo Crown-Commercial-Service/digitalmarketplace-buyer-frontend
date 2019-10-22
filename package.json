@@ -1,5 +1,5 @@
 {
-  "name": "digital-marketplace-frontend",
+  "name": "digitalmarketplace-buyer-frontend",
   "description": "Front end application for the Digital Marketplace",
   "version": "1.0.0",
   "private": true,
@@ -18,7 +18,7 @@
     "gulp-include": "2.3.1",
     "gulp-jasmine-phantom": "alphagov/gulp-jasmine-phantom#node-10-fs-unlink",
     "gulp-sass": "3.1.0",
-    "gulp-shell": "0.2.9",
+    "gulp-shell": "0.5.2",
     "gulp-sourcemaps": "1.5.2",
     "gulp-uglify": "1.5.1",
     "hogan.js": "3.0.2",
