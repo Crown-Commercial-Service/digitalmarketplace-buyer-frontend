@@ -26,9 +26,12 @@
     "scrolldepth": "https://github.com/alphagov/jquery-scrolldepth.git#1.0"
   },
   "scripts": {
-    "test": "gulp test",
+    "test": "standard gulpfile.js && gulp test",
     "frontend-build:development": "gulp build:development",
     "frontend-build:production": "gulp build:production",
     "frontend-build:watch": "gulp watch"
+  },
+  "devDependencies": {
+    "standard": "^14.3.1"
   }
 }
