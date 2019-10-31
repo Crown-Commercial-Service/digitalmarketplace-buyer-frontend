@@ -55,6 +55,15 @@ $path: "/static/images/";
 @import "toolkit/search/_search-result.scss";
 @import "toolkit/_user-research-consent-banner.scss";
 
+// GOV.UK Design System (compatible with old toolkit/elements)
+$govuk-assets-path: '/user/static/';
+$govuk-images-path: '/user/static/images/govuk-frontend/';
+$govuk-fonts-path: '/user/static/fonts/';
+$govuk-compatibility-govukfrontendtoolkit: true;
+$govuk-compatibility-govuktemplate: true;
+$govuk-compatibility-govukelements: true;
+@import "node_modules/digitalmarketplace-govuk-frontend/govuk-frontend/all";
+
 // App specific styles
 @import "_atoz_navigation.scss";
 @import "_end-your-search-page.scss";
