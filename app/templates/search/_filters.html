@@ -13,5 +13,11 @@
       {% endwith %}
     {% endfor %}
   </div>
-  <button class="button-save js-hidden js-dm-live-search" type="submit" aria-controls="search-summary-accessible-hint-wrapper">Filter</button>
+  {{ govukButton({
+    "text": "Filter",
+    "classes": "js-hidden js-dm-live-search",
+    "attributes": {
+      "aria-controls": "search-summary-accessible-hint-wrapper",
+    },
+  }) }}
 </div>

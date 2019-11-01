@@ -637,6 +637,8 @@ class TestSearchFilterOnClick(APIClientMixin, BaseApplicationTest):
 
         document = html.fromstring(res.get_data(as_text=True))
 
-        filter_button = document.xpath('//button[@class="button-save js-hidden js-dm-live-search"'
-                                       ' and normalize-space(text())="Filter"]')
+        filter_button = document.xpath(
+            '//button[contains(@class, "js-hidden")][contains(@class, "js-dm-live-search")]'
+            '[normalize-space(text())="Filter"]'
+        )
         assert len(filter_button) == 1

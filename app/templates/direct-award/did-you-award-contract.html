@@ -43,17 +43,15 @@
 
         {{ form.did_you_award_a_contract }}
 
-        {%
-          with
-          type = "save",
-          label = "Save and continue",
-          analytics= "trackEvent",
-          analytics_category = "did-you-award-a-contract",
-          analytics_action = "Save and continue",
-          analytics_target = "input[name=did_you_award_a_contract]:checked"
-        %}
-          {% include "toolkit/button.html" %}
-        {% endwith %}
+        {{ govukButton({
+          "text": "Save and continue",
+          "attributes": {
+            "data-analytics": "trackEvent",
+            "data-analytics-category": "did-you-award-a-contract",
+            "data-analytics-action": "Save and continue",
+            "data-analytics-target-selector": "input[name=did_you_award_a_contract]:checked",
+          },
+        }) }}
       </form>
 
       <p><a href="{{ url_for('direct_award.view_project', framework_family=framework.family, project_id=project.id) }}">Return to your task list</a></p>

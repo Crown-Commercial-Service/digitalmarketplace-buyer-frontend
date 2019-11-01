@@ -63,13 +63,9 @@
           {% endwith %}
         </div>
 
-        {%
-          with
-          type = "save",
-          label = "Search for services"
-        %}
-          {% include "toolkit/button.html" %}
-        {% endwith %}
+        {{ govukButton({
+          "text": "Search for services",
+        }) }}
 
       </form>
     </div>

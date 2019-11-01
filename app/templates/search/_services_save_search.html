@@ -1,15 +1,21 @@
+{# this file can be used from contexts that don't inherit from _base_page.html, so we must ensure we have all imports we need #}
+{% from "components/button/macro.njk" import govukButton %}
 <div id="js-dm-live-save-search-form">
   <form action="{{ url_for('direct_award.save_search', framework_family=framework_family) }}">
     <input type="hidden" name="search_query" value="{{ search_query_url }}">
     <div class="button-save-wrapper grid-row">
       <div class="save-button column-one-quarter">
-        <button id="save-search" class="button-save" role="button" type="submit"
-          data-analytics="trackEvent"
-          data-analytics-category="Direct Award"
-          data-analytics-action="Save search"
-          data-analytics-label="{{ search_count }}">
-          Save your search
-        </button>
+        {{ govukButton({
+          "text": "Save your search",
+          "attributes": {
+            "id": "save-search",
+            "role": "button",
+            "data-analytics": "trackEvent",
+            "data-analytics-category": "Direct Award",
+            "data-analytics-action": "Save search",
+            "data-analytics-label": search_count|string(),
+          },
+        }) }}
       </div>
     </div>
   </form>
