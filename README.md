@@ -29,7 +29,7 @@ you have them running:
 ```
 export DM_DATA_API_URL=http://localhost:5000
 export DM_DATA_API_AUTH_TOKEN=<auth_token_accepted_by_api>
-export DM_SEARCH_API_URL=http://localhost:5001
+export DM_SEARCH_API_URL=http://localhost:5009
 export DM_SEARCH_API_AUTH_TOKEN=<auth_token_accepted_by_search_api>
 ```
 
