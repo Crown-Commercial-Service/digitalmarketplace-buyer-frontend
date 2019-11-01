@@ -13,6 +13,8 @@ from dmutils.user import User
 from dmutils.external import external as external_blueprint
 from dmutils.timing import logged_duration
 
+from govuk_frontend_jinja.flask_ext import init_govuk_frontend
+
 from config import configs
 
 
@@ -67,6 +69,9 @@ from .main.helpers.search_save_helpers import SavedSearchStateEnum
 
 def create_app(config_name):
     application = Flask(__name__)
+
+    # allow using govuk-frontend Nunjucks templates
+    init_govuk_frontend(application)
 
     init_app(
         application,
