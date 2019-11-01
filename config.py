@@ -119,9 +119,9 @@ class Development(Config):
     SESSION_COOKIE_SECURE = False
     DM_SEARCH_PAGE_SIZE = 5
 
-    DM_DATA_API_URL = "http://localhost:5000"
+    DM_DATA_API_URL = f"http://localhost:{os.getenv('DM_API_PORT', 5000)}"
     DM_DATA_API_AUTH_TOKEN = "myToken"
-    DM_SEARCH_API_URL = "http://localhost:5001"
+    DM_SEARCH_API_URL = f"http://localhost:{os.getenv('DM_SEARCH_API_PORT', 5001)}"
     DM_SEARCH_API_AUTH_TOKEN = "myToken"
 
     DM_MANDRILL_API_KEY = "not_a_real_key"

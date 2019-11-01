@@ -80,13 +80,13 @@ More generally, the command to start the development server is:
 DM_ENVIRONMENT=development flask run
 ```
 
-When using the development server the buyer app is run on port 5002 by default.
-This is configured in the `.flaskenv` file; see the [Flask cli documentation]
-for details on how to configure the development server.
-
 Use the app at [http://127.0.0.1:5002/](http://127.0.0.1:5002/).
 
-[Flask cli documentation]: https://flask.palletsprojects.com/en/1.1.x/cli/
+When using the development server the buyer app listens on port 5002 by default. This can be changed by setting the `DM_BUYER_PORT` environment variable, e.g. to set the port number to 9002:
+
+```
+export DM_BUYER_PORT=9002
+```
 
 ### Updating application dependencies
 
