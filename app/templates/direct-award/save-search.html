@@ -87,7 +87,11 @@
 
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
         <input type="hidden" name="search_query" value="{{ search_query }}"/>
-        <input type="submit" class="button-save" name="return_to_overview" value="Save and continue">
+        {{ govukButton({
+          "text": "Save and continue",
+          "name": "return_to_overview",
+          "value": "Save and continue",
+        }) }}
 
       </div>
     </div>

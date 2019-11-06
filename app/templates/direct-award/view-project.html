@@ -128,12 +128,19 @@ your budget and requirements.Do not hold a competition to decide the winner. You
 negotiate with them.'|safe},
               {"type": "box", "style": "inactive", "label": "Can’t start yet"} if project and not search.searchedAt
                 else
-              {"type": "text", "text": '<button class="instruction-list-item-action button-save" id="ready-to-assess-button" name="readyToAssess"
-                                                value="true"
-                                                 data-analytics="trackEvent"
-                                                 data-analytics-category="Direct Award"
-                                                 data-analytics-action="Internal Link">Confirm you have read and
-understood how to assess services</button>'|safe} if project and not project.readyToAssessAt and not project.outcome else {},
+              {"type": "text", "text": govukButton({
+                  "text": "Confirm you have read and understood how to assess services",
+                  "name": "readyToAssess",
+                  "classes": "instruction-list-item-action",
+                  "value": "true",
+                  "attributes": {
+                    "id": "ready-to-assess-button",
+                    "data-analytics": "trackEvent",
+                    "data-analytics-category": "Direct Award",
+                    "data-analytics-action": "Internal Link",
+                  },
+                }),
+              } if project and not project.readyToAssessAt and not project.outcome else {},
               {"type": "box", "style": "complete", "label": "Completed"} if project and project.readyToAssessAt else {}
             ]
           },

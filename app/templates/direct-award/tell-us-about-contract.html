@@ -58,17 +58,15 @@
 
         {{ form.buying_organisation }}
 
-        {%
-          with
-          type = "save",
-          label = "Submit",
-          analytics = "trackEvent",
-          analytics_category = "tell-us-about-your-contract",
-          analytics_action = "Submit",
-          analytics_label = "awarded"
-        %}
-          {% include "toolkit/button.html" %}
-        {% endwith %}
+        {{ govukButton({
+          "text": "Submit",
+          "attributes": {
+            "data-analytics": "trackEvent",
+            "data-analytics-category": "tell-us-about-your-contract",
+            "data-analytics-action": "Submit",
+            "data-analytics-label": "awarded",
+          },
+        }) }}
 
       </form>
 

@@ -765,7 +765,7 @@ class TestDirectAwardAwardContract(TestDirectAwardBase):
         assert len(doc.xpath('//input[@type="radio"][contains(following-sibling::label, "No")]')) == 1
         assert len(doc.xpath(
             '//input[@type="radio"][contains(following-sibling::label, "We are still assessing services")]')) == 1
-        assert len(doc.xpath('//input[@type="submit"][@value="Save and continue"]')) == 1
+        assert len(doc.xpath('//button[normalize-space(string())=$t]', t="Save and continue")) == 1
 
     def test_award_contract_form_action_url_is_award_contract_url(self):
         self.login_as_buyer()
@@ -875,7 +875,7 @@ class TestDirectAwardAwardContract(TestDirectAwardBase):
         assert len(doc.xpath(
             '//span[contains(normalize-space(text()), "Supplier name")][contains(parent::label, "Service name")]')) == 1
         assert len(
-            doc.xpath('//input[@type="submit"][@value="Save and continue"]')) == 1
+            doc.xpath('//button[normalize-space(string())=$t]', t="Save and continue")) == 1
 
     @pytest.mark.parametrize("method", ("GET", "POST"))
     def test_which_service_did_you_award_page_invalid_framework_family(self, method):
@@ -978,11 +978,11 @@ class TestDirectAwardTellUsAboutContract(TestDirectAwardBase):
         assert xpath('boolean(//h1[contains(normalize-space(), "Tell us about your contract")])')
 
     def test_tell_us_about_contract_form_fields(self, xpath):
-        assert xpath('count(//input[@type="text"][substring-after(@name, "start_date")])') == 3
-        assert xpath('count(//input[@type="text"][substring-after(@name, "end_date")])') == 3
-        assert xpath('boolean(//input[@type="text"][contains(@name, "value_in_pounds")])')
-        assert xpath('boolean(//input[@type="text"][contains(@name, "buying_organisation")])')
-        assert xpath('boolean(//input[@type="submit"][@value="Submit"])')
+        assert len(xpath('//input[@type="text"][substring-after(@name, "start_date")]')) == 3
+        assert len(xpath('//input[@type="text"][substring-after(@name, "end_date")]')) == 3
+        assert xpath('//input[@type="text"][contains(@name, "value_in_pounds")]')
+        assert xpath('//input[@type="text"][contains(@name, "buying_organisation")]')
+        assert xpath('//button[normalize-space(string())=$t]', t="Submit")
 
     def test_previous_page_button_exists_and_points_to_previous_page(self, xpath):
         assert xpath(
@@ -1099,7 +1099,7 @@ class TestDirectAwardNonAwardContract(TestDirectAwardBase):
             '//span[contains(normalize-space(text()), "The services in your search results did not meet your requirements")]\
             [contains(parent::label, "There were no suitable services")]')) == 1
         assert len(
-            doc.xpath('//input[@type="submit"][@value="Save and continue"]')) == 1
+            doc.xpath('//button[normalize-space(string())=$t]', t="Save and continue")) == 1
 
     def test_which_service_did_you_award_page_should_not_render_if_not_locked_renders(self):
         self.login_as_buyer()

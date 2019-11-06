@@ -65,13 +65,18 @@
 
         {{ form.user_understands }}
 
-        <button class="button-save end-your-search-button"
-          data-analytics="trackEvent"
-          data-analytics-category="Direct Award"
-          data-analytics-action="End search"
-          data-analytics-label="{{ search_count }}"
-          {% if disable_end_search_btn %}disabled="disabled"{% endif %}
-          >Export results and continue</button>
+        {{ govukButton({
+          "text": "Export results and continue",
+          "value": "Export results and continue",
+          "classes": "end-your-search-button",
+          "disabled": disable_end_search_btn,
+          "attributes": {
+            "data-analytics": "trackEvent",
+            "data-analytics-category": "Direct Award",
+            "data-analytics-action": "End search",
+            "data-analytics-label": "{{ search_count }}",
+          },
+        }) }}
       </form>
 
       <p><a href="{{ url_for('direct_award.view_project', framework_family=framework.family, project_id=project.id) }}">Return to your task list</a></p>

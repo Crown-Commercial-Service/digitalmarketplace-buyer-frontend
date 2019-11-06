@@ -51,13 +51,9 @@
 
           {{ form.which_service_won_the_contract }}
 
-          {%
-            with
-            type = "save",
-            label = "Save and continue"
-          %}
-            {% include "toolkit/button.html" %}
-          {% endwith %}
+          {{ govukButton({
+            "text": "Save and continue",
+          }) }}
         </form>
 
         {% else %}

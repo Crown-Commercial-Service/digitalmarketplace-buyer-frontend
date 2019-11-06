@@ -47,17 +47,15 @@
 
         {{ form.why_did_you_not_award_the_contract }}
 
-        {%
-          with
-          type = "save",
-          label = "Save and continue",
-          analytics= "trackEvent",
-          analytics_category = "why-didnt-you-award",
-          analytics_action = "Save and continue",
-          analytics_target = "input[name={}]:checked".format(form.why_did_you_not_award_the_contract.name)
-        %}
-          {% include "toolkit/button.html" %}
-        {% endwith %}
+        {{ govukButton({
+          "text": "Save and continue",
+          "attributes": {
+            "data-analytics": "trackEvent",
+            "data-analytics-category": "why-didnt-you-award",
+            "data-analytics-action": "Save and continue",
+            "data-analytics-target-selector": "input[name={}]:checked".format(form.why_did_you_not_award_the_contract.name),
+          },
+        }) }}
       </form>
 
       <p><a href="{{ url_for('direct_award.did_you_award_contract', framework_family=framework.family, project_id=project.id) }}">Previous page</a></p>
