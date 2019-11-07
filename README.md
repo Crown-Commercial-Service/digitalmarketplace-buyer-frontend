@@ -29,7 +29,7 @@ you have them running:
 ```
 export DM_DATA_API_URL=http://localhost:5000
 export DM_DATA_API_AUTH_TOKEN=<auth_token_accepted_by_api>
-export DM_SEARCH_API_URL=http://localhost:5001
+export DM_SEARCH_API_URL=http://localhost:5009
 export DM_SEARCH_API_AUTH_TOKEN=<auth_token_accepted_by_search_api>
 ```
 
@@ -74,12 +74,19 @@ not already been set:
 make run-app
 ```
 
-More generally, the command to start the server is:
+More generally, the command to start the development server is:
+
 ```
-python application.py runserver
+DM_ENVIRONMENT=development flask run
 ```
 
-The buyer app runs on port 5002 by default. Use the app at [http://127.0.0.1:5002/](http://127.0.0.1:5002/)
+Use the app at [http://127.0.0.1:5002/](http://127.0.0.1:5002/).
+
+When using the development server the buyer app listens on port 5002 by default. This can be changed by setting the `DM_BUYER_PORT` environment variable, e.g. to set the port number to 9002:
+
+```
+export DM_BUYER_PORT=9002
+```
 
 ### Updating application dependencies
 

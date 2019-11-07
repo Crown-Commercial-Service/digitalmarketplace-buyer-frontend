@@ -1,0 +1,8 @@
+DM_API_PORT=5000
+DM_SEARCH_API_PORT=5009
+DM_BUYER_PORT=5002
+
+FLASK_APP=application:application
+FLASK_ENV=development
+FLASK_RUN_EXTRA_FILES=app/content/frameworks/
+FLASK_RUN_PORT=${DM_BUYER_PORT}

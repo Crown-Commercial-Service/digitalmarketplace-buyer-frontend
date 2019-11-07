@@ -5,7 +5,7 @@
     }
   },
   "links": {
-    "next": "http://localhost:5001/briefs-digital-outcomes-and-specialists/briefs/search?page=2&aggregations=lot&filter_status=live%2Cclosed&filter_lot=digital-specialists"
+    "next": "http://localhost:5009/briefs-digital-outcomes-and-specialists/briefs/search?page=2&aggregations=lot&filter_status=live%2Cclosed&filter_lot=digital-specialists"
   },
   "meta": {
     "query": {
