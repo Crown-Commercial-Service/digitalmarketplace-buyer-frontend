@@ -141,13 +141,9 @@
   <div class="grid-row">
     <div class="column-two-thirds">
       <form action="{{ url_for('external.start_brief_response', brief_id=brief.id) }}" method="get">
-        {%
-          with
-          label="Apply for this opportunity",
-          type="save"
-        %}
-          {% include "toolkit/button.html" %}
-        {% endwith %}
+        {{ govukButton({
+          "text": "Apply for this opportunity",
+        }) }}
       </form>
     </div>
   </div>

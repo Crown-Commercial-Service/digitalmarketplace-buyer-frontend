@@ -687,10 +687,10 @@ class TestBriefPage(BaseBriefPageTest):
         assert 'Quality assurance analyst' in res.get_data(as_text=True)
 
     def _assert_start_application(self, document, brief_id):
-        assert document.xpath("//form[@method='get']/@action") == [
-            "/suppliers/opportunities/{}/responses/start".format(brief_id)
-        ]
-        assert document.xpath("//input[@class='button-save']/@value") == ['Apply for this opportunity']
+        assert document.xpath(
+            "//form[@method='get'][normalize-space(string(.//button))=$t]/@action",
+            t="Apply for this opportunity",
+        ) == ["/suppliers/opportunities/{}/responses/start".format(brief_id)]
 
     def _assert_view_application(self, document, brief_id):
         assert len(document.xpath(
