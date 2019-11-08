@@ -138,6 +138,7 @@
     </div>
   </div>
 {% elif brief.status == 'live' %}
+  <br/><!-- <- remove once grid and body elements have been converted to govuk frontend -->
   <div class="grid-row">
     <div class="column-two-thirds">
       <form action="{{ url_for('external.start_brief_response', brief_id=brief.id) }}" method="get">
