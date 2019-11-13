@@ -1,6 +1,8 @@
 {% extends "_base_page.html" %}
 {% import "toolkit/summary-table.html" as summary %}
-{% block page_title %}Your saved searches - Digital Marketplace{% endblock %}
+{% block pageTitle %}
+  Your saved searches - Digital Marketplace
+{% endblock %}
 
 {% block breadcrumb %}
   {%
@@ -60,7 +62,7 @@
       {% call summary.row() %}
         {{ summary.service_link(item.name, url_for('direct_award.view_project', framework_family=framework.family, project_id=item.id), wide=False) }}
         {{ summary.text(item.lockedAt | datetimeformat ) }}
-        {{ 
+        {{
           summary.text("Awarded") if item.outcome and item.outcome.result == "awarded"
           else summary.text("The work has been cancelled") if item.outcome and item.outcome.result == "cancelled"
           else summary.text("No suitable services found") if item.outcome and item.outcome.result == "none-suitable"
@@ -68,7 +70,7 @@
           else summary.service_link("Tell us the outcome", url_for('direct_award.did_you_award_contract', framework_family=framework.family, project_id=item.id), wide=False) }}
       {% endcall %}
     {% endcall %}
-    
+
   </div>
 
 </div>
