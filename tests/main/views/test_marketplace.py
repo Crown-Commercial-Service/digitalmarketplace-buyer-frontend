@@ -616,9 +616,14 @@ class TestBriefPage(BaseBriefPageTest):
         brief = self.brief.copy()
         brief['briefs']['lot'] = lot_slug
         brief['briefs']['lotSlug'] = lot_slug
+        brief['briefs']['status'] = 'live'
+        brief['briefs']['publishedAt'] = '2019-01-02T00:00:00.000000Z'
         self.data_api_client.get_brief.return_value = brief
 
-        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief['briefs']['id']))
+        with self.app.app_context():
+            current_app.config['SHOW_BRIEF_MANDATORY_EVALUATION_METHOD'] = '2019-01-01'
+            res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief['briefs']['id']))
+
         assert res.status_code == 200
 
         document = html.fromstring(res.get_data(as_text=True))

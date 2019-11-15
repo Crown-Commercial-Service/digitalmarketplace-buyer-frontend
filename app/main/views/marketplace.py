@@ -15,6 +15,7 @@ from dmutils.flask import timed_render_template as render_template
 from app import search_api_client, data_api_client, content_loader
 from ..helpers.brief_helpers import (
     count_brief_responses_by_size_and_status, format_winning_supplier_size,
+    get_evaluation_description,
     COMPLETED_BRIEF_RESPONSE_STATUSES, ALL_BRIEF_RESPONSE_STATUSES, PUBLISHED_BRIEF_STATUSES
 )
 from ..helpers.framework_helpers import (
@@ -172,16 +173,7 @@ def get_brief_by_id(framework_family, brief_id):
     brief_content = content_loader.get_manifest(brief['frameworkSlug'], 'display_brief').filter(brief)
 
     # Add in mandatory evaluation method, missing from the display_brief manifest summary_page_description
-    # Digital Specialists: work history
-    # Digital Outcomes / User Research Participants: written proposal
-    # TODO: split the manifest sections and add the relevant description for each DOS5 lot
-    evaluation_description = None
-    for section in brief_content.summary(brief):
-        if section.name == 'How suppliers will be evaluated':
-            if brief['lotSlug'] == 'digital-specialists':
-                evaluation_description = 'All suppliers will be asked to provide a work history.'
-            else:
-                evaluation_description = 'All suppliers will be asked to provide a written proposal.'
+    evaluation_description = get_evaluation_description(brief, current_app, brief_content)
 
     return render_template(
         'brief.html',
