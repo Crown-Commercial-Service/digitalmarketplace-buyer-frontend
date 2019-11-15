@@ -1,6 +1,8 @@
 # coding: utf-8
 import mock
 
+from lxml import html
+
 from dmapiclient import APIError
 
 from ...helpers import BaseApplicationTest, BaseAPIClientMixin
@@ -84,18 +86,16 @@ class TestSuppliersPage(DataAPIClientMixin, BaseApplicationTest):
         res = self.client.get('/g-cloud/suppliers')
         assert res.status_code == 200
 
-        supplier_html = self._strip_whitespace('''
-        <div class="search-result">
-            <h2 class="search-result-title">
-            <a href="/g-cloud/supplier/586559">ABM UNITED KINGDOM LTD</a>
-        </h2>
+        document = html.fromstring(res.get_data(as_text=True))
 
-        <p class="search-result-excerpt">
-            We specialise in the development of intelligence and investigative software across law enforcement agencies, public sector and commercial organisations. We provide solutions to clients across the globe, including the United Kingdom, Australia, USA, Canada and Europe.
-        </p>
-        </div>''')  # noqa
-
-        assert supplier_html in self._strip_whitespace(res.get_data(as_text=True))
+        assert document.xpath(
+            "//*[contains(@class, 'search-result')]"
+            "[.//h2//a[@href=$u][normalize-space(string())=$t]]"
+            "[.//p[normalize-space(string())=$b]]",
+            u="/g-cloud/supplier/586559",
+            t="ABM UNITED KINGDOM LTD",
+            b="""We specialise in the development of intelligence and investigative software across law enforcement agencies, public sector and commercial organisations. We provide solutions to clients across the globe, including the United Kingdom, Australia, USA, Canada and Europe.""",  # noqa
+        )
 
     def test_should_show_a_t_z_nav(self):
         res = self.client.get('/g-cloud/suppliers')

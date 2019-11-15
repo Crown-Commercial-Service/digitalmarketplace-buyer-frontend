@@ -44,29 +44,29 @@
       {% endwith %}
     </div>
   </div>
-  {% if not project %}
-    <p class="lede">
-      Before you start you should
-      <a href="https://www.gov.uk/guidance/g-cloud-buyers-guide#requirements"
-         target="_blank" rel="external noopener noreferrer"
-         data-analytics="trackEvent"
-         data-analytics-category="Direct Award"
-         data-analytics-action="External Link">
-        write a list of requirements
-      </a>
-      and
-      <a href="https://www.gov.uk/service-manual/agile-delivery/spend-controls-check-if-you-need-approval-to-spend-money-on-a-service"
-         target="_blank" rel="external noopener noreferrer"
-         data-analytics="trackEvent"
-         data-analytics-category="Direct Award"
-         data-analytics-action="External Link">
-        check if you need approval
-      </a>
-      to spend money on a service.
-    </p>
-  {% endif %}
   <div class="grid-row direct-award-project-overview-page">
     <div class="column-two-thirds">
+    {% if not project %}
+      <p class="govuk-body-l">
+        Before you start you should
+        <a href="https://www.gov.uk/guidance/g-cloud-buyers-guide#requirements"
+          target="_blank" rel="external noopener noreferrer"
+          data-analytics="trackEvent"
+          data-analytics-category="Direct Award"
+          data-analytics-action="External Link">
+          write a list of requirements
+        </a>
+        and
+        <a href="https://www.gov.uk/service-manual/agile-delivery/spend-controls-check-if-you-need-approval-to-spend-money-on-a-service"
+          target="_blank" rel="external noopener noreferrer"
+          data-analytics="trackEvent"
+          data-analytics-category="Direct Award"
+          data-analytics-action="External Link">
+          check if you need approval
+        </a>
+        to spend money on a service.
+      </p>
+    {% endif %}
       {% if project %}<form action="{{url_for('direct_award.update_project', framework_family=framework.family, project_id=project.id)}}" method="post">{% endif %}
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         {% block before_sections %}{% endblock %}

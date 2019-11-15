@@ -40,10 +40,8 @@
     </header>
   </div>
   <div class="column-two-thirds">
-    <div class="marketplace-paragraph">
-      <p>Download a list of the services you’ve found to help you track and record your decision-making.</p>
-      <p>The files include suppliers’ service descriptions and contact information. Keep a copy for your records.</p>
-    </div>
+    <p class="govuk-body">Download a list of the services you’ve found to help you track and record your decision-making.</p>
+    <p class="govuk-body">The files include suppliers’ service descriptions and contact information. Keep a copy for your records.</p>
     <div class="marketplace-paragraph">
       {%
       with
@@ -71,13 +69,11 @@
         {% include "toolkit/documents.html" %}
       {% endwith %}
     </div>
-    <div class="application-notice info-notice">
-      <p>Results exported on {{ exported_at|datetimeformat }}</p>
-    </div>
-    <div class="marketplace-paragraph">
-      <p>You can download your results again at any time.</p>
-      <p><a href="{{ url_for('direct_award.view_project', framework_family=framework.family, project_id=project.id) }}">Return to your task list</a></p>
-    </div>
+    <p class="application-notice info-notice govuk-body">
+      Results exported on {{ exported_at|datetimeformat }}
+    </p>
+    <p class="govuk-body">You can download your results again at any time.</p>
+    <p class="govuk-body"><a href="{{ url_for('direct_award.view_project', framework_family=framework.family, project_id=project.id) }}">Return to your task list</a></p>
   </div>
 </div>
 {% endblock %}
