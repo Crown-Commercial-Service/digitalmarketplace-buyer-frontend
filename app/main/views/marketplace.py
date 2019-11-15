@@ -171,6 +171,18 @@ def get_brief_by_id(framework_family, brief_id):
 
     brief_content = content_loader.get_manifest(brief['frameworkSlug'], 'display_brief').filter(brief)
 
+    # Add in mandatory evaluation method, missing from the display_brief manifest summary_page_description
+    # Digital Specialists: work history
+    # Digital Outcomes / User Research Participants: written proposal
+    # TODO: split the manifest sections and add the relevant description for each DOS5 lot
+    evaluation_description = None
+    for section in brief_content.summary(brief):
+        if section.name == 'How suppliers will be evaluated':
+            if brief['lotSlug'] == 'digital-specialists':
+                evaluation_description = 'All suppliers will be asked to provide a work history.'
+            else:
+                evaluation_description = 'All suppliers will be asked to provide a written proposal.'
+
     return render_template(
         'brief.html',
         brief=brief,
@@ -178,7 +190,8 @@ def get_brief_by_id(framework_family, brief_id):
         content=brief_content,
         has_supplier_responded_to_brief=has_supplier_responded_to_brief,
         winning_response=winning_response,
-        winning_supplier_size=winning_supplier_size
+        winning_supplier_size=winning_supplier_size,
+        evaluation_description=evaluation_description
     )
 
 
