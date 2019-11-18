@@ -605,6 +605,35 @@ class TestBriefPage(BaseBriefPageTest):
         assert contract_length_key[0] == 'Expected contract length'
         assert contract_length_value[0] == '4 weeks'
 
+    @pytest.mark.parametrize(
+        'lot_slug, assessment_type', [
+            ('digital-outcomes', 'written proposal'),
+            ('digital-specialists', 'work history'),
+            ('user-research-participants', 'written proposal'),
+        ]
+    )
+    def test_dos_brief_displays_mandatory_evaluation_method_for_lot(self, lot_slug, assessment_type):
+        brief = self.brief.copy()
+        brief['briefs']['lot'] = lot_slug
+        brief['briefs']['lotSlug'] = lot_slug
+        brief['briefs']['status'] = 'live'
+        brief['briefs']['publishedAt'] = '2019-01-02T00:00:00.000000Z'
+        brief['briefs']['frameworkSlug'] = 'digital-outcomes-and-specialists-4'
+        self.data_api_client.get_brief.return_value = brief
+
+        with self.app.app_context():
+            current_app.config['SHOW_BRIEF_MANDATORY_EVALUATION_METHOD'] = '2019-01-01'
+            res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief['briefs']['id']))
+
+        assert res.status_code == 200
+
+        document = html.fromstring(res.get_data(as_text=True))
+        section_heading = document.xpath(
+            '//h2[@class="summary-item-heading"][contains(text(), "How suppliers will be evaluated")]'
+        )[0]
+        section_description = section_heading.xpath('following-sibling::p')[0]
+        assert section_description.text.strip() == f'All suppliers will be asked to provide a {assessment_type}.'
+
     def test_dos_brief_has_questions_and_answers(self):
         brief_id = self.brief['briefs']['id']
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief_id))

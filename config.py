@@ -84,6 +84,9 @@ class Config(object):
 
     GOOGLE_SITE_VERIFICATION = None
 
+    # Feature flag - show for briefs published after this date
+    SHOW_BRIEF_MANDATORY_EVALUATION_METHOD = None
+
     @staticmethod
     def init_app(app):
         repo_root = os.path.abspath(os.path.dirname(__file__))
@@ -130,6 +133,9 @@ class Development(Config):
 
     GOOGLE_SITE_VERIFICATION = "NotARealVerificationKey"
 
+    # Feature flag - show for briefs published after this date
+    SHOW_BRIEF_MANDATORY_EVALUATION_METHOD = '2019-11-18'
+
 
 class Live(Config):
     """Base config for deployed environments"""
@@ -144,9 +150,15 @@ class Live(Config):
         "user.marketplace.team": "success@simulator.amazonses.com",
     }
 
+    # Feature flag - show for briefs published after this date
+    SHOW_BRIEF_MANDATORY_EVALUATION_METHOD = None
+
 
 class Preview(Live):
     DM_PATCH_FRONTEND_URL = 'https://www.preview.marketplace.team/'
+
+    # Feature flag - show for briefs published after this date
+    SHOW_BRIEF_MANDATORY_EVALUATION_METHOD = '2019-11-18'
 
 
 class Staging(Live):

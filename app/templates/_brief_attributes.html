@@ -20,8 +20,11 @@
 {% for section in content.summary(brief) %}
     {{ summary.heading(section.name, id="opportunity-attributes-{}".format(loop.index)) }}
      {% if section.summary_page_description %}
-          {{ summary.description(section.summary_page_description) }}
-        {% endif %}
+        <p>{{ summary.description(section.summary_page_description) }}</p>
+     {# DISPLAY MANDATORY EVALUATION METHODS #}
+     {% elif section.name == 'How suppliers will be evaluated' and evaluation_description %}
+        <p>{{ evaluation_description }}</p>
+     {% endif %}
     {% call(item) summary.list_table(
       section.questions,
       caption=section.name,
