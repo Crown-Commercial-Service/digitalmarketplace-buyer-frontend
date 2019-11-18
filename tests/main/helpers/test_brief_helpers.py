@@ -31,14 +31,34 @@ class TestBriefHelpers(BaseApplicationTest):
     def test_show_mandatory_assessment_method_for_non_live_briefs(self, status):
         brief = {
             'status': status,
+            'frameworkSlug': 'digital-outcomes-and-specialists-4',
             'publishedAt': '2019-11-01'
         }
         current_app = mock.Mock()
         assert show_mandatory_assessment_method(brief, current_app)
 
+    @pytest.mark.parametrize(
+        'framework_slug',
+        [
+            'digital-outcomes-and-specialists',
+            'digital-outcomes-and-specialists-2',
+            'digital-outcomes-and-specialists-3',
+        ]
+    )
+    def test_do_not_show_mandatory_assessment_method_for_non_dos4_briefs(self, framework_slug):
+        brief = {
+            'status': 'live',
+            'frameworkSlug': framework_slug,
+            'publishedAt': '2019-11-02'
+        }
+        current_app = mock.Mock()
+        current_app.config = {'SHOW_BRIEF_MANDATORY_EVALUATION_METHOD': '2019-11-02'}
+        assert not show_mandatory_assessment_method(brief, current_app)
+
     def test_do_not_show_mandatory_assessment_method_for_live_briefs_before_date(self):
         brief = {
             'status': 'live',
+            'frameworkSlug': 'digital-outcomes-and-specialists-4',
             'publishedAt': '2019-11-01'
         }
         current_app = mock.Mock()
@@ -49,6 +69,7 @@ class TestBriefHelpers(BaseApplicationTest):
     def test_show_mandatory_assessment_method_for_live_briefs_on_or_after_date(self, date):
         brief = {
             'status': 'live',
+            'frameworkSlug': 'digital-outcomes-and-specialists-4',
             'publishedAt': date
         }
         current_app = mock.Mock()

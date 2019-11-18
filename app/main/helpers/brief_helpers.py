@@ -31,8 +31,11 @@ def format_winning_supplier_size(size):
 
 
 def show_mandatory_assessment_method(brief, current_app):
+    # For DOS4 briefs only.
     # To ensure suppliers see the same info while a brief is live, only show for closed briefs or
     # briefs published after the feature flag date.
+    if brief['frameworkSlug'] != 'digital-outcomes-and-specialists-4':
+        return False
     if brief['status'] != 'live':
         return True
     if current_app.config['SHOW_BRIEF_MANDATORY_EVALUATION_METHOD']:
@@ -43,7 +46,7 @@ def show_mandatory_assessment_method(brief, current_app):
 
 # TODO: split the manifest sections and add the relevant description for each DOS5 lot instead
 def get_evaluation_description(brief, current_app, brief_content):
-    # Add in mandatory evaluation method, missing from the display_brief manifest summary_page_description
+    # Add in mandatory evaluation method, missing from the DOS4 display_brief manifest summary_page_description
     #   Digital Specialists: work history
     #   Digital Outcomes / User Research Participants: written proposal
     if show_mandatory_assessment_method(brief, current_app):

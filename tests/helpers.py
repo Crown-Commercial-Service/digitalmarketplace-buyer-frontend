@@ -49,6 +49,10 @@ def get_frameworks_list_fixture_data():
             lots=dos_lots(), framework_agreement_version='v1.0', has_further_competition=True
         ).single_result_response(),
         FrameworkStub(
+            id=12, slug='digital-outcomes-and-specialists-4', status='live',
+            lots=dos_lots(), has_further_competition=True
+        ).single_result_response(),
+        FrameworkStub(
             id=5, slug='digital-outcomes-and-specialists', status='live',
             lots=dos_lots(), framework_agreement_version='v1.0', has_further_competition=True
         ).single_result_response(),

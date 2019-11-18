@@ -618,6 +618,7 @@ class TestBriefPage(BaseBriefPageTest):
         brief['briefs']['lotSlug'] = lot_slug
         brief['briefs']['status'] = 'live'
         brief['briefs']['publishedAt'] = '2019-01-02T00:00:00.000000Z'
+        brief['briefs']['frameworkSlug'] = 'digital-outcomes-and-specialists-4'
         self.data_api_client.get_brief.return_value = brief
 
         with self.app.app_context():
