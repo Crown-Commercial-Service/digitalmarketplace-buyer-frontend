@@ -172,23 +172,16 @@ negotiate with them.'|safe},
             ] if project else [])
           },
           {
-            "body": "Complete the Customer Benefits Record form",
+            "body": "Submit a Customer Benefits Record",
             "custom_body_list": [
               {"type": "text", "text":
-                ''.join(["You must fill in the <a href=\"", framework_urls.customer_benefits_record_form_url|e, "\"
+                ''.join(["You must <a href=\"", framework_urls.customer_benefits_record_form_url|e, "\"
                                                  target=\"_blank\" rel=\"external noopener noreferrer\"
                                                  data-analytics=\"trackEvent\"
                                                  data-analytics-category=\"Direct Award\"
                                                  data-analytics-action=\"External Link\"
-                                                >Customer Benefits Record form</a>
-                and email it to the Crown Commercial Service at <a href=\"mailto:", framework_urls.customer_benefits_record_form_email|e, "\"
-                                                                   target=\"_top\"
-                                                                   data-analytics=\"trackEvent\"
-                                                                   data-analytics-category=\"Direct Award\"
-                                                                   data-analytics-action=\"External Link\"
-                                                                  >", framework_urls.customer_benefits_record_form_email|replace("-", "&#8209;"|safe), "</a>.",
-                                                                  "<!-- use non-breaking dash TODO: do this in a better way -->",
-                 " They will contact you if they find any issues with the supplier."]
+                                                >submit a Customer Benefits Record</a>.",
+                 " The Crown Commercial Service will contact you if they find any issues with the supplier."]
                 )
               }
             ] + ([

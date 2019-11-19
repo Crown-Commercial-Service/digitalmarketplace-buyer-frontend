@@ -272,7 +272,7 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         doc = html.fromstring(body)
 
         item_headings = ['Save a search', 'Export your results', 'Start assessing',
-                         'Award a contract', 'Complete the Customer Benefits Record form']
+                         'Award a contract', 'Submit a Customer Benefits Record']
 
         tasklist = doc.xpath('//li[contains(@class, "instruction-list-item")]')
 
@@ -296,13 +296,10 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
             "https://www.gov.uk/guidance/g-cloud-buyers-guide#review-and-compare-services"
         assert self._task_has_link(tasklist, 3, buyer_guide_compare_services_url)
 
-        # Step 5 has a link to framework customer benefits form and customer benefits form email address.
+        # Step 5 has a link to framework customer benefits form
         customer_benefits_record_form_url = self.content_loader.get_message('g9', 'urls',
                                                                             'customer_benefits_record_form_url')
-        customer_benefits_record_form_email = self.content_loader.get_message('g9', 'urls',
-                                                                              'customer_benefits_record_form_email')
         assert self._task_has_link(tasklist, 5, customer_benefits_record_form_url)
-        assert self._task_has_link(tasklist, 5, 'mailto:{}'.format(customer_benefits_record_form_email))
 
         breadcrumbs = doc.xpath("//ol[@role='breadcrumbs']/li")
         assert tuple(li.xpath("normalize-space(string())") for li in breadcrumbs) == (
