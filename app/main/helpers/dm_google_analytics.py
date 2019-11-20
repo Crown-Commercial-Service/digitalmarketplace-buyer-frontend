@@ -23,12 +23,11 @@ def custom_dimension(custom_dimension_enum, value):
 
     Pass in the relevant enum from this module, and either an instance or an actual value from that enum.
     """
-
-    if value in CurrentProjectStageEnum:
-        custom_dimension_instance = value
-    else:
+    if isinstance(value, str):
         # If we've been given a string, try to convert it to an instance of the enum - if that fails then it'll be loud.
         custom_dimension_instance = custom_dimension_enum(value)
+    elif value in CurrentProjectStageEnum:
+        custom_dimension_instance = value
 
     return {
         "data_id": CUSTOM_DIMENSION_IDENTIFIERS[custom_dimension_enum],
