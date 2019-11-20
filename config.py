@@ -164,11 +164,17 @@ class Preview(Live):
 class Staging(Live):
     DM_PATCH_FRONTEND_URL = 'https://www.staging.marketplace.team/'
 
+    # Feature flag - show for briefs published after this date
+    SHOW_BRIEF_MANDATORY_EVALUATION_METHOD = '2019-11-21'
+
 
 class Production(Live):
     DM_PATCH_FRONTEND_URL = 'https://www.digitalmarketplace.service.gov.uk/'
 
     GOOGLE_SITE_VERIFICATION = "TKGSGZnfHpx1-lKOthI17ANtwk7fz3F4Sbr77I0ppO0"
+
+    # Feature flag - show for briefs published after this date
+    SHOW_BRIEF_MANDATORY_EVALUATION_METHOD = '2019-11-21'
 
 
 configs = {
