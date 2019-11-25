@@ -422,7 +422,9 @@ class TestBriefPage(BaseBriefPageTest):
 
         page_heading = document.xpath('//header[@class="page-heading-smaller"]')[0]
         assert page_heading.xpath('h1/text()')[0] == self.brief['briefs']['title']
-        assert page_heading.xpath('p[@class="context"]/text()')[0] == self.brief['briefs']['organisation']
+        assert page_heading.xpath(
+            'normalize-space(string(*[contains(@class, "govuk-caption")]))'
+        ) == self.brief['briefs']['organisation']
 
     def _assert_all_normal_api_calls(self):
         assert self.data_api_client.mock_calls == [
