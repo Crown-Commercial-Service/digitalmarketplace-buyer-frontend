@@ -62,7 +62,7 @@
           <p class="govuk-body">You cannot award this contract as there were no services matching your requirements.</p>
         {% endif %}
 
-        <p class="govuk-body"><a href="{{ url_for('direct_award.did_you_award_contract', framework_family=framework.family, project_id=project.id) }}">Previous page</a></p>
+        <p class="govuk-body"><a class="govuk-link" href="{{ url_for('direct_award.did_you_award_contract', framework_family=framework.family, project_id=project.id) }}">Previous page</a></p>
       </div>
     </div>
   </div>

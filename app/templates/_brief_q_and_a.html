@@ -2,7 +2,7 @@
 
 {% if brief.status == 'live' and not brief.clarificationQuestionsAreClosed and brief.questionAndAnswerSessionDetails %}
   {{ summary.heading("Question and answer session", id="question-and-answer-session") }}
-  <a href="/suppliers/opportunities/{{ brief.id }}/question-and-answer-session">
+  <a class="govuk-link" href="/suppliers/opportunities/{{ brief.id }}/question-and-answer-session">
     {% if current_user.is_authenticated and current_user.role == 'supplier' %}
       View question and answer session details
     {% else %}
@@ -32,7 +32,7 @@
 {% endcall %}
 
 {% if brief.status == 'live' and not brief.clarificationQuestionsAreClosed %}
-  <a href="/suppliers/opportunities/{{ brief.id }}/ask-a-question">
+  <a class="govuk-link" href="/suppliers/opportunities/{{ brief.id }}/ask-a-question">
     {% if current_user.is_authenticated and current_user.role == 'supplier' %}
       Ask a question
     {% else %}

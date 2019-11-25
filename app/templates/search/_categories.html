@@ -3,7 +3,7 @@
 {%- endmacro -%}
 
 {%- macro list_item__unselected(text, count, url) -%}
-  <li>{% if count > 0 %}<a href="{{ url }}">{% endif %}{{ text }} ({{ count }}){% if count > 0 %}</a>{% endif %}</li>
+  <li>{% if count > 0 %}<a class="govuk-link" href="{{ url }}">{% endif %}{{ text }} ({{ count }}){% if count > 0 %}</a>{% endif %}</li>
 {%- endmacro -%}
 
 {%- macro list_item__selected(text, count, url=None, nested_items=None) -%}

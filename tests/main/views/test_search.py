@@ -8,11 +8,11 @@ import pytest
 from ...helpers import BaseApplicationTest, BaseAPIClientMixin
 
 
-def find_pagination_links(res_data):
-    return re.findall(
-        r'<li class="[next|previous]+">[^<]+<a\ href="(/g-cloud/search\?[^"]+)',
-        res_data,
-        re.MULTILINE)
+def find_pagination_links(doc):
+    return doc.xpath(
+        "//li[contains(@class, 'next') or contains(@class, 'previous')]//a[starts-with(@href, $u)]",
+        u="/g-cloud/search?",
+    )
 
 
 def find_0_results_suggestion(res_data):
@@ -52,7 +52,14 @@ class TestSearchResults(APIClientMixin, BaseApplicationTest):
 
         res = self.client.get('/g-cloud/search?q=email')
         assert res.status_code == 200
-        assert '<a href="/g-cloud/services/5-G3-0279-010">CDN VDMS</a>' in res.get_data(as_text=True)
+
+        document = html.fromstring(res.get_data(as_text=True))
+
+        assert document.xpath(
+            "//a[@href=$u][normalize-space(string())=$t]",
+            u="/g-cloud/services/5-G3-0279-010",
+            t="CDN VDMS",
+        )
 
     def test_search_page_form(self):
         self.search_api_client.search.return_value = \
@@ -60,7 +67,10 @@ class TestSearchResults(APIClientMixin, BaseApplicationTest):
 
         res = self.client.get('/g-cloud/search?q=email')
         assert res.status_code == 200
-        assert '<form action="/g-cloud/search" method="get" id="js-dm-live-search-form">' in res.get_data(as_text=True)
+
+        document = html.fromstring(res.get_data(as_text=True))
+
+        assert document.xpath("//form[@action=$a][@method='get'][@id='js-dm-live-search-form']", a="/g-cloud/search")
 
     def test_search_page_allows_non_keyword_search(self):
         self.search_api_client.search.return_value = \
@@ -68,7 +78,14 @@ class TestSearchResults(APIClientMixin, BaseApplicationTest):
 
         res = self.client.get('/g-cloud/search?lot=cloud-software')
         assert res.status_code == 200
-        assert '<a href="/g-cloud/services/5-G3-0279-010">CDN VDMS</a>' in res.get_data(as_text=True)
+
+        document = html.fromstring(res.get_data(as_text=True))
+
+        assert document.xpath(
+            "//a[@href=$u][normalize-space(string())=$t]",
+            u="/g-cloud/services/5-G3-0279-010",
+            t="CDN VDMS",
+        )
 
     def test_should_not_render_pagination_on_single_results_page(self):
         self.search_api_client.search.return_value = \
@@ -85,13 +102,16 @@ class TestSearchResults(APIClientMixin, BaseApplicationTest):
 
         res = self.client.get('/g-cloud/search?lot=cloud-software')
         assert res.status_code == 200
+
+        document = html.fromstring(res.get_data(as_text=True))
+
         assert 'previous-next-navigation' in res.get_data(as_text=True)
         assert '<li class="previous">' not in res.get_data(as_text=True)
         assert '<li class="next">' in res.get_data(as_text=True)
 
-        (next_link,) = find_pagination_links(res.get_data(as_text=True))
-        assert 'page=2' in next_link
-        assert 'lot=cloud-software' in next_link
+        (next_link,) = find_pagination_links(document)
+        assert 'page=2' in next_link.attrib["href"]
+        assert 'lot=cloud-software' in next_link.attrib["href"]
 
     def test_should_render_pagination_link_on_second_results_page(self):
         self.search_api_client.search.return_value = \
@@ -99,16 +119,18 @@ class TestSearchResults(APIClientMixin, BaseApplicationTest):
 
         res = self.client.get('/g-cloud/search?lot=cloud-software&page=2')
         assert res.status_code == 200
+
+        document = html.fromstring(res.get_data(as_text=True))
+
         assert 'previous-next-navigation' in res.get_data(as_text=True)
         assert '<li class="previous">' in res.get_data(as_text=True)
         assert '<li class="next">' in res.get_data(as_text=True)
-        (prev_link, next_link) = find_pagination_links(
-            res.get_data(as_text=True))
+        (prev_link, next_link) = find_pagination_links(document)
 
-        assert 'page=1' in prev_link
-        assert 'lot=cloud-software' in prev_link
-        assert 'page=3' in next_link
-        assert 'lot=cloud-software' in next_link
+        assert 'page=1' in prev_link.attrib["href"]
+        assert 'lot=cloud-software' in prev_link.attrib["href"]
+        assert 'page=3' in next_link.attrib["href"]
+        assert 'lot=cloud-software' in next_link.attrib["href"]
 
     def test_should_render_total_pages_on_pagination_links(self):
         self.search_api_client.search.return_value = \
@@ -126,13 +148,16 @@ class TestSearchResults(APIClientMixin, BaseApplicationTest):
 
         res = self.client.get('/g-cloud/search?lot=cloud-software&page=200')
         assert res.status_code == 200
+
+        document = html.fromstring(res.get_data(as_text=True))
+
         assert 'previous-next-navigation' in res.get_data(as_text=True)
         assert '<li class="previous">' in res.get_data(as_text=True)
         assert '<li class="next">' not in res.get_data(as_text=True)
 
-        (prev_link,) = find_pagination_links(res.get_data(as_text=True))
-        assert 'page=199' in prev_link
-        assert 'lot=cloud-software' in prev_link
+        (prev_link,) = find_pagination_links(document)
+        assert 'page=199' in prev_link.attrib["href"]
+        assert 'lot=cloud-software' in prev_link.attrib["href"]
 
     def test_should_render_summary_for_0_results_in_all_categories_no_keywords(self):
         self.search_api_client.search.return_value = get_0_results_search_response()
