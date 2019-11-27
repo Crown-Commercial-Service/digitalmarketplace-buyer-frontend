@@ -61,9 +61,9 @@
   <div class="column-two-thirds">
     <header class="page-heading-smaller">
       {% if service.supplierName %}
-      <p class="context">{{ service.supplierName }}</p>
+      <span class="govuk-caption-l">{{ service.supplierName }}</span>
       {% endif %}
-      <h1>{{ service.title }}</h1>
+      <h1 class="govuk-heading-l">{{ service.title }}</h1>
     </header>
   </div>
 </div>
@@ -79,7 +79,7 @@
   <div class="column-one-whole">
     {% include '_service_attributes.html' %}
     {% include '_service_documents.html' %}
-    <a href="#content" class="return-to-top">Return to top ↑</a>
+    <a class="govuk-link" href="#content" class="return-to-top">Return to top ↑</a>
   </div>
 </div>
 

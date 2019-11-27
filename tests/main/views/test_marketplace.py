@@ -297,9 +297,9 @@ class TestHomepageSidebarMessage(APIClientMixin, BaseApplicationTest):
         document = html.fromstring(response_data)
 
         sidebar_links = document.xpath(
-            '//div[@class="supplier-messages column-one-third"]/aside/div/p[1]/a[@class="top-level-link"]/text()'
+            '//div[@class="supplier-messages column-one-third"]/aside//a[contains(@class, "top-level-link")]'
         )
-        sidebar_link_texts = [str(item).strip() for item in sidebar_links]
+        sidebar_link_texts = [item.xpath("normalize-space(string())") for item in sidebar_links]
 
         assert 'View Digital Outcomes and Specialists opportunities' in sidebar_link_texts
         assert 'Become a supplier' in sidebar_link_texts
@@ -318,9 +318,9 @@ class TestHomepageSidebarMessage(APIClientMixin, BaseApplicationTest):
         document = html.fromstring(response_data)
 
         sidebar_links = document.xpath(
-            '//div[@class="supplier-messages column-one-third"]/aside/div/p[1]/a[@class="top-level-link"]/text()'
+            '//div[@class="supplier-messages column-one-third"]/aside//a[contains(@class, "top-level-link")]'
         )
-        sidebar_link_texts = [str(item).strip() for item in sidebar_links]
+        sidebar_link_texts = [item.xpath("normalize-space(string())") for item in sidebar_links]
 
         assert 'View Digital Outcomes and Specialists opportunities' in sidebar_link_texts
         assert 'Become a supplier' not in sidebar_link_texts
@@ -422,7 +422,9 @@ class TestBriefPage(BaseBriefPageTest):
 
         page_heading = document.xpath('//header[@class="page-heading-smaller"]')[0]
         assert page_heading.xpath('h1/text()')[0] == self.brief['briefs']['title']
-        assert page_heading.xpath('p[@class="context"]/text()')[0] == self.brief['briefs']['organisation']
+        assert page_heading.xpath(
+            'normalize-space(string(*[contains(@class, "govuk-caption")]))'
+        ) == self.brief['briefs']['organisation']
 
     def _assert_all_normal_api_calls(self):
         assert self.data_api_client.mock_calls == [

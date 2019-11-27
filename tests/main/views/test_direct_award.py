@@ -535,8 +535,8 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
 
         search_links = doc.xpath("//div[@class='temporary-message-banner']//a")
         assert len(search_links) == 1
-        assert search_links[0].text == 'start a new search for G-Cloud\xa010 services'
-        assert search_links[0].values()[0] == '/g-cloud/search?q=accelerator'
+        assert search_links[0].xpath("normalize-space(string())") == 'start a new search for G-Cloud\xa010 services'
+        assert search_links[0].attrib["href"] == '/g-cloud/search?q=accelerator'
 
     @pytest.mark.parametrize(
         ('locked_at', 'fwork_status', 'following_fwork_status', 'xpath', 'index', 'date'),

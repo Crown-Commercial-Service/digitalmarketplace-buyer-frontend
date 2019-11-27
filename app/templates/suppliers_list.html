@@ -50,7 +50,7 @@
         {% else %}
           <li>
             <span class="visuallyhidden">Suppliers starting with </span>
-            <a href="{{ url_for('main.suppliers_list_by_prefix', prefix=item)}}">{{ item }}</a>
+            <a class="govuk-link" href="{{ url_for('main.suppliers_list_by_prefix', prefix=item)}}">{{ item }}</a>
           </li>
         {% endif %}
       {% endfor %}
@@ -62,7 +62,7 @@
       {% else %}
         <li>
           <span class="visuallyhidden">Suppliers starting with </span>
-          <a href="{{ url_for('main.suppliers_list_by_prefix', prefix='other') }}">1–9</a>
+          <a class="govuk-link" href="{{ url_for('main.suppliers_list_by_prefix', prefix='other') }}">1–9</a>
         </li>
       {% endif %}
     </ol>
@@ -74,7 +74,7 @@
       {% for supplier in suppliers %}
         <div class="search-result">
           <h2 class="search-result-title">
-            <a href="{{ url_for('main.suppliers_details', supplier_id=supplier.id)}}">{{ supplier.name}}</a>
+            <a class="govuk-link" href="{{ url_for('main.suppliers_details', supplier_id=supplier.id)}}">{{ supplier.name}}</a>
           </h2>
           <p class="search-result-excerpt">
             {{ supplier.description }}

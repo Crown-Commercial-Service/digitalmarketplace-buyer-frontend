@@ -1,6 +1,8 @@
 # coding: utf-8
 import mock
 
+from lxml import html
+
 from dmapiclient import APIError
 
 from ...helpers import BaseApplicationTest, BaseAPIClientMixin
@@ -84,53 +86,72 @@ class TestSuppliersPage(DataAPIClientMixin, BaseApplicationTest):
         res = self.client.get('/g-cloud/suppliers')
         assert res.status_code == 200
 
-        supplier_html = self._strip_whitespace('''
-        <div class="search-result">
-            <h2 class="search-result-title">
-            <a href="/g-cloud/supplier/586559">ABM UNITED KINGDOM LTD</a>
-        </h2>
+        document = html.fromstring(res.get_data(as_text=True))
 
-        <p class="search-result-excerpt">
-            We specialise in the development of intelligence and investigative software across law enforcement agencies, public sector and commercial organisations. We provide solutions to clients across the globe, including the United Kingdom, Australia, USA, Canada and Europe.
-        </p>
-        </div>''')  # noqa
-
-        assert supplier_html in self._strip_whitespace(res.get_data(as_text=True))
+        assert document.xpath(
+            "//*[contains(@class, 'search-result')]"
+            "[.//h2//a[@href=$u][normalize-space(string())=$t]]"
+            "[.//p[normalize-space(string())=$b]]",
+            u="/g-cloud/supplier/586559",
+            t="ABM UNITED KINGDOM LTD",
+            b="""We specialise in the development of intelligence and investigative software across law enforcement agencies, public sector and commercial organisations. We provide solutions to clients across the globe, including the United Kingdom, Australia, USA, Canada and Europe.""",  # noqa
+        )
 
     def test_should_show_a_t_z_nav(self):
         res = self.client.get('/g-cloud/suppliers')
         assert res.status_code == 200
 
-        supplier_html = self._strip_whitespace(u'''
-                <li class="selected"><span class="visuallyhidden">Suppliers starting with </span><strong>A</strong></li>
-                <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=B">B</a></li>
-                <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=C">C</a></li>
-                <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=D">D</a></li>
-                <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=E">E</a></li>
-                <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=F">F</a></li>
-                <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=G">G</a></li>
-                <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=H">H</a></li>
-                <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=I">I</a></li>
-                <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=J">J</a></li>
-                <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=K">K</a></li>
-                <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=L">L</a></li>
-                <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=M">M</a></li>
-                <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=N">N</a></li>
-                <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=O">O</a></li>
-                <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=P">P</a></li>
-                <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=Q">Q</a></li>
-                <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=R">R</a></li>
-                <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=S">S</a></li>
-                <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=T">T</a></li>
-                <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=U">U</a></li>
-                <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=V">V</a></li>
-                <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=W">W</a></li>
-                <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=X">X</a></li>
-                <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=Y">Y</a></li>
-                <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=Z">Z</a></li>
-                <li><span class="visuallyhidden">Suppliers starting with </span><a href="/g-cloud/suppliers?prefix=other">1–9</a></li>
-        ''')  # noqa
-        assert supplier_html in self._strip_whitespace(res.get_data(as_text=True))
+        document = html.fromstring(res.get_data(as_text=True))
+
+        nav_lis = document.xpath(
+            "//li[.//*[contains(@class, 'visuallyhidden')][normalize-space(string())=$s]][.//a[@href]]",
+            s="Suppliers starting with",
+        )
+        expected_strings = (
+            ("Suppliers starting with B", "B", "/g-cloud/suppliers?prefix=B",),
+            ("Suppliers starting with C", "C", "/g-cloud/suppliers?prefix=C",),
+            ("Suppliers starting with D", "D", "/g-cloud/suppliers?prefix=D",),
+            ("Suppliers starting with E", "E", "/g-cloud/suppliers?prefix=E",),
+            ("Suppliers starting with F", "F", "/g-cloud/suppliers?prefix=F",),
+            ("Suppliers starting with G", "G", "/g-cloud/suppliers?prefix=G",),
+            ("Suppliers starting with H", "H", "/g-cloud/suppliers?prefix=H",),
+            ("Suppliers starting with I", "I", "/g-cloud/suppliers?prefix=I",),
+            ("Suppliers starting with J", "J", "/g-cloud/suppliers?prefix=J",),
+            ("Suppliers starting with K", "K", "/g-cloud/suppliers?prefix=K",),
+            ("Suppliers starting with L", "L", "/g-cloud/suppliers?prefix=L",),
+            ("Suppliers starting with M", "M", "/g-cloud/suppliers?prefix=M",),
+            ("Suppliers starting with N", "N", "/g-cloud/suppliers?prefix=N",),
+            ("Suppliers starting with O", "O", "/g-cloud/suppliers?prefix=O",),
+            ("Suppliers starting with P", "P", "/g-cloud/suppliers?prefix=P",),
+            ("Suppliers starting with Q", "Q", "/g-cloud/suppliers?prefix=Q",),
+            ("Suppliers starting with R", "R", "/g-cloud/suppliers?prefix=R",),
+            ("Suppliers starting with S", "S", "/g-cloud/suppliers?prefix=S",),
+            ("Suppliers starting with T", "T", "/g-cloud/suppliers?prefix=T",),
+            ("Suppliers starting with U", "U", "/g-cloud/suppliers?prefix=U",),
+            ("Suppliers starting with V", "V", "/g-cloud/suppliers?prefix=V",),
+            ("Suppliers starting with W", "W", "/g-cloud/suppliers?prefix=W",),
+            ("Suppliers starting with X", "X", "/g-cloud/suppliers?prefix=X",),
+            ("Suppliers starting with Y", "Y", "/g-cloud/suppliers?prefix=Y",),
+            ("Suppliers starting with Z", "Z", "/g-cloud/suppliers?prefix=Z",),
+            ("Suppliers starting with 1–9", "1–9", "/g-cloud/suppliers?prefix=other",),
+        )
+
+        assert tuple(
+            (
+                nl.xpath("normalize-space(string())"),
+                nl.xpath("normalize-space(string(.//a))"),
+                nl.xpath(".//a/@href")[0],
+            ) for nl in nav_lis
+        ) == expected_strings
+        # these lis should all have the same parent
+        assert len(frozenset(nl.getparent() for nl in nav_lis)) == 1
+        # that parent should only have one other li
+        assert len(nav_lis[0].getparent().getchildren()) == len(expected_strings) + 1
+        # that li should be the first and match this pattern
+        assert nav_lis[0].getparent().xpath(
+            "./*[1][normalize-space(string())=$t][not(.//a[@href])]",
+            t="Suppliers starting with A",
+        )
 
     def test_should_show_no_suppliers_page_if_api_returns_404(self):
         self.data_api_client.find_suppliers.side_effect = APIError(mock.Mock(status_code=404))
@@ -141,15 +162,16 @@ class TestSuppliersPage(DataAPIClientMixin, BaseApplicationTest):
     def test_should_show_next_page_on_supplier_list(self):
         res = self.client.get('/g-cloud/suppliers')
         assert res.status_code == 200
-        html_tag = '<li class="next">'
-        html_link = '<a href="/g-cloud/suppliers?'
-        html_prefix = 'prefix=A'
-        html_page = 'page=2'
 
-        assert html_tag in res.get_data(as_text=True)
-        assert html_prefix in res.get_data(as_text=True)
-        assert html_link in res.get_data(as_text=True)
-        assert html_page in res.get_data(as_text=True)
+        document = html.fromstring(res.get_data(as_text=True))
+
+        assert document.xpath("//li[contains(@class, 'next')]")
+        assert document.xpath(
+            "//a[starts-with(@href, $u)][contains(@href, $px)][contains(@href, $pg)]",
+            u="/g-cloud/suppliers?",
+            px="prefix=A",
+            pg="page=2",
+        )
 
     def test_should_show_next_nav_on_supplier_list(self):
         self.data_api_client.find_suppliers.return_value = self.suppliers_by_prefix_page_2  # noqa
@@ -157,14 +179,16 @@ class TestSuppliersPage(DataAPIClientMixin, BaseApplicationTest):
         self.data_api_client.find_suppliers.assert_called_once_with('A', 2, 'g-cloud')
 
         assert res.status_code == 200
-        html_tag = '<li class="previous">'
-        html_link = '<a href="/g-cloud/suppliers?'
-        html_prefix = 'prefix=A'
-        html_page = 'page=1'
-        assert html_tag in res.get_data(as_text=True)
-        assert html_prefix in res.get_data(as_text=True)
-        assert html_link in res.get_data(as_text=True)
-        assert html_page in res.get_data(as_text=True)
+
+        document = html.fromstring(res.get_data(as_text=True))
+
+        assert document.xpath("//li[contains(@class, 'previous')]")
+        assert document.xpath(
+            "//a[starts-with(@href, $u)][contains(@href, $px)][contains(@href, $pg)]",
+            u="/g-cloud/suppliers?",
+            px="prefix=A",
+            pg="page=1",
+        )
 
     def test_should_show_next_and_prev_nav_on_supplier_list(self):
         self.data_api_client.find_suppliers.return_value = self.suppliers_by_prefix_next_and_prev  # noqa
@@ -172,25 +196,23 @@ class TestSuppliersPage(DataAPIClientMixin, BaseApplicationTest):
 
         assert res.status_code == 200
 
-        previous_html_tag = '<li class="previous">'
-        previous_html_link = '<a href="/g-cloud/suppliers?'
-        previous_html_prefix = 'prefix=A'
-        previous_html_page = 'page=1'
+        document = html.fromstring(res.get_data(as_text=True))
 
-        assert previous_html_tag in res.get_data(as_text=True)
-        assert previous_html_prefix in res.get_data(as_text=True)
-        assert previous_html_link in res.get_data(as_text=True)
-        assert previous_html_page in res.get_data(as_text=True)
+        assert document.xpath("//li[contains(@class, 'previous')]")
+        assert document.xpath(
+            "//a[starts-with(@href, $u)][contains(@href, $px)][contains(@href, $pg)]",
+            u="/g-cloud/suppliers?",
+            px="prefix=A",
+            pg="page=1",
+        )
 
-        next_html_tag = '<li class="next">'
-        next_html_link = '<a href="/g-cloud/suppliers?'
-        next_html_prefix = 'prefix=A'
-        next_html_page = 'page=3'
-
-        assert next_html_tag in res.get_data(as_text=True)
-        assert next_html_link in res.get_data(as_text=True)
-        assert next_html_prefix in res.get_data(as_text=True)
-        assert next_html_page in res.get_data(as_text=True)
+        assert document.xpath("//li[contains(@class, 'next')]")
+        assert document.xpath(
+            "//a[starts-with(@href, $u)][contains(@href, $px)][contains(@href, $pg)]",
+            u="/g-cloud/suppliers?",
+            px="prefix=A",
+            pg="page=3",
+        )
 
     def test_should_have_supplier_details_on_supplier_page(self):
         res = self.client.get('/g-cloud/supplier/92191')

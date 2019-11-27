@@ -1,7 +1,7 @@
 {% for service in services %}
 <div class="search-result">
   <h2 class="search-result-title">
-        <a href="{{ url_for('.get_service_by_id', service_id=service.id) }}">{{ service.serviceName }}</a>
+        <a class="govuk-link" href="{{ url_for('.get_service_by_id', service_id=service.id) }}">{{ service.serviceName }}</a>
     </h2>
 
     <p class="search-result-supplier">

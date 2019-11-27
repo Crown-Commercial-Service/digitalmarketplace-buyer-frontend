@@ -2,7 +2,7 @@
   <ul class="previous-next-navigation">
     {% if prev_link %}
       <li class="previous">
-          <a href="{{ url_for('.suppliers_list_by_prefix', **prev_link) }}">
+          <a class="govuk-link" href="{{ url_for('.suppliers_list_by_prefix', **prev_link) }}">
               Previous <span class="visuallyhidden">page</span>
           </a>
       </li>
@@ -10,7 +10,7 @@
 
     {% if next_link %}
       <li class="next">
-          <a href="{{ url_for('.suppliers_list_by_prefix', **next_link) }}">
+          <a class="govuk-link" href="{{ url_for('.suppliers_list_by_prefix', **next_link) }}">
               Next <span class="visuallyhidden">page</span>
           </a>
       </li>

@@ -4,9 +4,9 @@
         {% if pagination['show_prev'] %}
         <li class="previous">
             {% if framework_family == 'g-cloud' %}
-              <a href="{{ url_for('.{}'.format(view_name), page=pagination['prev_page'], **search_query) }}">
+              <a class="govuk-link" href="{{ url_for('.{}'.format(view_name), page=pagination['prev_page'], **search_query) }}">
             {% elif framework_family == 'digital-outcomes-and-specialists' %}
-              <a href="{{ url_for('.{}'.format(view_name), framework_family=framework_family, page=pagination['prev_page'], **search_query) }}">
+              <a class="govuk-link" href="{{ url_for('.{}'.format(view_name), framework_family=framework_family, page=pagination['prev_page'], **search_query) }}">
             {%endif%}
                 Previous <span class="visuallyhidden">page</span>
                 <span class="page-numbers">{{ pagination['prev_page'] }} of {{ pagination['total_pages'] }}</span>
@@ -17,9 +17,9 @@
         {% if pagination['show_next'] %}
         <li class="next">
             {% if framework_family == 'g-cloud' %}
-              <a href="{{ url_for('.{}'.format(view_name), page=pagination['next_page'], **search_query) }}">
+              <a class="govuk-link" href="{{ url_for('.{}'.format(view_name), page=pagination['next_page'], **search_query) }}">
             {% elif framework_family == 'digital-outcomes-and-specialists' %}
-              <a href="{{ url_for('.{}'.format(view_name), framework_family=framework_family, page=pagination['next_page'], **search_query) }}">
+              <a class="govuk-link" href="{{ url_for('.{}'.format(view_name), framework_family=framework_family, page=pagination['next_page'], **search_query) }}">
             {%endif%}
                 Next <span class="visuallyhidden">page</span>
                 <span class="page-numbers">{{ pagination['next_page'] }} of {{ pagination['total_pages'] }}</span>

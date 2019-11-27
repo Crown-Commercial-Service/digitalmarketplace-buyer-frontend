@@ -50,14 +50,14 @@
         </h1>
       </header>
 
-      <p>Export your search results to keep a record of the services you’ve found.</p>
+      <p class="govuk-body">Export your search results to keep a record of the services you’ve found.</p>
 
-      <p>
+      <p class="govuk-body">
         You can download exported results as a spreadsheet or comma-separated values (CSV). Both file types include
         suppliers’ service descriptions and contact details.
       </p>
 
-      <p>Do not export your results if you still need to edit your search.</p>
+      <p class="govuk-body">Do not export your results if you still need to edit your search.</p>
 
       <form
         action="{{ url_for('direct_award.end_search', framework_family=framework.family, project_id=project.id) }}"
@@ -81,7 +81,7 @@
         }) }}
       </form>
 
-      <p><a href="{{ url_for('direct_award.view_project', framework_family=framework.family, project_id=project.id) }}">Return to your task list</a></p>
+      <p class="govuk-body"><a class="govuk-link" href="{{ url_for('direct_award.view_project', framework_family=framework.family, project_id=project.id) }}">Return to your task list</a></p>
     </div>
   </div>
 
