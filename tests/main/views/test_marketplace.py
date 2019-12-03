@@ -341,12 +341,14 @@ class TestStaticMarketplacePages(BaseApplicationTest):
     def test_cookie_page(self):
         res = self.client.get('/cookies')
         assert res.status_code == 200
-        assert '<h1>Cookies</h1>' in self._strip_whitespace(res.get_data(as_text=True))
+        document = html.fromstring(res.get_data(as_text=True))
+        assert len(document.xpath('//h1[contains(text(), "Cookies on Digital Marketplace")]')) == 1
 
     def test_terms_and_conditions_page(self):
         res = self.client.get('/terms-and-conditions')
         assert res.status_code == 200
-        assert '<h1>Termsandconditions</h1>' in self._strip_whitespace(res.get_data(as_text=True))
+        document = html.fromstring(res.get_data(as_text=True))
+        assert len(document.xpath('//h1[contains(text(), "Terms and conditions")]')) == 1
 
     def test_external_404_makes_all_links_absolute(self):
         # Get the normal 404 page and a list of the relative URLs it contains links to
