@@ -217,7 +217,8 @@ class TestSuppliersPage(DataAPIClientMixin, BaseApplicationTest):
     def test_should_have_supplier_details_on_supplier_page(self):
         res = self.client.get('/g-cloud/supplier/92191')
         assert res.status_code == 200
-        assert '<h1>ExampleCompanyLimited</h1>' in self._strip_whitespace(res.get_data(as_text=True))
+        assert '<h1class="govuk-heading-l">ExampleCompanyLimited</h1>' \
+            in self._strip_whitespace(res.get_data(as_text=True))
         assert "Example Company Limited is an innovation station sensation; we deliver software so bleeding "\
             "edge you literally won&#39;t be able to run any of it on your systems." in res.get_data(as_text=True)
 
@@ -226,7 +227,8 @@ class TestSuppliersPage(DataAPIClientMixin, BaseApplicationTest):
 
         res = self.client.get('/g-cloud/supplier/92191')
         assert res.status_code == 200
-        assert '<h1>ExampleCompanyLimited</h1>' in self._strip_whitespace(res.get_data(as_text=True))
+        assert '<h1class="govuk-heading-l">ExampleCompanyLimited</h1>' \
+            in self._strip_whitespace(res.get_data(as_text=True))
         assert self._strip_whitespace("<h2>Clients</h2>") not in self._strip_whitespace(res.get_data(as_text=True))
 
     def test_should_have_supplier_contact_details_on_supplier_page(self):

@@ -39,9 +39,7 @@
 {% block page_heading %}
 <div class="grid-row">
   <div class="column-two-thirds">
-    {% with heading="{} opportunities".format(framework_family_name) %}
-        {% include "toolkit/page-heading.html" %}
-    {% endwith %}
+    <h1 class="govuk-heading-xl">{{ framework_family_name }} opportunities</h1>
     <div class="marketplace-paragraph">
       <p>View buyer requirements for {{ lot_names | map('lower') | smartjoin }}.</p>
     </div>

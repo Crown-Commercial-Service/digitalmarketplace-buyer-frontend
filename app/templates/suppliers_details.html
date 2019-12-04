@@ -32,14 +32,8 @@
 
 {% block main_content %}
 
-{%
-  with
-  heading = supplier.name,
-  context = "Digital Marketplace supplier",
-  smaller = True
-%}
-  {% include "toolkit/page-heading.html" %}
-{% endwith %}
+<span class="govuk-caption-l">Digital Marketplace supplier</span>
+<h1 class="govuk-heading-l">{{ supplier.name }}</h1>
 
 <div class="grid-row supplier-profile">
     {% if supplier.description or supplier.clients %}

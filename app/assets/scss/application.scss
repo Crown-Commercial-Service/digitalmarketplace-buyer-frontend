@@ -34,7 +34,6 @@ $path: "/static/images/";
 @import "toolkit/_grids.scss";
 @import "toolkit/_instruction-list.scss";
 @import "toolkit/_notification-banners.scss";
-@import "toolkit/_page-headings.scss";
 @import "toolkit/_phase-banner.scss";
 @import "toolkit/_proposition-header.scss";
 @import "toolkit/_secondary-action-link.scss";
@@ -83,6 +82,9 @@ $govuk-compatibility-govukelements: true;
 @import "_table.scss";
 @import "_text.scss";
 @import "_help-page.scss";
+
+// Overrides
+@import "overrides/_page_headings.scss";
 
 // Misc styles
 // TODO: Move misc styling into their own partial files or the Digital Marketplace FE Toolkit

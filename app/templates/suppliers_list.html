@@ -25,17 +25,9 @@
 {% block main_content %}
 
 {% if prefix == "other"%}
-{%
-  with heading="Suppliers starting with 1–9"
-%}
-  {% include "toolkit/page-heading.html" %}
-{% endwith %}
+  <h1 class="govuk-heading-xl">Suppliers starting with 1–9</h1>
 {% else %}
-{%
-  with heading="Suppliers starting with " + prefix
-%}
-  {% include "toolkit/page-heading.html" %}
-{% endwith %}
+  <h1 class="govuk-heading-xl">Suppliers starting with {{ prefix }}</h1>
 {% endif %}
 
 <div id="global-atoz-navigation">
