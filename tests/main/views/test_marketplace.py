@@ -625,9 +625,7 @@ class TestBriefPage(BaseBriefPageTest):
         brief['briefs']['frameworkSlug'] = 'digital-outcomes-and-specialists-4'
         self.data_api_client.get_brief.return_value = brief
 
-        with self.app.app_context():
-            current_app.config['SHOW_BRIEF_MANDATORY_EVALUATION_METHOD'] = '2019-01-01'
-            res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief['briefs']['id']))
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(brief['briefs']['id']))
 
         assert res.status_code == 200
 
