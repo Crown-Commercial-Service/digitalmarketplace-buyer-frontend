@@ -206,13 +206,4 @@ negotiate with them.'|safe},
     </div>
     {% include "direct-award/_saved-search-not-locked-project-temp-message.html" %}
   </div>
-  {% if not delete_requested %}
-     <div class="grid-row">
-       <div class="column-two-thirds">
-         {% if framework.status == 'live' and project.status == 'draft' %}
-         <a href="http://localhost">Delete</a>
-         {% endif %}
-       </div>
-     </div>
-   {% endif %}
 {% endblock %}
