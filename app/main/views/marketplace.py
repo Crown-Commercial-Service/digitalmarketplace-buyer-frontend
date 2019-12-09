@@ -173,7 +173,7 @@ def get_brief_by_id(framework_family, brief_id):
     brief_content = content_loader.get_manifest(brief['frameworkSlug'], 'display_brief').filter(brief)
 
     # Add in mandatory evaluation method, missing from the display_brief manifest summary_page_description
-    evaluation_description = get_evaluation_description(brief, current_app, brief_content)
+    evaluation_description = get_evaluation_description(brief, brief_content)
 
     return render_template(
         'brief.html',
