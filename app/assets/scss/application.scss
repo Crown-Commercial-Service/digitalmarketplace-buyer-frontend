@@ -84,6 +84,9 @@ $govuk-compatibility-govukelements: true;
 @import "_text.scss";
 @import "_help-page.scss";
 
+// Overrides
+@import "overrides/_page_headings.scss";
+
 // Misc styles
 // TODO: Move misc styling into their own partial files or the Digital Marketplace FE Toolkit
 #wrapper {

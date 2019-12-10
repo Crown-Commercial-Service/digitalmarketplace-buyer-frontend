@@ -45,9 +45,7 @@
 <div class="tell-us-about-contract-page">
   <div class="grid-row">
     <div class="column-two-thirds">
-      {% with heading="Tell us about your contract" %}
-        {% include "toolkit/page-heading.html" %}
-      {% endwith %}
+      <h1 class="govuk-heading-xl">Tell us about your contract</h1>
 
       <form method="POST" action="{{ url_for('direct_award.tell_us_about_contract', framework_family=framework.family, project_id=project.id, outcome_id=outcome_id) }}" class="tell-us-about-contract-form">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
