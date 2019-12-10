@@ -28,11 +28,11 @@
 {% block main_content %}
 
 <div class="index-page">
-  <header class="page-heading">
-    <h1>
-      {{ title|capitalize }}
-    </h1>
-  </header>
+
+  <h1 class="govuk-heading-xl">
+    {{ title|capitalize }}
+  </h1>
+
   <div class="grid-row">
     <div class="column-two-thirds">
       <form action="{{ url_for('direct_award_public.choose_lot', framework_family=framework_family)}}" method="post">

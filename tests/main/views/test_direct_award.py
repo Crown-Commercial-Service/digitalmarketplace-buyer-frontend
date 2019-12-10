@@ -69,7 +69,7 @@ class TestDirectAward(TestDirectAwardBase):
 
         result_html = res.get_data(as_text=True)
         doc = html.fromstring(result_html)
-        page_header = doc.xpath('//*[@id="content"]/div/header/h1')[0].text.strip()
+        page_header = doc.cssselect("h1.govuk-heading-xl")[0].text.strip()
 
         assert page_header == "Your saved searches"
         assert page_header in doc.xpath('/html/head/title')[0].text.strip()
