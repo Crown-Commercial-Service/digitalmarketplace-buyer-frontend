@@ -422,11 +422,14 @@ class TestBriefPage(BaseBriefPageTest):
 
         document = html.fromstring(res.get_data(as_text=True))
 
-        page_heading = document.xpath('//header[@class="page-heading-smaller"]')[0]
-        assert page_heading.xpath('h1/text()')[0] == self.brief['briefs']['title']
-        assert page_heading.xpath(
-            'normalize-space(string(*[contains(@class, "govuk-caption")]))'
-        ) == self.brief['briefs']['organisation']
+        page_heading = document.cssselect("span.govuk-caption-l + h1.govuk-heading-l")
+        assert page_heading
+
+        heading = page_heading[0]
+        assert heading.text == self.brief["briefs"]["title"]
+
+        caption = heading.getprevious()
+        assert caption.text == self.brief["briefs"]["organisation"]
 
     def _assert_all_normal_api_calls(self):
         assert self.data_api_client.mock_calls == [

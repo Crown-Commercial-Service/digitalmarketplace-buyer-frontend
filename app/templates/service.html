@@ -59,12 +59,10 @@
 {% endif %}
 <div class="grid-row">
   <div class="column-two-thirds">
-    <header class="page-heading-smaller">
-      {% if service.supplierName %}
-      <span class="govuk-caption-l">{{ service.supplierName }}</span>
-      {% endif %}
-      <h1 class="govuk-heading-l">{{ service.title }}</h1>
-    </header>
+    {% if service.supplierName %}
+    <span class="govuk-caption-l">{{ service.supplierName }}</span>
+    {% endif %}
+    <h1 class="govuk-heading-l">{{ service.title }}</h1>
   </div>
 </div>
 <div class="grid-row">
