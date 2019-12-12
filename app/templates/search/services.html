@@ -11,11 +11,21 @@
       "href": url_for('main.index'),
       "text": "Digital Marketplace"
     },
-    {
-      "href": url_for('.index_g_cloud'),
-      "text": gcloud_framework_description|capitalize
-    },
-  ] + ([{"text": current_lot.name},] if current_lot else [])
+  ] + (
+    [
+      {
+        "href": url_for('.index_g_cloud'),
+        "text": gcloud_framework_description|capitalize
+      },
+      {
+        "text": current_lot.name
+      },
+    ] if current_lot else [
+      {
+        "text": gcloud_framework_description|capitalize
+      },
+    ]
+  )
 }) }}
 {% endblock breadcrumb %}
 
