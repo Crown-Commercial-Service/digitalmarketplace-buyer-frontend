@@ -5,34 +5,31 @@
 {% endblock %}
 
 {% block breadcrumb %}
-  {%
-    with
-    items = [
-      {
-        "link": url_for('main.index'),
-        "label": "Digital Marketplace"
-      },
-      {
-        "link": url_for('external.buyer_dashboard'),
-        "label": "Your account"
-      },
-      {
-        "link": url_for('direct_award.saved_search_overview', framework_family=framework.family),
-        "label": "Your saved searches"
-      },
-      {
-        "link": url_for('direct_award.view_project', framework_family=framework.family, project_id=project.id),
-        "label": project.name
-      },
-      {
-        "link": url_for('direct_award.did_you_award_contract', framework_family=framework.family, project_id=project.id),
-        "label": "Did you award a contract?"
-      }
-    ]
-  %}
-    {% include "toolkit/breadcrumb.html" %}
-  {% endwith %}
-{% endblock %}
+{{ govukBreadcrumbs({
+  "items": [
+    {
+      "href": url_for('main.index'),
+      "text": "Digital Marketplace"
+    },
+    {
+      "href": url_for('external.buyer_dashboard'),
+      "text": "Your account"
+    },
+    {
+      "href": url_for('direct_award.saved_search_overview', framework_family=framework.family),
+      "text": "Your saved searches"
+    },
+    {
+      "href": url_for('direct_award.view_project', framework_family=framework.family, project_id=project.id),
+      "text": project.name
+    },
+    {
+      "href": url_for('direct_award.did_you_award_contract', framework_family=framework.family, project_id=project.id),
+      "text": "Did you award a contract?"
+    },
+  ]
+}) }}
+{% endblock breadcrumb %}
 
 {% block main_content %}
 {% include "toolkit/forms/validation.html" %}

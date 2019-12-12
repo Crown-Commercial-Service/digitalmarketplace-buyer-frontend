@@ -5,25 +5,22 @@
 {% endblock %}
 
 {% block breadcrumb %}
-  {%
-    with
-    items = [
-      {
-          "link": url_for('main.index'),
-          "label": "Digital Marketplace"
-      },
-      {
-        "link": url_for('direct_award_public.pre_project_task_list', framework_family=framework_family),
-        "label": "Find cloud hosting, software and support"
-      },
-      {
-          "label": title|capitalize
-      }
-    ]
-  %}
-    {% include "toolkit/breadcrumb.html" %}
-  {% endwith %}
-{% endblock %}
+{{ govukBreadcrumbs({
+  "items": [
+    {
+      "href": url_for('main.index'),
+      "text": "Digital Marketplace"
+    },
+    {
+      "href": url_for('direct_award_public.pre_project_task_list', framework_family=framework_family),
+      "text": "Find cloud hosting, software and support"
+    },
+    {
+      "text": title|capitalize
+    },
+  ]
+}) }}
+{% endblock breadcrumb %}
 
 {% block main_content %}
 

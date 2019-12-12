@@ -5,30 +5,28 @@
 {% endblock %}
 
 {% block breadcrumb %}
-  {%
-    with
-    items = [
-      {
-        "link": url_for('main.index'),
-        "label": "Digital Marketplace"
-      },
-      {
-        "link": url_for('external.buyer_dashboard'),
-        "label": "Your account"
-      },
-      {
-        "link": url_for('direct_award.saved_search_overview', framework_family=framework.framework),
-        "label": "Your saved searches"
-      },
-      {
-        "link": url_for('direct_award.view_project', framework_family=framework.framework, project_id=project.id),
-        "label": project.name
-      }
-    ]
-  %}
-    {% include "toolkit/breadcrumb.html" %}
-  {% endwith %}
-{% endblock %}
+{{ govukBreadcrumbs({
+  "items": [
+    {
+      "href": url_for('main.index'),
+      "text": "Digital Marketplace"
+    },
+    {
+      "href": url_for('external.buyer_dashboard'),
+      "text": "Your account"
+    },
+    {
+      "href": url_for('direct_award.saved_search_overview', framework_family=framework.framework),
+      "text": "Your saved searches"
+    },
+    {
+      "href": url_for('direct_award.view_project', framework_family=framework.framework, project_id=project.id),
+      "text": project.name
+    },
+  ]
+}) }}
+{% endblock breadcrumb %}
+
 
 {% block main_content %}
 {% include "toolkit/forms/validation.html" %}

@@ -7,25 +7,22 @@
 {% endblock %}
 
 {% block breadcrumb %}
-  {%
-    with
-    items = [
-      {
-          "link": url_for('main.index'),
-          "label": "Digital Marketplace"
-      },
-      {
-          "link": search_url,
-          "label": "Search"
-      },
-      {
-          "label": page_name
-      }
-    ]
-  %}
-    {% include "toolkit/breadcrumb.html" %}
-  {% endwith %}
-{% endblock %}
+{{ govukBreadcrumbs({
+  "items": [
+    {
+      "href": url_for('main.index'),
+      "text": "Digital Marketplace"
+    },
+    {
+      "href": search_url,
+      "text": "Search"
+    },
+    {
+      "text": page_name
+    },
+  ]
+}) }}
+{% endblock breadcrumb %}
 
 {% block main_content %}
 

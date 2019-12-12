@@ -5,36 +5,19 @@
 {% endblock %}
 
 {% block breadcrumb %}
-  {% with %}
-    {% if current_lot %}
-      {% set items = [
-        {
-          "link": url_for('.index'),
-          "label": "Digital Marketplace"
-        },
-        {
-          "link": url_for('.{}'.format(view_name), framework_family=framework_family),
-          "label": "Supplier opportunities"
-        },
-        {
-          "label": current_lot.name
-        }
-      ] %}
-    {% else %}
-      {% set items = [
-        {
-          "link": url_for('.index'),
-          "label": "Digital Marketplace"
-        },
-        {
-          "link": url_for('.{}'.format(view_name), framework_family=framework_family),
-          "label": "Supplier opportunities"
-        }
-      ] %}
-    {% endif %}
-    {% include "toolkit/breadcrumb.html" %}
-  {% endwith %}
-{% endblock %}
+{{ govukBreadcrumbs({
+  "items": [
+    {
+      "href": url_for('main.index'),
+      "text": "Digital Marketplace"
+    },
+    {
+      "href": url_for('.{}'.format(view_name), framework_family=framework_family),
+      "text": "Supplier opportunities"
+    },
+  ] + ([{"text": current_lot.name},] if current_lot else [])
+}) }}
+{% endblock breadcrumb %}
 
 {% block page_heading %}
 <div class="grid-row">
