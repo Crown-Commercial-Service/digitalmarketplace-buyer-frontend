@@ -15,7 +15,21 @@
       "href": url_for('.index_g_cloud'),
       "text": gcloud_framework_description|capitalize
     },
-  ]
+  ] + (
+    [
+      {
+        "href": url_for('.suppliers_list_by_prefix'),
+        "text": "Suppliers"
+      },
+      {
+        "text": request.args['prefix']
+      },
+    ] if request.args['prefix'] else [
+      {
+        "text": "Suppliers"
+      },
+    ]
+  )
 }) }}
 {% endblock breadcrumb %}
 
