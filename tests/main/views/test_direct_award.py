@@ -301,7 +301,7 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
                                                                             'customer_benefits_record_form_url')
         assert self._task_has_link(tasklist, 5, customer_benefits_record_form_url)
 
-        breadcrumbs = doc.xpath("//ol[@role='breadcrumbs']/li")
+        breadcrumbs = doc.xpath("//div[@class='govuk-breadcrumbs']/ol/li")
         assert tuple(li.xpath("normalize-space(string())") for li in breadcrumbs) == (
             "Digital Marketplace",
             "Your account",
@@ -1333,7 +1333,7 @@ class TestPreProjectTaskList(TestDirectAwardBase):
 
         doc = html.fromstring(res.get_data(as_text=True))
 
-        breadcrumbs = doc.xpath("//ol[@role='breadcrumbs']/li")
+        breadcrumbs = doc.xpath("//div[@class='govuk-breadcrumbs']/ol/li")
         assert tuple(li.xpath("normalize-space(string())") for li in breadcrumbs) == (
             "Digital Marketplace",
             "Find cloud hosting, software and support",

@@ -112,7 +112,7 @@ class TestServicePage(DataAPIClientMixin, BaseApplicationTest):
             '/g-cloud/search?lot={}'.format(lot): self.lots[lot]['name']
         }
 
-        breadcrumbs = document.xpath('//div[@id="global-breadcrumb"]//a')
+        breadcrumbs = document.xpath("//div[@class='govuk-breadcrumbs']/ol/li/a")
         assert len(breadcrumbs) == 3
 
         for breadcrumb in breadcrumbs:
