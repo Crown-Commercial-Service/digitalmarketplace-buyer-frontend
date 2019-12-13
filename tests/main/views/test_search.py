@@ -592,6 +592,53 @@ class TestSearchResults(APIClientMixin, BaseApplicationTest):
             'parentCategory': 'electronic document and records management (edrm)',
         }
 
+    @pytest.mark.parametrize(
+        ('query_string', 'expected_breadcrumbs'),
+        (
+            ('', (
+                ('Digital Marketplace', '/'),
+                ('Cloud hosting, software and support', '')
+            )),
+            ('?lot=foo', (
+                ('Digital Marketplace', '/'),
+                ('Cloud hosting, software and support', '')
+            )),
+            ('?bar=foo', (
+                ('Digital Marketplace', '/'),
+                ('Cloud hosting, software and support', '')
+            )),
+            ('?lot=cloud-software', (
+                ('Digital Marketplace', '/'),
+                ('Cloud hosting, software and support', '/g-cloud'),
+                ('Cloud software', '')
+            )),
+            ('?lot=cloud-hosting', (
+                ('Digital Marketplace', '/'),
+                ('Cloud hosting, software and support', '/g-cloud'),
+                ('Cloud hosting', '')
+            )),
+            ('?lot=cloud-support', (
+                ('Digital Marketplace', '/'),
+                ('Cloud hosting, software and support', '/g-cloud'),
+                ('Cloud support', '')
+            ))
+        )
+    )
+    def test_breadcrumbs(self, query_string, expected_breadcrumbs):
+        self.search_api_client.search.return_value = self.g9_search_results
+        res = self.client.get('/g-cloud/search{}'.format(query_string))
+        assert res.status_code == 200
+
+        document = html.fromstring(res.get_data(as_text=True))
+        found_breadcrumb_elements = document.xpath("//div[@class='govuk-breadcrumbs']/ol/li")
+        found_breadcrumbs = (
+            (element.xpath("normalize-space(string())"), element.xpath("normalize-space(string(.//a/@href))"))
+            for element in found_breadcrumb_elements
+        )
+
+        for found_breadcrumb, expected_breadcrumb in zip(found_breadcrumbs, expected_breadcrumbs):
+            assert found_breadcrumb == expected_breadcrumb
+
 
 class TestSearchFilterOnClick(APIClientMixin, BaseApplicationTest):
     def setup_method(self, method):
