@@ -5,30 +5,27 @@
 {% endblock %}
 
 {% block breadcrumb %}
-  {%
-    with
-    items = [
-      {
-          "link": url_for('.index'),
-          "label": "Digital Marketplace"
-      },
-      {
-          "link": url_for('.index_g_cloud'),
-          "label": gcloud_framework_description|capitalize
-      },
-      {
-          "link": url_for('.suppliers_list_by_prefix'),
-          "label": "Suppliers"
-      },
-      {
-          "link": url_for('.suppliers_list_by_prefix', prefix=prefix),
-          "label": prefix
-      }
-    ]
-  %}
-    {% include "toolkit/breadcrumb.html" %}
-  {% endwith %}
-{% endblock %}
+{{ govukBreadcrumbs({
+  "items": [
+    {
+      "href": url_for('main.index'),
+      "text": "Digital Marketplace"
+    },
+    {
+      "href": url_for('.index_g_cloud'),
+      "text": gcloud_framework_description|capitalize
+    },
+    {
+      "href": url_for('.suppliers_list_by_prefix'),
+      "text": "Suppliers"
+    },
+    {
+      "href": url_for('.suppliers_list_by_prefix', prefix=prefix),
+      "text": prefix
+    },
+  ]
+}) }}
+{% endblock breadcrumb %}
 
 {% block main_content %}
 

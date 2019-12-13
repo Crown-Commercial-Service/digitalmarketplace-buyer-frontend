@@ -5,22 +5,18 @@
 {% endblock %}
 
 {% block breadcrumb %}
-  {%
-    with
-    items = [
-      {
-          "link": url_for('.index'),
-          "label": "Digital Marketplace"
-      },
-      {
-          "link": url_for('.index_crown_hosting'),
-          "label": "Physical datacentre space"
-      }
-    ]
-  %}
-    {% include "toolkit/breadcrumb.html" %}
-  {% endwith %}
-{% endblock %}
+{{ govukBreadcrumbs({
+  "items": [
+    {
+      "href": url_for('main.index'),
+      "text": "Digital Marketplace"
+    },
+    {
+      "text": "Physical datacentre space"
+    },
+  ]
+}) }}
+{% endblock breadcrumb %}
 
 {% block main_content %}
 

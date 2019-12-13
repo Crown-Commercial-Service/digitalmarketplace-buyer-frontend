@@ -5,22 +5,22 @@
 {% endblock %}
 
 {% block breadcrumb %}
-  {%
-    with
-    items = [
-      {
-          "link": url_for('main.index'),
-          "label": "Digital Marketplace"
-      },
-      {
-          "link": url_for('external.buyer_dashboard'),
-          "label": "Your account"
-      }
-    ]
-  %}
-    {% include "toolkit/breadcrumb.html" %}
-  {% endwith %}
-{% endblock %}
+{{ govukBreadcrumbs({
+  "items": [
+    {
+      "href": url_for('main.index'),
+      "text": "Digital Marketplace"
+    },
+    {
+      "href": url_for('external.buyer_dashboard'),
+      "text": "Your account"
+    },
+    {
+      "text": "Your saved searches"
+    },
+  ]
+}) }}
+{% endblock breadcrumb %}
 
 {% block main_content %}
 

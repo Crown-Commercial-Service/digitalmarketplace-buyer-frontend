@@ -6,22 +6,19 @@
 {% endblock %}
 
 {% block breadcrumb %}
-  {%
-    with
-    items = [
-      {
-          "link": url_for('.index'),
-          "label": "Digital Marketplace"
-      },
-      {
-          "link": url_for('.list_opportunities', framework_family=brief.framework.family),
-          "label": "Supplier opportunities"
-      }
-    ]
-  %}
-    {% include "toolkit/breadcrumb.html" %}
-  {% endwith %}
-{% endblock %}
+{{ govukBreadcrumbs({
+  "items": [
+    {
+      "href": url_for('main.index'),
+      "text": "Digital Marketplace"
+    },
+    {
+      "href": url_for('.list_opportunities', framework_family=brief.framework.family),
+      "text": "Supplier opportunities"
+    },
+  ]
+}) }}
+{% endblock breadcrumb %}
 
 {% block main_content %}
 

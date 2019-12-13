@@ -5,18 +5,18 @@
 {% endblock %}
 
 {% block breadcrumb %}
-  {%
-    with
-    items = [
-      {
-          "link": url_for('.index'),
-          "label": "Digital Marketplace"
-      }
-    ]
-  %}
-    {% include "toolkit/breadcrumb.html" %}
-  {% endwith %}
-{% endblock %}
+{{ govukBreadcrumbs({
+  "items": [
+    {
+      "href": url_for('main.index'),
+      "text": "Digital Marketplace"
+    },
+    {
+      "text": "Terms and conditions"
+    },
+  ]
+}) }}
+{% endblock breadcrumb %}
 
 {% block main_content %}
   <div class="grid-row legal-content">

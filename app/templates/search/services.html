@@ -5,36 +5,29 @@
 {% endblock %}
 
 {% block breadcrumb %}
-  {% with %}
-    {% if current_lot %}
-      {% set items = [
-        {
-            "link": url_for('.index'),
-            "label": "Digital Marketplace"
-        },
-        {
-            "link": url_for('.index_g_cloud'),
-            "label": gcloud_framework_description|capitalize
-        },
-        {
-          "label": current_lot.name
-        }
-      ] %}
-    {% else %}
-      {% set items = [
-        {
-            "link": url_for('.index'),
-            "label": "Digital Marketplace"
-        },
-        {
-            "link": url_for('.index_g_cloud'),
-            "label": gcloud_framework_description|capitalize
-        }
-      ] %}
-    {% endif %}
-    {% include "toolkit/breadcrumb.html" %}
-  {% endwith %}
-{% endblock %}
+{{ govukBreadcrumbs({
+  "items": [
+    {
+      "href": url_for('main.index'),
+      "text": "Digital Marketplace"
+    },
+  ] + (
+    [
+      {
+        "href": url_for('.index_g_cloud'),
+        "text": gcloud_framework_description|capitalize
+      },
+      {
+        "text": current_lot.name
+      },
+    ] if current_lot else [
+      {
+        "text": gcloud_framework_description|capitalize
+      },
+    ]
+  )
+}) }}
+{% endblock breadcrumb %}
 
 {% block page_heading %}
   <h1 class="govuk-heading-xl">
