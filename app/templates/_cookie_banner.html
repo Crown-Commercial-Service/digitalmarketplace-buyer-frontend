@@ -1,0 +1,18 @@
+<div id="dm-cookie-banner-message" class="cookie-banner__wrapper govuk-width-container">
+  <p class="cookie-banner__message">GOV.UK uses cookies which are essential for the site to work. We also use non-essential cookies to help us improve government digital services. Any data collected is anonymised. By continuing to use this site, you agree to our use of cookies.</p>
+  <div class="cookie-banner__buttons">
+    <div class="cookie-banner__button cookie-banner__button-accept">
+      <button id="dm-accept-cookies" class="button govuk-button button--secondary button--inline" type="submit">Accept cookies</button>
+    </div>
+    <div class="cookie-banner__button cookie-banner__button-settings">
+      <a class="button govuk-button button--secondary button--inline" role="button" href="{{ url_for('external.cookies') }}">Cookie settings</a>
+    </div>
+  </div>
+</div>
+
+<div id="dm-cookie-banner-confirmation" class="cookie-banner__confirmation govuk-width-container" tabindex="-1">
+  <p class="cookie-banner__confirmation-message">
+      You’ve accepted all cookies. You can <a class="govuk-link" href="{{ url_for('external.cookies') }}">change your cookie settings</a> at any time.
+  </p>
+  <button id="dm-hide-cookie-banner" class="cookie-banner__hide-button">Hide</button>
+</div>
