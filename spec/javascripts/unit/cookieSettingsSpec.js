@@ -42,6 +42,7 @@ describe('cookieSettings', function() {
 
     warningContainer = document.createElement('div')
     warningContainer.setAttribute('id', 'cookie-settings-warning')
+    warningContainer.setAttribute('class', 'cookie-settings__warning')
     warningContainer.innerHTML =
       '<p>warning message<p>'
 
@@ -51,6 +52,7 @@ describe('cookieSettings', function() {
     errorContainer = document.createElement('div')
     errorContainer.style.display = "none"
     errorContainer.setAttribute('id', 'cookie-settings-error')
+    errorContainer.setAttribute('class', 'cookie-settings__error')
     errorContainer.innerHTML =
       '<p>Please select \'On\' or \'Off\' for all cookie choices<p>'
 
@@ -71,13 +73,13 @@ describe('cookieSettings', function() {
       GOVUK.GDM.cookie('cookie_policy', null)
 
       spyOn(GOVUK.GDM, 'setDefaultConsentCookie').and.callThrough()
-      cookieSettings.start(element)
+      cookieSettings.start()
 
       expect(GOVUK.GDM.setDefaultConsentCookie).toHaveBeenCalled()
     });
 
     it('sets all radio buttons to the default values', function() {
-      cookieSettings.start(element)
+      cookieSettings.start()
 
       var radioButtons = element.querySelectorAll('input[value=on]')
 

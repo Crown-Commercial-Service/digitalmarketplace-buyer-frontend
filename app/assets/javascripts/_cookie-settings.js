@@ -4,6 +4,7 @@
   'use strict'
   window.GOVUK.GDM = window.GOVUK.GDM || {}
   function CookieSettings () { }
+
   CookieSettings.prototype.start = function () {
     this.$module = document.querySelector('#cookie-settings')
     this.$module.submitSettingsForm = this.submitSettingsForm.bind(this)
@@ -142,11 +143,12 @@
 })(window);
 
 (function (window) {
-  // Extra jquery as the event listeners above don't work
+  // Initialise the code above if we're on the cookie settings page
   window.GOVUK.GDM = window.GOVUK.GDM || {}
+  var _cookieSettingsForm = new window.GOVUK.GDM.CookieSettings();
+  if (window.location.pathname === '/cookie-settings') {
+    _cookieSettingsForm.start()
+  }
 
-  $('#cookie-settings').on('submit', function () {
-       // TODO: Do something!
-  })
 
 })(window);

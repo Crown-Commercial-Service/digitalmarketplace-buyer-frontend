@@ -29,8 +29,7 @@ class TestApplication(APIClientMixin, BaseApplicationTest):
     def test_should_use_local_cookie_page_on_cookie_message(self):
         res = self.client.get('/')
         assert res.status_code == 200
-        assert '<p>GOV.UK uses cookies to make the site simpler. <a href="/cookies">' \
-            'Find out more about cookies</a></p>' in res.get_data(as_text=True)
+        assert 'GOV.UK uses cookies which are essential for the site to work.' in res.get_data(as_text=True)
         assert len(self.data_api_client.find_frameworks.call_args_list) == 2
 
     def test_google_verification_code_shown_on_homepage(self):
@@ -342,7 +341,15 @@ class TestStaticMarketplacePages(BaseApplicationTest):
         res = self.client.get('/cookies')
         assert res.status_code == 200
         document = html.fromstring(res.get_data(as_text=True))
+        assert len(document.xpath('//h1[contains(text(), "Details about cookies on Digital Marketplace")]')) == 1
+
+    def test_cookie_settings_page(self):
+        res = self.client.get('/cookie-settings')
+        assert res.status_code == 200
+        document = html.fromstring(res.get_data(as_text=True))
         assert len(document.xpath('//h1[contains(text(), "Cookies on Digital Marketplace")]')) == 1
+        assert len(document.xpath("//form//input[@name='cookies-usage']")) == 2
+        assert len(document.xpath("//form//input[@name='cookies-settings']")) == 2
 
     def test_terms_and_conditions_page(self):
         res = self.client.get('/terms-and-conditions')

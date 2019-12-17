@@ -94,6 +94,12 @@ def cookies():
     return render_template('content/cookies.html')
 
 
+@main.route('/cookie-settings')
+def cookie_settings():
+    # Preferences saved client side as cookies, so no POST required
+    return render_template('cookie_settings.html')
+
+
 @main.route('/privacy-notice')
 def privacy_notice():
     return render_template('content/privacy-notice.html')

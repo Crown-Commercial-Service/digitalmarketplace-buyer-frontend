@@ -1,0 +1,26 @@
+// See https://github.com/alphagov/frontend/blob/master/app/assets/stylesheets/views/_cookie-settings.scss
+
+.cookie-settings__form-wrapper,
+.cookie-settings__warning {
+  display: none;
+
+  .js-enabled & {
+    display: block;
+  }
+}
+
+.cookie-settings__no-js {
+  .js-enabled & {
+    display: none;
+  }
+}
+
+.cookie-settings__confirmation {
+  @include govuk-font(19);
+  display: none;
+}
+
+.cookie-settings__error {
+  @include govuk-font(19);
+  display: none;
+}
