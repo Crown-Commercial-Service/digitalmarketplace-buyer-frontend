@@ -5,14 +5,14 @@
       <button id="dm-accept-cookies" class="button govuk-button button--secondary button--inline" type="submit">Accept cookies</button>
     </div>
     <div class="cookie-banner__button cookie-banner__button-settings">
-      <a class="button govuk-button button--secondary button--inline" role="button" href="{{ url_for('external.cookies') }}">Cookie settings</a>
+      <a class="button govuk-button button--secondary button--inline" role="button" href="{{ url_for('external.cookie_settings') }}">Cookie settings</a>
     </div>
   </div>
 </div>
 
 <div id="dm-cookie-banner-confirmation" class="cookie-banner__confirmation govuk-width-container" tabindex="-1">
   <p class="cookie-banner__confirmation-message">
-      You’ve accepted all cookies. You can <a class="govuk-link" href="{{ url_for('external.cookies') }}">change your cookie settings</a> at any time.
+      You’ve accepted all cookies. You can <a class="govuk-link" href="{{ url_for('external.cookie_settings') }}">change your cookie settings</a> at any time.
   </p>
   <button id="dm-hide-cookie-banner" class="cookie-banner__hide-button">Hide</button>
 </div>

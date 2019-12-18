@@ -31,6 +31,9 @@ class TestApplication(APIClientMixin, BaseApplicationTest):
         assert res.status_code == 200
         assert 'GOV.UK uses cookies which are essential for the site to work.' in res.get_data(as_text=True)
         assert len(self.data_api_client.find_frameworks.call_args_list) == 2
+        document = html.fromstring(res.get_data(as_text=True))
+        assert len(document.xpath('//div[@id="dm-cookie-banner-message"]//a[@href="/cookie-settings"]')) == 1
+        assert len(document.xpath('//div[@id="dm-cookie-banner-confirmation"]//a[@href="/cookie-settings"]')) == 1
 
     def test_google_verification_code_shown_on_homepage(self):
         res = self.client.get('/')
