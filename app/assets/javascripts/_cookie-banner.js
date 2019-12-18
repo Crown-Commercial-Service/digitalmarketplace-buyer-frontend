@@ -1,4 +1,4 @@
-// Code to support the cookie banner page
+// Code to support the cookie banner component
 (function (window) {
   'use strict'
   window.GOVUK.GDM = window.GOVUK.GDM || {}
@@ -29,9 +29,9 @@
 
     // Force the new cookie banner to show if we don't think the user has seen it before
     // This involves resetting the seen_cookie_message cookie, which may be set to true if they've seen the old cookie banner
-    if (!window.GOVUK.GDM.cookie('cookie_policy')) {
-      if (window.GOVUK.GDM.cookie('seen_cookie_message') === ('true' || 'yes')) {
-        window.GOVUK.GDM.cookie('seen_cookie_message', false, { days: 365 })
+    if (!window.GOVUK.GDM.CookieHelper.cookie('cookie_policy')) {
+      if (window.GOVUK.GDM.CookieHelper.cookie('seen_cookie_message') === ('true' || 'yes')) {
+        window.GOVUK.GDM.CookieHelper.cookie('seen_cookie_message', false, { days: 365 })
       }
     }
     this.showCookieMessage()
@@ -40,13 +40,13 @@
   CookieBanner.prototype.showCookieMessage = function () {
     // Show the cookie banner if not in the cookie settings page or in an iframe
     if (!this.isInCookiesPage() && !this.isInIframe()) {
-      var shouldHaveCookieMessage = (this.$cookieBanner && window.GOVUK.GDM.cookie('seen_cookie_message') !== 'true')
+      var shouldHaveCookieMessage = (this.$cookieBanner && window.GOVUK.GDM.CookieHelper.cookie('seen_cookie_message') !== 'true')
       if (shouldHaveCookieMessage) {
         this.$cookieBanner.style.display = 'block'
 
         // Set the default consent cookie if it isn't already present
-        if (!window.GOVUK.GDM.cookie('cookie_policy')) {
-          window.GOVUK.GDM.setDefaultConsentCookie()
+        if (!window.GOVUK.GDM.CookieHelper.cookie('cookie_policy')) {
+          window.GOVUK.GDM.CookieHelper.setDefaultConsentCookie()
         }
       } else {
         this.$cookieBanner.style.display = 'none'
@@ -59,7 +59,7 @@
   CookieBanner.prototype.hideCookieMessage = function (event) {
     if (this.$cookieBanner) {
       this.$cookieBanner.style.display = 'none'
-      window.GOVUK.GDM.cookie('seen_cookie_message', 'true', { days: 365 })
+      window.GOVUK.GDM.CookieHelper.cookie('seen_cookie_message', 'true', { days: 365 })
     }
 
     if (event.target) {
@@ -68,11 +68,11 @@
   }
 
   CookieBanner.prototype.setCookieConsent = function () {
-    window.GOVUK.GDM.approveAllCookieTypes()
+    window.GOVUK.GDM.CookieHelper.approveAllCookieTypes()
     this.showConfirmationMessage()
     this.$cookieBannerConfirmationMessage.focus()
-    window.GOVUK.GDM.cookie('seen_cookie_message', 'true', { days: 365 })
-    window.GOVUK.GDM.cookie('cookie_preferences_set', 'true', { days: 365 })
+    window.GOVUK.GDM.CookieHelper.cookie('seen_cookie_message', 'true', { days: 365 })
+    window.GOVUK.GDM.CookieHelper.cookie('cookie_preferences_set', 'true', { days: 365 })
   }
 
   CookieBanner.prototype.showConfirmationMessage = function () {

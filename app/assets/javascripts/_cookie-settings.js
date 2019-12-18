@@ -15,13 +15,13 @@
   }
 
   CookieSettings.prototype.setInitialFormValues = function () {
-    if (!window.GOVUK.GDM.cookie('cookie_policy')) {
-      window.GOVUK.GDM.setDefaultConsentCookie()
+    if (!window.GOVUK.GDM.CookieHelper.cookie('cookie_policy')) {
+      window.GOVUK.GDM.CookieHelper.setDefaultConsentCookie()
     }
 
-    var currentConsentCookie = window.GOVUK.GDM.cookie('cookie_policy')
+    var currentConsentCookie = window.GOVUK.GDM.CookieHelper.cookie('cookie_policy')
     var currentConsentCookieJSON = JSON.parse(currentConsentCookie)
-    var preferencesSet = window.GOVUK.GDM.getCookie('cookie_preferences_set')
+    var preferencesSet = window.GOVUK.GDM.CookieHelper.getCookie('cookie_preferences_set')
 
     // We don't need the essential value as this cannot be changed by the user
     delete currentConsentCookieJSON.essential
@@ -64,13 +64,13 @@
       return false
     }
 
-    window.GOVUK.GDM.setConsentCookie(options)
-    window.GOVUK.GDM.setCookie('cookie_preferences_set', true, { days: 365 });
+    window.GOVUK.GDM.CookieHelper.setConsentCookie(options)
+    window.GOVUK.GDM.CookieHelper.setCookie('cookie_preferences_set', true, { days: 365 })
 
     this.fireAnalyticsEvent(options)
 
-    if (!window.GOVUK.GDM.cookie("seen_cookie_message")) {
-      window.GOVUK.GDM.setCookie("seen_cookie_message", true, { days: 365 })
+    if (!window.GOVUK.GDM.CookieHelper.cookie('seen_cookie_message')) {
+      window.GOVUK.GDM.CookieHelper.setCookie('seen_cookie_message', true, { days: 365 })
     }
     this.hideWarningMessage()
 
