@@ -93,14 +93,13 @@
   }
 
   window.GOVUK.GDM.CookieBanner = CookieBanner
-
 })(window);
 
 (function (window) {
   // Initialise the module above
   window.GOVUK.GDM = window.GOVUK.GDM || {}
 
-  var _cookieBanner = new window.GOVUK.GDM.CookieBanner();
+  var _cookieBanner = new window.GOVUK.GDM.CookieBanner()
   _cookieBanner.init()
 
 })(window);
