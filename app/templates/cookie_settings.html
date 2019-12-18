@@ -5,20 +5,17 @@
 {% endblock %}
 
 {% block breadcrumb %}
-  {%
-    with
-    items = [
-      {
-          "link": url_for('.index'),
-          "label": "Digital Marketplace"
-      },
-      {
-          "label": "Cookies"
-      }
-    ]
-  %}
-    {% include "toolkit/breadcrumb.html" %}
-  {% endwith %}
+  {{ govukBreadcrumbs({
+  "items": [
+    {
+      "href": url_for('main.index'),
+      "text": "Digital Marketplace"
+    },
+    {
+      "text": "Cookies settings"
+    },
+  ]
+}) }}
 {% endblock %}
 
 {% block main_content %}
