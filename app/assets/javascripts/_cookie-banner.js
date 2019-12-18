@@ -4,7 +4,7 @@
   window.GOVUK.GDM = window.GOVUK.GDM || {}
   function CookieBanner () { }
 
-  CookieBanner.prototype.start = function () {
+  CookieBanner.prototype.init = function () {
     this.$cookieBanner = document.querySelector('#global-cookie-message')
     this.$cookieBannerMainContent = document.querySelector('#dm-cookie-banner-message')
     this.$cookieBannerConfirmationMessage = document.querySelector('#dm-cookie-banner-confirmation')
@@ -100,7 +100,6 @@
   window.GOVUK.GDM = window.GOVUK.GDM || {}
 
   var _cookieBanner = new window.GOVUK.GDM.CookieBanner();
-  _cookieBanner.start()
-  _cookieBanner.showCookieMessage()
+  _cookieBanner.init()
 
 })(window);

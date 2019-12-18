@@ -44,7 +44,7 @@ describe('Cookie banner', function () {
   })
 
   it('should show the cookie banner', function () {
-    cookieBanner.start()
+    cookieBanner.init()
     var cookieBannerMain = document.querySelector('#dm-cookie-banner-message')
     var cookieBannerConfirmation = document.querySelector('#dm-cookie-banner-confirmation')
 
@@ -54,13 +54,13 @@ describe('Cookie banner', function () {
   })
 
   it('sets a default consent cookie', function () {
-    cookieBanner.start()
+    cookieBanner.init()
     expect(GOVUK.GDM.getCookie('cookie_policy')).toEqual(DEFAULT_COOKIE_CONSENT)
   })
 
   it('sets consent cookie when accepting cookies', function () {
     spyOn(GOVUK.GDM, 'setCookie').and.callThrough()
-    cookieBanner.start()
+    cookieBanner.init()
     // Manually reset the consent cookie so we can check the accept button works as intended
     expect(GOVUK.GDM.getCookie('cookie_policy')).toEqual(DEFAULT_COOKIE_CONSENT)
     GOVUK.GDM.cookie('cookie_policy', null)
@@ -73,7 +73,7 @@ describe('Cookie banner', function () {
   })
 
   it('shows a confirmation message when cookies have been accepted', function () {
-    cookieBanner.start()
+    cookieBanner.init()
     var acceptCookiesButton = document.querySelector('#dm-accept-cookies')
     var cookieBannerMain = document.querySelector('#dm-cookie-banner-message')
     var cookieBannerConfirmation = document.querySelector('#dm-cookie-banner-confirmation')
@@ -89,7 +89,7 @@ describe('Cookie banner', function () {
 
   it('should hide when pressing the "hide" link', function () {
     spyOn(GOVUK.GDM, 'setCookie').and.callThrough()
-    cookieBanner.start()
+    cookieBanner.init()
     var hideLink = document.querySelector('#dm-hide-cookie-banner')
     hideLink.dispatchEvent(new window.Event('click'))
 
@@ -101,7 +101,7 @@ describe('Cookie banner', function () {
   it('does not show the banner if user has acknowledged the banner previously and consent cookie is present', function () {
     GOVUK.GDM.setCookie('seen_cookie_message', 'true')
     GOVUK.GDM.setDefaultConsentCookie()
-    cookieBanner.start()
+    cookieBanner.init()
 
     expect(element.style.display).toEqual('none')
   })
@@ -119,7 +119,7 @@ describe('Cookie banner', function () {
     })
 
     it('should hide the cookie banner', function () {
-      cookieBanner.start()
+      cookieBanner.init()
       expect(element.style.display).toEqual('none')
     })
   })

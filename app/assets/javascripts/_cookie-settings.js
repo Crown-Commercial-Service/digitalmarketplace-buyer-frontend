@@ -5,7 +5,7 @@
   window.GOVUK.GDM = window.GOVUK.GDM || {}
   function CookieSettings () { }
 
-  CookieSettings.prototype.start = function () {
+  CookieSettings.prototype.init = function () {
     this.$module = document.querySelector('#cookie-settings')
     this.$module.submitSettingsForm = this.submitSettingsForm.bind(this)
 
@@ -147,7 +147,7 @@
   window.GOVUK.GDM = window.GOVUK.GDM || {}
   var _cookieSettingsForm = new window.GOVUK.GDM.CookieSettings();
   if (window.location.pathname === '/cookie-settings') {
-    _cookieSettingsForm.start()
+    _cookieSettingsForm.init()
   }
 
 
