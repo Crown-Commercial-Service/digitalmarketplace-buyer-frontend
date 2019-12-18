@@ -72,6 +72,7 @@
     this.showConfirmationMessage()
     this.$cookieBannerConfirmationMessage.focus()
     window.GOVUK.GDM.cookie('seen_cookie_message', 'true', { days: 365 })
+    window.GOVUK.GDM.cookie('cookie_preferences_set', 'true', { days: 365 })
   }
 
   CookieBanner.prototype.showConfirmationMessage = function () {
