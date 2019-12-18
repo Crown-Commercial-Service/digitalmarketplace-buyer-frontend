@@ -30,7 +30,7 @@
     // Force the new cookie banner to show if we don't think the user has seen it before
     // This involves resetting the seen_cookie_message cookie, which may be set to true if they've seen the old cookie banner
     if (!window.GOVUK.GDM.cookie('cookie_policy')) {
-      if (window.GOVUK.GDM.cookie('seen_cookie_message') === 'true') {
+      if (window.GOVUK.GDM.cookie('seen_cookie_message') === ('true' || 'yes')) {
         window.GOVUK.GDM.cookie('seen_cookie_message', false, { days: 365 })
       }
     }
