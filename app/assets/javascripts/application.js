@@ -23,12 +23,12 @@
 //= include ../../../node_modules/digitalmarketplace-frontend-toolkit/toolkit/javascripts/analytics/_pii.js
 //= include ../../../node_modules/digitalmarketplace-frontend-toolkit/toolkit/javascripts/analytics/_googleAnalyticsUniversalTracker.js
 //= include ../../../node_modules/digitalmarketplace-frontend-toolkit/toolkit/javascripts/analytics/_govukAnalytics.js
-//= require _analytics.js'
 //= require _onready.js'
 //= require _selection-buttons.js
 //= require _cookie-helpers.js
 //= require _cookie-settings.js
 //= require _cookie-banner.js
+//= require _analytics.js'
 
 
 GOVUKFrontend.initAll();
