@@ -13,11 +13,17 @@ var manifest = {
     '../../../app/assets/javascripts/analytics/_virtualPageViews.js',
     '../../../app/assets/javascripts/analytics/_trackExternalLinks.js',
     '../../../app/assets/javascripts/analytics/_scrollTracking.js',
-    '../../../app/assets/javascripts/analytics/_init.js'
+    '../../../app/assets/javascripts/analytics/_init.js',
+    '../../../app/assets/javascripts/_cookie-helpers.js',
+    '../../../app/assets/javascripts/_cookie-settings.js',
+    '../../../app/assets/javascripts/_cookie-banner.js',
   ],
   test : [
     '../unit/AnalyticsSpec.js',
     '../unit/piiSpec.js',
+    '../unit/cookieHelpersSpec.js',
+    '../unit/cookieSettingsSpec.js',
+    '../unit/cookieBannerSpec.js'
   ]
 };
 

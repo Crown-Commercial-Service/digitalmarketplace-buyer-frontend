@@ -26,6 +26,10 @@
 //= require _analytics.js'
 //= require _onready.js'
 //= require _selection-buttons.js
+//= require _cookie-helpers.js
+//= require _cookie-settings.js
+//= require _cookie-banner.js
+
 
 GOVUKFrontend.initAll();
 
