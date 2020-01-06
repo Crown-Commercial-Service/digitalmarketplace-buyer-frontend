@@ -21,15 +21,19 @@ class TestErrors(BaseApplicationTest):
     def test_404(self):
         res = self.client.get('/g-cloud/service/1234')
         assert res.status_code == 404
-        assert "Check you’ve entered the correct web " \
-            "address or start again on the Digital Marketplace homepage." \
-            in res.get_data(as_text=True)
-        assert "If you can’t find what you’re looking for, contact us at " \
-            "<a href=\"mailto:cloud_digital@crowncommercial.gov.uk?" \
-            "subject=Digital%20Marketplace%20feedback\" title=\"Please " \
-            "send feedback to cloud_digital@crowncommercial.gov.uk\">" \
-            "cloud_digital@crowncommercial.gov.uk</a>" \
-            in res.get_data(as_text=True)
+
+        html = res.get_data(as_text=True)
+        assert (
+            "Check you’ve entered the correct web address"
+            " or start again on the Digital Marketplace homepage." in html
+        )
+        assert (
+            "If you can’t find what you’re looking for, contact us at "
+            '<a class="govuk-link" href="mailto:cloud_digital@crowncommercial.gov.uk?'
+            'subject=Digital%20Marketplace%20feedback" title="Please '
+            'send feedback to cloud_digital@crowncommercial.gov.uk">'
+            "cloud_digital@crowncommercial.gov.uk</a>" in html
+        )
 
     def test_410(self):
         res = self.client.get('/digital-services/framework')
