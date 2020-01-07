@@ -17,7 +17,6 @@
     "gulp": "^4.0.2",
     "gulp-filelog": "0.4.1",
     "gulp-include": "^2.4.1",
-    "gulp-jasmine-phantom": "alphagov/gulp-jasmine-phantom#node-10-fs-unlink",
     "gulp-sass": "^4.0.2",
     "gulp-shell": "^0.7.1",
     "gulp-sourcemaps": "^2.6.5",
@@ -26,12 +25,22 @@
     "scrolldepth": "https://github.com/alphagov/jquery-scrolldepth.git#1.0"
   },
   "scripts": {
-    "test": "standard gulpfile.js && gulp test",
+    "test": "standard \"gulpfile.js\" \"spec/**/*.js\" && jest",
     "frontend-build:development": "gulp build:development",
     "frontend-build:production": "gulp build:production",
     "frontend-build:watch": "gulp watch"
   },
   "devDependencies": {
+    "jest": "^24.9.0",
     "standard": "^14.3.1"
+  },
+  "standard": {
+    "env": {
+      "jest": true
+    },
+    "globals": [
+      "GOVUK",
+      "spyOn"
+    ]
   }
 }
