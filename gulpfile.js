@@ -4,7 +4,6 @@ const del = require('del')
 const sass = require('gulp-sass')
 const filelog = require('gulp-filelog')
 const include = require('gulp-include')
-const jasmine = require('gulp-jasmine-phantom')
 const path = require('path')
 const sourcemaps = require('gulp-sourcemaps')
 
@@ -256,25 +255,6 @@ gulp.task(
     staticFolder + '/images/govuk-frontend/'
   )
 )
-
-gulp.task('test', function () {
-  const manifest = require(path.join(repoRoot, 'spec', 'javascripts', 'manifest.js')).manifest
-
-  manifest.support = manifest.support.map(function (val) {
-    return val.replace(/^(\.\.\/){3}/, '')
-  })
-  manifest.test = manifest.test.map(function (val) {
-    return val.replace(/^\.\.\//, 'spec/javascripts/')
-  })
-
-  return gulp.src(manifest.test)
-    .pipe(jasmine({
-      jasmine: '2.0',
-      integration: true,
-      abortOnFail: true,
-      vendor: manifest.support
-    }))
-})
 
 gulp.task('set_environment_to_development', function (cb) {
   environment = 'development'
