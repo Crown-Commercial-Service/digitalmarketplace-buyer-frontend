@@ -1,4 +1,6 @@
-describe("GOVUK.PII", () => {
+/* eslint new-cap: ["error", { "newIsCap": false }] */
+
+describe('GOVUK.PII', () => {
   let pii
 
   beforeAll(() => {
@@ -116,7 +118,7 @@ describe("GOVUK.PII", () => {
   })
 
   describe('when there is a a govuk:static-analytics:strip-dates meta tag present', () => {
-    beforeEach( () => {
+    beforeEach(() => {
       pageWantsDatesStripped()
       pii = new GOVUK.pii()
     })
