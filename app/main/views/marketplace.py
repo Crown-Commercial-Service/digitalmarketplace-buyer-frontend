@@ -9,6 +9,7 @@ from werkzeug.datastructures import MultiDict
 
 from dmapiclient import APIError
 from dmcontent.content_loader import ContentNotFoundError
+from dmutils.errors import render_error_page
 from dmutils.filters import capitalize_first
 from dmutils.flask import timed_render_template as render_template
 
@@ -112,7 +113,8 @@ def external_404():
     in the page are absolute.
     :return: Our usual 404 page, but with all relative links made absolute
     """
-    document = html.fromstring(render_template('toolkit/errors/404.html'))
+    error_page, status_code = render_error_page(status_code=404)
+    document = html.fromstring(error_page)
     relative_links = document.xpath('//a[starts-with(@href, "/")]')
     forms_with_relative_actions = document.xpath('//form[starts-with(@action, "/")]')
 
@@ -122,7 +124,7 @@ def external_404():
     for form in forms_with_relative_actions:
         form.set("action", urljoin(current_app.config.get("DM_PATCH_FRONTEND_URL", ""), form.get("action")))
 
-    return html.tostring(document), 404
+    return html.tostring(document), status_code
 
 
 @main.route('/<framework_family>/opportunities/<brief_id>')
