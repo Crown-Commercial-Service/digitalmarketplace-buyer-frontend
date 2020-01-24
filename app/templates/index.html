@@ -16,11 +16,9 @@
 
 {% block after_header %}{% endblock %}
 
- {% block body_classes %}index-page-body{% endblock %}
-
 {% block mainContent %}
 
-<div class="index-page grid-row">
+<div class="grid-row">
   <div class="column-two-thirds">
     <nav id="app-buyer-nav" role="navigation" aria-labelledby="app-buyer-nav-heading">
       <h2 id="app-buyer-nav-heading" class="govuk-heading-l govuk-!-font-size-27">
@@ -105,48 +103,60 @@
     </nav>
   </div>
 
-  <div class="supplier-messages column-one-third">
-    <aside role="complementary" aria-labelledby="supplier-message-heading">
-      <h2>Sell services</h2>
-      <div class="padding-bottom-small">
-          <p class="govuk-body">
-            <a href="/digital-outcomes-and-specialists/opportunities" class="govuk-link top-level-link">
+  <div class="column-one-third">
+    <nav id="app-supplier-nav" role="navigation" aria-labelledby="app-supplier-nav-heading">
+      <h2 id="app-supplier-nav-heading" class="govuk-heading-l govuk-!-font-size-27">
+        Sell services
+      </h2>
+
+      <ul class="govuk-list">
+        <li class="govuk-!-padding-bottom-6">
+          <strong>
+            <a class="govuk-link"
+               href="{{ url_for('main.list_opportunities', framework_family='digital-outcomes-and-specialists') }}">
               View Digital Outcomes and Specialists opportunities
             </a>
-          </p>
-      </div>
+          </strong>
+        </li>
 
-    {% if temporary_message %}
-      {%
-        with
-          heading = temporary_message.heading,
-          main = True,
-          subheading = temporary_message.subheading,
-          messages = temporary_message.messages,
-          message = temporary_message.message
-      %}
-        {% include "toolkit/temporary-message.html" %}
-      {% endwith %}
-    {% endif %}
+        {% if temporary_message %}
+        <li>
+          {%
+            with
+              heading = temporary_message.heading,
+              main = True,
+              subheading = temporary_message.subheading,
+              messages = temporary_message.messages,
+              message = temporary_message.message
+          %}
+            {% include "toolkit/temporary-message.html" %}
+          {% endwith %}
+        </li>
+        {% endif %}
 
-    {% if current_user.role != 'supplier' %}
-      <div class="padding-bottom-small">
-        <p class="govuk-body">
-          <a href="/suppliers/supply" class="govuk-link top-level-link">
-            Become a supplier
-          </a>
-        </p>
-      </div>
-    {% endif %}
+        {% if current_user.role != 'supplier' %}
+        <li class="govuk-!-padding-bottom-6">
+          <strong>
+            <a class="govuk-link"
+               {# TODO: add an external link for this #}
+               href="/suppliers/supply">
+              Become a supplier
+            </a>
+          </strong>
+        </li>
+        {% endif %}
 
-      <div class="padding-bottom-small">
-        <p class="govuk-body">
-          <a href="https://www.gov.uk/government/collections/digital-marketplace-sales" class="govuk-link top-level-link">
-            See Digital Marketplace sales figures
-          </a>
-        </p>
-      </div>
-    </aside>
+        <li class="govuk-!-padding-bottom-6">
+          <strong>
+            <a class="govuk-link"
+               {# TODO: add an external link for this? #}
+               href="https://www.gov.uk/government/collections/digital-marketplace-sales">
+              See Digital Marketplace sales figures
+            </a>
+          </strong>
+        </li>
+      </ul>
+    </nav>
   </div>
 </div>
 

@@ -222,17 +222,17 @@ class TestHomepageSidebarMessage(APIClientMixin, BaseApplicationTest):
         }
 
     @staticmethod
-    def _assert_message_container_is_empty(response_data):
+    def _assert_supplier_nav_is_empty(response_data):
         document = html.fromstring(response_data)
-        message_container_contents = document.xpath('//div[@class="supplier-messages column-one-third"]/aside/*')
-        assert len(message_container_contents) == 0
+        supplier_nav_contents = document.xpath('//nav[@id="app-supplier-nav"]/*')
+        assert len(supplier_nav_contents) == 0
 
     @staticmethod
-    def _assert_message_container_is_not_empty(response_data):
+    def _assert_supplier_nav_is_not_empty(response_data):
         document = html.fromstring(response_data)
-        message_container_contents = document.xpath('//div[@class="supplier-messages column-one-third"]/aside/*')
-        assert len(message_container_contents) > 0
-        assert message_container_contents[0].xpath('text()')[0].strip() == "Sell services"
+        supplier_nav_contents = document.xpath('//nav[@id="app-supplier-nav"]/*')
+        assert len(supplier_nav_contents) > 0
+        assert supplier_nav_contents[0].xpath('text()')[0].strip() == "Sell services"
 
     def _load_homepage(self, framework_slugs_and_statuses, framework_messages):
         self.data_api_client.find_frameworks.return_value = self._find_frameworks(framework_slugs_and_statuses)
@@ -241,11 +241,11 @@ class TestHomepageSidebarMessage(APIClientMixin, BaseApplicationTest):
         response_data = res.get_data(as_text=True)
 
         if framework_messages:
-            self._assert_message_container_is_not_empty(response_data)
+            self._assert_supplier_nav_is_not_empty(response_data)
             for message in framework_messages:
                 assert message in response_data
         else:
-            self._assert_message_container_is_empty(response_data)
+            self._assert_supplier_nav_is_empty(response_data)
 
     def test_homepage_sidebar_message_exists_gcloud_8_coming(self):
 
@@ -296,14 +296,12 @@ class TestHomepageSidebarMessage(APIClientMixin, BaseApplicationTest):
 
         document = html.fromstring(response_data)
 
-        sidebar_links = document.xpath(
-            '//div[@class="supplier-messages column-one-third"]/aside//a[contains(@class, "top-level-link")]'
-        )
-        sidebar_link_texts = [item.xpath("normalize-space(string())") for item in sidebar_links]
+        supplier_links = document.cssselect("#app-supplier-nav a")
+        supplier_link_texts = [item.xpath("normalize-space(string())") for item in supplier_links]
 
-        assert 'View Digital Outcomes and Specialists opportunities' in sidebar_link_texts
-        assert 'Become a supplier' in sidebar_link_texts
-        assert 'See Digital Marketplace sales figures' in sidebar_link_texts
+        assert 'View Digital Outcomes and Specialists opportunities' in supplier_link_texts
+        assert 'Become a supplier' in supplier_link_texts
+        assert 'See Digital Marketplace sales figures' in supplier_link_texts
 
     def test_homepage_sidebar_messages_when_logged_in(self):
         self.data_api_client.find_frameworks.return_value = self._find_frameworks([
@@ -317,13 +315,11 @@ class TestHomepageSidebarMessage(APIClientMixin, BaseApplicationTest):
 
         document = html.fromstring(response_data)
 
-        sidebar_links = document.xpath(
-            '//div[@class="supplier-messages column-one-third"]/aside//a[contains(@class, "top-level-link")]'
-        )
-        sidebar_link_texts = [item.xpath("normalize-space(string())") for item in sidebar_links]
+        supplier_links = document.cssselect("#app-supplier-nav a")
+        supplier_link_texts = [item.xpath("normalize-space(string())") for item in supplier_links]
 
-        assert 'View Digital Outcomes and Specialists opportunities' in sidebar_link_texts
-        assert 'Become a supplier' not in sidebar_link_texts
+        assert 'View Digital Outcomes and Specialists opportunities' in supplier_link_texts
+        assert 'Become a supplier' not in supplier_link_texts
 
     # here we've given an valid framework with a valid status but there is no message.yml file to read from
     def test_g_cloud_6_open_blows_up(self):
