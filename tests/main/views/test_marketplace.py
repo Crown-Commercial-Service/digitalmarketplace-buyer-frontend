@@ -100,7 +100,7 @@ class TestHomepageBrowseList(APIClientMixin, BaseApplicationTest):
 
         assert res.status_code == 200
 
-        link_texts = [item.text_content().strip() for item in document.cssselect('.browse-list-item a')]
+        link_texts = [item.text_content().strip() for item in document.cssselect('#app-buyer-nav a')]
         assert link_texts[0] == "Find an individual specialist"
         assert link_texts[-1] == "Buy physical datacentre space"
         assert "Find specialists to work on digital projects" not in link_texts
@@ -121,7 +121,7 @@ class TestHomepageBrowseList(APIClientMixin, BaseApplicationTest):
 
         assert res.status_code == 200
 
-        link_locations = [item.values()[1] for item in document.cssselect('.browse-list-item a')]
+        link_locations = [item.values()[1] for item in document.cssselect('#app-buyer-nav a')]
 
         lots = ['digital-specialists', 'digital-outcomes', 'user-research-participants', 'user-research-studios']
         dos_base_path = '/buyers/frameworks/digital-outcomes-and-specialists/requirements/{}'
@@ -142,7 +142,7 @@ class TestHomepageBrowseList(APIClientMixin, BaseApplicationTest):
 
         assert res.status_code == 200
 
-        link_locations = [item.values()[1] for item in document.cssselect('.browse-list-item a')]
+        link_locations = [item.values()[1] for item in document.cssselect('#app-buyer-nav a')]
 
         lots = ['digital-specialists', 'digital-outcomes', 'user-research-participants', 'user-research-studios']
         dos2_base_path = '/buyers/frameworks/digital-outcomes-and-specialists-2/requirements/{}'
@@ -166,7 +166,7 @@ class TestHomepageBrowseList(APIClientMixin, BaseApplicationTest):
 
         assert res.status_code == 200
 
-        link_locations = [item.values()[1] for item in document.cssselect('.browse-list-item a')]
+        link_locations = [item.values()[1] for item in document.cssselect('#app-buyer-nav a')]
 
         lots = ['digital-specialists', 'digital-outcomes', 'user-research-participants', 'user-research-studios']
         dos2_base_path = '/buyers/frameworks/digital-outcomes-and-specialists-2/requirements/{}'
@@ -194,7 +194,7 @@ class TestHomepageBrowseList(APIClientMixin, BaseApplicationTest):
 
         assert res.status_code == 200
 
-        link_texts = [item.text_content().strip() for item in document.cssselect('.browse-list-item a')]
+        link_texts = [item.text_content().strip() for item in document.cssselect('#app-buyer-nav a')]
         assert link_texts[0] == "Find cloud hosting, software and support"
         assert link_texts[1] == "Buy physical datacentre space"
         assert len(link_texts) == 2
@@ -1897,6 +1897,6 @@ class TestGCloudHomepageLinks(APIClientMixin, BaseApplicationTest):
 
         assert res.status_code == 200
 
-        link_texts = [item.text_content().strip() for item in document.cssselect('.browse-list-item a')]
+        link_texts = [item.text_content().strip() for item in document.cssselect('#app-buyer-nav a')]
         assert link_texts[-2] == gcloud_content
         assert link_texts[-1] == 'Buy physical datacentre space'
