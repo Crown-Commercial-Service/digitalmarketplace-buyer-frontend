@@ -14,6 +14,10 @@ $path: "/static/images/";
 @import "elements/forms/_form-validation.scss";
 @import "elements/_panels.scss";
 
+// Temporarily needed until all components have migrated to govuk-frontend
+// and elements which need to be styled should have class names associated to them
+@import "overrides/govuk-template/_govuk-template";
+
 // Digital Marketplace Front-end toolkit shared CSS placeholders used by other DM toolkit styles
 @import "toolkit/shared_placeholders/_temporary-messages.scss";
 @import "toolkit/shared_placeholders/_placeholders.scss";
