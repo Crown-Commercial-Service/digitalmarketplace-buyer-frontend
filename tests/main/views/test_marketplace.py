@@ -26,6 +26,7 @@ class TestApplication(APIClientMixin, BaseApplicationTest):
         assert res.status_code == 200
         assert 'trackPageview' in res.get_data(as_text=True)
 
+    @pytest.mark.skip(reason="cookie banner still outstanding")
     def test_should_use_local_cookie_page_on_cookie_message(self):
         res = self.client.get('/')
         assert res.status_code == 200
