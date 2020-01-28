@@ -16,100 +16,147 @@
 
 {% block after_header %}{% endblock %}
 
- {% block body_classes %}index-page-body{% endblock %}
-
 {% block mainContent %}
 
-<div class="index-page grid-row">
+<div class="grid-row">
   <div class="column-two-thirds">
-    <h2>Find technology or people for digital projects in the public sector</h2>
-      {% set items = [] %}
-      {% if dos_slug %}
-        {% set items = [
-            {
-              "link": url_for("external.info_page_for_starting_a_brief", framework_slug=dos_slug, lot_slug='digital-specialists'),
-              "title": "Find an individual specialist",
-              "body": "eg a developer or user researcher",
-            },
-            {
-              "link": url_for("external.info_page_for_starting_a_brief", framework_slug=dos_slug, lot_slug='digital-outcomes'),
-              "title": "Find a team to provide an outcome",
-              "body": "eg a booking system or accessibility audit",
-            },
-            {
-              "link": url_for("external.info_page_for_starting_a_brief", framework_slug=dos_slug, lot_slug='user-research-participants'),
-              "title": "Find user research participants",
-              "body": "eg people from a specific user group to test your service",
-            },
-            {
-              "link": url_for("external.studios_start_page", framework_slug=dos_slug),
-              "title": "Find a user research lab",
-              "body": "eg a room to conduct research sessions",
-            }
-          ]
-        %}
-      {% endif %}
+    <nav id="app-buyer-nav" role="navigation" aria-labelledby="app-buyer-nav-heading">
+      <h2 id="app-buyer-nav-heading" class="govuk-heading-l govuk-!-font-size-27">
+        Find technology or people for digital projects in the public sector
+      </h2>
 
-      {% set items = items + [
-        {
-          "link": "/g-cloud",
-          "title": "Find " + gcloud_framework_description,
-          "body": "eg content delivery networks or accounting software",
-        },
-        {
-          "link": "/crown-hosting",
-          "title": "Buy physical datacentre space",
-          "body": "eg access to mission-critical datacentres",
-        }]
-      %}
+      <ul class="govuk-list">
+        {% if dos_slug %}
+        <li>
+          <strong>
+            <a class="govuk-link"
+               href="{{ url_for('external.info_page_for_starting_a_brief', framework_slug=dos_slug, lot_slug='digital-specialists') }}">
+              Find an individual specialist
+            </a>
+          </strong>
+          <p class="govuk-body">
+            eg a developer or user researcher
+          </p>
+        </li>
 
-      {% with items = items %}
-        {% include "toolkit/browse-list.html" %}
-      {% endwith %}
+        <li>
+          <strong>
+            <a class="govuk-link"
+               href="{{ url_for('external.info_page_for_starting_a_brief', framework_slug=dos_slug, lot_slug='digital-outcomes') }}">
+              Find a team to provide an outcome
+            </a>
+          </strong>
+          <p class="govuk-body">
+            eg a booking system or accessibility audit
+          </p>
+        </li>
+
+        <li>
+          <strong>
+            <a class="govuk-link"
+               href="{{ url_for('external.info_page_for_starting_a_brief', framework_slug=dos_slug, lot_slug='user-research-participants') }}">
+              Find user research participants
+            </a>
+          </strong>
+          <p class="govuk-body">
+            eg people from a specific user group to test your service
+          </p>
+        </li>
+
+        <li>
+          <strong>
+            <a class="govuk-link"
+               href="{{ url_for('external.studios_start_page', framework_slug=dos_slug) }}">
+              Find a user research lab
+            </a>
+          </strong>
+          <p class="govuk-body">
+            eg a room to conduct research sessions
+          </p>
+        </li>
+        {% endif %}
+
+        <li>
+          <strong>
+            <a class="govuk-link"
+               href="{{ url_for('main.index_g_cloud') }}">
+              Find {{ gcloud_framework_description }}
+            </a>
+          </strong>
+          <p class="govuk-body">
+            eg content delivery networks or accounting software
+          </p>
+        </li>
+
+        <li>
+          <strong>
+            <a class="govuk-link"
+               href="{{ url_for('main.index_crown_hosting') }}">
+              Buy physical datacentre space
+            </a>
+          </strong>
+          <p class="govuk-body">
+            eg access to mission-critical datacentres
+          </p>
+        </li>
+      </ul>
+    </nav>
   </div>
 
-  <div class="supplier-messages column-one-third">
-    <aside role="complementary" aria-labelledby="supplier-message-heading">
-      <h2>Sell services</h2>
-      <div class="padding-bottom-small">
-          <p class="govuk-body">
-            <a href="/digital-outcomes-and-specialists/opportunities" class="govuk-link top-level-link">
+  <div class="column-one-third">
+    <nav id="app-supplier-nav" role="navigation" aria-labelledby="app-supplier-nav-heading">
+      <h2 id="app-supplier-nav-heading" class="govuk-heading-l govuk-!-font-size-27">
+        Sell services
+      </h2>
+
+      <ul class="govuk-list">
+        <li class="govuk-!-padding-bottom-6">
+          <strong>
+            <a class="govuk-link"
+               href="{{ url_for('main.list_opportunities', framework_family='digital-outcomes-and-specialists') }}">
               View Digital Outcomes and Specialists opportunities
             </a>
-          </p>
-      </div>
+          </strong>
+        </li>
 
-    {% if temporary_message %}
-      {%
-        with
-          heading = temporary_message.heading,
-          main = True,
-          subheading = temporary_message.subheading,
-          messages = temporary_message.messages,
-          message = temporary_message.message
-      %}
-        {% include "toolkit/temporary-message.html" %}
-      {% endwith %}
-    {% endif %}
+        {% if temporary_message %}
+        <li>
+          {%
+            with
+              heading = temporary_message.heading,
+              main = True,
+              subheading = temporary_message.subheading,
+              messages = temporary_message.messages,
+              message = temporary_message.message
+          %}
+            {% include "toolkit/temporary-message.html" %}
+          {% endwith %}
+        </li>
+        {% endif %}
 
-    {% if current_user.role != 'supplier' %}
-      <div class="padding-bottom-small">
-        <p class="govuk-body">
-          <a href="/suppliers/supply" class="govuk-link top-level-link">
-            Become a supplier
-          </a>
-        </p>
-      </div>
-    {% endif %}
+        {% if current_user.role != 'supplier' %}
+        <li class="govuk-!-padding-bottom-6">
+          <strong>
+            <a class="govuk-link"
+               {# TODO: add an external link for this #}
+               href="/suppliers/supply">
+              Become a supplier
+            </a>
+          </strong>
+        </li>
+        {% endif %}
 
-      <div class="padding-bottom-small">
-        <p class="govuk-body">
-          <a href="https://www.gov.uk/government/collections/digital-marketplace-sales" class="govuk-link top-level-link">
-            See Digital Marketplace sales figures
-          </a>
-        </p>
-      </div>
-    </aside>
+        <li class="govuk-!-padding-bottom-6">
+          <strong>
+            <a class="govuk-link"
+               {# TODO: add an external link for this? #}
+               href="https://www.gov.uk/government/collections/digital-marketplace-sales">
+              See Digital Marketplace sales figures
+            </a>
+          </strong>
+        </li>
+      </ul>
+    </nav>
   </div>
 </div>
 
