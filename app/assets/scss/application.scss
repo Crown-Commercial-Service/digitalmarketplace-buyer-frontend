@@ -7,12 +7,9 @@
 // Path to assets for use with file-url()
 $path: "/static/images/";
 
-// GOVUK elements styles (only import the files you need)
-// TODO: Bring any GOVUK elements we require into the DM Front end toolkit and import them from there instead
-@import "elements/_helpers.scss";
-@import "elements/_forms.scss";
-@import "elements/forms/_form-validation.scss";
-@import "elements/_panels.scss";
+// Temporarily needed until all components have migrated to govuk-frontend
+// and elements which need to be styled should have class names associated to them
+@import "overrides/govuk-template/_govuk-template";
 
 // Digital Marketplace Front-end toolkit shared CSS placeholders used by other DM toolkit styles
 @import "toolkit/shared_placeholders/_temporary-messages.scss";
@@ -61,9 +58,12 @@ $govuk-assets-path: '/static/';
 $govuk-images-path: '/static/images/';
 $govuk-fonts-path: '/static/fonts/';
 $govuk-compatibility-govukfrontendtoolkit: true;
-$govuk-compatibility-govuktemplate: true;
 $govuk-compatibility-govukelements: true;
+$govuk-global-styles: true;
 @import "node_modules/digitalmarketplace-govuk-frontend/govuk-frontend/all";
+
+// Digital Marketplace Components
+@import "node_modules/digitalmarketplace-govuk-frontend/digitalmarketplace/all";
 
 // App specific styles
 @import "_atoz_navigation.scss";
@@ -87,14 +87,10 @@ $govuk-compatibility-govukelements: true;
 // Overrides
 @import "overrides/_notification-banners.scss";
 @import "overrides/_page_headings.scss";
+@import "overrides/_temporary-messages.scss";
 
 // Misc styles
 // TODO: Move misc styling into their own partial files or the Digital Marketplace FE Toolkit
-#wrapper {
-  @extend %site-width-container;
-  padding-bottom: $gutter * 2;
-}
-
 .marketplace-paragraph {
   h2 {
     @include bold-27;
@@ -104,13 +100,4 @@ $govuk-compatibility-govukelements: true;
   p {
     padding-bottom: 30px;
   }
-}
-
-.padding-bottom-small {
-  padding-bottom: 10px;
-}
-
-.break-link {
-  display: inline-block;
-  word-break: break-all;
 }

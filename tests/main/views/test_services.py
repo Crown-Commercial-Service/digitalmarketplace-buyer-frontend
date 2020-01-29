@@ -14,7 +14,7 @@ class UnavailableBanner(object):
 
     def __init__(self, document):
         self.banner = document.xpath(
-            '//div[@id="wrapper"]//div[@class="banner-temporary-message-without-action"]'
+            '//main//div[@class="banner-temporary-message-without-action"]'
         )
 
     @property
@@ -132,7 +132,7 @@ class TestServicePage(DataAPIClientMixin, BaseApplicationTest):
 
         document = html.fromstring(res.get_data(as_text=True))
 
-        page_title = document.xpath('//div[@id="wrapper"]//h1/text()')[0]
+        page_title = document.xpath('//main[@id="main-content"]//h1/text()')[0]
         assert page_title == "{}".format(service_title)
 
         self._assert_contact_details(document)
@@ -313,7 +313,7 @@ class TestServicePage(DataAPIClientMixin, BaseApplicationTest):
         document = html.fromstring(res.get_data(as_text=True))
 
         attribute_headings = document.xpath(
-            '//div[@id="wrapper"]//div[@class="grid-row service-attributes"]' +
+            '//main//div[@class="grid-row service-attributes"]' +
             '//h2/text()')
 
         attribute_headings = [
