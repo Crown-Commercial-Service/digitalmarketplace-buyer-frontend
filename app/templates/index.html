@@ -4,17 +4,16 @@
   Digital Marketplace
 {% endblock %}
 
-{% block top_header %}
-<header class="marketplace-homepage-heading">
-  <h1>
-    Digital Marketplace
-  </h1>
-</header>
+{% block header %}
+  {{ super() }}
+  <div class="marketplace-homepage-heading">
+    <h1>
+      Digital Marketplace
+    </h1>
+  </div>
 {% endblock %}
 
-{% block phase_banner %}{% endblock %}
-
-{% block after_header %}{% endblock %}
+{% block phaseBanner %}{% endblock %}
 
 {% block mainContent %}
 
