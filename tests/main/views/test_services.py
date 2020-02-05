@@ -313,7 +313,7 @@ class TestServicePage(DataAPIClientMixin, BaseApplicationTest):
         document = html.fromstring(res.get_data(as_text=True))
 
         attribute_headings = document.xpath(
-            '//main//div[@class="grid-row service-attributes"]' +
+            '//main//div[@class="govuk-grid-row service-attributes"]' +
             '//h2/text()')
 
         attribute_headings = [
