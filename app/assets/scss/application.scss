@@ -1,6 +1,5 @@
 // GOVUK Front-end toolkit variables, mixins and functions
 @import "colours";              // Colour variables
-@import "_grid_layout.scss";    // Grid variables
 @import "_typography.scss";     // Core bold and heading mixins
 @import "_url-helpers.scss";
 
@@ -29,7 +28,6 @@ $path: "/static/images/";
 @import "toolkit/_contact-details.scss";
 @import "toolkit/_document.scss";
 @import "toolkit/_footer.scss";
-@import "toolkit/_grids.scss";
 @import "toolkit/_instruction-list.scss";
 @import "toolkit/_notification-banners.scss";
 @import "toolkit/_page-headings.scss";
