@@ -30,8 +30,8 @@
     {{ title|capitalize }}
   </h1>
 
-  <div class="grid-row">
-    <div class="column-two-thirds">
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
       <form action="{{ url_for('direct_award_public.choose_lot', framework_family=framework_family)}}" method="post">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
 

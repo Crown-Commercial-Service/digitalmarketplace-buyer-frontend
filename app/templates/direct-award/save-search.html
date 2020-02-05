@@ -27,8 +27,8 @@
 {% block mainContent %}
 
 <div class="single-question-page save-search-page">
-  <div class="grid-row">
-    <div class="column-one-whole">
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
         {#
           we cannot use the toolkit/forms/validation.html template here,
           as this page was designed with a govuk style error summary banner
@@ -52,16 +52,16 @@
         {% endif %}
     </div>
   </div>
-  <div class="grid-row">
-    <div class="column-two-thirds">
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
       <h1 class="govuk-heading-l">
         {{ page_name }}
       </h1>
     </div>
   </div>
   <form method="post" action="" id="createProjectForm">
-    <div class="grid-row">
-      <div class="column-two-thirds">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
         <div class="search-summary-panel panel panel-border-wide">
           {% with content = search_summary_sentence %}
             {% include "toolkit/search-summary.html" %}

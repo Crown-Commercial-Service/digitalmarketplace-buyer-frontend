@@ -32,16 +32,16 @@
 <span class="govuk-caption-l">Digital Marketplace supplier</span>
 <h1 class="govuk-heading-l">{{ supplier.name }}</h1>
 
-<div class="grid-row supplier-profile">
+<div class="govuk-grid-row supplier-profile">
     {% if supplier.description or supplier.clients %}
-      <div class="column-two-thirds">
+      <div class="govuk-grid-column-two-thirds">
           <p class="govuk-body">
               {{ supplier.description }}
           </p>
       </div>
     {% endif %}
 
-    <aside id="meta" role="complementary" class="column-one-third" aria-label="Supplier contact">
+    <aside id="meta" role="complementary" class="govuk-grid-column-one-third" aria-label="Supplier contact">
       <h2 class="sidebar-heading">Contact</h2>
       {%
         with

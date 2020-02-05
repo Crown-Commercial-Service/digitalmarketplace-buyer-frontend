@@ -23,8 +23,8 @@
 {% block mainContent %}
 
 {% if brief.status == 'closed' %}
-<div class="grid-row">
-  <div class="column-one-whole">
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
     {%
       with
       type = "temporary-message",
@@ -36,8 +36,8 @@
   </div>
 </div>
 {% elif brief.status == 'withdrawn' %}
-<div class="grid-row">
-  <div class="column-one-whole">
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
     {%
       with
       type = "temporary-message",
@@ -49,8 +49,8 @@
   </div>
 </div>
 {% elif brief.status == 'cancelled' %}
-<div class="grid-row">
-  <div class="column-one-whole">
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
     {%
       with
       type = "temporary-message",
@@ -62,8 +62,8 @@
   </div>
 </div>
 {% elif brief.status == 'unsuccessful' %}
-<div class="grid-row">
-  <div class="column-one-whole">
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
     {%
       with
       type = "temporary-message",
@@ -75,8 +75,8 @@
   </div>
 </div>
 {% elif brief.status == 'awarded' %}
-<div class="grid-row">
-  <div class="column-one-whole">
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
     {% set brief_awarded_message %}
       Start date: {}<br />
       Value: &pound;{:,.2f}<br/>
@@ -98,34 +98,34 @@
 </div>
 {% endif %}
 
-<div class="grid-row">
-  <div class="column-two-thirds">
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
     <span class="govuk-caption-l">{{ brief.organisation }}</span>
     <h1 class="govuk-heading-l">{{ brief.title }}</h1>
     <span data-lot="{{ brief.lotSlug }}"></span>
   </div>
 </div>
 
-<div class="grid-row">
-  <div class="column-one-whole">
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
     {% include '_brief_applications_stats.html' %}
   </div>
 </div>
 
-<div class="grid-row">
-  <div class="column-one-whole">
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
     {% include '_brief_attributes.html' %}
   </div>
 </div>
-<div class="grid-row">
-  <div class="column-one-whole">
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
     {% include '_brief_q_and_a.html' %}
   </div>
 </div>
 
 {% if has_supplier_responded_to_brief %}
-  <div class="grid-row">
-    <div class="column-one-third">
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-third">
         {% with
            url = url_for('external.view_response_result', brief_id=brief.id),
            text = "View your application"
@@ -136,8 +136,8 @@
   </div>
 {% elif brief.status == 'live' %}
   <br/><!-- <- remove once grid and body elements have been converted to govuk frontend -->
-  <div class="grid-row">
-    <div class="column-two-thirds">
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
       <form action="{{ url_for('external.start_brief_response', brief_id=brief.id) }}" method="get">
         {{ govukButton({
           "text": "Apply for this opportunity",

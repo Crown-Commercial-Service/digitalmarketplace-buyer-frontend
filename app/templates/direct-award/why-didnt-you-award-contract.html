@@ -35,8 +35,8 @@
 {% include "toolkit/forms/validation.html" %}
 
 <div class="why-didnt-you-award-contract-page">
-  <div class="grid-row">
-    <div class="column-two-thirds">
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
       <h1 class="govuk-heading-xl">Why didn’t you award a contract?</h1>
 
       <form method="POST" action="{{ url_for('direct_award.why_did_you_not_award_the_contract', framework_family=framework.family, project_id=project.id) }}">
