@@ -7,6 +7,7 @@
 {% from "govuk-frontend/components/phase-banner/macro.njk" import govukPhaseBanner %}
 
 {# Import DM Components #}
+{% from "digitalmarketplace/components/cookie-banner/macro.njk" import dmCookieBanner %}
 {% from "digitalmarketplace/components/header/macro.njk" import dmHeader%}
 {% from "digitalmarketplace/components/footer/macro.njk" import dmFooter%}
 
@@ -20,6 +21,12 @@
 {% endblock %}
 
 {% block header %}
+  {% block cookieBanner %}
+    {{ dmCookieBanner({
+      'cookieSettingsUrl': url_for('external.cookie_settings'),
+      'cookieInfoUrl': url_for('main.cookies'),
+    }) }}
+  {% endblock %}
   {{ dmHeader({
     "role": current_user.role | default(None)
   }) }}

@@ -60,6 +60,13 @@
       }
     ]%}
   {% endif %}
+
+  {% block cookieBanner %}
+    {{ dmCookieBanner({
+      'cookieSettingsUrl': url_for('external.cookie_settings'),
+      'cookieInfoUrl': url_for('main.cookies'),
+    }) }}
+  {% endblock %}
   <header class="govuk-header" role="banner" data-module="govuk-header">
     <div class="govuk-header__container govuk-width-container">
       <div class="govuk-header__logo">
