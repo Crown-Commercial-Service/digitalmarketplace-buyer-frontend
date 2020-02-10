@@ -21,12 +21,7 @@
 {% endblock %}
 
 {% block header %}
-  {% block cookieBanner %}
-    {{ dmCookieBanner({
-      'cookieSettingsUrl': url_for('external.cookie_settings'),
-      'cookieInfoUrl': url_for('main.cookies'),
-    }) }}
-  {% endblock %}
+  {% include "_cookie_banner.html" %}
   {{ dmHeader({
     "role": current_user.role | default(None)
   }) }}

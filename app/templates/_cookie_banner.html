@@ -1,0 +1,6 @@
+{% block cookieBanner %}
+  {{ dmCookieBanner({
+    'cookieSettingsUrl': url_for('external.cookie_settings'),
+    'cookieInfoUrl': url_for('main.cookies'),
+  }) }}
+{% endblock %}
