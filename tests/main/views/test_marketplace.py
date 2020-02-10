@@ -26,12 +26,12 @@ class TestApplication(APIClientMixin, BaseApplicationTest):
         assert res.status_code == 200
         assert 'trackPageview' in res.get_data(as_text=True)
 
-    @pytest.mark.skip(reason="cookie banner still outstanding")
-    def test_should_use_local_cookie_page_on_cookie_message(self):
+    def test_should_display_cookie_banner(self):
         res = self.client.get('/')
         assert res.status_code == 200
-        assert '<p>GOV.UK uses cookies to make the site simpler. <a href="/cookies">' \
-            'Find out more about cookies</a></p>' in res.get_data(as_text=True)
+        document = html.fromstring(res.get_data(as_text=True))
+        cookie_banner = document.xpath('//div[@id="dm-cookie-banner"]')
+        assert cookie_banner[0].xpath('//h2//text()')[0].strip() == "Can we store analytics cookies on your device?"
         assert len(self.data_api_client.find_frameworks.call_args_list) == 2
 
     def test_google_verification_code_shown_on_homepage(self):
