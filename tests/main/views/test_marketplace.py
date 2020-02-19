@@ -103,7 +103,7 @@ class TestHomepageBrowseList(APIClientMixin, BaseApplicationTest):
 
         link_texts = [item.text_content().strip() for item in document.cssselect('#app-buyer-nav a')]
         assert link_texts[0] == "Find an individual specialist"
-        assert link_texts[-1] == "Buy physical datacentre space"
+        assert link_texts[-1] == "Find physical datacentre space"
         assert "Find specialists to work on digital projects" not in link_texts
 
     def test_links_are_for_existing_dos_framework_when_a_new_dos_framework_in_standstill_exists(self):
@@ -197,7 +197,7 @@ class TestHomepageBrowseList(APIClientMixin, BaseApplicationTest):
 
         link_texts = [item.text_content().strip() for item in document.cssselect('#app-buyer-nav a')]
         assert link_texts[0] == "Find cloud hosting, software and support"
-        assert link_texts[1] == "Buy physical datacentre space"
+        assert link_texts[1] == "Find physical datacentre space"
         assert len(link_texts) == 2
 
 
@@ -1896,4 +1896,4 @@ class TestGCloudHomepageLinks(APIClientMixin, BaseApplicationTest):
 
         link_texts = [item.text_content().strip() for item in document.cssselect('#app-buyer-nav a')]
         assert link_texts[-2] == gcloud_content
-        assert link_texts[-1] == 'Buy physical datacentre space'
+        assert link_texts[-1] == 'Find physical datacentre space'
