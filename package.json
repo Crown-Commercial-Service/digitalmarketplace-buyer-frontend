@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "del": "^5.1.0",
-    "digitalmarketplace-frameworks": "github:alphagov/digitalmarketplace-frameworks#v17.5.0",
+    "digitalmarketplace-frameworks": "github:alphagov/digitalmarketplace-frameworks#v17.7.3",
     "digitalmarketplace-frontend-toolkit": "https://github.com/alphagov/digitalmarketplace-frontend-toolkit.git#v36.1.0",
     "digitalmarketplace-govuk-frontend": "^0.6.5",
     "govuk-elements-sass": "3.0.3",
