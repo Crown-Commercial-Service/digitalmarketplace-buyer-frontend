@@ -1280,7 +1280,7 @@ class TestCatalogueOfBriefsPage(APIClientMixin, BaseApplicationTest):
 
     def test_catalogue_of_briefs_page_filtered(self):
         original_url = "/digital-outcomes-and-specialists/opportunities?page=2"\
-            "&statusOpenClosed=open&lot=digital-outcomes&location=wales"
+            "&statusOpenClosed=open&lot=digital-outcomes&location=wales&location=london"
         res = self.client.get(original_url)
         assert res.status_code == 200
 
@@ -1292,7 +1292,7 @@ class TestCatalogueOfBriefsPage(APIClientMixin, BaseApplicationTest):
             doc_type='briefs',
             statusOpenClosed='open',
             lot='digital-outcomes',
-            location='wales',
+            location='wales,london',
             page='2',
         )
 
@@ -1346,7 +1346,7 @@ class TestCatalogueOfBriefsPage(APIClientMixin, BaseApplicationTest):
             "west midlands": False,
             "east of england": False,
             "wales": True,
-            "london": False,
+            "london": True,
             "south east england": False,
             "south west england": False,
             "northern ireland": False,
