@@ -66,7 +66,7 @@ def test_should_strip_page_from_multidict():
     params.add("page", 100)
 
     parsed = search_helpers.query_args_for_pagination(params)
-    assert parsed['this'] == 'that'
+    assert parsed['this'] == ['that']
     assert 'page' not in parsed
 
 

@@ -1,5 +1,6 @@
 from math import ceil
 import re
+from typing import Dict, Sequence
 
 from flask import url_for
 from werkzeug.datastructures import MultiDict
@@ -210,20 +211,12 @@ def build_search_query(request_args, lot_filters, content_builder, lots_by_slug,
     return group_request_filters(query, content_builder)
 
 
-def query_args_for_pagination(args):
+def query_args_for_pagination(args: MultiDict) -> Dict[str, Sequence[str]]:
     """
-    To use url_for for pagination next/prev page links
-    We need to not have the current page in the query args
-    :param request:
-    :return request args without page
+    Strip page from args and expand values to lists (to allow url_for to cope
+    with multi-valued keys)
     """
-    query = args.copy()
-
-    if 'page' in query:
-        del query['page']
-        return query
-    else:
-        return query
+    return {key: values for key, values in args.lists() if key != "page"}
 
 
 def total_pages(total, page_size):
