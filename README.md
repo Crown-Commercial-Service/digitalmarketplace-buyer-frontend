@@ -121,6 +121,20 @@ Commit the changes to `package.json` and `package-lock.json`.
 
 You can also run `npm audit fix` to make minor updates to `package-lock.json`.
 
+## Contributing
+
+This repository is maintained by the Digital Marketplace team at the [Government Digital Service](https://github.com/alphagov).
+
+If you have a suggestion for improvement, please raise an issue on this repo.
+
+### Reporting Vulnerabilities
+
+If you have discovered a security vulnerability in this code, we appreciate your help in disclosing it to us in a
+responsible manner.
+
+Please follow the [GDS vulnerability reporting steps](https://github.com/alphagov/.github/blob/master/SECURITY.md),
+giving details of any issue you find. Appropriate credit will be given to those reporting confirmed issues.
+
 ## Licence
 
 Unless stated otherwise, the codebase is released under [the MIT License][mit].
