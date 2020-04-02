@@ -1,28 +1,43 @@
 # Digital Marketplace Buyer Frontend
 
 [![Coverage Status](https://coveralls.io/repos/alphagov/digitalmarketplace-buyer-frontend/badge.svg?branch=master&service=github)](https://coveralls.io/github/alphagov/digitalmarketplace-buyer-frontend?branch=master)
-[![Requirements Status](https://requires.io/github/alphagov/digitalmarketplace-buyer-frontend/requirements.svg?branch=master)](https://requires.io/github/alphagov/digitalmarketplace-buyer-frontend/requirements/?branch=master)
 ![Python 3.6](https://img.shields.io/badge/python-3.6-blue.svg)
 
-Frontend buyer application for the digital marketplace.
+Frontend application for the Digital Marketplace.
 
 - Python app, based on the [Flask framework](http://flask.pocoo.org/)
 
+This app contains:
+ 
+- Digital Marketplace's public pages
+- the G-Cloud buyer journey
+
 ## Quickstart
 
-Install dependencies, run migrations and run the app
+It's recommended to use the [DM Runner](https://github.com/alphagov/digitalmarketplace-runner)
+tool, which will install and run the app as part of the full suite of apps.
+
+If you want to run the app as a stand-alone process, clone the repo then run:
+
 ```
 make run-all
 ````
 
-## Setup
+This command will install dependencies and start the app.
 
-The buyer frontend app requires access to both the API (for service pages) and
-to the search API (for search results). The location and access tokens for 
-these services is set with environment variables.
+By default, the app will be served at [http://127.0.0.1:5002](http://127.0.0.1:5002/).
+This can be changed by setting the `DM_BUYER_PORT` environment variable.
+ 
 
+### API dependencies
 
-For development you can either point the environment variables to use the 
+(If you are using DM Runner you can skip this section.)
+
+The Buyer Frontend app requires access to both the API app (for service pages) and
+to the search API app (for search results). The location and access tokens for
+these services is set with environment variables in `config.py`.
+
+For development, you can either point the environment variables to use the
 preview environment's `API` and `Search API` boxes, or use local API instances if 
 you have them running:
 
@@ -37,61 +52,31 @@ Where `DM_DATA_API_AUTH_TOKEN` is a token accepted by the Data API
 instance pointed to by `DM_API_URL`, and `DM_SEARCH_API_AUTH_TOKEN` 
 is a token accepted by the Search API instance pointed to by `DM_SEARCH_API_URL`.
 
-### Create and activate the virtual environment
+## Testing
 
-```
-python3 -m venv ./venv
-source ./venv/bin/activate
-```
-
-### Upgrade dependencies
-
-Install new Python dependencies with pip
-
-```pip install -r requirements-dev.txt```
-
-### Run the tests
-
-To run the whole testsuite:
+Run the full test suite:
 
 ```
 make test
 ```
 
-To only run the JavaScript tests:
+To only run the Python or Javascript tests:
 
 ```
+make test-python
 make test-javascript
 ```
 
-### Run the development server
-
-To run the Buyer Frontend App for local development you can use the convenient run 
-script, which sets the required environment variables to defaults if they have
-not already been set:
+To run the `flake8` linter:
 
 ```
-make run-app
+make test-flake8
 ```
 
-More generally, the command to start the development server is:
+### Updating Python dependencies
 
-```
-DM_ENVIRONMENT=development flask run
-```
-
-Use the app at [http://127.0.0.1:5002/](http://127.0.0.1:5002/).
-
-When using the development server the buyer app listens on port 5002 by default. This can be changed by setting the `DM_BUYER_PORT` environment variable, e.g. to set the port number to 9002:
-
-```
-export DM_BUYER_PORT=9002
-```
-
-### Updating application dependencies
-
-`requirements.txt` file is generated from the `requirements-app.txt` in order to pin
-versions of all nested dependencies. If `requirements-app.txt` has been changed (or
+`requirements.txt` file is generated from the `requirements.in` in order to pin
+versions of all nested dependencies. If `requirements.in` has been changed (or
 we want to update the unpinned nested dependencies) `requirements.txt` should be
 regenerated with
 
@@ -99,9 +84,9 @@ regenerated with
 make freeze-requirements
 ```
 
-`requirements.txt` should be commited alongside `requirements-app.txt` changes.
+`requirements.txt` should be committed alongside `requirements.in` changes.
 
-## Front-end
+## Frontend assets
 
 Front-end code (both development and production) is compiled using [Node](http://nodejs.org/) and [Gulp](http://gulpjs.com/).
 
@@ -116,13 +101,39 @@ To check the version you're running, type:
 node --version
 ```
 
-## Frontend tasks
+### Frontend tasks
 
 [npm](https://docs.npmjs.com/cli/run-script) is used for all frontend build tasks. The commands available are:
 
 - `npm run frontend-build:development` (compile the frontend files for development)
 - `npm run frontend-build:production` (compile the frontend files for production)
 - `npm run frontend-build:watch` (watch all frontend+framework files & rebuild when anything changes)
+
+### Updating NPM dependencies
+
+Update the relevant version numbers in `package.json`, then run
+
+```
+npm install
+```
+
+Commit the changes to `package.json` and `package-lock.json`.
+
+You can also run `npm audit fix` to make minor updates to `package-lock.json`.
+
+## Contributing
+
+This repository is maintained by the Digital Marketplace team at the [Government Digital Service](https://github.com/alphagov).
+
+If you have a suggestion for improvement, please raise an issue on this repo.
+
+### Reporting Vulnerabilities
+
+If you have discovered a security vulnerability in this code, we appreciate your help in disclosing it to us in a
+responsible manner.
+
+Please follow the [GDS vulnerability reporting steps](https://github.com/alphagov/.github/blob/master/SECURITY.md),
+giving details of any issue you find. Appropriate credit will be given to those reporting confirmed issues.
 
 ## Licence
 
