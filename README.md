@@ -52,19 +52,6 @@ Where `DM_DATA_API_AUTH_TOKEN` is a token accepted by the Data API
 instance pointed to by `DM_API_URL`, and `DM_SEARCH_API_AUTH_TOKEN` 
 is a token accepted by the Search API instance pointed to by `DM_SEARCH_API_URL`.
 
-### Updating Python dependencies
-
-`requirements.txt` file is generated from the `requirements.in` in order to pin
-versions of all nested dependencies. If `requirements.in` has been changed (or
-we want to update the unpinned nested dependencies) `requirements.txt` should be
-regenerated with
-
-```
-make freeze-requirements
-```
-
-`requirements.txt` should be committed alongside `requirements.in` changes.
-
 ## Testing
 
 Run the full test suite:
@@ -85,6 +72,19 @@ To run the `flake8` linter:
 ```
 make test-flake8
 ```
+
+### Updating Python dependencies
+
+`requirements.txt` file is generated from the `requirements.in` in order to pin
+versions of all nested dependencies. If `requirements.in` has been changed (or
+we want to update the unpinned nested dependencies) `requirements.txt` should be
+regenerated with
+
+```
+make freeze-requirements
+```
+
+`requirements.txt` should be committed alongside `requirements.in` changes.
 
 ## Frontend assets
 
