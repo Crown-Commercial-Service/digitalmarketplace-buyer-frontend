@@ -126,12 +126,10 @@
 {% if has_supplier_responded_to_brief %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-one-third">
-        {% with
-           url = url_for('external.view_response_result', brief_id=brief.id),
-           text = "View your application"
-        %}
-          {% include "toolkit/secondary-action-link.html" %}
-        {% endwith %}
+      <a class="govuk-link govuk-!-margin-top-6 govuk-!-display-inline-block" 
+          href="{{ url_for('external.view_response_result', brief_id=brief.id) }}">
+          View your application
+      </a>
     </div>
   </div>
 {% elif brief.status == 'live' %}
