@@ -33,14 +33,12 @@
             Digital Marketplace uses cookies that are essential for the site to work.
         </p>
       
-        <h2>How cookies are used on Digital Marketplace</h2>
+        <h2 class="govuk-heading-m">How cookies are used on Digital Marketplace</h2>
 
-        <h3>Introductory message cookie</h3>
+        <h3>Session cookie</h3>
 
         <p class="govuk-body">
-            When you first use Digital Marketplace, you see a message about how the site uses cookies and how to find 
-              out about them. Once you&rsquo;ve seen the message, we store a cookie on your computer so it knows 
-              not to show it again.
+            We store a session cookie on your device to help keep your information secure while you use the service.
         </p>
         <table class="content-table">
             <tbody>
@@ -48,20 +46,20 @@
                 <th scope="col">Name</th>
                 <th scope="col">Purpose</th>
                 <th scope="col">Expires</th>
-            </tr>
+              </tr>
             <tr>
-                <td>seen_cookie_message</td>
-                <td>Tells us that you have seen our cookie message</td>
-                <td>1 month</td>
+                <td>dm_session</td>
+                <td>Stores encrypted session data</td>
+                <td>1 hour</td>
             </tr>
             </tbody>
         </table>
 
-        <h3>Accepting cookie settings</h3>
+        <h3>Testing if cookies are accepted</h3>
 
         <p class="govuk-body">
-            We test whether your browser is accepting cookies from Digital Marketplace. This allows us to give 
-              useful error messages when things go wrong.
+            We test whether your browser is accepting cookies from Digital Marketplace, by setting a cookie.
+            This cookie allows us to give useful error messages when things go wrong.
         </p>
         <table class="content-table">
             <tbody>
@@ -78,40 +76,19 @@
             </tbody>
         </table>
 
-        <h3>Session cookies</h3>
-
-        <p class="govuk-body">
-            We store session cookies on your computer to help keep your information secure while you use the service.
-        </p>
-        <table class="content-table">
-            <tbody>
-            <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Purpose</th>
-                <th scope="col">Expires</th>
-              </tr>
-            <tr>
-                <td>dm_session</td>
-                <td>Stores encrypted session data</td>
-                <td>When you close your browser</td>
-            </tr>
-            </tbody>
-        </table>
-
         <h3>Measuring website usage</h3>
 
         <p class="govuk-body">
             We use Google Analytics to measure how you use the Digital Marketplace so we can improve it based on user needs.
         </p>
 
-        <p class="govuk-body">Google Analytics sets cookies that store anonymised information about:
+        <p class="govuk-body">Google Analytics sets cookies that store anonymised information about:</p>
 
         <ul class="govuk-list govuk-list--bullet">
             <li>how you got to Digital Marketplace</li>
             <li>the pages you visit on Digital Marketplace and government digital services, and how long you spend on each page</li>
             <li>what you click on while you&rsquo;re using the service</li>
         </ul>
-        </p>
 
         <p class="govuk-body">
             We do not allow Google to use or share the data about how you use this site.
@@ -138,13 +115,41 @@
                 </td>
                 <td>24 hours</td>
             </tr>
+            <tr>
+                <td>_gat_govuk_shared</td>
+                <td>Helps us count how many users visit <a class="govuk-link" href="http://www.gov.uk" rel=external>GOV.UK</a> after visiting Digital Marketplace
+                </td>
+                <td>10 minutes</td>
+            </tr>
             </tbody>
         </table>
 
-        <h2>Change your settings</h2>
+        <h3>Analytics settings cookie</h3>
 
-        <p>You can <a href="{{ url_for('external.cookie_settings')}}" class="govuk-link">change which cookies you’re happy for us
-            to use</a>.</p>
+        <p class="govuk-body">
+            If you choose to accept or reject analytics cookies, we store this setting in a separate cookie.
+        </p>
+        <p class="govuk-body">
+            Setting this cookie also stops the cookie banner appearing on later visits.
+        </p>
+        <p class="govuk-body">
+            You can <a href="{{ url_for('external.cookie_settings')}}" class="govuk-link">change your analytics
+            settings</a> at any time.
+        </p>
+        <table class="content-table">
+            <tbody>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Purpose</th>
+                <th scope="col">Expires</th>
+            </tr>
+            <tr>
+                <td>dm_cookie_policy</td>
+                <td>Tells us that you have seen our cookie message</td>
+                <td>1 year</td>
+            </tr>
+            </tbody>
+        </table>
     </div>
 </div>
 {% endblock %}
