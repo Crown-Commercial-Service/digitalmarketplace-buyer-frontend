@@ -82,24 +82,21 @@ class WhichServiceWonTheContractForm(FlaskForm):
 
 
 class TellUsAboutContractForm(FlaskForm):
-    INPUT_REQUIRED_MESSAGE = "You need to answer this question."
-    INVALID_DATE_MESSAGE = "Your answer must be a valid date."
-    INVALID_VALUE_MESSAGE = "Enter your value in pounds and pence using numbers and decimals only" \
-                            ", for example 9900.05 for 9900 pounds and 5 pence."
+    INVALID_VALUE_MESSAGE = "Enter the value in pounds and pence using numbers and decimals only"
 
     start_date = DMDateField(
         "Start date",
         validators=[
-            InputRequired(INPUT_REQUIRED_MESSAGE),
-            DataRequired(INVALID_DATE_MESSAGE),
+            InputRequired("Enter the start date"),
+            DataRequired("Enter a real start date"),
         ],
     )
 
     end_date = DMDateField(
         "End date",
         validators=[
-            InputRequired(INPUT_REQUIRED_MESSAGE),
-            DataRequired(INVALID_DATE_MESSAGE),
+            InputRequired("Enter the end date"),
+            DataRequired("Enter a real end date"),
             GreaterThan("start_date", "Your end date must be later than the start date."),
         ],
     )
@@ -107,7 +104,7 @@ class TellUsAboutContractForm(FlaskForm):
     value_in_pounds = DMPoundsField(
         "Value",
         validators=[
-            InputRequired(INPUT_REQUIRED_MESSAGE),
+            InputRequired("Enter the contract value"),
             DataRequired(INVALID_VALUE_MESSAGE),
             NumberRange(min=Decimal('0.01'), message=INVALID_VALUE_MESSAGE),
         ],
@@ -117,7 +114,7 @@ class TellUsAboutContractForm(FlaskForm):
         "Organisation buying the service",
         hint="For example, National Audit Office or Lewisham Council",
         validators=[
-            InputRequired(INPUT_REQUIRED_MESSAGE)
+            InputRequired("Enter an organisation")
         ],
     )
 
