@@ -783,7 +783,7 @@ class TestDirectAwardAwardContract(TestDirectAwardBase):
         assert res.status_code == 400
 
         doc = html.fromstring(res.get_data(as_text=True))
-        assert len(doc.xpath('//legend[contains(normalize-space(), "You need to answer this question.")]')) == 1
+        assert len(doc.xpath('//legend[contains(normalize-space(), "Select yes if you awarded a contract")]')) == 1
         assert doc.xpath('boolean(//div[@class="validation-masthead"])')
         assert doc.xpath('count(//div[@class="validation-masthead"]/a[@class="validation-masthead-link"])') == 1
 

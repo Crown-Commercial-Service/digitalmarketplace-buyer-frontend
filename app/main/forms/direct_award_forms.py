@@ -57,7 +57,7 @@ class DidYouAwardAContractForm(FlaskForm):
 
     did_you_award_a_contract = DMRadioField(
         "Did you award a contract?",
-        validators=[InputRequired(message="You need to answer this question.")],
+        validators=[InputRequired(message="Select yes if you awarded a contract")],
         options=[
             {'value': YES, 'label': 'Yes'},
             {'value': NO, 'label': 'No'},
