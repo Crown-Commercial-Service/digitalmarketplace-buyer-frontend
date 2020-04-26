@@ -82,7 +82,7 @@ class WhichServiceWonTheContractForm(FlaskForm):
 
 
 class TellUsAboutContractForm(FlaskForm):
-    INVALID_VALUE_MESSAGE = "Enter the value in pounds and pence using numbers and decimals only"
+    INVALID_VALUE_MESSAGE = "Enter the value in pounds and pence, using numbers and decimals only"
 
     start_date = DMDateField(
         "Start date",
