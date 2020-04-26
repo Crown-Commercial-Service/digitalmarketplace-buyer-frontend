@@ -145,6 +145,6 @@ class BeforeYouDownloadForm(FlaskForm):
     user_understands = DMBooleanField(
         "I understand that I cannot edit my search again after I export my results",
         validators=[
-            InputRequired(message="Please confirm that you understand before you continue.")
+            InputRequired(message="Confirm that you have finished editing your search")
         ],
     )
