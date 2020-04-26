@@ -119,7 +119,7 @@ def choose_lot(framework_family):
         else:
             errors["lot"] = {
                 "question": "Choose a category",
-                "message": "Please select a category to start your search"
+                "message": "Select a category to start your search"
             }
 
     return render_template('choose-lot.html',
