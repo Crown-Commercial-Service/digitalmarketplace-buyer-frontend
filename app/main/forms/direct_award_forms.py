@@ -68,7 +68,7 @@ class DidYouAwardAContractForm(FlaskForm):
 class WhichServiceWonTheContractForm(FlaskForm):
     which_service_won_the_contract = DMRadioField(
         "Which service won the contract?",
-        validators=[InputRequired(message="Please select the service that won the contract")],
+        validators=[InputRequired(message="Select the service that won the contract")],
     )
 
     def __init__(self, services, *args, **kwargs):
