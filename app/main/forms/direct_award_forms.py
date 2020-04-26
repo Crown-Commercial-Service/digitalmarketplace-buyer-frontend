@@ -17,7 +17,7 @@ from decimal import Decimal
 class CreateProjectForm(FlaskForm):
     save_search_selection = DMRadioField(
         validators=[
-            InputRequired("Please choose where to save your search")
+            InputRequired("Select a save location")
         ]
     )
     name = DMStripWhitespaceStringField(
@@ -44,7 +44,7 @@ class CreateProjectForm(FlaskForm):
     def validate_name(form, field):
         if form.save_search_selection.data == "new_search":
             try:
-                Length(min=1, max=100, message="Names must be between 1 and 100 characters")(form, field)
+                Length(min=1, max=100, message="Name must be between 1 and 100 characters")(form, field)
             except ValidationError as e:
                 form.save_search_selection.options[-1]["reveal"]["error"] = e.args[0]
                 raise

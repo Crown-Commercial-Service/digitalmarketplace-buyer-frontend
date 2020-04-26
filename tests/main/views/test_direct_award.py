@@ -161,7 +161,7 @@ class TestDirectAward(TestDirectAwardBase):
         html = res.get_data(as_text=True)
         assert self.SEARCH_API_URL not in html  # it was once, so let's check
         assert self.SIMPLE_SEARCH_PARAMS in html
-        assert "Names must be between 1 and 100 characters" in html
+        assert "Name must be between 1 and 100 characters" in html
 
     def test_save_search_submit_success(self):
         res = self._save_search('some name " foo bar \u2016')
