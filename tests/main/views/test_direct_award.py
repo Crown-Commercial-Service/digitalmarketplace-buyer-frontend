@@ -161,7 +161,7 @@ class TestDirectAward(TestDirectAwardBase):
         html = res.get_data(as_text=True)
         assert self.SEARCH_API_URL not in html  # it was once, so let's check
         assert self.SIMPLE_SEARCH_PARAMS in html
-        assert "Names must be between 1 and 100 characters" in html
+        assert "Search name must be between 1 and 100 characters" in html
 
     def test_save_search_submit_success(self):
         res = self._save_search('some name " foo bar \u2016')
@@ -783,7 +783,7 @@ class TestDirectAwardAwardContract(TestDirectAwardBase):
         assert res.status_code == 400
 
         doc = html.fromstring(res.get_data(as_text=True))
-        assert len(doc.xpath('//legend[contains(normalize-space(), "You need to answer this question.")]')) == 1
+        assert len(doc.xpath('//legend[contains(normalize-space(), "Select if you have awarded your contract")]')) == 1
         assert doc.xpath('boolean(//div[@class="validation-masthead"])')
         assert doc.xpath('count(//div[@class="validation-masthead"]/a[@class="validation-masthead-link"])') == 1
 

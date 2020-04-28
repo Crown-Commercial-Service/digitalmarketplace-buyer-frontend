@@ -17,7 +17,7 @@ from decimal import Decimal
 class CreateProjectForm(FlaskForm):
     save_search_selection = DMRadioField(
         validators=[
-            InputRequired("Please choose where to save your search")
+            InputRequired("Select where to save your search result")
         ]
     )
     name = DMStripWhitespaceStringField(
@@ -44,7 +44,7 @@ class CreateProjectForm(FlaskForm):
     def validate_name(form, field):
         if form.save_search_selection.data == "new_search":
             try:
-                Length(min=1, max=100, message="Names must be between 1 and 100 characters")(form, field)
+                Length(min=1, max=100, message="Search name must be between 1 and 100 characters")(form, field)
             except ValidationError as e:
                 form.save_search_selection.options[-1]["reveal"]["error"] = e.args[0]
                 raise
@@ -57,7 +57,7 @@ class DidYouAwardAContractForm(FlaskForm):
 
     did_you_award_a_contract = DMRadioField(
         "Did you award a contract?",
-        validators=[InputRequired(message="You need to answer this question.")],
+        validators=[InputRequired(message="Select if you have awarded your contract")],
         options=[
             {'value': YES, 'label': 'Yes'},
             {'value': NO, 'label': 'No'},
@@ -68,7 +68,7 @@ class DidYouAwardAContractForm(FlaskForm):
 class WhichServiceWonTheContractForm(FlaskForm):
     which_service_won_the_contract = DMRadioField(
         "Which service won the contract?",
-        validators=[InputRequired(message="Please select the service that won the contract")],
+        validators=[InputRequired(message="Select the service that won the contract")],
     )
 
     def __init__(self, services, *args, **kwargs):
@@ -82,24 +82,21 @@ class WhichServiceWonTheContractForm(FlaskForm):
 
 
 class TellUsAboutContractForm(FlaskForm):
-    INPUT_REQUIRED_MESSAGE = "You need to answer this question."
-    INVALID_DATE_MESSAGE = "Your answer must be a valid date."
-    INVALID_VALUE_MESSAGE = "Enter your value in pounds and pence using numbers and decimals only" \
-                            ", for example 9900.05 for 9900 pounds and 5 pence."
+    INVALID_VALUE_MESSAGE = "Enter the value in pounds and pence, using numbers and decimals"
 
     start_date = DMDateField(
         "Start date",
         validators=[
-            InputRequired(INPUT_REQUIRED_MESSAGE),
-            DataRequired(INVALID_DATE_MESSAGE),
+            InputRequired("Enter the start date"),
+            DataRequired("Enter the full start date of your contract"),
         ],
     )
 
     end_date = DMDateField(
         "End date",
         validators=[
-            InputRequired(INPUT_REQUIRED_MESSAGE),
-            DataRequired(INVALID_DATE_MESSAGE),
+            InputRequired("Enter the end date"),
+            DataRequired("Enter the full end date of your contract"),
             GreaterThan("start_date", "Your end date must be later than the start date."),
         ],
     )
@@ -107,7 +104,7 @@ class TellUsAboutContractForm(FlaskForm):
     value_in_pounds = DMPoundsField(
         "Value",
         validators=[
-            InputRequired(INPUT_REQUIRED_MESSAGE),
+            InputRequired("Enter the contract value"),
             DataRequired(INVALID_VALUE_MESSAGE),
             NumberRange(min=Decimal('0.01'), message=INVALID_VALUE_MESSAGE),
         ],
@@ -117,7 +114,7 @@ class TellUsAboutContractForm(FlaskForm):
         "Organisation buying the service",
         hint="For example, National Audit Office or Lewisham Council",
         validators=[
-            InputRequired(INPUT_REQUIRED_MESSAGE)
+            InputRequired("Enter an organisation")
         ],
     )
 
@@ -137,7 +134,7 @@ class WhyDidYouNotAwardForm(FlaskForm):
                 "hint": "The services in your search results did not meet your requirements",
             },
         ],
-        validators=[InputRequired(message="Please select a reason why you didn't award a contract")]
+        validators=[InputRequired(message="Select a reason why you didn't award a contract")]
     )
 
 
@@ -145,6 +142,6 @@ class BeforeYouDownloadForm(FlaskForm):
     user_understands = DMBooleanField(
         "I understand that I cannot edit my search again after I export my results",
         validators=[
-            InputRequired(message="Please confirm that you understand before you continue.")
+            InputRequired(message="Confirm that you have finished editing your search")
         ],
     )
