@@ -134,7 +134,7 @@ class WhyDidYouNotAwardForm(FlaskForm):
                 "hint": "The services in your search results did not meet your requirements",
             },
         ],
-        validators=[InputRequired(message="Please select a reason why you didn't award a contract")]
+        validators=[InputRequired(message="Select a reason why you didn't award a contract")]
     )
 
 
