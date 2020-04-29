@@ -29,26 +29,6 @@
   }
 }
 
-.button-save-wrapper {
-  margin: 0px 0px 20px;
-
-  .save-summary-text {
-    @include core-16;
-    padding: 7px 15px;
-    @include media(mobile) {
-      margin-bottom: 10px;
-    }
-  }
-
-  .save-button {
-    padding: 0;
-
-    .button-save {
-      @include core-19;
-    }
-  }
-}
-
 @import "search/_search-result.scss";
 
 .search-page-filters {
