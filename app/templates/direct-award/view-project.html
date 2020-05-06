@@ -23,6 +23,9 @@
         "href": url_for('direct_award.saved_search_overview', framework_family=framework.family),
         "text": "Your saved searches"
       },
+      {
+        "text": page_title
+      },
     ] if project else [
       {
         "text": page_title
@@ -121,7 +124,8 @@ Follow the <a href="https://www.gov.uk/guidance/g-cloud-buyers-guide#review-and-
               data-analytics="trackEvent"
               data-analytics-category="Direct Award"
               data-analytics-action="External Link">guidance for assessing services</a>. Choose the one that best meets
-your budget and requirements.Do not hold a competition to decide the winner. You can
+            your budget and requirements.'},
+            {"type": "text", "text": 'Do not hold a competition to decide the winner. You can
 <a href="https://www.gov.uk/guidance/g-cloud-buyers-guide#what-to-do-if-you-have-a-question-for-the-suppliers
    data-analytics="trackEvent"
    class="govuk-link"
