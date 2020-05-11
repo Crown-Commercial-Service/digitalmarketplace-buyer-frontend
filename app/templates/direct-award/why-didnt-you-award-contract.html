@@ -1,7 +1,7 @@
 {% extends "_base_page.html" %}
 
 {% block pageTitle %}
-  Why didn't you award a contract? - Digital Marketplace
+  Why didn’t you award a contract? - Digital Marketplace
 {% endblock %}
 
 {% block breadcrumb %}
@@ -24,8 +24,7 @@
       "text": project.name
     },
     {
-      "href": url_for('direct_award.did_you_award_contract', framework_family=framework.family, project_id=project.id),
-      "text": "Did you award a contract?"
+      "text": "Why didn’t you award a contract?"
     },
   ]
 }) }}

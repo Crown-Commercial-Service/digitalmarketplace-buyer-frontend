@@ -121,7 +121,7 @@ class TellUsAboutContractForm(FlaskForm):
 
 class WhyDidYouNotAwardForm(FlaskForm):
     why_did_you_not_award_the_contract = DMRadioField(
-        "Why didn't you award a contract?",
+        "Why didn’t you award a contract?",
         options=[
             {
                 "label": "The work has been cancelled",
@@ -140,8 +140,8 @@ class WhyDidYouNotAwardForm(FlaskForm):
 
 class BeforeYouDownloadForm(FlaskForm):
     user_understands = DMBooleanField(
-        "I understand that I cannot edit my search again after I export my results",
+        "I understand that I cannot edit my search after I export my results",
         validators=[
-            InputRequired(message="Confirm that you have finished editing your search")
+            InputRequired(message="Confirm that you’ve finished editing your search")
         ],
     )

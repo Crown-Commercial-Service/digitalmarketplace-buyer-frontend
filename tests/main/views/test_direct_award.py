@@ -306,11 +306,13 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
             "Digital Marketplace",
             "Your account",
             "Your saved searches",
+            "My procurement project <",
         )
         assert tuple(li.xpath(".//a/@href") for li in breadcrumbs) == (
             ["/"],
             ["/buyers"],
             ["/buyers/direct-award/g-cloud"],
+            [],
         )
 
     def test_overview_renders_specific_elements_for_no_search_state(self):
