@@ -95,3 +95,8 @@ $govuk-global-styles: true;
     padding-bottom: 30px;
   }
 }
+
+.app-break-link {
+  display: inline-block;
+  word-break: break-all;
+}
