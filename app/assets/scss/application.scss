@@ -76,7 +76,6 @@ $govuk-global-styles: true;
 @import "_service-page.scss";
 @import "_supplier-a-to-z.scss";
 @import "_table.scss";
-@import "_text.scss";
 @import "_help-page.scss";
 
 // Overrides
@@ -94,4 +93,9 @@ $govuk-global-styles: true;
   p {
     padding-bottom: 30px;
   }
+}
+
+.app-break-link {
+  display: inline-block;
+  word-break: break-all;
 }
