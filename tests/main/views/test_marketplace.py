@@ -1571,8 +1571,7 @@ class TestCatalogueOfBriefsPage(APIClientMixin, BaseApplicationTest):
         header = document.xpath("//h2[@id='opportunity-data-header']")[0].text
         description = document.xpath("//p[@id='opportunity-data-description']")[0].text
         expected_desc = "Download data buyers have provided about closed opportunities. Some data may be missing."
-        link_text = document.xpath("//a[@class='document-link-with-icon']")[0].text_content()
-        link = document.xpath("//a[@class='document-link-with-icon']")[0].values()
+        link = document.xpath("//a[normalize-space(text())='Download data (CSV)']")[0].values()
         expected_link = (
             "https://assets.digitalmarketplace.service.gov.uk"
             + f"/digital-outcomes-and-specialists{expected_url_slug_suffix}/communications/data/opportunity-data.csv"
@@ -1580,7 +1579,6 @@ class TestCatalogueOfBriefsPage(APIClientMixin, BaseApplicationTest):
 
         assert "Opportunity data" in header
         assert expected_desc in description
-        assert "Download data" in link_text
         assert expected_link in link
 
     def test_catalogue_of_briefs_page_shows_pagination_if_more_pages(self):

@@ -1150,7 +1150,7 @@ class TestDirectAwardResultsPage(TestDirectAwardBase):
         res = self.client.get('/buyers/direct-award/g-cloud/projects/1/results')
         doc = html.fromstring(res.get_data(as_text=True))
 
-        download_links = doc.xpath('//ul[@class="document-list"]//a[@class="document-link-with-icon"]/@href')
+        download_links = doc.xpath('//ul[@class="govuk-list"]//a[@class="govuk-link"]/@href')
 
         for download_link in download_links:
             res = self.client.get(download_link)
