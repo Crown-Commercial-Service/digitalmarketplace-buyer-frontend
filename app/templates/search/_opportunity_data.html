@@ -2,20 +2,11 @@
   <h2 class="heading-small" id="opportunity-data-header">Opportunity data</h2>
   <p id="opportunity-data-description">Download data buyers have provided about closed opportunities. Some data may be missing.<p>
 </div>
-{%
-  with
-  items = [
-      {
-          "title": "Download data",
-          "link": "https://assets.digitalmarketplace.service.gov.uk/{}/communications/data/opportunity-data.csv".format(framework.slug),
-          "file_type": "CSV",
-          "download": "True",
-          "analytics": "trackEvent",
-          "analytics_category": "opportunity-data-csv",
-          "analytics_action": "download CSV",
-          "analytics_label": "Opportunity Data CSV"
-      }
-    ]
-%}
-    {% include "toolkit/documents.html" %}
-{% endwith %}
+<a class="govuk-link" 
+    href="{{ 'https://assets.digitalmarketplace.service.gov.uk/{}/communications/data/opportunity-data.csv'.format(framework.slug) }}"
+    download
+    data-analytics="trackEvent"
+    data-analytics-category="opportunity-data-csv"
+    data-analytics-action="download CSV"
+    data-analytics-label="Opportunity Data CSV"        
+>Download data (CSV)</a>

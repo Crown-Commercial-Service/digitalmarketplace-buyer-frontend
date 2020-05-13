@@ -78,7 +78,7 @@ class TestServicePage(DataAPIClientMixin, BaseApplicationTest):
         ]
 
         doc_hrefs = [a.get('href') for a in document.xpath(
-            '//div[@id="meta"]//li[@class="document-list-item"]/a')]
+            '//div[@id="meta"]//ul[@class="govuk-list"]//li/a')]
 
         for url_key in url_keys:
             if url_key in self.service['services']:

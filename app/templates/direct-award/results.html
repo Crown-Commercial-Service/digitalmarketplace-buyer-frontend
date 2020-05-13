@@ -41,33 +41,26 @@
 
     <p class="govuk-body">Download a list of the services you’ve found to help you track and record your decision-making.</p>
     <p class="govuk-body">The files include suppliers’ service descriptions and contact information. Keep a copy for your records.</p>
-    <div class="marketplace-paragraph">
-      {%
-      with
-      items = [
-          {
-              "title": "Download search results as comma-separated values",
-              "link": url_for('direct_award.download_results', framework_family=framework.family, project_id=project.id, filetype='csv'),
-              "file_type": "CSV",
-              "analytics": "trackEvent",
-              "analytics_category": "Direct Award",
-              "analytics_action": "Download search results format",
-              "analytics_label": "CSV"
-          },
-          {
-              "title": "Download search results as a spreadsheet",
-              "link": url_for('direct_award.download_results', framework_family=framework.family, project_id=project.id, filetype='ods'),
-              "file_type": "ODS",
-              "analytics": "trackEvent",
-              "analytics_category": "Direct Award",
-              "analytics_action": "Download search results format",
-              "analytics_label": "ODS"
-          }
-      ]
-      %}
-        {% include "toolkit/documents.html" %}
-      {% endwith %}
-    </div>
+    <ul class="govuk-list">
+      <li class="govuk-!-margin-bottom-2">
+        <a class="govuk-link" 
+            href="{{url_for('direct_award.download_results', framework_family=framework.family, project_id=project.id, filetype='csv')}}"
+            data-analytics="trackEvent"
+            data-analytics-category="Direct Award"
+            data-analytics-action="Download search results format"
+            data-analytics-label="CSV"        
+        >Download search results as comma-separated values (CSV)</a>
+      </li>
+      <li class="govuk-!-margin-bottom-2">
+        <a class="govuk-link" 
+            href="{{ url_for('direct_award.download_results', framework_family=framework.family, project_id=project.id, filetype='ods') }}"
+            data-analytics="trackEvent"
+            data-analytics-category="Direct Award"
+            data-analytics-action="Download search results format"
+            data-analytics-label="ODS"        
+        >Download search results as a spreadsheet (ODS)</a>
+      </li>
+    </ul>
     <p class="application-notice info-notice govuk-body">
       Results exported on {{ exported_at|datetimeformat }}
     </p>
