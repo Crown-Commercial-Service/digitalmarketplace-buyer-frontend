@@ -76,7 +76,16 @@
 <div class="govuk-grid-row service-attributes">
   <div class="govuk-grid-column-full">
     {% include '_service_attributes.html' %}
-    {% include '_service_documents.html' %}
+    <h2 class="govuk-!-font-size-27 govuk-!-margin-bottom-2 govuk-!-margin-top-7" id="service-documents">Service documents</h2>
+    <ul class="govuk-list">
+    {% for document in service.meta.documents %}
+      <li class="govuk-!-margin-bottom-2">
+        <a href="{{ document.url }}" class="govuk-link">
+          {{ document.name }} ({{ document.extension }})
+        </a>
+      </li>
+    {% endfor %}
+    </ul>
     <a class="govuk-link" href="#main-content" class="return-to-top">Return to top ↑</a>
   </div>
 </div>
