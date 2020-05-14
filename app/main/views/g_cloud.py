@@ -71,8 +71,9 @@ def index_g_cloud():
 def pre_project_task_list(framework_family):
     if framework_family != "g-cloud":
         abort(404)
+    
     frameworks_by_slug = framework_helpers.get_frameworks_by_slug(data_api_client)
-    framework = framework_helpers.get_latest_live_framework(frameworks_by_slug.values(), "g-cloud")
+    framework = framework_helpers.get_latest_live_framework(frameworks_by_slug.values(), framework_family)
 
     content_loader.load_messages(framework['slug'], ['urls'])
     framework_urls = content_loader.get_message(framework['slug'], 'urls')
