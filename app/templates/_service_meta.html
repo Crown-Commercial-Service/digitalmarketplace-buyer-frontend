@@ -1,16 +1,15 @@
 <div id="meta">
   <h2 class="visuallyhidden">Pricing</h2>
   <p class="price">{{ service.meta.price }}</p>
-  <ul class="price-caveats">
+  <ul class="govuk-list">
   {% for caveat in service.meta.priceCaveats %}
     <li>
       {% if caveat['link'] %}
-        {% with text = caveat['text'],
-                link = caveat['link'],
-                target = "_blank"
-        %}
-          {% include "toolkit/external-link.html" %}
-        {% endwith %}
+        <a href="{{ caveat['link'] }}"
+           class="govuk-link"
+           rel="external noopener noreferrer"
+           target="_blank"
+        >{{ caveat['text'] }}</a>
       {% else %}
         {{ caveat['text'] }}
       {% endif %}
@@ -29,12 +28,10 @@
   </ul>
   <h2 class="sidebar-heading">Framework</h2>
   {% if service.meta.externalFrameworkUrl is not none %}
-    {%
-      with
-      text=service.frameworkName,
-      link=service.meta.externalFrameworkUrl %}
-      {% include "toolkit/external-link.html" %}
-    {% endwith %}
+    <a href="{{ service.meta.externalFrameworkUrl }}"
+        class="govuk-link govuk-!-display-inline-block govuk-!-margin-bottom-6"
+        rel="external"
+    >{{ service.frameworkName }}</a>
   {% else %}
     <p class="framework-name">{{ service.frameworkName }}</p>
   {% endif %}
