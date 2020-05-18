@@ -27,14 +27,7 @@
   {% endfor %}
   </ul>
   <h2 class="govuk-!-font-size-4 govuk-!-margin-bottom-1">Framework</h2>
-  {% if service.meta.externalFrameworkUrl is not none %}
-    <a href="{{ service.meta.externalFrameworkUrl }}"
-        class="govuk-link govuk-!-display-inline-block govuk-!-margin-bottom-6"
-        rel="external"
-    >{{ service.frameworkName }}</a>
-  {% else %}
-    <p class="framework-name">{{ service.frameworkName }}</p>
-  {% endif %}
+  <p class="framework-name">{{ service.frameworkName }}</p>
   <h2 class="govuk-!-font-size-4 govuk-!-margin-bottom-1">Service ID</h2>
   {% for chunk in service.meta.serviceId -%}
   <span class="govuk-!-margin-bottom-6 {% if not loop.first %} govuk-!-padding-left-1 {% endif %} govuk-!-display-inline-block">{{chunk}}</span>
