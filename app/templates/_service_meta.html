@@ -1,23 +1,22 @@
 <div id="meta">
-  <h2 class="visuallyhidden">Pricing</h2>
+  <h2 class="govuk-visually-hidden">Pricing</h2>
   <p class="price">{{ service.meta.price }}</p>
-  <ul class="price-caveats">
+  <ul class="govuk-list">
   {% for caveat in service.meta.priceCaveats %}
     <li>
       {% if caveat['link'] %}
-        {% with text = caveat['text'],
-                link = caveat['link'],
-                target = "_blank"
-        %}
-          {% include "toolkit/external-link.html" %}
-        {% endwith %}
+        <a href="{{ caveat['link'] }}"
+           class="govuk-link"
+           rel="external noopener noreferrer"
+           target="_blank"
+        >{{ caveat['text'] }}</a>
       {% else %}
         {{ caveat['text'] }}
       {% endif %}
     </li>
   {% endfor %}
   </ul>
-  <h2 class="visuallyhidden">Service documents</h2>
+  <h2 class="govuk-visually-hidden">Service documents</h2>
   <ul class="govuk-list">
   {% for document in service.meta.documents %}
     <li class="govuk-!-margin-bottom-2">
@@ -27,22 +26,13 @@
     </li>
   {% endfor %}
   </ul>
-  <h2 class="sidebar-heading">Framework</h2>
-  {% if service.meta.externalFrameworkUrl is not none %}
-    {%
-      with
-      text=service.frameworkName,
-      link=service.meta.externalFrameworkUrl %}
-      {% include "toolkit/external-link.html" %}
-    {% endwith %}
-  {% else %}
-    <p class="framework-name">{{ service.frameworkName }}</p>
-  {% endif %}
-  <h2 class="sidebar-heading">Service ID</h2>
+  <h2 class="govuk-!-font-size-4 govuk-!-margin-bottom-1">Framework</h2>
+  <p class="framework-name">{{ service.frameworkName }}</p>
+  <h2 class="govuk-!-font-size-4 govuk-!-margin-bottom-1">Service ID</h2>
   {% for chunk in service.meta.serviceId -%}
   <span class="govuk-!-margin-bottom-6 {% if not loop.first %} govuk-!-padding-left-1 {% endif %} govuk-!-display-inline-block">{{chunk}}</span>
   {%- endfor %}
-  <h2 class="sidebar-heading">Contact</h2>
+  <h2 class="govuk-!-font-size-4 govuk-!-margin-bottom-1">Contact</h2>
   {%
     with
     organisation_type="supplier",
