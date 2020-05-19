@@ -16,7 +16,7 @@
     </li>
   {% endfor %}
   </ul>
-  <h2 class="govuk-visually-hidden">Service documents</h2>
+  <h2>Service documents</h2>
   <ul class="govuk-list">
   {% for document in service.meta.documents %}
     <li class="govuk-!-margin-bottom-2">
@@ -29,9 +29,12 @@
   <h2 class="govuk-!-font-size-4 govuk-!-margin-bottom-1">Framework</h2>
   <p class="framework-name">{{ service.frameworkName }}</p>
   <h2 class="govuk-!-font-size-4 govuk-!-margin-bottom-1">Service ID</h2>
-  {% for chunk in service.meta.serviceId -%}
-  <span class="govuk-!-margin-bottom-6 {% if not loop.first %} govuk-!-padding-left-1 {% endif %} govuk-!-display-inline-block">{{chunk}}</span>
-  {%- endfor %}
+  <p class="govuk-visually-hidden">{{ (service.meta.serviceId|join(''))|join(' ') }}</p>
+  <p aria-hidden="true">
+    {% for chunk in service.meta.serviceId -%}
+    <span class="{% if not loop.first %} govuk-!-padding-left-1 {% endif %}">{{chunk}}</span>
+    {%- endfor %}
+  </p>
   <h2 class="govuk-!-font-size-4 govuk-!-margin-bottom-1">Contact</h2>
   {%
     with
