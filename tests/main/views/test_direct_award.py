@@ -158,10 +158,13 @@ class TestDirectAward(TestDirectAwardBase):
 
     def _asserts_for_create_project_failure(self, res):
         assert res.status_code == 400
-        html = res.get_data(as_text=True)
-        assert self.SEARCH_API_URL not in html  # it was once, so let's check
-        assert self.SIMPLE_SEARCH_PARAMS in html
-        assert "Search name must be between 1 and 100 characters" in html
+        doc = res.get_data(as_text=True)
+        assert self.SEARCH_API_URL not in doc  # it was once, so let's check
+        assert self.SIMPLE_SEARCH_PARAMS in doc
+        errors = html.fromstring(doc)
+        assert len(errors.cssselect("div.govuk-error-summary a")) == 1
+        assert errors.cssselect("div.govuk-error-summary a")[0].text_content() == \
+            "Search name must be between 1 and 100 characters"
 
     def test_save_search_submit_success(self):
         res = self._save_search('some name " foo bar \u2016')

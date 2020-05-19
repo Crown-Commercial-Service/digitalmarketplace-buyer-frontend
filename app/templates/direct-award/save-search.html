@@ -29,10 +29,6 @@
 <div class="single-question-page save-search-page">
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-        {#
-          we cannot use the toolkit/forms/validation.html template here,
-          as this page was designed with a govuk style error summary banner
-        #}
         {% if errors %}
         <div class="error-summary" role="alert" aria-labelledby="saving-search-error" tabindex="-1">
 
