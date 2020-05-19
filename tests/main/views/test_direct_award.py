@@ -786,8 +786,9 @@ class TestDirectAwardAwardContract(TestDirectAwardBase):
 
         doc = html.fromstring(res.get_data(as_text=True))
         assert len(doc.xpath('//legend[contains(normalize-space(), "Select if you have awarded your contract")]')) == 1
-        assert doc.xpath('boolean(//div[@class="validation-masthead"])')
-        assert doc.xpath('count(//div[@class="validation-masthead"]/a[@class="validation-masthead-link"])') == 1
+        errors = doc.cssselect('div.govuk-error-summary a')
+        assert len(errors) == 1
+        assert errors[0].text_content() == 'Select if you have awarded your contract'
 
     @pytest.mark.parametrize('choice, expected_redirect',
                              (('still-assessing', '/buyers/direct-award/g-cloud/projects/1'),
