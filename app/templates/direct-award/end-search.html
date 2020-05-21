@@ -31,16 +31,6 @@
 {% endblock breadcrumb %}
 
 {% block mainContent %}
-{% if errors %}
-  <div class="validation-masthead" aria-labelledby="validation-masthead-heading" aria-role="group" tabindex="-1">
-    <p>
-      You need to <a href="#{{ form.user_understands.id }}">confirm that you’ve finished editing your search</a> before you
-      export your results.
-    </p>
-  </div>
-{% endif %}
-
-
 <div class="end-search-page">
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds dmspeak">
