@@ -122,14 +122,16 @@ class Meta(object):
         caveats = []
         main_caveats = [
             {
-                'key': 'vatIncluded',
-                'if_exists': 'Including VAT',
-                'if_absent': 'Excluding VAT'
-            },
-            {
                 'key': 'educationPricing',
                 'if_exists': 'Education pricing available',
                 'if_absent': False
+            }
+        ]
+        g8_and_earlier_caveats = [
+            {
+                'key': 'vatIncluded',
+                'if_exists': 'Including VAT',
+                'if_absent': 'Excluding VAT'
             },
             {
                 'key': 'terminationCost',
@@ -139,12 +141,14 @@ class Meta(object):
         ]
 
         if 'minimumContractPeriod' in service_data:
+            # G-Cloud 8 and earlier
             caveats.append(make_caveat('Minimum contract period: {}'.format(service_data['minimumContractPeriod'])))
 
         if service_data.get('freeVersionTrialOption') is True:
             options = make_caveat('Free trial available', service_data.get('freeVersionLink'))
 
         else:
+            # G-Cloud 8 and earlier
             options = self._if_both_keys_or_either(
                 service_data,
                 keys=['trialOption', 'freeOption'],
@@ -157,7 +161,8 @@ class Meta(object):
             )
             options = make_caveat(options) if options else options
 
-        for item in main_caveats:
+        for item in main_caveats + g8_and_earlier_caveats:
+            # 'vatIncluded' and 'terminationCost' only displayed for services on G8 and earlier
             if item['key'] in service_data:
                 if service_data[item['key']]:
                     caveats.append(make_caveat(item['if_exists']))
