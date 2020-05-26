@@ -129,13 +129,6 @@ class TestMeta:
         assert self.meta.get_service_id({'id': 123456789012345}) == ['1234', '5678', '9012', '345']
         assert self.meta.get_service_id({'id': '5-G4-1046-001'}) == ['5-G4-1046-001']
 
-    def test_external_framework_url_returns_correct_suffix(self):
-        assert self.meta.get_external_framework_url({'frameworkSlug': 'g-cloud-7'}) == (
-            'http://ccs-agreements.cabinetoffice.gov.uk/contracts/rm1557vii'
-        )
-        assert self.meta.get_external_framework_url({'frameworkSlug': 'g-cloud-6'}) is None
-        assert self.meta.get_external_framework_url({'frameworkSlug': 'None'}) is None
-
     def test_get_documents_returns_the_correct_document_information(self):
         expected_information = [
             {
