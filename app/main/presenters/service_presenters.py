@@ -3,8 +3,6 @@ import re
 from collections import OrderedDict
 from urllib.parse import unquote, urlparse
 
-from app import content_loader
-from dmcontent.errors import ContentNotFoundError
 from dmcontent.formats import format_service_price
 
 DECLARATION_DOCUMENT_KEYS = [
@@ -61,7 +59,6 @@ class Meta(object):
         self.serviceId = self.get_service_id(service_data)
         self.declaration = declaration or {}
         self.documents = self.get_documents(service_data)
-        self.externalFrameworkUrl = self.get_external_framework_url(service_data)
 
     def set_contact_attribute(self, contactName, phone, email):
         self.contact = {
@@ -76,18 +73,6 @@ class Meta(object):
             return [id]
         else:
             return list(chunk_string(str(id), 4))
-
-    def get_external_framework_url(self, service_data):
-        try:
-            content_loader.load_messages(service_data['frameworkSlug'], ['urls'])
-            return content_loader.get_message(
-                service_data['frameworkSlug'],
-                'urls',
-                'framework_url'
-            ) or None
-        except ContentNotFoundError:
-            # If no urls.yml exists then we don't have a URL for the framework
-            return None
 
     def _add_declaration_documents_to_service_data(self, service_data):
         # Check if the supplier has provided a declaration document, and add it to the service data.
