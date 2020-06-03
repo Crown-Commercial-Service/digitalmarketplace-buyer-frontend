@@ -1,44 +1,38 @@
-{% import "toolkit/summary-table.html" as summary %}
-{% call(item) summary.list_table(
-  [
-    {"label": "Published", "value": brief.publishedAt|dateformat},
-    {"label": "Deadline for asking questions", "value": brief.clarificationQuestionsClosedAt|utcdatetimeformat},
-    {"label": "Closing date for applications", "value": brief.applicationsClosedAt|utcdatetimeformat}
+{% from "govuk-frontend/components/summary-list/macro.njk" import govukSummaryList %}
+
+<h2 class="govuk-visually-hidden">Important dates</h2>
+{{ govukSummaryList({
+  "rows": [
+    {
+      "key": {"text": "Published"},
+      "value": {"text": brief.publishedAt|dateformat}
+    },
+    {
+      "key": {"text": "Deadline for asking questions"},
+      "value": {"text": brief.clarificationQuestionsClosedAt|utcdatetimeformat}
+    },
+    {
+      "key": {"text": "Closing date for applications"},
+      "value": {"text": brief.applicationsClosedAt|utcdatetimeformat}
+    }
   ],
-  caption="Important dates",
-  field_headings=[
-    "Opportunity attribute name",
-    "Opportunity attribute value"
-  ],
-  field_headings_visible=False
-) %}
-  {% call summary.row() %}
-    {{ summary.field_name(item.label) }}
-    {{ summary.text(item.value) }}
-  {% endcall %}
-{% endcall %}
-{% for section in content.summary(brief) %}
-    {{ summary.heading(section.name, id="opportunity-attributes-{}".format(loop.index)) }}
-     {% if section.summary_page_description %}
-        <p>{{ summary.description(section.summary_page_description) }}</p>
-     {# DISPLAY MANDATORY EVALUATION METHODS #}
-     {% elif section.name == 'How suppliers will be evaluated' and evaluation_description %}
-        <p>{{ evaluation_description }}</p>
-     {% endif %}
-    {% call(item) summary.list_table(
-      section.questions,
-      caption=section.name,
-      field_headings=[
-        "Opportunity attribute name",
-        "Opportunity attribute value"
-      ],
-      field_headings_visible=False
-    ) %}
-      {% call summary.row() %}
-        {{ summary.field_name(item.label) }}
-        {% with item_value = summary[item.type](item.value) | format_links %}
-            {{ (item_value | preserve_line_breaks) if item.type == 'textbox_large' else item_value }}
-        {% endwith %}
-      {% endcall %}
-    {% endcall %}
+  "attributes": {
+    "id": "opportunity-important-dates"
+  }, 
+  "classes": 'app-govuk-summary-list--top-border govuk-!-margin-bottom-8'
+}) }}
+
+{% for section in brief_content_summary %}
+  <h2 id="{{ 'opportunity-attributes-{}'.format(loop.index) }}" class="govuk-heading-m govuk-!-font-size-27">{{ section.name }}</h2>
+  {% if section.summary_page_description %}
+  <p class="govuk-body govuk-!-margin-top-3">{{ section.summary_page_description }}</p>
+  {# DISPLAY MANDATORY EVALUATION METHODS #}
+  {% elif section.name == 'How suppliers will be evaluated' and evaluation_description %}
+  <p class="govuk-body govuk-!-margin-top-3">{{ evaluation_description }}</p>
+  {% endif %}
+  {{ govukSummaryList({
+    "rows": section.summary_list, 
+    "classes": 'app-govuk-summary-list--top-border govuk-!-margin-bottom-8'
+    }) 
+  }}
 {% endfor %}

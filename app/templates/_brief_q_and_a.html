@@ -1,7 +1,7 @@
-{% import "toolkit/summary-table.html" as summary %}
+{% from "govuk-frontend/components/summary-list/macro.njk" import govukSummaryList %}
 
 {% if brief.status == 'live' and not brief.clarificationQuestionsAreClosed and brief.questionAndAnswerSessionDetails %}
-  {{ summary.heading("Question and answer session", id="question-and-answer-session") }}
+  <h2 id="question-and-answer-session" class="govuk-heading-m govuk-!-font-size-27">Question and answer session</h2>
   <a class="govuk-link" href="/suppliers/opportunities/{{ brief.id }}/question-and-answer-session">
     {% if current_user.is_authenticated and current_user.role == 'supplier' %}
       View question and answer session details
@@ -11,25 +11,16 @@
   </a>
 {% endif %}
 
-{{ summary.heading("Questions asked by suppliers", id="clarification-questions") }}
-{% call(question) summary.list_table(
-  brief.clarificationQuestions,
-  caption="Questions asked by suppliers",
-  field_headings=[
-    "Supplier question",
-    "Buyer answer"
-    ],
-    field_headings_visible=False,
-    empty_message="No questions have been answered yet"
-) %}
-  {% call summary.row() %}
-    {% call summary.field(first=True, wide=False) -%}
-      <span aria-label="question">{{ question.number }}.</span>
-      {{ question.question | format_links | preserve_line_breaks }}
-    {%- endcall %}
-    {{ summary.text(question.answer | format_links | preserve_line_breaks) }}
-  {% endcall %}
-{% endcall %}
+<h2 id="clarification-questions" class="govuk-heading-m govuk-!-font-size-27">Questions asked by suppliers</h2>
+{% if brief.clarificationQuestions is undefined or brief.clarificationQuestions|length == 0 %} 
+<p class="summary-item-no-content">No questions have been answered yet</p>
+{% else %}
+{{ govukSummaryList({
+    "rows": brief.clarificationQuestions, 
+    "classes": 'app-govuk-summary-list--top-border govuk-!-margin-bottom-8'
+  }) 
+}}
+{% endif %}
 
 {% if brief.status == 'live' and not brief.clarificationQuestionsAreClosed %}
   <a class="govuk-link" href="/suppliers/opportunities/{{ brief.id }}/ask-a-question">
