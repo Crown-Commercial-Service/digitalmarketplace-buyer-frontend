@@ -32,7 +32,7 @@ class Service(object):
         self.summary_manifest = manifest.summary(service_data)
         # get attributes in format suitable for govukSummaryList
         for section in self.summary_manifest:
-            section.summary_list = to_summary_list_rows(section.questions)
+            section.summary_list = to_summary_list_rows(section.questions, preserve_line_breaks=True)
         # required attributes directly mapped to service_data values
         self.title = service_data['serviceName']
         self.serviceSummary = service_data.get('serviceSummary', service_data.get('serviceDescription'))
