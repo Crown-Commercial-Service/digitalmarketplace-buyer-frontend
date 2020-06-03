@@ -4,6 +4,7 @@ from collections import OrderedDict
 from urllib.parse import unquote, urlparse
 
 from dmcontent.formats import format_service_price
+from dmcontent.html import to_summary_list_rows
 
 DECLARATION_DOCUMENT_KEYS = [
     ('modernSlaveryStatement', 'modernSlaveryStatementURL'),
@@ -29,6 +30,9 @@ class Service(object):
 
     def __init__(self, service_data, manifest, lots_by_slug, declaration=None):
         self.summary_manifest = manifest.summary(service_data)
+        # get attributes in format suitable for govukSummaryList
+        for section in self.summary_manifest:
+            section.summary_list = to_summary_list_rows(section.questions)
         # required attributes directly mapped to service_data values
         self.title = service_data['serviceName']
         self.serviceSummary = service_data.get('serviceSummary', service_data.get('serviceDescription'))
