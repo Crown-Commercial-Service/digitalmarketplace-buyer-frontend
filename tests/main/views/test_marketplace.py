@@ -549,19 +549,19 @@ class TestBriefPage(BaseBriefPageTest):
         document = html.fromstring(res.get_data(as_text=True))
 
         brief_important_dates = document.xpath(
-            '(//table[@class="summary-item-body"])[1]/tbody/tr')
+            '(//dl[@id="opportunity-important-dates"]//div)')
         assert 3 == len(brief_important_dates)
-        assert brief_important_dates[0].xpath('td[@class="summary-item-field-first"]')[0].text_content().strip() \
+        assert brief_important_dates[0].xpath('dt')[0].text_content().strip() \
             == "Published"
-        assert brief_important_dates[0].xpath('td[@class="summary-item-field"]')[0].text_content().strip() \
+        assert brief_important_dates[0].xpath('dd')[0].text_content().strip() \
             == "Thursday 1 December 2016"
-        assert brief_important_dates[1].xpath('td[@class="summary-item-field-first"]')[0].text_content().strip() \
+        assert brief_important_dates[1].xpath('dt')[0].text_content().strip() \
             == "Deadline for asking questions"
-        assert brief_important_dates[1].xpath('td[@class="summary-item-field"]')[0].text_content().strip() \
+        assert brief_important_dates[1].xpath('dd')[0].text_content().strip() \
             == "Wednesday 14 December 2016 at 11:08am GMT"
-        assert brief_important_dates[2].xpath('td[@class="summary-item-field-first"]')[0].text_content().strip() \
+        assert brief_important_dates[2].xpath('dt')[0].text_content().strip() \
             == "Closing date for applications"
-        assert brief_important_dates[2].xpath('td[@class="summary-item-field"]')[0].text_content().strip() \
+        assert brief_important_dates[2].xpath('dd')[0].text_content().strip() \
             == "Thursday 15 December 2016 at 11:08am GMT"
 
     def test_dos_brief_with_daylight_savings_has_question_deadline_closing_date_forced_to_utc(self):
@@ -575,15 +575,15 @@ class TestBriefPage(BaseBriefPageTest):
         document = html.fromstring(res.get_data(as_text=True))
 
         brief_important_dates = document.xpath(
-            '(//table[@class="summary-item-body"])[1]/tbody/tr')
+            '(//dl[@id="opportunity-important-dates"]//div)')
         assert 3 == len(brief_important_dates)
         # Publish date does not have UTC filter applied
-        assert brief_important_dates[0].xpath('td[@class="summary-item-field"]')[0].text_content().strip() \
+        assert brief_important_dates[0].xpath('dd')[0].text_content().strip() \
             == "Monday 1 August 2016"
         # Question deadline and closing date are forced to 11.59pm (UTC+00) on the correct day
-        assert brief_important_dates[1].xpath('td[@class="summary-item-field"]')[0].text_content().strip() \
+        assert brief_important_dates[1].xpath('dd')[0].text_content().strip() \
             == "Sunday 14 August 2016 at 11:59pm GMT"
-        assert brief_important_dates[2].xpath('td[@class="summary-item-field"]')[0].text_content().strip() \
+        assert brief_important_dates[2].xpath('dd')[0].text_content().strip() \
             == "Monday 15 August 2016 at 11:59pm GMT"
 
     def test_dos_brief_has_at_least_one_section(self):
@@ -593,21 +593,20 @@ class TestBriefPage(BaseBriefPageTest):
 
         document = html.fromstring(res.get_data(as_text=True))
 
-        section_heading = document.xpath('//h2[@class="summary-item-heading"]')[0]
-        section_attributes = section_heading.xpath('following-sibling::table[1]/tbody/tr')
+        section_heading = document.xpath('//h2[@id="opportunity-attributes-1"]')[0]
+        section_attributes = section_heading.xpath('following-sibling::dl[1]/div')
 
-        start_date_key = section_attributes[2].xpath('td[1]/span/text()')
-        start_date_value = section_attributes[2].xpath('td[2]/span/text()')
+        start_date_key = section_attributes[2].xpath('dt/text()')
+        start_date_value = section_attributes[2].xpath('dd/text()')
 
-        contract_length_key = section_attributes[3].xpath('td[1]/span/text()')
-        contract_length_value = section_attributes[3].xpath('td[2]/span/text()')
+        contract_length_key = section_attributes[3].xpath('dt/text()')
+        contract_length_value = section_attributes[3].xpath('dd/text()')
 
-        assert section_heading.get('id') == 'opportunity-attributes-1'
         assert section_heading.text.strip() == 'Overview'
-        assert start_date_key[0] == 'Latest start date'
-        assert start_date_value[0] == 'Wednesday 1 March 2017'
-        assert contract_length_key[0] == 'Expected contract length'
-        assert contract_length_value[0] == '4 weeks'
+        assert start_date_key[0].strip() == 'Latest start date'
+        assert start_date_value[0].strip() == 'Wednesday 1 March 2017'
+        assert contract_length_key[0].strip() == 'Expected contract length'
+        assert contract_length_value[0].strip() == '4 weeks'
 
     @pytest.mark.parametrize(
         'lot_slug, assessment_type', [
@@ -631,7 +630,7 @@ class TestBriefPage(BaseBriefPageTest):
 
         document = html.fromstring(res.get_data(as_text=True))
         section_heading = document.xpath(
-            '//h2[@class="summary-item-heading"][contains(text(), "How suppliers will be evaluated")]'
+            '//h2[contains(text(), "How suppliers will be evaluated")]'
         )[0]
         section_description = section_heading.xpath('following-sibling::p')[0]
         assert section_description.text.strip() == f'All suppliers will be asked to provide a {assessment_type}.'
@@ -643,15 +642,14 @@ class TestBriefPage(BaseBriefPageTest):
 
         document = html.fromstring(res.get_data(as_text=True))
 
-        xpath = '//h2[@id="clarification-questions"]/following-sibling::table/tbody/tr'
+        xpath = '//h2[@id="clarification-questions"]/following-sibling::dl/div'
         clarification_questions = document.xpath(xpath)
 
-        number = clarification_questions[0].xpath('td[1]/span/span/text()')[0].strip()
-        question = clarification_questions[0].xpath('td[1]/span/text()')[0].strip()
-        answer = clarification_questions[0].xpath('td[2]/span/text()')[0].strip()
+        question = clarification_questions[0].xpath('dt')[0].text_content().strip()
+        answer = clarification_questions[0].xpath('dd')[0].text_content().strip()
 
-        assert number == "1."
-        assert question == "Why?"
+        assert question.startswith("1.")
+        assert question.endswith("Why?")
         assert answer == "Because"
 
     def test_can_apply_to_live_brief(self):
