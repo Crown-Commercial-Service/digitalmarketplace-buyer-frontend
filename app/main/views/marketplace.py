@@ -12,7 +12,7 @@ from dmcontent.content_loader import ContentNotFoundError
 from dmutils.errors import render_error_page
 from dmutils.filters import capitalize_first
 from dmutils.flask import timed_render_template as render_template
-from dmcontent.html import to_html, text_to_html
+from dmcontent.html import to_summary_list_rows, text_to_html
 from app import search_api_client, data_api_client, content_loader
 from ..helpers.brief_helpers import (
     count_brief_responses_by_size_and_status, format_winning_supplier_size,
@@ -167,23 +167,20 @@ def get_brief_by_id(framework_family, brief_id):
     except AttributeError:
         has_supplier_responded_to_brief = False
 
-    # Get questions in format suitable for govukSummaryList
+    # Get Q&A in format suitable for govukSummaryList
     for index, question in enumerate(brief['clarificationQuestions']):
-        question["key"] = {"text": f"{str(index + 1)}. {question['question']}"}
+        question["key"] = {
+            "text": f"{str(index + 1)}. "
+                    f"{text_to_html(question['question'], format_links=True, preserve_line_breaks=True)}"
+        }
         question["value"] = {"html": text_to_html(question["answer"], format_links=True, preserve_line_breaks=True)}
 
     brief_content = content_loader.get_manifest(brief['frameworkSlug'], 'display_brief').filter(brief)
 
-    # Get questions in format suitable for govukSummaryList
+    # Get attributes in format suitable for govukSummaryList
     brief_summary = brief_content.summary(brief)
     for section in brief_summary:
-        section.summary_list = [
-            {
-                "key": {"text": question['label']},
-                "value": {"html": to_html(question, format_links=True)}
-            }
-            for question in section.questions
-        ]
+        section.summary_list = to_summary_list_rows(section.questions, format_links=True)
 
     # Add in mandatory evaluation method, missing from the display_brief manifest summary_page_description
     evaluation_description = get_evaluation_description(brief, brief_content)
