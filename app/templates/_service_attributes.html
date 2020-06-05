@@ -7,10 +7,10 @@
     {% else %}
     <div class="scroll-tracking" id="{{ loop.index }}-{{ section.slug }}">
     {% endif %}
-      <h2 id="{{ section.slug }}" class="govuk-heading-m govuk-!-font-size-27">{{ section.name }}</h2>
+      <h2 id="{{ section.slug }}" class="govuk-heading-m">{{ section.name }}</h2>
       {{ govukSummaryList({
         "rows": section.summary_list, 
-        "classes": 'app-govuk-summary-list--top-border govuk-!-margin-bottom-8'
+        "classes": 'app-govuk-summary-list app-govuk-summary-list--top-border govuk-!-margin-bottom-8'
         }) 
       }}
     </div>

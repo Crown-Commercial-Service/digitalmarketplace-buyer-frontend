@@ -19,11 +19,11 @@
   "attributes": {
     "id": "opportunity-important-dates"
   }, 
-  "classes": 'app-govuk-summary-list--top-border govuk-!-margin-bottom-8'
+  "classes": 'app-govuk-summary-list app-govuk-summary-list--top-border govuk-!-margin-bottom-8'
 }) }}
 
 {% for section in brief_content_summary %}
-  <h2 id="{{ 'opportunity-attributes-{}'.format(loop.index) }}" class="govuk-heading-m govuk-!-font-size-27">{{ section.name }}</h2>
+  <h2 id="{{ 'opportunity-attributes-{}'.format(loop.index) }}" class="govuk-heading-m">{{ section.name }}</h2>
   {% if section.summary_page_description %}
   <p class="govuk-body govuk-!-margin-top-3">{{ section.summary_page_description }}</p>
   {# DISPLAY MANDATORY EVALUATION METHODS #}
@@ -32,7 +32,7 @@
   {% endif %}
   {{ govukSummaryList({
     "rows": section.summary_list, 
-    "classes": 'app-govuk-summary-list--top-border govuk-!-margin-bottom-8'
+    "classes": 'app-govuk-summary-list app-govuk-summary-list--top-border govuk-!-margin-bottom-8'
     }) 
   }}
 {% endfor %}
