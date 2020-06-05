@@ -462,13 +462,13 @@ class TestBriefPage(BaseBriefPageTest):
         incomplete_responses_section = document.xpath('//div[@id="incomplete-applications"]')[0]
         completed_responses_section = document.xpath('//div[@id="completed-applications"]')[0]
 
-        assert incomplete_responses_section.xpath('div[@class="big-statistic"]/text()')[0] == '3'
-        assert incomplete_responses_section.xpath('div[@class="statistic-name"]/text()')[0] == "Incomplete applications"
-        assert incomplete_responses_section.xpath('div[@class="statistic-description"]/text()')[0] == "3 SME, 0 large"
+        assert incomplete_responses_section.xpath('h2//span[1]/text()')[0] == '3'
+        assert incomplete_responses_section.xpath('h2//span[2]/text()')[0] == "Incomplete applications"
+        assert incomplete_responses_section.xpath('p[1]/text()')[0] == "3 SME, 0 large"
 
-        assert completed_responses_section.xpath('div[@class="big-statistic"]/text()')[0] == '5'
-        assert completed_responses_section.xpath('div[@class="statistic-name"]/text()')[0] == "Completed applications"
-        assert completed_responses_section.xpath('div[@class="statistic-description"]/text()')[0] == "4 SME, 1 large"
+        assert completed_responses_section.xpath('h2//span[1]/text()')[0] == '5'
+        assert completed_responses_section.xpath('h2//span[2]/text()')[0] == "Completed applications"
+        assert completed_responses_section.xpath('p[1]/text()')[0] == "4 SME, 1 large"
 
         self._assert_all_normal_api_calls()
 
@@ -504,13 +504,13 @@ class TestBriefPage(BaseBriefPageTest):
         incomplete_responses_section = document.xpath('//div[@id="incomplete-applications"]')[0]
         completed_responses_section = document.xpath('//div[@id="completed-applications"]')[0]
 
-        assert incomplete_responses_section.xpath('div[@class="big-statistic"]/text()')[0] == '1'
-        assert incomplete_responses_section.xpath('div[@class="statistic-name"]/text()')[0] == "Incomplete application"
-        assert incomplete_responses_section.xpath('div[@class="statistic-description"]/text()')[0] == "1 SME, 0 large"
+        assert incomplete_responses_section.xpath('h2//span[1]/text()')[0] == '1'
+        assert incomplete_responses_section.xpath('h2//span[2]/text()')[0] == "Incomplete application"
+        assert incomplete_responses_section.xpath('p[1]/text()')[0] == "1 SME, 0 large"
 
-        assert completed_responses_section.xpath('div[@class="big-statistic"]/text()')[0] == '1'
-        assert completed_responses_section.xpath('div[@class="statistic-name"]/text()')[0] == "Completed application"
-        assert completed_responses_section.xpath('div[@class="statistic-description"]/text()')[0] == "0 SME, 1 large"
+        assert completed_responses_section.xpath('h2//span[1]/text()')[0] == '1'
+        assert completed_responses_section.xpath('h2//span[2]/text()')[0] == "Completed application"
+        assert completed_responses_section.xpath('p[1]/text()')[0] == "0 SME, 1 large"
 
     def test_dos_brief_displays_application_stats_correctly_when_no_applications(self):
         brief_id = self.brief['briefs']['id']
@@ -522,12 +522,12 @@ class TestBriefPage(BaseBriefPageTest):
         incomplete_responses_section = document.xpath('//div[@id="incomplete-applications"]')[0]
         completed_responses_section = document.xpath('//div[@id="completed-applications"]')[0]
 
-        assert incomplete_responses_section.xpath('div[@class="big-statistic"]/text()')[0] == '0'
-        assert completed_responses_section.xpath('div[@class="big-statistic"]/text()')[0] == '0'
-        assert incomplete_responses_section.xpath('div[@class="statistic-name"]/text()')[0] == "Incomplete applications"
-        assert completed_responses_section.xpath('div[@class="statistic-name"]/text()')[0] == "Completed applications"
-        assert len(incomplete_responses_section.xpath('div[@class="statistic-description"]/text()')) == 0
-        assert len(completed_responses_section.xpath('div[@class="statistic-description"]/text()')) == 0
+        assert incomplete_responses_section.xpath('h2//span[1]/text()')[0] == '0'
+        assert completed_responses_section.xpath('h2//span[1]/text()')[0] == '0'
+        assert incomplete_responses_section.xpath('h2//span[2]/text()')[0] == "Incomplete applications"
+        assert completed_responses_section.xpath('h2//span[2]/text()')[0] == "Completed applications"
+        assert len(incomplete_responses_section.xpath('p[1]/text()')) == 0
+        assert len(completed_responses_section.xpath('p[1]/text()')) == 0
 
     def test_dos_brief_has_lot_analytics_string(self):
         brief = self.brief['briefs']

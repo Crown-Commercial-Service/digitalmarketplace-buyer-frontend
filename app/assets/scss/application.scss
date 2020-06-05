@@ -63,6 +63,7 @@ $govuk-global-styles: true;
 
 // App specific styles
 @import "_atoz_navigation.scss";
+@import "_brief_page.scss";
 @import "_end-your-search-page.scss";
 @import "_error-pages.scss";
 @import "_gcloud_browse_list.scss";

@@ -1,22 +1,49 @@
-{% import "toolkit/statistics.html" as statistics %}
+<div class="govuk-grid-column-one-third app-stat-block" id="incomplete-applications">
+   <h2>
+      <span class="govuk-!-font-size-36 govuk-!-display-block">{{- brief_responses_stats.incomplete_responses_total }}</span>
+      <span>
+         {{- 
+            pluralize(
+               brief_responses_stats.incomplete_responses_total,
+               "Incomplete application",
+               "Incomplete applications"
+            ) 
+         -}}
+      </span>
+   </h2>
+   <p class="govuk-body govuk-!-font-size-16">
+      {%- if brief_responses_stats.incomplete_responses_total %}
+         {{- 
+            "%d SME, %d large" | format(
+               brief_responses_stats.incomplete_sme_responses,
+               brief_responses_stats.incomplete_large_responses
+            ) 
+         -}}
+      {% endif -%}
+   </p>
+</div>
+<div class="govuk-grid-column-one-third app-stat-block" id="completed-applications">
+   <h2>
+      <span class="govuk-!-font-size-36 govuk-!-display-block">{{- brief_responses_stats.completed_responses_total }}</span>
+      <span>
+         {{- 
+            pluralize(
+               brief_responses_stats.completed_responses_total,
+               "Completed application",
+               "Completed applications"
+            ) 
+         -}}
+      </span>
+   </h2>
+   <p class="govuk-body govuk-!-font-size-16">
+      {%- if brief_responses_stats.completed_responses_total %}
+         {{- 
+            "%d SME, %d large" | format(
+               brief_responses_stats.completed_sme_responses,
+               brief_responses_stats.completed_large_responses
+            ) 
+         -}}
+      {% endif -%}
+   </p>
+</div>
 
-{{ statistics.big_stat(
-     brief_responses_stats.incomplete_responses_total,
-     pluralize(brief_responses_stats.incomplete_responses_total, "Incomplete application", "Incomplete applications"),
-     "%d SME, %d large" | format(
-        brief_responses_stats.incomplete_sme_responses,
-        brief_responses_stats.incomplete_large_responses
-     ) if brief_responses_stats.incomplete_responses_total else None,
-     id="incomplete-applications"
-   )
-}}
-{{ statistics.big_stat(
-     brief_responses_stats.completed_responses_total,
-     pluralize(brief_responses_stats.completed_responses_total, "Completed application", "Completed applications"),
-     "%d SME, %d large" | format(
-     brief_responses_stats.completed_sme_responses,
-     brief_responses_stats.completed_large_responses
-     ) if brief_responses_stats.completed_responses_total else None,
-     id="completed-applications"
-   )
-}}
