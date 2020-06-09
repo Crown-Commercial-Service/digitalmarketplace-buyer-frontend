@@ -180,7 +180,7 @@ def get_brief_by_id(framework_family, brief_id):
     # Get attributes in format suitable for govukSummaryList
     brief_summary = brief_content.summary(brief)
     for section in brief_summary:
-        section.summary_list = to_summary_list_rows(section.questions, format_links=True)
+        section.summary_list = to_summary_list_rows(section.questions, format_links=True, filter_empty=False)
 
     # Add in mandatory evaluation method, missing from the display_brief manifest summary_page_description
     evaluation_description = get_evaluation_description(brief, brief_content)
