@@ -1,0 +1,20 @@
+/*
+ * A top border more clearly delineates the multiple data lists per page
+ * from their headings and other context.
+ */
+.app-govuk-summary-list--top-border {
+    border-top: 1px solid $govuk-border-colour;
+
+    @include govuk-media-query($until: tablet) {
+        padding-top: govuk-spacing(3)
+    }
+}
+/*
+ * We de-bold the questions to avoid bombarding users with emphasised text
+ * and to help the headings stand out.
+ */
+.app-govuk-summary-list .govuk-summary-list__key {
+    @include govuk-media-query($from: tablet) {
+        font-weight: $govuk-font-weight-regular;
+    }
+}
