@@ -1,4 +1,15 @@
 /*
+ * On smaller screens, it's difficult to discern headings from summary
+ * list keys, so we size up the headings
+ */
+.app-summary-list-heading {
+    @include govuk-media-query($until: tablet) {
+        font-size: 22px;
+        margin-top: 10px;
+    }
+}
+
+/*
  * A top border more clearly delineates the multiple data lists per page
  * from their headings and other context.
  */
