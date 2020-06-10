@@ -170,7 +170,7 @@ def get_brief_by_id(framework_family, brief_id):
     # Get Q&A in format suitable for govukSummaryList
     for index, question in enumerate(brief['clarificationQuestions']):
         question["key"] = {
-            "text": f"{str(index + 1)}. "
+            "html": f"{str(index + 1)}. "
                     f"{text_to_html(question['question'], format_links=True, preserve_line_breaks=True)}"
         }
         question["value"] = {"html": text_to_html(question["answer"], format_links=True, preserve_line_breaks=True)}
