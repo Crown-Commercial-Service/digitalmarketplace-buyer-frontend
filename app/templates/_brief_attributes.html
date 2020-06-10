@@ -23,7 +23,7 @@
 }) }}
 
 {% for section in brief_content_summary %}
-  <h2 id="{{ 'opportunity-attributes-{}'.format(loop.index) }}" class="govuk-heading-m">{{ section.name }}</h2>
+  <h2 id="{{ 'opportunity-attributes-{}'.format(loop.index) }}" class="govuk-heading-m app-summary-list-heading">{{ section.name }}</h2>
   {% if section.summary_page_description %}
   <p class="govuk-body govuk-!-margin-top-3">{{ section.summary_page_description }}</p>
   {# DISPLAY MANDATORY EVALUATION METHODS #}
