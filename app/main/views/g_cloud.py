@@ -11,7 +11,7 @@ from dmapiclient import HTTPError
 from dmcontent.formats import format_service_price
 from dmcontent.questions import Pricing
 from dmutils.flask import timed_render_template as render_template
-from dmutils.forms.helpers import get_errors_from_wtform
+from dmutils.forms.errors import get_errors_from_wtform, govuk_errors
 from dmutils.formats import dateformat, DATETIME_FORMAT, datetimeformat
 from dmutils.filters import capitalize_first
 from dmutils.ods import A as AnchorElement
@@ -118,12 +118,14 @@ def choose_lot(framework_family):
                 return redirect(url_for("main.search_services"))
         else:
             errors["lot"] = {
+                "input_name": "lot",
+                "href": "#input-lot-1",
                 "question": "Choose a category",
-                "message": "Select a category to start your search"
+                "message": "Select a category to start your search",
             }
 
     return render_template('choose-lot.html',
-                           errors=errors,
+                           errors=govuk_errors(errors),
                            framework_family=framework_family,
                            title="Choose a category",
                            lots=lots)

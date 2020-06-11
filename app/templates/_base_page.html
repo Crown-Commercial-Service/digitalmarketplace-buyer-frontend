@@ -4,6 +4,7 @@
 
 {% from "components/button/macro.njk" import govukButton %}
 {% from "components/breadcrumbs/macro.njk" import govukBreadcrumbs %}
+{% from "components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk-frontend/components/phase-banner/macro.njk" import govukPhaseBanner %}
 
 {# Import DM Components #}
@@ -41,6 +42,14 @@
 
 {% block content %}
   {% include "toolkit/flash_messages.html" %}
+  {% block errorSummary %}
+    {% if errors %}
+      {{ govukErrorSummary({
+      "titleText": "There is a problem",
+      "errorList": errors.values(),
+    }) }}
+    {% endif %}
+  {% endblock %}
   {% block mainContent %}{% endblock %}
 {% endblock %}
 

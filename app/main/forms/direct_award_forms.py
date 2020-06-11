@@ -86,6 +86,7 @@ class TellUsAboutContractForm(FlaskForm):
 
     start_date = DMDateField(
         "Start date",
+        id="input-start_date-day",
         validators=[
             InputRequired("Enter the start date"),
             DataRequired("Enter the full start date of your contract"),
@@ -94,6 +95,7 @@ class TellUsAboutContractForm(FlaskForm):
 
     end_date = DMDateField(
         "End date",
+        id="input-end_date-day",
         validators=[
             InputRequired("Enter the end date"),
             DataRequired("Enter the full end date of your contract"),

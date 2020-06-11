@@ -158,10 +158,13 @@ class TestDirectAward(TestDirectAwardBase):
 
     def _asserts_for_create_project_failure(self, res):
         assert res.status_code == 400
-        html = res.get_data(as_text=True)
-        assert self.SEARCH_API_URL not in html  # it was once, so let's check
-        assert self.SIMPLE_SEARCH_PARAMS in html
-        assert "Search name must be between 1 and 100 characters" in html
+        doc = res.get_data(as_text=True)
+        assert self.SEARCH_API_URL not in doc  # it was once, so let's check
+        assert self.SIMPLE_SEARCH_PARAMS in doc
+        errors = html.fromstring(doc)
+        assert len(errors.cssselect("div.govuk-error-summary a")) == 1
+        assert errors.cssselect("div.govuk-error-summary a")[0].text_content() == \
+            "Search name must be between 1 and 100 characters"
 
     def test_save_search_submit_success(self):
         res = self._save_search('some name " foo bar \u2016')
@@ -786,8 +789,9 @@ class TestDirectAwardAwardContract(TestDirectAwardBase):
 
         doc = html.fromstring(res.get_data(as_text=True))
         assert len(doc.xpath('//legend[contains(normalize-space(), "Select if you have awarded your contract")]')) == 1
-        assert doc.xpath('boolean(//div[@class="validation-masthead"])')
-        assert doc.xpath('count(//div[@class="validation-masthead"]/a[@class="validation-masthead-link"])') == 1
+        errors = doc.cssselect('div.govuk-error-summary a')
+        assert len(errors) == 1
+        assert errors[0].text_content() == 'Select if you have awarded your contract'
 
     @pytest.mark.parametrize('choice, expected_redirect',
                              (('still-assessing', '/buyers/direct-award/g-cloud/projects/1'),
@@ -1021,11 +1025,13 @@ class TestDirectAwardTellUsAboutContract(TestDirectAwardBase):
 
     def test_tell_us_about_contract_post_raises_400_and_shows_validation_messages_if_no_form_input(self, client):
         res = client.post(self.url)
-        xpath = html.fromstring(res.get_data(as_text=True)).xpath
+        doc = html.fromstring(res.get_data(as_text=True))
         assert res.status_code == 400
-        assert xpath('boolean(//div[@class="validation-masthead"])')
-        assert xpath('count(//a[@class="validation-masthead-link"])') == 4
-        assert xpath('count(//span[@class="validation-message"])') == 4
+        errors = doc.cssselect('div.govuk-error-summary a')
+        assert errors[0].text_content() == 'Enter the start date'
+        assert errors[1].text_content() == 'Enter the end date'
+        assert errors[2].text_content() == 'Enter the contract value'
+        assert errors[3].text_content() == 'Enter an organisation'
 
     @pytest.mark.parametrize('invalid_data', (
         {'start_date-year': 'year', 'start_date-month': 'mo', 'start_date-day': 'da'},
@@ -1038,23 +1044,25 @@ class TestDirectAwardTellUsAboutContract(TestDirectAwardBase):
         res = client.post(self.url, data=data)
         assert res.status_code == 400
 
-        xpath = html.fromstring(res.get_data(as_text=True)).xpath
-        assert xpath('count(//span[@class="validation-message"])') == 1
-        assert xpath('boolean(//div[@class="validation-masthead"])')
-        assert xpath('count(//a[@class="validation-masthead-link"])') == 1
+        doc = html.fromstring(res.get_data(as_text=True))
+        assert doc.xpath('count(//span[@class="validation-message"])') == 1
+        errors = doc.cssselect('div.govuk-error-summary a')
+        assert len(errors) == 1
+        assert len(errors[0].text_content()) > 0
 
         for field, value in data.items():
-            assert xpath(f'//input[@name="{field}"]/@value')[0] == value
+            assert doc.xpath(f'//input[@name="{field}"]/@value')[0] == value
 
     def test_if_end_date_is_before_start_date_raise_400_and_show_validation_message(self, client, data):
         data.update({'end_date-year': str(int(data['start_date-year']) - 1)})
         res = client.post(self.url, data=data)
         assert res.status_code == 400
 
-        xpath = html.fromstring(res.get_data(as_text=True)).xpath
-        assert xpath('count(//span[@class="validation-message"])') == 1
-        assert xpath('boolean(//div[@class="validation-masthead"])')
-        assert xpath('count(//a[@class="validation-masthead-link"])') == 1
+        doc = html.fromstring(res.get_data(as_text=True))
+        assert doc.xpath('count(//span[@class="validation-message"])') == 1
+        errors = doc.cssselect('div.govuk-error-summary a')
+        assert len(errors) == 1
+        assert errors[0].text_content() == 'Your end date must be later than the start date.'
 
     def test_raises_410_if_outcome_is_completed(self, client):
         self.data_api_client.get_outcome.return_value['outcome']['completed'] = True
