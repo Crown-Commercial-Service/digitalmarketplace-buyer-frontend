@@ -41,6 +41,10 @@ class CreateProjectForm(FlaskForm):
             }
         })
 
+        # href for name field is assigned by digitalmarketplace-frontend-toolkit
+        # based on how many options there are above
+        self.name.href = f"input-save_search_selection-{len(self.save_search_selection.options)}-name"
+
     def validate_name(form, field):
         if form.save_search_selection.data == "new_search":
             try:
