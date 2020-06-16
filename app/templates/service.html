@@ -38,7 +38,7 @@
         heading = "This {} service is no longer available to buy.".format(service.frameworkName),
         message = " The {} framework expired on {}. Any existing contracts with {} are still valid.".format(
             service.frameworkName,
-            service_unavailability_information.date,
+            framework_expires_at_date,
             service.supplierName)
       %}
         {% include "toolkit/notification-banner.html" %}

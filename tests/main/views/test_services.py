@@ -273,7 +273,7 @@ class TestServicePage(DataAPIClientMixin, BaseApplicationTest):
         assert unavailable_banner.body_text() == 'The {} framework expired on {}. Any existing contracts with {} are' \
             ' still valid.'.format(
                 self.service['services']['frameworkName'],
-                'Tuesday 5 January 2016',
+                'Thursday 6 January 2000',
                 self.service['services']['supplierName'],
         )
 
