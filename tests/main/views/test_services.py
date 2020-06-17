@@ -261,6 +261,9 @@ class TestServicePage(DataAPIClientMixin, BaseApplicationTest):
         self.data_api_client.get_service.return_value = self.service
 
         service_id = self.service['services']['id']
+        framework_copy_with_updated_expiry_date = self.data_api_client.get_framework.return_value.copy()
+        framework_copy_with_updated_expiry_date['frameworks']['frameworkExpiresAtUTC'] = '2020-01-05T17:01:07.649587Z'
+        self.data_api_client.get_framework.return_value = framework_copy_with_updated_expiry_date
         res = self.client.get('/g-cloud/services/{}'.format(service_id))
         assert res.status_code == 410
 
@@ -273,7 +276,7 @@ class TestServicePage(DataAPIClientMixin, BaseApplicationTest):
         assert unavailable_banner.body_text() == 'The {} framework expired on {}. Any existing contracts with {} are' \
             ' still valid.'.format(
                 self.service['services']['frameworkName'],
-                'Tuesday 5 January 2016',
+                'Sunday 5 January 2020',
                 self.service['services']['supplierName'],
         )
 

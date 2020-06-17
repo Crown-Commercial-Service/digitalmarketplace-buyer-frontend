@@ -206,6 +206,7 @@ def get_service_by_id(service_id):
             abort(e.status_code)
 
         service_unavailability_information = None
+        framework_expires_at_date = dateformat(framework['frameworkExpiresAtUTC'])
         status_code = 200
         if service['serviceMadeUnavailableAuditEvent'] is not None:
             service_unavailability_information = {
@@ -221,6 +222,7 @@ def get_service_by_id(service_id):
             service_unavailability_information=service_unavailability_information,
             lot=service_view_data.lot,
             gcloud_framework_description=framework_helpers.get_framework_description(data_api_client, 'g-cloud'),
+            framework_expires_at_date=framework_expires_at_date
         ), status_code
     except AuthException:
         abort(500, "Application error")
