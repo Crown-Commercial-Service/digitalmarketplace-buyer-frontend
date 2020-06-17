@@ -107,7 +107,7 @@ def create_app(config_name):
     application.register_blueprint(external_blueprint)
 
     login_manager.login_view = '/user/login'
-    login_manager.login_message_category = "must_login"
+    login_manager.login_message = None  # don't flash message to user
     gds_metrics.init_app(application)
     csrf.init_app(application)
 
