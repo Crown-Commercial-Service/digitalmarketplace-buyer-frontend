@@ -96,12 +96,3 @@ $govuk-global-styles: true;
     padding-bottom: 30px;
   }
 }
-
-/*
- * TODO: Remove this class once the Brief opportunity page and the Preview Brief opportunity page
- * have been swapped from DM FE Toolkit summary tables to DS summary lists
- */
-.app-break-link {
-  display: inline-block;
-  word-break: break-all;
-}
