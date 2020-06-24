@@ -420,7 +420,10 @@ def save_search(framework_family):
     framework = framework_helpers.get_latest_live_framework_or_404(all_frameworks, framework_family)
     lots_by_slug = framework_helpers.get_lots_by_slug(framework)
 
-    search_query = url_decode(request.values.get('search_query'))
+    if "search_query" not in request.values:
+        abort(400)
+
+    search_query = url_decode(request.values['search_query'])
 
     current_lot_slug = get_valid_lot_from_args_or_none(search_query, lots_by_slug)
 
