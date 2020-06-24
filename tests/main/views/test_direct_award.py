@@ -139,6 +139,15 @@ class TestDirectAward(TestDirectAwardBase):
         summary = self.find_search_summary(res.get_data(as_text=True))[0]
         assert '<span class="search-summary-count">1150</span> results found in <em>Cloud software</em>' in summary
 
+    def test_save_search_view_raises_400_if_no_search(self):
+        self.login_as_buyer()
+
+        res = self.client.get(self.SAVE_SEARCH_URL)
+
+        assert res.status_code == 400
+
+        assert "Sorry, there was a problem with your request" in res.get_data(as_text=True)
+
     def _save_search(self, name, save_search_selection="new_search"):
         self.login_as_buyer()
         self.search_api_client.search.return_value = self.g9_search_results
