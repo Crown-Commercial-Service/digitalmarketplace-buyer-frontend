@@ -14,7 +14,7 @@ class UnavailableBanner(object):
 
     def __init__(self, document):
         self.banner = document.xpath(
-            '//main//div[@class="banner-temporary-message-without-action"]'
+            '//main//section[@class="dm-banner"]'
         )
 
     @property
@@ -25,7 +25,7 @@ class UnavailableBanner(object):
         return self.banner[0].xpath('h2/text()')[0].strip()
 
     def body_text(self):
-        return self.banner[0].xpath('p[@class="banner-message"]/text()')[0].strip()
+        return self.banner[0].xpath('div/text()')[0].strip()
 
 
 class TestServicePage(DataAPIClientMixin, BaseApplicationTest):
