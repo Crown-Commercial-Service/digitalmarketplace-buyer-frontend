@@ -45,7 +45,7 @@ from ..presenters.search_summary import SearchSummary
 
 @main.route('/')
 def index():
-    temporary_message = {}
+    framework_status_message = {}
 
     try:
         frameworks = data_api_client.find_frameworks().get('frameworks')
@@ -56,7 +56,7 @@ def index():
 
         if framework is not None:
             content_loader.load_messages(framework.get('slug'), ['homepage-sidebar'])
-            temporary_message = content_loader.get_message(
+            framework_status_message = content_loader.get_message(
                 framework.get('slug'),
                 'homepage-sidebar',
                 framework.get('status')
@@ -80,7 +80,7 @@ def index():
         'index.html',
         dos_slug=dos_framework['slug'] if dos_framework else None,
         frameworks={framework['slug']: framework for framework in frameworks},
-        temporary_message=temporary_message,
+        framework_status_message=framework_status_message,
         gcloud_framework_description=get_framework_description(data_api_client, 'g-cloud'),
     )
 

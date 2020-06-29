@@ -243,18 +243,16 @@
           </strong>
         </li>
 
-        {% if temporary_message %}
+        {% if framework_status_message %}
         <li>
-          {%
-            with
-              heading = temporary_message.heading,
-              main = True,
-              subheading = temporary_message.subheading,
-              messages = temporary_message.messages,
-              message = temporary_message.message
-          %}
-            {% include "toolkit/temporary-message.html" %}
-          {% endwith %}
+            <div class="temporary-framework-message">
+              <h3 class="temporary-framework-message-heading">{{ framework_status_message.heading }}</h3>
+              {%- for message in framework_status_message.messages %}
+                <p class="govuk-body">
+                  {{ message }}
+                </p>
+              {%- endfor %}
+            </div>
         </li>
         {% endif %}
 
