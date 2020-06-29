@@ -478,19 +478,16 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         doc = html.fromstring(body)
 
         if position is None:
-            assert not doc.xpath("//div[@class='temporary-message-banner']")
-            assert not doc.xpath("//div[@class='temporary-message']")
+            assert not doc.xpath("//section[@class='dm-banner']")
         elif position == 'sidebar':
-            assert len(doc.xpath("//div[@class='temporary-message']")) == 1
-            assert not doc.xpath("//div[@class='temporary-message-banner']")
+            assert len(doc.xpath("//section[@class='dm-banner']")) == 1
         elif position == 'banner':
-            assert len(doc.xpath("//div[@class='temporary-message-banner']")) == 1
-            assert not doc.xpath("//div[@class='temporary-message']")
+            assert len(doc.xpath("//section[@class='dm-banner']")) == 1
         else:
             raise
 
         if position:
-            assert doc.xpath(f"//h3[@class='temporary-message-heading'][contains(normalize-space(), '{heading}')]")
+            assert doc.xpath(f"//section[@class='dm-banner']/h2[contains(normalize-space(), '{heading}')]")
 
     @mock.patch('app.main.helpers.framework_helpers.content_loader')
     def test_banner_messages_not_shown_if_no_defined_following_framework(self, content_loader_mock):
@@ -502,8 +499,7 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         body = res.get_data(as_text=True)
         doc = html.fromstring(body)
 
-        assert not doc.xpath("//div[@class='temporary-message']")
-        assert not doc.xpath("//div[@class='temporary-message-banner']")
+        assert not doc.xpath("//section[@class='dm-banner']")
 
     @mock.patch('app.main.helpers.framework_helpers.content_loader')
     def test_banner_messages_not_shown_if_following_framework_not_found(self, content_loader_mock):
@@ -514,8 +510,7 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         assert res.status_code == 200
 
         doc = html.fromstring(res.get_data(as_text=True))
-        assert not doc.xpath("//div[@class='temporary-message']")
-        assert not doc.xpath("//div[@class='temporary-message-banner']")
+        assert not doc.xpath("//section[@class='dm-banner']")
 
     @mock.patch('app.main.helpers.framework_helpers.content_loader')
     def test_following_framework_still_raises_on_api_error(self, content_loader_mock):
@@ -547,7 +542,7 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         body = res.get_data(as_text=True)
         doc = html.fromstring(body)
 
-        search_links = doc.xpath("//div[@class='temporary-message-banner']//a")
+        search_links = doc.xpath("//section[@class='dm-banner']//a")
         assert len(search_links) == 1
         assert search_links[0].xpath("normalize-space(string())") == 'start a new search for G-Cloud\xa010 services'
         assert search_links[0].attrib["href"] == '/g-cloud/search?q=accelerator'
@@ -555,11 +550,11 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
     @pytest.mark.parametrize(
         ('locked_at', 'fwork_status', 'following_fwork_status', 'xpath', 'index', 'date'),
         (
-            (None, 'live', 'standstill', '//h3[@class="temporary-message-heading"]', 0, 'Wednesday 5 January 2000'),
-            (None, 'live', 'standstill', '//p[@class="temporary-message-message"]', 1, 'before 5 January they'),
-            (None, 'live', 'live', '//h3[@class="temporary-message-heading"]', 0, 'Wednesday 5 January 2000'),
-            (True, 'live', 'standstill', '//ul[@class="list-bullet-small"]/li', 1, 'Wednesday 5 January 2000'),
-            (True, 'expired', 'live', '//p[@class="temporary-message-message"]', 0, 'Thursday 6 January 2000'),
+            (None, 'live', 'standstill', '//section[@class="dm-banner"]/h2', 0, 'Wednesday 5 January 2000'),
+            (None, 'live', 'standstill', '//section[@class="dm-banner"]/div', 0, 'before 5 January they'),
+            (None, 'live', 'live', '//section[@class="dm-banner"]/h2', 0, 'Wednesday 5 January 2000'),
+            (True, 'live', 'standstill', '//ul[@class="govuk-list--bullet"]/li', 1, 'Wednesday 5 January 2000'),
+            (True, 'expired', 'live', '//section[@class="dm-banner"]/div', 0, 'Thursday 6 January 2000'),
         )
     )
     @mock.patch('app.main.helpers.framework_helpers.content_loader')

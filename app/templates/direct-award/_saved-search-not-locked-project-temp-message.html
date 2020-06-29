@@ -11,12 +11,10 @@
       {% set banner_heading = '{}'.format(following_framework.name)|nbsp + ' services replaced ' + '{}'.format(framework.name)|nbsp + ' services on {}'.format(following_framework.frameworkLiveAtUTC|dateformat) %}
       {% set banner_messages = ['Your search results may have changed.'] %}
     {% endif %}
-    {%
-      with
-      heading = banner_heading,
-      messages = banner_messages
-    %}
-      {% include "toolkit/temporary-message.html" %}
-    {% endwith %}
+    {{ dmBanner({
+      "title": banner_heading,
+      "headingLevel": 2,
+      "html": "\n".join(banner_messages)
+    }) }}
   </div>
 {% endif %}
