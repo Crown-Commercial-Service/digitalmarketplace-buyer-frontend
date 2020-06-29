@@ -54,7 +54,7 @@ class SearchMeta(object):
         return int(self.search_summary.count)
 
 
-def get_saved_search_temporary_message_status(project, framework, following_framework):
+def get_saved_search_banner_message_status(project, framework, following_framework):
     if following_framework['status'] in ['coming', 'open', 'pending']:
         return None
 
@@ -73,7 +73,7 @@ def get_saved_search_temporary_message_status(project, framework, following_fram
 
     # this should never be reached
     current_app.logger.error(
-        "Saved search temporary messages invalid frameworks state: "
+        "Saved search banner messages invalid frameworks state: "
         "'{}' - '{}' and '{}' - '{}'".format(
             framework['slug'], framework['status'], following_framework['slug'], following_framework['status']
         )

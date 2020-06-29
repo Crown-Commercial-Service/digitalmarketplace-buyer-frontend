@@ -465,7 +465,7 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         )
     )
     @mock.patch('app.main.helpers.framework_helpers.content_loader')
-    def test_overview_displays_correct_temporary_message(
+    def test_overview_displays_correct_banner_message(
         self, content_loader_mock, framework_status, following_framework_status, locked_at, position, heading
     ):
         self._set_project_locked_and_framework_states(locked_at, framework_status, following_framework_status)
@@ -493,7 +493,7 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
             assert doc.xpath(f"//h3[@class='temporary-message-heading'][contains(normalize-space(), '{heading}')]")
 
     @mock.patch('app.main.helpers.framework_helpers.content_loader')
-    def test_temporary_messages_not_shown_if_no_defined_following_framework(self, content_loader_mock):
+    def test_banner_messages_not_shown_if_no_defined_following_framework(self, content_loader_mock):
         content_loader_mock.get_metadata.side_effect = ContentNotFoundError()
 
         res = self.client.get('/buyers/direct-award/g-cloud/projects/1')
@@ -506,7 +506,7 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         assert not doc.xpath("//div[@class='temporary-message-banner']")
 
     @mock.patch('app.main.helpers.framework_helpers.content_loader')
-    def test_temporary_messages_not_shown_if_following_framework_not_found(self, content_loader_mock):
+    def test_banner_messages_not_shown_if_following_framework_not_found(self, content_loader_mock):
         self.data_api_client.get_framework.side_effect = HTTPError(response=mock.Mock(status_code=404))
         content_loader_mock.get_metadata.return_value = {'slug': 'g-cloud-11'}
 

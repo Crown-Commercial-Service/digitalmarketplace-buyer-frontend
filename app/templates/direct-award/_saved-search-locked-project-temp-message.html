@@ -1,7 +1,7 @@
-{% if project.lockedAt and temporary_message_status %}
-  {% if temporary_message_status == LOCKED_STANDSTILL %}
-    {% set temp_heading = 'The ' + '{}'.format(framework.name)|nbsp + ' services you found will expire soon' %}
-    {% set temp_messages = [
+{% if project.lockedAt and banner_message_status %}
+  {% if banner_message_status == LOCKED_STANDSTILL %}
+    {% set banner_heading = 'The ' + '{}'.format(framework.name)|nbsp + ' services you found will expire soon' %}
+    {% set banner_messages = [
         'You can either:',
         ('<ul class="list-bullet-small"><li>award a contract for a '|safe + '{}'.format(framework.name)|nbsp +
          ' service</li><li>start a new search for '|safe + '{}'.format(following_framework.name)|nbsp +
@@ -9,9 +9,9 @@
         'Any existing contracts for ' + '{}'.format(framework.name)|nbsp + ' services are still valid.'
       ]
     %}
-  {% elif temporary_message_status == LOCKED_POST_LIVE_DURING_INTERIM %}
-    {% set temp_heading = 'The ' + '{}'.format(framework.name)|nbsp + ' services you found will expire soon' %}
-    {% set temp_messages = [
+  {% elif banner_message_status == LOCKED_POST_LIVE_DURING_INTERIM %}
+    {% set banner_heading = 'The ' + '{}'.format(framework.name)|nbsp + ' services you found will expire soon' %}
+    {% set banner_messages = [
         'You can either:',
         ('<ul class="list-bullet-small"><li>award a contract for a '|safe + '{}'.format(framework.name)|nbsp +
          ' service</li><li><a class="govuk-link" href="{}">start a new search for '.format(buyer_search_page_url)|safe +
@@ -19,9 +19,9 @@
         'Any existing contracts for ' + '{}'.format(framework.name)|nbsp + ' services are still valid.'
       ]
     %}
-  {% elif temporary_message_status == LOCKED_POST_LIVE_POST_INTERIM %}
-    {% set temp_heading = 'The ' + '{}'.format(framework.name)|nbsp + ' services you found have expired' %}
-    {% set temp_messages = [
+  {% elif banner_message_status == LOCKED_POST_LIVE_POST_INTERIM %}
+    {% set banner_heading = 'The ' + '{}'.format(framework.name)|nbsp + ' services you found have expired' %}
+    {% set banner_messages = [
         ('If you did not award a contract by {}, you need to <a class="govuk-link" href="{}">start a new search for '.format(framework.frameworkExpiresAtUTC|dateformat, buyer_search_page_url)|safe +
         following_framework.name|nbsp + ' services</a>. If you did award a contract, please tell us the outcome.'|safe)
     ]
@@ -29,8 +29,8 @@
   {% endif %}
   {%
     with
-    heading = temp_heading,
-    messages = temp_messages,
+    heading = banner_heading,
+    messages = banner_messages,
     banner = True
   %}
     {% include "toolkit/temporary-message.html" %}
