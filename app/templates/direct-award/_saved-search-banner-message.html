@@ -1,0 +1,43 @@
+{% if banner_message_status == LOCKED_STANDSTILL %}
+  {% set banner_heading = 'The ' + '{}'.format(framework.name)|nbsp + ' services you found will expire soon' %}
+  {% set banner_messages = [
+      'You can either:',
+      ('<ul class="govuk-list--bullet"><li>award a contract for a '|safe + '{}'.format(framework.name)|nbsp +
+      ' service</li><li>start a new search for '|safe + '{}'.format(following_framework.name)|nbsp +
+      ' services from {}</li></ul>'.format(following_framework.frameworkLiveAtUTC|dateformat)|safe),
+      'Any existing contracts for ' + '{}'.format(framework.name)|nbsp + ' services are still valid.'
+    ]
+  %}
+{% elif banner_message_status == LOCKED_POST_LIVE_DURING_INTERIM %}
+  {% set banner_heading = 'The ' + '{}'.format(framework.name)|nbsp + ' services you found will expire soon' %}
+  {% set banner_messages = [
+      'You can either:',
+      ('<ul class="govuk-list--bullet"><li>award a contract for a '|safe + '{}'.format(framework.name)|nbsp +
+      ' service</li><li><a class="govuk-link" href="{}">start a new search for '.format(buyer_search_page_url)|safe +
+      '{}'.format(following_framework.name)|nbsp + ' services</a></li></ul>'|safe),
+      'Any existing contracts for ' + '{}'.format(framework.name)|nbsp + ' services are still valid.'
+    ]
+  %}
+{% elif banner_message_status == LOCKED_POST_LIVE_POST_INTERIM %}
+  {% set banner_heading = 'The ' + '{}'.format(framework.name)|nbsp + ' services you found have expired' %}
+  {% set banner_messages = [
+      ('If you did not award a contract by {}, you need to <a class="govuk-link" href="{}">start a new search for '.format(framework.frameworkExpiresAtUTC|dateformat, buyer_search_page_url)|safe +
+      following_framework.name|nbsp + ' services</a>. If you did award a contract, please tell us the outcome.'|safe)
+    ]
+  %}
+{% elif banner_message_status == NOT_LOCKED_STANDSTILL %}
+  {% set banner_heading =  '{}'.format(following_framework.name)|nbsp + ' services will replace existing services on {}'.format(following_framework.frameworkLiveAtUTC|dateformat) %}
+  {% set banner_messages =  [
+      'Your search results will update automatically.',
+      'If you export your results before {} they will only include '.format(following_framework.frameworkLiveAtUTC|shortdateformat) + '{}'.format(framework.name)|nbsp + ' services.'
+    ]
+  %}
+{% elif banner_message_status == NOT_LOCKED_POST_LIVE %}
+  {% set banner_heading = '{}'.format(following_framework.name)|nbsp + ' services replaced ' + '{}'.format(framework.name)|nbsp + ' services on {}'.format(following_framework.frameworkLiveAtUTC|dateformat) %}
+  {% set banner_messages = ['Your search results may have changed.'] %}
+{% endif %}
+
+{{ dmBanner({
+  "title": banner_heading,
+  "html": "<br />".join(banner_messages)
+}) }}

@@ -36,8 +36,9 @@
 {% endblock breadcrumb %}
 
 {% block mainContent %}
-  {% include "direct-award/_saved-search-locked-project-temp-message.html" %}
-  {% include "direct-award/_saved-search-not-locked-project-temp-message.html" %}
+  {% if banner_message_status %}
+    {% include "direct-award/_saved-search-banner-message.html" %}
+  {% endif %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       <h1 class="govuk-heading-xl">{{ page_title }}</h1>

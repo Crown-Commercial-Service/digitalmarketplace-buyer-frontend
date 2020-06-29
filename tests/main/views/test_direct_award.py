@@ -548,7 +548,7 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         assert search_links[0].attrib["href"] == '/g-cloud/search?q=accelerator'
 
     @pytest.mark.parametrize(
-        ('locked_at', 'fwork_status', 'following_fwork_status', 'xpath', 'index', 'date'),
+        ('locked_at', 'fwork_status', 'following_fwork_status', 'xpath', 'index', 'expected_date'),
         (
             (None, 'live', 'standstill', '//section[@class="dm-banner"]/h2', 0, 'Wednesday 5 January 2000'),
             (None, 'live', 'standstill', '//section[@class="dm-banner"]/div', 0, 'before 5 January they'),
@@ -559,7 +559,7 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
     )
     @mock.patch('app.main.helpers.framework_helpers.content_loader')
     def test_temp_message_dates_are_correctly_shown(
-        self, content_loader_mock, locked_at, fwork_status, following_fwork_status, xpath, index, date
+        self, content_loader_mock, locked_at, fwork_status, following_fwork_status, xpath, index, expected_date
     ):
         self._set_project_locked_and_framework_states(locked_at, fwork_status, following_fwork_status)
         content_loader_mock.get_metadata.return_value = {'slug': 'g-cloud-11'}
@@ -570,7 +570,7 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         body = res.get_data(as_text=True)
         doc = html.fromstring(body)
 
-        assert date in doc.xpath(xpath)[index].text
+        assert len(doc.xpath(f'{xpath}[contains(normalize-space(), "{expected_date}")]')) == 1
 
     def test_search_completed_if_less_than_30_results(self):
         res = self.client.get('/buyers/direct-award/g-cloud/projects/1')
