@@ -37,7 +37,7 @@ from ..helpers.search_helpers import (
 from ..helpers import framework_helpers
 from ..helpers import dm_google_analytics
 from ..helpers.direct_award_helpers import is_direct_award_project_accessible, get_direct_award_projects
-from ..helpers.search_save_helpers import get_saved_search_temporary_message_status, SearchMeta
+from ..helpers.search_save_helpers import get_saved_search_banner_message_status, SearchMeta
 from ..helpers.shared_helpers import get_fields_from_manifest, get_questions_from_manifest_by_id
 from ...main import main, direct_award, direct_award_public
 from ..presenters.search_presenters import (
@@ -554,7 +554,7 @@ def view_project(framework_family, project_id):
     following_framework = framework_helpers.get_following_framework(
         data_api_client, framework, current_app.logger
     )
-    temporary_message_status = get_saved_search_temporary_message_status(
+    banner_message_status = get_saved_search_banner_message_status(
         project, framework, following_framework
     ) if following_framework else None
 
@@ -571,7 +571,7 @@ def view_project(framework_family, project_id):
         framework_urls=framework_urls,
         call_off_contract_url=framework_urls['call_off_contract_url'],
         project_outcome_label=project_outcome_label,
-        temporary_message_status=temporary_message_status,
+        banner_message_status=banner_message_status,
     )
 
 

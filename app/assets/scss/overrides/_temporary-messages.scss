@@ -1,31 +1,14 @@
-// TODO: Remove when temporary message banners have been replaced
-
-// Ensure that text within banners contrasts with blue background
-.banner-temporary-message-without-action {
-  p.banner-message,
-  p.banner-message {
-    color: $white;
-
-    a, a:visited {
-      color: $white;
-    }
-
-    a:hover, a:active {
-      color: $light-blue-50;
-    }
-  }
+// Home page temporary message
+.temporary-framework-message {
+  @include govuk-responsive-padding(3);
+  @include govuk-responsive-margin(4, "bottom");
+  margin-bottom: $gutter;
+  background: $light-blue-25;
+  @include core-19;
+  color: $black;
 }
 
-.temporary-message {
-  p.temporary-message-message {
-    color: $white;
-
-    a, a:visited {
-      color: $white;
-    }
-
-    a:hover, a:active {
-      color: $light-blue-50;
-    }
-  }
+.temporary-framework-message-heading {
+  @include bold-19;
+  @include govuk-responsive-margin(2, "bottom");
 }

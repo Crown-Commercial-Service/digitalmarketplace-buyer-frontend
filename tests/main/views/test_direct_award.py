@@ -465,7 +465,7 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         )
     )
     @mock.patch('app.main.helpers.framework_helpers.content_loader')
-    def test_overview_displays_correct_temporary_message(
+    def test_overview_displays_correct_banner_message(
         self, content_loader_mock, framework_status, following_framework_status, locked_at, position, heading
     ):
         self._set_project_locked_and_framework_states(locked_at, framework_status, following_framework_status)
@@ -478,22 +478,19 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         doc = html.fromstring(body)
 
         if position is None:
-            assert not doc.xpath("//div[@class='temporary-message-banner']")
-            assert not doc.xpath("//div[@class='temporary-message']")
+            assert not doc.xpath("//section[@class='dm-banner']")
         elif position == 'sidebar':
-            assert len(doc.xpath("//div[@class='temporary-message']")) == 1
-            assert not doc.xpath("//div[@class='temporary-message-banner']")
+            assert len(doc.xpath("//section[@class='dm-banner']")) == 1
         elif position == 'banner':
-            assert len(doc.xpath("//div[@class='temporary-message-banner']")) == 1
-            assert not doc.xpath("//div[@class='temporary-message']")
+            assert len(doc.xpath("//section[@class='dm-banner']")) == 1
         else:
             raise
 
         if position:
-            assert doc.xpath(f"//h3[@class='temporary-message-heading'][contains(normalize-space(), '{heading}')]")
+            assert doc.xpath(f"//section[@class='dm-banner']/h2[contains(normalize-space(), '{heading}')]")
 
     @mock.patch('app.main.helpers.framework_helpers.content_loader')
-    def test_temporary_messages_not_shown_if_no_defined_following_framework(self, content_loader_mock):
+    def test_banner_messages_not_shown_if_no_defined_following_framework(self, content_loader_mock):
         content_loader_mock.get_metadata.side_effect = ContentNotFoundError()
 
         res = self.client.get('/buyers/direct-award/g-cloud/projects/1')
@@ -502,11 +499,10 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         body = res.get_data(as_text=True)
         doc = html.fromstring(body)
 
-        assert not doc.xpath("//div[@class='temporary-message']")
-        assert not doc.xpath("//div[@class='temporary-message-banner']")
+        assert not doc.xpath("//section[@class='dm-banner']")
 
     @mock.patch('app.main.helpers.framework_helpers.content_loader')
-    def test_temporary_messages_not_shown_if_following_framework_not_found(self, content_loader_mock):
+    def test_banner_messages_not_shown_if_following_framework_not_found(self, content_loader_mock):
         self.data_api_client.get_framework.side_effect = HTTPError(response=mock.Mock(status_code=404))
         content_loader_mock.get_metadata.return_value = {'slug': 'g-cloud-11'}
 
@@ -514,8 +510,7 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         assert res.status_code == 200
 
         doc = html.fromstring(res.get_data(as_text=True))
-        assert not doc.xpath("//div[@class='temporary-message']")
-        assert not doc.xpath("//div[@class='temporary-message-banner']")
+        assert not doc.xpath("//section[@class='dm-banner']")
 
     @mock.patch('app.main.helpers.framework_helpers.content_loader')
     def test_following_framework_still_raises_on_api_error(self, content_loader_mock):
@@ -547,24 +542,24 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         body = res.get_data(as_text=True)
         doc = html.fromstring(body)
 
-        search_links = doc.xpath("//div[@class='temporary-message-banner']//a")
+        search_links = doc.xpath("//section[@class='dm-banner']//a")
         assert len(search_links) == 1
         assert search_links[0].xpath("normalize-space(string())") == 'start a new search for G-Cloud\xa010 services'
         assert search_links[0].attrib["href"] == '/g-cloud/search?q=accelerator'
 
     @pytest.mark.parametrize(
-        ('locked_at', 'fwork_status', 'following_fwork_status', 'xpath', 'index', 'date'),
+        ('locked_at', 'fwork_status', 'following_fwork_status', 'xpath', 'index', 'expected_date'),
         (
-            (None, 'live', 'standstill', '//h3[@class="temporary-message-heading"]', 0, 'Wednesday 5 January 2000'),
-            (None, 'live', 'standstill', '//p[@class="temporary-message-message"]', 1, 'before 5 January they'),
-            (None, 'live', 'live', '//h3[@class="temporary-message-heading"]', 0, 'Wednesday 5 January 2000'),
-            (True, 'live', 'standstill', '//ul[@class="list-bullet-small"]/li', 1, 'Wednesday 5 January 2000'),
-            (True, 'expired', 'live', '//p[@class="temporary-message-message"]', 0, 'Thursday 6 January 2000'),
+            (None, 'live', 'standstill', '//section[@class="dm-banner"]/h2', 0, 'Wednesday 5 January 2000'),
+            (None, 'live', 'standstill', '//section[@class="dm-banner"]/div', 0, 'before 5 January they'),
+            (None, 'live', 'live', '//section[@class="dm-banner"]/h2', 0, 'Wednesday 5 January 2000'),
+            (True, 'live', 'standstill', '//ul[@class="govuk-list--bullet"]/li', 1, 'Wednesday 5 January 2000'),
+            (True, 'expired', 'live', '//section[@class="dm-banner"]/div', 0, 'Thursday 6 January 2000'),
         )
     )
     @mock.patch('app.main.helpers.framework_helpers.content_loader')
     def test_temp_message_dates_are_correctly_shown(
-        self, content_loader_mock, locked_at, fwork_status, following_fwork_status, xpath, index, date
+        self, content_loader_mock, locked_at, fwork_status, following_fwork_status, xpath, index, expected_date
     ):
         self._set_project_locked_and_framework_states(locked_at, fwork_status, following_fwork_status)
         content_loader_mock.get_metadata.return_value = {'slug': 'g-cloud-11'}
@@ -575,7 +570,7 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         body = res.get_data(as_text=True)
         doc = html.fromstring(body)
 
-        assert date in doc.xpath(xpath)[index].text
+        assert len(doc.xpath(f'{xpath}[contains(normalize-space(), "{expected_date}")]')) == 1
 
     def test_search_completed_if_less_than_30_results(self):
         res = self.client.get('/buyers/direct-award/g-cloud/projects/1')

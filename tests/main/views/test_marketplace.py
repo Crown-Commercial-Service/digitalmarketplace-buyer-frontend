@@ -446,7 +446,7 @@ class TestBriefPage(BaseBriefPageTest):
             self.brief['briefs']['awardedBriefResponseId'] = 14276
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(self.brief_id))
         document = html.fromstring(res.get_data(as_text=True))
-        number_of_banners = len(document.xpath('//div[@class="banner-temporary-message-without-action"]'))
+        number_of_banners = len(document.xpath('//section[@class="dm-banner"]'))
 
         assert number_of_banners == 1
 
@@ -1042,38 +1042,38 @@ class TestAwardedBriefPage(BaseBriefPageTest):
     def test_award_banner_with_winning_supplier_shown_on_awarded_brief_page(self):
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(self.brief_id))
         document = html.fromstring(res.get_data(as_text=True))
-        awarded_banner = document.xpath('//div[@class="banner-temporary-message-without-action"]')[0]
+        awarded_banner = document.xpath('//section[@class="dm-banner"]')[0]
 
         assert 'Awarded to Example Company Limited' in awarded_banner.xpath('h2/text()')[0]
 
     def test_contract_start_date_visible_on_award_banner(self):
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(self.brief_id))
         document = html.fromstring(res.get_data(as_text=True))
-        awarded_banner = document.xpath('//div[@class="banner-temporary-message-without-action"]')[0]
+        awarded_banner = document.xpath('//section[@class="dm-banner"]')[0]
 
-        assert 'Start date: Monday 21 August 2017' in awarded_banner.xpath('p/text()')[0]
+        assert 'Start date: Monday 21 August 2017' in awarded_banner.xpath('div/text()')[0]
 
     def test_contract_value_visible_on_award_banner_does_not_include_zero_pence(self):
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(self.brief_id))
         document = html.fromstring(res.get_data(as_text=True))
-        awarded_banner = document.xpath('//div[@class="banner-temporary-message-without-action"]')[0]
+        awarded_banner = document.xpath('//section[@class="dm-banner"]')[0]
 
-        assert u'Value: £20,000' in awarded_banner.xpath('p/text()')[1]
+        assert u'Value: £20,000' in awarded_banner.xpath('div/text()')[1]
 
     def test_contract_value_visible_on_award_banner_includes_non_zero_pence(self):
         self.brief_responses["briefResponses"][1]["awardDetails"]["awardedContractValue"] = "20000.10"
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(self.brief_id))
         document = html.fromstring(res.get_data(as_text=True))
-        awarded_banner = document.xpath('//div[@class="banner-temporary-message-without-action"]')[0]
+        awarded_banner = document.xpath('//section[@class="dm-banner"]')[0]
 
-        assert u'Value: £20,000.10' in awarded_banner.xpath('p/text()')[1]
+        assert u'Value: £20,000.10' in awarded_banner.xpath('div/text()')[1]
 
     def test_supplier_size_visible_on_award_banner(self):
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(self.brief_id))
         document = html.fromstring(res.get_data(as_text=True))
-        awarded_banner = document.xpath('//div[@class="banner-temporary-message-without-action"]')[0]
+        awarded_banner = document.xpath('//section[@class="dm-banner"]')[0]
 
-        assert 'Company size: SME' in awarded_banner.xpath('p/text()')[2]
+        assert 'Company size: SME' in awarded_banner.xpath('div/text()')[2]
 
 
 class TestCancelledBriefPage(BaseBriefPageTest):
@@ -1084,18 +1084,18 @@ class TestCancelledBriefPage(BaseBriefPageTest):
     def test_cancelled_banner_shown_on_cancelled_brief_page(self):
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(self.brief_id))
         document = html.fromstring(res.get_data(as_text=True))
-        cancelled_banner = document.xpath('//div[@class="banner-temporary-message-without-action"]')[0]
+        cancelled_banner = document.xpath('//section[@class="dm-banner"]')[0]
 
         assert 'This opportunity was cancelled' in cancelled_banner.xpath('h2/text()')[0]
 
     def test_explanation_message_shown_on_cancelled_banner(self):
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(self.brief_id))
         document = html.fromstring(res.get_data(as_text=True))
-        cancelled_banner = document.xpath('//div[@class="banner-temporary-message-without-action"]')[0]
+        cancelled_banner = document.xpath('//section[@class="dm-banner"]')[0]
         expected_message = ("The buyer cancelled this opportunity, for example because they no longer have the budget. "
                             "They may publish an updated version later."
                             )
-        assert expected_message in cancelled_banner.xpath('p/text()')[0]
+        assert expected_message in cancelled_banner.xpath('div/text()')[0]
 
 
 class TestUnsuccessfulBriefPage(BaseBriefPageTest):
@@ -1106,18 +1106,18 @@ class TestUnsuccessfulBriefPage(BaseBriefPageTest):
     def test_unsuccessful_banner_shown_on_unsuccessful_brief_page(self):
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(self.brief_id))
         document = html.fromstring(res.get_data(as_text=True))
-        unsuccessful_banner = document.xpath('//div[@class="banner-temporary-message-without-action"]')[0]
+        unsuccessful_banner = document.xpath('//section[@class="dm-banner"]')[0]
 
         assert 'No suitable suppliers applied' in unsuccessful_banner.xpath('h2/text()')[0]
 
     def test_explanation_message_shown_on_unsuccessful_banner(self):
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(self.brief_id))
         document = html.fromstring(res.get_data(as_text=True))
-        cancelled_banner = document.xpath('//div[@class="banner-temporary-message-without-action"]')[0]
+        cancelled_banner = document.xpath('//section[@class="dm-banner"]')[0]
         expected_message = ("The buyer didn't award this contract because no suppliers met their requirements. "
                             "They may publish an updated version later."
                             )
-        assert expected_message in cancelled_banner.xpath('p/text()')[0]
+        assert expected_message in cancelled_banner.xpath('div/text()')[0]
 
 
 class TestWithdrawnSpecificBriefPage(BaseBriefPageTest):
@@ -1165,9 +1165,9 @@ class TestWithdrawnSpecificBriefPage(BaseBriefPageTest):
 
     def test_dateformat_in_withdrawn_banner_displayed_correctly(self):
         res = self.client.get('/digital-outcomes-and-specialists/opportunities/{}'.format(self.brief_id))
-        page = res.get_data(as_text=True)
-
-        assert 'This opportunity was withdrawn on Friday&nbsp;25&nbsp;November&nbsp;2016' in page
+        document = html.fromstring(res.get_data(as_text=True))
+        withdrawn_banner = document.xpath('//section[@class="dm-banner"]')[0]
+        assert 'This opportunity was withdrawn on Friday 25 November 2016' in withdrawn_banner.xpath('h2//text()')[0]
 
 
 class TestCatalogueOfBriefsPage(APIClientMixin, BaseApplicationTest):

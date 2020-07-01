@@ -3,12 +3,12 @@ import pytest
 
 from dmtestutils.api_model_stubs import FrameworkStub
 
-from app.main.helpers.search_save_helpers import get_saved_search_temporary_message_status, SavedSearchStateEnum
+from app.main.helpers.search_save_helpers import get_saved_search_banner_message_status, SavedSearchStateEnum
 
 from ...helpers import CustomAbortException
 
 
-class TestGetSavedSearchTemporaryMessageStatus:
+class TestGetSavedSearchBannerMessageStatus:
     def setup(self):
         self.current_app = mock.patch('app.main.helpers.search_save_helpers.current_app').start()
 
@@ -36,7 +36,7 @@ class TestGetSavedSearchTemporaryMessageStatus:
         self, project_locked_at, fwork_status, following_fwork_status, status
     ):
 
-        temp_message_status = get_saved_search_temporary_message_status(
+        temp_message_status = get_saved_search_banner_message_status(
             {'lockedAt': project_locked_at},
             FrameworkStub(slug='B-Cloud-1', status=fwork_status).response(),
             FrameworkStub(slug='B-Cloud-2', status=following_fwork_status).response(),
@@ -49,7 +49,7 @@ class TestGetSavedSearchTemporaryMessageStatus:
         abort.side_effect = CustomAbortException()
 
         with pytest.raises(CustomAbortException):
-            get_saved_search_temporary_message_status(
+            get_saved_search_banner_message_status(
                 {'lockedAt': '2018-06-25T13:39:54.167852Z'},
                 FrameworkStub(slug='B-Cloud-1', status='some-new-status').response(),
                 FrameworkStub(status='live').response(),
@@ -57,7 +57,7 @@ class TestGetSavedSearchTemporaryMessageStatus:
 
         assert self.current_app.logger.error.call_args_list == [
             mock.call(
-                "Saved search temporary messages invalid frameworks state: "
+                "Saved search banner messages invalid frameworks state: "
                 "'B-Cloud-1' - 'some-new-status' and 'g-cloud-10' - 'live'"
             )
         ]
