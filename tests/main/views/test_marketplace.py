@@ -1,6 +1,5 @@
 # coding=utf-8
 import json
-import re
 from urllib.parse import urlparse, parse_qs
 
 from flask import current_app
@@ -42,21 +41,6 @@ class TestApplication(APIClientMixin, BaseApplicationTest):
 
 
 class TestHomepageAccountCreationVirtualPageViews(APIClientMixin, BaseApplicationTest):
-
-    def test_data_analytics_track_page_view_is_shown_if_account_created_flash_message(self):
-        with self.client.session_transaction() as session:
-            session['_flashes'] = [('track-page-view', 'buyers?account-created=true')]
-
-        res = self.client.get("/")
-        data = res.get_data(as_text=True)
-
-        assert 'data-analytics="trackPageView" data-url="buyers?account-created=true"' in data
-        # however this should not be shown as a regular flash message
-        flash_banner_match = re.search(r'<p class="banner-message">\s*(.*)', data, re.MULTILINE)
-        assert flash_banner_match is None, "Unexpected flash banner message '{}'.".format(
-            flash_banner_match.groups()[0])
-
-        assert len(self.data_api_client.find_frameworks.call_args_list) == 2
 
     def test_data_analytics_track_page_view_not_shown_if_no_account_created_flash_message(self):
         res = self.client.get("/")
