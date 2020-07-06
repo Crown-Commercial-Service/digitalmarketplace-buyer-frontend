@@ -746,7 +746,7 @@ class TestDirectAwardReadyToAssess(TestDirectAwardBase):
         assert res.location.endswith('/buyers/direct-award/g-cloud/projects/1')
         self.data_api_client.update_direct_award_project.assert_called_once_with(
             project_data={'readyToAssess': True}, project_id=1, user_email='buyer@email.com')
-        self.assert_flashes(html_escape(CONFIRM_START_ASSESSING_MESSAGE))
+        self.assert_flashes(html_escape(CONFIRM_START_ASSESSING_MESSAGE), expected_category='success')
 
 
 class TestDirectAwardAwardContract(TestDirectAwardBase):

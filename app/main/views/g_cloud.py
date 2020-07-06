@@ -648,7 +648,7 @@ def update_project(framework_family, project_id):
             user_email=current_user.email_address,
             project_data={'readyToAssess': True}
         )
-        flash(CONFIRM_START_ASSESSING_MESSAGE)
+        flash(CONFIRM_START_ASSESSING_MESSAGE, 'success')
     return redirect(url_for('.view_project',
                             framework_family=framework_family,
                             project_id=project_id))
@@ -857,7 +857,7 @@ def why_did_you_not_award_the_contract(framework_family, project_id):
             data_api_client.create_direct_award_project_outcome_none_suitable(
                 project_id=project_id,
                 user_email=current_user.email_address)
-        flash("You’ve updated ‘{}’".format(project['name']))
+        flash("You’ve updated ‘{}’".format(project['name']), 'success')
         return redirect(url_for('.view_project', framework_family=framework_family, project_id=project['id']))
 
     errors = get_errors_from_wtform(form)

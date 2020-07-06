@@ -10,6 +10,7 @@
 {# Import DM Components #}
 {% from "digitalmarketplace/components/cookie-banner/macro.njk" import dmCookieBanner %}
 {% from "digitalmarketplace/components/header/macro.njk" import dmHeader%}
+{% from "digitalmarketplace/components/alert/macro.njk" import dmAlert %}
 {% from "digitalmarketplace/components/footer/macro.njk" import dmFooter%}
 {% from "digitalmarketplace/components/banner/macro.njk" import dmBanner %}
 
@@ -42,7 +43,20 @@
 {% endblock %}
 
 {% block content %}
-  {% include "toolkit/flash_messages.html" %}
+  {% block flashMessages %}
+    {% with
+       messages = get_flashed_messages(with_categories=True),
+       titles = {"error": "There is a problem"}
+    %}
+      {% for category, message in messages %}
+        {{ dmAlert({
+          "titleHtml": titles.get(category) or message,
+          "html": message if category in titles else None,
+          "type": category,
+        }) }}
+      {% endfor %}
+    {% endwith %}
+  {% endblock flashMessages %}
   {% block errorSummary %}
     {% if errors %}
       {{ govukErrorSummary({
