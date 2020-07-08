@@ -73,8 +73,8 @@ class TestDirectAward(TestDirectAwardBase):
 
         assert page_header == "Your saved searches"
         assert page_header in doc.xpath('/html/head/title')[0].text.strip()
-        assert doc.xpath('//*[@id="searching_table"]')[0].text.strip() == "Searching"
-        assert doc.xpath('//*[@id="search_ended_table"]')[0].text.strip() == "Results exported"
+        assert doc.cssselect('#searching_table caption')[0].text.strip() == "Searching"
+        assert doc.cssselect('#search_ended_table caption')[0].text.strip() == "Results exported"
 
         tables = [
             doc.xpath('//*[@id="content"]/div/div/table[1]/tbody/tr'),
