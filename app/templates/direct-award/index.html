@@ -1,5 +1,5 @@
 {% extends "_base_page.html" %}
-{% import "toolkit/summary-table.html" as summary %}
+{% from "govuk-frontend/components/table/macro.njk" import govukTable %}
 {% block pageTitle %}
   Your saved searches - Digital Marketplace
 {% endblock %}
@@ -30,47 +30,41 @@
     Your saved searches
   </h1>
 
-  <div class="grid">
-
-    {{ summary.heading("Searching", id="searching_table") }}
-    {% call(item) summary.list_table(open_projects,
-      caption="Searching",
-      empty_message="You have no saved searches",
-      field_headings=[
-        "Name",
-        "Saved"  ],
-      field_headings_visible=True
-    ) %}
-      {% call summary.row() %}
-        {{ summary.service_link(item.name, url_for('direct_award.view_project', framework_family=framework.family, project_id=item.id)) }}
-        {{ summary.text(item.createdAt | datetimeformat ) }}
-      {% endcall %}
-    {% endcall %}
-
-    {{ summary.heading("Results exported", id="search_ended_table") }}
-    {% call(item) summary.list_table(closed_projects,
-      caption="Search ended",
-      empty_message="You have no saved searches",
-      field_headings=[
-        "Name",
-        "Exported",
-        "Status"
+  {% if open_projects|length %}
+    {{ govukTable({
+      "caption": "Searching",
+      "captionClasses": "govuk-heading-m",
+      "head": [
+        {"text": "Name"},
+        {"text": "Saved"}
       ],
-      field_headings_visible=True
-    ) %}
-      {% call summary.row() %}
-        {{ summary.service_link(item.name, url_for('direct_award.view_project', framework_family=framework.family, project_id=item.id), wide=False) }}
-        {{ summary.text(item.lockedAt | datetimeformat ) }}
-        {{
-          summary.text("Awarded") if item.outcome and item.outcome.result == "awarded"
-          else summary.text("The work has been cancelled") if item.outcome and item.outcome.result == "cancelled"
-          else summary.text("No suitable services found") if item.outcome and item.outcome.result == "none-suitable"
-          else summary.service_link("Download results", url_for('direct_award.search_results', framework_family=framework.family, project_id=item.id), wide=False) if not item.downloadedAt
-          else summary.service_link("Tell us the outcome", url_for('direct_award.did_you_award_contract', framework_family=framework.family, project_id=item.id), wide=False) }}
-      {% endcall %}
-    {% endcall %}
+      "rows": open_projects,
+      "attributes": {
+        "id": "searching_table"
+      }
+    }) }}
+  {% else %}
+    <h2 class="govuk-heading-m">Searching</h2>
+    <p class="govuk-body">You have no saved searches</p>
+  {% endif %}
 
-  </div>
-
+  {% if closed_projects|length %}
+    {{ govukTable({
+      "caption": "Results exported",
+      "captionClasses": "govuk-heading-m",
+      "head": [
+        {"text": "Name"},
+        {"text": "Exported"},
+        {"text": "Status"}
+      ],
+      "rows": closed_projects,
+      "attributes": {
+        "id": "search_ended_table"
+      }
+    }) }}
+  {% else %}
+    <h2 class="govuk-heading-m">Results exported</h2>
+    <p class="govuk-body">You have no saved searches</p>
+  {% endif %}
 </div>
 {% endblock %}
