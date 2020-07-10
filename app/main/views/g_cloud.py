@@ -36,7 +36,10 @@ from ..helpers.search_helpers import (
 )
 from ..helpers import framework_helpers
 from ..helpers import dm_google_analytics
-from ..helpers.direct_award_helpers import is_direct_award_project_accessible, get_direct_award_projects
+from ..helpers.direct_award_helpers import (
+    is_direct_award_project_accessible,
+    get_direct_award_projects
+)
 from ..helpers.search_save_helpers import get_saved_search_banner_message_status, SearchMeta
 from ..helpers.shared_helpers import get_fields_from_manifest, get_questions_from_manifest_by_id
 from ...main import main, direct_award, direct_award_public
@@ -390,6 +393,14 @@ def search_services():
 
 @direct_award.route('/<string:framework_family>', methods=['GET'])
 def saved_search_overview(framework_family):
+    project_outcome_content = {
+        "awarded": "Awarded",
+        "cancelled": "The work has been cancelled",
+        "none-suitable": "No suitable services found",
+        "download_results": "Download results",
+        "awaiting_outcome": "Tell us the outcome"
+    }
+
     all_frameworks = data_api_client.find_frameworks().get('frameworks')
     framework = framework_helpers.get_latest_live_framework_or_404(all_frameworks, framework_family)
 
@@ -399,10 +410,59 @@ def saved_search_overview(framework_family):
     projects = get_direct_award_projects(data_api_client, current_user.id, latest_first=True)
     projects['closed_projects'].sort(key=itemgetter('lockedAt'), reverse=True)
 
+    # Format saved searches for display
+    open_projects = []
+    for project in projects['open_projects']:
+        view_project_url = url_for(
+            'direct_award.view_project',
+            framework_family=framework_family,
+            project_id=project['id']
+        )
+        open_projects.append(
+            [
+                {'html': f'<a href="{view_project_url}">{project["name"]}</a>'},
+                {'text': datetimeformat(project['createdAt'])}
+            ]
+        )
+
+    # Format closed searches for display
+    closed_projects = []
+    for project in projects['closed_projects']:
+        view_project_url = url_for(
+            'direct_award.view_project',
+            framework_family=framework_family,
+            project_id=project['id']
+        )
+
+        if project['outcome']:
+            project_status = project_outcome_content[project['outcome']['result']]
+        elif not project['downloadedAt']:
+            download_url = url_for(
+                'direct_award.search_results',
+                framework_family=framework_family,
+                project_id=project['id']
+            )
+            project_status = f'<a href="{download_url}">{project_outcome_content["download_results"]}</a>'
+        else:
+            tell_us_the_outcome_url = url_for(
+                'direct_award.did_you_award_contract',
+                framework_family=framework_family,
+                project_id=project['id']
+            )
+            project_status = f'<a href="{tell_us_the_outcome_url}">{project_outcome_content["awaiting_outcome"]}</a>'
+
+        closed_projects.append(
+            [
+                {'html': f'<a href="{view_project_url}">{project["name"]}</a>'},
+                {'text': datetimeformat(project['lockedAt'])},
+                {'html': project_status}
+            ]
+        )
+
     return render_template(
         'direct-award/index.html',
-        open_projects=projects['open_projects'],
-        closed_projects=projects['closed_projects'],
+        open_projects=open_projects,
+        closed_projects=closed_projects,
         framework=framework,
         framework_short_description=framework_short_description
     )
