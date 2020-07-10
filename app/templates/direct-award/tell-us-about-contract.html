@@ -37,7 +37,7 @@
     <div class="govuk-grid-column-two-thirds">
       <h1 class="govuk-heading-xl">Tell us about your contract</h1>
 
-      <form method="POST" action="{{ url_for('direct_award.tell_us_about_contract', framework_family=framework.family, project_id=project.id, outcome_id=outcome_id) }}" class="tell-us-about-contract-form">
+      <form method="POST" action="{{ url_for('direct_award.tell_us_about_contract', framework_family=framework.family, project_id=project.id, outcome_id=outcome_id) }}" class="tell-us-about-contract-form" novalidate>
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
 
         {{ form.start_date}}
@@ -46,7 +46,21 @@
 
         {{ form.value_in_pounds }}
 
-        {{ form.buying_organisation }}
+        {{ govukInput ({
+          "classes": "app-text-input--height-compatible",
+          "errorMessage": errors.buying_organisation.errorMessage,
+          "hint": {
+            "text": form.buying_organisation.hint,
+          },
+          "id": "input-buying_organisation",
+          "label": {
+            "text": form.buying_organisation.label.text,
+            "classes": 'govuk-label--m'
+          },
+          "name": "buying_organisation",
+          "type": "text",
+          "value": form.buying_organisation.data
+        }) }}
 
         {{ govukButton({
           "text": "Submit",
