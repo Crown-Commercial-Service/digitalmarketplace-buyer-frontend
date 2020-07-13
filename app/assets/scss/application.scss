@@ -79,6 +79,7 @@ $govuk-global-styles: true;
 @import "_help-page.scss";
 
 // Overrides
+@import "overrides/_text-input.scss";
 @import "overrides/_notification-banners.scss";
 @import "overrides/_temporary-messages.scss";
 @import "overrides/_summary-list.scss";
