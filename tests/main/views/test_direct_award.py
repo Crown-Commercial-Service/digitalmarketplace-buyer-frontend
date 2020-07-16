@@ -1049,13 +1049,18 @@ class TestDirectAwardTellUsAboutContract(TestDirectAwardBase):
         assert res.status_code == 400
 
         doc = html.fromstring(res.get_data(as_text=True))
-        assert doc.xpath('count(//span[@class="validation-message"])') == 1
+        assert (doc.xpath('count(//span[@class="validation-message"])') == 1 or
+                doc.xpath('count(//span[@class="govuk-error-message"])') == 1)
         errors = doc.cssselect('div.govuk-error-summary a')
         assert len(errors) == 1
         assert len(errors[0].text_content()) > 0
 
         for field, value in data.items():
-            assert doc.xpath(f'//input[@name="{field}"]/@value')[0] == value
+            input_element = doc.xpath(f'//input[@name="{field}"]')[0]
+            if not value:
+                assert('value' not in input_element.attrib)
+            else:
+                assert input_element.attrib['value'] == value
 
     def test_if_end_date_is_before_start_date_raise_400_and_show_validation_message(self, client, data):
         data.update({'end_date-year': str(int(data['start_date-year']) - 1)})
