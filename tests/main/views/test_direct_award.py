@@ -89,21 +89,23 @@ class TestDirectAward(TestDirectAwardBase):
                     assert parser.parse(previous_date) >= parser.parse(current_date)
                 previous_date = current_date
 
-    def test_escapes_search_name(self):
+    @pytest.mark.parametrize("xpath,value",
+                             [('//*[@id="searching_table"]/tbody/tr[1]/td[1]/a',
+                              (b'<a href="/buyers/direct-award/g-cloud/projects/731851428862851">\\&lt;a o'
+                               b'nmouseover="alert(document.cookie)"&gt;xxs link\\&lt;/a&gt;</a>')),
+                              ('//*[@id="search_ended_table"]/tbody/tr/td[1]/a',
+                              (b'<a href="/buyers/direct-award/g-cloud/projects/272774709812396">\\&lt;a o'
+                               b'nmouseover="alert(document.cookie)"&gt;xxs link CLOSED\\&lt;/a&gt;</a>'))])
+    def test_escapes_search_name(self, xpath, value):
         self.data_api_client.find_direct_award_projects.return_value = self._get_direct_award_project_list_xss_fixture()
         self.login_as_buyer()
         res = self.client.get(self.SAVE_SEARCH_OVERVIEW_URL)
         assert res.status_code == 200
         result_html = res.get_data(as_text=True)
         doc = html.fromstring(result_html)
-        open_search_name = doc.xpath('//*[@id="searching_table"]/tbody/tr[1]/td[1]/a')[0]
-        open_element_source = html.tostring(open_search_name)
-        closed_search_name = doc.xpath('//*[@id="search_ended_table"]/tbody/tr/td[1]/a')[0]
-        closed_element_source = html.tostring(closed_search_name)
-        assert open_element_source == (b'<a href="/buyers/direct-award/g-cloud/projects/731851428862851">\\&lt;a o'
-                                       b'nmouseover="alert(document.cookie)"&gt;xxs link\\&lt;/a&gt;</a>')
-        assert closed_element_source == ((b'<a href="/buyers/direct-award/g-cloud/projects/272774709812396">\\&lt;a o'
-                                          b'nmouseover="alert(document.cookie)"&gt;xxs link CLOSED\\&lt;/a&gt;</a>'))
+        search_name = doc.xpath(xpath)[0]
+        element_source = html.tostring(search_name)
+        assert element_source == value
 
     def test_renders_outcome_column_for_search_ended(self):
         self.login_as_buyer()
