@@ -410,7 +410,7 @@ def saved_search_overview(framework_family):
     projects = get_direct_award_projects(data_api_client, current_user.id, latest_first=True)
     projects['closed_projects'].sort(key=itemgetter('lockedAt'), reverse=True)
 
-    # Format saved searches for display
+    # Format saved searches in format expected by govukTable rows
     open_projects = []
     for project in projects['open_projects']:
         view_project_url = url_for(
@@ -425,7 +425,7 @@ def saved_search_overview(framework_family):
             ]
         )
 
-    # Format closed searches for display
+    # Format closed searches in format expected by govukTable rows
     closed_projects = []
     for project in projects['closed_projects']:
         view_project_url = url_for(
