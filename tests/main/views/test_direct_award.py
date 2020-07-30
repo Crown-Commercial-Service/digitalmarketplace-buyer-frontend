@@ -96,10 +96,14 @@ class TestDirectAward(TestDirectAwardBase):
         assert res.status_code == 200
         result_html = res.get_data(as_text=True)
         doc = html.fromstring(result_html)
-        search_name = doc.xpath('//*[@id="searching_table"]/tbody/tr[1]/td[1]/a')[0]
-        element_source = html.tostring(search_name)
-        assert element_source == (b'<a href="/buyers/direct-award/g-cloud/projects/731851428862851">\\&lt;a o'
-                                  b'nmouseover="alert(document.cookie)"&gt;xxs link\\&lt;/a&gt;</a>')
+        open_search_name = doc.xpath('//*[@id="searching_table"]/tbody/tr[1]/td[1]/a')[0]
+        open_element_source = html.tostring(open_search_name)
+        closed_search_name = doc.xpath('//*[@id="search_ended_table"]/tbody/tr/td[1]/a')[0]
+        closed_element_source = html.tostring(closed_search_name)
+        assert open_element_source == (b'<a href="/buyers/direct-award/g-cloud/projects/731851428862851">\\&lt;a o'
+                                       b'nmouseover="alert(document.cookie)"&gt;xxs link\\&lt;/a&gt;</a>')
+        assert closed_element_source == ((b'<a href="/buyers/direct-award/g-cloud/projects/272774709812396">\\&lt;a o'
+                                          b'nmouseover="alert(document.cookie)"&gt;xxs link CLOSED\\&lt;/a&gt;</a>'))
 
     def test_renders_outcome_column_for_search_ended(self):
         self.login_as_buyer()
