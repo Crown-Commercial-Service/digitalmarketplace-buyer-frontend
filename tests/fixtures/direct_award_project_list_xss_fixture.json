@@ -1,0 +1,20 @@
+{
+  "links": {
+    "self": "http://localhost:5000/direct-award/projects?latest-first=1&user-id=19175"
+  },
+  "meta": {
+    "total": 1
+  },
+  "projects": [
+    {
+      "active": true,
+      "createdAt": "2018-06-22T10:41:31.281853Z",
+      "downloadedAt": null,
+      "id": 731851428862851,
+      "lockedAt": null,
+      "name": "\\<a onmouseover=\"alert(document.cookie)\">xxs link\\</a>",
+      "readyToAssessAt": null,
+      "outcome": null
+    }
+  ]
+}
