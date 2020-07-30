@@ -453,7 +453,7 @@ def saved_search_overview(framework_family):
 
         closed_projects.append(
             [
-                {'html': f'<a href="{view_project_url}">{project["name"]}</a>'},
+                {'html': f'<a href="{view_project_url}">{escape(project["name"])}</a>'},
                 {'text': datetimeformat(project['lockedAt'])},
                 {'html': project_status}
             ]
