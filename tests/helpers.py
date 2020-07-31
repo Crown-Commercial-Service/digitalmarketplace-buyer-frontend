@@ -292,6 +292,10 @@ class BaseApplicationTest(object):
         return BaseApplicationTest._get_fixture_data('direct_award_project_list_fixture.json')
 
     @staticmethod
+    def _get_direct_award_project_list_xss_fixture(**kwargs):
+        return BaseApplicationTest._get_fixture_data('direct_award_project_list_xss_fixture.json')
+
+    @staticmethod
     def _get_direct_award_project_fixture(**kwargs):
         project = BaseApplicationTest._get_fixture_data('direct_award_project_fixture.json')
 

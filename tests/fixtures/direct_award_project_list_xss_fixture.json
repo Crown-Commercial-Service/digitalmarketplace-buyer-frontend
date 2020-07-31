@@ -1,0 +1,55 @@
+{
+  "links": {
+    "self": "http://localhost:5000/direct-award/projects?latest-first=1&user-id=19175"
+  },
+  "meta": {
+    "total": 2
+  },
+  "projects": [
+    {
+      "active": true,
+      "createdAt": "2018-06-22T10:41:31.281853Z",
+      "downloadedAt": null,
+      "id": 731851428862851,
+      "lockedAt": null,
+      "name": "\\<a onmouseover=\"alert(document.cookie)\">xxs link\\</a>",
+      "readyToAssessAt": null,
+      "outcome": null
+    },
+    {
+      "active": true,
+      "createdAt": "2018-06-19T13:36:37.557144Z",
+      "downloadedAt": "2018-06-19T13:37:30.849304Z",
+      "id": 272774709812396,
+      "lockedAt": "2018-06-19T13:37:03.176398Z",
+      "readyToAssessAt": "2018-06-22T10:41:31.281853Z",
+      "name": "\\<a onmouseover=\"alert(document.cookie)\">xxs link CLOSED\\</a>",
+      "outcome": {
+        "award": {
+          "awardValue": "1234.00",
+          "awardingOrganisationName": "123321",
+          "endDate": "2020-12-12",
+          "startDate": "2002-12-12"
+        },
+        "completed": true,
+        "completedAt": "2018-06-19T13:37:59.713497Z",
+        "id": 680306864633356,
+        "result": "awarded",
+        "resultOfDirectAward": {
+          "archivedService": {
+            "id": 266018,
+            "service": {
+              "id": "316684326093280"
+            }
+          },
+          "project": {
+            "id": 272774709812396
+          },
+          "search": {
+            "id": 3706
+          }
+        }
+      }
+    }
+  ]
+}

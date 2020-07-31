@@ -3,7 +3,7 @@ from datetime import datetime
 import inflection
 from operator import itemgetter
 
-from flask import abort, request, redirect, current_app, url_for, flash
+from flask import abort, request, redirect, current_app, url_for, flash, escape
 from flask_login import current_user
 from werkzeug.urls import Href, url_encode, url_decode
 
@@ -410,7 +410,7 @@ def saved_search_overview(framework_family):
     projects = get_direct_award_projects(data_api_client, current_user.id, latest_first=True)
     projects['closed_projects'].sort(key=itemgetter('lockedAt'), reverse=True)
 
-    # Format saved searches for display
+    # Format saved searches in format expected by govukTable rows
     open_projects = []
     for project in projects['open_projects']:
         view_project_url = url_for(
@@ -420,12 +420,12 @@ def saved_search_overview(framework_family):
         )
         open_projects.append(
             [
-                {'html': f'<a href="{view_project_url}">{project["name"]}</a>'},
+                {'html': f'<a href="{view_project_url}">{escape(project["name"])}</a>'},
                 {'text': datetimeformat(project['createdAt'])}
             ]
         )
 
-    # Format closed searches for display
+    # Format closed searches in format expected by govukTable rows
     closed_projects = []
     for project in projects['closed_projects']:
         view_project_url = url_for(
@@ -453,7 +453,7 @@ def saved_search_overview(framework_family):
 
         closed_projects.append(
             [
-                {'html': f'<a href="{view_project_url}">{project["name"]}</a>'},
+                {'html': f'<a href="{view_project_url}">{escape(project["name"])}</a>'},
                 {'text': datetimeformat(project['lockedAt'])},
                 {'html': project_status}
             ]
