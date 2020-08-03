@@ -1,5 +1,3 @@
-{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
-
 {% if brief.status == 'live' and not brief.clarificationQuestionsAreClosed and brief.questionAndAnswerSessionDetails %}
   <h2 id="question-and-answer-session" class="govuk-heading-m">Question and answer session</h2>
   <a class="govuk-link govuk-!-display-inline-block govuk-!-margin-bottom-6" href="/suppliers/opportunities/{{ brief.id }}/question-and-answer-session">

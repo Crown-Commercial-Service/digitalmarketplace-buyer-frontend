@@ -1,5 +1,3 @@
-{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
-
 {% for section in service.summary_manifest %}
   {% if not section.is_empty %}
     {% if loop.index < 10 %}
