@@ -1,5 +1,6 @@
 {# this file can be used from contexts that don't inherit from _base_page.html, so we must ensure we have all imports we need #}
-{% from "components/button/macro.njk" import govukButton %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
 <div id="js-dm-live-save-search-form">
   <form action="{{ url_for('direct_award.save_search', framework_family=framework_family) }}">
     <input type="hidden" name="search_query" value="{{ search_query_url }}">

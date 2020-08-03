@@ -55,7 +55,7 @@ $govuk-fonts-path: '/static/fonts/';
 $govuk-compatibility-govukfrontendtoolkit: true;
 $govuk-compatibility-govukelements: true;
 $govuk-global-styles: true;
-@import "node_modules/digitalmarketplace-govuk-frontend/govuk-frontend/all";
+@import "node_modules/digitalmarketplace-govuk-frontend/govuk/all";
 
 // Digital Marketplace Components
 @import "node_modules/digitalmarketplace-govuk-frontend/digitalmarketplace/all";
