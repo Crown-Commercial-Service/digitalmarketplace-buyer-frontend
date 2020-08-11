@@ -5,7 +5,8 @@
       "filter_lot": "saas"
     },
     "total": 9,
-    "took": 13
+    "took": 13,
+    "results_per_page": 100
   },
   "documents": [
     {
