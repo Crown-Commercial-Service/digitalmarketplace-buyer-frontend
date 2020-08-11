@@ -275,11 +275,13 @@ def search_services():
         )),
     )
 
-    # the search api doesn't supply its own pagination information: use this `pagination` function to figure out what
-    # links to show
+    # Get the results per page from the Search API meta data (or fall back to Buyer FE config setting)
+    results_per_page = search_api_response['meta'].get('results_per_page', current_app.config["DM_SEARCH_PAGE_SIZE"])
+
+    # Get prev/next link info and number of pages
     pagination_config = pagination(
         search_results_obj.total,
-        current_app.config["DM_SEARCH_PAGE_SIZE"],
+        results_per_page,
         get_page_from_request(request)
     )
 

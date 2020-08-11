@@ -2,7 +2,6 @@
 import json
 from urllib.parse import urlparse, parse_qs
 
-from flask import current_app
 from lxml import html
 import mock
 import pytest
@@ -1579,14 +1578,17 @@ class TestCatalogueOfBriefsPage(APIClientMixin, BaseApplicationTest):
         assert '<span class="page-numbers">3 of 9</span>' in res.get_data(as_text=True)
 
     def test_no_pagination_if_no_more_pages(self):
-        with self.app.app_context():
-            current_app.config['DM_SEARCH_PAGE_SIZE'] = 1000
-            res = self.client.get('/digital-outcomes-and-specialists/opportunities')
-            assert res.status_code == 200
-            page = res.get_data(as_text=True)
+        # Artificially increase the results_per_page
+        search_api_fixture = self._get_dos_brief_search_api_response_fixture_data()
+        search_api_fixture['meta']['results_per_page'] = 1000
+        self.search_api_client.search.return_value = search_api_fixture
 
-            assert '<li class="previous">' not in page
-            assert '<li class="next">' not in page
+        res = self.client.get('/digital-outcomes-and-specialists/opportunities')
+        assert res.status_code == 200
+        page = res.get_data(as_text=True)
+
+        assert '<li class="previous">' not in page
+        assert '<li class="next">' not in page
 
     def test_catalogue_of_briefs_page_404_for_framework_that_does_not_exist(self):
         res = self.client.get('/digital-giraffes-and-monkeys/opportunities')
