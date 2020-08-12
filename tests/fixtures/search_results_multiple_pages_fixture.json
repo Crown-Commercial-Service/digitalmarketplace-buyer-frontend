@@ -1,12 +1,13 @@
 {
-    "meta": {
+  "meta": {
     "query": {
       "q": "CDN",
       "filter_lot": "saas",
       "page": "20"
     },
     "total": 19981,
-    "took": 13
+    "took": 13,
+    "results_per_page": 100
   },
   "documents": [
     {

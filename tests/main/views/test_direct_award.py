@@ -714,7 +714,8 @@ class TestDirectAwardEndSearch(TestDirectAwardBase):
             "meta": {
                 "query": {},
                 "total": END_SEARCH_LIMIT + 1,
-                "took": 3
+                "took": 3,
+                "results_per_page": 100
             },
             "links": {}
         }

@@ -26,7 +26,8 @@ def get_0_results_search_response():
         "meta": {
             "query": {},
             "total": 0,
-            "took": 3
+            "took": 3,
+            "results_per_page": 100
         },
         "links": {}
     }
@@ -205,7 +206,8 @@ class TestSearchResults(APIClientMixin, BaseApplicationTest):
             "meta": {
                 "query": {},
                 "total": 2,
-                "took": 3
+                "took": 3,
+                "results_per_page": 30
             },
             "links": {}
         }

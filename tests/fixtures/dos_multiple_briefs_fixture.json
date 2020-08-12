@@ -306,6 +306,7 @@
     "next":"http://localhost:5000/briefs?status=live%2Cclosed&framework=digital-outcomes-and-specialists&page=3"
   },
   "meta":{
-    "total":6
+    "total":6,
+    "results_per_page": 100
   }
 }
