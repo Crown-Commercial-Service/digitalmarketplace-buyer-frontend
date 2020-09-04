@@ -12,7 +12,7 @@
 //= require ../../../node_modules/digitalmarketplace-frontend-toolkit/toolkit/javascripts/list-entry.js
 //= require ../../../node_modules/digitalmarketplace-frontend-toolkit/toolkit/javascripts/clear-filters.js
 //= require ../../../node_modules/digitalmarketplace-frontend-toolkit/toolkit/javascripts/word-counter.js
-//= require ../../../node_modules/digitalmarketplace-govuk-frontend/govuk/all.js
+//= require ../../../node_modules/govuk-frontend/all.js
 //= require ../../../node_modules/digitalmarketplace-govuk-frontend/digitalmarketplace/all.js
 //= require ../../../node_modules/govuk_frontend_toolkit/javascripts/govuk/selection-buttons.js
 //= require ../../../node_modules/govuk_frontend_toolkit/javascripts/govuk/shim-links-with-button-role.js
