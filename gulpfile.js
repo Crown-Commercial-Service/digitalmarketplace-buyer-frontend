@@ -13,7 +13,7 @@ const repoRoot = path.join(__dirname)
 const npmRoot = path.join(repoRoot, 'node_modules')
 const govukToolkitRoot = path.join(npmRoot, 'govuk_frontend_toolkit')
 const govukElementsRoot = path.join(npmRoot, 'govuk-elements-sass')
-const govukFrontendRoot = path.join(npmRoot, 'digitalmarketplace-govuk-frontend', 'govuk')
+const govukFrontendRoot = path.join(npmRoot, 'govuk-frontend')
 const dmToolkitRoot = path.join(npmRoot, 'digitalmarketplace-frontend-toolkit', 'toolkit')
 const sspContentRoot = path.join(npmRoot, 'digitalmarketplace-frameworks')
 const assetsFolder = path.join(repoRoot, 'app', 'assets')
@@ -137,6 +137,18 @@ function copyFactory (resourceName, sourceFolder, targetFolder) {
 }
 
 gulp.task(
+  'copy:govuk_frontend:stylesheets',
+  function () {
+    return gulp
+      .src(path.join(govukFrontendRoot, '**', '*.scss'), { base: govukFrontendRoot })
+      .pipe(gulp.dest(path.join('app', 'assets', 'scss', 'govuk')))
+      .on('end', function () {
+        console.log('📂  Copied stylesheets from GOV.UK Frontend')
+      })
+  }
+)
+
+gulp.task(
   'copy:dm_toolkit_assets:stylesheets',
   copyFactory(
     'stylesheets from the Digital Marketplace frontend toolkit',
@@ -230,6 +242,7 @@ gulp.task('set_environment_to_production', function (cb) {
 gulp.task('copy', gulp.parallel(
   'copy:frameworks',
   'copy:govuk_toolkit_assets:images',
+  'copy:govuk_frontend:stylesheets',
   'copy:dm_toolkit_assets:stylesheets',
   'copy:dm_toolkit_assets:images',
   'copy:dm_toolkit_assets:templates',
