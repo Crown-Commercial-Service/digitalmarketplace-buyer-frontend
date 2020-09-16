@@ -83,6 +83,7 @@ $govuk-global-styles: true;
 @import "overrides/_notification-banners.scss";
 @import "overrides/_temporary-messages.scss";
 @import "overrides/_summary-list.scss";
+@import "overrides/_search-result.scss";
 
 // Misc styles
 // TODO: Move misc styling into their own partial files or the Digital Marketplace FE Toolkit

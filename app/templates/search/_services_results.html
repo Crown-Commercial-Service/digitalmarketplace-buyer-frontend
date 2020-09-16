@@ -1,25 +1,25 @@
 <ul>
     {% for service in services %}
-    <li class="search-result">
-    <h2 class="search-result-title">
+    <li class="app-search-result">
+        <h2 class="govuk-heading-s govuk-!-margin-bottom-1">
             <a class="govuk-link" href="{{ url_for('.get_service_by_id', service_id=service.id) }}">{{ service.serviceName }}</a>
         </h2>
 
-        <p class="search-result-supplier">
+        <p class="govuk-body govuk-!-font-size-16 govuk-!-font-weight-bold">
             {{ service.supplierName }}
         </p>
 
-        <p class="search-result-excerpt">
+        <p class="govuk-body govuk-!-font-size-16">
             {{ service.serviceSummary or service.serviceDescription }} {# G-Cloud 9 uses serviceDescription, not serviceSummary. #}
         </p>
-        <ul aria-label="tags" class="search-result-metadata">
-            <li class="search-result-metadata-item-inline">
+        <ul aria-label="tags" class="app-search-result__metadata">
+            <li class="govuk-!-display-inline govuk-!-padding-right-4">
                 {{ service.lot.name }}
             </li>
-            <li class="search-result-metadata-item-inline">
+            <li class="govuk-!-display-inline">
                 {{ service.frameworkName }}
             </li>
         </ul>
     </li>
+    {% endfor %}
 </ul>
-{% endfor %}
