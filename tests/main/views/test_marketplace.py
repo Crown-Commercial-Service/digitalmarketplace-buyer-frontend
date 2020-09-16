@@ -1254,10 +1254,10 @@ class TestCatalogueOfBriefsPage(APIClientMixin, BaseApplicationTest):
         ss_elem = document.xpath("//p[@class='search-summary']")[0]
         assert self._normalize_whitespace(self._squashed_element_text(ss_elem)) == "864 results found in All categories"
 
-        specialist_role_labels = document.xpath("//div[@class='search-result']/ul[2]/li[2]/text()")
+        specialist_role_labels = document.xpath("//li[@class='app-search-result']/ul[2]/li[2]/text()")
         assert len(specialist_role_labels) == 2  # only two briefs has a specialist role so only one label should exist
-        assert specialist_role_labels[0].strip() == "Developer"
-        assert specialist_role_labels[1].strip() == "Technical architect"
+        assert specialist_role_labels[0].strip() == "- Developer"
+        assert specialist_role_labels[1].strip() == "- Technical architect"
 
     def test_catalogue_of_briefs_page_filtered(self):
         original_url = "/digital-outcomes-and-specialists/opportunities?page=2"\
@@ -1615,37 +1615,37 @@ class TestCatalogueOfBriefsPage(APIClientMixin, BaseApplicationTest):
         document = html.fromstring(res.get_data(as_text=True))
 
         live_opportunity_published_at = document.xpath(
-            '//div[@class="search-result"][1]//li[@class="search-result-metadata-item"]'
+            '//li[@class="app-search-result"][1]//ul[@class="app-search-result__metadata"]//li'
         )[-3].text_content().strip()
         assert live_opportunity_published_at == "Published: Friday 17 November 2017"
 
         live_opportunity_qs_closing_at = document.xpath(
-            '//div[@class="search-result"][1]//li[@class="search-result-metadata-item"]'
+            '//li[@class="app-search-result"][1]//ul[@class="app-search-result__metadata"]//li'
         )[-2].text_content().strip()
         assert live_opportunity_qs_closing_at == "Deadline for asking questions: Sunday 26 November 2017"
 
         live_opportunity_closing_at = document.xpath(
-            '//div[@class="search-result"][1]//li[@class="search-result-metadata-item"]'
+            '//li[@class="app-search-result"][1]//ul[@class="app-search-result__metadata"]//li'
         )[-1].text_content().strip()
         assert live_opportunity_closing_at == "Closing: Friday 1 December 2017"
 
         closed_opportunity_status = document.xpath(
-            '//div[@class="search-result"][2]//li[@class="search-result-metadata-item"]'
+            '//li[@class="app-search-result"][2]//ul[@class="app-search-result__metadata"]//li'
         )[-1].text_content().strip()
         assert closed_opportunity_status == "Closed: awaiting outcome"
 
         unsuccessful_opportunity_status = document.xpath(
-            '//div[@class="search-result"][3]//li[@class="search-result-metadata-item"]'
+            '//li[@class="app-search-result"][3]//ul[@class="app-search-result__metadata"]//li'
         )[-1].text_content().strip()
         assert unsuccessful_opportunity_status == "Closed: no suitable suppliers"
 
         cancelled_opportunity_status = document.xpath(
-            '//div[@class="search-result"][4]//li[@class="search-result-metadata-item"]'
+            '//li[@class="app-search-result"][4]//ul[@class="app-search-result__metadata"]//li'
         )[-1].text_content().strip()
         assert cancelled_opportunity_status == "Closed: cancelled"
 
         awarded_opportunity_status = document.xpath(
-            '//div[@class="search-result"][6]//li[@class="search-result-metadata-item"]'
+            '//li[@class="app-search-result"][6]//ul[@class="app-search-result__metadata"]//li'
         )[-1].text_content().strip()
         assert awarded_opportunity_status == "Closed: awarded"
 
