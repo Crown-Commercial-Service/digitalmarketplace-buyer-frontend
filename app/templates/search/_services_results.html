@@ -1,23 +1,25 @@
-{% for service in services %}
-<div class="search-result">
-  <h2 class="search-result-title">
-        <a class="govuk-link" href="{{ url_for('.get_service_by_id', service_id=service.id) }}">{{ service.serviceName }}</a>
-    </h2>
+<ul>
+    {% for service in services %}
+    <li class="search-result">
+    <h2 class="search-result-title">
+            <a class="govuk-link" href="{{ url_for('.get_service_by_id', service_id=service.id) }}">{{ service.serviceName }}</a>
+        </h2>
 
-    <p class="search-result-supplier">
-        {{ service.supplierName }}
-    </p>
+        <p class="search-result-supplier">
+            {{ service.supplierName }}
+        </p>
 
-    <p class="search-result-excerpt">
-        {{ service.serviceSummary or service.serviceDescription }} {# G-Cloud 9 uses serviceDescription, not serviceSummary. #}
-    </p>
-    <ul aria-label="tags" class="search-result-metadata">
-        <li class="search-result-metadata-item-inline">
-            {{ service.lot.name }}
-        </li>
-        <li class="search-result-metadata-item-inline">
-            {{ service.frameworkName }}
-        </li>
-    </ul>
-</div>
+        <p class="search-result-excerpt">
+            {{ service.serviceSummary or service.serviceDescription }} {# G-Cloud 9 uses serviceDescription, not serviceSummary. #}
+        </p>
+        <ul aria-label="tags" class="search-result-metadata">
+            <li class="search-result-metadata-item-inline">
+                {{ service.lot.name }}
+            </li>
+            <li class="search-result-metadata-item-inline">
+                {{ service.frameworkName }}
+            </li>
+        </ul>
+    </li>
+</ul>
 {% endfor %}

@@ -1,50 +1,51 @@
-{% for brief in briefs %}
-<div class="search-result">
-    <h2 class="search-result-title">
-        <a class="govuk-link" href="{{ url_for('.get_brief_by_id', framework_family=framework_family, brief_id=brief.id) }}">{{ brief.title }}</a>
-    </h2>
+<ul>
+    {% for brief in briefs %}
+    <li class="search-result">
+        <h2 class="search-result-title">
+            <a class="govuk-link" href="{{ url_for('.get_brief_by_id', framework_family=framework_family, brief_id=brief.id) }}">{{ brief.title }}</a>
+        </h2>
 
-    <ul class="search-result-important-metadata">
-        <li class="search-result-metadata-item">
-            {{ brief.organisation }}
-        </li>
-        <li class="search-result-metadata-item">
-            {{ brief.location }}
-        </li>
-    </ul>
-
-    <ul class="search-result-metadata">
-        <li class="search-result-metadata-item-inline">
-            {{ brief.lot.name }}
-        </li>
-        {% if 'specialistRole' in brief %}
-        <li class="search-result-metadata-item-inline">
-            {{ brief.specialistRole | capitalize() }}
-        </li>
-        {% endif %}
-    </ul>
-
-    <ul class="search-result-metadata">
-        {% if brief.status in outcomes.keys() %}
+        <ul class="search-result-important-metadata">
             <li class="search-result-metadata-item">
-                Closed: {{ outcomes[brief.status] }}
-            </li>
-        {% else %}
-            <li class="search-result-metadata-item">
-                Published: {{ brief.publishedAt|dateformat }}
+                {{ brief.organisation }}
             </li>
             <li class="search-result-metadata-item">
-                Deadline for asking questions: {{ brief.clarificationQuestionsClosedAt|dateformat }}
+                {{ brief.location }}
             </li>
-            <li class="search-result-metadata-item">
-                Closing: {{ brief.applicationsClosedAt|dateformat }}
+        </ul>
+
+        <ul class="search-result-metadata">
+            <li class="search-result-metadata-item-inline">
+                {{ brief.lot.name }}
             </li>
-        {% endif %}
-    </ul>
+            {% if 'specialistRole' in brief %}
+            <li class="search-result-metadata-item-inline">
+                {{ brief.specialistRole | capitalize() }}
+            </li>
+            {% endif %}
+        </ul>
 
-    <p class="search-result-excerpt">
-        {{ brief.summary }}
-    </p>
-</div>
+        <ul class="search-result-metadata">
+            {% if brief.status in outcomes.keys() %}
+                <li class="search-result-metadata-item">
+                    Closed: {{ outcomes[brief.status] }}
+                </li>
+            {% else %}
+                <li class="search-result-metadata-item">
+                    Published: {{ brief.publishedAt|dateformat }}
+                </li>
+                <li class="search-result-metadata-item">
+                    Deadline for asking questions: {{ brief.clarificationQuestionsClosedAt|dateformat }}
+                </li>
+                <li class="search-result-metadata-item">
+                    Closing: {{ brief.applicationsClosedAt|dateformat }}
+                </li>
+            {% endif %}
+        </ul>
 
-{% endfor %}
+        <p class="search-result-excerpt">
+            {{ brief.summary }}
+        </p>
+    </li>
+    {% endfor %}
+</ul>
