@@ -1,50 +1,51 @@
-{% for brief in briefs %}
-<div class="search-result">
-    <h2 class="search-result-title">
-        <a class="govuk-link" href="{{ url_for('.get_brief_by_id', framework_family=framework_family, brief_id=brief.id) }}">{{ brief.title }}</a>
-    </h2>
+<ul>
+    {% for brief in briefs %}
+    <li class="app-search-result">
+        <h2 class="govuk-heading-s govuk-!-margin-bottom-1">
+            <a class="govuk-link" href="{{ url_for('.get_brief_by_id', framework_family=framework_family, brief_id=brief.id) }}">{{ brief.title }}</a>
+        </h2>
 
-    <ul class="search-result-important-metadata">
-        <li class="search-result-metadata-item">
-            {{ brief.organisation }}
-        </li>
-        <li class="search-result-metadata-item">
-            {{ brief.location }}
-        </li>
-    </ul>
-
-    <ul class="search-result-metadata">
-        <li class="search-result-metadata-item-inline">
-            {{ brief.lot.name }}
-        </li>
-        {% if 'specialistRole' in brief %}
-        <li class="search-result-metadata-item-inline">
-            {{ brief.specialistRole | capitalize() }}
-        </li>
-        {% endif %}
-    </ul>
-
-    <ul class="search-result-metadata">
-        {% if brief.status in outcomes.keys() %}
-            <li class="search-result-metadata-item">
-                Closed: {{ outcomes[brief.status] }}
+        <ul>
+            <li class="govuk-!-font-weight-bold">
+                <span class="govuk-visually-hidden">Organisation: </span>{{ brief.organisation }}
             </li>
-        {% else %}
-            <li class="search-result-metadata-item">
-                Published: {{ brief.publishedAt|dateformat }}
+            <li class="govuk-!-font-weight-bold">
+                <span class="govuk-visually-hidden">Location: </span>{{ brief.location }}
             </li>
-            <li class="search-result-metadata-item">
-                Deadline for asking questions: {{ brief.clarificationQuestionsClosedAt|dateformat }}
-            </li>
-            <li class="search-result-metadata-item">
-                Closing: {{ brief.applicationsClosedAt|dateformat }}
-            </li>
-        {% endif %}
-    </ul>
+        </ul>
 
-    <p class="search-result-excerpt">
-        {{ brief.summary }}
-    </p>
-</div>
+        <ul class="app-search-result__metadata">
+            <li class="govuk-!-display-inline-block">
+                {{ brief.lot.name }}
+            </li>
+            {% if 'specialistRole' in brief %}
+            <li class="govuk-!-display-inline-block">
+                - {{ brief.specialistRole | capitalize() }}
+            </li>
+            {% endif %}
+        </ul>
 
-{% endfor %}
+        <ul class="app-search-result__metadata">
+            {% if brief.status in outcomes.keys() %}
+                <li>
+                    Closed: {{ outcomes[brief.status] }}
+                </li>
+            {% else %}
+                <li>
+                    Published: {{ brief.publishedAt|dateformat }}
+                </li>
+                <li>
+                    Deadline for asking questions: {{ brief.clarificationQuestionsClosedAt|dateformat }}
+                </li>
+                <li>
+                    Closing: {{ brief.applicationsClosedAt|dateformat }}
+                </li>
+            {% endif %}
+        </ul>
+
+        <p class="govuk-body govuk-!-font-size-16 govuk-!-margin-bottom-0 govuk-!-margin-top-1">
+            {{ brief.summary }}
+        </p>
+    </li>
+    {% endfor %}
+</ul>

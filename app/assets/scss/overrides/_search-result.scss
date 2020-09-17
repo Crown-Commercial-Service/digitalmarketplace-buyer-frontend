@@ -1,0 +1,19 @@
+/**
+ * To remove our reliance on the Toolkit classes, we copy this style
+ */
+ .app-search-result {
+     padding: 0 0 15px;
+     margin: 0 0 15px;
+     border-bottom: 1px solid $govuk-border-colour;
+     @include core-16;
+     // Automatic wrapping for unbreakable text (e.g. URLs)
+     word-wrap: break-word; // Fallback for older browsers only
+     overflow-wrap: break-word;
+ }
+
+ /**
+  * Decrease the size of metadata text to match the Finder app.
+  */
+ .app-search-result__metadata {
+    @include core-14;
+ }
