@@ -100,6 +100,11 @@ def privacy_notice():
     return render_template('content/privacy-notice.html')
 
 
+@main.route('/accessibility-statement')
+def accessibility_statement():
+    return render_template('content/accessibility-statement.html')
+
+
 @main.route('/terms-and-conditions')
 def terms_and_conditions():
     return render_template('content/terms-and-conditions.html')
