@@ -1,0 +1,95 @@
+{% extends "_base_page.html" %}
+
+{% block pageTitle %}
+  Accessibility statement - Digital Marketplace
+{% endblock %}
+
+{% block breadcrumb %}
+{{ govukBreadcrumbs({
+  "items": [
+    {
+      "href": url_for('main.index'),
+      "text": "Digital Marketplace"
+    },
+    {
+      "text": "Accessibility statement"
+    },
+  ]
+}) }}
+{% endblock breadcrumb %}
+
+{% block mainContent %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      <h1 class="govuk-heading-l">
+        Accessibility statement
+      </h1>
+
+      <p class="govuk-body">Last updated: 22 September 2020</p>
+
+      <h2 class="govuk-heading-m">Introduction</h2>
+      <p class="govuk-body">This statement applies to content published on the www.digitalmarketplace.service.gov.uk domain. It does not apply to content on GOV.UK (for example, www.gov.uk/guidance/g-cloud-suppliers-guide).</p>
+      <p class="govuk-body">This website is run by the Government Digital Service. It is designed to be used by as many people as possible. The text should be clear and simple to understand. You should be able to:</p>
+      <ul class="govuk-list govuk-list--bullet">
+        <li>change colours, contrast levels and fonts</li>
+        <li>zoom in up to 300% without problems</li>
+        <li>navigate most of the website using just a keyboard</li>
+        <li>navigate most of the website using speech recognition software</li>
+        <li>use most of the website using a screen reader (including the most recent versions of JAWS, NVDA and VoiceOver)</li>
+      </ul>
+      <p class="govuk-body">AbilityNet has <a href="https://mcmw.abilitynet.org.uk/" class="govuk-link" rel="external nofollow">advice on making your device easier to use</a> if you have a disability.</p>
+
+      <h2 class="govuk-heading-m">How accessible is the website</h2>
+      <p class="govuk-body">Parts of this website are not fully accessible. For example:</p>
+      <ul class="govuk-list govuk-list--bullet">
+        <li>some pages and document attachments are not clearly written</li>
+        <li>some pages have poor colour contrast</li>
+        <li>some forms are not correctly identified</li>
+        <li>most of the <abbr title="Portable Document Format">PDF</abbr> documents are not accessible</li>
+        <li>not all the user journeys are consistently presented</li>
+        <li>some error messages do not direct screen reader users to message links</li>
+        <li>website search is not available</li>
+      </ul>
+
+      <h2 class="govuk-heading-m">What to do if you cannot access parts of this website</h2>
+      <p class="govuk-body">If you need information on this website in a different format like accessible <abbr title="Portable Document Format">PDF</abbr>s, or assistance completing a task, contact <a href="mailto:info@crowncommercial.gov.uk">info@crowncommercial.gov.uk</a></p>
+
+      <h2 class="govuk-heading-m">Reporting accessibility problems with this website</h2>
+      <p class="govuk-body">We’re always looking to improve the accessibility of this website. If you find any problems that are not listed on this page or you think we’re not meeting the accessibility requirements, <a href="mailto:info@crowncommercial.gov.uk">contact us</a>.</p>
+
+      <h2 class="govuk-heading-m">Enforcement procedure</h2>
+      <p class="govuk-body">The Equality and Human Rights Commission (<abbr title="Equality and Human Rights Commission">EHRC</abbr>) is responsible for enforcing the Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018 (the ‘accessibility regulations’). If you’re not happy with how we respond to your complaint, contact the <a href="https://www.equalityadvisoryservice.com/" rel="external">Equality Advisory and Support Service (<abbr title="Equality Advisory and Support Service">EASS</abbr>)</a>.</p>
+
+      <h2 class="govuk-heading-m">Technical information about this website’s accessibility</h2>
+      <p class="govuk-body"><abbr title="Government Digital Service">GDS</abbr> is committed to making its website accessible, in accordance with the Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018.</a></p>
+      <p class="govuk-body">This website is partially compliant with the <a href="https://www.w3.org/TR/WCAG21/" rel="external">Web Content Accessibility Guidelines version 2.1</a> AA standard, due to the non-compliances listed below.</p>
+
+      <h2 class="govuk-heading-m">Non accessible content</h2>
+      <p class="govuk-body">The content listed below is non-accessible for the following reasons:</p>
+      
+      <h3 class="govuk-heading-s">Non compliance with the accessibility regulations</h3>
+      <p class="govuk-body">Some pages don’t clearly identify content within the page. This fails <abbr title="Web Content Accessibility Guidelines">WCAG</abbr> 2.1 A success criterion 2.4.2 (title of a Web page not identifying the contents).</p>
+      <p class="govuk-body">Not all our interactive elements meet the required non-text contrast ratio. This fails WCAG 2.1 AA success criterion 1.4.11  (non-text contrast).</p>
+      <p class="govuk-body">Labeled elements on some pages are not declared by screen readers. This fails WCAG 2.1 A success criterion 2.5.3 (label in name).</p>
+      <p class="govuk-body">Not all our journeys offer consistent navigation. This fails WCAG 2.1 AA success criterion 3.2.3 (consistent navigation).</p>
+      <p class="govuk-body">Some error messages include irrelevant text and do not direct screen reader users to an error message link. This fails WCAG 2.1 A success criterion 3.3.1 (error identification).</p>
+      <p class="govuk-body">Search and sitemap functionality is missing. This fails WCAG 2.1 AA success criterion 2.4.5 (multiple ways).</p>
+      <p class="govuk-body">Screen readers do not declare the state or function of some elements correctly. This fails WCAG 2.1 A  success criterion 4.1.2 (name,role,value).</p>
+
+      <h3 class="govuk-heading-s">Disproportionate burden</h3>
+      <p class="govuk-body">We will not seek to offer accessible PDFs due to the technical complexity of making the changes and anticipated migration of the platform.</p>
+
+      <h2 class="govuk-heading-m">Content not within the scope of the accessibility regulations</h2>
+      <h3 class="govuk-heading-s">PDFs and other documents</h3>
+      <p class="govuk-body">All supplier submitted PDFs do not need to comply with the accessibility requirement because they are <a href="http://www.legislation.gov.uk/uksi/2018/952/regulation/4/made" rel="external">third party content</a> that is neither funded nor developed by the Crown Commercial Service. If anyone requires an accessible format of these documents,  contact: <a href="mailto:info@crowncommercial.gov.uk">info@crowncommercial.gov.uk</a></p>
+
+      <h2 class="govuk-heading-m">How we tested this website</h2>
+      <p class="govuk-body">This website was tested for compliance with the Web Content Accessibility Guidelines V2.1 level A and level AA. Tests have been carried out externally and internally.</p>
+
+      <h2 class="govuk-heading-m">What we’re doing to improve accessibility</h2>
+      <p class="govuk-body">We plan to fix all known issues by September 2021.</p>
+      <p class="govuk-body">This statement was prepared on 22 September 2020. It was last updated on 22 September 2020.</p>
+  </div>
+</div>
+{% endblock %}
