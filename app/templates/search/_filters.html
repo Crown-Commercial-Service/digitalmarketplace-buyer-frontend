@@ -1,20 +1,15 @@
-{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "digitalmarketplace/components/option-select/macro.njk" import dmOptionSelect %}
 <div class="dm-filters">
   {% include "search/_filter_title.html" %}
-  <div>
-    {% for filter in filters %}
-      {{ govukCheckboxes({
-        "idPrefix": filter.slug,
-        "name": filter.slug,
-        "fieldset": {
-          "legend": {
-            "text": filter.label
-          }
-        },
-        "items": filter.filters
-      })}}
-    {% endfor %}
-  </div>
+  {% for filter in filters %}
+    {{ dmOptionSelect({
+      "name": filter.slug,
+      "title": filter.label,
+      "options_container_id": filter.slug,
+      "items": filter.filters,
+      "closed_on_load": true
+    })}}
+  {% endfor %}
   {{ govukButton({
     "text": "Filter",
     "classes": "js-hidden js-dm-live-search",
