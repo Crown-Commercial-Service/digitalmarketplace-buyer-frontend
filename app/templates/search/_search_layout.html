@@ -1,4 +1,5 @@
 {% extends "_base_page.html" %}
+{% from "digitalmarketplace/components/keyword-search/macro.njk" import dmKeywordSearch %}
 
 {% block head %}
   <meta name="robots" content="noindex">
@@ -11,34 +12,48 @@
 {% block page_heading %}{% endblock %}
 </section>
 
-<div id="js-dm-live-search-wrapper" class="govuk-grid-row search-results-page">
+<div id="js-dm-live-search-wrapper" class="search-results-page">
   {% block post_heading %}{% endblock %}
-
+      
   <form action="{{ form_action }}" method="get" id="js-dm-live-search-form">
-    <section class="govuk-grid-column-one-third search-page-filters" aria-label="Search filters" role="search">
-          {% include 'search/_filters_and_categories_wrapper.html' %}
-          {% block post_filters %}{% endblock %}
-    </section>
-  </form>
-
-  <section class="govuk-grid-column-two-thirds" aria-label="Search results">
-    {#
-      the element referenced by an `aria-controls=` seems to need to be persistent -
-      at least I wasn't able to get it to work by just re-using a fragment of the
-      existing search summary text, as it gets removed and replaced wholesale by
-      the javascript when a new set of results is fetched.
-
-      instead, we have this dedicated (and more importantly, persistent) wrapper
-      element, which itself can be the target of `aria-controls=`
-    #}
-    <div id="search-summary-accessible-hint-wrapper" class="search-summary-accessible-hint-wrapper" aria-atomic="true" aria-live="polite" aria-relevant="additions text">
-      {% include 'search/_summary_accessible_hint.html' %}
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        {{ dmKeywordSearch({
+          "id": "search-keywords",
+          "ariaLabel": "keywords",
+          "label": "Keyword search",
+          "inputId": "keywords",
+          "inputLabel": "Keyword search",
+          "inputName": "q",
+          "inputValue": search_keywords,
+          "inputAriaControls": "search-summary-accessible-hint-wrapper"
+        })}}
+      </div>
     </div>
-    {% block pre_results %}
-      {% include 'search/_summary.html' %}
-    {% endblock %}
-    {% include 'search/_results_wrapper.html' %}
-  </section>
+    <div class="govuk-grid-row">
+      <section class="govuk-grid-column-one-third search-page-filters" aria-label="Search filters" role="search">
+        {% include 'search/_filters_and_categories_wrapper.html' %}
+        {% block post_filters %}{% endblock %}
+      </section>  
+      <section class="govuk-grid-column-two-thirds" aria-label="Search results">
+        {#
+          the element referenced by an `aria-controls=` seems to need to be persistent -
+          at least I wasn't able to get it to work by just re-using a fragment of the
+          existing search summary text, as it gets removed and replaced wholesale by
+          the javascript when a new set of results is fetched.
 
+          instead, we have this dedicated (and more importantly, persistent) wrapper
+          element, which itself can be the target of `aria-controls=`
+        #}
+        <div id="search-summary-accessible-hint-wrapper" class="search-summary-accessible-hint-wrapper" aria-atomic="true" aria-live="polite" aria-relevant="additions text">
+          {% include 'search/_summary_accessible_hint.html' %}
+        </div>
+        {% block pre_results %}
+          {% include 'search/_summary.html' %}
+        {% endblock %}
+        {% include 'search/_results_wrapper.html' %}
+      </section>
+    </div>
+  </form>
 </div>
 {% endblock %}
