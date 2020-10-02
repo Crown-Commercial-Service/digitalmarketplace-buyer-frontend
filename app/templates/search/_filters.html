@@ -1,18 +1,15 @@
+{% from "digitalmarketplace/components/option-select/macro.njk" import dmOptionSelect %}
 <div class="dm-filters">
   {% include "search/_filter_title.html" %}
-  <div>
-    {% for filter in filters %}
-      {%
-        with
-        label = filter.label,
-        options_container_id = filter.slug,
-        options = filter.filters,
-        aria_controls="search-summary-accessible-hint-wrapper"
-      %}
-        {% include "toolkit/forms/option-select.html" %}
-      {% endwith %}
-    {% endfor %}
-  </div>
+  {% for filter in filters %}
+    {{ dmOptionSelect({
+      "name": filter.slug,
+      "title": filter.label,
+      "options_container_id": filter.slug,
+      "items": filter.filters,
+      "closed_on_load": true
+    })}}
+  {% endfor %}
   {{ govukButton({
     "text": "Filter",
     "classes": "js-hidden js-dm-live-search",

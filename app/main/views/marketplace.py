@@ -311,6 +311,8 @@ def list_opportunities(framework_family):
         for filter_instance in filter_groups['filters']:
             if 'label' in filter_instance:
                 filter_instance['label'] = capitalize_first(filter_instance['label'])
+                filter_instance['text'] = capitalize_first(filter_instance['label'])
+            filter_instance['attributes'] = {'aria-controls': 'search-summary-accessible-hint-wrapper'}
 
     clear_filters_url = get_request_url_without_any_filters(
         request, filters, view_name, framework_family=framework_family

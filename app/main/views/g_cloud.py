@@ -323,11 +323,13 @@ def search_services():
     # annotate `filters` with their values as set in this request for re-rendering purposes.
     set_filter_states(filters.values(), request)
 
-    # Uppercase first character of filter labels for display
+    # Create filters that can be used with GOV.UK components
     for filter_groups in filters.values():
         for filter_instance in filter_groups['filters']:
             if 'label' in filter_instance:
                 filter_instance['label'] = capitalize_first(filter_instance['label'])
+                filter_instance['text'] = capitalize_first(filter_instance['label'])
+            filter_instance['attributes'] = {"aria-controls": "search-summary-accessible-hint-wrapper"}
 
     clear_filters_url = get_request_url_without_any_filters(request, filters, view_name)
     search_query = query_args_for_pagination(clean_request_query_params)

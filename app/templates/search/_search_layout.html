@@ -15,7 +15,7 @@
   {% block post_heading %}{% endblock %}
 
   <form action="{{ form_action }}" method="get" id="js-dm-live-search-form">
-    <section class="govuk-grid-column-one-third search-page-filters" aria-label="Search filters">
+    <section class="govuk-grid-column-one-third search-page-filters" aria-label="Search filters" role="search">
           {% include 'search/_filters_and_categories_wrapper.html' %}
           {% block post_filters %}{% endblock %}
     </section>
