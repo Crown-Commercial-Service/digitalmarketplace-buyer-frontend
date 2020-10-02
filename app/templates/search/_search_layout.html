@@ -1,5 +1,5 @@
 {% extends "_base_page.html" %}
-{% from "digitalmarketplace/components/keyword-search/macro.njk" import dmKeywordSearch %}
+{% from "digitalmarketplace/components/search-box/macro.njk" import dmSearchBox %}
 
 {% block head %}
   <meta name="robots" content="noindex">
@@ -18,7 +18,7 @@
   <form action="{{ form_action }}" method="get" id="js-dm-live-search-form">
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
-        {{ dmKeywordSearch({
+        {{ dmSearchBox({
           "id": "search-keywords",
           "ariaLabel": "keywords",
           "label": "Keyword search",
