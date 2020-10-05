@@ -129,16 +129,17 @@ class TestDirectAward(TestDirectAwardBase):
                     "The work has been cancelled"
                 ]
 
-    def test_renders_save_search_link(self):
+    def test_renders_save_search_button(self):
         self.search_api_client.search.return_value = self.g9_search_results
 
         res = self.client.get(self.SEARCH_URL)
         assert res.status_code == 200
 
         doc = html.fromstring(res.get_data(as_text=True))
-        href = self.SAVE_SEARCH_URL + '?search_query=' + quote_plus(self.SIMPLE_SEARCH_PARAMS)
-        assert doc.xpath('id("js-dm-live-save-search-form")//a[@class="govuk-button"]'
-                         '/@href')[0] == href
+        assert doc.xpath('id("js-dm-live-save-search-form")//input[@name="search_query"]'
+                         '/@value')[0] == self.SIMPLE_SEARCH_PARAMS
+        assert doc.xpath('id("js-dm-live-save-search-form")//form/@action')[0] == self.SAVE_SEARCH_URL
+        assert len(doc.xpath('id("js-dm-live-save-search-form")//form//button[@type="submit"]')) > 0
 
     def test_save_search_redirects_to_login(self):
         res = self.client.get(self.SIMPLE_SAVE_SEARCH_URL)
