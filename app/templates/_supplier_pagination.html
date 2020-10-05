@@ -1,19 +1,10 @@
-<nav role="navigation">
-  <ul class="previous-next-navigation">
-    {% if prev_link %}
-      <li class="previous">
-          <a class="govuk-link" href="{{ url_for('.suppliers_list_by_prefix', **prev_link) }}">
-              Previous <span class="visuallyhidden">page</span>
-          </a>
-      </li>
-    {% endif %}
-
-    {% if next_link %}
-      <li class="next">
-          <a class="govuk-link" href="{{ url_for('.suppliers_list_by_prefix', **next_link) }}">
-              Next <span class="visuallyhidden">page</span>
-          </a>
-      </li>
-    {% endif %}
-  </ul>
-</nav>
+{{ dmPreviousNextPagination({
+  "previousPage": {
+    "url": url_for('.suppliers_list_by_prefix', **prev_link),
+    "title": "Previous page"
+  } if prev_link,
+  "nextPage": {
+    "url": url_for('.suppliers_list_by_prefix', **next_link),
+    "title": "Next page"
+  } if next_link
+})}}

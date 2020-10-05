@@ -21,3 +21,12 @@
  .app-search-result__metadata {
     @include core-14;
  }
+
+ /**
+  * On the Supplier A-Z list, we want a border at the top of the
+  * first result.
+  */
+ .supplier-list .app-search-result:first-child {
+    border-top: 1px solid $govuk-border-colour;
+    padding-top: 15px;
+ }
