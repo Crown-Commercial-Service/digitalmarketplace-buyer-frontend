@@ -1249,7 +1249,7 @@ class TestCatalogueOfBriefsPage(APIClientMixin, BaseApplicationTest):
         }
 
         q_inputs = document.xpath("//form[@method='get']//input[@name='q']")
-        assert tuple(element.get("value") for element in q_inputs) == ("",)
+        assert tuple(element.get("value") for element in q_inputs) == (None,)
 
         ss_elem = document.xpath("//p[@class='search-summary']")[0]
         assert self._normalize_whitespace(self._squashed_element_text(ss_elem)) == "864 results found in All categories"
@@ -1336,7 +1336,7 @@ class TestCatalogueOfBriefsPage(APIClientMixin, BaseApplicationTest):
         }
 
         q_inputs = document.xpath("//form[@method='get']//input[@name='q']")
-        assert tuple(element.get("value") for element in q_inputs) == ("",)
+        assert tuple(element.get("value") for element in q_inputs) == (None,)
 
         parsed_original_url = urlparse(original_url)
         parsed_prev_url = urlparse(document.xpath("//li[@class='previous']/a/@href")[0])
@@ -1512,7 +1512,7 @@ class TestCatalogueOfBriefsPage(APIClientMixin, BaseApplicationTest):
         }
 
         q_inputs = document.xpath("//form[@method='get']//input[@name='q']")
-        assert tuple(element.get("value") for element in q_inputs) == ("",)
+        assert tuple(element.get("value") for element in q_inputs) == (None,)
 
         parsed_original_url = urlparse(original_url)
         parsed_next_url = urlparse(document.xpath("//li[@class='next']/a/@href")[0])

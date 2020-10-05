@@ -5,9 +5,9 @@
     {{ dmOptionSelect({
       "name": filter.slug,
       "title": filter.label,
-      "options_container_id": filter.slug,
+      "optionsContainerId": filter.slug,
       "items": filter.filters,
-      "closed_on_load": true
+      "closedOnLoad": true
     })}}
   {% endfor %}
   {{ govukButton({
