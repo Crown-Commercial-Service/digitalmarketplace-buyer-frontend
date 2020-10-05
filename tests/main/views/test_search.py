@@ -10,7 +10,9 @@ from ...helpers import BaseApplicationTest, BaseAPIClientMixin
 
 def find_pagination_links(doc):
     return doc.xpath(
-        "//li[contains(@class, 'next') or contains(@class, 'previous')]//a[starts-with(@href, $u)]",
+        ("//li[contains(@class, 'dm-pagination__item--next') "
+         "or contains(@class, 'dm-pagination__item--previous')]"
+         "//a[starts-with(@href, $u)]"),
         u="/g-cloud/search?",
     )
 
@@ -94,8 +96,8 @@ class TestSearchResults(APIClientMixin, BaseApplicationTest):
 
         res = self.client.get('/g-cloud/search?lot=cloud-software')
         assert res.status_code == 200
-        assert '<li class="next">' not in res.get_data(as_text=True)
-        assert '<li class="previous">' not in res.get_data(as_text=True)
+        assert '<li class="dm-pagination__item dm-pagination__item--next">' not in res.get_data(as_text=True)
+        assert '<li class="dm-pagination__item dm-pagination__item--previous">' not in res.get_data(as_text=True)
 
     def test_should_render_pagination_link_on_first_results_page(self):
         self.search_api_client.search.return_value = \
@@ -105,10 +107,9 @@ class TestSearchResults(APIClientMixin, BaseApplicationTest):
         assert res.status_code == 200
 
         document = html.fromstring(res.get_data(as_text=True))
-
-        assert 'previous-next-navigation' in res.get_data(as_text=True)
-        assert '<li class="previous">' not in res.get_data(as_text=True)
-        assert '<li class="next">' in res.get_data(as_text=True)
+        assert '<nav class="dm-pagination"' in res.get_data(as_text=True)
+        assert '<li class="dm-pagination__item dm-pagination__item--previous">' not in res.get_data(as_text=True)
+        assert '<li class="dm-pagination__item dm-pagination__item--next">' in res.get_data(as_text=True)
 
         (next_link,) = find_pagination_links(document)
         assert 'page=2' in next_link.attrib["href"]
@@ -123,9 +124,10 @@ class TestSearchResults(APIClientMixin, BaseApplicationTest):
 
         document = html.fromstring(res.get_data(as_text=True))
 
-        assert 'previous-next-navigation' in res.get_data(as_text=True)
-        assert '<li class="previous">' in res.get_data(as_text=True)
-        assert '<li class="next">' in res.get_data(as_text=True)
+        assert '<nav class="dm-pagination"' in res.get_data(as_text=True)
+        assert '<li class="dm-pagination__item dm-pagination__item--previous">' in res.get_data(as_text=True)
+        assert '<li class="dm-pagination__item dm-pagination__item--next">' in res.get_data(as_text=True)
+
         (prev_link, next_link) = find_pagination_links(document)
 
         assert 'page=1' in prev_link.attrib["href"]
@@ -139,9 +141,9 @@ class TestSearchResults(APIClientMixin, BaseApplicationTest):
 
         res = self.client.get('/g-cloud/search?lot=cloud-software&page=2')
         assert res.status_code == 200
-        assert 'previous-next-navigation' in res.get_data(as_text=True)
-        assert '<span class="page-numbers">1 of 200</span>' in res.get_data(as_text=True)
-        assert '<span class="page-numbers">3 of 200</span>' in res.get_data(as_text=True)
+        assert '<nav class="dm-pagination"' in res.get_data(as_text=True)
+        assert '<span class="dm-pagination__link-label">1 of 200</span>' in res.get_data(as_text=True)
+        assert '<span class="dm-pagination__link-label">3 of 200</span>' in res.get_data(as_text=True)
 
     def test_should_render_pagination_link_on_last_results_page(self):
         self.search_api_client.search.return_value = \
@@ -152,9 +154,9 @@ class TestSearchResults(APIClientMixin, BaseApplicationTest):
 
         document = html.fromstring(res.get_data(as_text=True))
 
-        assert 'previous-next-navigation' in res.get_data(as_text=True)
-        assert '<li class="previous">' in res.get_data(as_text=True)
-        assert '<li class="next">' not in res.get_data(as_text=True)
+        assert '<nav class="dm-pagination"' in res.get_data(as_text=True)
+        assert '<li class="dm-pagination__item dm-pagination__item--previous">' in res.get_data(as_text=True)
+        assert '<li class="dm-pagination__item dm-pagination__item--next">' not in res.get_data(as_text=True)
 
         (prev_link,) = find_pagination_links(document)
         assert 'page=199' in prev_link.attrib["href"]

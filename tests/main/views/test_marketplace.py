@@ -1339,8 +1339,12 @@ class TestCatalogueOfBriefsPage(APIClientMixin, BaseApplicationTest):
         assert tuple(element.get("value") for element in q_inputs) == (None,)
 
         parsed_original_url = urlparse(original_url)
-        parsed_prev_url = urlparse(document.xpath("//li[@class='previous']/a/@href")[0])
-        parsed_next_url = urlparse(document.xpath("//li[@class='next']/a/@href")[0])
+        parsed_prev_url = urlparse(document.cssselect(
+            ".dm-pagination__item--previous .dm-pagination__link")[0].get('href')
+        )
+        parsed_next_url = urlparse(document.cssselect(
+            ".dm-pagination__item--next .dm-pagination__link")[0].get('href')
+        )
         assert parsed_original_url.path == parsed_prev_url.path == parsed_next_url.path
 
         assert self.normalize_qs(parsed_original_url.query) == \
@@ -1433,8 +1437,12 @@ class TestCatalogueOfBriefsPage(APIClientMixin, BaseApplicationTest):
         assert tuple(element.get("value") for element in q_inputs) == ("Richie Poldy",)
 
         parsed_original_url = urlparse(original_url)
-        parsed_prev_url = urlparse(document.xpath("//li[@class='previous']/a/@href")[0])
-        parsed_next_url = urlparse(document.xpath("//li[@class='next']/a/@href")[0])
+        parsed_prev_url = urlparse(document.cssselect(
+            ".dm-pagination__item--previous .dm-pagination__link")[0].get('href')
+        )
+        parsed_next_url = urlparse(document.cssselect(
+            ".dm-pagination__item--next .dm-pagination__link")[0].get('href')
+        )
         assert parsed_original_url.path == parsed_prev_url.path == parsed_next_url.path
 
         assert self.normalize_qs(parsed_original_url.query) == \
@@ -1515,7 +1523,9 @@ class TestCatalogueOfBriefsPage(APIClientMixin, BaseApplicationTest):
         assert tuple(element.get("value") for element in q_inputs) == (None,)
 
         parsed_original_url = urlparse(original_url)
-        parsed_next_url = urlparse(document.xpath("//li[@class='next']/a/@href")[0])
+        parsed_next_url = urlparse(document.cssselect(
+            ".dm-pagination__item--next .dm-pagination__link")[0].get('href')
+        )
         assert parsed_original_url.path == parsed_next_url.path
 
         assert self.normalize_qs(parsed_next_url.query) == {'lot': {'digital-outcomes'}}
@@ -1568,14 +1578,18 @@ class TestCatalogueOfBriefsPage(APIClientMixin, BaseApplicationTest):
         page = res.get_data(as_text=True)
         document = html.fromstring(page)
 
-        assert '<li class="previous">' in page
-        assert '<li class="next">' in page
-        prev_url = str(document.xpath('string(//li[@class="previous"]/a/@href)'))
-        next_url = str(document.xpath('string(//li[@class="next"]/a/@href)'))
+        assert '<li class="dm-pagination__item dm-pagination__item--previous">' in page
+        assert '<li class="dm-pagination__item dm-pagination__item--next">' in page
+        prev_url = str(document.cssselect(
+            ".dm-pagination__item--previous .dm-pagination__link")[0].get('href')
+        )
+        next_url = str(document.cssselect(
+            ".dm-pagination__item--next .dm-pagination__link")[0].get('href')
+        )
         assert prev_url.endswith('/opportunities?page=1')
         assert next_url.endswith('/opportunities?page=3')
-        assert '<span class="page-numbers">1 of 9</span>' in res.get_data(as_text=True)
-        assert '<span class="page-numbers">3 of 9</span>' in res.get_data(as_text=True)
+        assert '<span class="dm-pagination__link-label">1 of 9</span>' in res.get_data(as_text=True)
+        assert '<span class="dm-pagination__link-label">3 of 9</span>' in res.get_data(as_text=True)
 
     def test_no_pagination_if_no_more_pages(self):
         # Artificially increase the results_per_page
@@ -1587,8 +1601,8 @@ class TestCatalogueOfBriefsPage(APIClientMixin, BaseApplicationTest):
         assert res.status_code == 200
         page = res.get_data(as_text=True)
 
-        assert '<li class="previous">' not in page
-        assert '<li class="next">' not in page
+        assert '<li class="dm-pagination__item dm-pagination__item--previous">' not in page
+        assert '<li class="dm-pagination__item dm-pagination__item--next">' not in page
 
     def test_catalogue_of_briefs_page_404_for_framework_that_does_not_exist(self):
         res = self.client.get('/digital-giraffes-and-monkeys/opportunities')
