@@ -8,6 +8,7 @@
 //= require ../../../node_modules/scrolldepth/jquery.scrolldepth.js
 //= require ../../../node_modules/digitalmarketplace-frontend-toolkit/toolkit/javascripts/option-select.js
 //= require ../../../node_modules/digitalmarketplace-frontend-toolkit/toolkit/javascripts/support.js
+//= require ../../../node_modules/digitalmarketplace-frontend-toolkit/toolkit/javascripts/live-search.js
 //= require ../../../node_modules/digitalmarketplace-frontend-toolkit/toolkit/javascripts/list-entry.js
 //= require ../../../node_modules/digitalmarketplace-frontend-toolkit/toolkit/javascripts/clear-filters.js
 //= require ../../../node_modules/digitalmarketplace-frontend-toolkit/toolkit/javascripts/word-counter.js
@@ -19,7 +20,6 @@
 //= require ../../../node_modules/digitalmarketplace-frontend-toolkit/toolkit/javascripts/show-hide-content.js
 //= require _onready.js'
 //= require _selection-buttons.js
-//= require _live-search.js
 
 GOVUKFrontend.initAll();
 DMGOVUKFrontend.initAll();
