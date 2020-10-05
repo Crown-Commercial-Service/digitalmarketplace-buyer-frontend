@@ -9,6 +9,10 @@
      // Automatic wrapping for unbreakable text (e.g. URLs)
      word-wrap: break-word; // Fallback for older browsers only
      overflow-wrap: break-word;
+
+     &:last-child {
+         border-bottom: none;
+     }
  }
 
  /**
