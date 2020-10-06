@@ -43,8 +43,8 @@ endpoint response (application/json):
       this.$wrapper = $wrapper;
       this.$form = this.$wrapper.find('#js-dm-live-search-form');
       this.$options = this.$form.find('.govuk-option-select').find("input[type='checkbox']");
-      this.$searchSubmitButton = this.$form.find('.dm-keyword-search__submit');
-      this.$searchInput = this.$form.find('.dm-keyword-search__input');
+      this.$searchSubmitButton = this.$form.find('.dm-search-box__submit');
+      this.$searchInput = this.$form.find('.dm-search-box__input');
       this.$saveSearchButton = this.$form.find('button#save-search')
   
       this.state = false;
