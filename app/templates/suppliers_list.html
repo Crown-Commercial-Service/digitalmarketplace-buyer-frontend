@@ -75,19 +75,19 @@
   <div class="govuk-grid-column-two-thirds">
     <div class="supplier-list">
       {% for supplier in suppliers %}
-        <div class="search-result">
-          <h2 class="search-result-title">
-            <a class="govuk-link" href="{{ url_for('main.suppliers_details', supplier_id=supplier.id)}}">{{ supplier.name}}</a>
+        <div class="app-search-result">
+          <h2 class="govuk-heading-s govuk-!-margin-bottom-1">
+            <a class="govuk-link" href="{{ url_for('main.suppliers_details', supplier_id=supplier.id) }}">{{ supplier.name }}</a>
           </h2>
-          <p class="search-result-excerpt">
+          <p class="govuk-body govuk-!-font-size-16 govuk-!-margin-bottom-0 govuk-!-margin-top-1">
             {{ supplier.description }}
           </p>
         </div>
       {% endfor %}
     </div>
+    {% include '_supplier_pagination.html' %}
   </div>
 </div>
 
-{% include '_supplier_pagination.html' %}
 
 {% endblock %}
