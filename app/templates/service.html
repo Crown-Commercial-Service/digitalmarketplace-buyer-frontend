@@ -33,23 +33,23 @@
   <div class="govuk-grid-column-full">
     {% if service_unavailability_information.type == 'framework_update' %}
     {# TODO: Hardcoding this banner for G11 for now, should be derived from the framework object  #}
-       {% if service.frameworkName == 'G-Cloud 11' %}
-           {{ dmBanner({
+        {% if service.frameworkName == 'G-Cloud 11' %}
+            {{ dmBanner({
         "title": "This G-Cloud 11 service has been suspended and is no longer searchable on the Digital Marketplace.",
         "text": "The G-Cloud 11 framework expires on 18 December 2020 to allow in progress procurements to be concluded. Existing contracts with {} are still valid.".format(
             service.supplierName)
-      }) }}
-   {% else %}
-      {{ dmBanner({
+        }) }}
+        {% else %}
+            {{ dmBanner({
         "title": "This {} service is no longer available to buy.".format(service.frameworkName),
         "text": "The {} framework expired on {}. Any existing contracts with {} are still valid.".format(
             service.frameworkName,
             framework_expires_at_date,
             service.supplierName)
-      }) }}
-   {% endif %}
+        }) }}
+        {% endif %}
     {% else %}
-      {{ dmBanner({
+        {{ dmBanner({
         "title": "{} stopped offering this service on {}.".format(service.supplierName, service_unavailability_information.date),
         "text": "Any existing contracts for this service are still valid."
       }) }}
