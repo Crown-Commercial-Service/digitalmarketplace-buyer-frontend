@@ -35,8 +35,8 @@
     {# TODO: Hardcoding this banner for G11 for now, should be derived from the framework object  #}
         {% if service.frameworkName == 'G-Cloud 11' %}
             {{ dmBanner({
-        "title": "This G-Cloud 11 service has been suspended and is no longer searchable on the Digital Marketplace.",
-        "text": "The G-Cloud 11 framework expires on 18 December 2020 to allow in progress procurements to be concluded. Existing contracts with {} are still valid.".format(
+        "title": "G-Cloud 11 services are suspended on Digital Marketplace",
+        "text": "If you have an ongoing procurement on G-Cloud 11, you must complete it by 18 December 2020. Existing contracts with {} are still valid.".format(
             service.supplierName)
         }) }}
         {% else %}
