@@ -1,0 +1,34 @@
+.search-summary {
+  @include core-14;
+  padding: 0 0 $gutter-half;
+
+  em {
+    font-style: normal;
+    font-weight: bold;
+  }
+
+  @include media(tablet) {
+    @include core-16;
+  }
+}
+
+.column-one-whole .search-summary {
+  @include core-19;
+
+  .search-summary-count {
+    font-size: 30px;
+
+    margin-right: 2px;
+    padding: 0;
+
+    @include media(mobile) {
+      margin-right: 0;
+      font-size: inherit;
+    }
+  }
+}
+
+.search-summary-count {
+  @include bold-48;
+  padding-right: 5px;
+}

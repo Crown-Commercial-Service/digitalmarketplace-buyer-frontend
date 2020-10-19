@@ -42,7 +42,6 @@ endpoint response (application/json):
       // Attach filter-on-click functionality if this page has a live-search form.
       this.$wrapper = $wrapper;
       this.$form = this.$wrapper.find('#js-dm-live-search-form');
-      this.$options = this.$form.find('.govuk-option-select').find("input[type='checkbox']");
       this.$searchSubmitButton = this.$form.find('.dm-search-box__submit');
       this.$searchInput = this.$form.find('.dm-search-box__input');
       this.$saveSearchButton = this.$form.find('button#save-search')

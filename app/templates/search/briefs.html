@@ -31,11 +31,9 @@
 
 {% block page_heading %}
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
+  <div class="govuk-grid-column-two-thirds govuk-!-margin-bottom-3">
     <h1 class="govuk-heading-xl">{{ framework_family_name }} opportunities</h1>
-    <div class="marketplace-paragraph">
-      <p>View buyer requirements for {{ lot_names | map('lower') | smartjoin }}.</p>
-    </div>
+    <p class="govuk-body">View buyer requirements for {{ lot_names | map('lower') | smartjoin }}.</p>
   </div>
 </div>
 {% endblock %}

@@ -45,7 +45,7 @@
           instead, we have this dedicated (and more importantly, persistent) wrapper
           element, which itself can be the target of `aria-controls=`
         #}
-        <div id="search-summary-accessible-hint-wrapper" class="search-summary-accessible-hint-wrapper" aria-atomic="true" aria-live="polite" aria-relevant="additions text">
+        <div id="search-summary-accessible-hint-wrapper" class="search-summary-accessible-hint-wrapper govuk-visually-hidden" aria-atomic="true" aria-live="polite" aria-relevant="additions text">
           {% include 'search/_summary_accessible_hint.html' %}
         </div>
         {% block pre_results %}
