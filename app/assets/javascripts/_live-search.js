@@ -219,10 +219,10 @@ endpoint response (application/json):
       return '';
     };
   
-    GOVUK = GOVUK || {};
-    GOVUK.GDM = GOVUK.GDM || {};
-    GOVUK.GDM.LiveSearch = LiveSearch;
+    GOVUKFrontend = GOVUKFrontend || {};
+    DMGOVUKFrontend = DMGOVUKFrontend || {};
+    DMGOVUKFrontend.LiveSearch = LiveSearch;
   
     // Instantiate an option select for each one found on the page
-    var form = new GOVUK.GDM.LiveSearch($('#js-dm-live-search-wrapper'));
+    var form = new DMGOVUKFrontend.LiveSearch($('#js-dm-live-search-wrapper'));
   })(jQuery);
