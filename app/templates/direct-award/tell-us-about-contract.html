@@ -40,9 +40,69 @@
       <form method="POST" action="{{ url_for('direct_award.tell_us_about_contract', framework_family=framework.family, project_id=project.id, outcome_id=outcome_id) }}" class="tell-us-about-contract-form" novalidate>
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
 
-        {{ form.start_date}}
+        {{ govukDateInput ({
+          "id": "input-start_date",
+          "namePrefix": "start_date",
+          "fieldset": {
+            "legend": {
+              "text": form.start_date.question,
+              "classes": "govuk-fieldset__legend--m"
+            }
+          },
+          "hint": {
+            "text": form.start_date.hint
+          } if form.start_date.hint,
+          "errorMessage": errors.start_date.errorMessage if errors.start_date.errorMessage,
+          "items": [
+            {
+              "classes": "govuk-input--width-2",
+              "name": "day",
+              "value": form.start_date.value['start_date-day'] if form.start_date.value['start_date-day']
+            },
+            {
+              "classes": "govuk-input--width-2",
+              "name": "month",
+              "value": form.start_date.value['start_date-month'] if form.start_date.value['start_date-month']
+            },
+            {
+              "classes": "govuk-input--width-4",
+              "name": "year",
+              "value": form.start_date.value['start_date-year'] if form.start_date.value['start_date-year']
+            }
+          ]
+        })}}
 
-        {{ form.end_date }}
+        {{ govukDateInput ({
+          "id": "input-end_date",
+          "namePrefix": "end_date",
+          "fieldset": {
+            "legend": {
+              "text": form.end_date.question,
+              "classes": "govuk-fieldset__legend--m"
+            }
+          },
+          "hint": {
+            "text": form.end_date.hint
+          } if form.end_date.hint,
+          "errorMessage": errors.end_date.errorMessage if errors.end_date.errorMessage,
+          "items": [
+            {
+              "classes": "govuk-input--width-2",
+              "name": "day",
+              "value": form.end_date.value['end_date-day'] if form.end_date.value['end_date-day']
+            },
+            {
+              "classes": "govuk-input--width-2",
+              "name": "month",
+              "value": form.end_date.value['end_date-month'] if form.end_date.value['end_date-month']
+            },
+            {
+              "classes": "govuk-input--width-4",
+              "name": "year",
+              "value": form.end_date.value['end_date-year'] if form.end_date.value['end_date-year']
+            }
+          ]
+        })}}
 
         {{ form.value_in_pounds }}
 
