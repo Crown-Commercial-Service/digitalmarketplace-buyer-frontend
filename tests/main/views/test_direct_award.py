@@ -1003,8 +1003,8 @@ class TestDirectAwardTellUsAboutContract(TestDirectAwardBase):
         assert xpath('boolean(//h1[contains(normalize-space(), "Tell us about your contract")])')
 
     def test_tell_us_about_contract_form_fields(self, xpath):
-        assert len(xpath('//input[@type="text"][substring-after(@name, "start_date")]')) == 3
-        assert len(xpath('//input[@type="text"][substring-after(@name, "end_date")]')) == 3
+        assert len(xpath('//input[@type="number"][substring-after(@name, "start_date")]')) == 3
+        assert len(xpath('//input[@type="number"][substring-after(@name, "end_date")]')) == 3
         assert xpath('//input[@type="text"][contains(@name, "value_in_pounds")]')
         assert xpath('//input[@type="text"][contains(@name, "buying_organisation")]')
         assert xpath('//button[normalize-space(string())=$t]', t="Submit")
@@ -1086,7 +1086,7 @@ class TestDirectAwardTellUsAboutContract(TestDirectAwardBase):
         assert res.status_code == 400
 
         doc = html.fromstring(res.get_data(as_text=True))
-        assert doc.xpath('count(//span[@class="validation-message"])') == 1
+        assert doc.xpath('count(//span[@class="govuk-error-message"])') == 1
         errors = doc.cssselect('div.govuk-error-summary a')
         assert len(errors) == 1
         assert errors[0].text_content() == 'Your end date must be later than the start date.'
