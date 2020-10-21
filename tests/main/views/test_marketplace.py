@@ -1212,7 +1212,7 @@ class TestCatalogueOfBriefsPage(APIClientMixin, BaseApplicationTest):
         assert heading == "Digital Outcomes and Specialists opportunities"
         assert ('View buyer requirements for digital outcomes, '
                 'digital specialists and user research participants') in document.xpath(
-            "normalize-space(//div[@class='marketplace-paragraph']/p/text())"
+            "normalize-space(//section[@id='search-page-heading']//p/text())"
         )
 
         lot_filters = document.xpath("//form[@method='get']//ul[@class='lot-filters--last-list']//a")
@@ -1281,7 +1281,7 @@ class TestCatalogueOfBriefsPage(APIClientMixin, BaseApplicationTest):
         assert heading == "Digital Outcomes and Specialists opportunities"
         assert ('View buyer requirements for digital outcomes, '
                 'digital specialists and user research participants') in document.xpath(
-            "normalize-space(//div[@class='marketplace-paragraph']/p/text())"
+            "normalize-space(//section[@id='search-page-heading']//p/text())"
         )
 
         all_categories_return_link = document.xpath("//form[@method='get']//div[@class='lot-filters']/ul/li/a")[0]
@@ -1379,7 +1379,7 @@ class TestCatalogueOfBriefsPage(APIClientMixin, BaseApplicationTest):
         assert heading == "Digital Outcomes and Specialists opportunities"
         assert ('View buyer requirements for digital outcomes, '
                 'digital specialists and user research participants') in document.xpath(
-            "normalize-space(//div[@class='marketplace-paragraph']/p/text())"
+            "normalize-space(//section[@id='search-page-heading']//p/text())"
         )
 
         all_categories_return_link = document.xpath("//form[@method='get']//div[@class='lot-filters']/ul/li/a")[0]
@@ -1473,7 +1473,7 @@ class TestCatalogueOfBriefsPage(APIClientMixin, BaseApplicationTest):
         assert heading == "Digital Outcomes and Specialists opportunities"
         assert ('View buyer requirements for digital outcomes, '
                 'digital specialists and user research participants') in document.xpath(
-            "normalize-space(//div[@class='marketplace-paragraph']/p/text())"
+            "normalize-space(//section[@id='search-page-heading']//p/text())"
         )
 
         all_categories_return_link = document.xpath("//form[@method='get']//div[@class='lot-filters']/ul/li/a")[0]

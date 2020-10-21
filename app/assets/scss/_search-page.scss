@@ -1,35 +1,6 @@
-@import "search/_search-summary.scss";
-
 #search-page-heading .page-heading {
   margin-bottom: 10px;
 }
-
-.search-summary {
-  padding: 0 0 $gutter-half;
-
-  em {
-    font-style: normal;
-    font-weight: bold;
-  }
-}
-
-.column-one-whole .search-summary {
-  @include core-19;
-
-  .search-summary-count {
-    font-size: 30px;
-
-    margin-right: 2px;
-    padding: 0;
-
-    @include media(mobile) {
-      margin-right: 0;
-      font-size: inherit;
-    }
-  }
-}
-
-@import "search/_search-result.scss";
 
 .search-page-filters {
 
@@ -107,14 +78,6 @@
     }
 
   }
-
-  .govuk-option-select {
-    margin-bottom: $gutter;
-  }
-
-  .option-select-label {
-    display: block;
-  }
 }
 
 .search-page-filters {
@@ -126,4 +89,37 @@
     @include bold-16;
     color: $black;
   }
+}
+
+/**
+ * SEARCH RESULTS
+ */
+ .app-search-result {
+  padding: 0 0 15px;
+  margin: 0 0 15px;
+  border-bottom: 1px solid $govuk-border-colour;
+  @include core-16;
+  // Automatic wrapping for unbreakable text (e.g. URLs)
+  word-wrap: break-word; // Fallback for older browsers only
+  overflow-wrap: break-word;
+
+  &:last-child {
+      border-bottom: none;
+  }
+}
+
+/**
+* Decrease the size of metadata text to match the Finder app.
+*/
+.app-search-result__metadata {
+ @include core-14;
+}
+
+/**
+* On the Supplier A-Z list, we want a border at the top of the
+* first result.
+*/
+.supplier-list .app-search-result:first-child {
+ border-top: 1px solid $govuk-border-colour;
+ padding-top: 15px;
 }
