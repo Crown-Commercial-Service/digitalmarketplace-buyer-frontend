@@ -24,43 +24,28 @@
 
 {% block mainContent %}
 
+{% set question = title|capitalize %}
+{% set errorMessage = errors.get("lot", {}).get("message", None) %}
+
 <div>
-
-  <h1 class="govuk-heading-xl">
-    {{ title|capitalize }}
-  </h1>
-
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       <form action="{{ url_for('direct_award_public.choose_lot', framework_family=framework_family)}}" method="post">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
 
-        {%
-           with
-           error = errors.get("lot", {}).get("message", None),
-           hint = "or",
-           hint_underneath = true,
-           name = "lot",
-           type = "radio",
-           options = lots
-        %}
-          {% include "toolkit/forms/selection-buttons.html" %}
-        {% endwith %}
-
-        <div class="question first-question">
-          {%
-            with
-            name = "lot",
-            id = "input-lot-100",
-            input_type = "radio",
-            input_value = "",
-            option = {
-              "label": "All categories"
+        {{ govukRadios({
+          "idPrefix": "input-lot",
+          "name": "lot",
+          "fieldset": {
+            "legend": {
+              "classes": "govuk-fieldset__legend--xl",
+              "text": question,
+              "isPageHeading": true
             }
-          %}
-            {% include "toolkit/forms/_selection-button.html" %}
-          {% endwith %}
-        </div>
+          },
+          "errorMessage": {"text": errorMessage} if errorMessage,
+          "items": lots
+        })}}
 
         {{ govukButton({
           "text": "Search for services",

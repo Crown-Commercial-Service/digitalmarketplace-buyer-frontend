@@ -14,6 +14,7 @@ from dmutils.flask import timed_render_template as render_template
 from dmutils.forms.errors import get_errors_from_wtform, govuk_errors
 from dmutils.formats import dateformat, DATETIME_FORMAT, datetimeformat
 from dmutils.filters import capitalize_first
+from dmutils.forms.helpers import govuk_options
 from dmutils.ods import A as AnchorElement
 from dmutils.views import SimpleDownloadFileView
 
@@ -104,12 +105,23 @@ def choose_lot(framework_family):
     for lot in framework['lots']:
         lot_item = {
             "value": lot['slug'],
-            "label": lot['name'],
-            "description": gcloud_lot_messages[lot['slug']]['body'],
-            "hint": gcloud_lot_messages[lot['slug']].get('advice'),
+            "text": lot['name'],
+            "hint": {
+                "html":
+                    f"""<span class="dm-options__description">{gcloud_lot_messages[lot['slug']]['body']}</span>"""
+                    f"""<span>{gcloud_lot_messages[lot['slug']].get('advice')}</span>"""
+            }
         }
 
         lots.append(lot_item)
+
+    lots.append({"divider": "or"})
+    lots.append(
+        {
+            "value": "",
+            "text": "All categories",
+        }
+    )
 
     errors = {}
     if request.method == 'POST':
@@ -501,6 +513,9 @@ def save_search(framework_family):
     default_selection = {"save_search_selection": "new_search"} if not projects else {}
     form = CreateProjectForm(projects, data=default_selection)
 
+    save_search_options = govuk_options(form.save_search_selection.options)
+    save_search_options.insert(len(save_search_options) - 1, {"divider": "or"})
+
     if form.validate_on_submit():
         if form.save_search_selection.data == "new_search":
             try:
@@ -549,6 +564,7 @@ def save_search(framework_family):
         return render_template('direct-award/save-search.html',
                                errors=get_errors_from_wtform(form),
                                form=form,
+                               save_search_options=save_search_options,
                                search_summary_sentence=search_summary.markup(),
                                search_query=url_encode(search_query),
                                search_url=url_for('main.search_services', **search_query),
@@ -811,6 +827,7 @@ def which_service_won_contract(framework_family, project_id):
     )
 
     form = WhichServiceWonTheContractForm(services)
+    service_options = govuk_options(form.which_service_won_the_contract.options)
 
     if form.validate_on_submit():
         outcome = data_api_client.create_direct_award_project_outcome_award(
@@ -831,6 +848,7 @@ def which_service_won_contract(framework_family, project_id):
         framework=framework,
         services=services,
         form=form,
+        service_options=service_options
     ), 200 if not errors else 400
 
 
@@ -911,6 +929,7 @@ def why_did_you_not_award_the_contract(framework_family, project_id):
         abort(410)
 
     form = WhyDidYouNotAwardForm()
+    form_options = govuk_options(form.why_did_you_not_award_the_contract.options)
 
     if form.validate_on_submit():
         if form.why_did_you_not_award_the_contract.data == 'work_cancelled':
@@ -931,6 +950,7 @@ def why_did_you_not_award_the_contract(framework_family, project_id):
         project=project,
         framework=framework,
         form=form,
+        form_options=form_options,
         errors=errors,
     ), 200 if not errors else 400
 

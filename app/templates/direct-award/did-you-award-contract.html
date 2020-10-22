@@ -1,7 +1,7 @@
 {% extends "_base_page.html" %}
 
 {% block pageTitle %}
-  Did you award a contract? - Digital Marketplace
+  {% if errors %}Error: {% endif %}Did you award a contract? - Digital Marketplace
 {% endblock %}
 
 {% block breadcrumb %}
@@ -41,7 +41,31 @@
       <form method="POST" action="{{ url_for('direct_award.did_you_award_contract', framework_family=framework.family, project_id=project.id) }}">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
 
-        {{ form.did_you_award_a_contract }}
+        {{ govukRadios({
+          "idPrefix": "input-did_you_award_a_contract",
+          "name": "did_you_award_a_contract",
+          "fieldset": {
+            "legend": {
+              "classes": "govuk-fieldset__legend--m",
+              "text": "Did you award a contract?"
+            }
+          },
+          "errorMessage": errors.did_you_award_a_contract.errorMessage if errors.did_you_award_a_contract.errorMessage,
+          "items": [
+            { 
+              "value": "yes",
+              "text": "Yes"
+            },
+            { 
+              "value": "no",
+              "text": "No"
+            },
+            { 
+              "value": "still-assessing",
+              "text": "We are still assessing services"
+            }
+          ]
+        })}}
 
         {{ govukButton({
           "text": "Save and continue",

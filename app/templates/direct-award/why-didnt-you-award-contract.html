@@ -1,7 +1,7 @@
 {% extends "_base_page.html" %}
 
 {% block pageTitle %}
-  Why didn’t you award a contract? - Digital Marketplace
+  {% if errors %}Error: {% endif %}Why didn’t you award a contract? - Digital Marketplace
 {% endblock %}
 
 {% block breadcrumb %}
@@ -40,7 +40,18 @@
       <form method="POST" action="{{ url_for('direct_award.why_did_you_not_award_the_contract', framework_family=framework.family, project_id=project.id) }}">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
 
-        {{ form.why_did_you_not_award_the_contract }}
+        {{ govukRadios({
+          "idPrefix": "input-why_did_you_not_award_the_contract",
+          "name": "why_did_you_not_award_the_contract",
+          "fieldset": {
+            "legend": {
+              "classes": "govuk-fieldset__legend--m",
+              "text": "Why didn’t you award a contract?"
+            }
+          },
+          "errorMessage": errors.why_did_you_not_award_the_contract.errorMessage if errors.why_did_you_not_award_the_contract.errorMessage,
+          "items": form_options
+        })}}
 
         {{ govukButton({
           "text": "Save and continue",

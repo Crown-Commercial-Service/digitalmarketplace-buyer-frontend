@@ -3,7 +3,7 @@
 {% set page_name = "Save your search" %}
 
 {% block pageTitle %}
-  {{ page_name }} - Digital Marketplace
+  {% if errors %}Error: {% endif %}{{ page_name }} - Digital Marketplace
 {% endblock %}
 
 {% block breadcrumb %}
@@ -43,19 +43,18 @@
           {% endwith %}
         </div>
 
-        {%
-          with
-          type = "radio",
-          name = form.save_search_selection.name,
-          finally = "or",
-          value = form.save_search_selection.data,
-          options = form.save_search_selection.options,
-          error = form.save_search_selection.errors[0]
-        %}
-          {% include "toolkit/forms/selection-buttons.html" %}
-        {% endwith %}
-
-        <br>
+        {{ govukRadios({
+          "idPrefix": "input-" + form.save_search_selection.name,
+          "name": form.save_search_selection.name,
+          "fieldset": {
+            "legend": {
+              "text": "Save your search",
+              "classes": "govuk-visually-hidden"
+            }
+          },
+          "errorMessage": {"text": form.save_search_selection.errors[0]} if form.save_search_selection.errors[0],
+          "items": save_search_options
+        })}}
 
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
         <input type="hidden" name="search_query" value="{{ search_query }}"/>
