@@ -53,7 +53,17 @@
         >
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
 
-        {{ form.user_understands }}
+        {{ govukCheckboxes({
+          "idPrefix": "input-user_understands",
+          "name": "user_understands",
+          "errorMessage": errors.user_understands.errorMessage if errors.user_understands.errorMessage,
+          "items": [
+            {
+              "value": form.user_understands.data,
+              "text": "I understand that I cannot edit my search after I export my results"
+            }
+          ]
+        })}}
 
         {{ govukButton({
           "text": "Export results and continue",
