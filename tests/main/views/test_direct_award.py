@@ -734,7 +734,7 @@ class TestDirectAwardEndSearch(TestDirectAwardBase):
         assert res.status_code == 400
 
         doc = html.fromstring(res.get_data(as_text=True))
-        assert doc.get_element_by_id('error-user_understands') is not None
+        assert doc.get_element_by_id('input-user_understands-error') is not None
 
     def test_end_search_redirects_to_results_page(self):
         self.login_as_buyer()
