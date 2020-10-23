@@ -37,11 +37,10 @@
   <form method="post" action="" id="createProjectForm">
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
-        <div class="search-summary-panel panel panel-border-wide">
-          {% with content = search_summary_sentence %}
-            {% include "toolkit/search-summary.html" %}
-          {% endwith %}
-        </div>
+        {{govukInsetText({
+          "html": search_summary_sentence,
+          "classes": "search-summary"
+        })}}
 
         {%
           with

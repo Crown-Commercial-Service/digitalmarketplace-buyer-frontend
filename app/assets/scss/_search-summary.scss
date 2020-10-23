@@ -32,3 +32,12 @@
   @include bold-48;
   padding-right: 5px;
 }
+
+/* On the Save search page, we display the search summary in a govukInsetText,
+so we need to adjust padding to match */
+.save-search-page {
+  .search-summary {
+      padding: 15px;
+      margin-top: 0;
+  }
+}
