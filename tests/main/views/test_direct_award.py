@@ -810,7 +810,8 @@ class TestDirectAwardAwardContract(TestDirectAwardBase):
         assert res.status_code == 400
 
         doc = html.fromstring(res.get_data(as_text=True))
-        assert len(doc.xpath('//legend[contains(normalize-space(), "Select if you have awarded your contract")]')) == 1
+        error_message = doc.cssselect('.govuk-error-message')[0].text_content().strip()
+        assert error_message == "Error: Select if you have awarded your contract"
         errors = doc.cssselect('div.govuk-error-summary a')
         assert len(errors) == 1
         assert errors[0].text_content() == 'Select if you have awarded your contract'
@@ -898,7 +899,8 @@ class TestDirectAwardAwardContract(TestDirectAwardBase):
         assert len(doc.xpath(
             '//input[@type="radio"][contains(following-sibling::label, "Service name")]')) == 1
         assert len(doc.xpath(
-            '//span[contains(normalize-space(text()), "Supplier name")][contains(parent::label, "Service name")]')) == 1
+            '//span[contains(normalize-space(text()), "Supplier name")]'
+            '[contains(preceding-sibling::label, "Service name")]')) == 1
         assert len(
             doc.xpath('//button[normalize-space(string())=$t]', t="Save and continue")) == 1
 
@@ -1126,12 +1128,12 @@ class TestDirectAwardNonAwardContract(TestDirectAwardBase):
             '//input[@type="radio"][contains(following-sibling::label, "The work has been cancelled")]')) == 1
         assert len(doc.xpath(
             '//span[contains(normalize-space(text()), "For example, because you no longer have the budget")]\
-            [contains(parent::label, "The work has been cancelled")]')) == 1
+            [contains(preceding-sibling::label, "The work has been cancelled")]')) == 1
         assert len(doc.xpath(
             '//input[@type="radio"][contains(following-sibling::label, "The work has been cancelled")]')) == 1
         assert len(doc.xpath(
             '//span[contains(normalize-space(text()), "The services in your search results did not meet your requirements")]\
-            [contains(parent::label, "There were no suitable services")]')) == 1
+            [contains(preceding-sibling::label, "There were no suitable services")]')) == 1
         assert len(
             doc.xpath('//button[normalize-space(string())=$t]', t="Save and continue")) == 1
 
