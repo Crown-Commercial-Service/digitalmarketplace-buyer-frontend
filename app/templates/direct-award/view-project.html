@@ -69,141 +69,262 @@
         to spend money on a service.
       </p>
     {% endif %}
-      {% if project %}<form action="{{url_for('direct_award.update_project', framework_family=framework.family, project_id=project.id)}}" method="post">{% endif %}
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-        {% block before_sections %}{% endblock %}
-        {% with items = [
-          {
-            "body": "Save a search",
-            "custom_body_list": [
-              {"type": "text", "text": "Save your search so you can export your results later. You must <a href=\"https://www.gov.uk/guidance/g-cloud-buyers-guide#fairness\" class=\"govuk-link\" target=\"_blank\" rel=\"external noopener noreferrer\"
-                data-analytics=\"trackEvent\"
-                data-analytics-category=\"Direct Award\"
-                data-analytics-action=\"External Link\"
-                >buy fairly</a> and assess all the services that you find. Do not combine the results of more than one search."|safe}
-            ] + ([
-              {"type": "action", "label": "Start a new search", "href": url_for('direct_award_public.choose_lot', framework_family=framework.family), "analytics": "trackEvent", "analytics_category": "Direct Award", "analytics_action": "Internal Link"},
-              {"type": "text", "text": ''.join(["<a href=\"", url_for('direct_award.saved_search_overview', framework_family=framework.family)|e, "\" class=\"govuk-link\">See a list of your saved searches</a>"])|safe}
-            ] if not search_summary_sentence else [
-              {"type": "text", "class": ["app-search-summary", "app-search-summary--small", "govuk-body-s"], "text": search_summary_sentence},
-              {"type": "text", "text": ''.join(["<a href=\"", buyer_search_page_url|e, "\" class=\"govuk-link\">Edit your search and view results</a>"])|safe} if not search.searchedAt else {},
-              {"type": "box", "style": "complete", "label": "Completed"} if search.searchedAt or can_end_search else {}
-            ])
-          },
-          {
-            "body": "Export your results",
-            "custom_body_list": [
-              {"type": "text", "text": '
-Export a list of the services you’ve found. Download suppliers’ service descriptions and contact details to help you
-assess services. Keep a copy for your records.'},
-              {"type": "text", "text": '<p class="browse-list-item-status-angry"><strong>You have too many services to
-assess. Refine your search until you have no more than 30 results.</strong></p>'} if project and not can_end_search else {},
-              {"type": "box", "style": "inactive", "label": "Can’t start yet"} if project and not (search.searchedAt
-              or can_end_search)
-                else
-              {"type": "action", "label": "Export your results",
-               "href": url_for('direct_award.end_search', framework_family=framework.family, project_id=project.id),
-               "analytics": "trackEvent", "analytics_category": "Direct Award",
-               "analytics_action": "Internal Link"} if project and not search.searchedAt and can_end_search
-                else
-              {"type": "text", "text": ''.join(['
-<a href="', url_for('direct_award.search_results', framework_family=framework.family, project_id=project.id)|e, '"
-   class="govuk-link"
-   data-analytics="trackEvent"
-   data-analytics-category="Direct Award"
-   data-analytics-action="Internal Link"
->Download your results</a>'])|safe} if project and search.searchedAt else {},
-              {"type": "box", "style": "complete", "label": "Completed"} if project and search.searchedAt else {}
-            ]
-          },
-          {
-            "body": "Start assessing services",
-            "custom_body_list": [
-              {"type": "text", "text": '
-Follow the <a href="https://www.gov.uk/guidance/g-cloud-buyers-guide#review-and-compare-services"
-              class="govuk-link"
-              target="_blank" rel="external noopener noreferrer"
-              data-analytics="trackEvent"
-              data-analytics-category="Direct Award"
-              data-analytics-action="External Link">guidance for assessing services</a>. Choose the one that best meets
-            your budget and requirements.'},
-            {"type": "text", "text": 'Do not hold a competition to decide the winner. You can
-<a href="https://www.gov.uk/guidance/g-cloud-buyers-guide#what-to-do-if-you-have-a-question-for-the-suppliers"
-   data-analytics="trackEvent"
-   class="govuk-link"
-   data-analytics-category="Direct Award"
-   data-analytics-action="External Link">contact suppliers to ask clarification questions</a>, but you must not
-negotiate with them.'|safe},
-              {"type": "box", "style": "inactive", "label": "Can’t start yet"} if project and not search.searchedAt
-                else
-              {"type": "text", "text": govukButton({
-                  "text": "Confirm you have read and understood how to assess services",
-                  "name": "readyToAssess",
-                  "classes": "instruction-list-item-action",
-                  "value": "true",
-                  "attributes": {
-                    "id": "ready-to-assess-button",
-                    "data-analytics": "trackEvent",
-                    "data-analytics-category": "Direct Award",
-                    "data-analytics-action": "Internal Link",
-                  },
-                }),
-              } if project and not project.readyToAssessAt and not project.outcome else {},
-              {"type": "box", "style": "complete", "label": "Completed"} if project and project.readyToAssessAt else {}
-            ]
-          },
-          {
-            "body": "Award a contract",
-            "custom_body_list": [
-              {"type": "text", "text":
-                "Follow the guidance for <a href=\"https://www.gov.uk/guidance/g-cloud-buyers-guide#contract\"
-                                            class=\"govuk-link\"
-                                            target=\"_blank\"
-                                            rel=\"external noopener noreferrer\"
-                                            data-analytics=\"trackEvent\"
-                                            data-analytics-category=\"Direct Award\"
-                                            data-analytics-action=\"External Link\"
-                                           >awarding a contract</a>.
-                 Check if you need to <a href=\"https://www.gov.uk/guidance/g-cloud-buyers-guide#contracts-finder\"
-                                         class=\"govuk-link\"
-                                         target=\"_blank\"
-                                         rel=\"external noopener noreferrer\"
-                                         data-analytics=\"trackEvent\"
-                                         data-analytics-category=\"Direct Award\"
-                                         data-analytics-action=\"External Link\"
-                                        >publish the details on Contracts Finder</a>.
-                 Whether or not you award a contract, tell us the outcome. This information helps us improve the Digital Marketplace."|safe},
-            ] + ([
-              {"type": "box", "style": "complete", "label": project_outcome_label } if project.outcome
-              else {"type": "box", "style": "inactive", "label": "Can’t start yet"} if not project.readyToAssessAt
-              else {"type": "action", "label": "Tell us the outcome", "href": url_for('direct_award.did_you_award_contract', framework_family=framework.family, project_id=project.id), "analytics": "trackEvent", "analytics_category": "Direct Award", "analytics_action": "Internal Link"}
-            ] if project else [])
-          },
-          {
-            "body": "Submit a Customer Benefits Record",
-            "custom_body_list": [
-              {"type": "text", "text":
-                ''.join(["You must <a href=\"", framework_urls.customer_benefits_record_form_url|e, "\"
-                                                 class=\"govuk-link\"
-                                                 target=\"_blank\" rel=\"external noopener noreferrer\"
-                                                 data-analytics=\"trackEvent\"
-                                                 data-analytics-category=\"Direct Award\"
-                                                 data-analytics-action=\"External Link\"
-                                                >submit a Customer Benefits Record</a>.",
-                 " The Crown Commercial Service will contact you if they find any issues with the supplier."]
-                )
-              }
-            ] + ([
-              {"type": "box", "style": "inactive", "label": "Can’t start yet"} if not project.outcome else {}
-            ] if project else [])
-          }
 
-        ],
-         verbose = True
-        %}
-          {% include "toolkit/instruction-list.html" %}
-        {% endwith %}
-      {% if project %}</form>{% endif %}
+    {% if project %}
+    <form action="{{url_for('direct_award.update_project', framework_family=framework.family, project_id=project.id)}}" method="post">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    {% endif %}
+
+    <ol class="dm-task-list">
+      <li>
+        <h2 class="govuk-heading-l dm-task-list__section">
+          <span class="dm-task-list__section-number">1. </span>
+          Save a search
+        </h2>
+
+        <p class="govuk-body">
+        Save your search so you can export your results later. You must
+        <a class="govuk-link"
+           href="https://www.gov.uk/guidance/g-cloud-buyers-guide#fairness"
+           target="_blank"
+           rel="external noopener noreferrer"
+           data-analytics="trackEvent"
+           data-analytics-category="Direct Award"
+           data-analytics-action="External Link"
+         >buy fairly</a>
+        and assess all the services that you find. Do not combine the results of
+        more than one search.
+        </p>
+
+        {% if not search_summary_sentence %}
+          {{ govukButton({
+            "href": url_for("direct_award_public.choose_lot", framework_family=framework.family),
+            "text": "Start a new search",
+
+            "attributes": {
+              "data-analytics": "trackEvent",
+              "data-analytics-category": "Direct Award",
+              "data-analytics-action": "Internal Link",
+            }
+          }) }}
+
+          <p class="govuk-body">
+            <a class="govuk-link" href="{{ url_for('direct_award.saved_search_overview', framework_family=framework.family) }}">
+              See a list of your saved searches
+            </a>
+          </p>
+        {% else %}
+          <p class="app-search-summary app-search-summary--small govuk-body-s">{{ search_summary_sentence }}</p>
+
+          {% if not search.searchedAt %}
+            <p class="govuk-body">
+              <a class="govuk-link" href="{{ buyer_search_page_url }}">
+                Edit your search and view results
+              </a>
+            </p>
+          {% endif %}
+          {% if search.searchedAt or can_end_search %}
+            <p class="instruction-list-item-box complete">Completed</p>
+          {% endif %}
+        {% endif %}
+      </li>
+
+      <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+
+      <li>
+        <h2 class="govuk-heading-l dm-task-list__section">
+          <span class="dm-task-list__section-number">2. </span>
+          Export your results
+        </h2>
+
+        <p class="govuk-body">
+          Export a list of the services you’ve found. Download suppliers’ service
+          descriptions and contact details to help you assess services. Keep a copy
+          for your records.
+        </p>
+
+        {% if project %}
+          {% if not can_end_search %}
+            <p class="browse-list-item-status-angry">
+              <strong>
+                You have too many services to assess. Refine your search until
+                you have no more than 30 results.
+              </strong>
+            </p>
+          {% endif %}
+          {% if not (search.searchedAt or can_end_search) %}
+            <p class="instruction-list-item-box inactive">Can’t start yet</p>
+          {% elif not search.searchedAt and can_end_search %}
+            {{ govukButton({
+              "href": url_for("direct_award.end_search", framework_family=framework.family, project_id=project.id),
+              "text": "Export your results",
+
+              "classes": "govuk-!-margin-bottom-1",
+
+              "attributes": {
+                "data-analytics": "trackEvent",
+                "data-analytics-category": "Direct Award",
+                "data-analytics-action": "Internal Link",
+              }
+            }) }}
+          {% elif project and search.searchedAt %}
+            <p class="govuk-body">
+              <a class="govuk-link"
+                 href="{{ url_for('direct_award.search_results', framework_family=framework.family, project_id=project.id) }}"
+                 data-analytics="trackEvent"
+                 data-analytics-category="Direct Award"
+                 data-analytics-action="Internal Link"
+              >Download your results</a>
+            </p>
+
+            <p class="instruction-list-item-box complete">Completed</p>
+          {% endif %}
+        {% endif %}
+      </li>
+
+      <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+
+      <li>
+        <h2 class="govuk-heading-l dm-task-list__section">
+          <span class="dm-task-list__section-number">3. </span>
+          Start assessing services
+        </h2>
+
+        <p class="govuk-body">
+          Follow the
+          <a class="govuk-link"
+             href="https://www.gov.uk/guidance/g-cloud-buyers-guide#review-and-compare-services"
+             target="_blank" rel="external noopener noreferrer"
+             data-analytics="trackEvent"
+             data-analytics-category="Direct Award"
+             data-analytics-action="External Link"
+          >guidance for assessing services</a>.
+
+          Choose the one that best meets your budget and requirements.
+        </p>
+
+        <p class="govuk-body">
+          Do not hold a competition to decide the winner. You can
+          <a class="govuk-link"
+             href="https://www.gov.uk/guidance/g-cloud-buyers-guide#what-to-do-if-you-have-a-question-for-the-suppliers"
+             target="_blank" rel="external noopener noreferrer"
+             data-analytics="trackEvent"
+             data-analytics-category="Direct Award"
+             data-analytics-action="External Link"
+          >contact suppliers to ask clarification questions</a>,
+          but you must not negotiate with them.
+        </p>
+
+        {% if project %}
+          {% if not search.searchedAt %}
+            <p class="instruction-list-item-box inactive">Can’t start yet</p>
+          {% elif not project.readyToAssessAt and not project.outcome %}
+            {{ govukButton({
+              "name": "readyToAssess",
+              "text": "Confirm you have read and understood how to assess services",
+              "value": "true",
+
+              "classes": "govuk-!-margin-bottom-1",
+
+              "attributes": {
+                "id": "ready-to-assess-button",
+                "data-analytics": "trackEvent",
+                "data-analytics-category": "Direct Award",
+                "data-analytics-action": "Internal Link",
+              }
+            }) }}
+          {% elif project.readyToAssessAt %}
+            <p class="instruction-list-item-box complete">Completed</p>
+          {% endif %}
+        {% endif %}
+      </li>
+
+      <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+
+      <li>
+        <h2 class="govuk-heading-l dm-task-list__section">
+          <span class="dm-task-list__section-number">4. </span>
+          Award a contract
+        </h2>
+
+        <p class="govuk-body">
+          Follow the guidance for
+          <a class="govuk-link"
+             href="https://www.gov.uk/guidance/g-cloud-buyers-guide#contract"
+             target="_blank" rel="external noopener noreferrer"
+             data-analytics="trackEvent"
+             data-analytics-category="Direct Award"
+             data-analytics-action="External Link"
+          >awarding a contract</a>.
+
+          Check if you need to
+          <a class="govuk-link"
+             href="https://www.gov.uk/guidance/g-cloud-buyers-guide#contracts-finder"
+             target="_blank" rel="external noopener noreferrer"
+             data-analytics="trackEvent"
+             data-analytics-category="Direct Award"
+             data-analytics-action="External Link"
+          >publish the details on Contracts Finder</a>.
+
+          Whether or not you award a contract, tell us the outcome. This
+          information helps us improve the Digital Marketplace.
+        </p>
+
+        {% if project %}
+          {% if project.outcome %}
+            <p class="instruction-list-item-box complete">{{ project_outcome_label }}</p>
+          {% elif not project.readyToAssessAt %}
+            <p class="instruction-list-item-box inactive">Can’t start yet</p>
+          {% else %}
+            {{ govukButton({
+              "href": url_for("direct_award.did_you_award_contract", framework_family=framework.family, project_id=project.id),
+              "text": "Tell us the outcome",
+
+              "classes": "govuk-!-margin-bottom-1",
+
+              "attributes": {
+                "data-analytics": "trackEvent",
+                "data-analytics-category": "Direct Award",
+                "data-analytics-action": "Internal Link",
+              }
+            }) }}
+          {% endif %}
+        {% endif %}
+      </li>
+
+      <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+
+      <li>
+        <h2 class="govuk-heading-l dm-task-list__section">
+          <span class="dm-task-list__section-number">5. </span>
+          Submit a Customer Benefits Record
+        </h2>
+
+        <p class="govuk-body">
+          You must
+          <a class="govuk-link"
+             href="{{ framework_urls.customer_benefits_record_form_url|e }}"
+             target="_blank" rel="external noopener noreferrer"
+             data-analytics="trackEvent"
+             data-analytics-category="Direct Award"
+             data-analytics-action="External Link"
+           >submit a Customer Benefits Record</a>.
+
+           The Crown Commercial Service will contact you if they find any issues
+           with the supplier.
+        </p>
+
+        {% if project %}
+          {% if not project.outcome %}
+            <p class="instruction-list-item-box inactive">Can’t start yet</p>
+          {% endif %}
+        {% endif %}
+      </li>
+
+    {% if project %}
+    </form>
+    {% endif %}
+
     </div>
   </div>
 {% endblock %}
