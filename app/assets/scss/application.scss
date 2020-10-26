@@ -65,7 +65,6 @@ $govuk-global-styles: true;
 @import "_error-pages.scss";
 @import "_gcloud_browse_list.scss";
 @import "_index-page.scss";
-@import "_legal.scss";
 @import "_notice.scss";
 @import "_save-search-page.scss";
 @import "_search-page.scss";
@@ -73,7 +72,6 @@ $govuk-global-styles: true;
 @import "_search_overview.scss";
 @import "_service-page.scss";
 @import "_table.scss";
-@import "_help-page.scss";
 
 // Overrides
 @import "overrides/_text-input.scss";
