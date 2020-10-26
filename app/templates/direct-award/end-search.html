@@ -1,7 +1,7 @@
 {% extends "_base_page.html" %}
 
 {% block pageTitle %}
-  Export your results - Digital Marketplace
+  {% if errors %}Error: {% endif %}Export your results - Digital Marketplace
 {% endblock %}
 
 {% block breadcrumb %}
@@ -45,15 +45,29 @@
         suppliers’ service descriptions and contact details.
       </p>
 
-      <p class="govuk-body">Do not export your results if you still need to edit your search.</p>
-
       <form
         action="{{ url_for('direct_award.end_search', framework_family=framework.family, project_id=project.id) }}"
         method="POST"
         >
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
 
-        {{ form.user_understands }}
+        {{ govukCheckboxes({
+          "idPrefix": "input-user_understands",
+          "name": "user_understands",
+          "errorMessage": errors.user_understands.errorMessage if errors.user_understands.errorMessage,
+          "fieldset": {
+            "legend": {
+              "text": "Do not export your results if you still need to edit your search.",
+              "classes": "govuk-fieldset__legend--s"
+            }
+          },
+          "items": [
+            {
+              "value": form.user_understands.data,
+              "text": "I understand that I cannot edit my search after I export my results"
+            }
+          ]
+        })}}
 
         {{ govukButton({
           "text": "Export results and continue",
