@@ -1,0 +1,66 @@
+{% extends "_base_page.html" %}
+
+{% set page_name = "Save a new search" %}
+
+{% block pageTitle %}
+  {% if errors %}Error: {% endif %}{{ page_name }} - Digital Marketplace
+{% endblock %}
+
+{% block breadcrumb %}
+{{ govukBreadcrumbs({
+  "items": [
+    {
+      "href": url_for('main.index'),
+      "text": "Digital Marketplace"
+    },
+    {
+      "href": search_url,
+      "text": "Search"
+    },
+    {
+      "href": save_search_url,
+      "text": "Save your search"
+    },
+    {
+      "text": page_name
+    },
+  ]
+}) }}
+{% endblock breadcrumb %}
+
+{% block mainContent %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <form action="{{ action_url }}" method="post" id="createNewProjectForm" novalidate>
+      <h1 class="govuk-heading-l">{{ page_name }}</h1>
+      <div class="search-summary-panel panel panel-border-wide">
+        {% with content = search_summary_sentence %}
+          {% include "toolkit/search-summary.html" %}
+        {% endwith %}
+      </div>
+
+      {{ govukInput({
+        "label": {
+          "text": "Name your search. A reference number or short description of what you want to buy makes a good name."
+        },
+        "id": "input-project_name",
+        "name": "project_name",
+        "hint": {
+          "text": "100 characters maximum"
+        },
+        "errorMessage": errors['project_name']['errorMessage'] if errors['project_name'],
+        "value": form.project_name.data
+      }) }}
+
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+      <input type="hidden" name="search_query" value="{{ search_query }}"/>
+      {{ govukButton({
+        "text": "Save and continue",
+        "name": "return_to_overview",
+        "value": "Save and continue",
+      }) }}
+    </form>
+  </div>
+</div>
+{% endblock %}

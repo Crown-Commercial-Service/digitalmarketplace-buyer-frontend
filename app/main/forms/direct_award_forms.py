@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 
-from wtforms.validators import DataRequired, Length, NumberRange, InputRequired, ValidationError
+from wtforms.validators import DataRequired, Length, NumberRange, InputRequired
 
 from dmutils.forms.fields import (
     DMBooleanField,
@@ -41,17 +41,14 @@ class CreateProjectForm(FlaskForm):
             }
         })
 
-        # href for name field is assigned by digitalmarketplace-frontend-toolkit
-        # based on how many options there are above
-        self.name.href = f"input-save_search_selection-{len(self.save_search_selection.options)}-name"
 
-    def validate_name(form, field):
-        if form.save_search_selection.data == "new_search":
-            try:
-                Length(min=1, max=100, message="Search name must be between 1 and 100 characters")(form, field)
-            except ValidationError as e:
-                form.save_search_selection.options[-1]["reveal"]["error"] = e.args[0]
-                raise
+class CreateNewProjectForm(FlaskForm):
+    project_name = DMStripWhitespaceStringField(
+        "Name your search. A reference number or short description of what you want to buy makes a good name.",
+        validators=[
+            Length(min=1, max=100, message="Enter a name for your search between 1 and 100 characters")
+        ],
+    )
 
 
 class DidYouAwardAContractForm(FlaskForm):
