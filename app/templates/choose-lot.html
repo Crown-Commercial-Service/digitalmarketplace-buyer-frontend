@@ -30,7 +30,7 @@
 <div>
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <form action="{{ url_for('direct_award_public.choose_lot', framework_family=framework_family)}}" method="post">
+      <form action="{{ url_for('direct_award_public.choose_lot', framework_family=framework_family)}}" method="post" novalidate>
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
 
         {{ govukRadios({

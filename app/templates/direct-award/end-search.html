@@ -48,6 +48,7 @@
       <form
         action="{{ url_for('direct_award.end_search', framework_family=framework.family, project_id=project.id) }}"
         method="POST"
+        novalidate
         >
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
 

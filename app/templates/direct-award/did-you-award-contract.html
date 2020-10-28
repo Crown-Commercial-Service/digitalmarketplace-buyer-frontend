@@ -38,7 +38,7 @@
     <div class="govuk-grid-column-two-thirds">
       <h1 class="govuk-heading-xl">Did you award a contract for ‘{{ project.name }}’?</h1>
 
-      <form method="POST" action="{{ url_for('direct_award.did_you_award_contract', framework_family=framework.family, project_id=project.id) }}">
+      <form method="POST" action="{{ url_for('direct_award.did_you_award_contract', framework_family=framework.family, project_id=project.id) }}" novalidate>
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
 
         {{ govukRadios({
