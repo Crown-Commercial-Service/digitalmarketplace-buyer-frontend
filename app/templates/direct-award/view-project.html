@@ -85,7 +85,7 @@
               {"type": "action", "label": "Start a new search", "href": url_for('direct_award_public.choose_lot', framework_family=framework.family), "analytics": "trackEvent", "analytics_category": "Direct Award", "analytics_action": "Internal Link"},
               {"type": "text", "text": ''.join(["<a href=\"", url_for('direct_award.saved_search_overview', framework_family=framework.family)|e, "\" class=\"govuk-link\">See a list of your saved searches</a>"])|safe}
             ] if not search_summary_sentence else [
-              {"type": "text", "class": ["search-summary", "application-notice", "info-notice"], "text": search_summary_sentence},
+              {"type": "text", "class": ["app-search-summary", "app-search-summary--small", "govuk-body-s"], "text": search_summary_sentence},
               {"type": "text", "text": ''.join(["<a href=\"", buyer_search_page_url|e, "\" class=\"govuk-link\">Edit your search and view results</a>"])|safe} if not search.searchedAt else {},
               {"type": "box", "style": "complete", "label": "Completed"} if search.searchedAt or can_end_search else {}
             ])

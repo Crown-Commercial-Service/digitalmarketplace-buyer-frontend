@@ -9,12 +9,12 @@ from lxml.html import document_fromstring
 class SearchSummary(object):
     """Provides a paragraph summarising the search performed and results"""
 
-    COUNT_PRE_TAG = '<span class="app-search-summary-count">'
+    COUNT_PRE_TAG = '<span class="app-search-summary__count">'
     COUNT_POST_TAG = '</span>'
-    KEYWORDS_PRE_TAG = '<em>'
-    KEYWORDS_POST_TAG = '</em>'
-    LOT_PRE_TAG = '<em>'
-    LOT_POST_TAG = '</em>'
+    KEYWORDS_PRE_TAG = '<strong>'
+    KEYWORDS_POST_TAG = '</strong>'
+    LOT_PRE_TAG = '<strong>'
+    LOT_POST_TAG = '</strong>'
 
     @staticmethod
     def write_parts_as_sentence(parts):
@@ -189,8 +189,8 @@ class SummaryRules(object):
 class SummaryFragment(object):
     """Provides access to a search summary fragment"""
 
-    PRE_TAG = u'<em>'
-    POST_TAG = u'</em>'
+    PRE_TAG = u'<strong>'
+    POST_TAG = u'</strong>'
     FINAL_CONJUNCTION = u'and'
 
     def __init__(self, group_id, filters, rules):
