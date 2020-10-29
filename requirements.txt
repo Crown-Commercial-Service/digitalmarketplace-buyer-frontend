@@ -16,7 +16,7 @@ contextlib2==0.6.0.post1  # via digitalmarketplace-utils
 cryptography==2.3.1       # via digitalmarketplace-utils
 defusedxml==0.6.0         # via odfpy
 git+https://github.com/alphagov/digitalmarketplace-apiclient.git@21.4.1#egg=digitalmarketplace-apiclient==21.4.1  # via -r requirements.in
-git+https://github.com/alphagov/digitalmarketplace-utils.git@54.0.1#egg=digitalmarketplace-utils==54.0.1  # via -r requirements.in, digitalmarketplace-content-loader
+git+https://github.com/alphagov/digitalmarketplace-utils.git@54.0.2#egg=digitalmarketplace-utils==54.0.2  # via -r requirements.in, digitalmarketplace-content-loader
 git+https://github.com/alphagov/digitalmarketplace-content-loader.git@7.26.0#egg=digitalmarketplace-content-loader==7.26.0  # via -r requirements.in
 docopt==0.6.2             # via notifications-python-client
 docutils==0.15.2          # via botocore
@@ -28,7 +28,7 @@ fleep==1.0.1              # via digitalmarketplace-utils
 future==0.18.2            # via notifications-python-client
 gds-metrics==0.2.0        # via digitalmarketplace-utils
 govuk-country-register==0.5.0  # via digitalmarketplace-utils
-git+https://github.com/alphagov/govuk-frontend-jinja.git@v0.5.5-alpha#egg=govuk-frontend-jinja==0.5.5-alpha  # via -r requirements.in
+git+https://github.com/alphagov/govuk-frontend-jinja.git@v0.5.6-alpha#egg=govuk-frontend-jinja==0.5.6-alpha  # via -r requirements.in
 idna==2.9                 # via cryptography, requests
 inflection==0.3.1         # via digitalmarketplace-content-loader
 itsdangerous==1.1.0       # via -r requirements.in, flask, flask-wtf

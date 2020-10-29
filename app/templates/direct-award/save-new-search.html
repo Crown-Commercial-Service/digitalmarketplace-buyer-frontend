@@ -1,6 +1,6 @@
 {% extends "_base_page.html" %}
 
-{% set page_name = "Save your search" %}
+{% set page_name = "Save a new search" %}
 
 {% block breadcrumb %}
 {{ govukBreadcrumbs({
@@ -14,6 +14,10 @@
       "text": "Search"
     },
     {
+      "href": save_search_url,
+      "text": "Save your search"
+    },
+    {
       "text": page_name
     },
   ]
@@ -24,28 +28,26 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-l">
-      {{ page_name }}
-    </h1>
-    <form method="post" action="" id="createProjectForm" novalidate>
+    <form action="{{ action_url }}" method="post" id="createNewProjectForm" novalidate>
+      <h1 class="govuk-heading-l">{{ page_name }}</h1>
       <div class="search-summary-panel panel panel-border-wide">
         {% with content = search_summary_sentence %}
           {% include "toolkit/search-summary.html" %}
         {% endwith %}
       </div>
 
-      {{ govukRadios({
-        "idPrefix": "input-" + form.save_search_selection.name,
-        "name": form.save_search_selection.name,
-        "fieldset": {
-          "legend": {
-            "text": "Save your search",
-            "classes": "govuk-visually-hidden"
-          }
+      {{ govukInput({
+        "label": {
+          "text": "Name your search. A reference number or short description of what you want to buy makes a good name."
         },
-        "errorMessage": {"text": form.save_search_selection.errors[0]} if form.save_search_selection.errors[0],
-        "items": save_search_options
-      })}}
+        "id": "input-project_name",
+        "name": "project_name",
+        "hint": {
+          "text": "100 characters maximum"
+        },
+        "errorMessage": errors['project_name']['errorMessage'] if errors['project_name'],
+        "value": form.project_name.data
+      }) }}
 
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
       <input type="hidden" name="search_query" value="{{ search_query }}"/>

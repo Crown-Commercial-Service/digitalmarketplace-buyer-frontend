@@ -8,6 +8,7 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/date-input/macro.njk" import govukDateInput %}
 {% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/phase-banner/macro.njk" import govukPhaseBanner %}
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
@@ -21,6 +22,10 @@
 {% from "digitalmarketplace/components/previous-next-pagination/macro.njk" import dmPreviousNextPagination %}
 
 {% set assetPath = '/static' %}
+
+{% block pageTitle %}
+  {% if errors %}Error: {% endif %}{{ page_name }} - Digital Marketplace
+{% endblock %}
 
 {% block head %}
   {% include "digitalmarketplace/templates/layouts/_custom_dimensions.html" %}

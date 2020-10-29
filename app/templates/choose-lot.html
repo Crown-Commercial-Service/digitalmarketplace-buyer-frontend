@@ -1,8 +1,6 @@
 {% extends "_base_page.html" %}
 
-{% block pageTitle %}
-  G-Cloud - Digital Marketplace
-{% endblock %}
+{% set page_name = title|capitalize %}
 
 {% block breadcrumb %}
 {{ govukBreadcrumbs({
@@ -24,50 +22,33 @@
 
 {% block mainContent %}
 
-<div>
+{% set question = title|capitalize %}
+{% set errorMessage = errors.get("lot", {}).get("message", None) %}
 
-  <h1 class="govuk-heading-xl">
-    {{ title|capitalize }}
-  </h1>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <form action="{{ url_for('direct_award_public.choose_lot', framework_family=framework_family)}}" method="post" novalidate>
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
 
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-      <form action="{{ url_for('direct_award_public.choose_lot', framework_family=framework_family)}}" method="post">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+      {{ govukRadios({
+        "idPrefix": "input-lot",
+        "name": "lot",
+        "fieldset": {
+          "legend": {
+            "classes": "govuk-fieldset__legend--xl",
+            "text": question,
+            "isPageHeading": true
+          }
+        },
+        "errorMessage": {"text": errorMessage} if errorMessage,
+        "items": lots
+      })}}
 
-        {%
-           with
-           error = errors.get("lot", {}).get("message", None),
-           hint = "or",
-           hint_underneath = true,
-           name = "lot",
-           type = "radio",
-           options = lots
-        %}
-          {% include "toolkit/forms/selection-buttons.html" %}
-        {% endwith %}
+      {{ govukButton({
+        "text": "Search for services",
+      }) }}
 
-        <div class="question first-question">
-          {%
-            with
-            name = "lot",
-            id = "input-lot-100",
-            input_type = "radio",
-            input_value = "",
-            option = {
-              "label": "All categories"
-            }
-          %}
-            {% include "toolkit/forms/_selection-button.html" %}
-          {% endwith %}
-        </div>
-
-        {{ govukButton({
-          "text": "Search for services",
-        }) }}
-
-      </form>
-    </div>
+    </form>
   </div>
 </div>
 {% endblock %}

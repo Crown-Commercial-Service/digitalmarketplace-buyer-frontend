@@ -14,6 +14,7 @@ from dmutils.flask import timed_render_template as render_template
 from dmutils.forms.errors import get_errors_from_wtform, govuk_errors
 from dmutils.formats import dateformat, DATETIME_FORMAT, datetimeformat
 from dmutils.filters import capitalize_first
+from dmutils.forms.helpers import govuk_options
 from dmutils.ods import A as AnchorElement
 from dmutils.views import SimpleDownloadFileView
 
@@ -21,6 +22,7 @@ from app import search_api_client, data_api_client, content_loader
 from ..exceptions import AuthException
 from ..forms.direct_award_forms import (
     CreateProjectForm,
+    CreateNewProjectForm,
     BeforeYouDownloadForm,
     DidYouAwardAContractForm,
     TellUsAboutContractForm,
@@ -104,12 +106,23 @@ def choose_lot(framework_family):
     for lot in framework['lots']:
         lot_item = {
             "value": lot['slug'],
-            "label": lot['name'],
-            "description": gcloud_lot_messages[lot['slug']]['body'],
-            "hint": gcloud_lot_messages[lot['slug']].get('advice'),
+            "text": lot['name'],
+            "hint": {
+                "html":
+                    f"""<span class="dm-options__description">{gcloud_lot_messages[lot['slug']]['body']}</span>"""
+                    f"""<span>{gcloud_lot_messages[lot['slug']].get('advice')}</span>"""
+            }
         }
 
         lots.append(lot_item)
+
+    lots.append({"divider": "or"})
+    lots.append(
+        {
+            "value": "",
+            "text": "All categories",
+        }
+    )
 
     errors = {}
     if request.method == 'POST':
@@ -500,17 +513,28 @@ def save_search(framework_family):
 
     default_selection = {"save_search_selection": "new_search"} if not projects else {}
     form = CreateProjectForm(projects, data=default_selection)
+    save_search_options = []
+    for project in projects:
+        save_search_options.append({
+            "text": project["name"] or f"Untitled project {project['id']}",
+            "value": str(project["id"])
+        })
+    if len(save_search_options) > 0:
+        save_search_options.append({"divider": "or"})
+    save_search_options.append({
+        "text": "Save a new search",
+        "value": "new_search"
+    })
 
     if form.validate_on_submit():
         if form.save_search_selection.data == "new_search":
-            try:
-                api_project = data_api_client.create_direct_award_project(user_id=current_user.id,
-                                                                          user_email=current_user.email_address,
-                                                                          project_name=form.name.data)
-            except HTTPError as e:
-                abort(e.status_code)
-
-            project = api_project['project']
+            return redirect(
+                url_for(
+                    '.save_new_search',
+                    framework_family=framework_family,
+                    search_query=request.values['search_query']
+                )
+            )
         else:
             project = data_api_client.get_direct_award_project(project_id=form.save_search_selection.data)['project']
             if not project or not is_direct_award_project_accessible(project, current_user.id):
@@ -549,8 +573,85 @@ def save_search(framework_family):
         return render_template('direct-award/save-search.html',
                                errors=get_errors_from_wtform(form),
                                form=form,
+                               save_search_options=save_search_options,
                                search_summary_sentence=search_summary.markup(),
                                search_query=url_encode(search_query),
+                               search_url=url_for('main.search_services', **search_query),
+                               framework_family=framework_family), 400 if request.method == 'POST' else 200
+
+
+@direct_award.route('/<string:framework_family>/save-new-search', methods=['GET', 'POST'])
+def save_new_search(framework_family):
+    if "search_query" not in request.values:
+        abort(400)
+
+    # Get core data
+    all_frameworks = data_api_client.find_frameworks().get('frameworks')
+    framework = framework_helpers.get_latest_live_framework_or_404(all_frameworks, framework_family)
+    lots_by_slug = framework_helpers.get_lots_by_slug(framework)
+
+    search_query = url_decode(request.values['search_query'])
+
+    current_lot_slug = get_valid_lot_from_args_or_none(search_query, lots_by_slug)
+
+    content_manifest = content_loader.get_manifest(framework['slug'], 'services_search_filters')
+    filters = filters_for_lot(current_lot_slug, content_manifest, all_lots=framework['lots'])
+    clean_request_query_params = clean_request_args(search_query, filters.values(), lots_by_slug)
+
+    form = CreateNewProjectForm()
+
+    if form.validate_on_submit():
+        try:
+            api_project = data_api_client.create_direct_award_project(user_id=current_user.id,
+                                                                      user_email=current_user.email_address,
+                                                                      project_name=form.project_name.data)
+        except HTTPError as e:
+            abort(e.status_code)
+
+        project = api_project['project']
+
+        search_api_url = search_api_client.get_search_url(
+            index=framework['slug'],
+            **build_search_query(search_query, filters.values(), content_manifest, lots_by_slug)
+        )
+        try:
+            data_api_client.create_direct_award_project_search(user_id=current_user.id,
+                                                               user_email=current_user.email_address,
+                                                               project_id=project['id'],
+                                                               search_url=search_api_url)
+
+        except HTTPError as e:
+            abort(e.status_code)
+
+        flash(PROJECT_SAVED_MESSAGE, 'success')
+
+        return redirect(url_for('.view_project',
+                                framework_family=framework_family,
+                                project_id=project['id']
+                                ), code=303)
+    else:
+        # Retrieve results so we can display SearchSummary
+        search_api_response = search_api_client.search(
+            index=framework['slug'],
+            doc_type='services',
+            **build_search_query(search_query, filters.values(), content_manifest, lots_by_slug)
+        )
+        search_summary = SearchSummary(search_api_response['meta']['total'], clean_request_query_params.copy(),
+                                       filters.values(), lots_by_slug)
+
+        return render_template('direct-award/save-new-search.html',
+                               errors=get_errors_from_wtform(form),
+                               form=form,
+                               search_summary_sentence=search_summary.markup(),
+                               action_url=url_for(
+                                   '.save_new_search',
+                                   framework_family=framework_family,
+                                   search_query=url_encode(search_query)
+                               ),
+                               save_search_url=url_for(
+                                   '.save_search',
+                                   framework_family=framework_family,
+                                   search_query=request.values['search_query']),
                                search_url=url_for('main.search_services', **search_query),
                                framework_family=framework_family), 400 if request.method == 'POST' else 200
 
@@ -811,6 +912,7 @@ def which_service_won_contract(framework_family, project_id):
     )
 
     form = WhichServiceWonTheContractForm(services)
+    service_options = govuk_options(form.which_service_won_the_contract.options)
 
     if form.validate_on_submit():
         outcome = data_api_client.create_direct_award_project_outcome_award(
@@ -831,6 +933,7 @@ def which_service_won_contract(framework_family, project_id):
         framework=framework,
         services=services,
         form=form,
+        service_options=service_options
     ), 200 if not errors else 400
 
 
@@ -911,6 +1014,7 @@ def why_did_you_not_award_the_contract(framework_family, project_id):
         abort(410)
 
     form = WhyDidYouNotAwardForm()
+    form_options = govuk_options(form.why_did_you_not_award_the_contract.options)
 
     if form.validate_on_submit():
         if form.why_did_you_not_award_the_contract.data == 'work_cancelled':
@@ -931,6 +1035,7 @@ def why_did_you_not_award_the_contract(framework_family, project_id):
         project=project,
         framework=framework,
         form=form,
+        form_options=form_options,
         errors=errors,
     ), 200 if not errors else 400
 

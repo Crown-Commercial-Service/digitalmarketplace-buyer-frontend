@@ -50,11 +50,14 @@ class TestDirectAward(TestDirectAwardBase):
 
         cls.SAVE_SEARCH_OVERVIEW_URL = '/buyers/direct-award/g-cloud'
         cls.SAVE_SEARCH_URL = '/buyers/direct-award/g-cloud/save-search'
+        cls.SAVE_NEW_SEARCH_URL = '/buyers/direct-award/g-cloud/save-new-search'
         cls.SIMPLE_SEARCH_PARAMS = 'lot=cloud-software'
         cls.SEARCH_URL = '/g-cloud/search?' + cls.SIMPLE_SEARCH_PARAMS
         cls.PROJECT_CREATE_URL = '/buyers/direct-award/g-cloud/projects/create'
         cls.SIMPLE_SAVE_SEARCH_URL = '{}?search_query={}'.format(
             cls.SAVE_SEARCH_URL, quote_plus(cls.SIMPLE_SEARCH_PARAMS))
+        cls.SIMPLE_SAVE_NEW_SEARCH_URL = '{}?search_query={}'.format(
+            cls.SAVE_NEW_SEARCH_URL, quote_plus(cls.SIMPLE_SEARCH_PARAMS))
         cls.SEARCH_API_URL = 'g-cloud-9/services/search'
 
     def test_invalid_framework_family(self):
@@ -145,11 +148,27 @@ class TestDirectAward(TestDirectAwardBase):
         assert res.status_code == 302
         assert res.location == 'http://localhost/user/login?next={}'.format(quote_plus(self.SIMPLE_SAVE_SEARCH_URL))
 
+    def test_save_new_search_redirects_to_login(self):
+        res = self.client.get(self.SIMPLE_SAVE_NEW_SEARCH_URL)
+        assert res.status_code == 302
+        assert res.location == 'http://localhost/user/login?next={}'.format(quote_plus(self.SIMPLE_SAVE_NEW_SEARCH_URL))
+
     def test_save_search_renders_summary_on_page(self):
         self.login_as_buyer()
         self.search_api_client.search.return_value = self.g9_search_results
 
         res = self.client.get(self.SIMPLE_SAVE_SEARCH_URL)
+
+        assert res.status_code == 200
+
+        summary = self.find_search_summary(res.get_data(as_text=True))[0]
+        assert '<span class="search-summary-count">1150</span> results found in <em>Cloud software</em>' in summary
+
+    def test_save_new_search_renders_summary_on_page(self):
+        self.login_as_buyer()
+        self.search_api_client.search.return_value = self.g9_search_results
+
+        res = self.client.get(self.SIMPLE_SAVE_NEW_SEARCH_URL)
 
         assert res.status_code == 200
 
@@ -165,6 +184,15 @@ class TestDirectAward(TestDirectAwardBase):
 
         assert "Sorry, there was a problem with your request" in res.get_data(as_text=True)
 
+    def test_save_new_search_view_raises_400_if_no_search(self):
+        self.login_as_buyer()
+
+        res = self.client.get(self.SAVE_NEW_SEARCH_URL)
+
+        assert res.status_code == 400
+
+        assert "Sorry, there was a problem with your request" in res.get_data(as_text=True)
+
     def _save_search(self, name, save_search_selection="new_search"):
         self.login_as_buyer()
         self.search_api_client.search.return_value = self.g9_search_results
@@ -172,12 +200,19 @@ class TestDirectAward(TestDirectAwardBase):
         self.data_api_client.create_direct_award_project_search.return_value = \
             self._get_direct_award_project_searches_fixture()['searches'][0]
 
-        return self.client.post(self.SAVE_SEARCH_URL,
-                                data={
-                                    'name': name,
-                                    'search_query': self.SIMPLE_SEARCH_PARAMS,
-                                    'save_search_selection': save_search_selection
-                                })
+        if save_search_selection == "new_search":
+            return self.client.post(self.SAVE_NEW_SEARCH_URL,
+                                    data={
+                                        'project_name': name,
+                                        'search_query': self.SIMPLE_SEARCH_PARAMS
+                                    })
+        else:
+            return self.client.post(self.SAVE_SEARCH_URL,
+                                    data={
+                                        'name': name,
+                                        'search_query': self.SIMPLE_SEARCH_PARAMS,
+                                        'save_search_selection': save_search_selection
+                                    })
 
     def _update_existing_project(self, save_search_selection):
         return self._save_search(None, save_search_selection)
@@ -190,7 +225,7 @@ class TestDirectAward(TestDirectAwardBase):
         errors = html.fromstring(doc)
         assert len(errors.cssselect("div.govuk-error-summary a")) == 1
         assert errors.cssselect("div.govuk-error-summary a")[0].text_content() == \
-            "Search name must be between 1 and 100 characters"
+            "Enter a name for your search between 1 and 100 characters"
 
     def test_save_search_submit_success(self):
         res = self._save_search('some name " foo bar \u2016')
@@ -810,7 +845,8 @@ class TestDirectAwardAwardContract(TestDirectAwardBase):
         assert res.status_code == 400
 
         doc = html.fromstring(res.get_data(as_text=True))
-        assert len(doc.xpath('//legend[contains(normalize-space(), "Select if you have awarded your contract")]')) == 1
+        error_message = doc.cssselect('.govuk-error-message')[0].text_content().strip()
+        assert error_message == "Error: Select if you have awarded your contract"
         errors = doc.cssselect('div.govuk-error-summary a')
         assert len(errors) == 1
         assert errors[0].text_content() == 'Select if you have awarded your contract'
@@ -898,7 +934,8 @@ class TestDirectAwardAwardContract(TestDirectAwardBase):
         assert len(doc.xpath(
             '//input[@type="radio"][contains(following-sibling::label, "Service name")]')) == 1
         assert len(doc.xpath(
-            '//span[contains(normalize-space(text()), "Supplier name")][contains(parent::label, "Service name")]')) == 1
+            '//span[contains(normalize-space(text()), "Supplier name")]'
+            '[contains(preceding-sibling::label, "Service name")]')) == 1
         assert len(
             doc.xpath('//button[normalize-space(string())=$t]', t="Save and continue")) == 1
 
@@ -1126,12 +1163,12 @@ class TestDirectAwardNonAwardContract(TestDirectAwardBase):
             '//input[@type="radio"][contains(following-sibling::label, "The work has been cancelled")]')) == 1
         assert len(doc.xpath(
             '//span[contains(normalize-space(text()), "For example, because you no longer have the budget")]\
-            [contains(parent::label, "The work has been cancelled")]')) == 1
+            [contains(preceding-sibling::label, "The work has been cancelled")]')) == 1
         assert len(doc.xpath(
             '//input[@type="radio"][contains(following-sibling::label, "The work has been cancelled")]')) == 1
         assert len(doc.xpath(
             '//span[contains(normalize-space(text()), "The services in your search results did not meet your requirements")]\
-            [contains(parent::label, "There were no suitable services")]')) == 1
+            [contains(preceding-sibling::label, "There were no suitable services")]')) == 1
         assert len(
             doc.xpath('//button[normalize-space(string())=$t]', t="Save and continue")) == 1
 

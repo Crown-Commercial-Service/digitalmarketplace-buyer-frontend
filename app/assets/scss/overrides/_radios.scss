@@ -1,0 +1,16 @@
+/* On the "Which service won the contract page", we want to display hints for each options, but
+there are potentially a LOT of options, which is a lot of text to parse. We can make this easier
+by making the hint text a little smaller. We apply this style generically to achieve consistency
+across other pages. We can review this when updated to Design System 3 to decide if we still want
+the font size to be smaller */
+.govuk-radios__hint {
+    @include core-16;
+}
+
+/* On the choose-lot page, options have both a description and a hint. Before we review this
+content, we style the description so that it matches the previous styling */
+.dm-options__description {
+    display: inline-block;
+    color: $govuk-text-colour;
+    padding-bottom: govuk-spacing(2);
+}
