@@ -1671,7 +1671,7 @@ class TestCatalogueOfBriefsPage(APIClientMixin, BaseApplicationTest):
         res = self.client.get('/digital-outcomes-and-specialists/opportunities')
         assert res.status_code == 200
         summary = self.find_search_summary(res.get_data(as_text=True))[0]
-        assert '<span class="search-summary-count">0</span> results found in <em>All categories</em>' in summary
+        assert '<span class="app-search-summary-count">0</span> results found in <em>All categories</em>' in summary
 
     def test_should_render_summary_for_0_results_in_particular_lot(self):
         search_results = self._get_dos_brief_search_api_response_fixture_data()
@@ -1681,7 +1681,7 @@ class TestCatalogueOfBriefsPage(APIClientMixin, BaseApplicationTest):
         res = self.client.get('/digital-outcomes-and-specialists/opportunities?lot=digital-outcomes')
         assert res.status_code == 200
         summary = self.find_search_summary(res.get_data(as_text=True))[0]
-        assert '<span class="search-summary-count">0</span> results found in <em>Digital outcomes</em>' in summary
+        assert '<span class="app-search-summary-count">0</span> results found in <em>Digital outcomes</em>' in summary
 
     def test_should_render_summary_for_1_result_found_in_all_lots(self):
         search_results = self._get_dos_brief_search_api_response_fixture_data()
@@ -1691,13 +1691,13 @@ class TestCatalogueOfBriefsPage(APIClientMixin, BaseApplicationTest):
         res = self.client.get('/digital-outcomes-and-specialists/opportunities')
         assert res.status_code == 200
         summary = self.find_search_summary(res.get_data(as_text=True))[0]
-        assert '<span class="search-summary-count">1</span> result found in <em>All categories</em>' in summary
+        assert '<span class="app-search-summary-count">1</span> result found in <em>All categories</em>' in summary
 
     def test_should_render_summary_for_many_results_found_in_a_particular_lot(self):
         res = self.client.get('/digital-outcomes-and-specialists/opportunities?lot=digital-specialists')
         assert res.status_code == 200
         summary = self.find_search_summary(res.get_data(as_text=True))[0]
-        assert '<span class="search-summary-count">864</span> results found in <em>Digital specialists</em>' in summary
+        assert '<span class="app-search-summary-count">864</span> results found in <em>Digital specialists</em>' in summary
 
     def test_should_render_suggestions_for_0_results(self):
         search_results = self._get_dos_brief_search_api_response_fixture_data()

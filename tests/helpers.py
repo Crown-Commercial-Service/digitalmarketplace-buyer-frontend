@@ -442,7 +442,7 @@ class BaseApplicationTest(object):
 
     @staticmethod
     def find_search_summary(res_data):
-        return re.findall(r'<span class="search-summary-count">.+</span>[^\n]+', res_data)
+        return re.findall(r'<span class="app-search-summary-count">.+</span>[^\n]+', res_data)
 
     # Method to test flashes taken from http://blog.paulopoiati.com/2013/02/22/testing-flash-messages-in-flask/
     def assert_flashes(self, expected_message_markup, expected_category='message'):

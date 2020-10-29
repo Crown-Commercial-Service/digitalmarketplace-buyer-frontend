@@ -1,6 +1,6 @@
-.search-summary {
-  @include core-14;
-  padding: 0 0 $gutter-half;
+.app-search-summary {
+  @include govuk-font(14);
+  padding-bottom: govuk-spacing(6);
 
   em {
     font-style: normal;
@@ -8,27 +8,11 @@
   }
 
   @include media(tablet) {
-    @include core-16;
+    @include govuk-font(16);
   }
 }
 
-.column-one-whole .search-summary {
-  @include core-19;
-
-  .search-summary-count {
-    font-size: 30px;
-
-    margin-right: 2px;
-    padding: 0;
-
-    @include media(mobile) {
-      margin-right: 0;
-      font-size: inherit;
-    }
-  }
-}
-
-.search-summary-count {
-  @include bold-48;
+.app-app-search-summary-count {
+  @include govuk-font(48, $weight: bold);
   padding-right: 5px;
 }

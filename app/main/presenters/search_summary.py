@@ -9,7 +9,7 @@ from lxml.html import document_fromstring
 class SearchSummary(object):
     """Provides a paragraph summarising the search performed and results"""
 
-    COUNT_PRE_TAG = '<span class="search-summary-count">'
+    COUNT_PRE_TAG = '<span class="app-search-summary-count">'
     COUNT_POST_TAG = '</span>'
     KEYWORDS_PRE_TAG = '<em>'
     KEYWORDS_POST_TAG = '</em>'
