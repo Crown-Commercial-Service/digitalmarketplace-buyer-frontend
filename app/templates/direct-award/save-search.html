@@ -28,11 +28,9 @@
       {{ page_name }}
     </h1>
     <form method="post" action="" id="createProjectForm" novalidate>
-      <div class="search-summary-panel panel panel-border-wide">
-        {% with content = search_summary_sentence %}
-          {% include "toolkit/search-summary.html" %}
-        {% endwith %}
-      </div>
+      {{govukInsetText({
+        "html": search_summary_sentence
+      })}}
 
       {{ govukRadios({
         "idPrefix": "input-" + form.save_search_selection.name,
