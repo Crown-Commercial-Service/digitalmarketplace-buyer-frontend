@@ -1,8 +1,6 @@
 {% extends "_base_page.html" %}
 
-{% block pageTitle %}
-  {% if errors %}Error: {% endif %}Did you award a contract? - Digital Marketplace
-{% endblock %}
+{% set page_name = 'Did you award a contract?' %}
 
 {% block breadcrumb %}
 {{ govukBreadcrumbs({
@@ -24,7 +22,7 @@
       "text": project.name
     },
     {
-      "text": "Did you award a contract?"
+      "text": page_name
     }
   ]
 }) }}
@@ -32,55 +30,51 @@
 
 
 {% block mainContent %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">Did you award a contract for ‘{{ project.name }}’?</h1>
 
-<div class="did-you-award-contract-page">
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-      <h1 class="govuk-heading-xl">Did you award a contract for ‘{{ project.name }}’?</h1>
+    <form method="POST" action="{{ url_for('direct_award.did_you_award_contract', framework_family=framework.family, project_id=project.id) }}" novalidate>
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
 
-      <form method="POST" action="{{ url_for('direct_award.did_you_award_contract', framework_family=framework.family, project_id=project.id) }}" novalidate>
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-
-        {{ govukRadios({
-          "idPrefix": "input-did_you_award_a_contract",
-          "name": "did_you_award_a_contract",
-          "fieldset": {
-            "legend": {
-              "classes": "govuk-fieldset__legend--m",
-              "text": "Did you award a contract?"
-            }
+      {{ govukRadios({
+        "idPrefix": "input-did_you_award_a_contract",
+        "name": "did_you_award_a_contract",
+        "fieldset": {
+          "legend": {
+            "classes": "govuk-fieldset__legend--m",
+            "text": "Did you award a contract?"
+          }
+        },
+        "errorMessage": errors.did_you_award_a_contract.errorMessage if errors.did_you_award_a_contract.errorMessage,
+        "items": [
+          { 
+            "value": "yes",
+            "text": "Yes"
           },
-          "errorMessage": errors.did_you_award_a_contract.errorMessage if errors.did_you_award_a_contract.errorMessage,
-          "items": [
-            { 
-              "value": "yes",
-              "text": "Yes"
-            },
-            { 
-              "value": "no",
-              "text": "No"
-            },
-            { 
-              "value": "still-assessing",
-              "text": "We are still assessing services"
-            }
-          ]
-        })}}
-
-        {{ govukButton({
-          "text": "Save and continue",
-          "attributes": {
-            "data-analytics": "trackEvent",
-            "data-analytics-category": "did-you-award-a-contract",
-            "data-analytics-action": "Save and continue",
-            "data-analytics-target-selector": "input[name=did_you_award_a_contract]:checked",
+          { 
+            "value": "no",
+            "text": "No"
           },
-        }) }}
-      </form>
+          { 
+            "value": "still-assessing",
+            "text": "We are still assessing services"
+          }
+        ]
+      })}}
 
-      <p class="govuk-body"><a class="govuk-link" href="{{ url_for('direct_award.view_project', framework_family=framework.family, project_id=project.id) }}">Return to your task list</a></p>
-    </div>
+      {{ govukButton({
+        "text": "Save and continue",
+        "attributes": {
+          "data-analytics": "trackEvent",
+          "data-analytics-category": "did-you-award-a-contract",
+          "data-analytics-action": "Save and continue",
+          "data-analytics-target-selector": "input[name=did_you_award_a_contract]:checked",
+        },
+      }) }}
+    </form>
+
+    <p class="govuk-body"><a class="govuk-link" href="{{ url_for('direct_award.view_project', framework_family=framework.family, project_id=project.id) }}">Return to your task list</a></p>
   </div>
-
 </div>
 {% endblock %}

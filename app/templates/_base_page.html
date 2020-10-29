@@ -23,6 +23,10 @@
 
 {% set assetPath = '/static' %}
 
+{% block pageTitle %}
+  {% if errors %}Error: {% endif %}{{ page_name }} - Digital Marketplace
+{% endblock %}
+
 {% block head %}
   {% include "digitalmarketplace/templates/layouts/_custom_dimensions.html" %}
   {% include "digitalmarketplace/templates/layouts/_site_verification.html" %}

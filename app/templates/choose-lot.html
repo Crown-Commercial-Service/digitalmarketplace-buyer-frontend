@@ -1,8 +1,6 @@
 {% extends "_base_page.html" %}
 
-{% block pageTitle %}
-  G-Cloud - Digital Marketplace
-{% endblock %}
+{% set page_name = title|capitalize %}
 
 {% block breadcrumb %}
 {{ govukBreadcrumbs({
@@ -27,32 +25,30 @@
 {% set question = title|capitalize %}
 {% set errorMessage = errors.get("lot", {}).get("message", None) %}
 
-<div>
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-      <form action="{{ url_for('direct_award_public.choose_lot', framework_family=framework_family)}}" method="post" novalidate>
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <form action="{{ url_for('direct_award_public.choose_lot', framework_family=framework_family)}}" method="post" novalidate>
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
 
-        {{ govukRadios({
-          "idPrefix": "input-lot",
-          "name": "lot",
-          "fieldset": {
-            "legend": {
-              "classes": "govuk-fieldset__legend--xl",
-              "text": question,
-              "isPageHeading": true
-            }
-          },
-          "errorMessage": {"text": errorMessage} if errorMessage,
-          "items": lots
-        })}}
+      {{ govukRadios({
+        "idPrefix": "input-lot",
+        "name": "lot",
+        "fieldset": {
+          "legend": {
+            "classes": "govuk-fieldset__legend--xl",
+            "text": question,
+            "isPageHeading": true
+          }
+        },
+        "errorMessage": {"text": errorMessage} if errorMessage,
+        "items": lots
+      })}}
 
-        {{ govukButton({
-          "text": "Search for services",
-        }) }}
+      {{ govukButton({
+        "text": "Search for services",
+      }) }}
 
-      </form>
-    </div>
+    </form>
   </div>
 </div>
 {% endblock %}

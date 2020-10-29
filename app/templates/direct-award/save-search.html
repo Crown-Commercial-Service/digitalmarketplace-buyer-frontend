@@ -2,10 +2,6 @@
 
 {% set page_name = "Save your search" %}
 
-{% block pageTitle %}
-  {% if errors %}Error: {% endif %}{{ page_name }} - Digital Marketplace
-{% endblock %}
-
 {% block breadcrumb %}
 {{ govukBreadcrumbs({
   "items": [
@@ -26,46 +22,39 @@
 
 {% block mainContent %}
 
-<div class="single-question-page save-search-page">
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-      <h1 class="govuk-heading-l">
-        {{ page_name }}
-      </h1>
-    </div>
-  </div>
-  <form method="post" action="" id="createProjectForm" novalidate>
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-two-thirds">
-        <div class="search-summary-panel panel panel-border-wide">
-          {% with content = search_summary_sentence %}
-            {% include "toolkit/search-summary.html" %}
-          {% endwith %}
-        </div>
-
-        {{ govukRadios({
-          "idPrefix": "input-" + form.save_search_selection.name,
-          "name": form.save_search_selection.name,
-          "fieldset": {
-            "legend": {
-              "text": "Save your search",
-              "classes": "govuk-visually-hidden"
-            }
-          },
-          "errorMessage": {"text": form.save_search_selection.errors[0]} if form.save_search_selection.errors[0],
-          "items": save_search_options
-        })}}
-
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-        <input type="hidden" name="search_query" value="{{ search_query }}"/>
-        {{ govukButton({
-          "text": "Save and continue",
-          "name": "return_to_overview",
-          "value": "Save and continue",
-        }) }}
-
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-l">
+      {{ page_name }}
+    </h1>
+    <form method="post" action="" id="createProjectForm" novalidate>
+      <div class="search-summary-panel panel panel-border-wide">
+        {% with content = search_summary_sentence %}
+          {% include "toolkit/search-summary.html" %}
+        {% endwith %}
       </div>
-    </div>
-  </form>
+
+      {{ govukRadios({
+        "idPrefix": "input-" + form.save_search_selection.name,
+        "name": form.save_search_selection.name,
+        "fieldset": {
+          "legend": {
+            "text": "Save your search",
+            "classes": "govuk-visually-hidden"
+          }
+        },
+        "errorMessage": {"text": form.save_search_selection.errors[0]} if form.save_search_selection.errors[0],
+        "items": save_search_options
+      })}}
+
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+      <input type="hidden" name="search_query" value="{{ search_query }}"/>
+      {{ govukButton({
+        "text": "Save and continue",
+        "name": "return_to_overview",
+        "value": "Save and continue",
+      }) }}
+    </form>
+  </div>
 </div>
 {% endblock %}

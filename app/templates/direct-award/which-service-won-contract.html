@@ -1,8 +1,6 @@
 {% extends "_base_page.html" %}
 
-{% block pageTitle %}
-  {% if errors %}Error: {% endif %}Which service won the contract? - Digital Marketplace
-{% endblock %}
+{% set page_name = 'Which service won the contract?' %}
 
 {% block breadcrumb %}
 {{ govukBreadcrumbs({
@@ -24,51 +22,45 @@
       "text": project.name
     },
     {
-      "text": "Which service won the contract?"
+      "text": page_name
     },
   ]
 }) }}
 {% endblock breadcrumb %}
 
 {% block mainContent %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+      {% if form.which_service_won_the_contract.options %}
+      <form method="POST" action="{{ url_for('direct_award.which_service_won_contract', framework_family=framework.family, project_id=project.id) }}" novalidate>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
 
-<div class="which-service-won-contract-page">
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
+        {{ govukRadios({
+          "idPrefix": "input-which_service_won_the_contract",
+          "name": "which_service_won_the_contract",
+          "fieldset": {
+            "legend": {
+              "classes": "govuk-fieldset__legend--l",
+              "text": page_name,
+              "isPageHeading": True
+            }
+          },
+          "errorMessage": errors.which_service_won_the_contract.errorMessage if errors.which_service_won_the_contract.errorMessage,
+          "items": service_options
+        })}}
 
-      <h1 class="govuk-heading-xl">Which service won the contract?</h1>
+        {{ govukButton({
+          "text": "Save and continue",
+        }) }}
+      </form>
 
-        {% if form.which_service_won_the_contract.options %}
+      {% else %}
+        <h1 class="govuk-heading-xl">{{ page_name }}</h1>
+        <p class="govuk-body">You cannot award this contract as there were no services matching your requirements.</p>
+      {% endif %}
 
-        <form method="POST" action="{{ url_for('direct_award.which_service_won_contract', framework_family=framework.family, project_id=project.id) }}" novalidate>
-          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-
-          {{ govukRadios({
-            "idPrefix": "input-which_service_won_the_contract",
-            "name": "which_service_won_the_contract",
-            "fieldset": {
-              "legend": {
-                "classes": "govuk-fieldset__legend--m",
-                "text": "Which service won the contract?"
-              }
-            },
-            "errorMessage": errors.which_service_won_the_contract.errorMessage if errors.which_service_won_the_contract.errorMessage,
-            "items": service_options
-          })}}
-
-          {{ govukButton({
-            "text": "Save and continue",
-          }) }}
-        </form>
-
-        {% else %}
-          <p class="govuk-body">You cannot award this contract as there were no services matching your requirements.</p>
-        {% endif %}
-
-        <p class="govuk-body"><a class="govuk-link" href="{{ url_for('direct_award.did_you_award_contract', framework_family=framework.family, project_id=project.id) }}">Previous page</a></p>
-      </div>
+      <p class="govuk-body"><a class="govuk-link" href="{{ url_for('direct_award.did_you_award_contract', framework_family=framework.family, project_id=project.id) }}">Previous page</a></p>
     </div>
   </div>
-
 </div>
 {% endblock %}

@@ -1,8 +1,6 @@
 {% extends "_base_page.html" %}
 
-{% block pageTitle %}
-  {% if errors %}Error: {% endif %}Why didn’t you award a contract? - Digital Marketplace
-{% endblock %}
+{% set page_name = "Why didn’t you award a contract?" %}
 
 {% block breadcrumb %}
 {{ govukBreadcrumbs({
@@ -24,49 +22,45 @@
       "text": project.name
     },
     {
-      "text": "Why didn’t you award a contract?"
+      "text": page_name
     },
   ]
 }) }}
 {% endblock breadcrumb %}
 
 {% block mainContent %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">{{ page_name }}</h1>
 
-<div class="why-didnt-you-award-contract-page">
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-      <h1 class="govuk-heading-xl">Why didn’t you award a contract?</h1>
+    <form method="POST" action="{{ url_for('direct_award.why_did_you_not_award_the_contract', framework_family=framework.family, project_id=project.id) }}" novalidate>
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
 
-      <form method="POST" action="{{ url_for('direct_award.why_did_you_not_award_the_contract', framework_family=framework.family, project_id=project.id) }}" novalidate>
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+      {{ govukRadios({
+        "idPrefix": "input-why_did_you_not_award_the_contract",
+        "name": "why_did_you_not_award_the_contract",
+        "fieldset": {
+          "legend": {
+            "classes": "govuk-fieldset__legend--m",
+            "text": "Why didn’t you award a contract?"
+          }
+        },
+        "errorMessage": errors.why_did_you_not_award_the_contract.errorMessage if errors.why_did_you_not_award_the_contract.errorMessage,
+        "items": form_options
+      })}}
 
-        {{ govukRadios({
-          "idPrefix": "input-why_did_you_not_award_the_contract",
-          "name": "why_did_you_not_award_the_contract",
-          "fieldset": {
-            "legend": {
-              "classes": "govuk-fieldset__legend--m",
-              "text": "Why didn’t you award a contract?"
-            }
-          },
-          "errorMessage": errors.why_did_you_not_award_the_contract.errorMessage if errors.why_did_you_not_award_the_contract.errorMessage,
-          "items": form_options
-        })}}
+      {{ govukButton({
+        "text": "Save and continue",
+        "attributes": {
+          "data-analytics": "trackEvent",
+          "data-analytics-category": "why-didnt-you-award",
+          "data-analytics-action": "Save and continue",
+          "data-analytics-target-selector": "input[name={}]:checked".format(form.why_did_you_not_award_the_contract.name),
+        },
+      }) }}
+    </form>
 
-        {{ govukButton({
-          "text": "Save and continue",
-          "attributes": {
-            "data-analytics": "trackEvent",
-            "data-analytics-category": "why-didnt-you-award",
-            "data-analytics-action": "Save and continue",
-            "data-analytics-target-selector": "input[name={}]:checked".format(form.why_did_you_not_award_the_contract.name),
-          },
-        }) }}
-      </form>
-
-      <p class="govuk-body"><a class="govuk-link" href="{{ url_for('direct_award.did_you_award_contract', framework_family=framework.family, project_id=project.id) }}">Previous page</a></p>
-    </div>
+    <p class="govuk-body"><a class="govuk-link" href="{{ url_for('direct_award.did_you_award_contract', framework_family=framework.family, project_id=project.id) }}">Previous page</a></p>
   </div>
-
 </div>
 {% endblock %}
