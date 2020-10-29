@@ -257,9 +257,11 @@ class TestSearchResults(APIClientMixin, BaseApplicationTest):
         res = self.client.get('/g-cloud/search?q=email&lot=cloud-software')
         assert res.status_code == 200
         summary = self.find_search_summary(res.get_data(as_text=True))[0]
-        assert '<span class="app-search-summary__count">1</span> result found' \
-            ' containing <strong>email</strong> in' \
-            ' <strong>Cloud software</strong>' in summary
+        assert (
+            '<span class="app-search-summary__count">1</span> result found'
+            ' containing <strong>email</strong> in'
+            ' <strong>Cloud software</strong>'
+        ) in summary
 
     def test_should_render_summary_with_a_group_of_1_boolean_filter(self):
         return_value = self.search_results_multiple_page
@@ -271,10 +273,12 @@ class TestSearchResults(APIClientMixin, BaseApplicationTest):
             '/g-cloud/search?q=email&lot=cloud-software&phoneSupport=true')
         assert res.status_code == 200
         summary = self.find_search_summary(res.get_data(as_text=True))[0]
-        assert '<span class="app-search-summary__count">1</span> result found' \
-            ' containing <strong>email</strong> in' \
-            ' <strong>Cloud software</strong>' \
-            ' where user support is available by <strong>phone</strong>' in summary
+        assert (
+            '<span class="app-search-summary__count">1</span> result found'
+            ' containing <strong>email</strong> in'
+            ' <strong>Cloud software</strong>'
+            ' where user support is available by <strong>phone</strong>'
+        ) in summary
 
     def test_should_render_summary_with_a_group_of_2_boolean_filters(self):
         return_value = self.search_results_multiple_page
@@ -286,9 +290,11 @@ class TestSearchResults(APIClientMixin, BaseApplicationTest):
             '/g-cloud/search?q=email&lot=cloud-software&phoneSupport=true&onsiteSupport=yes')
         assert res.status_code == 200
         summary = self.find_search_summary(res.get_data(as_text=True))[0]
-        assert '<span class="app-search-summary__count">1</span> result found' \
-            ' containing <strong>email</strong> in' \
-            ' <strong>Cloud software</strong>' in summary
+        assert (
+            '<span class="app-search-summary__count">1</span> result found'
+            ' containing <strong>email</strong> in'
+            ' <strong>Cloud software</strong>'
+        ) in summary
         assert ' where user support is available ' in summary
         assert 'by <strong>phone</strong>' in summary
         assert 'through <strong>onsite support</strong>' in summary
@@ -303,11 +309,12 @@ class TestSearchResults(APIClientMixin, BaseApplicationTest):
             '/g-cloud/search?q=email&lot=cloud-software&resellingType=not_reseller')
         assert res.status_code == 200
         summary = self.find_search_summary(res.get_data(as_text=True))[0]
-        assert '<span class="app-search-summary__count">1</span> result found' \
-            ' containing <strong>email</strong> in' \
-            ' <strong>Cloud software</strong>' \
-            ' where the supplier is <strong>not a reseller</strong>' \
-            in summary
+        assert (
+            '<span class="app-search-summary__count">1</span> result found'
+            ' containing <strong>email</strong> in'
+            ' <strong>Cloud software</strong>'
+            ' where the supplier is <strong>not a reseller</strong>'
+        ) in summary
 
     def test_should_render_summary_with_a_group_of_2_array_filters(self):
         return_value = self.search_results_multiple_page
@@ -319,10 +326,12 @@ class TestSearchResults(APIClientMixin, BaseApplicationTest):
             '/g-cloud/search?q=email&lot=cloud-software&resellingType=not_reseller&resellingType=reseller_no_extras')
         assert res.status_code == 200
         summary = self.find_search_summary(res.get_data(as_text=True))[0]
-        assert '<span class="app-search-summary__count">1</span> result found' \
-            ' containing <strong>email</strong> in' \
-            ' <strong>Cloud software</strong>' \
-            ' where the supplier is ' in summary
+        assert (
+            '<span class="app-search-summary__count">1</span> result found'
+            ' containing <strong>email</strong> in'
+            ' <strong>Cloud software</strong>'
+            ' where the supplier is '
+        ) in summary
         assert '<strong>not a reseller</strong>' in summary
         assert 'a <strong>reseller (no extras)</strong>' in summary
 
@@ -337,9 +346,11 @@ class TestSearchResults(APIClientMixin, BaseApplicationTest):
             '&resellingType=not_reseller&resellingType=reseller_no_extras')
         assert res.status_code == 200
         summary = self.find_search_summary(res.get_data(as_text=True))[0]
-        assert '<span class="app-search-summary__count">1</span> result found' \
-            ' containing <strong>email</strong> in' \
-            ' <strong>Cloud software</strong>' in summary
+        assert (
+            '<span class="app-search-summary__count">1</span> result found'
+            ' containing <strong>email</strong> in'
+            ' <strong>Cloud software</strong>'
+        ) in summary
         assert ' where the supplier is ' in summary
         assert '<strong>not a reseller</strong>' in summary
         assert 'a <strong>reseller (no extras)</strong>' in summary
@@ -357,9 +368,11 @@ class TestSearchResults(APIClientMixin, BaseApplicationTest):
             '&governmentSecurityClearances=dv')
         assert res.status_code == 200
         summary = self.find_search_summary(res.get_data(as_text=True))[0]
-        assert '<span class="app-search-summary__count">1</span> result found' \
-            ' containing <strong>email</strong> in' \
-            ' <strong>Cloud software</strong>' in summary
+        assert (
+            '<span class="app-search-summary__count">1</span> result found'
+            ' containing <strong>email</strong> in'
+            ' <strong>Cloud software</strong>'
+        ) in summary
         assert ' where the supplier is ' in summary
         assert '<strong>not a reseller</strong>' in summary
         assert 'a <strong>reseller (no extras)</strong>' in summary
@@ -402,9 +415,11 @@ class TestSearchResults(APIClientMixin, BaseApplicationTest):
         res = self.client.get(u'/g-cloud/search?q=email+\U0001f47e&lot=cloud-software')
         assert res.status_code == 200
         summary = self.find_search_summary(res.get_data(as_text=True))[0]
-        assert u'<span class="app-search-summary__count">1</span> result found' \
-            u' containing <strong>email \U0001f47e</strong> in' \
-            u' <strong>Cloud software</strong>' in summary
+        assert (
+            u'<span class="app-search-summary__count">1</span> result found'
+            u' containing <strong>email \U0001f47e</strong> in'
+            u' <strong>Cloud software</strong>'
+        ) in summary
 
     def test_should_404_on_invalid_page_param(self):
         self.search_api_client.search.return_value = \

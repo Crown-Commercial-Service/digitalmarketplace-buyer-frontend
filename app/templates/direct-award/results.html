@@ -61,9 +61,9 @@
         >Download search results as a spreadsheet (ODS)</a>
       </li>
     </ul>
-    <p class="application-notice info-notice govuk-body">
-      Results exported on {{ exported_at|datetimeformat }}
-    </p>
+    {{ govukInsetText({
+      "text": "Results exported on " ~ exported_at|datetimeformat
+    })}}
     <p class="govuk-body">You can download your results again at any time.</p>
     <p class="govuk-body"><a class="govuk-link" href="{{ url_for('direct_award.view_project', framework_family=framework.family, project_id=project.id) }}">Return to your task list</a></p>
   </div>

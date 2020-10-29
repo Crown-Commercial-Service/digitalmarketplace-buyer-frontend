@@ -504,8 +504,8 @@ class TestSummaryFragment:
         summary_fragment = SummaryFragment(
             id, filters, self.rules_instance_mock)
         assert summary_fragment.str() == (
-            u"datacentre tiers with a <strong>TIA-942 Tier 1</strong>" +
-            u", met with a <strong>uptime institute tier 1</strong>" +
+            u"datacentre tiers with a <strong>TIA-942 Tier 1</strong>"
+            u", met with a <strong>uptime institute tier 1</strong>"
             u" or aligned with <strong>uptime institute tier 2</strong>"
         )
 
@@ -514,8 +514,8 @@ class TestSummaryFragment:
         summary_fragment = SummaryFragment(
             id, filters, self.rules_instance_mock)
         assert summary_fragment.str() == (
-            u"datacentre tiers <strong>TIA-942 Tier 1</strong>" +
-            u", met with a <strong>uptime institute tier 1</strong>" +
+            u"datacentre tiers <strong>TIA-942 Tier 1</strong>"
+            u", met with a <strong>uptime institute tier 1</strong>"
             u" or <strong>uptime institute tier 2</strong>"
         )
 
