@@ -30,11 +30,9 @@
   <div class="govuk-grid-column-two-thirds">
     <form action="{{ action_url }}" method="post" id="createNewProjectForm" novalidate>
       <h1 class="govuk-heading-l">{{ page_name }}</h1>
-      <div class="search-summary-panel panel panel-border-wide">
-        {% with content = search_summary_sentence %}
-          {% include "toolkit/search-summary.html" %}
-        {% endwith %}
-      </div>
+      {{govukInsetText({
+        "html": search_summary_sentence
+      })}}
 
       {{ govukInput({
         "label": {
@@ -56,6 +54,10 @@
         "name": "return_to_overview",
         "value": "Save and continue",
       }) }}
+
+      <p class="govuk-body">
+        <a class="govuk-link" href="{{ save_search_url }}">Previous page</a>
+      </p>
     </form>
   </div>
 </div>
