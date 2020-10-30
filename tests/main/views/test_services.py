@@ -50,20 +50,18 @@ class TestServicePage(DataAPIClientMixin, BaseApplicationTest):
         contact_info = self.supplier['suppliers']['contactInformation'][0]
 
         meta = document.xpath('//div[@id="meta"]')[0]
-        contact_heading = meta.xpath('//div/p[@class="contact-details-organisation"]/span/text()')[0]  # noqa
-        ps = [
-            p.text_content().strip()
-            for p in meta.xpath('//div[@class="contact-details"]//p')
-        ]
+        contact_details_p = meta.xpath('//h2[text()="Contact"]/following-sibling::p[1]')[0].text_content()
+        contact_heading = meta.xpath('//h2[text()="Contact"]/following-sibling::p[1]/span/text()')[0]
 
         assert contact_heading == supplier_name
 
         for contact_detail in [
+            supplier_name,
             contact_info['contactName'],
             contact_info['phoneNumber'],
             contact_info['email']
         ]:
-            assert "{}".format(contact_detail) in ps
+            assert contact_detail in contact_details_p
 
     def _assert_document_links(self, document):
 
@@ -78,7 +76,9 @@ class TestServicePage(DataAPIClientMixin, BaseApplicationTest):
         ]
 
         doc_hrefs = [a.get('href') for a in document.xpath(
-            '//div[@id="meta"]//ul[@class="govuk-list"]//li/a')]
+            '//div[@id="meta"]//ul[contains(@class, "govuk-list")]//li/a')]
+
+        print(str(doc_hrefs))
 
         for url_key in url_keys:
             if url_key in self.service['services']:
