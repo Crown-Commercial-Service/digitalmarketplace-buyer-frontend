@@ -122,7 +122,10 @@
             </p>
           {% endif %}
           {% if search.searchedAt or can_end_search %}
-            <p class="instruction-list-item-box complete">Completed</p>
+            {{ govukTag({
+              "classes": "app-tag--box app-tag--black",
+              "text": "Completed"
+            }) }}
           {% endif %}
         {% endif %}
       </li>
@@ -152,7 +155,10 @@
           </div>
           {% endif %}
           {% if not (search.searchedAt or can_end_search) %}
-            <p class="instruction-list-item-box inactive">Cannot start yet</p>
+            {{ govukTag({
+              "classes": "app-tag--box",
+              "text": "Cannot start yet"
+            }) }}
           {% elif not search.searchedAt and can_end_search %}
             {{ govukButton({
               "href": url_for("direct_award.end_search", framework_family=framework.family, project_id=project.id),
@@ -176,7 +182,10 @@
               >Download your results</a>
             </p>
 
-            <p class="instruction-list-item-box complete">Completed</p>
+            {{ govukTag({
+              "classes": "app-tag--box app-tag--black",
+              "text": "Completed"
+            }) }}
           {% endif %}
         {% endif %}
       </li>
@@ -216,7 +225,10 @@
 
         {% if project %}
           {% if not search.searchedAt %}
-            <p class="instruction-list-item-box inactive">Cannot start yet</p>
+            {{ govukTag({
+              "classes": "app-tag--box",
+              "text": "Cannot start yet"
+            }) }}
           {% elif not project.readyToAssessAt and not project.outcome %}
             {{ govukButton({
               "name": "readyToAssess",
@@ -233,7 +245,10 @@
               }
             }) }}
           {% elif project.readyToAssessAt %}
-            <p class="instruction-list-item-box complete">Completed</p>
+            {{ govukTag({
+              "classes": "app-tag--box app-tag--black",
+              "text": "Completed"
+            }) }}
           {% endif %}
         {% endif %}
       </li>
@@ -271,9 +286,15 @@
 
         {% if project %}
           {% if project.outcome %}
-            <p class="instruction-list-item-box complete">{{ project_outcome_label }}</p>
+            {{ govukTag({
+              "classes": "app-tag--box app-tag--black",
+              "text": project_outcome_label
+            }) }}
           {% elif not project.readyToAssessAt %}
-            <p class="instruction-list-item-box inactive">Cannot start yet</p>
+            {{ govukTag({
+              "classes": "app-tag--box",
+              "text": "Cannot start yet"
+            }) }}
           {% else %}
             {{ govukButton({
               "href": url_for("direct_award.did_you_award_contract", framework_family=framework.family, project_id=project.id),
@@ -315,7 +336,10 @@
 
         {% if project %}
           {% if not project.outcome %}
-            <p class="instruction-list-item-box inactive">Cannot start yet</p>
+            {{ govukTag({
+              "classes": "app-tag--box",
+              "text": "Cannot start yet"
+            }) }}
           {% endif %}
         {% endif %}
       </li>

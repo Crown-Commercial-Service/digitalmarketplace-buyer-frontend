@@ -293,8 +293,10 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         if task <= 0:
             raise ValueError()
 
-        box = tasklist[task - 1].xpath('.//p[@class="instruction-list-item-box {}"'
-                                       ' and normalize-space(text())="{}"]'.format(style, text))
+        style = {"inactive": "", "complete": ".app-tag--black"}[style]
+
+        box = tasklist[task - 1].cssselect(f".govuk-tag{style}:contains('{text}')")
+
         return len(box) == 1
 
     def _task_cannot_start_yet(self, tasklist, task):
