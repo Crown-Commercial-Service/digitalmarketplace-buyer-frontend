@@ -32,28 +32,35 @@
 <span class="govuk-caption-l">Digital Marketplace supplier</span>
 <h1 class="govuk-heading-l">{{ supplier.name }}</h1>
 
-<div class="govuk-grid-row supplier-profile">
-    {% if supplier.description or supplier.clients %}
-      <div class="govuk-grid-column-two-thirds">
-          <p class="govuk-body">
-              {{ supplier.description }}
-          </p>
-      </div>
-    {% endif %}
+<div class="govuk-grid-row">
+  {% if supplier.description or supplier.clients %}
+    <div class="govuk-grid-column-two-thirds">
+      <p class="govuk-body">
+        {{ supplier.description }}
+      </p>
+    </div>
+  {% endif %}
 
-    <aside id="meta" role="complementary" class="govuk-grid-column-one-third" aria-label="Supplier contact">
-      <h2 class="sidebar-heading">Contact</h2>
-      {%
-        with
-        organisation_type = "supplier",
-        organisation = supplier.name,
-        telephone = supplier.contactInformation[0].phoneNumber,
-        contact_name = supplier.contactInformation[0].contactName,
-        email_address = supplier.contactInformation[0].email
-      %}
-        {% include "toolkit/contact-details.html" %}
-      {% endwith %}
-    </aside>
+  <aside id="meta" role="complementary" class="govuk-grid-column-one-third" aria-label="Supplier contact">
+    <h2 class="sidebar-heading">Contact</h2>
+    <p class="govuk-body">
+      <span class="govuk-visually-hidden">{{ supplier.name }}</span>
+      {% if supplier.contactInformation[0].contactName %}
+      {{ supplier.contactInformation[0].contactName }}<br />
+      {% endif %}
+      {% if supplier.contactInformation[0].phoneNumber %}
+      <span class="govuk-visually-hidden">Telephone: </span>
+      {{ supplier.contactInformation[0].phoneNumber }}<br />
+      {% endif %}
+      {% if supplier.contactInformation[0].email %}
+      <a 
+        href="mailto:{{ supplier.contactInformation[0].email }}"
+        data-event-category="Email a supplier"
+        data-event-label="{{ supplier.name }}"
+      ><span class="govuk-visually-hidden">Email: </span>{{ supplier.contactInformation[0].email }}</a><br />
+      {% endif %}
+    </p>
+  </aside>
 </div>
 
 {% endblock %}

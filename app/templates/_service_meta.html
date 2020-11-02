@@ -1,7 +1,7 @@
 <div id="meta">
   <h2 class="govuk-visually-hidden">Pricing</h2>
-  <p class="price">{{ service.meta.price }}</p>
-  <ul class="govuk-list">
+  <p class="govuk-!-font-weight-bold govuk-!-margin-bottom-1">{{ service.meta.price }}</p>
+  <ul class="govuk-list govuk-body-s">
   {% for caveat in service.meta.priceCaveats %}
     <li>
       {% if caveat['link'] %}
@@ -16,8 +16,8 @@
     </li>
   {% endfor %}
   </ul>
-  <h2>Service documents</h2>
-  <ul class="govuk-list">
+  <h2 class="govuk-heading-s govuk-!-margin-bottom-1 govuk-!-padding-top-1">Service documents</h2>
+  <ul class="govuk-list govuk-body-s">
   {% for document in service.meta.documents %}
     <li class="govuk-!-margin-bottom-2">
       <a href="{{ document.url }}" class="govuk-link">
@@ -26,24 +26,30 @@
     </li>
   {% endfor %}
   </ul>
-  <h2 class="govuk-!-font-size-4 govuk-!-margin-bottom-1">Framework</h2>
-  <p class="framework-name">{{ service.frameworkName }}</p>
-  <h2 class="govuk-!-font-size-4 govuk-!-margin-bottom-1">Service ID</h2>
+  <h2 class="govuk-heading-s govuk-!-margin-bottom-1 govuk-!-padding-top-1">Framework</h2>
+  <p class="govuk-body-s">{{ service.frameworkName }}</p>
+  <h2 class="govuk-heading-s govuk-!-margin-bottom-1 govuk-!-padding-top-1">Service ID</h2>
   <p class="govuk-visually-hidden">{{ (service.meta.serviceId|join(''))|join(' ') }}</p>
-  <p aria-hidden="true">
+  <p aria-hidden="true" class="govuk-body-s">
     {% for chunk in service.meta.serviceId -%}
     <span class="{% if not loop.first %} govuk-!-padding-left-1 {% endif %}">{{chunk}}</span>
     {%- endfor %}
   </p>
-  <h2 class="govuk-!-font-size-4 govuk-!-margin-bottom-1">Contact</h2>
-  {%
-    with
-    organisation_type="supplier",
-    organisation=service.supplierName,
-    telephone=service.meta.contact.phone or None,
-    contact_name=service.meta.contact.name,
-    email_address=service.meta.contact.email
-  %}
-    {% include "toolkit/contact-details.html" %}
-  {% endwith %}
+  <h2 class="govuk-heading-s govuk-!-margin-bottom-1 govuk-!-padding-top-1">Contact</h2>
+  <p class="govuk-body-s">
+    <span class="govuk-visually-hidden">{{ service.supplierName }}</span>
+    {% if service.meta.contact.name %}
+    {{ service.meta.contact.name }}<br />
+    {% endif %}
+    {% if service.meta.contact.phone %}
+    <span class="govuk-visually-hidden">Telephone: </span>{{ service.meta.contact.phone }}<br />
+    {% endif %}
+    {% if service.meta.contact.email %}
+    <a 
+      href="mailto:{{ service.meta.contact.email }}"
+      data-event-category="Email a supplier"
+      data-event-label="{{ service.supplierName }}"
+    ><span class="govuk-visually-hidden">Email: </span>{{ service.meta.contact.email }}</a><br />
+    {% endif %}
+  </p>
 </div>

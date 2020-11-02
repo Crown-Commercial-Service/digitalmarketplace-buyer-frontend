@@ -236,15 +236,16 @@ class TestSuppliersPage(DataAPIClientMixin, BaseApplicationTest):
 
         assert res.status_code == 200
         assert self._strip_whitespace(
-            '<span itemprop="name">John Example</span>'
+            'John Example'
         ) in self._strip_whitespace(res.get_data(as_text=True))
         assert self._strip_whitespace(
-            '<span itemprop="telephone">07309404738</span>'
+            '07309404738'
         ) in self._strip_whitespace(res.get_data(as_text=True))
 
         email_html = '''<a href="mailto:j@examplecompany.biz"
         data-event-category="Email a supplier"
-        data-event-label="Example Company Limited">j@examplecompany.biz</a>'''
+        data-event-label="Example Company Limited">
+        <span class="govuk-visually-hidden">Email: </span>j@examplecompany.biz</a>'''
 
         assert self._strip_whitespace(email_html) in self._strip_whitespace(res.get_data(as_text=True))
 
@@ -255,12 +256,13 @@ class TestSuppliersPage(DataAPIClientMixin, BaseApplicationTest):
 
         assert res.status_code == 200
         assert self._strip_whitespace(
-            '<span itemprop="name">John Example</span>'
+            'John Example'
         ) in self._strip_whitespace(res.get_data(as_text=True))
 
         email_html = '''<a href="mailto:j@examplecompany.biz"
         data-event-category="Email a supplier"
-        data-event-label="Example Company Limited">j@examplecompany.biz</a>'''
+        data-event-label="Example Company Limited">
+        <span class="govuk-visually-hidden">Email: </span>j@examplecompany.biz</a>'''
 
         assert self._strip_whitespace(email_html) in self._strip_whitespace(res.get_data(as_text=True))
 
