@@ -334,6 +334,16 @@ class TestSearchSummary(BaseApplicationTest):
         search_summary.filters_fragments = [fragment]
         assert search_summary.markup() == u"5 results found with option1 and option2"
 
+    def test_markup_method_works_with_wrap(self):
+        def get_starting_sentence():
+            return u"5 results found"
+
+        search_summary = SearchSummary(9, self.request_args, filter_groups, self._lots_by_slug)
+        search_summary.get_starting_sentence = get_starting_sentence
+        search_summary.filters_fragments = []
+        wrapped_summary_markup = search_summary.markup(True)
+        assert wrapped_summary_markup == u'<p class="app-search-summary govuk-body-s">5 results found</p>'
+
 
 class TestSummaryRules:
     def setup_method(self, method):

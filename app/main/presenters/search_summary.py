@@ -9,6 +9,8 @@ from lxml.html import document_fromstring
 class SearchSummary(object):
     """Provides a paragraph summarising the search performed and results"""
 
+    WRAP_PRE_TAG = '<p class="app-search-summary govuk-body-s">'
+    WRAP_POST_TAG = '</p>'
     COUNT_PRE_TAG = '<span class="app-search-summary__count">'
     COUNT_POST_TAG = '</span>'
     KEYWORDS_PRE_TAG = '<strong>'
@@ -79,10 +81,13 @@ class SearchSummary(object):
         else:
             self.sentence = u"{} in {}".format(count_string, lot)
 
-    def markup(self):
+    def markup(self, wrap=False):
 
         def _get_fragment_string(fragment):
             return fragment.str()
+
+        pre_wrap = SearchSummary.WRAP_PRE_TAG if wrap else ''
+        post_wrap = SearchSummary.WRAP_POST_TAG if wrap else ''
 
         parts = [self.get_starting_sentence()]
         if len(self.filters_fragments) > 0:
@@ -91,7 +96,7 @@ class SearchSummary(object):
             parts.append(SearchSummary.write_list_as_sentence(
                 fragment_strings, u"and"))
 
-        return Markup(u" ".join(parts))
+        return Markup(pre_wrap + u" ".join(parts) + post_wrap)
 
     def text_content(self):
         return document_fromstring(self.markup()).text_content()

@@ -3,7 +3,7 @@ from datetime import datetime
 import inflection
 from operator import itemgetter
 
-from flask import abort, request, redirect, current_app, url_for, flash, escape, Markup
+from flask import abort, request, redirect, current_app, url_for, flash, escape
 from flask_login import current_user
 from werkzeug.urls import Href, url_encode, url_decode
 
@@ -574,9 +574,7 @@ def save_search(framework_family):
                                errors=get_errors_from_wtform(form),
                                form=form,
                                save_search_options=save_search_options,
-                               search_summary_sentence=Markup(
-                                   f'<p class="app-search-summary govuk-body-s">{search_summary.markup()}</p>'
-                               ),
+                               search_summary_sentence=search_summary.markup(wrap=True),
                                search_query=url_encode(search_query),
                                search_url=url_for('main.search_services', **search_query),
                                framework_family=framework_family), 400 if request.method == 'POST' else 200
@@ -644,9 +642,7 @@ def save_new_search(framework_family):
         return render_template('direct-award/save-new-search.html',
                                errors=get_errors_from_wtform(form),
                                form=form,
-                               search_summary_sentence=Markup(
-                                   f'<p class="app-search-summary govuk-body-s">{search_summary.markup()}</p>'
-                               ),
+                               search_summary_sentence=search_summary.markup(wrap=True),
                                action_url=url_for(
                                    '.save_new_search',
                                    framework_family=framework_family,
