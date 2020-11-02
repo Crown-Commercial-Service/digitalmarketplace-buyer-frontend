@@ -658,9 +658,11 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         tasklist = self._get_tasklist(doc)
         assert not self._task_completed(tasklist, 1)
         assert self._cannot_start_from_task(tasklist, 2)
-        assert len(tasklist[1].xpath(
-            './p[contains(normalize-space(),'
-            ' "You have too many services to assess.")]')) == 1
+        assert len(
+            tasklist[1].cssselect(
+                "div:contains('You have too many services to assess.')"
+            )
+        ) == 1
 
 
 class TestDirectAwardURLGeneration(BaseApplicationTest):
