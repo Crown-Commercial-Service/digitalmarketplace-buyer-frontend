@@ -152,7 +152,7 @@
           </div>
           {% endif %}
           {% if not (search.searchedAt or can_end_search) %}
-            <p class="instruction-list-item-box inactive">Can’t start yet</p>
+            <p class="instruction-list-item-box inactive">Cannot start yet</p>
           {% elif not search.searchedAt and can_end_search %}
             {{ govukButton({
               "href": url_for("direct_award.end_search", framework_family=framework.family, project_id=project.id),
@@ -216,7 +216,7 @@
 
         {% if project %}
           {% if not search.searchedAt %}
-            <p class="instruction-list-item-box inactive">Can’t start yet</p>
+            <p class="instruction-list-item-box inactive">Cannot start yet</p>
           {% elif not project.readyToAssessAt and not project.outcome %}
             {{ govukButton({
               "name": "readyToAssess",
@@ -273,7 +273,7 @@
           {% if project.outcome %}
             <p class="instruction-list-item-box complete">{{ project_outcome_label }}</p>
           {% elif not project.readyToAssessAt %}
-            <p class="instruction-list-item-box inactive">Can’t start yet</p>
+            <p class="instruction-list-item-box inactive">Cannot start yet</p>
           {% else %}
             {{ govukButton({
               "href": url_for("direct_award.did_you_award_contract", framework_family=framework.family, project_id=project.id),
@@ -315,7 +315,7 @@
 
         {% if project %}
           {% if not project.outcome %}
-            <p class="instruction-list-item-box inactive">Can’t start yet</p>
+            <p class="instruction-list-item-box inactive">Cannot start yet</p>
           {% endif %}
         {% endif %}
       </li>
