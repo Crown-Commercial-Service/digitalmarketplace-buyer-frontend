@@ -162,7 +162,10 @@ class TestDirectAward(TestDirectAwardBase):
         assert res.status_code == 200
 
         summary = self.find_search_summary(res.get_data(as_text=True))[0]
-        assert '<span class="search-summary-count">1150</span> results found in <em>Cloud software</em>' in summary
+        assert (
+            '<span class="app-search-summary__count">1150</span> '
+            'results found in <strong>Cloud software</strong>'
+        ) in summary
 
     def test_save_new_search_renders_summary_on_page(self):
         self.login_as_buyer()
@@ -173,7 +176,10 @@ class TestDirectAward(TestDirectAwardBase):
         assert res.status_code == 200
 
         summary = self.find_search_summary(res.get_data(as_text=True))[0]
-        assert '<span class="search-summary-count">1150</span> results found in <em>Cloud software</em>' in summary
+        assert (
+            '<span class="app-search-summary__count">1150</span> '
+            'results found in <strong>Cloud software</strong>'
+        ) in summary
 
     def test_save_search_view_raises_400_if_no_search(self):
         self.login_as_buyer()

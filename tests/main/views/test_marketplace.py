@@ -1251,7 +1251,7 @@ class TestCatalogueOfBriefsPage(APIClientMixin, BaseApplicationTest):
         q_inputs = document.xpath("//form[@method='get']//input[@name='q']")
         assert tuple(element.get("value") for element in q_inputs) == (None,)
 
-        ss_elem = document.xpath("//p[@class='search-summary']")[0]
+        ss_elem = document.cssselect("p.app-search-summary")[0]
         assert self._normalize_whitespace(self._squashed_element_text(ss_elem)) == "864 results found in All categories"
 
         specialist_role_labels = document.xpath("//li[@class='app-search-result']/ul[2]/li[2]/text()")
@@ -1351,7 +1351,7 @@ class TestCatalogueOfBriefsPage(APIClientMixin, BaseApplicationTest):
             self.normalize_qs(parsed_next_url.query) == \
             self.normalize_qs(parsed_prev_url.query)
 
-        ss_elem = document.xpath("//p[@class='search-summary']")[0]
+        ss_elem = document.cssselect("p.app-search-summary")[0]
         assert self._normalize_whitespace(self._squashed_element_text(ss_elem)) == \
             "864 results found in Digital outcomes"
 
@@ -1449,7 +1449,7 @@ class TestCatalogueOfBriefsPage(APIClientMixin, BaseApplicationTest):
             self.normalize_qs(parsed_next_url.query) == \
             self.normalize_qs(parsed_prev_url.query)
 
-        ss_elem = document.xpath("//p[@class='search-summary']")[0]
+        ss_elem = document.cssselect("p.app-search-summary")[0]
         assert self._normalize_whitespace(self._squashed_element_text(ss_elem)) == \
             "864 results found containing Richie Poldy in Digital outcomes"
 
@@ -1530,7 +1530,7 @@ class TestCatalogueOfBriefsPage(APIClientMixin, BaseApplicationTest):
 
         assert self.normalize_qs(parsed_next_url.query) == {'lot': {'digital-outcomes'}}
 
-        ss_elem = document.xpath("//p[@class='search-summary']")[0]
+        ss_elem = document.cssselect("p.app-search-summary")[0]
         assert self._normalize_whitespace(self._squashed_element_text(ss_elem)) == \
             "864 results found in Digital outcomes"
 
@@ -1671,7 +1671,10 @@ class TestCatalogueOfBriefsPage(APIClientMixin, BaseApplicationTest):
         res = self.client.get('/digital-outcomes-and-specialists/opportunities')
         assert res.status_code == 200
         summary = self.find_search_summary(res.get_data(as_text=True))[0]
-        assert '<span class="search-summary-count">0</span> results found in <em>All categories</em>' in summary
+        assert (
+            '<span class="app-search-summary__count">0</span> '
+            'results found in <strong>All categories</strong>'
+        ) in summary
 
     def test_should_render_summary_for_0_results_in_particular_lot(self):
         search_results = self._get_dos_brief_search_api_response_fixture_data()
@@ -1681,7 +1684,10 @@ class TestCatalogueOfBriefsPage(APIClientMixin, BaseApplicationTest):
         res = self.client.get('/digital-outcomes-and-specialists/opportunities?lot=digital-outcomes')
         assert res.status_code == 200
         summary = self.find_search_summary(res.get_data(as_text=True))[0]
-        assert '<span class="search-summary-count">0</span> results found in <em>Digital outcomes</em>' in summary
+        assert (
+            '<span class="app-search-summary__count">0</span> '
+            'results found in <strong>Digital outcomes</strong>'
+        ) in summary
 
     def test_should_render_summary_for_1_result_found_in_all_lots(self):
         search_results = self._get_dos_brief_search_api_response_fixture_data()
@@ -1691,13 +1697,19 @@ class TestCatalogueOfBriefsPage(APIClientMixin, BaseApplicationTest):
         res = self.client.get('/digital-outcomes-and-specialists/opportunities')
         assert res.status_code == 200
         summary = self.find_search_summary(res.get_data(as_text=True))[0]
-        assert '<span class="search-summary-count">1</span> result found in <em>All categories</em>' in summary
+        assert (
+            '<span class="app-search-summary__count">1</span> '
+            'result found in <strong>All categories</strong>'
+        ) in summary
 
     def test_should_render_summary_for_many_results_found_in_a_particular_lot(self):
         res = self.client.get('/digital-outcomes-and-specialists/opportunities?lot=digital-specialists')
         assert res.status_code == 200
         summary = self.find_search_summary(res.get_data(as_text=True))[0]
-        assert '<span class="search-summary-count">864</span> results found in <em>Digital specialists</em>' in summary
+        assert (
+            '<span class="app-search-summary__count">864</span> '
+            'results found in <strong>Digital specialists</strong>'
+        ) in summary
 
     def test_should_render_suggestions_for_0_results(self):
         search_results = self._get_dos_brief_search_api_response_fixture_data()

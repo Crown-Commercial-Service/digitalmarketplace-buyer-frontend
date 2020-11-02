@@ -9,12 +9,14 @@ from lxml.html import document_fromstring
 class SearchSummary(object):
     """Provides a paragraph summarising the search performed and results"""
 
-    COUNT_PRE_TAG = '<span class="search-summary-count">'
+    WRAP_PRE_TAG = '<p class="app-search-summary govuk-body-s">'
+    WRAP_POST_TAG = '</p>'
+    COUNT_PRE_TAG = '<span class="app-search-summary__count">'
     COUNT_POST_TAG = '</span>'
-    KEYWORDS_PRE_TAG = '<em>'
-    KEYWORDS_POST_TAG = '</em>'
-    LOT_PRE_TAG = '<em>'
-    LOT_POST_TAG = '</em>'
+    KEYWORDS_PRE_TAG = '<strong>'
+    KEYWORDS_POST_TAG = '</strong>'
+    LOT_PRE_TAG = '<strong>'
+    LOT_POST_TAG = '</strong>'
 
     @staticmethod
     def write_parts_as_sentence(parts):
@@ -79,10 +81,13 @@ class SearchSummary(object):
         else:
             self.sentence = u"{} in {}".format(count_string, lot)
 
-    def markup(self):
+    def markup(self, wrap=False):
 
         def _get_fragment_string(fragment):
             return fragment.str()
+
+        pre_wrap = SearchSummary.WRAP_PRE_TAG if wrap else ''
+        post_wrap = SearchSummary.WRAP_POST_TAG if wrap else ''
 
         parts = [self.get_starting_sentence()]
         if len(self.filters_fragments) > 0:
@@ -91,7 +96,7 @@ class SearchSummary(object):
             parts.append(SearchSummary.write_list_as_sentence(
                 fragment_strings, u"and"))
 
-        return Markup(u" ".join(parts))
+        return Markup(pre_wrap + u" ".join(parts) + post_wrap)
 
     def text_content(self):
         return document_fromstring(self.markup()).text_content()
@@ -189,8 +194,8 @@ class SummaryRules(object):
 class SummaryFragment(object):
     """Provides access to a search summary fragment"""
 
-    PRE_TAG = u'<em>'
-    POST_TAG = u'</em>'
+    PRE_TAG = u'<strong>'
+    POST_TAG = u'</strong>'
     FINAL_CONJUNCTION = u'and'
 
     def __init__(self, group_id, filters, rules):

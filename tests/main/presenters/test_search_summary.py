@@ -97,14 +97,15 @@ class TestSearchSummary(BaseApplicationTest):
     def test_search_summary_works_with_keywords(self):
         search_summary = SearchSummary('1', self.request_args, filter_groups, self._lots_by_slug)
         assert search_summary.count == '1'
-        assert search_summary.sentence == u"result found containing <em>email</em> in <em>Software as a Service</em>"
+        assert search_summary.sentence == (u"result found containing <strong>email</strong> in "
+                                           "<strong>Software as a Service</strong>")
         assert len(search_summary.filters_fragments) == 0
 
     def test_search_summary_works_with_blank_keywords(self):
         self.request_args.setlist('q', [''])
         search_summary = SearchSummary('1', self.request_args, filter_groups, self._lots_by_slug)
         assert search_summary.count == '1'
-        assert search_summary.sentence == u"result found in <em>Software as a Service</em>"
+        assert search_summary.sentence == u"result found in <strong>Software as a Service</strong>"
         assert len(search_summary.filters_fragments) == 0
 
     def test_search_summary_works_with_a_different_lot(self):
@@ -112,7 +113,7 @@ class TestSearchSummary(BaseApplicationTest):
         search_summary = SearchSummary('1', self.request_args, filter_groups, self._lots_by_slug)
         assert search_summary.count == '1'
         assert search_summary.sentence == (
-            u"result found containing <em>email</em> in <em>Infrastructure as a Service</em>"
+            u"result found containing <strong>email</strong> in <strong>Infrastructure as a Service</strong>"
         )
         assert len(search_summary.filters_fragments) == 0
 
@@ -120,7 +121,7 @@ class TestSearchSummary(BaseApplicationTest):
         search_summary = SearchSummary('0', self.request_args, filter_groups, self._lots_by_slug)
         assert search_summary.count == '0'
         assert search_summary.sentence == (
-            u"results found containing <em>email</em> in <em>Software as a Service</em>"
+            u"results found containing <strong>email</strong> in <strong>Software as a Service</strong>"
         )
         assert len(search_summary.filters_fragments) == 0
 
@@ -128,7 +129,7 @@ class TestSearchSummary(BaseApplicationTest):
         search_summary = SearchSummary(1, self.request_args, filter_groups, self._lots_by_slug)
         assert search_summary.count == '1'
         assert search_summary.sentence == (
-            u"result found containing <em>email</em> in <em>Software as a Service</em>"
+            u"result found containing <strong>email</strong> in <strong>Software as a Service</strong>"
         )
         assert len(search_summary.filters_fragments) == 0
 
@@ -136,7 +137,7 @@ class TestSearchSummary(BaseApplicationTest):
         search_summary = SearchSummary('9', self.request_args, filter_groups, self._lots_by_slug)
         assert search_summary.count == '9'
         assert search_summary.sentence == (
-            u"results found containing <em>email</em> in <em>Software as a Service</em>"
+            u"results found containing <strong>email</strong> in <strong>Software as a Service</strong>"
         )
         assert len(search_summary.filters_fragments) == 0
 
@@ -145,7 +146,7 @@ class TestSearchSummary(BaseApplicationTest):
         search_summary = SearchSummary('9', self.request_args, filter_groups, self._lots_by_slug)
         assert search_summary.count == '9'
         assert search_summary.sentence == (
-            u"results found containing <em>email</em> in <em>Software as a Service</em>"
+            u"results found containing <strong>email</strong> in <strong>Software as a Service</strong>"
         )
         assert len(search_summary.filters_fragments) == 1
 
@@ -161,7 +162,7 @@ class TestSearchSummary(BaseApplicationTest):
         search_summary = SearchSummary('9', self.request_args, filter_groups, self._lots_by_slug)
         assert search_summary.count == '9'
         assert search_summary.sentence == (
-            u"results found containing <em>email</em> in <em>Software as a Service</em>"
+            u"results found containing <strong>email</strong> in <strong>Software as a Service</strong>"
         )
         assert len(search_summary.filters_fragments) == 2
 
@@ -185,7 +186,7 @@ class TestSearchSummary(BaseApplicationTest):
         search_summary = SearchSummary('9', self.request_args, filter_groups, self._lots_by_slug)
         assert search_summary.count == '9'
         assert search_summary.sentence == (
-            u"results found containing <em>email</em> in <em>Software as a Service</em>"
+            u"results found containing <strong>email</strong> in <strong>Software as a Service</strong>"
         )
         assert len(search_summary.filters_fragments) == 3
 
@@ -258,7 +259,7 @@ class TestSearchSummary(BaseApplicationTest):
         )
         search_summary = SearchSummary('9', self.request_args, g9_filter_groups, self._g9_lots_by_slug)
         summary_markup = search_summary.markup()
-        assert "category <em>Accounting and finance</em>" in summary_markup
+        assert "category <strong>Accounting and finance</strong>" in summary_markup
 
     def test_subcategory_filters_are_available(self):
         self.request_args.setlist(
@@ -267,7 +268,7 @@ class TestSearchSummary(BaseApplicationTest):
         )
         search_summary = SearchSummary('9', self.request_args, g9_filter_groups, self._g9_lots_by_slug)
         summary_markup = search_summary.markup()
-        assert "category <em>Analytics</em>" in summary_markup
+        assert "category <strong>Analytics</strong>" in summary_markup
 
     def test_each_filter(self):
         """
@@ -281,7 +282,7 @@ class TestSearchSummary(BaseApplicationTest):
                     request_args[f['name']] = f['value']
                     search_summary = SearchSummary('9', request_args, g9_filter_groups, self._g9_lots_by_slug)
                     summary_markup = search_summary.markup()
-                    assert summary_markup.count("<em>") == 3  # the keyword, the lot, and one filter
+                    assert summary_markup.count("<strong>") == 3  # the keyword, the lot, and one filter
 
     def test_all_filters(self):
         """
@@ -299,18 +300,19 @@ class TestSearchSummary(BaseApplicationTest):
 
                     search_summary = SearchSummary('9', request_args, g9_filter_groups, self._g9_lots_by_slug)
                     summary_markup = search_summary.markup()
-                    assert summary_markup.count("<em>") == 2 + filter_count
+                    assert summary_markup.count("<strong>") == 2 + filter_count
 
     def test_get_starting_sentence_works(self):
         search_summary = SearchSummary('9', self.request_args, filter_groups, self._lots_by_slug)
         search_summary.count = '9'
-        search_summary.COUNT_PRE_TAG = '<em>'
-        search_summary.COUNT_POST_TAG = '</em>'
+        search_summary.COUNT_PRE_TAG = '<strong>'
+        search_summary.COUNT_POST_TAG = '</strong>'
         search_summary.sentence = (
-            u"results found containing <em>email</em>" +
-            u" in <em>Software as a Service</em>")
+            u"results found containing <strong>email</strong>" +
+            u" in <strong>Software as a Service</strong>")
         assert search_summary.get_starting_sentence() == (
-            u"<em>9</em> results found containing <em>email</em> in <em>Software as a Service</em>"
+            u"<strong>9</strong> results found containing "
+            "<strong>email</strong> in <strong>Software as a Service</strong>"
         )
 
     def test_markup_method_works_with_no_fragments(self):
@@ -331,6 +333,16 @@ class TestSearchSummary(BaseApplicationTest):
         search_summary.get_starting_sentence = get_starting_sentence
         search_summary.filters_fragments = [fragment]
         assert search_summary.markup() == u"5 results found with option1 and option2"
+
+    def test_markup_method_works_with_wrap(self):
+        def get_starting_sentence():
+            return u"5 results found"
+
+        search_summary = SearchSummary(9, self.request_args, filter_groups, self._lots_by_slug)
+        search_summary.get_starting_sentence = get_starting_sentence
+        search_summary.filters_fragments = []
+        wrapped_summary_markup = search_summary.markup(True)
+        assert wrapped_summary_markup == u'<p class="app-search-summary govuk-body-s">5 results found</p>'
 
 
 class TestSummaryRules:
@@ -368,17 +380,17 @@ class TestSummaryRules:
 
     def test_add_preposition_with_a_filter_that_has_one(self):
         summary_rules = SummaryRules('Minimum contract period')
-        assert u"an <em>Hour</em>" == summary_rules.add_filter_preposition(
+        assert u"an <strong>Hour</strong>" == summary_rules.add_filter_preposition(
             filter_id='Hour',
-            filter_string=u"<em>Hour</em>",
+            filter_string=u"<strong>Hour</strong>",
         )
 
     def test_add_preposition_with_a_filter_without_any_for_its_group(self):
         summary_rules = SummaryRules('Pricing')
         assert summary_rules.add_filter_preposition(
             filter_id='Trial option',
-            filter_string=u"<em>Trial option</em>",
-        ) == u"<em>Trial option</em>"
+            filter_string=u"<strong>Trial option</strong>",
+        ) == u"<strong>Trial option</strong>"
 
     def test_add_preposition_with_a_filter_without_in_a_group_with_some(self):
         SummaryRules._rules['Minimum contract period']['filterRules'].remove({
@@ -388,8 +400,8 @@ class TestSummaryRules:
         summary_rules = SummaryRules('Minimum contract period')
         assert summary_rules.add_filter_preposition(
             filter_id='Hour',
-            filter_string=u"<em>Hour</em>",
-        ) == u"<em>Hour</em>"
+            filter_string=u"<strong>Hour</strong>",
+        ) == u"<strong>Hour</strong>"
         # Make SummaryRules to reload its data
         SummaryRules.loaded = False
 
@@ -432,7 +444,7 @@ class TestSummaryFragment:
         filters = ['TIA-942 Tier 1']
         summary_fragment = SummaryFragment(
             id, filters, self.rules_instance_mock)
-        assert summary_fragment.str() == u"<em>TIA-942 Tier 1</em>"
+        assert summary_fragment.str() == u"<strong>TIA-942 Tier 1</strong>"
 
     def test_fragment_with_label_and_one_filter(self):
         id = 'Datacentre tier'
@@ -443,7 +455,7 @@ class TestSummaryFragment:
         }
         summary_fragment = SummaryFragment(
             id, filters, self.rules_instance_mock)
-        assert summary_fragment.str() == u"datacentre tier <em>TIA-942 Tier 1</em>"
+        assert summary_fragment.str() == u"datacentre tier <strong>TIA-942 Tier 1</strong>"
 
     def test_fragment_with_label_and_two_filters(self):
         id = 'Datacentre tier'
@@ -454,7 +466,10 @@ class TestSummaryFragment:
         }
         summary_fragment = SummaryFragment(
             id, filters, self.rules_instance_mock)
-        assert summary_fragment.str() == u"datacentre tiers <em>TIA-942 Tier 1</em> or <em>uptime institute tier 1</em>"
+        assert summary_fragment.str() == (
+            u"datacentre tiers <strong>TIA-942 Tier 1</strong> or "
+            "<strong>uptime institute tier 1</strong>"
+        )
 
     def test_fragment_with_label_and_three_filters(self):
         id = 'Datacentre tier'
@@ -469,8 +484,8 @@ class TestSummaryFragment:
         summary_fragment = SummaryFragment(
             id, filters, self.rules_instance_mock)
         assert summary_fragment.str() == (
-            u"datacentre tiers <em>TIA-942 Tier 1</em>, <em>uptime institute tier 1</em> or <em>uptime institute tier" +
-            " 2</em>"
+            u"datacentre tiers <strong>TIA-942 Tier 1</strong>, <strong>uptime institute tier 1</strong> "
+            "or <strong>uptime institute tier 2</strong>"
         )
 
     def test_fragment_with_label_and_three_filters_with_prepositions(self):
@@ -499,9 +514,9 @@ class TestSummaryFragment:
         summary_fragment = SummaryFragment(
             id, filters, self.rules_instance_mock)
         assert summary_fragment.str() == (
-            u"datacentre tiers with a <em>TIA-942 Tier 1</em>" +
-            u", met with a <em>uptime institute tier 1</em>" +
-            u" or aligned with <em>uptime institute tier 2</em>"
+            u"datacentre tiers with a <strong>TIA-942 Tier 1</strong>"
+            u", met with a <strong>uptime institute tier 1</strong>"
+            u" or aligned with <strong>uptime institute tier 2</strong>"
         )
 
         # now check we can still create a summary if some of the filters are missing from the filter-rules list
@@ -509,9 +524,9 @@ class TestSummaryFragment:
         summary_fragment = SummaryFragment(
             id, filters, self.rules_instance_mock)
         assert summary_fragment.str() == (
-            u"datacentre tiers <em>TIA-942 Tier 1</em>" +
-            u", met with a <em>uptime institute tier 1</em>" +
-            u" or <em>uptime institute tier 2</em>"
+            u"datacentre tiers <strong>TIA-942 Tier 1</strong>"
+            u", met with a <strong>uptime institute tier 1</strong>"
+            u" or <strong>uptime institute tier 2</strong>"
         )
 
     def test_str_method_works(self):

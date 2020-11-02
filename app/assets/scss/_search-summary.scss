@@ -1,34 +1,20 @@
-.search-summary {
-  @include core-14;
-  padding: 0 0 $gutter-half;
-
-  em {
-    font-style: normal;
-    font-weight: bold;
+.app-search-summary {
+  .app-search-summary__count {
+    @include govuk-font(48, $weight: bold);
+    padding-right: 5px;
   }
 
-  @include media(tablet) {
-    @include core-16;
+  &.app-search-summary--small .app-search-summary__count {
+    @include govuk-font(19, $weight: bold);
+    padding-right: 1px;
   }
 }
 
-.column-one-whole .search-summary {
-  @include core-19;
-
-  .search-summary-count {
-    font-size: 30px;
-
-    margin-right: 2px;
-    padding: 0;
-
-    @include media(mobile) {
-      margin-right: 0;
-      font-size: inherit;
-    }
-  }
-}
-
-.search-summary-count {
-  @include bold-48;
-  padding-right: 5px;
+/*
+ * Until the project overview page is de-instruction listed, we want to ensure
+ * that search summary text has govuk-body-s style.
+ * TODO: Remove this when we no longer use instruction list.
+ */
+.direct-award-project-overview-page .instruction-list-item .instruction-list-item-top.app-search-summary {
+  @include govuk-font($size: 16);
 }
