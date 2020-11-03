@@ -61,8 +61,6 @@ $govuk-global-styles: true;
 // App specific styles
 @import "_atoz_navigation.scss";
 @import "_brief_page.scss";
-@import "_end-your-search-page.scss";
-@import "_error-pages.scss";
 @import "_gcloud_browse_list.scss";
 @import "_index-page.scss";
 @import "_search-page.scss";
@@ -80,16 +78,6 @@ $govuk-global-styles: true;
 
 // Misc styles
 // TODO: Move misc styling into their own partial files or the Digital Marketplace FE Toolkit
-.marketplace-paragraph {
-  h2 {
-    @include bold-27;
-    padding-bottom: 10px;
-  }
-
-  p {
-    padding-bottom: 30px;
-  }
-}
 
 abbr {
   text-decoration: none;
