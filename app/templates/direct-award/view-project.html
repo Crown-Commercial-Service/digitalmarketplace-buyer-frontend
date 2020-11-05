@@ -1,10 +1,15 @@
 {% extends "_base_page.html" %}
 
-{% set page_title = project.name|default("Find cloud hosting, software and support") %}
+{% set page_name = project.name|default("Find cloud hosting, software and support") %}
 
-{% block pageTitle %}
-  {{ page_title }} - Digital Marketplace
-{% endblock %}
+{% if project and not can_end_search %}
+  {% set errors = {
+    "save-a-search": {
+      "text": "You have too many services to assess. Refine your search until you have no more than 30 results.",
+      "href": "#save-a-search"
+    }
+  } %}
+{% endif %}
 
 {% block breadcrumb %}
 {{ govukBreadcrumbs({
@@ -24,11 +29,11 @@
         "text": "Your saved searches"
       },
       {
-        "text": page_title
+        "text": page_name
       },
     ] if project else [
       {
-        "text": page_title
+        "text": page_name
       },
     ]
   )
@@ -42,7 +47,7 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 
-    <h1 class="govuk-heading-xl">{{ page_title }}</h1>
+    <h1 class="govuk-heading-xl">{{ page_name }}</h1>
 
     {% if not project %}
       <p class="govuk-body">
@@ -74,7 +79,7 @@
     {% endif %}
 
     <ol class="dm-task-list">
-      <li>
+      <li id="save-a-search">
         <h2 class="govuk-heading-l dm-task-list__section">
           <span class="dm-task-list__section-number">1. </span>
           Save a search
@@ -115,11 +120,25 @@
           <p class="app-search-summary app-search-summary--small govuk-body-s">{{ search_summary_sentence }}</p>
 
           {% if not search.searchedAt %}
+
+          {% if "save-a-search" in errors %}
+          <div class="govuk-form-group--error">
+            <span class="govuk-error-message">
+              <span class="govuk-visually-hidden">Error:</span>
+              {{ errors["save-a-search"].text }}
+            </span>
+          {% endif %}
+
             <p class="govuk-body">
               <a class="govuk-link" href="{{ buyer_search_page_url }}">
                 Edit your search and view results
               </a>
             </p>
+
+          {% if "too_many_results" in errors %}
+          </div>
+          {% endif %}
+
           {% endif %}
           {% if search.searchedAt or can_end_search %}
             {{ govukTag({
@@ -145,15 +164,6 @@
         </p>
 
         {% if project %}
-          {% if not can_end_search %}
-          <div class="govuk-form-group--error">
-            <span class="govuk-error-message">
-              <span class="govuk-visually-hidden">Error:</span>
-              You have too many services to assess. Refine your search until
-              you have no more than 30 results.
-            </span>
-          </div>
-          {% endif %}
           {% if not (search.searchedAt or can_end_search) %}
             {{ govukTag({
               "classes": "app-tag--box",

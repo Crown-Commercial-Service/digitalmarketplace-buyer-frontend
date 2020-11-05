@@ -661,7 +661,12 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         assert not self._task_completed(tasklist, 1)
         assert self._cannot_start_from_task(tasklist, 2)
         assert len(
-            tasklist[1].cssselect(
+            doc.cssselect(
+                "div.govuk-error-summary:contains('You have too many services to assess.')"
+            )
+        ) == 1
+        assert len(
+            tasklist[0].cssselect(
                 "div:contains('You have too many services to assess.')"
             )
         ) == 1
