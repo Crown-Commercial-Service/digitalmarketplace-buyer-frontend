@@ -272,6 +272,9 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
     def teardown_method(self, method):
         super().teardown_method(method)
 
+    def _get_tasklist(self, doc):
+        return doc.cssselect("ol.dm-task-list li")
+
     def _task_has_link(self, tasklist, task, link):
         """Task here refers to the tasklist item number rather than the zero-indexed python array. This feels easier to
         understand and amend in the context of the tasklist."""
@@ -290,12 +293,14 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         if task <= 0:
             raise ValueError()
 
-        box = tasklist[task - 1].xpath('.//p[@class="instruction-list-item-box {}"'
-                                       ' and normalize-space(text())="{}"]'.format(style, text))
+        style = {"inactive": "", "complete": ".app-tag--black"}[style]
+
+        box = tasklist[task - 1].cssselect(f".govuk-tag{style}:contains('{text}')")
+
         return len(box) == 1
 
     def _task_cannot_start_yet(self, tasklist, task):
-        return self._task_has_box(tasklist, task, style='inactive', text='Can’t start yet')
+        return self._task_has_box(tasklist, task, style='inactive', text='Cannot start yet')
 
     def _task_completed(self, tasklist, task):
         return self._task_has_box(tasklist, task, style='complete', text='Completed')
@@ -344,10 +349,10 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         item_headings = ['Save a search', 'Export your results', 'Start assessing',
                          'Award a contract', 'Submit a Customer Benefits Record']
 
-        tasklist = doc.xpath('//li[contains(@class, "instruction-list-item")]')
+        tasklist = self._get_tasklist(doc)
 
         for i, item in enumerate(tasklist):
-            assert item_headings[i] in item.xpath('h2/text()')[0]
+            assert item_headings[i] in item.find("h2").text_content()
 
     def test_overview_renders_links_common_to_all_states(self):
         res = self.client.get('/buyers/direct-award/g-cloud/projects/1')
@@ -356,7 +361,7 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         body = res.get_data(as_text=True)
         doc = html.fromstring(body)
 
-        tasklist = doc.xpath('//li[contains(@class, "instruction-list-item")]')
+        tasklist = self._get_tasklist(doc)
 
         # Step 1 should link to the guidance for buying fairly.
         assert self._task_has_link(tasklist, 1, 'https://www.gov.uk/guidance/g-cloud-buyers-guide#fairness')
@@ -398,7 +403,7 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         body = res.get_data(as_text=True)
         doc = html.fromstring(body)
 
-        tasklist = doc.xpath('//li[contains(@class, "instruction-list-item")]')
+        tasklist = self._get_tasklist(doc)
 
         assert self._task_has_link(tasklist, 1, '/buyers/direct-award/g-cloud/choose-lot')
         assert self._task_has_link(tasklist, 2, '/buyers/direct-award/g-cloud/projects/1/end-search') is False
@@ -414,7 +419,7 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         body = res.get_data(as_text=True)
         doc = html.fromstring(body)
 
-        tasklist = doc.xpath('//li[contains(@class, "instruction-list-item")]')
+        tasklist = self._get_tasklist(doc)
 
         assert self._task_has_link(tasklist, 1, '/g-cloud/search?q=accelerator')
         assert self._task_has_link(tasklist, 2, '/buyers/direct-award/g-cloud/projects/1/end-search')
@@ -437,7 +442,7 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         body = res.get_data(as_text=True)
         doc = html.fromstring(body)
 
-        tasklist = doc.xpath('//li[contains(@class, "instruction-list-item")]')
+        tasklist = self._get_tasklist(doc)
 
         assert self._task_has_link(tasklist, 1, '/g-cloud/search?q=accelerator') is False
         assert self._task_completed(tasklist, 2)
@@ -464,7 +469,7 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         body = res.get_data(as_text=True)
         doc = html.fromstring(body)
 
-        tasklist = doc.xpath('//li[contains(@class, "instruction-list-item")]')
+        tasklist = self._get_tasklist(doc)
 
         assert self._task_has_link(tasklist, 1, '/g-cloud/search?q=accelerator') is False
         assert self._task_completed(tasklist, 2)
@@ -489,7 +494,7 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
 
         body = res.get_data(as_text=True)
         doc = html.fromstring(body)
-        tasklist = doc.xpath('//li[contains(@class, "instruction-list-item")]')
+        tasklist = self._get_tasklist(doc)
 
         assert not self._task_has_button(tasklist, 3, 'readyToAssess', 'true')
 
@@ -637,7 +642,7 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         body = res.get_data(as_text=True)
         doc = html.fromstring(body)
 
-        tasklist = doc.xpath('//li[contains(@class, "instruction-list-item")]')
+        tasklist = self._get_tasklist(doc)
         assert self._task_completed(tasklist, 1)
 
     def test_search_not_completed_if_more_than_30_results(self):
@@ -652,12 +657,19 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         body = res.get_data(as_text=True)
         doc = html.fromstring(body)
 
-        tasklist = doc.xpath('//li[contains(@class, "instruction-list-item")]')
+        tasklist = self._get_tasklist(doc)
         assert not self._task_completed(tasklist, 1)
         assert self._cannot_start_from_task(tasklist, 2)
-        assert len(doc.xpath(
-            '(//li[contains(@class, "instruction-list-item")])[2]/p[contains(normalize-space(),'
-            ' "You have too many services to assess.")]')) == 1
+        assert len(
+            doc.cssselect(
+                "div.govuk-error-summary:contains('You have too many services to assess.')"
+            )
+        ) == 1
+        assert len(
+            tasklist[0].cssselect(
+                "div:contains('You have too many services to assess.')"
+            )
+        ) == 1
 
 
 class TestDirectAwardURLGeneration(BaseApplicationTest):
@@ -1432,19 +1444,17 @@ class TestPreProjectTaskList(TestDirectAwardBase):
         assert doc.xpath("//p[starts-with(normalize-space(string()), $t)]", t="Before you start you should")
 
         # there shouldn't be "Can't start yet" steps
-        assert not doc.xpath(
-            "//li[contains(@class, 'instruction-list-item')]"
-            "[.//*[contains(@class, 'instruction-list-item-box')][normalize-space(string())=$t]]",
-            t="Can’t start yet",
+        assert not doc.cssselect(
+            "ol.dm-task-list li instruction-list-item-box:contains('Can’t start yet')"
         )
 
         # but there should be more than one step shown
-        steps = doc.xpath("//li[contains(@class, 'instruction-list-item')]")
+        steps = doc.cssselect("ol.dm-task-list li")
         assert len(steps) > 1
         active_step = steps[0]
 
         assert active_step.xpath(
-            ".//a[@href=$u][contains(@class, 'button-save')][normalize-space(string())=$t]",
+            ".//a[@href=$u][contains(@class, 'govuk-button')][normalize-space(string())=$t]",
             u="/buyers/direct-award/g-cloud/choose-lot",
             t="Start a new search",
         )

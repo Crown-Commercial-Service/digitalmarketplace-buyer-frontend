@@ -1,0 +1,17 @@
+.app-tag--box {
+  border: 3px solid $grey-1;
+  font-weight: bold;
+  color: $grey-1;
+  padding: 0.5em 0.75em 0.33em 0.5em;
+  display: table;
+
+  // Overriding settings in .govuk-tag
+  background: none;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+.app-tag--black {
+  border-color: $black;
+  color: $black;
+}

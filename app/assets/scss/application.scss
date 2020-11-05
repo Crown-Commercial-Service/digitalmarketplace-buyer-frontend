@@ -23,7 +23,6 @@ $path: "/static/images/";
 
 // Digital Marketplace Front-end toolkit styles (only import the files you need)
 @import "toolkit/_breadcrumb.scss";
-@import "toolkit/_browse-list.scss";
 @import "toolkit/_buttons.scss";
 @import "toolkit/_contact-details.scss";
 @import "toolkit/_document.scss";
@@ -64,7 +63,6 @@ $govuk-global-styles: true;
 @import "_gcloud_browse_list.scss";
 @import "_index-page.scss";
 @import "_search-page.scss";
-@import "_search_overview.scss";
 @import "_search-summary.scss";
 @import "_service-page.scss";
 @import "_table.scss";
@@ -75,6 +73,7 @@ $govuk-global-styles: true;
 @import "overrides/_temporary-messages.scss";
 @import "overrides/_summary-list.scss";
 @import "overrides/_radios.scss";
+@import "overrides/_tag.scss";
 
 // Misc styles
 // TODO: Move misc styling into their own partial files or the Digital Marketplace FE Toolkit
