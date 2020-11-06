@@ -120,8 +120,17 @@ class Meta(object):
         return documents
 
     def get_price_caveats(self, service_data):
+        def is_valid_link(link):
+            """
+            We can only accept links that begin with http/https. This is because we can't reliably distinguish between
+            links that have no scheme (such as www.gov.uk) and things that aren't links (such as www.gov@example.com).
+            """
+            return link and urlparse(link).scheme in ['http', 'https']
+
         def make_caveat(text, link=None):
-            return {'text': text, 'link': link} if link else {'text': text}
+            if is_valid_link(link):
+                return {'text': text, 'link': link}
+            return {'text': text}
 
         caveats = []
         main_caveats = [
