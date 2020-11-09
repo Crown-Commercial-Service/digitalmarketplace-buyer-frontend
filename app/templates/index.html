@@ -63,7 +63,7 @@
 
   {% include "_cookie_banner.html" %}
 
-  <header class="govuk-header" role="banner" data-module="header">
+  <header class="govuk-header app-header" role="banner" data-module="govuk-header">
     <div class="govuk-header__container govuk-width-container">
       <div class="govuk-header__logo">
         <a href="/" class="govuk-header__link govuk-header__link--homepage">
@@ -114,9 +114,9 @@
         </a>
       </div>
       <div class="govuk-header__content">
-      <button type="button" class="govuk-header__menu-button js-header-toggle" aria-controls="navigation" aria-label="Show or hide Top Level Navigation">Menu</button>
+      <button type="button" class="govuk-header__menu-button govuk-js-header-toggle" aria-controls="navigation" aria-label="Show or hide navigation menu">Menu</button>
       <nav>
-        <ul id="navigation" class="govuk-header__navigation {{ params.navigationClasses if params.navigationClasses }}" aria-label="Top Level Navigation">
+        <ul id="navigation" class="govuk-header__navigation" aria-label="Navigation menu">
           {% for item in headerNavigation %}
             {% if item.href and item.text %}
               <li class="govuk-header__navigation-item{{ ' govuk-header__navigation-item--active' if item.active }}">
@@ -132,9 +132,7 @@
     </div>
   </header>
   <div class="app-masthead">
-    <h1>
-      Digital Marketplace
-    </h1>
+    <h1>Digital Marketplace</h1>
   </div>
 {% endblock %}
 
@@ -245,14 +243,14 @@
 
         {% if framework_status_message %}
         <li>
-            <div class="temporary-framework-message">
-              <h3 class="temporary-framework-message-heading">{{ framework_status_message.heading }}</h3>
-              {%- for message in framework_status_message.messages %}
-                <p class="govuk-body">
-                  {{ message }}
-                </p>
-              {%- endfor %}
-            </div>
+          <div class="app-temporary-framework-message">
+            <h3 class="govuk-heading-s govuk-!-font-weight-bold">{{ framework_status_message.heading }}</h3>
+            {%- for message in framework_status_message.messages %}
+              <p class="govuk-body">
+                {{ message }}
+              </p>
+            {%- endfor %}
+          </div>
         </li>
         {% endif %}
 

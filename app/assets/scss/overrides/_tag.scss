@@ -1,7 +1,7 @@
 .app-tag--box {
-  border: 3px solid $govuk-border-colour;
+  border: 3px solid govuk-colour("dark-grey");
   font-weight: bold;
-  color: $govuk-secondary-text-colour;
+  color: govuk-colour("dark-grey");
   padding: 0.5em 0.75em 0.33em 0.5em;
   display: table;
 
@@ -12,6 +12,6 @@
 }
 
 .app-tag--black {
-  border-color: $govuk-text-colour;
-  color: $govuk-text-colour;
+  border-color: govuk-colour('black');
+  color: govuk-colour('black');
 }
