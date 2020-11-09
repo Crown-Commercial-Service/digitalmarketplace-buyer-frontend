@@ -15,8 +15,8 @@ const govukFrontendRoot = path.join(npmRoot, 'govuk-frontend')
 const sspContentRoot = path.join(npmRoot, 'digitalmarketplace-frameworks')
 const assetsFolder = path.join(repoRoot, 'app', 'assets')
 const staticFolder = path.join(repoRoot, 'app', 'static')
-const govukFrontendFontsFolder = path.join(govukFrontendRoot, 'assets', 'fonts')
-const govukFrontendImageFolder = path.join(govukFrontendRoot, 'assets', 'images')
+const govukFrontendFontsFolder = path.join(govukFrontendRoot, 'govuk', 'assets', 'fonts')
+const govukFrontendImageFolder = path.join(govukFrontendRoot, 'govuk', 'assets', 'images')
 
 // JavaScript paths
 const jsSourceFile = path.join(assetsFolder, 'javascripts', 'application.js')
@@ -27,13 +27,19 @@ const jsDistributionFile = 'application.js'
 const cssSourceGlob = path.join(assetsFolder, 'scss', 'application*.scss')
 const cssDistributionFolder = path.join(staticFolder, 'stylesheets')
 
+// Legacy paths
+const dmToolkitScssRoot = path.join(repoRoot, 'app', 'assets', 'scss', 'toolkit')
+const dmToolkitTemplateRoot = path.join(repoRoot, 'app', 'templates', 'toolkit')
+const govukCopiedScssRoot = path.join(repoRoot, 'app', 'assets', 'scss', 'govuk')
+
 // Configuration
 const sassOptions = {
   development: {
     outputStyle: 'expanded',
     lineNumbers: true,
     includePaths: [
-      path.join(assetsFolder, 'scss')
+      path.join(assetsFolder, 'scss'),
+      govukFrontendRoot
     ],
     sourceComments: true,
     errLogToConsole: true
@@ -42,7 +48,8 @@ const sassOptions = {
     outputStyle: 'compressed',
     lineNumbers: true,
     includePaths: [
-      path.join(assetsFolder, 'scss')
+      path.join(assetsFolder, 'scss'),
+      govukFrontendRoot
     ]
   }
 }
@@ -81,7 +88,15 @@ gulp.task('clean:css', function () {
   })
 })
 
-gulp.task('clean', gulp.parallel('clean:js', 'clean:css'))
+gulp.task('clean:legacy', function () {
+  return del(
+    [dmToolkitScssRoot, dmToolkitTemplateRoot, govukCopiedScssRoot]
+  ).then(function (paths) {
+    console.log('💥  Deleted the following legacy directories:\n', paths.join('\n'))
+  })
+})
+
+gulp.task('clean', gulp.parallel('clean:js', 'clean:css', 'clean:legacy'))
 
 gulp.task('sass', function () {
   const stream = gulp.src(cssSourceGlob)
@@ -126,18 +141,6 @@ function copyFactory (resourceName, sourceFolder, targetFolder) {
       })
   }
 }
-
-gulp.task(
-  'copy:govuk_frontend:stylesheets',
-  function () {
-    return gulp
-      .src(path.join(govukFrontendRoot, '**', '*.scss'), { base: govukFrontendRoot })
-      .pipe(gulp.dest(path.join('app', 'assets', 'scss', 'govuk')))
-      .on('end', function () {
-        console.log('📂  Copied stylesheets from GOV.UK Frontend')
-      })
-  }
-)
 
 gulp.task(
   'copy:images',
@@ -196,7 +199,6 @@ gulp.task('set_environment_to_production', function (cb) {
 
 gulp.task('copy', gulp.parallel(
   'copy:frameworks',
-  'copy:govuk_frontend:stylesheets',
   'copy:images',
   'copy:svg',
   'copy:govuk_frontend_assets:fonts',

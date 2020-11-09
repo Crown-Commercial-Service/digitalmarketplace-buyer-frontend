@@ -93,13 +93,11 @@ class Config(object):
         govuk_frontend = os.path.join(repo_root, "node_modules", "govuk-frontend")
         template_folders = [
             os.path.join(repo_root, "app", "templates"),
+            os.path.join(govuk_frontend),
             os.path.join(digitalmarketplace_govuk_frontend),
             os.path.join(digitalmarketplace_govuk_frontend, "digitalmarketplace", "templates"),
         ]
-        jinja_loader = jinja2.ChoiceLoader([
-            jinja2.FileSystemLoader(template_folders),
-            jinja2.PrefixLoader({'govuk': jinja2.FileSystemLoader(govuk_frontend)})
-        ])
+        jinja_loader = jinja2.FileSystemLoader(template_folders)
         app.jinja_loader = jinja_loader
 
 
