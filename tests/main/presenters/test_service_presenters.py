@@ -262,3 +262,12 @@ class TestMeta:
         free_trial_caveat = list(filter(lambda x: x['text'] == 'Free trial available', price_caveats))
         assert len(free_trial_caveat) == 1
         assert free_trial_caveat[0]['link'] == 'https://www.digitalmarketplace.service.gov.uk'
+
+    def test_caveat_links_must_be_valid_urls(self):
+        self.fixture['freeVersionTrialOption'] = True
+        self.fixture['freeVersionLink'] = 'www.gov.uk'
+        price_caveats = self.meta.get_price_caveats(self.fixture)
+
+        free_trial_caveat = list(filter(lambda x: x['text'] == 'Free trial available', price_caveats))
+        assert len(free_trial_caveat) == 1
+        assert 'link' not in free_trial_caveat[0]
