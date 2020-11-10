@@ -376,7 +376,7 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
                                                                             'customer_benefits_record_form_url')
         assert self._task_has_link(tasklist, 5, customer_benefits_record_form_url)
 
-        breadcrumbs = doc.xpath("//div[@class='govuk-breadcrumbs']/ol/li")
+        breadcrumbs = doc.xpath("//div[contains(@class, 'govuk-breadcrumbs')]/ol/li")
         assert tuple(li.xpath("normalize-space(string())") for li in breadcrumbs) == (
             "Digital Marketplace",
             "Your account",
@@ -952,7 +952,7 @@ class TestDirectAwardAwardContract(TestDirectAwardBase):
         assert len(doc.xpath(
             '//input[@type="radio"][contains(following-sibling::label, "Service name")]')) == 1
         assert len(doc.xpath(
-            '//span[contains(normalize-space(text()), "Supplier name")]'
+            '//div[contains(normalize-space(text()), "Supplier name")]'
             '[contains(preceding-sibling::label, "Service name")]')) == 1
         assert len(
             doc.xpath('//button[normalize-space(string())=$t]', t="Save and continue")) == 1
@@ -1058,8 +1058,8 @@ class TestDirectAwardTellUsAboutContract(TestDirectAwardBase):
         assert xpath('boolean(//h1[contains(normalize-space(), "Tell us about your contract")])')
 
     def test_tell_us_about_contract_form_fields(self, xpath):
-        assert len(xpath('//input[@type="number"][substring-after(@name, "start_date")]')) == 3
-        assert len(xpath('//input[@type="number"][substring-after(@name, "end_date")]')) == 3
+        assert len(xpath('//input[@type="text"][substring-after(@name, "start_date")]')) == 3
+        assert len(xpath('//input[@type="text"][substring-after(@name, "end_date")]')) == 3
         assert xpath('//input[@type="text"][contains(@name, "value_in_pounds")]')
         assert xpath('//input[@type="text"][contains(@name, "buying_organisation")]')
         assert xpath('//button[normalize-space(string())=$t]', t="Submit")
@@ -1180,12 +1180,12 @@ class TestDirectAwardNonAwardContract(TestDirectAwardBase):
         assert len(doc.xpath(
             '//input[@type="radio"][contains(following-sibling::label, "The work has been cancelled")]')) == 1
         assert len(doc.xpath(
-            '//span[contains(normalize-space(text()), "For example, because you no longer have the budget")]\
+            '//div[contains(normalize-space(text()), "For example, because you no longer have the budget")]\
             [contains(preceding-sibling::label, "The work has been cancelled")]')) == 1
         assert len(doc.xpath(
             '//input[@type="radio"][contains(following-sibling::label, "The work has been cancelled")]')) == 1
         assert len(doc.xpath(
-            '//span[contains(normalize-space(text()), "The services in your search results did not meet your requirements")]\
+            '//div[contains(normalize-space(text()), "The services in your search results did not meet your requirements")]\
             [contains(preceding-sibling::label, "There were no suitable services")]')) == 1
         assert len(
             doc.xpath('//button[normalize-space(string())=$t]', t="Save and continue")) == 1
@@ -1425,7 +1425,7 @@ class TestPreProjectTaskList(TestDirectAwardBase):
 
         doc = html.fromstring(res.get_data(as_text=True))
 
-        breadcrumbs = doc.xpath("//div[@class='govuk-breadcrumbs']/ol/li")
+        breadcrumbs = doc.xpath("//div[contains(@class, 'govuk-breadcrumbs')]/ol/li")
         assert tuple(li.xpath("normalize-space(string())") for li in breadcrumbs) == (
             "Digital Marketplace",
             "Find cloud hosting, software and support",
