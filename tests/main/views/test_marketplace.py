@@ -1215,13 +1215,15 @@ class TestCatalogueOfBriefsPage(APIClientMixin, BaseApplicationTest):
             "normalize-space(//section[@id='search-page-heading']//p/text())"
         )
 
-        lot_filters = document.xpath("//form[@method='get']//ul[@class='lot-filters--last-list']//a")
+        lot_filters = document.xpath("//form[@method='get']//ul[contains(@class, 'app-lot-filter__last-list')]//a")
         assert set(element.text for element in lot_filters) == {
             "Digital outcomes (629)",
             "Digital specialists (827)",
             "User research participants (39)",
         }
-        assert len(document.xpath("//form[@method='get']//ul[@class='lot-filters--last-list']//strong")) == 0
+        assert len(
+            document.xpath("//form[@method='get']//ul[contains(@class, 'app-lot-filter__last-list')]//strong")
+        ) == 0
 
         status_inputs = document.xpath("//form[@method='get']//input[@name='statusOpenClosed']")
         assert set(element.get("value") for element in status_inputs) == {"open", "closed"}
@@ -1284,10 +1286,10 @@ class TestCatalogueOfBriefsPage(APIClientMixin, BaseApplicationTest):
             "normalize-space(//section[@id='search-page-heading']//p/text())"
         )
 
-        all_categories_return_link = document.xpath("//form[@method='get']//div[@class='lot-filters']/ul/li/a")[0]
+        all_categories_return_link = document.xpath("//form[@method='get']//div[@class='app-lot-filter']/ul/li/a")[0]
         assert all_categories_return_link.text == 'All categories'
 
-        lot_filters = document.xpath("//form[@method='get']//div[@class='lot-filters']//ul//ul/li/*[1]")
+        lot_filters = document.xpath("//form[@method='get']//div[@class='app-lot-filter']//ul//ul/li/*[1]")
         assert {
             element.text: element.tag
             for element in lot_filters
@@ -1382,10 +1384,10 @@ class TestCatalogueOfBriefsPage(APIClientMixin, BaseApplicationTest):
             "normalize-space(//section[@id='search-page-heading']//p/text())"
         )
 
-        all_categories_return_link = document.xpath("//form[@method='get']//div[@class='lot-filters']/ul/li/a")[0]
+        all_categories_return_link = document.xpath("//form[@method='get']//div[@class='app-lot-filter']/ul/li/a")[0]
         assert all_categories_return_link.text == 'All categories'
 
-        lot_filters = document.xpath("//form[@method='get']//div[@class='lot-filters']//ul//ul/li/*[1]")
+        lot_filters = document.xpath("//form[@method='get']//div[@class='app-lot-filter']//ul//ul/li/*[1]")
         assert {
             element.text: element.tag
             for element in lot_filters
@@ -1476,10 +1478,10 @@ class TestCatalogueOfBriefsPage(APIClientMixin, BaseApplicationTest):
             "normalize-space(//section[@id='search-page-heading']//p/text())"
         )
 
-        all_categories_return_link = document.xpath("//form[@method='get']//div[@class='lot-filters']/ul/li/a")[0]
+        all_categories_return_link = document.xpath("//form[@method='get']//div[@class='app-lot-filter']/ul/li/a")[0]
         assert all_categories_return_link.text == 'All categories'
 
-        lot_filters = document.xpath("//form[@method='get']//div[@class='lot-filters']//ul//ul/li/*[1]")
+        lot_filters = document.xpath("//form[@method='get']//div[@class='app-lot-filter']//ul//ul/li/*[1]")
         assert {
             element.text: element.tag
             for element in lot_filters
@@ -1610,15 +1612,14 @@ class TestCatalogueOfBriefsPage(APIClientMixin, BaseApplicationTest):
         assert res.status_code == 404
         self.data_api_client.find_frameworks.assert_called_once_with()
 
-    def test_briefs_search_has_js_hidden_filter_button(self):
+    def test_briefs_search_has_filter_button_by_default(self):
         res = self.client.get('/digital-outcomes-and-specialists/opportunities')
         assert res.status_code == 200
 
         document = html.fromstring(res.get_data(as_text=True))
 
         filter_button = document.xpath(
-            '//button[contains(@class, "js-hidden")][contains(@class, "js-dm-live-search")]'
-            '[normalize-space(text())="Filter"]'
+            '//button[contains(@class, "js-dm-live-search")][normalize-space(text())="Filter"]'
         )
         assert len(filter_button) == 1
 
@@ -1628,39 +1629,41 @@ class TestCatalogueOfBriefsPage(APIClientMixin, BaseApplicationTest):
 
         document = html.fromstring(res.get_data(as_text=True))
 
-        live_opportunity_published_at = document.xpath(
-            '//li[@class="app-search-result"][1]//ul[@class="app-search-result__metadata"]//li'
-        )[-3].text_content().strip()
+        results = document.cssselect('li.app-search-result')
+
+        live_opportunity_published_at = (
+            results[0].cssselect('ul.app-search-result__metadata li')[-3].text_content().strip()
+        )
         assert live_opportunity_published_at == "Published: Friday 17 November 2017"
 
-        live_opportunity_qs_closing_at = document.xpath(
-            '//li[@class="app-search-result"][1]//ul[@class="app-search-result__metadata"]//li'
-        )[-2].text_content().strip()
+        live_opportunity_qs_closing_at = (
+            results[0].cssselect('ul.app-search-result__metadata li')[-2].text_content().strip()
+        )
         assert live_opportunity_qs_closing_at == "Deadline for asking questions: Sunday 26 November 2017"
 
-        live_opportunity_closing_at = document.xpath(
-            '//li[@class="app-search-result"][1]//ul[@class="app-search-result__metadata"]//li'
-        )[-1].text_content().strip()
+        live_opportunity_closing_at = (
+            results[0].cssselect('ul.app-search-result__metadata li')[-1].text_content().strip()
+        )
         assert live_opportunity_closing_at == "Closing: Friday 1 December 2017"
 
-        closed_opportunity_status = document.xpath(
-            '//li[@class="app-search-result"][2]//ul[@class="app-search-result__metadata"]//li'
-        )[-1].text_content().strip()
+        closed_opportunity_status = (
+            results[1].cssselect('ul.app-search-result__metadata li')[-1].text_content().strip()
+        )
         assert closed_opportunity_status == "Closed: awaiting outcome"
 
-        unsuccessful_opportunity_status = document.xpath(
-            '//li[@class="app-search-result"][3]//ul[@class="app-search-result__metadata"]//li'
-        )[-1].text_content().strip()
+        unsuccessful_opportunity_status = (
+            results[2].cssselect('ul.app-search-result__metadata li')[-1].text_content().strip()
+        )
         assert unsuccessful_opportunity_status == "Closed: no suitable suppliers"
 
-        cancelled_opportunity_status = document.xpath(
-            '//li[@class="app-search-result"][4]//ul[@class="app-search-result__metadata"]//li'
-        )[-1].text_content().strip()
+        cancelled_opportunity_status = (
+            results[3].cssselect('ul.app-search-result__metadata li')[-1].text_content().strip()
+        )
         assert cancelled_opportunity_status == "Closed: cancelled"
 
-        awarded_opportunity_status = document.xpath(
-            '//li[@class="app-search-result"][6]//ul[@class="app-search-result__metadata"]//li'
-        )[-1].text_content().strip()
+        awarded_opportunity_status = (
+            results[5].cssselect('ul.app-search-result__metadata li')[-1].text_content().strip()
+        )
         assert awarded_opportunity_status == "Closed: awarded"
 
     def test_should_render_summary_for_0_results_in_all_lots(self):
@@ -1750,7 +1753,9 @@ class TestCatalogueOfBriefsPage(APIClientMixin, BaseApplicationTest):
 
         document = html.fromstring(res.get_data(as_text=True))
 
-        lots = document.xpath('//div[@class="lot-filters"]//ul[@class="lot-filters--last-list"]//li/a')
+        lots = document.xpath(
+            '//div[@class="app-lot-filter"]//ul[contains(@class, "app-lot-filter__last-list")]//li/a'
+        )
         assert lots[0].text_content().startswith('Digital outcomes')
         assert lots[1].text_content().startswith('Digital specialists')
         assert lots[2].text_content().startswith('User research participants')
@@ -1761,7 +1766,9 @@ class TestCatalogueOfBriefsPage(APIClientMixin, BaseApplicationTest):
 
         document = html.fromstring(res.get_data(as_text=True))
 
-        lots = document.xpath('//div[@class="lot-filters"]//ul[@class="lot-filters--last-list"]//li/a')
+        lots = document.xpath(
+            '//div[@class="app-lot-filter"]//ul[contains(@class, "app-lot-filter__last-list")]//li/a'
+        )
         for lot in lots:
             assert 'location=london' in lot.get('href')
 
@@ -1779,7 +1786,7 @@ class TestCatalogueOfBriefsPage(APIClientMixin, BaseApplicationTest):
 
         document = html.fromstring(res.get_data(as_text=True))
 
-        specialist_label = document.xpath("//ul[@class='lot-filters--last-list']//li")[-2]
+        specialist_label = document.xpath("//ul[contains(@class, 'app-lot-filter__last-list')]//li")[-2]
         assert len(specialist_label.xpath('a')) == 0
         assert specialist_label.text_content() == 'Digital specialists (0)'
 
@@ -1866,15 +1873,14 @@ class TestCatalogueOfBriefsFilterOnClick(APIClientMixin, BaseApplicationTest):
 
         assert urls == tuple(x[0][0] for x in render_template_patch.call_args_list)
 
-    def test_form_has_js_hidden_filter_button(self):
+    def test_form_has_filter_button_by_default(self):
         res = self.client.get('/digital-outcomes-and-specialists/opportunities')
         assert res.status_code == 200
 
         document = html.fromstring(res.get_data(as_text=True))
 
         filter_button = document.xpath(
-            '//button[contains(@class, "js-hidden")][contains(@class, "js-dm-live-search")]'
-            '[normalize-space(text())="Filter"]'
+            '//button[contains(@class, "js-dm-live-search")][normalize-space(text())="Filter"]'
         )
         assert len(filter_button) == 1
 
