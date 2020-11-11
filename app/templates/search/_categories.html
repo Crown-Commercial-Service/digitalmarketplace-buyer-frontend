@@ -1,5 +1,5 @@
 {%- macro top_level_link(text, count, url) -%}
-  <a href="{{ url }}" class="lot-filters__top-level-link">{{ text }}</a>
+  <a href="{{ url }}" class="app-lot-filter__top-level-link">{{ text }}</a>
 {%- endmacro -%}
 
 {%- macro list_item__unselected(text, count, url) -%}
@@ -35,7 +35,7 @@
   {# check that none of these items contain nested items that are "selected" #}
   {% set last_list = items|selectattr(_keys['nested_items'])|list|selectattr(_keys['selected'])|list|length == 0 %}
 
-  <ul {% if last_list %}class="lot-filters--last-list"{% endif %}>
+  <ul class="govuk-list govuk-body-s{% if last_list %} govuk-!-margin-top-2 app-lot-filter__last-list {% else %} govuk-!-margin-top-0{% endif %}">
     {% for item in items %}
       {% if item.get(_keys['selected']) %}
          {{ list_item__selected(text=item.label, count=item.service_count, url=item.get(_keys['url']), nested_items=item.get(_keys['nested_items'])) }}

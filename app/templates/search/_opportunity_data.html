@@ -1,12 +1,14 @@
 <div>
   <h2 class="govuk-heading-s" id="opportunity-data-header">Opportunity data</h2>
   <p class="govuk-body" id="opportunity-data-description">Download data buyers have provided about closed opportunities. Some data may be missing.<p>
+  <p class="govuk-body govuk-!-margin-bottom-9">
+    <a class="govuk-link" 
+        href="{{ 'https://assets.digitalmarketplace.service.gov.uk/{}/communications/data/opportunity-data.csv'.format(framework.slug) }}"
+        download
+        data-analytics="trackEvent"
+        data-analytics-category="opportunity-data-csv"
+        data-analytics-action="download CSV"
+        data-analytics-label="Opportunity Data CSV"        
+    >Download data (CSV)</a>
+  </p>
 </div>
-<a class="govuk-link" 
-    href="{{ 'https://assets.digitalmarketplace.service.gov.uk/{}/communications/data/opportunity-data.csv'.format(framework.slug) }}"
-    download
-    data-analytics="trackEvent"
-    data-analytics-category="opportunity-data-csv"
-    data-analytics-action="download CSV"
-    data-analytics-label="Opportunity Data CSV"        
->Download data (CSV)</a>

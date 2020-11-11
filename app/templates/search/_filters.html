@@ -1,5 +1,5 @@
 {% from "digitalmarketplace/components/option-select/macro.njk" import dmOptionSelect %}
-<div class="dm-filters">
+<div class="app-filters">
   {% include "search/_filter_title.html" %}
   {% for filter in filters %}
     {{ dmOptionSelect({
@@ -12,7 +12,7 @@
   {% endfor %}
   {{ govukButton({
     "text": "Filter",
-    "classes": "js-hidden js-dm-live-search",
+    "classes": "js-dm-live-search",
     "attributes": {
       "aria-controls": "search-summary-accessible-hint-wrapper",
     },
