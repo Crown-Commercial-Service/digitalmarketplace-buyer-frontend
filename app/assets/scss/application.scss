@@ -59,7 +59,6 @@ $govuk-global-styles: true;
 
 // App specific styles
 @import "_atoz_navigation.scss";
-@import "_brief_page.scss";
 @import "_gcloud_browse_list.scss";
 @import "_index-page.scss";
 @import "_search-page.scss";
@@ -69,6 +68,7 @@ $govuk-global-styles: true;
 @import "overrides/_text-input.scss";
 @import "overrides/_notification-banners.scss";
 @import "overrides/_temporary-messages.scss";
+@import "overrides/_stat_block.scss";
 @import "overrides/_summary-list.scss";
 @import "overrides/_radios.scss";
 @import "overrides/_tag.scss";
