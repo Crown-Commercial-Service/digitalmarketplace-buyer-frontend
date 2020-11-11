@@ -9,12 +9,3 @@
     padding-right: 1px;
   }
 }
-
-/*
- * Until the project overview page is de-instruction listed, we want to ensure
- * that search summary text has govuk-body-s style.
- * TODO: Remove this when we no longer use instruction list.
- */
-.direct-award-project-overview-page .instruction-list-item .instruction-list-item-top.app-search-summary {
-  @include govuk-font($size: 16);
-}
