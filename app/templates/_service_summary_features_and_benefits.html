@@ -1,15 +1,15 @@
-<p class="service-summary-lede">{{ (service.serviceSummary or service.serviceDescription) | preserve_line_breaks }}</p> {# G-Cloud 9 uses serviceDescription, not serviceSummary. #}
+<p class="govuk-body">{{ (service.serviceSummary or service.serviceDescription) | preserve_line_breaks }}</p> {# G-Cloud 9 uses serviceDescription, not serviceSummary. #}
 {% if service.features %}
-<h2 class="service-summary-heading">Features</h2>
-<ul class="service-summary-features-and-benefits">
+<h2 class="govuk-heading-m">Features</h2>
+<ul class="govuk-list govuk-list--bullet">
 {% for feature in service.features %}
   <li>{{ feature }}</li>
 {% endfor %}
 </ul>
 {% endif %}
 {% if service.benefits %}
-<h2 class="service-summary-heading">Benefits</h2>
-<ul class="service-summary-features-and-benefits">
+<h2 class="govuk-heading-m">Benefits</h2>
+<ul class="govuk-list govuk-list--bullet">
     {% for benefit in service.benefits %}
     <li>{{ benefit }}</li>
     {% endfor %}
