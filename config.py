@@ -29,6 +29,7 @@ class Config(object):
     DM_SEARCH_API_URL = None
     DM_SEARCH_API_AUTH_TOKEN = None
     DM_MANDRILL_API_KEY = None
+    DM_REDIS_SERVICE_NAME = None
 
     # Used for generating absolute URLs from relative URLs when necessary
     DM_PATCH_FRONTEND_URL = 'http://localhost/'
