@@ -104,10 +104,27 @@
           ]
         })}}
 
-        {{ form.value_in_pounds }}
+        {{ govukInput ({
+          "classes": "govuk-input--width-5",
+          "errorMessage": errors.value_in_pounds.errorMessage,
+          "hint": {
+            "text": form.value_in_pounds.hint,
+          },
+          "id": "input-value_in_pounds",
+          "label": {
+            "text": form.value_in_pounds.label.text,
+            "classes": 'govuk-label--m'
+          },
+          "prefix": {
+            "text": form.value_in_pounds.unit
+          },
+          "spellcheck": false,
+          "name": "value_in_pounds",
+          "type": "text",
+          "value": form.value_in_pounds.value
+        }) }}
 
         {{ govukInput ({
-          "classes": "app-text-input--height-compatible",
           "errorMessage": errors.buying_organisation.errorMessage,
           "hint": {
             "text": form.buying_organisation.hint,
