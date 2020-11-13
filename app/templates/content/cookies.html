@@ -40,20 +40,21 @@ Cookies - Digital Marketplace
     <p class="govuk-body">
       We store a session cookie on your device to help keep your information secure while you use the service.
     </p>
-    <table class="content-table">
-      <tbody>
-        <tr>
-          <th scope="col">Name</th>
-          <th scope="col">Purpose</th>
-          <th scope="col">Expires</th>
-        </tr>
-        <tr>
-          <td>dm_session</td>
-          <td>Stores encrypted session data</td>
-          <td>1 hour</td>
-        </tr>
-      </tbody>
-    </table>
+
+    {{ govukTable({
+      "head": [
+        {"text": "Name", "classes": "govuk-body-s"},
+        {"text": "Purpose", "classes": "govuk-body-s"},
+        {"text": "Expires", "classes": "govuk-body-s"}
+      ],
+      "rows": [
+        [
+          {"text": "dm_session", "classes": "govuk-body-s"},
+          {"text": "Stores encrypted session data", "classes": "govuk-body-s"},
+          {"text": "1 hour", "classes": "govuk-body-s"}
+        ],
+      ]
+    }) }}
 
     <h3 class="govuk-heading-m">Testing if cookies are accepted</h3>
 
@@ -61,20 +62,21 @@ Cookies - Digital Marketplace
       We test whether your browser is accepting cookies from Digital Marketplace, by setting a cookie.
       This cookie allows us to give useful error messages when things go wrong.
     </p>
-    <table class="content-table">
-      <tbody>
-        <tr>
-          <th scope="col">Name</th>
-          <th scope="col">Purpose</th>
-          <th scope="col">Expires</th>
-        </tr>
-        <tr>
-          <td>dm_cookie_probe</td>
-          <td>Tells us if your browser is accepting cookies</td>
-          <td>1 year</td>
-        </tr>
-      </tbody>
-    </table>
+
+    {{ govukTable({
+      "head": [
+        {"text": "Name", "classes": "govuk-body-s"},
+        {"text": "Purpose", "classes": "govuk-body-s"},
+        {"text": "Expires", "classes": "govuk-body-s"}
+      ],
+      "rows": [
+        [
+          {"text": "dm_cookie_probe", "classes": "govuk-body-s"},
+          {"text": "Tells us if your browser is accepting cookies", "classes": "govuk-body-s"},
+          {"text": "1 year", "classes": "govuk-body-s"}
+        ],
+      ]
+    }) }}
 
     <h3 class="govuk-heading-m">Measuring website usage</h3>
 
@@ -94,35 +96,30 @@ Cookies - Digital Marketplace
       We do not allow Google to use or share the data about how you use this site.
     </p>
 
-    <table class="content-table">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Purpose</th>
-          <th>Expires</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>_ga</td>
-          <td>Helps us count how many people visit Digital Marketplace by tracking if you’ve visited the service before
-          </td>
-          <td>2 years</td>
-        </tr>
-        <tr>
-          <td>_gid</td>
-          <td>Helps us count how many people visit Digital Marketplace by tracking if you’ve visited the service before
-          </td>
-          <td>24 hours</td>
-        </tr>
-        <tr>
-          <td>_gat_govuk_shared</td>
-          <td>Helps us count how many users visit <a class="govuk-link" href="http://www.gov.uk" rel=external>GOV.UK</a> after visiting Digital Marketplace
-          </td>
-          <td>10 minutes</td>
-        </tr>
-      </tbody>
-    </table>
+    {{ govukTable({
+      "head": [
+        {"text": "Name", "classes": "govuk-body-s"},
+        {"text": "Purpose", "classes": "govuk-body-s"},
+        {"text": "Expires", "classes": "govuk-body-s"}
+      ],
+      "rows": [
+        [
+          {"text": "_ga", "classes": "govuk-body-s"},
+          {"text": "Helps us count how many people visit Digital Marketplace by tracking if you’ve visited the service before", "classes": "govuk-body-s"},
+          {"text": "2 years", "classes": "govuk-body-s"}
+        ],
+        [
+          {"text": "_gid", "classes": "govuk-body-s"},
+          {"text": "Helps us count how many people visit Digital Marketplace by tracking if you’ve visited the service before", "classes": "govuk-body-s"},
+          {"text": "24 hours", "classes": "govuk-body-s"}
+        ],
+        [
+          {"text": "_gat_govuk_shared", "classes": "govuk-body-s"},
+          {"html": 'Helps us count how many users visit <a class="govuk-link" href="http://www.gov.uk" rel=external>GOV.UK</a> after visiting Digital Marketplace', "classes": "govuk-body-s"},
+          {"text": "10 minutes", "classes": "govuk-body-s"}
+        ]
+      ]
+    }) }}
 
     <h3 class="govuk-heading-m">Analytics settings cookie</h3>
 
@@ -136,20 +133,20 @@ Cookies - Digital Marketplace
       You can <a href="{{ url_for('external.cookie_settings')}}" class="govuk-link">change your analytics
         settings</a> at any time.
     </p>
-    <table class="content-table">
-      <tbody>
-        <tr>
-          <th scope="col">Name</th>
-          <th scope="col">Purpose</th>
-          <th scope="col">Expires</th>
-        </tr>
-        <tr>
-          <td>dm_cookie_policy</td>
-          <td>Tells us that you have seen our cookie message</td>
-          <td>1 year</td>
-        </tr>
-      </tbody>
-    </table>
+    {{ govukTable({
+      "head": [
+        {"text": "Name", "classes": "govuk-body-s"},
+        {"text": "Purpose", "classes": "govuk-body-s"},
+        {"text": "Expires", "classes": "govuk-body-s"}
+      ],
+      "rows": [
+        [
+          {"text": "dm_cookie_policy", "classes": "govuk-body-s"},
+          {"text": "Tells us that you have seen our cookie message", "classes": "govuk-body-s"},
+          {"text": "1 year", "classes": "govuk-body-s"}
+        ],
+      ]
+    }) }}
   </div>
 </div>
 {% endblock %}
