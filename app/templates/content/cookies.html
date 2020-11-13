@@ -40,19 +40,21 @@ Cookies - Digital Marketplace
     <p class="govuk-body">
       We store a session cookie on your device to help keep your information secure while you use the service.
     </p>
-
-    {{ govukTable({
-      "head": [
-        {"text": "Name", "classes": "govuk-body-s"},
-        {"text": "Purpose", "classes": "govuk-body-s"},
-        {"text": "Expires", "classes": "govuk-body-s"}
-      ],
+    
+    {{ govukSummaryList({
       "rows": [
-        [
-          {"text": "dm_session", "classes": "govuk-body-s"},
-          {"text": "Stores encrypted session data", "classes": "govuk-body-s"},
-          {"text": "1 hour", "classes": "govuk-body-s"}
-        ],
+        {
+          "key": {"text": "Name"},
+          "value": {"text": "dm_session"},
+        },
+        {
+          "key": {"text": "Purpose"},
+          "value": {"text": "Stores encrypted session data"},
+        },
+        {
+          "key": {"text": "Expires"},
+          "value": {"text": "1 hour"},
+        }
       ]
     }) }}
 
@@ -62,19 +64,21 @@ Cookies - Digital Marketplace
       We test whether your browser is accepting cookies from Digital Marketplace, by setting a cookie.
       This cookie allows us to give useful error messages when things go wrong.
     </p>
-
-    {{ govukTable({
-      "head": [
-        {"text": "Name", "classes": "govuk-body-s"},
-        {"text": "Purpose", "classes": "govuk-body-s"},
-        {"text": "Expires", "classes": "govuk-body-s"}
-      ],
+    
+    {{ govukSummaryList({
       "rows": [
-        [
-          {"text": "dm_cookie_probe", "classes": "govuk-body-s"},
-          {"text": "Tells us if your browser is accepting cookies", "classes": "govuk-body-s"},
-          {"text": "1 year", "classes": "govuk-body-s"}
-        ],
+        {
+          "key": {"text": "Name"},
+          "value": {"text": "dm_cookie_probe"},
+        },
+        {
+          "key": {"text": "Purpose"},
+          "value": {"text": "Tells us if your browser is accepting cookies"},
+        },
+        {
+          "key": {"text": "Expires"},
+          "value": {"text": "1 year"},
+        }
       ]
     }) }}
 
@@ -95,29 +99,57 @@ Cookies - Digital Marketplace
     <p class="govuk-body">
       We do not allow Google to use or share the data about how you use this site.
     </p>
-
-    {{ govukTable({
-      "head": [
-        {"text": "Name", "classes": "govuk-body-s"},
-        {"text": "Purpose", "classes": "govuk-body-s"},
-        {"text": "Expires", "classes": "govuk-body-s"}
-      ],
+    
+    {{ govukSummaryList({
+      "classes": "govuk-!-margin-bottom-7",
       "rows": [
-        [
-          {"text": "_ga", "classes": "govuk-body-s"},
-          {"text": "Helps us count how many people visit Digital Marketplace by tracking if you’ve visited the service before", "classes": "govuk-body-s"},
-          {"text": "2 years", "classes": "govuk-body-s"}
-        ],
-        [
-          {"text": "_gid", "classes": "govuk-body-s"},
-          {"text": "Helps us count how many people visit Digital Marketplace by tracking if you’ve visited the service before", "classes": "govuk-body-s"},
-          {"text": "24 hours", "classes": "govuk-body-s"}
-        ],
-        [
-          {"text": "_gat_govuk_shared", "classes": "govuk-body-s"},
-          {"html": 'Helps us count how many users visit <a class="govuk-link" href="http://www.gov.uk" rel=external>GOV.UK</a> after visiting Digital Marketplace', "classes": "govuk-body-s"},
-          {"text": "10 minutes", "classes": "govuk-body-s"}
-        ]
+        {
+          "key": {"text": "Name"},
+          "value": {"text": "_ga"},
+        },
+        {
+          "key": {"text": "Purpose"},
+          "value": {"text": "Helps us count how many people visit Digital Marketplace by tracking if you’ve visited the service before"},
+        },
+        {
+          "key": {"text": "Expires"},
+          "value": {"text": "2 years"},
+        }
+      ]
+    }) }}
+    
+    {{ govukSummaryList({
+      "classes": "govuk-!-margin-bottom-7",
+      "rows": [
+        {
+          "key": {"text": "Name"},
+          "value": {"text": "_gid"},
+        },
+        {
+          "key": {"text": "Purpose"},
+          "value": {"text": "Helps us count how many people visit Digital Marketplace by tracking if you’ve visited the service before"},
+        },
+        {
+          "key": {"text": "Expires"},
+          "value": {"text": "24 hours"}
+        }
+      ]
+    }) }}
+    
+    {{ govukSummaryList({
+      "rows": [
+        {
+          "key": {"text": "Name"},
+          "value": {"text": "_gat_govuk_shared"},
+        },
+        {
+          "key": {"text": "Purpose"},
+          "value": {"html": 'Helps us count how many users visit <a class="govuk-link" href="http://www.gov.uk" rel=external>GOV.UK</a> after visiting Digital Marketplace'},
+        },
+        {
+          "key": {"text": "Expires"},
+          "value": {"text": "10 minutes"}
+        }
       ]
     }) }}
 
@@ -133,18 +165,21 @@ Cookies - Digital Marketplace
       You can <a href="{{ url_for('external.cookie_settings')}}" class="govuk-link">change your analytics
         settings</a> at any time.
     </p>
-    {{ govukTable({
-      "head": [
-        {"text": "Name", "classes": "govuk-body-s"},
-        {"text": "Purpose", "classes": "govuk-body-s"},
-        {"text": "Expires", "classes": "govuk-body-s"}
-      ],
+    
+    {{ govukSummaryList({
       "rows": [
-        [
-          {"text": "dm_cookie_policy", "classes": "govuk-body-s"},
-          {"text": "Tells us that you have seen our cookie message", "classes": "govuk-body-s"},
-          {"text": "1 year", "classes": "govuk-body-s"}
-        ],
+        {
+          "key": {"text": "Name"},
+          "value": {"text": "dm_cookie_policy"},
+        },
+        {
+          "key": {"text": "Purpose"},
+          "value": {"text": "Tells us that you have seen our cookie message"},
+        },
+        {
+          "key": {"text": "Expires"},
+          "value": {"text": "1 year"}
+        }
       ]
     }) }}
   </div>
