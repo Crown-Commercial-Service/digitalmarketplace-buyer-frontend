@@ -5,7 +5,7 @@ Key components:
  - The form to be monitored for changes
    - Required id: js-dm-live-search-form
  - The form's submission button
-   - Required css selector: `button.button-save.js-dm-live-search`
+   - Required css selector: `button.js-dm-live-search`
  - An arbitrary number of elements which should get updated.
    - Requires a unique selector (recommend an id with prefix `js-dm-live-search-`)
    - Required class: js-dm-live-search-fade (to hook into fade in/out functionality that telegraphs new content)
@@ -15,8 +15,7 @@ form on the page. The entire form, including elements which are going to change,
 id `js-dm-live-search-wrapper`. The form inside must have the id `js-dm-live-search-form`. Arbitrary elements within the
 wrapper should be tagged with ids in a similar vein, e.g. with the prefix `js-dm-live-search-*`. Any elements whose
 content will change should have the class `js-dm-live-search-fade` to capture the fade in/out used to telegraph new
-content. The form's submit button (`button.button-save.js-dm-live-search`) should have the `js-hidden` class by default;
-this will be removed if the browser's Javascript does not support accessing history.
+content.
 
 When the form detects a change, it will post to the form's associated endpoint after injecting a `live-results=true`
 query parameter. The view must intercept this and return a JSON blob with the below structure:
@@ -50,7 +49,8 @@ endpoint response (application/json):
       this.previousState = false;
       this.resultsCache = {};
   
-      if(GOVUK.GDM.support.history()) {
+      if(window.history && window.history.pushState && window.history.replaceState) {
+        this.$form.find('button.js-dm-live-search').addClass('app-js-hidden');
         this.originalState = this.$form.serializeArray();
         this.saveState();
         this.$form.on('change', 'input[type=checkbox], input[type=search], input[type=radio]', this.formChange.bind(this));
@@ -72,7 +72,7 @@ endpoint response (application/json):
           }.bind(this)
         );
       } else {
-        this.$form.find('button.button-save.js-dm-live-search').removeClass('js-hidden');
+        this.$form.find('button.js-dm-live-search').removeClass('app-js-hidden');
       }
     }
   

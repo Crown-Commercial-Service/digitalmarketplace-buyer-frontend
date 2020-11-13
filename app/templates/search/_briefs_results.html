@@ -1,4 +1,4 @@
-<ul>
+<ul class="govuk-list">
     {% for brief in briefs %}
     <li class="app-search-result">
         <h2 class="govuk-heading-s govuk-!-margin-bottom-1">
@@ -14,7 +14,7 @@
             </li>
         </ul>
 
-        <ul class="app-search-result__metadata">
+        <ul class="govuk-list app-search-result__metadata">
             <li class="govuk-!-display-inline-block">
                 {{ brief.lot.name }}
             </li>
@@ -25,7 +25,7 @@
             {% endif %}
         </ul>
 
-        <ul class="app-search-result__metadata">
+        <ul class="govuk-list app-search-result__metadata">
             {% if brief.status in outcomes.keys() %}
                 <li>
                     Closed: {{ outcomes[brief.status] }}

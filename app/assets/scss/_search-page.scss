@@ -1,94 +1,56 @@
-#search-page-heading .page-heading {
-  margin-bottom: 10px;
+.app-js-hidden {
+  display: none;
+  visibility: hidden;
 }
 
-.search-page-filters {
+/**
+ * Lot/category filter list
+ */
+.app-lot-filter {
 
-  $lot-filters__gutter: 24px;
+  li[aria-current] strong {
+    display: inline-block;
+    margin-top: govuk-spacing(2);
+  }
 
-  .lot-filters {
-
-    @include core-16;
-    margin-bottom: $gutter;
-
-    h2 {
-      @include bold-19;
+  &__top-level-link {
+    &::before {
+      content: "\2039"; /* left-pointing chevron */
+      padding-right: govuk-spacing(1);
+      font-size: 1.333em;
     }
+  }
 
-    .lot-filters--last-list {
-      margin-left: $lot-filters__gutter / 2;
+  &__last-list {
 
-      li[aria-current] strong {
-        margin: 0;
-      }
-    }
-
-    /* if there's no <strong> tag before the deepest list, we need some top spacing */
-    a ~ .lot-filters--last-list {
-      margin-top: $lot-filters__gutter / 2;
-    }
-
-    li {
-      margin-top: $lot-filters__gutter / 8;
-
-      &[aria-current] strong {
-        display: inline-block;
-        margin: ($lot-filters__gutter / 3) 0;
-      }
-    }
-
-    a {
-      text-decoration: none;
-    }
-
-    .lot-filters__top-level-link {
-      padding-left: $lot-filters__gutter / 2;
+    li[aria-current] strong {
       display: inline-block;
-      position: relative;
-
-      &:before {
-        position: absolute;
-        left: 0;
-        top: 0;
-        line-height: .70;
-        content: "\2039"; /* left-pointing chevron */
-        font-size: 1.333em;
-
-        @include media(tablet) {
-          line-height: .85;
-        }
-      }
+      margin-top: 0;
     }
+
+    margin-top: govuk-spacing(3);
+    margin-left: govuk-spacing(3);
   }
 
-  .dm-filters {
+}
 
-    .dm-filter-title {
-      margin-bottom: 10px;
+/**
+ * Other filters
+ */
+.app-filters {
+  .app-filter-title {
 
-      .apply-filters-title {
-        display: inline-block;
-      }
+    .apply-filters-title {
+      display: inline-block;
+    }
 
-      .clear-filters-link {
-        float: right;
-        font-size: 16px;
-      }
-
+    .clear-filters-link {
+      float: right;
+      font-size: 16px;
     }
 
   }
-}
 
-.search-page-filters {
-  padding-bottom: 15px;
-}
-
-.search-result-important-metadata {
-  li {
-    @include bold-16;
-    color: $black;
-  }
 }
 
 /**
@@ -98,7 +60,7 @@
   padding: 0 0 15px;
   margin: 0 0 15px;
   border-bottom: 1px solid $govuk-border-colour;
-  @include core-16;
+  @include govuk-font(16);
   // Automatic wrapping for unbreakable text (e.g. URLs)
   word-wrap: break-word; // Fallback for older browsers only
   overflow-wrap: break-word;
@@ -112,7 +74,15 @@
 * Decrease the size of metadata text to match the Finder app.
 */
 .app-search-result__metadata {
- @include core-14;
+  @include govuk-font(14);
+  margin-bottom: govuk-spacing(0);
+  &.govuk-list {
+    margin-top: govuk-spacing(0);
+  }
+
+  li {
+    margin-bottom: govuk-spacing(0);
+  }
 }
 
 /**

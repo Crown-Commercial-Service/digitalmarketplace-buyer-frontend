@@ -442,7 +442,9 @@ class TestSearchResults(APIClientMixin, BaseApplicationTest):
 
         document = html.fromstring(res.get_data(as_text=True))
 
-        lots = document.xpath('//div[@class="lot-filters"]//ul[@class="lot-filters--last-list"]//li/a')
+        lots = document.xpath(
+            '//div[@class="app-lot-filter"]//ul[contains(@class, "app-lot-filter__last-list")]//li/a'
+        )
         assert lots[0].text_content().startswith('Cloud hosting')
         assert lots[1].text_content().startswith('Cloud software')
         assert lots[2].text_content().startswith('Cloud support')
@@ -455,7 +457,9 @@ class TestSearchResults(APIClientMixin, BaseApplicationTest):
 
         document = html.fromstring(res.get_data(as_text=True))
 
-        lots = document.xpath('//div[@class="lot-filters"]//ul[@class="lot-filters--last-list"]//li/a')
+        lots = document.xpath(
+            '//div[@class="app-lot-filter"]//ul[contains(@class, "app-lot-filter__last-list")]//li/a'
+        )
         assert lots[0].text_content() == 'Cloud hosting (500)'
         assert lots[1].text_content() == 'Cloud software (500)'
         assert lots[2].text_content() == 'Cloud support (500)'
@@ -468,7 +472,7 @@ class TestSearchResults(APIClientMixin, BaseApplicationTest):
 
         document = html.fromstring(res.get_data(as_text=True))
 
-        lots = document.xpath('//div[@class="lot-filters"]//li[@aria-current="page"]/strong')
+        lots = document.xpath('//div[@class="app-lot-filter"]//li[@aria-current="page"]/strong')
         assert lots[0].text_content() == 'Cloud software'
 
     def test_search_results_show_aggregations_by_parent_category(self):
@@ -483,7 +487,9 @@ class TestSearchResults(APIClientMixin, BaseApplicationTest):
         expected_lot_counts = self._get_fixture_data('g9_aggregations_fixture.json')['aggregations']['service'
                                                                                                      'Categories']
 
-        categories = document.xpath('//div[@class="lot-filters"]//ul[@class="lot-filters--last-list"]//li')
+        categories = document.xpath(
+            '//div[@class="app-lot-filter"]//ul[contains(@class, "app-lot-filter__last-list")]//li'
+        )
         for category in categories:
             category_name, number_of_services = category_matcher.match(category.text_content()).groups()
             assert expected_lot_counts[category_name] == int(number_of_services)
@@ -512,11 +518,11 @@ class TestSearchResults(APIClientMixin, BaseApplicationTest):
 
         document = html.fromstring(res.get_data(as_text=True))
 
-        all_categories = document.xpath('//div[@class="lot-filters"]/ul/li')[0]
-        assert all_categories.xpath('a[@class="lot-filters__top-level-link"]')[0].text_content() == 'All categories'
+        all_categories = document.xpath('//div[@class="app-lot-filter"]/ul/li')[0]
+        assert all_categories.xpath('a[@class="app-lot-filter__top-level-link"]')[0].text_content() == 'All categories'
 
         cloud_software = all_categories.xpath('ul/li')[0]
-        assert cloud_software.xpath('a[@class="lot-filters__top-level-link"]')[0].text_content() == 'Cloud software'
+        assert cloud_software.xpath('a[@class="app-lot-filter__top-level-link"]')[0].text_content() == 'Cloud software'
 
         parent_category = cloud_software.xpath('ul/li[@aria-current="page"]')[0]
         assert parent_category.xpath('strong')[0].text_content() == 'Accounting and finance'
@@ -533,7 +539,9 @@ class TestSearchResults(APIClientMixin, BaseApplicationTest):
         expected_lot_counts = self._get_fixture_data('g9_aggregations_fixture.json')['aggregations']['service'
                                                                                                      'Categories']
 
-        categories = document.xpath('//div[@class="lot-filters"]//ul[@class="lot-filters--last-list"]//li')
+        categories = document.xpath(
+            '//div[@class="app-lot-filter"]//ul[contains(@class, "app-lot-filter__last-list")]//li'
+        )
 
         for category in categories:
             category_name, number_of_services = category_matcher.match(category.text_content()).groups()
@@ -547,7 +555,9 @@ class TestSearchResults(APIClientMixin, BaseApplicationTest):
 
         document = html.fromstring(res.get_data(as_text=True))
 
-        categories_anchors = document.xpath('//div[@class="lot-filters"]//ul[@class="lot-filters--last-list"]//li/a')
+        categories_anchors = document.xpath(
+            '//div[@class="app-lot-filter"]//ul[contains(@class, "app-lot-filter__last-list")]//li/a'
+        )
 
         for category_anchor in categories_anchors:
             assert 'parentCategory=accounting+and+finance' in category_anchor.get('href')
@@ -560,7 +570,9 @@ class TestSearchResults(APIClientMixin, BaseApplicationTest):
 
         document = html.fromstring(res.get_data(as_text=True))
 
-        lots = document.xpath('//div[@class="lot-filters"]//ul[@class="lot-filters--last-list"]//li/a')
+        lots = document.xpath(
+            '//div[@class="app-lot-filter"]//ul[contains(@class, "app-lot-filter__last-list")]//li/a'
+        )
         for lot in lots:
             assert 'phoneSupport=true' in lot.get('href')
 
@@ -572,7 +584,7 @@ class TestSearchResults(APIClientMixin, BaseApplicationTest):
 
         document = html.fromstring(res.get_data(as_text=True))
 
-        lots = document.xpath('//div[@class="lot-filters"]/ul/li/a')
+        lots = document.xpath('//div[@class="app-lot-filter"]/ul/li/a')
         assert 'phoneSupport=true' in lots[0].get('href')
         assert 'scalingType=automatic' not in lots[0].get('href')
 
@@ -584,7 +596,7 @@ class TestSearchResults(APIClientMixin, BaseApplicationTest):
 
         document = html.fromstring(res.get_data(as_text=True))
 
-        category_links = document.xpath('//div[@class="lot-filters"]/ul/li/ul/li/ul/li/a')
+        category_links = document.xpath('//div[@class="app-lot-filter"]/ul/li/ul/li/ul/li/a')
         for category_link in category_links:
             assert 'phoneSupport=true' in category_link.get('href')
             assert 'scalingType=automatic' in category_link.get('href')
@@ -597,8 +609,10 @@ class TestSearchResults(APIClientMixin, BaseApplicationTest):
 
         document = html.fromstring(res.get_data(as_text=True))
 
-        training = document.xpath('//div[@class="lot-filters"]//ul[@class="lot-filters--last-list"]//'
-                                  'li[normalize-space(string())=$training]', training="Training (0)")
+        training = document.xpath(
+            '//div[@class="app-lot-filter"]//ul[contains(@class, "app-lot-filter__last-list")]//'
+            'li[normalize-space(string())=$training]', training="Training (0)"
+        )
         assert len(training) == 1
         assert len(training[0].xpath('a')) == 0
 
@@ -731,14 +745,13 @@ class TestSearchFilterOnClick(APIClientMixin, BaseApplicationTest):
 
         assert urls == tuple(x[0][0] for x in render_template_patch.call_args_list)
 
-    def test_g_cloud_search_has_js_hidden_filter_button(self):
+    def test_g_cloud_search_has_filter_button_by_default(self):
         res = self.client.get('/g-cloud/search')
         assert res.status_code == 200
 
         document = html.fromstring(res.get_data(as_text=True))
 
         filter_button = document.xpath(
-            '//button[contains(@class, "js-hidden")][contains(@class, "js-dm-live-search")]'
-            '[normalize-space(text())="Filter"]'
+            '//button[contains(@class, "js-dm-live-search")][normalize-space(text())="Filter"]'
         )
         assert len(filter_button) == 1
