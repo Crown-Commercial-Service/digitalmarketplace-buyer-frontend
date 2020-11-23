@@ -223,15 +223,21 @@ class TestDirectAward(TestDirectAwardBase):
     def _update_existing_project(self, save_search_selection):
         return self._save_search(None, save_search_selection)
 
-    def _asserts_for_create_project_failure(self, res):
+    def _asserts_for_create_project_failure(
+        self,
+        res,
+        expected_error_message="Enter a name for your search between 1 and 100 characters",
+        expected_error_link="input-project_name",
+    ):
         assert res.status_code == 400
         doc = res.get_data(as_text=True)
         assert self.SEARCH_API_URL not in doc  # it was once, so let's check
         assert self.SIMPLE_SEARCH_PARAMS in doc
-        errors = html.fromstring(doc)
-        assert len(errors.cssselect("div.govuk-error-summary a")) == 1
-        assert errors.cssselect("div.govuk-error-summary a")[0].text_content() == \
-            "Enter a name for your search between 1 and 100 characters"
+        doc = html.fromstring(doc)
+        errors = doc.cssselect("div.govuk-error-summary")[0]
+        assert len(errors.cssselect("a")) == 1
+        assert errors.cssselect("a")[0].text_content() == expected_error_message
+        assert errors.cssselect("a")[0].attrib["href"] == f"#{expected_error_link}"
 
     def test_save_search_submit_success(self):
         res = self._save_search('some name " foo bar \u2016')
@@ -242,6 +248,14 @@ class TestDirectAward(TestDirectAwardBase):
         res = self._save_search(name='', save_search_selection='1')
         assert res.status_code == 303
         assert urlparse(res.location).path == '/buyers/direct-award/g-cloud/projects/1'
+
+    def test_save_search_submit_no_input(self):
+        res = self._save_search(name=None, save_search_selection=None)
+        self._asserts_for_create_project_failure(
+            res,
+            expected_error_message="Select where to save your search result",
+            expected_error_link="input-save_search_selection",
+        )
 
     def test_save_search_submit_no_name(self):
         res = self._save_search('')
@@ -787,7 +801,17 @@ class TestDirectAwardEndSearch(TestDirectAwardBase):
         assert res.status_code == 400
 
         doc = html.fromstring(res.get_data(as_text=True))
+        error_message = doc.cssselect(".govuk-error-message")[0]
+        error_summary_errors = doc.cssselect("div.govuk-error-summary a")
+
         assert doc.get_element_by_id('input-user_understands-error') is not None
+
+        assert len(error_summary_errors) == 1
+        assert error_message.text_content().strip() == "Error: " + error_summary_errors[0].text
+
+        assert not error_summary_errors[0].attrib["href"].endswith("-1"), (
+            "in govuk-frontend v2 first radio element id ended in '-1', in govuk-frontend v3 it has no suffix"
+        )
 
     def test_end_search_redirects_to_results_page(self):
         self.login_as_buyer()
@@ -868,6 +892,9 @@ class TestDirectAwardAwardContract(TestDirectAwardBase):
         errors = doc.cssselect('div.govuk-error-summary a')
         assert len(errors) == 1
         assert errors[0].text_content() == 'Select if you have awarded your contract'
+        assert not errors[0].attrib["href"].endswith("-1"), (
+            "in govuk-frontend v2 first radio element id ended in '-1', in govuk-frontend v3 it has no suffix"
+        )
 
     @pytest.mark.parametrize('choice, expected_redirect',
                              (('still-assessing', '/buyers/direct-award/g-cloud/projects/1'),
@@ -999,6 +1026,26 @@ class TestDirectAwardAwardContract(TestDirectAwardBase):
             data={'which_service_won_the_contract': '123456789'},
         )
         self.data_api_client.create_direct_award_project_outcome_award.assert_called_once()
+
+    def test_which_service_did_you_award_page_error_if_no_input(self):
+        self.login_as_buyer()
+        res = self.client.post(
+            '/buyers/direct-award/g-cloud/projects/1/which-service-won-contract',
+            data={'which_service_won_the_contract': None},
+        )
+
+        assert res.status_code == 400
+
+        doc = html.fromstring(res.get_data(as_text=True))
+        assert doc.findtext(".//title").strip().startswith("Error: ")
+        error_message = doc.cssselect('.govuk-error-message')[0].text_content().strip()
+        assert error_message == "Error: Select the service that won the contract"
+        errors = doc.cssselect('div.govuk-error-summary a')
+        assert len(errors) == 1
+        assert errors[0].text_content() == "Select the service that won the contract"
+        assert not errors[0].attrib["href"].endswith("-1"), (
+            "in govuk-frontend v2 first radio element id ended in '-1', in govuk-frontend v3 it has no suffix"
+        )
 
     def test_which_service_did_you_award_should_redirect_to_tell_us_about_contract(self):
         self.login_as_buyer()
@@ -1212,6 +1259,25 @@ class TestDirectAwardNonAwardContract(TestDirectAwardBase):
             data={'why_did_you_not_award_the_contract': 'no_suitable_services'}
         )
         self.data_api_client.create_direct_award_project_outcome_none_suitable.assert_called_once()
+
+    def test_why_did_you_not_award_page_error_if_no_input(self):
+        self.login_as_buyer()
+
+        res = self.client.post("/buyers/direct-award/g-cloud/projects/1/why-didnt-you-award-contract")
+
+        assert res.status_code == 400
+
+        doc = html.fromstring(res.get_data(as_text=True))
+
+        error_message = doc.cssselect(".govuk-error-message")[0]
+        error_summary_errors = doc.cssselect("div.govuk-error-summary a")
+
+        assert len(error_summary_errors) == 1
+        assert error_message.text_content().strip() == "Error: " + error_summary_errors[0].text
+
+        assert not error_summary_errors[0].attrib["href"].endswith("-1"), (
+            "in govuk-frontend v2 first radio element id ended in '-1', in govuk-frontend v3 it has no suffix"
+        )
 
     def test_why_did_you_not_award_page_raises_410_if_outcome_is_completed(self):
         self.login_as_buyer()
