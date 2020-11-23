@@ -1,0 +1,12 @@
+/**
+ * We display stat blocks on opportunity pages. They each take up 1/3rd of the row width.
+ * However, they look visually mismatched with the tables we display below, whose cells each
+ * take up 30% width.
+ *
+ * So for now, we override the width to make them align a bit better with the tables.
+ */
+.app-stat-block {
+    @include govuk-media-query($from: tablet) {
+        width: 30%;
+    }
+}
