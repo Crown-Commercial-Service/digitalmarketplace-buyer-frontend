@@ -107,8 +107,8 @@ endpoint response (application/json):
           function(){
             var newPath = window.location.origin + window.location.pathname + "?" + $.param(this.state);
             history.pushState(this.state, '', newPath);
-            if (GOVUK.analytics && GOVUK.analytics.trackPageview) {
-              GOVUK.analytics.trackPageview(newPath);
+            if (DMGOVUKFrontend.analytics && DMGOVUKFrontend.Analytics.TrackPageview) {
+              DMGOVUKFrontend.Analytics.TrackPageview(newPath);
             }
           }.bind(this)
         );
