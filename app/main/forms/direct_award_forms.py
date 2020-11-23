@@ -20,9 +20,6 @@ class CreateProjectForm(FlaskForm):
             InputRequired("Select where to save your search result")
         ]
     )
-    name = DMStripWhitespaceStringField(
-        "Name your search. A reference number or short description of what you want to buy makes a good name.",
-    )
 
     def __init__(self, projects, **kwargs):
         super().__init__(**kwargs)
@@ -34,11 +31,6 @@ class CreateProjectForm(FlaskForm):
         self.save_search_selection.options.append({
             "label": "Save a new search",
             "value": "new_search",
-            "reveal": {
-                "question": self.name.label.text,
-                "hint": "100 characters maximum",
-                "name": self.name.name,
-            }
         })
 
 
