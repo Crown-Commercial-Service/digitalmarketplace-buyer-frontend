@@ -22,7 +22,7 @@ class TestApplication(APIClientMixin, BaseApplicationTest):
     def test_analytics_code_should_be_in_javascript(self):
         res = self.client.get('/static/javascripts/application.js')
         assert res.status_code == 200
-        assert 'trackPageview' in res.get_data(as_text=True)
+        assert 'TrackPageview' in res.get_data(as_text=True)
 
     def test_should_display_cookie_banner(self):
         res = self.client.get('/')

@@ -1,58 +1,12 @@
-// GOVUK Front-end toolkit variables, mixins and functions
-@import "colours";              // Colour variables
-@import "_typography.scss";     // Core bold and heading mixins
-@import "_url-helpers.scss";
-
 // Path to assets for use with file-url()
 $path: "/static/images/";
-
-// Temporarily needed until all components have migrated to govuk-frontend
-// and elements which need to be styled should have class names associated to them
-@import "overrides/govuk-template/_govuk-template";
-
-// Digital Marketplace Front-end toolkit shared CSS placeholders used by other DM toolkit styles
-@import "toolkit/shared_placeholders/_temporary-messages.scss";
-@import "toolkit/shared_placeholders/_placeholders.scss";
-@import "toolkit/shared_placeholders/_dm-typography.scss";
-
-// Digital Marketplace Front-end toolkit shared styles between multiple apps
-@import "toolkit/shared_scss/_reset.scss";
-@import "toolkit/shared_scss/_lists.scss";
-@import "toolkit/shared_scss/_dmspeak.scss";
-@import "toolkit/shared_scss/_conditionals2.scss";
-
-// Digital Marketplace Front-end toolkit styles (only import the files you need)
-@import "toolkit/_breadcrumb.scss";
-@import "toolkit/_buttons.scss";
-@import "toolkit/_contact-details.scss";
-@import "toolkit/_document.scss";
-@import "toolkit/_footer.scss";
-@import "toolkit/_instruction-list.scss";
-@import "toolkit/_notification-banners.scss";
-@import "toolkit/_page-headings.scss";
-@import "toolkit/_phase-banner.scss";
-@import "toolkit/_proposition-header.scss";
-@import "toolkit/_statistics.scss";
-@import "toolkit/_report-a-problem.scss";
-@import "toolkit/forms/_dates.scss";
-@import "toolkit/forms/_hint.scss";
-@import "toolkit/forms/_keyword-search.scss";
-@import "toolkit/forms/_list-entry.scss";
-@import "toolkit/forms/_questions.scss";
-@import "toolkit/forms/_selection-buttons.scss";
-@import "toolkit/forms/_summary.scss";
-@import "toolkit/forms/_textboxes.scss";
-@import "toolkit/forms/_validation.scss";
-@import "toolkit/_user-research-consent-banner.scss";
 
 // GOV.UK Design System (compatible with old toolkit/elements)
 $govuk-assets-path: '/static/';
 $govuk-images-path: '/static/images/';
 $govuk-fonts-path: '/static/fonts/';
-$govuk-compatibility-govukfrontendtoolkit: true;
-$govuk-compatibility-govukelements: true;
 $govuk-global-styles: true;
-@import "node_modules/govuk-frontend/all";
+@import "node_modules/govuk-frontend/govuk/all";
 
 // Digital Marketplace Components
 @import "node_modules/digitalmarketplace-govuk-frontend/digitalmarketplace/all";
@@ -71,8 +25,8 @@ $govuk-global-styles: true;
 @import "overrides/_tag.scss";
 
 // Misc styles
-// TODO: Move misc styling into their own partial files or the Digital Marketplace FE Toolkit
 
+// TODO: Decide how we want to style our <abbr> tags.
 abbr {
   text-decoration: none;
 }

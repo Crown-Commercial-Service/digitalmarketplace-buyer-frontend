@@ -35,7 +35,8 @@ class TestSuppliersPage(DataAPIClientMixin, BaseApplicationTest):
         res = self.client.get('/g-cloud/suppliers')
         assert res.status_code == 200
         assert self._strip_whitespace(
-            '<li class="selected"><span class="visuallyhidden">Suppliers starting with </span><strong>A</strong></li>'
+            '<li class="selected"><span class="govuk-visually-hidden">'
+            'Suppliers starting with </span><strong>A</strong></li>'
         ) in self._strip_whitespace(res.get_data(as_text=True))
 
     def test_should_show_suppliers_prefixed_by_a_param(self):
@@ -43,14 +44,16 @@ class TestSuppliersPage(DataAPIClientMixin, BaseApplicationTest):
         self.data_api_client.find_suppliers.assert_called_once_with('M', 1, 'g-cloud')
         assert res.status_code == 200
         assert self._strip_whitespace(
-            '<li class="selected"><span class="visuallyhidden">Suppliers starting with </span><strong>M</strong></li>'
+            '<li class="selected"><span class="govuk-visually-hidden">'
+            'Suppliers starting with </span><strong>M</strong></li>'
         ) in self._strip_whitespace(res.get_data(as_text=True))
 
     def test_should_use_uppercase_prefix(self):
         res = self.client.get('/g-cloud/suppliers?prefix=b')
         assert res.status_code == 200
         assert self._strip_whitespace(
-            '<li class="selected"><span class="visuallyhidden">Suppliers starting with </span><strong>B</strong></li>'
+            '<li class="selected"><span class="govuk-visually-hidden">'
+            'Suppliers starting with </span><strong>B</strong></li>'
         ) in self._strip_whitespace(res.get_data(as_text=True))
 
     def test_should_use_default_if_invalid(self):
@@ -59,7 +62,8 @@ class TestSuppliersPage(DataAPIClientMixin, BaseApplicationTest):
 
         assert res.status_code == 200
         assert self._strip_whitespace(
-            '<li class="selected"><span class="visuallyhidden">Suppliers starting with </span><strong>A</strong></li>'
+            '<li class="selected"><span class="govuk-visually-hidden">'
+            'Suppliers starting with </span><strong>A</strong></li>'
         ) in self._strip_whitespace(res.get_data(as_text=True))
 
     def test_should_use_default_if_multichar_prefix(self):
@@ -69,7 +73,8 @@ class TestSuppliersPage(DataAPIClientMixin, BaseApplicationTest):
         assert res.status_code == 200
 
         assert self._strip_whitespace(
-            '<li class="selected"><span class="visuallyhidden">Suppliers starting with </span><strong>A</strong></li>'
+            '<li class="selected"><span class="govuk-visually-hidden">'
+            'Suppliers starting with </span><strong>A</strong></li>'
         ) in self._strip_whitespace(res.get_data(as_text=True))
 
     def test_should_use_number_range_prefix(self):
@@ -78,7 +83,7 @@ class TestSuppliersPage(DataAPIClientMixin, BaseApplicationTest):
 
         assert res.status_code == 200
         assert self._strip_whitespace(
-            u'<li class="selected"><span class="visuallyhidden">Suppliers starting with </span>' +
+            u'<li class="selected"><span class="govuk-visually-hidden">Suppliers starting with </span>' +
             u'<strong>1–9</strong></li>'
         ) in self._strip_whitespace(res.get_data(as_text=True))
 
@@ -104,7 +109,7 @@ class TestSuppliersPage(DataAPIClientMixin, BaseApplicationTest):
         document = html.fromstring(res.get_data(as_text=True))
 
         nav_lis = document.xpath(
-            "//li[.//*[contains(@class, 'visuallyhidden')][normalize-space(string())=$s]][.//a[@href]]",
+            "//li[.//*[contains(@class, 'govuk-visually-hidden')][normalize-space(string())=$s]][.//a[@href]]",
             s="Suppliers starting with",
         )
         expected_strings = (

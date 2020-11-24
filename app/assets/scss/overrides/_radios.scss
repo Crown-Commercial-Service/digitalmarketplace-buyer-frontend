@@ -4,7 +4,7 @@ by making the hint text a little smaller. We apply this style generically to ach
 across other pages. We can review this when updated to Design System 3 to decide if we still want
 the font size to be smaller */
 .govuk-radios__hint {
-    @include core-16;
+    @include govuk-font(16);
 }
 
 /* On the choose-lot page, options have both a description and a hint. Before we review this

@@ -47,24 +47,24 @@
       {% for item in nav %}
         {% if prefix == item %}
           <li class="selected">
-            <span class="visuallyhidden">Suppliers starting with </span>
+            <span class="govuk-visually-hidden">Suppliers starting with </span>
             <strong>{{ item }}</strong>
           </li>
         {% else %}
           <li>
-            <span class="visuallyhidden">Suppliers starting with </span>
+            <span class="govuk-visually-hidden">Suppliers starting with </span>
             <a class="govuk-link" href="{{ url_for('main.suppliers_list_by_prefix', prefix=item)}}">{{ item }}</a>
           </li>
         {% endif %}
       {% endfor %}
       {% if prefix == "other" %}
         <li class="selected">
-          <span class="visuallyhidden">Suppliers starting with </span>
+          <span class="govuk-visually-hidden">Suppliers starting with </span>
           <strong>1–9</strong>
         </li>
       {% else %}
         <li>
-          <span class="visuallyhidden">Suppliers starting with </span>
+          <span class="govuk-visually-hidden">Suppliers starting with </span>
           <a class="govuk-link" href="{{ url_for('main.suppliers_list_by_prefix', prefix='other') }}">1–9</a>
         </li>
       {% endif %}

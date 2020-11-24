@@ -16,12 +16,10 @@ from decimal import Decimal
 
 class CreateProjectForm(FlaskForm):
     save_search_selection = DMRadioField(
+        id="input-save_search_selection",
         validators=[
             InputRequired("Select where to save your search result")
         ]
-    )
-    name = DMStripWhitespaceStringField(
-        "Name your search. A reference number or short description of what you want to buy makes a good name.",
     )
 
     def __init__(self, projects, **kwargs):
@@ -34,11 +32,6 @@ class CreateProjectForm(FlaskForm):
         self.save_search_selection.options.append({
             "label": "Save a new search",
             "value": "new_search",
-            "reveal": {
-                "question": self.name.label.text,
-                "hint": "100 characters maximum",
-                "name": self.name.name,
-            }
         })
 
 
@@ -58,6 +51,7 @@ class DidYouAwardAContractForm(FlaskForm):
 
     did_you_award_a_contract = DMRadioField(
         "Did you award a contract?",
+        id="input-did_you_award_a_contract",
         validators=[InputRequired(message="Select if you have awarded your contract")],
         options=[
             {'value': YES, 'label': 'Yes'},
@@ -69,6 +63,7 @@ class DidYouAwardAContractForm(FlaskForm):
 class WhichServiceWonTheContractForm(FlaskForm):
     which_service_won_the_contract = DMRadioField(
         "Which service won the contract?",
+        id="input-which_service_won_the_contract",
         validators=[InputRequired(message="Select the service that won the contract")],
     )
 
@@ -125,6 +120,7 @@ class TellUsAboutContractForm(FlaskForm):
 class WhyDidYouNotAwardForm(FlaskForm):
     why_did_you_not_award_the_contract = DMRadioField(
         "Why didn’t you award a contract?",
+        id="input-why_did_you_not_award_the_contract",
         options=[
             {
                 "label": "The work has been cancelled",
@@ -144,6 +140,7 @@ class WhyDidYouNotAwardForm(FlaskForm):
 class BeforeYouDownloadForm(FlaskForm):
     user_understands = DMBooleanField(
         "I understand that I cannot edit my search after I export my results",
+        id="input-user_understands",
         validators=[
             InputRequired(message="Confirm that you’ve finished editing your search")
         ],

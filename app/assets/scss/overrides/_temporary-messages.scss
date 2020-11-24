@@ -1,14 +1,9 @@
 // Home page temporary message
-.temporary-framework-message {
+.app-temporary-framework-message {
   @include govuk-responsive-padding(3);
   @include govuk-responsive-margin(4, "bottom");
-  margin-bottom: $gutter;
-  background: $light-blue-25;
-  @include core-19;
-  color: $black;
-}
-
-.temporary-framework-message-heading {
-  @include bold-19;
-  @include govuk-responsive-margin(2, "bottom");
+  margin-bottom: 30px;
+  background: govuk-tint(govuk-colour("light-blue"), 80%);
+  @include govuk-font(19);
+  color: $govuk-text-colour;
 }
