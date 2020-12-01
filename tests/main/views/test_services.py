@@ -76,7 +76,7 @@ class TestServicePage(DataAPIClientMixin, BaseApplicationTest):
         ]
 
         doc_hrefs = [a.get('href') for a in document.xpath(
-            '//div[@id="meta"]//ul[contains(@class, "govuk-list")]//li/a')]
+            '//div[@id="meta"]//ul[contains(@class, "govuk-list")]//li/section[@class="dm-attachment"]//p/a')]
 
         print(str(doc_hrefs))
 
