@@ -19,10 +19,17 @@
   <h2 class="govuk-heading-s govuk-!-margin-bottom-1 govuk-!-padding-top-1">Service documents</h2>
   <ul class="govuk-list govuk-body-s">
   {% for document in service.meta.documents %}
-    <li class="govuk-!-margin-bottom-2">
-      <a href="{{ document.url }}" class="govuk-link">
-        {{ document.name }} ({{ document.extension }})
-      </a>
+    <li class="gouk-!-margin-bottom-2">
+      {{dmAttachment({
+        "link": {
+          "classes": "govuk-!-font-size-16",
+          "href": document.url,
+          "text": document.name
+        },
+        "contentType": document.extension | upper,
+        "headingTag": 'p',
+        "thumbnailSize": "small"
+      })}}
     </li>
   {% endfor %}
   </ul>
