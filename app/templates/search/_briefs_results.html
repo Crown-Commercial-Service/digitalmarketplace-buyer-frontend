@@ -5,11 +5,11 @@
             <a class="govuk-link" href="{{ url_for('.get_brief_by_id', framework_family=framework_family, brief_id=brief.id) }}">{{ brief.title }}</a>
         </h2>
 
-        <ul>
-            <li class="govuk-!-font-weight-bold">
+        <ul class="govuk-list govuk-!-margin-top-0 govuk-!-margin-bottom-0">
+            <li class="govuk-!-font-weight-bold govuk-!-font-size-16 govuk-!-margin-bottom-0">
                 <span class="govuk-visually-hidden">Organisation: </span>{{ brief.organisation }}
             </li>
-            <li class="govuk-!-font-weight-bold">
+            <li class="govuk-!-font-weight-bold govuk-!-font-size-16">
                 <span class="govuk-visually-hidden">Location: </span>{{ brief.location }}
             </li>
         </ul>
