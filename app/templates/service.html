@@ -76,6 +76,10 @@
 <div class="govuk-grid-row" id="service-attributes">
   <div class="govuk-grid-column-full">
     {% include '_service_attributes.html' %}
+  </div>
+</div>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
     <h2 class="govuk-heading-m app-summary-list-heading" id="service-documents">Service documents</h2>
     <ul class="govuk-list">
     {% for document in service.meta.documents %}
@@ -93,6 +97,11 @@
       </li>
     {% endfor %}
     </ul>
+    {{ govukDetails({
+      "classes": "govuk-!-font-size-16",
+      "summaryText": "Request an accessible format",
+      "html": 'If you use assistive technology (such as a screen reader) and need a version of these documents in a more accessible format, please email <a href="mailto:info@crowncommercial.gov.uk" target="_blank" class="govuk-link">info@crowncommercial.gov.uk</a>. Please tell us what format you need. It will help us if you say what assistive technology you use.'
+    })}}
   </div>
 </div>
 
