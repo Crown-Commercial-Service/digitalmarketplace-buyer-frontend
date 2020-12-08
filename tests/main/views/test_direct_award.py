@@ -1182,6 +1182,34 @@ class TestDirectAwardTellUsAboutContract(TestDirectAwardBase):
             else:
                 assert input_element.attrib['value'] == value
 
+    @pytest.mark.parametrize("missing_field", (
+        "start_date-year", "start_date-month", "start_date-day",
+        "end_date-year", "end_date-month", "end_date-day",
+    ))
+    def test_missing_date_data_raises_400_and_highlights_missing_field(
+        self, client, data, missing_field
+    ):
+        data[missing_field] = ""
+        res = client.post(self.url, data=data)
+        assert res.status_code == 400
+
+        doc = html.fromstring(res.get_data(as_text=True))
+
+        date_part_name = missing_field.split("-")[-1]
+        input_id = "input-" + missing_field
+
+        error_messages = doc.cssselect(".govuk-error-message")
+        assert len(error_messages) == 1
+        assert date_part_name in error_messages[0].text_content()
+
+        errors = doc.cssselect("div.govuk-error-summary a")
+        assert len(errors) == 1
+        assert len(errors[0].text_content()) > 0
+        assert errors[0].attrib["href"] == "#" + input_id
+
+        input_el = doc.get_element_by_id(input_id)
+        assert "govuk-input--error" in input_el.classes
+
     def test_if_end_date_is_before_start_date_raise_400_and_show_validation_message(self, client, data):
         data.update({'end_date-year': str(int(data['start_date-year']) - 1)})
         res = client.post(self.url, data=data)
@@ -1191,7 +1219,8 @@ class TestDirectAwardTellUsAboutContract(TestDirectAwardBase):
         assert doc.xpath('count(//span[@class="govuk-error-message"])') == 1
         errors = doc.cssselect('div.govuk-error-summary a')
         assert len(errors) == 1
-        assert errors[0].text_content() == 'Your end date must be later than the start date.'
+        assert errors[0].text_content() == 'End date must be after the start date'
+        assert len(doc.cssselect(".govuk-input--error")) == 3
 
     def test_raises_410_if_outcome_is_completed(self, client):
         self.data_api_client.get_outcome.return_value['outcome']['completed'] = True
