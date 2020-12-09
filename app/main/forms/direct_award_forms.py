@@ -9,7 +9,7 @@ from dmutils.forms.fields import (
     DMStripWhitespaceStringField,
     DMRadioField,
 )
-from dmutils.forms.validators import GreaterThan
+from dmutils.forms.validators import DateValidator, GreaterThan
 
 from decimal import Decimal
 
@@ -82,20 +82,16 @@ class TellUsAboutContractForm(FlaskForm):
 
     start_date = DMDateField(
         "Start date",
-        id="input-start_date-day",
         validators=[
-            InputRequired("Enter the start date"),
-            DataRequired("Enter the full start date of your contract"),
+            DateValidator("the start date"),
         ],
     )
 
     end_date = DMDateField(
         "End date",
-        id="input-end_date-day",
         validators=[
-            InputRequired("Enter the end date"),
-            DataRequired("Enter the full end date of your contract"),
-            GreaterThan("start_date", "Your end date must be later than the start date."),
+            DateValidator("the end date"),
+            GreaterThan("start_date", "End date must be after the start date"),
         ],
     )
 

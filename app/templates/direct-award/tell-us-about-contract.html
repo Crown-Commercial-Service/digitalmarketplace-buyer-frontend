@@ -55,17 +55,17 @@
           "errorMessage": errors.start_date.errorMessage if errors.start_date.errorMessage,
           "items": [
             {
-              "classes": "govuk-input--width-2" ~ (' govuk-input--error' if errors.start_date.errorMessage),
+              "classes": "govuk-input--width-2" ~ (' govuk-input--error' if form.start_date.day.errors),
               "name": "day",
               "value": form.start_date.value['start_date-day'] if form.start_date.value['start_date-day']
             },
             {
-              "classes": "govuk-input--width-2" ~ (' govuk-input--error' if errors.start_date.errorMessage),
+              "classes": "govuk-input--width-2" ~ (' govuk-input--error' if form.start_date.month.errors),
               "name": "month",
               "value": form.start_date.value['start_date-month'] if form.start_date.value['start_date-month']
             },
             {
-              "classes": "govuk-input--width-4" ~ (' govuk-input--error' if errors.start_date.errorMessage),
+              "classes": "govuk-input--width-4" ~ (' govuk-input--error' if form.start_date.year.errors),
               "name": "year",
               "value": form.start_date.value['start_date-year'] if form.start_date.value['start_date-year']
             }
@@ -87,17 +87,17 @@
           "errorMessage": errors.end_date.errorMessage if errors.end_date.errorMessage,
           "items": [
             {
-              "classes": "govuk-input--width-2" ~ (' govuk-input--error' if errors.end_date.errorMessage),
+              "classes": "govuk-input--width-2" ~ (' govuk-input--error' if form.end_date.day.errors),
               "name": "day",
               "value": form.end_date.value['end_date-day'] if form.end_date.value['end_date-day']
             },
             {
-              "classes": "govuk-input--width-2" ~ (' govuk-input--error' if errors.end_date.errorMessage),
+              "classes": "govuk-input--width-2" ~ (' govuk-input--error' if form.end_date.month.errors),
               "name": "month",
               "value": form.end_date.value['end_date-month'] if form.end_date.value['end_date-month']
             },
             {
-              "classes": "govuk-input--width-4" ~ (' govuk-input--error' if errors.end_date.errorMessage),
+              "classes": "govuk-input--width-4" ~ (' govuk-input--error' if form.end_date.year.errors),
               "name": "year",
               "value": form.end_date.value['end_date-year'] if form.end_date.value['end_date-year']
             }
