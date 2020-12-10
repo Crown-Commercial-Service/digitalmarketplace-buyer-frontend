@@ -17,7 +17,22 @@
   {% endfor %}
   </ul>
   <h2 class="govuk-heading-s govuk-!-margin-bottom-1 govuk-!-padding-top-1">Service documents</h2>
-  {% include '_service_documents.html' %}
+  <ul class="govuk-list govuk-body-s">
+  {% for document in service.meta.documents %}
+    <li class="gouk-!-margin-bottom-2">
+      {{dmAttachment({
+        "link": {
+          "classes": "govuk-!-font-size-16",
+          "href": document.url,
+          "text": document.name
+        },
+        "contentType": document.extension | upper,
+        "headingTag": 'p',
+        "thumbnailSize": "small"
+      })}}
+    </li>
+  {% endfor %}
+  </ul>
   <h2 class="govuk-heading-s govuk-!-margin-bottom-1 govuk-!-padding-top-1">Framework</h2>
   <p class="govuk-body-s">{{ service.frameworkName }}</p>
   <h2 class="govuk-heading-s govuk-!-margin-bottom-1 govuk-!-padding-top-1">Service ID</h2>
