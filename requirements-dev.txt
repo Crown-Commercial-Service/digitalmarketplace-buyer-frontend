@@ -27,7 +27,7 @@ coveralls==1.11.1
     # via -r requirements-dev.in
 cssselect==1.1.0
     # via -r requirements-dev.in
-git+https://github.com/alphagov/digitalmarketplace-test-utils.git@2.8.2#egg=digitalmarketplace-test-utils==2.8.2
+digitalmarketplace-test-utils==2.8.2
     # via -r requirements-dev.in
 docopt==0.6.2
     # via
