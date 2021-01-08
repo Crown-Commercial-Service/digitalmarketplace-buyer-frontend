@@ -1,12 +1,15 @@
 {% if brief.status == 'live' and not brief.clarificationQuestionsAreClosed and brief.questionAndAnswerSessionDetails %}
   <h2 id="question-and-answer-session" class="govuk-heading-m">Question and answer session</h2>
-  <a class="govuk-link govuk-!-display-inline-block govuk-!-margin-bottom-6" href="/suppliers/opportunities/{{ brief.id }}/question-and-answer-session">
-    {% if current_user.is_authenticated and current_user.role == 'supplier' %}
-      View question and answer session details
-    {% else %}
-      Log in to view question and answer session details
-    {% endif %}
-  </a>
+
+  <p class="govuk-body">
+    <a class="govuk-link govuk-!-margin-bottom-6" href="/suppliers/opportunities/{{ brief.id }}/question-and-answer-session">
+      {% if current_user.is_authenticated and current_user.role == 'supplier' %}
+        View question and answer session details
+      {% else %}
+        Log in to view question and answer session details
+      {% endif %}
+    </a>
+  </p>
 {% endif %}
 
 <h2 id="clarification-questions" class="govuk-heading-m app-summary-list-heading">Questions asked by suppliers</h2>
@@ -21,13 +24,15 @@
 {% endif %}
 
 {% if brief.status == 'live' and not brief.clarificationQuestionsAreClosed %}
-  <a class="govuk-link" href="/suppliers/opportunities/{{ brief.id }}/ask-a-question">
-    {% if current_user.is_authenticated and current_user.role == 'supplier' %}
-      Ask a question
-    {% else %}
-      Log in to ask a question
-    {% endif %}
-  </a>
+  <p class="govuk-body">
+    <a class="govuk-link" href="/suppliers/opportunities/{{ brief.id }}/ask-a-question">
+      {% if current_user.is_authenticated and current_user.role == 'supplier' %}
+        Ask a question
+      {% else %}
+        Log in to ask a question
+      {% endif %}
+    </a>
+  </p>
 {% elif brief.status == 'live' %}
   <p class="govuk-body">The deadline for asking questions about this opportunity was {{ brief.clarificationQuestionsClosedAt|dateformat }}.</p>
 {% endif %}
