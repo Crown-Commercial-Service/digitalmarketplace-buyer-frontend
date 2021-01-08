@@ -11,7 +11,7 @@
 
 <h2 id="clarification-questions" class="govuk-heading-m app-summary-list-heading">Questions asked by suppliers</h2>
 {% if brief.clarificationQuestions is undefined or brief.clarificationQuestions|length == 0 %} 
-<p class="summary-item-no-content">No questions have been answered yet</p>
+<p class="govuk-body">No questions have been answered yet</p>
 {% else %}
 {{ govukSummaryList({
     "rows": brief.clarificationQuestions, 
@@ -29,5 +29,5 @@
     {% endif %}
   </a>
 {% elif brief.status == 'live' %}
-  The deadline for asking questions about this opportunity was {{ brief.clarificationQuestionsClosedAt|dateformat }}.
+  <p class="govuk-body">The deadline for asking questions about this opportunity was {{ brief.clarificationQuestionsClosedAt|dateformat }}.</p>
 {% endif %}
