@@ -28,18 +28,3 @@ def format_winning_supplier_size(size):
         return "SME"
     elif size in LARGE:
         return "large"
-
-
-# TODO: split the manifest sections and add the relevant description for each DOS5 lot to dm-frameworks instead
-def get_evaluation_description(brief, brief_content):
-    # For DOS4 briefs only, add in mandatory evaluation method. This is missing from the DOS4 display_brief manifest
-    # summary_page_description.
-    #   Digital Specialists: work history
-    #   Digital Outcomes / User Research Participants: written proposal
-    if brief['frameworkSlug'] == 'digital-outcomes-and-specialists-4':
-        for section in brief_content.summary(brief):
-            if section.name == 'How suppliers will be evaluated':
-                if brief['lotSlug'] == 'digital-specialists':
-                    return 'All suppliers will be asked to provide a work history.'
-                return 'All suppliers will be asked to provide a written proposal.'
-    return None

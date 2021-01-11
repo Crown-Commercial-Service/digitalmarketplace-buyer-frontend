@@ -16,7 +16,6 @@ from dmcontent.html import to_summary_list_rows, text_to_html
 from app import search_api_client, data_api_client, content_loader
 from ..helpers.brief_helpers import (
     count_brief_responses_by_size_and_status, format_winning_supplier_size,
-    get_evaluation_description,
     COMPLETED_BRIEF_RESPONSE_STATUSES, ALL_BRIEF_RESPONSE_STATUSES, PUBLISHED_BRIEF_STATUSES
 )
 from ..helpers.framework_helpers import (
@@ -187,9 +186,6 @@ def get_brief_by_id(framework_family, brief_id):
     for section in brief_summary:
         section.summary_list = to_summary_list_rows(section.questions, format_links=True, filter_empty=False)
 
-    # Add in mandatory evaluation method, missing from the display_brief manifest summary_page_description
-    evaluation_description = get_evaluation_description(brief, brief_content)
-
     return render_template(
         'brief.html',
         brief=brief,
@@ -199,7 +195,6 @@ def get_brief_by_id(framework_family, brief_id):
         has_supplier_responded_to_brief=has_supplier_responded_to_brief,
         winning_response=winning_response,
         winning_supplier_size=winning_supplier_size,
-        evaluation_description=evaluation_description
     )
 
 
