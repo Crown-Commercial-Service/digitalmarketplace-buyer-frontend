@@ -24,7 +24,7 @@ click==7.0
     # via flask
 contextlib2==0.6.0.post1
     # via digitalmarketplace-utils
-cryptography==3.2.1
+cryptography==3.3.2
     # via digitalmarketplace-utils
 defusedxml==0.6.0
     # via odfpy
@@ -81,7 +81,7 @@ itsdangerous==1.1.0
     #   -r requirements.in
     #   flask
     #   flask-wtf
-jinja2==2.10.3
+jinja2==2.11.3
     # via
     #   digitalmarketplace-content-loader
     #   flask
@@ -134,7 +134,7 @@ six==1.14.0
     #   python-dateutil
 unicodecsv==0.14.1
     # via digitalmarketplace-utils
-urllib3==1.25.8
+urllib3==1.25.9
     # via
     #   botocore
     #   requests
