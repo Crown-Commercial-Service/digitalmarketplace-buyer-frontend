@@ -135,7 +135,7 @@ def choose_lot(framework_family):
         else:
             errors["lot"] = {
                 "input_name": "lot",
-                "href": "#input-lot-1",
+                "href": "#input-lot",
                 "question": "Choose a category",
                 "message": "Select a category to start your search",
             }
