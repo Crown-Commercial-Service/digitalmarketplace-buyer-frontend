@@ -1,5 +1,7 @@
-from flask_wtf import FlaskForm
+from decimal import Decimal
 
+from flask_wtf import FlaskForm
+from wtforms import RadioField
 from wtforms.validators import DataRequired, Length, NumberRange, InputRequired
 
 from dmutils.forms.fields import (
@@ -7,15 +9,12 @@ from dmutils.forms.fields import (
     DMDateField,
     DMPoundsField,
     DMStripWhitespaceStringField,
-    DMRadioField,
 )
 from dmutils.forms.validators import DateValidator, GreaterThan
 
-from decimal import Decimal
-
 
 class CreateProjectForm(FlaskForm):
-    save_search_selection = DMRadioField(
+    save_search_selection = RadioField(
         id="input-save_search_selection",
         validators=[
             InputRequired("Select where to save your search result")
@@ -25,14 +24,13 @@ class CreateProjectForm(FlaskForm):
     def __init__(self, projects, **kwargs):
         super().__init__(**kwargs)
 
-        self.save_search_selection.options = [{
-            "label": project["name"] or f"Untitled project {project['id']}",
-            "value": str(project["id"]),
-        } for project in projects]
-        self.save_search_selection.options.append({
-            "label": "Save a new search",
-            "value": "new_search",
-        })
+        self.save_search_selection.choices = [(
+            str(project["id"]),  # value
+            project["name"] or f"Untitled project {project['id']}",  # text
+        ) for project in projects]
+        self.save_search_selection.choices.append((
+            "new_search", "Save a new search",
+        ))
 
 
 class CreateNewProjectForm(FlaskForm):
@@ -49,32 +47,38 @@ class DidYouAwardAContractForm(FlaskForm):
     NO = 'no'
     STILL_ASSESSING = 'still-assessing'
 
-    did_you_award_a_contract = DMRadioField(
+    did_you_award_a_contract = RadioField(
         "Did you award a contract?",
         id="input-did_you_award_a_contract",
         validators=[InputRequired(message="Select if you have awarded your contract")],
-        options=[
-            {'value': YES, 'label': 'Yes'},
-            {'value': NO, 'label': 'No'},
-            {'value': STILL_ASSESSING, 'label': 'We are still assessing services'},
+        choices=[
+            # value, text
+            (YES, 'Yes'),
+            (NO, 'No'),
+            (STILL_ASSESSING, 'We are still assessing services'),
         ])
 
 
 class WhichServiceWonTheContractForm(FlaskForm):
-    which_service_won_the_contract = DMRadioField(
+    which_service_won_the_contract = RadioField(
         "Which service won the contract?",
         id="input-which_service_won_the_contract",
         validators=[InputRequired(message="Select the service that won the contract")],
     )
 
     def __init__(self, services, *args, **kwargs):
-        super(WhichServiceWonTheContractForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.which_service_won_the_contract.options = [{
             "label": service["data"]["serviceName"],
             "value": service["id"],
             "hint": service["supplier"]["name"],
         } for service in services['services']]
+
+        self.which_service_won_the_contract.choices = [
+            (o["value"], o["label"])
+            for o in self.which_service_won_the_contract.options
+        ]
 
 
 class TellUsAboutContractForm(FlaskForm):
@@ -114,10 +118,16 @@ class TellUsAboutContractForm(FlaskForm):
 
 
 class WhyDidYouNotAwardForm(FlaskForm):
-    why_did_you_not_award_the_contract = DMRadioField(
+    why_did_you_not_award_the_contract = RadioField(
         "Why didn’t you award a contract?",
         id="input-why_did_you_not_award_the_contract",
-        options=[
+        validators=[InputRequired(message="Select a reason why you didn't award a contract")]
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.why_did_you_not_award_the_contract.options = [
             {
                 "label": "The work has been cancelled",
                 "value": "work_cancelled",
@@ -128,9 +138,12 @@ class WhyDidYouNotAwardForm(FlaskForm):
                 "value": "no_suitable_services",
                 "hint": "The services in your search results did not meet your requirements",
             },
-        ],
-        validators=[InputRequired(message="Select a reason why you didn't award a contract")]
-    )
+        ]
+
+        self.why_did_you_not_award_the_contract.choices = [
+            (o["value"], o["label"])
+            for o in self.why_did_you_not_award_the_contract.options
+        ]
 
 
 class BeforeYouDownloadForm(FlaskForm):
