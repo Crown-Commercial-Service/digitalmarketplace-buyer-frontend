@@ -321,3 +321,11 @@ class TestServicePage(DataAPIClientMixin, BaseApplicationTest):
             heading.strip() for heading in attribute_headings]
 
         assert 'Certifications' not in attribute_headings
+
+    def test_deleted_service_causes_404(self):
+        self.service["services"]["status"] = "deleted"
+        self.data_api_client.get_service.return_value = self.service
+
+        service_id = self.service['services']['id']
+        res = self.client.get(f'/g-cloud/services/{service_id}')
+        assert res.status_code == 404

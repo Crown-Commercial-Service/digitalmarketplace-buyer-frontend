@@ -180,6 +180,8 @@ def get_service_by_id(service_id):
             abort(404, "Service ID '{}' can not be found".format(service_id))
         if service['services']['frameworkStatus'] not in ("live", "expired"):
             abort(404, "Service ID '{}' can not be found".format(service_id))
+        if service['services']['status'] == 'deleted':
+            abort(404, "Service ID '{}' can not be found".format(service_id))
 
         service_data = service['services']
         framework_slug = service_data['frameworkSlug']
