@@ -1,0 +1,18 @@
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+
+<ul class="govuk-list">
+{% for document in service.meta.documents %}
+  <li class="gouk-!-margin-bottom-2">
+    {{dmAttachment({
+      "link": {
+        "classes": "govuk-!-font-size-16",
+        "href": document.url,
+        "text": document.name
+      },
+      "contentType": document.extension | upper,
+      "headingTag": 'p',
+      "thumbnailSize": "small"
+    })}}
+  </li>
+{% endfor %}
+</ul>
