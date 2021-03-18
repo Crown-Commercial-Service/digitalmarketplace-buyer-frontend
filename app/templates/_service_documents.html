@@ -16,3 +16,15 @@
   </li>
 {% endfor %}
 </ul>
+
+{% set alternativeFormatHtml %}
+  If you use assistive technology (such as a screen reader) and need versions of these documents in a more accessible format,
+  email the supplier at <a href="mailto:{{ service.meta.contact.email }}" target="_blank" class="govuk-link">{{ service.meta.contact.email }}</a>.
+  Tell them what format you need. It will help if you say what assistive technology you use.
+{% endset %}
+
+{{ govukDetails({
+  "classes": "govuk-!-font-size-16",
+  "summaryText": "Request an accessible format",
+  "html": alternativeFormatHtml
+}) }}
