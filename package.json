@@ -16,7 +16,7 @@
     "gulp-include": "^2.4.1",
     "gulp-sass": "^4.1.0",
     "gulp-shell": "^0.7.1",
-    "gulp-sourcemaps": "^2.6.5",
+    "gulp-sourcemaps": "^3.0.0",
     "gulp-uglify": "^3.0.2",
     "jquery": "3.6.0",
     "scrolldepth": "https://github.com/alphagov/jquery-scrolldepth.git#1.0"
