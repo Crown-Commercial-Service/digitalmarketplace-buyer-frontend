@@ -7,7 +7,7 @@
     "node": "^10.18.1"
   },
   "dependencies": {
-    "del": "^5.1.0",
+    "del": "^6.0.0",
     "digitalmarketplace-frameworks": "^18.2.1",
     "digitalmarketplace-govuk-frontend": "github:alphagov/digitalmarketplace-govuk-frontend#pre-release-v3.0.0-govuk-frontend-3-r4",
     "govuk-frontend": "^3.11.0",
