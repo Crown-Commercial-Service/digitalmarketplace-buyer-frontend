@@ -30,22 +30,22 @@ _local = Local()
 
 def _make_content_loader_factory(application, frameworks, initial_instance=None):
     # for testing purposes we allow an initial_instance to be provided
-    master_cl = initial_instance if initial_instance is not None else ContentLoader('app/content')
+    primary_cl = initial_instance if initial_instance is not None else ContentLoader('app/content')
     for framework_data in frameworks:
         if not framework_data['slug'] in application.config.get('DM_FRAMEWORK_CONTENT_MAP', {}):
             if framework_data['framework'] == 'g-cloud':
-                master_cl.load_manifest(framework_data['slug'], 'services', 'services_search_filters')
+                primary_cl.load_manifest(framework_data['slug'], 'services', 'services_search_filters')
                 # we need to be able to display old services, even on expired frameworks
-                master_cl.load_manifest(framework_data['slug'], 'services', 'display_service')
-                master_cl.load_manifest(framework_data['slug'], 'services', 'download_results')
-                try_load_metadata(master_cl, application, framework_data, ['following_framework'])
+                primary_cl.load_manifest(framework_data['slug'], 'services', 'display_service')
+                primary_cl.load_manifest(framework_data['slug'], 'services', 'download_results')
+                try_load_metadata(primary_cl, application, framework_data, ['following_framework'])
             elif framework_data['framework'] == 'digital-outcomes-and-specialists':
-                master_cl.load_manifest(framework_data['slug'], 'briefs', 'display_brief')
-                try_load_manifest(master_cl, application, framework_data, 'briefs', 'briefs_search_filters')
+                primary_cl.load_manifest(framework_data['slug'], 'briefs', 'display_brief')
+                try_load_manifest(primary_cl, application, framework_data, 'briefs', 'briefs_search_filters')
 
-    # seal master_cl in a closure by returning a function which will only ever return an independent copy of it.
+    # seal primary_cl in a closure by returning a function which will only ever return an independent copy of it.
     # this is of course only guaranteed when the initial_instance argument wasn't used.
-    return lambda: deepcopy(master_cl)
+    return lambda: deepcopy(primary_cl)
 
 
 def _content_loader_factory():
