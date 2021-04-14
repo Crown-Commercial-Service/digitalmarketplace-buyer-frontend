@@ -14,12 +14,9 @@ from ..helpers.shared_helpers import parse_link
 from ..helpers.framework_helpers import get_framework_description
 
 
-def process_prefix(prefix=None, format='view'):
+def process_prefix(prefix=None):
     if prefix == u"other":  # special case
-        if format == 'api':
-            return u"other"
-        else:
-            return prefix
+        return prefix
     if is_alpha(prefix):
         return prefix[:1].upper()
     return u"A"  # default
@@ -32,16 +29,11 @@ def is_alpha(character):
 
 @main.route('/g-cloud/suppliers')
 def suppliers_list_by_prefix():
-    api_prefix = process_prefix(
-        prefix=request.args.get('prefix', default=u"A"),
-        format='api')
-    template_prefix = process_prefix(
-        prefix=request.args.get('prefix', default=u"A"),
-        format='view')
+    prefix = process_prefix(prefix=request.args.get('prefix', default=u"A"))
     page = request.args.get('page', default=1, type=int)
 
     try:
-        api_result = data_api_client.find_suppliers(api_prefix, page, 'g-cloud')
+        api_result = data_api_client.find_suppliers(prefix, page, 'g-cloud')
         suppliers = api_result["suppliers"]
         links = api_result["links"]
 
@@ -51,12 +43,12 @@ def suppliers_list_by_prefix():
                                count=len(suppliers),
                                prev_link=parse_link(links, 'prev'),
                                next_link=parse_link(links, 'next'),
-                               prefix=template_prefix,
+                               prefix=prefix,
                                gcloud_framework_description=get_framework_description(data_api_client, 'g-cloud'),
                                )
     except APIError as e:
         if e.status_code == 404:
-            abort(404, "No suppliers for prefix {} page {}".format(api_prefix, page))
+            abort(404, "No suppliers for prefix {} page {}".format(prefix, page))
         else:
             raise e
 
@@ -71,7 +63,7 @@ def suppliers_details(supplier_id):
     if any(supplier.get('service_counts', {}).get(framework_name, 0) > 0 for framework_name in live_framework_names):
         first_character_of_supplier_name = supplier["name"][:1]
         if is_alpha(first_character_of_supplier_name):
-            prefix = process_prefix(prefix=first_character_of_supplier_name, format='template')
+            prefix = process_prefix(prefix=first_character_of_supplier_name)
         else:
             prefix = u"other"
 
