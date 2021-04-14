@@ -15,11 +15,11 @@ from ..helpers.framework_helpers import get_framework_description
 
 
 def process_prefix(prefix=None):
-    if prefix == u"other":  # special case
+    if prefix == "other":  # special case
         return prefix
     if is_alpha(prefix):
         return prefix[:1].upper()
-    return u"A"  # default
+    return "A"  # default
 
 
 def is_alpha(character):
