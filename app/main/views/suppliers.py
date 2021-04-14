@@ -63,9 +63,9 @@ def suppliers_details(supplier_id):
     if any(supplier.get('service_counts', {}).get(framework_name, 0) > 0 for framework_name in live_framework_names):
         first_character_of_supplier_name = supplier["name"][:1]
         if is_alpha(first_character_of_supplier_name):
-            prefix = process_prefix(prefix=first_character_of_supplier_name)
+            prefix = first_character_of_supplier_name.upper()
         else:
-            prefix = u"other"
+            prefix = "other"
 
         return render_template(
             'suppliers_details.html',
