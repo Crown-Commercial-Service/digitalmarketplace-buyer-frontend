@@ -1,3 +1,5 @@
+from functools import lru_cache
+
 from flask import abort
 
 from dmapiclient import HTTPError
@@ -34,6 +36,7 @@ def get_lots_by_slug(framework_data):
     return {lot['slug']: lot for lot in framework_data['lots']}
 
 
+@lru_cache()
 def get_framework_description(data_api_client, framework_family):
     frameworks = data_api_client.find_frameworks().get('frameworks')
     framework = get_latest_live_framework(frameworks, framework_family)
