@@ -9,7 +9,7 @@
   "dependencies": {
     "del": "^6.0.0",
     "digitalmarketplace-frameworks": "^18.2.2",
-    "digitalmarketplace-govuk-frontend": "github:alphagov/digitalmarketplace-govuk-frontend#pre-release-v3.0.0-govuk-frontend-3-r5",
+    "digitalmarketplace-govuk-frontend": "^3.0.1",
     "govuk-frontend": "^3.11.0",
     "gulp": "^4.0.2",
     "gulp-filelog": "0.4.1",
