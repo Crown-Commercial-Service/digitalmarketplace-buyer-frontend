@@ -5,6 +5,7 @@ from urllib.parse import unquote, urlparse
 
 from dmcontent.formats import format_service_price
 from dmcontent.html import to_summary_list_rows
+from dmutils.urls import rewrite_supplier_asset_path
 
 DECLARATION_DOCUMENT_KEYS = [
     ('modernSlaveryStatement', 'modernSlaveryStatementURL'),
@@ -83,14 +84,8 @@ class Meta(object):
         # The Service presenter will add it to the other documents ready for display
         for document_key, target_key in DECLARATION_DOCUMENT_KEYS:
             if document_key in self.declaration:
-                supplier_document_url = self.declaration[document_key]
-                # Convert supplier-facing url to public assets domain
-                # TODO: change declaration upload functionality to store it on assets.* in the first place?
-                public_document_url = supplier_document_url.replace(
-                    'https://www.digitalmarketplace.service.gov.uk/suppliers/assets',
-                    'https://assets.digitalmarketplace.service.gov.uk'
-                )
-                service_data[target_key] = public_document_url
+                service_data[target_key] = rewrite_supplier_asset_path(
+                    self.declaration[document_key], 'https://assets.digitalmarketplace.service.gov.uk')
 
     def get_documents(self, service_data):
         self._add_declaration_documents_to_service_data(service_data)
