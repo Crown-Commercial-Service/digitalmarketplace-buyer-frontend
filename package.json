@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "del": "^6.0.0",
-    "digitalmarketplace-frameworks": "^18.3.1",
+    "digitalmarketplace-frameworks": "^18.4.1",
     "digitalmarketplace-govuk-frontend": "^3.0.1",
     "govuk-frontend": "^3.13.0",
     "gulp": "^4.0.2",
