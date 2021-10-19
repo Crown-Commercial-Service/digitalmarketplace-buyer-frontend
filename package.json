@@ -10,7 +10,7 @@
     "del": "^6.0.0",
     "digitalmarketplace-frameworks": "^18.4.1",
     "digitalmarketplace-govuk-frontend": "^3.0.1",
-    "govuk-frontend": "^3.13.1",
+    "govuk-frontend": "^3.14.0",
     "gulp": "^4.0.2",
     "gulp-filelog": "0.4.1",
     "gulp-include": "^2.4.1",
