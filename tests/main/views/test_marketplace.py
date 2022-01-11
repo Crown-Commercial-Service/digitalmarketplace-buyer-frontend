@@ -11,6 +11,8 @@ from ...helpers import BaseApplicationTest, BaseAPIClientMixin
 from dmtestutils.api_model_stubs import FrameworkStub
 from dmtestutils.api_model_stubs.lot import dos_lots, cloud_lots
 
+from freezegun import freeze_time
+
 
 class APIClientMixin(BaseAPIClientMixin):
     data_api_client_patch_path = 'app.main.views.marketplace.data_api_client'
@@ -314,6 +316,84 @@ class TestHomepageSidebarMessage(APIClientMixin, BaseApplicationTest):
         self.data_api_client.find_frameworks.return_value = self._find_frameworks(framework_slugs_and_statuses)
         res = self.client.get('/')
         assert res.status_code == 500
+
+
+class TestHomepageNotificationBannerWhenLoggedOut(APIClientMixin, BaseApplicationTest):
+    @freeze_time('2022-01-04')
+    def test_should_not_show_banner_if_before_go_live_date(self):
+        res = self.client.get("/")
+        assert res.status_code == 200
+        assert "Important supplier information" not in res.get_data(as_text=True)
+
+    @freeze_time('2022-01-14')
+    def test_should_show_banner_if_on_go_live_date(self):
+        res = self.client.get("/")
+        assert res.status_code == 200
+        assert "Important supplier information" in res.get_data(as_text=True)
+
+    @freeze_time('2022-01-15')
+    def test_should_show_banner_if_after_go_live_date(self):
+        res = self.client.get("/")
+        assert res.status_code == 200
+        assert "Important supplier information" in res.get_data(as_text=True)
+
+    @freeze_time('2022-01-04')
+    def test_should_show_banner_if_before_date_and_go_live_param(self):
+        res = self.client.get("/?show_dmp_so_banner=true")
+        assert res.status_code == 200
+        assert "Important supplier information" in res.get_data(as_text=True)
+
+    @freeze_time('2022-01-04')
+    def test_should_not_show_banner_if_before_date_and_not_go_live_param(self):
+        res = self.client.get("/?show_dos6_live=true")
+        assert res.status_code == 200
+        assert "Important supplier information" not in res.get_data(as_text=True)
+
+
+class TestHomepageNotificationBannerWhenLoggedinAsSupplier(APIClientMixin, BaseApplicationTest):
+    @freeze_time('2022-01-14')
+    def test_should_show_banner_if_on_go_live_date(self):
+        self.login_as_supplier()
+        res = self.client.get("/")
+        assert res.status_code == 200
+        assert "Important supplier information" in res.get_data(as_text=True)
+
+    @freeze_time('2022-01-15')
+    def test_should_show_banner_if_after_go_live_date(self):
+        self.login_as_supplier()
+        res = self.client.get("/")
+        assert res.status_code == 200
+        assert "Important supplier information" in res.get_data(as_text=True)
+
+    @freeze_time('2022-01-04')
+    def test_should_show_banner_if_before_date_and_go_live_param(self):
+        self.login_as_supplier()
+        res = self.client.get("/?show_dmp_so_banner=true")
+        assert res.status_code == 200
+        assert "Important supplier information" in res.get_data(as_text=True)
+
+
+class TestHomepageNotificationBannerWhenLoggedinAsBuyer(APIClientMixin, BaseApplicationTest):
+    @freeze_time('2022-01-14')
+    def test_should_not_show_banner_if_on_go_live_date(self):
+        self.login_as_buyer()
+        res = self.client.get("/")
+        assert res.status_code == 200
+        assert "Important supplier information" not in res.get_data(as_text=True)
+
+    @freeze_time('2022-01-15')
+    def test_should_not_show_banner_if_after_go_live_date(self):
+        self.login_as_buyer()
+        res = self.client.get("/")
+        assert res.status_code == 200
+        assert "Important supplier information" not in res.get_data(as_text=True)
+
+    @freeze_time('2022-01-04')
+    def test_should_not_show_banner_if_before_date_and_go_live_param(self):
+        self.login_as_buyer()
+        res = self.client.get("/?show_dmp_so_banner=true")
+        assert res.status_code == 200
+        assert "Important supplier information" not in res.get_data(as_text=True)
 
 
 class TestStaticMarketplacePages(BaseApplicationTest):

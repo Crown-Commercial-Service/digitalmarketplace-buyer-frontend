@@ -12,6 +12,7 @@ from dmcontent.content_loader import ContentNotFoundError
 from dmutils.errors import render_error_page
 from dmutils.filters import capitalize_first
 from dmutils.flask import timed_render_template as render_template
+from dmutils.dmp_so_status import are_new_frameworks_live
 from dmcontent.html import to_summary_list_rows, text_to_html
 from app import search_api_client, data_api_client, content_loader
 from ..helpers.brief_helpers import (
@@ -81,6 +82,7 @@ def index():
         frameworks={framework['slug']: framework for framework in frameworks},
         framework_status_message=framework_status_message,
         gcloud_framework_description=get_framework_description(data_api_client, 'g-cloud'),
+        are_new_frameworks_live=are_new_frameworks_live(request.args)
     )
 
 

@@ -140,6 +140,14 @@
 
 {% block mainContent %}
 
+{% if are_new_frameworks_live and (current_user.role == nil or current_user.role == 'supplier') %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {{ dmNewFrameworkBanner() }}
+    </div>
+  </div>
+{% endif %}
+
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <nav id="app-buyer-nav" role="navigation" aria-labelledby="app-buyer-nav-heading">
