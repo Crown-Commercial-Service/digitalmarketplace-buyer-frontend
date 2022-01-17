@@ -18,7 +18,7 @@
     "gulp-shell": "^0.8.0",
     "gulp-uglify": "^3.0.2",
     "jquery": "3.6.0",
-    "sass": "^1.47.0",
+    "sass": "^1.48.0",
     "scrolldepth": "https://github.com/alphagov/jquery-scrolldepth.git#1.0"
   },
   "scripts": {
