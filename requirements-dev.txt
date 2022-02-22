@@ -14,8 +14,6 @@ entrypoints==0.3
     # via flake8
 flake8==3.7.9
     # via -r requirements-dev.in
-freezegun==1.1.0
-    # via -r requirements-dev.in
 mccabe==0.6.1
     # via flake8
 mock==3.0.5
@@ -38,10 +36,6 @@ pyparsing==2.4.6
     # via packaging
 pytest==5.3.5
     # via -r requirements-dev.in
-python-dateutil==2.8.1
-    # via
-    #   -c requirements.txt
-    #   freezegun
 python-dotenv==0.11.0
     # via -r requirements-dev.in
 six==1.14.0
@@ -49,7 +43,6 @@ six==1.14.0
     #   -c requirements.txt
     #   mock
     #   packaging
-    #   python-dateutil
 watchdog==0.10.2
     # via -r requirements-dev.in
 wcwidth==0.1.8

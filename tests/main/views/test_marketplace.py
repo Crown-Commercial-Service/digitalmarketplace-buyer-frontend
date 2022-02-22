@@ -11,8 +11,6 @@ from ...helpers import BaseApplicationTest, BaseAPIClientMixin
 from dmtestutils.api_model_stubs import FrameworkStub
 from dmtestutils.api_model_stubs.lot import dos_lots, cloud_lots
 
-from freezegun import freeze_time
-
 
 class APIClientMixin(BaseAPIClientMixin):
     data_api_client_patch_path = 'app.main.views.marketplace.data_api_client'
@@ -319,79 +317,58 @@ class TestHomepageSidebarMessage(APIClientMixin, BaseApplicationTest):
 
 
 class TestHomepageNotificationBannerWhenLoggedOut(APIClientMixin, BaseApplicationTest):
-    @freeze_time('2022-01-04')
-    def test_should_not_show_banner_if_before_go_live_date(self):
+    @mock.patch('app.main.views.marketplace.are_new_frameworks_live')
+    def test_should_hide_banner_when_not_needed(self, are_new_frameworks_live):
+        are_new_frameworks_live.return_value = False
         res = self.client.get("/")
         assert res.status_code == 200
+        are_new_frameworks_live.assert_called_once()
         assert "Important supplier information" not in res.get_data(as_text=True)
 
-    @freeze_time('2022-01-14')
-    def test_should_show_banner_if_on_go_live_date(self):
+    @mock.patch('app.main.views.marketplace.are_new_frameworks_live')
+    def test_should_show_banner_when_needed(self, are_new_frameworks_live):
+        are_new_frameworks_live.return_value = True
         res = self.client.get("/")
         assert res.status_code == 200
         assert "Important supplier information" in res.get_data(as_text=True)
 
-    @freeze_time('2022-01-15')
-    def test_should_show_banner_if_after_go_live_date(self):
-        res = self.client.get("/")
-        assert res.status_code == 200
-        assert "Important supplier information" in res.get_data(as_text=True)
-
-    @freeze_time('2022-01-04')
-    def test_should_show_banner_if_before_date_and_go_live_param(self):
-        res = self.client.get("/?show_dmp_so_banner=true")
-        assert res.status_code == 200
-        assert "Important supplier information" in res.get_data(as_text=True)
-
-    @freeze_time('2022-01-04')
-    def test_should_not_show_banner_if_before_date_and_not_go_live_param(self):
-        res = self.client.get("/?show_dos6_live=true")
-        assert res.status_code == 200
-        assert "Important supplier information" not in res.get_data(as_text=True)
+    @mock.patch('app.main.views.marketplace.are_new_frameworks_live')
+    def test_should_pass_through_request_parameters(self, are_new_frameworks_live):
+        self.client.get("/?show_dmp_so_banner=true")
+        assert are_new_frameworks_live.call_args[0][0].to_dict() == {"show_dmp_so_banner": 'true'}
 
 
 class TestHomepageNotificationBannerWhenLoggedinAsSupplier(APIClientMixin, BaseApplicationTest):
-    @freeze_time('2022-01-14')
-    def test_should_show_banner_if_on_go_live_date(self):
+    @mock.patch('app.main.views.marketplace.are_new_frameworks_live')
+    def test_should_hide_banner_when_not_needed(self, are_new_frameworks_live):
+        are_new_frameworks_live.return_value = False
+        self.login_as_supplier()
+        res = self.client.get("/")
+        assert res.status_code == 200
+        are_new_frameworks_live.assert_called_once()
+        assert "Important supplier information" not in res.get_data(as_text=True)
+
+    @mock.patch('app.main.views.marketplace.are_new_frameworks_live')
+    def test_should_show_banner_when_needed(self, are_new_frameworks_live):
+        are_new_frameworks_live.return_value = True
         self.login_as_supplier()
         res = self.client.get("/")
         assert res.status_code == 200
         assert "Important supplier information" in res.get_data(as_text=True)
 
-    @freeze_time('2022-01-15')
-    def test_should_show_banner_if_after_go_live_date(self):
+    @mock.patch('app.main.views.marketplace.are_new_frameworks_live')
+    def test_should_pass_through_request_parameters(self, are_new_frameworks_live):
         self.login_as_supplier()
-        res = self.client.get("/")
-        assert res.status_code == 200
-        assert "Important supplier information" in res.get_data(as_text=True)
-
-    @freeze_time('2022-01-04')
-    def test_should_show_banner_if_before_date_and_go_live_param(self):
-        self.login_as_supplier()
-        res = self.client.get("/?show_dmp_so_banner=true")
-        assert res.status_code == 200
-        assert "Important supplier information" in res.get_data(as_text=True)
+        self.client.get("/?show_dmp_so_banner=true")
+        assert are_new_frameworks_live.call_args[0][0].to_dict() == {"show_dmp_so_banner": 'true'}
 
 
 class TestHomepageNotificationBannerWhenLoggedinAsBuyer(APIClientMixin, BaseApplicationTest):
-    @freeze_time('2022-01-14')
-    def test_should_not_show_banner_if_on_go_live_date(self):
+    @mock.patch('app.main.views.marketplace.are_new_frameworks_live')
+    def test_should_never_show_banner(self, are_new_frameworks_live):
+        are_new_frameworks_live.return_value = True
         self.login_as_buyer()
         res = self.client.get("/")
-        assert res.status_code == 200
-        assert "Important supplier information" not in res.get_data(as_text=True)
-
-    @freeze_time('2022-01-15')
-    def test_should_not_show_banner_if_after_go_live_date(self):
-        self.login_as_buyer()
-        res = self.client.get("/")
-        assert res.status_code == 200
-        assert "Important supplier information" not in res.get_data(as_text=True)
-
-    @freeze_time('2022-01-04')
-    def test_should_not_show_banner_if_before_date_and_go_live_param(self):
-        self.login_as_buyer()
-        res = self.client.get("/?show_dmp_so_banner=true")
         assert res.status_code == 200
         assert "Important supplier information" not in res.get_data(as_text=True)
 
