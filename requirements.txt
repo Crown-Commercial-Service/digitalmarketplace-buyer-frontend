@@ -50,7 +50,7 @@ flask==1.1.4
     #   gds-metrics
 flask-gzip==0.2
     # via digitalmarketplace-utils
-flask-login==0.6.1
+flask-login==0.6.2
     # via
     #   -r requirements.in
     #   digitalmarketplace-utils
@@ -93,7 +93,9 @@ mailchimp3==3.0.17
 markdown==2.6.11
     # via digitalmarketplace-content-loader
 markupsafe==1.1.1
-    # via jinja2
+    # via
+    #   jinja2
+    #   wtforms
 notifications-python-client==6.3.0
     # via digitalmarketplace-utils
 odfpy==1.4.1
