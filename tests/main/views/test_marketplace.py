@@ -323,14 +323,14 @@ class TestHomepageNotificationBannerWhenLoggedOut(APIClientMixin, BaseApplicatio
         res = self.client.get("/")
         assert res.status_code == 200
         are_new_frameworks_live.assert_called_once()
-        assert "Important supplier information" not in res.get_data(as_text=True)
+        assert "Important information" not in res.get_data(as_text=True)
 
     @mock.patch('app.main.views.marketplace.are_new_frameworks_live')
     def test_should_show_banner_when_needed(self, are_new_frameworks_live):
         are_new_frameworks_live.return_value = True
         res = self.client.get("/")
         assert res.status_code == 200
-        assert "Important supplier information" in res.get_data(as_text=True)
+        assert "Important information" in res.get_data(as_text=True)
 
     @mock.patch('app.main.views.marketplace.are_new_frameworks_live')
     def test_should_pass_through_request_parameters(self, are_new_frameworks_live):
@@ -346,7 +346,7 @@ class TestHomepageNotificationBannerWhenLoggedinAsSupplier(APIClientMixin, BaseA
         res = self.client.get("/")
         assert res.status_code == 200
         are_new_frameworks_live.assert_called_once()
-        assert "Important supplier information" not in res.get_data(as_text=True)
+        assert "Important information" not in res.get_data(as_text=True)
 
     @mock.patch('app.main.views.marketplace.are_new_frameworks_live')
     def test_should_show_banner_when_needed(self, are_new_frameworks_live):
@@ -354,7 +354,7 @@ class TestHomepageNotificationBannerWhenLoggedinAsSupplier(APIClientMixin, BaseA
         self.login_as_supplier()
         res = self.client.get("/")
         assert res.status_code == 200
-        assert "Important supplier information" in res.get_data(as_text=True)
+        assert "Important information" in res.get_data(as_text=True)
 
     @mock.patch('app.main.views.marketplace.are_new_frameworks_live')
     def test_should_pass_through_request_parameters(self, are_new_frameworks_live):
@@ -370,7 +370,7 @@ class TestHomepageNotificationBannerWhenLoggedinAsBuyer(APIClientMixin, BaseAppl
         self.login_as_buyer()
         res = self.client.get("/")
         assert res.status_code == 200
-        assert "Important supplier information" not in res.get_data(as_text=True)
+        assert "Important information" not in res.get_data(as_text=True)
 
 
 class TestStaticMarketplacePages(BaseApplicationTest):
