@@ -421,10 +421,7 @@ def saved_search_overview(framework_family):
     }
 
     all_frameworks = data_api_client.find_frameworks().get('frameworks')
-    framework = framework_helpers.get_latest_live_framework_or_404(all_frameworks, framework_family)
-
-    content_loader.load_messages(framework['slug'], ['descriptions', 'urls'])
-    framework_short_description = content_loader.get_message(framework['slug'], 'descriptions', 'framework_short')
+    framework_helpers.get_last_live_framework_or_404(all_frameworks, framework_family)
 
     projects = get_direct_award_projects(data_api_client, current_user.id, latest_first=True)
     projects['closed_projects'].sort(key=itemgetter('lockedAt'), reverse=True)
@@ -482,8 +479,6 @@ def saved_search_overview(framework_family):
         'direct-award/index.html',
         open_projects=open_projects,
         closed_projects=closed_projects,
-        framework=framework,
-        framework_short_description=framework_short_description
     )
 
 
@@ -827,7 +822,10 @@ def update_project(framework_family, project_id):
 )
 def did_you_award_contract(framework_family, project_id):
     all_frameworks = data_api_client.find_frameworks().get('frameworks')
-    framework = framework_helpers.get_latest_live_framework_or_404(all_frameworks, framework_family)
+    framework = framework_helpers.get_last_live_framework_or_404(
+        all_frameworks,
+        framework_family
+    )
 
     # Get the requested Direct Award Project.
     project = data_api_client.get_direct_award_project(project_id=project_id)['project']
@@ -894,8 +892,10 @@ def which_service_won_contract(framework_family, project_id):
         abort(410)
 
     all_frameworks = data_api_client.find_frameworks().get('frameworks')
-    framework = framework_helpers.get_latest_live_framework_or_404(
-        all_frameworks, framework_family)
+    framework = framework_helpers.get_last_live_framework_or_404(
+        all_frameworks,
+        framework_family
+    )
 
     search = data_api_client.find_direct_award_project_searches(user_id=current_user.id,
                                                                 project_id=project['id'],
@@ -945,7 +945,10 @@ def which_service_won_contract(framework_family, project_id):
 )
 def tell_us_about_contract(framework_family, project_id, outcome_id):
     all_frameworks = data_api_client.find_frameworks().get('frameworks')
-    framework = framework_helpers.get_latest_live_framework_or_404(all_frameworks, framework_family)
+    framework = framework_helpers.get_last_live_framework_or_404(
+        all_frameworks,
+        framework_family
+    )
 
     # Get the requested Direct Award Project.
     project = data_api_client.get_direct_award_project(project_id=project_id)['project']
@@ -1001,8 +1004,10 @@ def tell_us_about_contract(framework_family, project_id, outcome_id):
 )
 def why_did_you_not_award_the_contract(framework_family, project_id):
     all_frameworks = data_api_client.find_frameworks().get('frameworks')
-    framework = framework_helpers.get_latest_live_framework_or_404(
-        all_frameworks, framework_family)
+    framework = framework_helpers.get_last_live_framework_or_404(
+        all_frameworks,
+        framework_family
+    )
 
     project = data_api_client.get_direct_award_project(project_id=project_id)['project']
 
