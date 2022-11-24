@@ -92,6 +92,35 @@ class TestDirectAward(TestDirectAwardBase):
                     assert parser.parse(previous_date) >= parser.parse(current_date)
                 previous_date = current_date
 
+    def test_renders_saved_search_overview_when_all_frameworks_have_expired(self):
+        self.data_api_client.find_frameworks.return_value = self._get_expired_frameworks_list_fixture_data()
+
+        self.login_as_buyer()
+        res = self.client.get(self.SAVE_SEARCH_OVERVIEW_URL)
+        assert res.status_code == 200
+
+        result_html = res.get_data(as_text=True)
+        doc = html.fromstring(result_html)
+        page_header = doc.cssselect("h1.govuk-heading-xl")[0].text.strip()
+
+        assert page_header == "Your saved searches"
+        assert page_header in doc.xpath('/html/head/title')[0].text.strip()
+        assert doc.cssselect('#searching_table caption')[0].text.strip() == "Searching"
+        assert doc.cssselect('#search_ended_table caption')[0].text.strip() == "Results exported"
+
+        tables = [
+            doc.xpath('//*[@id="content"]/div/div/table[1]/tbody/tr'),
+            doc.xpath('//*[@id="content"]/div/div/table[2]/tbody/tr')
+        ]
+
+        for table in tables:
+            previous_date = None
+            for row in table:
+                current_date = row[1][0].text
+                if previous_date:
+                    assert parser.parse(previous_date) >= parser.parse(current_date)
+                previous_date = current_date
+
     @pytest.mark.parametrize("xpath,value",
                              [('//*[@id="searching_table"]/tbody/tr[1]/td[1]/a',
                               (b'<a href="/buyers/direct-award/g-cloud/projects/731851428862851">\\&lt;a o'
@@ -843,6 +872,18 @@ class TestDirectAwardReadyToAssess(TestDirectAwardBase):
             project_data={'readyToAssess': True}, project_id=1, user_email='buyer@email.com')
         self.assert_flashes(html_escape(CONFIRM_START_ASSESSING_MESSAGE), expected_category='success')
 
+    def test_ready_button_does_something_when_all_frameworks_expired(self):
+        self.data_api_client.find_frameworks.return_value = self._get_expired_frameworks_list_fixture_data()
+
+        self.login_as_buyer()
+        res = self.client.post('/buyers/direct-award/g-cloud/projects/1', data={"readyToAssess": "true"})
+
+        assert res.status_code == 302
+        assert res.location.endswith('/buyers/direct-award/g-cloud/projects/1')
+        self.data_api_client.update_direct_award_project.assert_called_once_with(
+            project_data={'readyToAssess': True}, project_id=1, user_email='buyer@email.com')
+        self.assert_flashes(html_escape(CONFIRM_START_ASSESSING_MESSAGE), expected_category='success')
+
 
 class TestDirectAwardAwardContract(TestDirectAwardBase):
     def setup_method(self, method):
@@ -854,6 +895,23 @@ class TestDirectAwardAwardContract(TestDirectAwardBase):
         self.data_api_client.get_direct_award_project.return_value = self._get_direct_award_lock_project_fixture()
 
     def test_award_contract_page_renders(self):
+        self.login_as_buyer()
+
+        res = self.client.get('/buyers/direct-award/g-cloud/projects/1/did-you-award-contract')
+        assert res.status_code == 200
+
+        doc = html.fromstring(res.get_data(as_text=True))
+        assert len(doc.xpath(
+            '//h1[contains(normalize-space(), "Did you award a contract for ‘My procurement project <’?")]')) == 1
+        assert len(doc.xpath('//input[@type="radio"][contains(following-sibling::label, "Yes")]')) == 1
+        assert len(doc.xpath('//input[@type="radio"][contains(following-sibling::label, "No")]')) == 1
+        assert len(doc.xpath(
+            '//input[@type="radio"][contains(following-sibling::label, "We are still assessing services")]')) == 1
+        assert len(doc.xpath('//button[normalize-space(string())=$t]', t="Save and continue")) == 1
+
+    def test_award_contract_page_renders_when_all_frameworks_have_expired(self):
+        self.data_api_client.find_frameworks.return_value = self._get_expired_frameworks_list_fixture_data()
+
         self.login_as_buyer()
 
         res = self.client.get('/buyers/direct-award/g-cloud/projects/1/did-you-award-contract')
@@ -901,6 +959,21 @@ class TestDirectAwardAwardContract(TestDirectAwardBase):
                               ('yes', '/buyers/direct-award/g-cloud/projects/1/which-service-won-contract'),
                               ('no', '/buyers/direct-award/g-cloud/projects/1/why-didnt-you-award-contract')))
     def test_did_you_award_contract_redirects_on_post(self, choice, expected_redirect):
+        self.login_as_buyer()
+
+        res = self.client.post('/buyers/direct-award/g-cloud/projects/1/did-you-award-contract',
+                               data={'did_you_award_a_contract': choice})
+
+        assert res.status_code == 302
+        assert res.location.endswith(expected_redirect)
+
+    @pytest.mark.parametrize('choice, expected_redirect',
+                             (('still-assessing', '/buyers/direct-award/g-cloud/projects/1'),
+                              ('yes', '/buyers/direct-award/g-cloud/projects/1/which-service-won-contract'),
+                              ('no', '/buyers/direct-award/g-cloud/projects/1/why-didnt-you-award-contract')))
+    def test_did_you_award_contract_redirects_on_post_when_all_frameworks_have_expired(self, choice, expected_redirect):
+        self.data_api_client.find_frameworks.return_value = self._get_expired_frameworks_list_fixture_data()
+
         self.login_as_buyer()
 
         res = self.client.post('/buyers/direct-award/g-cloud/projects/1/did-you-award-contract',
@@ -967,6 +1040,26 @@ class TestDirectAwardAwardContract(TestDirectAwardBase):
         assert res.status_code == 410
 
     def test_which_service_did_you_award_page_renders(self):
+        self.login_as_buyer()
+
+        res = self.client.get(
+            '/buyers/direct-award/g-cloud/projects/1/which-service-won-contract')
+        assert res.status_code == 200
+
+        doc = html.fromstring(res.get_data(as_text=True))
+        assert len(doc.xpath(
+            '//h1[contains(normalize-space(), "Which service won the contract?")]')) == 1
+        assert len(doc.xpath(
+            '//input[@type="radio"][contains(following-sibling::label, "Service name")]')) == 1
+        assert len(doc.xpath(
+            '//div[contains(normalize-space(text()), "Supplier name")]'
+            '[contains(preceding-sibling::label, "Service name")]')) == 1
+        assert len(
+            doc.xpath('//button[normalize-space(string())=$t]', t="Save and continue")) == 1
+
+    def test_which_service_did_you_award_page_renders_when_all_frameworks_have_expired(self):
+        self.data_api_client.find_frameworks.return_value = self._get_expired_frameworks_list_fixture_data()
+
         self.login_as_buyer()
 
         res = self.client.get(
@@ -1057,6 +1150,17 @@ class TestDirectAwardAwardContract(TestDirectAwardBase):
         assert res.status_code == 302
         assert res.location.endswith('/buyers/direct-award/g-cloud/projects/1/outcomes/1/tell-us-about-contract')
 
+    def test_which_service_did_you_award_should_redirect_when_all_frameworks_have_expired(self):
+        self.data_api_client.find_frameworks.return_value = self._get_expired_frameworks_list_fixture_data()
+        self.login_as_buyer()
+
+        res = self.client.post(
+            '/buyers/direct-award/g-cloud/projects/1/which-service-won-contract',
+            data={'which_service_won_the_contract': '123456789'})
+
+        assert res.status_code == 302
+        assert res.location.endswith('/buyers/direct-award/g-cloud/projects/1/outcomes/1/tell-us-about-contract')
+
     def test_which_service_raises_410_if_outcome_is_completed(self):
         self.data_api_client.get_direct_award_project.return_value = \
             self._get_direct_award_project_with_completed_outcome_awarded_fixture()
@@ -1120,6 +1224,11 @@ class TestDirectAwardTellUsAboutContract(TestDirectAwardBase):
     def test_tell_us_about_contract_form_action_url_is_tell_us_about_contract_url(self, xpath):
         assert xpath('//form[@class="tell-us-about-contract-form"]/@action')[0] == self.url
 
+    def test_tell_us_about_contract_renders_when_all_frameworks_have_expired(self, xpath):
+        self.data_api_client.find_frameworks.return_value = self._get_expired_frameworks_list_fixture_data()
+
+        assert xpath('boolean(//h1[contains(normalize-space(), "Tell us about your contract")])')
+
     def test_tell_us_about_contract_raises_404_if_project_does_not_exist(self, client):
         self.data_api_client.get_direct_award_project.side_effect = HTTPError(mock.Mock(status_code=404))
 
@@ -1142,6 +1251,14 @@ class TestDirectAwardTellUsAboutContract(TestDirectAwardBase):
         assert res.status_code == 404
 
     def test_tell_us_about_contract_successful_post_redirects_to_project_overview(self, client, data):
+        res = client.post(self.url, data=data)
+        assert res.status_code == 302
+        assert res.location.endswith('/buyers/direct-award/g-cloud/projects/1')
+        self.assert_flashes("You’ve updated ‘My procurement project &lt;’", 'success')
+
+    def test_tell_us_about_contract_successful_post_redirects_when_all_frameworks_have_expired(self, client, data):
+        self.data_api_client.find_frameworks.return_value = self._get_expired_frameworks_list_fixture_data()
+
         res = client.post(self.url, data=data)
         assert res.status_code == 302
         assert res.location.endswith('/buyers/direct-award/g-cloud/projects/1')
@@ -1266,6 +1383,31 @@ class TestDirectAwardNonAwardContract(TestDirectAwardBase):
         assert len(
             doc.xpath('//button[normalize-space(string())=$t]', t="Save and continue")) == 1
 
+    def test_which_service_did_you_award_page_renders_when_all_frameworks_have_expired(self):
+        self.data_api_client.find_frameworks.return_value = self._get_expired_frameworks_list_fixture_data()
+
+        self.login_as_buyer()
+
+        res = self.client.get(
+            '/buyers/direct-award/g-cloud/projects/1/why-didnt-you-award-contract')
+        assert res.status_code == 200
+
+        doc = html.fromstring(res.get_data(as_text=True))
+        assert len(doc.xpath(
+            '//h1[contains(normalize-space(), "Why didn’t you award a contract?")]')) == 1
+        assert len(doc.xpath(
+            '//input[@type="radio"][contains(following-sibling::label, "The work has been cancelled")]')) == 1
+        assert len(doc.xpath(
+            '//div[contains(normalize-space(text()), "For example, because you no longer have the budget")]\
+            [contains(preceding-sibling::label, "The work has been cancelled")]')) == 1
+        assert len(doc.xpath(
+            '//input[@type="radio"][contains(following-sibling::label, "The work has been cancelled")]')) == 1
+        assert len(doc.xpath(
+            '//div[contains(normalize-space(text()), "The services in your search results did not meet your requirements")]\
+            [contains(preceding-sibling::label, "There were no suitable services")]')) == 1
+        assert len(
+            doc.xpath('//button[normalize-space(string())=$t]', t="Save and continue")) == 1
+
     def test_which_service_did_you_award_page_should_not_render_if_not_locked_renders(self):
         self.login_as_buyer()
         self.data_api_client.get_direct_award_project.return_value = self._get_direct_award_not_lock_project_fixture()
@@ -1275,6 +1417,23 @@ class TestDirectAwardNonAwardContract(TestDirectAwardBase):
         assert res.status_code == 400
 
     def test_why_did_you_not_award_page_creates_direct_award_project_outcome(self):
+        self.login_as_buyer()
+
+        self.client.post(
+            '/buyers/direct-award/g-cloud/projects/1/why-didnt-you-award-contract',
+            data={'why_did_you_not_award_the_contract': 'work_cancelled'}
+        )
+        self.data_api_client.create_direct_award_project_outcome_cancelled.assert_called_once()
+
+        self.client.post(
+            '/buyers/direct-award/g-cloud/projects/1/why-didnt-you-award-contract',
+            data={'why_did_you_not_award_the_contract': 'no_suitable_services'}
+        )
+        self.data_api_client.create_direct_award_project_outcome_none_suitable.assert_called_once()
+
+    def test_why_did_you_not_award_page_creates_direct_award_project_outcome_when_all_frameworks_have_expired(self):
+        self.data_api_client.find_frameworks.return_value = self._get_expired_frameworks_list_fixture_data()
+
         self.login_as_buyer()
 
         self.client.post(
@@ -1330,6 +1489,20 @@ class TestDirectAwardNonAwardContract(TestDirectAwardBase):
 
 class TestDirectAwardResultsPage(TestDirectAwardBase):
     def test_results_page_download_links_work(self):
+        self.login_as_buyer()
+
+        res = self.client.get('/buyers/direct-award/g-cloud/projects/1/results')
+        doc = html.fromstring(res.get_data(as_text=True))
+
+        download_links = doc.xpath('//ul[@class="govuk-list"]//a[@class="govuk-link"]/@href')
+
+        for download_link in download_links:
+            res = self.client.get(download_link)
+            assert res.status_code == 200
+
+    def test_results_page_download_links_work_when_all_frameworks_have_expired(self):
+        self.data_api_client.find_frameworks.return_value = self._get_expired_frameworks_list_fixture_data()
+
         self.login_as_buyer()
 
         res = self.client.get('/buyers/direct-award/g-cloud/projects/1/results')
@@ -1495,6 +1668,19 @@ class TestDirectAwardDownloadResultsView(TestDirectAwardBase):
             assert file_row['cells'][j + 5] == file_context['services'][i]['supplier']['contact']['email']
 
     def test_file_download(self):
+        self.login_as_buyer()
+
+        res = self.client.get('/buyers/direct-award/g-cloud/projects/1/results/download?filetype=csv')
+        assert res.status_code == 200
+
+        res = self.client.get('/buyers/direct-award/g-cloud/projects/1/results/download?filetype=ods')
+        assert res.status_code == 200
+
+        res = self.client.get('/buyers/direct-award/g-cloud/projects/1/results/download?filetype=docx')
+        assert res.status_code == 400
+
+    def test_file_download_when_all_frameworks_have_expired(self):
+        self.data_api_client.find_frameworks.return_value = self._get_expired_frameworks_list_fixture_data()
         self.login_as_buyer()
 
         res = self.client.get('/buyers/direct-award/g-cloud/projects/1/results/download?filetype=csv')

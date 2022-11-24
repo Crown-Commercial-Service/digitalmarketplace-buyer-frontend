@@ -32,6 +32,24 @@ def get_latest_live_framework_or_404(all_frameworks, framework_family):
     return latest_live_framework
 
 
+def get_last_live_framework_or_404(all_frameworks, framework_family):
+    frameworks_in_family = list((f for f in all_frameworks if f['framework'] == framework_family))
+
+    if not frameworks_in_family:
+        abort(404, f"No frameworks found for `{framework_family}` family")
+
+    try:
+        return max(
+            (f for f in frameworks_in_family if f['status'] == 'live'),
+            key=lambda f: f['id'],
+        )
+    except ValueError:  # max of empty iterable
+        return max(
+            (f for f in frameworks_in_family),
+            key=lambda f: f['id'],
+        )
+
+
 def get_lots_by_slug(framework_data):
     return {lot['slug']: lot for lot in framework_data['lots']}
 

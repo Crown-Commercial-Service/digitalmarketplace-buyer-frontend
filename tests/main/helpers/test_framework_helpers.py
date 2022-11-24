@@ -3,8 +3,14 @@ import pytest
 
 from dmapiclient import HTTPError
 from dmtestutils.api_model_stubs import FrameworkStub
+from werkzeug.exceptions import NotFound
 
-from app.main.helpers.framework_helpers import get_framework_or_500, get_latest_live_framework, get_lots_by_slug
+from app.main.helpers.framework_helpers import (
+    get_framework_or_500,
+    get_latest_live_framework,
+    get_lots_by_slug,
+    get_last_live_framework_or_404
+)
 from ...helpers import BaseApplicationTest, CustomAbortException
 
 
@@ -72,3 +78,26 @@ class TestGetFrameworkOr500():
                 extra={'error': 'An error from the API (status: 404)', 'framework_slug': 'g-cloud-7'},
             )
         ]
+
+
+class TestGetLastLiveFrameworkOr404(BaseApplicationTest):
+    def setup_method(self, method):
+        super().setup_method(method)
+
+    def test_404_when_framework_not_in_family(self):
+        available_frameworks = self._get_frameworks_list_fixture_data().get('frameworks')
+
+        with pytest.raises(NotFound, match='No frameworks found for `xenoblade` family'):
+            get_last_live_framework_or_404(available_frameworks, 'xenoblade')
+
+    def test_returns_live_framework_when_in_family(self):
+        available_frameworks = self._get_frameworks_list_fixture_data().get('frameworks')
+        latest_live_framework = get_last_live_framework_or_404(available_frameworks, 'g-cloud')
+
+        assert latest_live_framework['slug'] == 'g-cloud-9'
+
+    def test_returns_last_live_framework_when_all_are_expired(self):
+        available_frameworks = self._get_expired_frameworks_list_fixture_data().get('frameworks')
+        latest_live_framework = get_last_live_framework_or_404(available_frameworks, 'g-cloud')
+
+        assert latest_live_framework['slug'] == 'g-cloud-9'

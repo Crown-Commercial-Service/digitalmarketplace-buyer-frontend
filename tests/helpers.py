@@ -64,6 +64,31 @@ def get_frameworks_list_fixture_data():
     return {'frameworks': [framework['frameworks'] for framework in frameworks]}
 
 
+def get_expired_frameworks_list_fixture_data():
+    frameworks = [
+        FrameworkStub(
+            id=4, slug='g-cloud-7', status='expired', lots=as_a_service_lots()
+        ).single_result_response(),
+        FrameworkStub(
+            id=1, slug='g-cloud-6', status='expired', lots=as_a_service_lots()
+        ).single_result_response(),
+        FrameworkStub(
+            id=6, slug='g-cloud-8', status='expired', lots=as_a_service_lots(),
+        ).single_result_response(),
+        FrameworkStub(
+            id=3, slug='g-cloud-5', status='expired', lots=as_a_service_lots()
+        ).single_result_response(),
+        FrameworkStub(
+            id=2, slug='g-cloud-4', status='expired', lots=as_a_service_lots()
+        ).single_result_response(),
+        FrameworkStub(
+            id=8, slug='g-cloud-9', status='expired', lots=cloud_lots()
+        ).single_result_response(),
+    ]
+
+    return {'frameworks': [framework['frameworks'] for framework in frameworks]}
+
+
 class BaseAPIClientMixin:
     """
     Mixin for patching the API clients when imported for each view module.
@@ -221,6 +246,10 @@ class BaseApplicationTest(object):
     @staticmethod
     def _get_frameworks_list_fixture_data():
         return get_frameworks_list_fixture_data()
+
+    @staticmethod
+    def _get_expired_frameworks_list_fixture_data():
+        return get_expired_frameworks_list_fixture_data()
 
     @staticmethod
     def _get_g4_service_fixture_data():
