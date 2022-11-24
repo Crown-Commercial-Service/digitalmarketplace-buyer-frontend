@@ -271,6 +271,13 @@ class BaseApplicationTest(object):
         }
 
     @staticmethod
+    def _get_expired_framework_fixture_data(framework_slug):
+        return {
+            'frameworks': next(f for f in BaseApplicationTest._get_expired_frameworks_list_fixture_data()['frameworks']
+                               if f['slug'] == framework_slug)
+        }
+
+    @staticmethod
     def _get_dos_brief_fixture_data(multi=False):
         if multi:
             return BaseApplicationTest._get_fixture_data('dos_multiple_briefs_fixture.json')

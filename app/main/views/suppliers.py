@@ -1,13 +1,17 @@
 # coding=utf-8
 import re
+from string import ascii_uppercase
 
-from flask import redirect, abort
+from flask import request, redirect, abort
+
+from dmapiclient import APIError
 
 from dmutils.flask import timed_render_template as render_template
 
 from app import data_api_client
 from app.main import main
-from ..helpers.framework_helpers import get_framework_description
+from ..helpers.shared_helpers import parse_link
+from ..helpers.framework_helpers import get_framework_description, get_latest_live_framework
 
 
 def process_prefix(prefix=None):
@@ -25,7 +29,34 @@ def is_alpha(character):
 
 @main.route('/g-cloud/suppliers')
 def suppliers_list_by_prefix():
-    return redirect('https://www.applytosupply.digitalmarketplace.service.gov.uk/g-cloud/suppliers', 301)
+    all_frameworks = data_api_client.find_frameworks().get('frameworks')
+
+    if get_latest_live_framework(all_frameworks, 'g-cloud'):
+        prefix = process_prefix(prefix=request.args.get('prefix', default=u"A"))
+        page = request.args.get('page', default=1, type=int)
+
+        try:
+            api_result = data_api_client.find_suppliers(prefix, page, 'g-cloud')
+            suppliers = api_result["suppliers"]
+            links = api_result["links"]
+
+            return render_template(
+                'suppliers_list.html',
+                suppliers=suppliers,
+                nav=ascii_uppercase,
+                count=len(suppliers),
+                prev_link=parse_link(links, 'prev'),
+                next_link=parse_link(links, 'next'),
+                prefix=prefix,
+                gcloud_framework_description=get_framework_description(data_api_client, 'g-cloud'),
+            )
+        except APIError as e:
+            if e.status_code == 404:
+                abort(404, "No suppliers for prefix {} page {}".format(prefix, page))
+            else:
+                raise e
+    else:
+        return redirect('https://www.applytosupply.digitalmarketplace.service.gov.uk/g-cloud/suppliers', 302)
 
 
 @main.route('/g-cloud/supplier/<supplier_id>')
