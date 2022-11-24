@@ -120,25 +120,23 @@
           <p class="app-search-summary app-search-summary--small govuk-body-s">{{ search_summary_sentence }}</p>
 
           {% if not search.searchedAt %}
-
-          {% if "save-a-search" in errors %}
-          <div class="govuk-form-group--error">
-            <span class="govuk-error-message">
-              <span class="govuk-visually-hidden">Error:</span>
-              {{ errors["save-a-search"].text }}
-            </span>
-          {% endif %}
-
-            <p class="govuk-body">
-              <a class="govuk-link" href="{{ buyer_search_page_url }}">
-                Edit your search and view results
-              </a>
-            </p>
-
-          {% if "too_many_results" in errors %}
-          </div>
-          {% endif %}
-
+            {% if latest_live_framework %}
+              {% if "save-a-search" in errors %}
+              <div class="govuk-form-group--error">
+                <span class="govuk-error-message">
+                  <span class="govuk-visually-hidden">Error:</span>
+                  {{ errors["save-a-search"].text }}
+                </span>
+              {% endif %}
+                <p class="govuk-body">
+                  <a class="govuk-link" href="{{ buyer_search_page_url }}">
+                    Edit your search and view results
+                  </a>
+                </p>
+              {% if "too_many_results" in errors %}
+              </div>
+              {% endif %}
+            {% endif %}
           {% endif %}
           {% if search.searchedAt or can_end_search %}
             {{ govukTag({
@@ -157,11 +155,23 @@
           Export your results
         </h2>
 
-        <p class="govuk-body">
-          Export a list of the services you’ve found. Download suppliers’ service
-          descriptions and contact details to help you assess services. Keep a copy
-          for your records.
-        </p>
+        {% if not search.searchedAt and can_end_search and not latest_live_framework %}
+          <p class="govuk-body">
+            You cannot export these results as the framework you used to create them, {{ framework['name'] }}, has expired. You can start a new search for G-Cloud 13 by going to the
+            <a class="govuk-link"
+              href="https://www.contractawardservice.crowncommercial.gov.uk/projects/create-or-choose"
+              data-analytics="trackEvent"
+              data-analytics-category="CAS"
+              data-analytics-action="External Link"
+            >Contract Award Service</a>.
+          </p>
+        {% else %}
+          <p class="govuk-body">
+            Export a list of the services you’ve found. Download suppliers’ service
+            descriptions and contact details to help you assess services. Keep a copy
+            for your records.
+          </p>
+        {% endif %}
 
         {% if project %}
           {% if not (search.searchedAt or can_end_search) %}
@@ -170,18 +180,20 @@
               "text": "Cannot start yet"
             }) }}
           {% elif not search.searchedAt and can_end_search %}
-            {{ govukButton({
-              "href": url_for("direct_award.end_search", framework_family=framework.family, project_id=project.id),
-              "text": "Export your results",
+            {% if latest_live_framework %}
+              {{ govukButton({
+                "href": url_for("direct_award.end_search", framework_family=framework.family, project_id=project.id),
+                "text": "Export your results",
 
-              "classes": "govuk-!-margin-bottom-1",
+                "classes": "govuk-!-margin-bottom-1",
 
-              "attributes": {
-                "data-analytics": "trackEvent",
-                "data-analytics-category": "Direct Award",
-                "data-analytics-action": "Internal Link",
-              }
-            }) }}
+                "attributes": {
+                  "data-analytics": "trackEvent",
+                  "data-analytics-category": "Direct Award",
+                  "data-analytics-action": "Internal Link",
+                }
+              }) }}
+            {% endif %}
           {% elif project and search.searchedAt %}
             <p class="govuk-body">
               <a class="govuk-link"

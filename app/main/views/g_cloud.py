@@ -672,10 +672,15 @@ def view_project(framework_family, project_id):
         search_summary_sentence = search_meta.search_summary.markup()
         can_end_search = _can_end_search(search_meta)
         framework = frameworks_by_slug[search_meta.framework_slug]
+        latest_live_framework = framework_helpers.get_latest_live_framework(frameworks_by_slug.values(), 'g-cloud')
+        if not latest_live_framework:
+            can_end_search = True
+
         buyer_search_page_url = search_meta.url
 
     else:
         framework = framework_helpers.get_latest_live_framework(frameworks_by_slug.values(), 'g-cloud')
+        latest_live_framework = framework
 
         search = None
         buyer_search_page_url = None
@@ -723,6 +728,7 @@ def view_project(framework_family, project_id):
     return render_template(
         'direct-award/view-project.html',
         framework=framework,
+        latest_live_framework=latest_live_framework,
         following_framework=following_framework,
         project=project,
         custom_dimensions=custom_dimensions,

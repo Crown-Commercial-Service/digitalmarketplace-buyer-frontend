@@ -472,6 +472,11 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         assert doc.xpath('//p[contains(@class, "search-summary")]')[0].text_content() == '1 result found containing '\
                                                                                          'accelerator in All categories'
 
+        export_results_content = doc.xpath('//*[@id="main-content"]/div/div/form/ol/li[2]')[0].text_content()
+
+        assert "You cannot export these results as the framework you used to create them" not in export_results_content
+        assert "Export a list of the services you’ve found" in export_results_content
+
     def test_overview_renders_specific_elements_for_search_ended_state(self):
         searches = self._get_direct_award_project_searches_fixture()
         for search in searches['searches']:
@@ -494,6 +499,11 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         assert self._task_has_button(tasklist, 3, 'readyToAssess', 'true')
         assert self._task_has_link(tasklist, 4,
                                    '/buyers/direct-award/g-cloud/projects/1/did-you-award-contract') is False
+
+        export_results_content = doc.xpath('//*[@id="main-content"]/div/div/form/ol/li[2]')[0].text_content()
+
+        assert "You cannot export these results as the framework you used to create them" not in export_results_content
+        assert "Export a list of the services you’ve found" in export_results_content
 
     def test_overview_renders_specific_elements_once_assessing_started(self):
         searches = self._get_direct_award_project_searches_fixture()
@@ -522,6 +532,11 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         assert self._task_has_link(tasklist, 4,
                                    '/buyers/direct-award/g-cloud/projects/1/did-you-award-contract')
 
+        export_results_content = doc.xpath('//*[@id="main-content"]/div/div/form/ol/li[2]')[0].text_content()
+
+        assert "You cannot export these results as the framework you used to create them" not in export_results_content
+        assert "Export a list of the services you’ve found" in export_results_content
+
     def test_assess_button_not_present_if_outcome_awarded(self):
         searches = self._get_direct_award_project_searches_fixture()
         for search in searches['searches']:
@@ -540,6 +555,122 @@ class TestDirectAwardProjectOverview(TestDirectAwardBase):
         tasklist = self._get_tasklist(doc)
 
         assert not self._task_has_button(tasklist, 3, 'readyToAssess', 'true')
+
+        export_results_content = doc.xpath('//*[@id="main-content"]/div/div/form/ol/li[2]')[0].text_content()
+
+        assert "You cannot export these results as the framework you used to create them" not in export_results_content
+        assert "Export a list of the services you’ve found" in export_results_content
+
+    def test_overview_renders_specific_elements_for_search_created_state_when_no_frameworks_are_live(self):
+        self.data_api_client.find_frameworks.return_value = self._get_expired_frameworks_list_fixture_data()
+
+        res = self.client.get('/buyers/direct-award/g-cloud/projects/1')
+        assert res.status_code == 200
+
+        body = res.get_data(as_text=True)
+        doc = html.fromstring(body)
+
+        tasklist = self._get_tasklist(doc)
+
+        assert '/g-cloud/search?q=accelerator' not in doc
+        assert '/buyers/direct-award/g-cloud/projects/1/end-search' not in doc
+
+        assert self._cannot_start_from_task(tasklist, 3)
+
+        assert doc.xpath('//p[contains(@class, "search-summary")]')[0].text_content() == '1 result found containing '\
+                                                                                         'accelerator in All categories'
+
+        export_results_content = doc.xpath('//*[@id="main-content"]/div/div/form/ol/li[2]')[0].text_content()
+
+        assert "You cannot export these results as the framework you used to create them" in export_results_content
+        assert "Export a list of the services you’ve found" not in export_results_content
+
+    def test_overview_renders_specific_elements_for_search_ended_state_when_no_frameworks_are_live(self):
+        self.data_api_client.find_frameworks.return_value = self._get_expired_frameworks_list_fixture_data()
+        searches = self._get_direct_award_project_searches_fixture()
+        for search in searches['searches']:
+            search['searchedAt'] = search['createdAt']
+
+        self.data_api_client.find_direct_award_project_searches.return_value = searches
+
+        res = self.client.get('/buyers/direct-award/g-cloud/projects/1')
+        assert res.status_code == 200
+
+        body = res.get_data(as_text=True)
+        doc = html.fromstring(body)
+
+        tasklist = self._get_tasklist(doc)
+
+        assert self._task_has_link(tasklist, 1, '/g-cloud/search?q=accelerator') is False
+        assert self._task_completed(tasklist, 2)
+        assert self._task_has_link(tasklist, 2,
+                                   '/buyers/direct-award/g-cloud/projects/1/results')
+        assert self._task_has_button(tasklist, 3, 'readyToAssess', 'true')
+        assert self._task_has_link(tasklist, 4,
+                                   '/buyers/direct-award/g-cloud/projects/1/did-you-award-contract') is False
+
+        export_results_content = doc.xpath('//*[@id="main-content"]/div/div/form/ol/li[2]')[0].text_content()
+
+        assert "You cannot export these results as the framework you used to create them" not in export_results_content
+        assert "Export a list of the services you’ve found" in export_results_content
+
+    def test_overview_renders_specific_elements_once_assessing_started_when_no_frameworks_are_live(self):
+        self.data_api_client.find_frameworks.return_value = self._get_expired_frameworks_list_fixture_data()
+        searches = self._get_direct_award_project_searches_fixture()
+        for search in searches['searches']:
+            search['searchedAt'] = search['createdAt']
+
+        project = self._get_direct_award_project_fixture()
+        project['project']['readyToAssessAt'] = project['project']['createdAt']
+        self.data_api_client.get_direct_award_project.return_value = project
+
+        self.data_api_client.find_direct_award_project_searches.return_value = searches
+
+        res = self.client.get('/buyers/direct-award/g-cloud/projects/1')
+        assert res.status_code == 200
+
+        body = res.get_data(as_text=True)
+        doc = html.fromstring(body)
+
+        tasklist = self._get_tasklist(doc)
+
+        assert self._task_has_link(tasklist, 1, '/g-cloud/search?q=accelerator') is False
+        assert self._task_completed(tasklist, 2)
+        assert self._task_has_link(tasklist, 2,
+                                   '/buyers/direct-award/g-cloud/projects/1/results')
+        assert self._task_completed(tasklist, 3)
+        assert self._task_has_link(tasklist, 4,
+                                   '/buyers/direct-award/g-cloud/projects/1/did-you-award-contract')
+
+        export_results_content = doc.xpath('//*[@id="main-content"]/div/div/form/ol/li[2]')[0].text_content()
+
+        assert "You cannot export these results as the framework you used to create them" not in export_results_content
+        assert "Export a list of the services you’ve found" in export_results_content
+
+    def test_assess_button_not_present_if_outcome_awarded_when_no_frameworks_are_live(self):
+        self.data_api_client.find_frameworks.return_value = self._get_expired_frameworks_list_fixture_data()
+        searches = self._get_direct_award_project_searches_fixture()
+        for search in searches['searches']:
+            search['searchedAt'] = search['createdAt']
+
+        self.data_api_client.get_direct_award_project.return_value = \
+            self._get_direct_award_project_with_completed_outcome_awarded_fixture()
+
+        self.data_api_client.find_direct_award_project_searches.return_value = searches
+
+        res = self.client.get("/buyers/direct-award/g-cloud/projects/1")
+        assert res.status_code == 200
+
+        body = res.get_data(as_text=True)
+        doc = html.fromstring(body)
+        tasklist = self._get_tasklist(doc)
+
+        assert not self._task_has_button(tasklist, 3, 'readyToAssess', 'true')
+
+        export_results_content = doc.xpath('//*[@id="main-content"]/div/div/form/ol/li[2]')[0].text_content()
+
+        assert "You cannot export these results as the framework you used to create them" not in export_results_content
+        assert "Export a list of the services you’ve found" in export_results_content
 
     @pytest.mark.parametrize(
         ('framework_status', 'following_framework_status', 'locked_at', 'position', 'heading'),
