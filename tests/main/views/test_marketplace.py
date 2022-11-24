@@ -183,6 +183,26 @@ class TestHomepageBrowseList(APIClientMixin, BaseApplicationTest):
         assert link_texts[1] == "Find physical datacentre space"
         assert len(link_texts) == 2
 
+    def test_g_cloud_links_are_not_shown_if_no_live_g_cloud_frameworks(self):
+        mock_expired_g_cloud_9_framework = self.mock_live_g_cloud_9_framework.copy()
+        mock_expired_g_cloud_9_framework.update({"status": "expired"})
+
+        self.data_api_client.find_frameworks.return_value = {
+            "frameworks": [
+                mock_expired_g_cloud_9_framework,
+            ]
+        }
+
+        res = self.client.get("/")
+        document = html.fromstring(res.get_data(as_text=True))
+
+        assert res.status_code == 200
+
+        link_texts = [item.text_content().strip() for item in document.cssselect('#app-buyer-nav a')]
+        assert len(link_texts) == 1
+        assert "Find cloud hosting, software and support" not in link_texts
+        assert "Find physical datacentre space" in link_texts
+
 
 class TestHomepageSidebarMessage(APIClientMixin, BaseApplicationTest):
 

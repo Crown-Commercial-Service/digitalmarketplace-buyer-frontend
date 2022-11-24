@@ -206,17 +206,19 @@
         </li>
         {% endif %}
 
-        <li>
-          <strong>
-            <a class="govuk-link"
-               href="{{ url_for('main.index_g_cloud') }}">
-              Find {{ gcloud_framework_description }}
-            </a>
-          </strong>
-          <p class="govuk-body">
-            eg content delivery networks or accounting software
-          </p>
-        </li>
+        {% if gcloud_framework_description %}
+          <li>
+            <strong>
+              <a class="govuk-link"
+                href="{{ url_for('main.index_g_cloud') }}">
+                Find {{ gcloud_framework_description }}
+              </a>
+            </strong>
+            <p class="govuk-body">
+              eg content delivery networks or accounting software
+            </p>
+          </li>
+        {% endif %}
 
         <li>
           <strong>
