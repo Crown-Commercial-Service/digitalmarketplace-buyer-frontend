@@ -22,7 +22,7 @@ from ..helpers.brief_helpers import (
 from ..helpers.framework_helpers import (
     abort_if_not_further_competition_framework,
     get_latest_live_framework,
-    get_latest_live_framework_or_404,
+    get_last_live_framework_or_404,
     get_framework_description,
     get_lots_by_slug
 )
@@ -137,7 +137,7 @@ def external_404():
 def get_brief_by_id(framework_family, brief_id):
     frameworks = data_api_client.find_frameworks()['frameworks']
     frameworks = [framework for framework in frameworks if framework['framework'] == framework_family]
-    framework = get_latest_live_framework_or_404(frameworks, framework_family)
+    framework = get_last_live_framework_or_404(frameworks, framework_family)
 
     abort_if_not_further_competition_framework(framework)
 
@@ -204,7 +204,7 @@ def get_brief_by_id(framework_family, brief_id):
 def list_opportunities(framework_family):
     frameworks = data_api_client.find_frameworks()['frameworks']
     frameworks = [v for v in frameworks if v['framework'] == framework_family]
-    framework = get_latest_live_framework_or_404(frameworks, framework_family)
+    framework = get_last_live_framework_or_404(frameworks, framework_family)
 
     abort_if_not_further_competition_framework(framework)
 
