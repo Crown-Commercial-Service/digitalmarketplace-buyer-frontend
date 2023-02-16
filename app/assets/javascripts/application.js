@@ -5,7 +5,7 @@
   directives to concatenate multiple Javascript files into one.
 */
 //= require ../../../node_modules/jquery/dist/jquery.js
-//= require ../../../node_modules/scrolldepth/jquery.scrolldepth.js
+//= require ../../../node_modules/scroll-depth/jquery.scrolldepth.js
 //= require ../../../node_modules/govuk-frontend/govuk/all.js
 //= require ../../../node_modules/digitalmarketplace-govuk-frontend/digitalmarketplace/all.js
 //= require _onready.js'
