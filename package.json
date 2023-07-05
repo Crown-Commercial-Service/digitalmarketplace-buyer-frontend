@@ -9,7 +9,7 @@
   "dependencies": {
     "del": "^6.1.1",
     "digitalmarketplace-frameworks": "^18.4.1",
-    "digitalmarketplace-govuk-frontend": "^3.11.3",
+    "digitalmarketplace-govuk-frontend": "^3.12.0",
     "govuk-frontend": "^3.14.0",
     "gulp": "^4.0.2",
     "gulp-filelog": "0.4.1",
