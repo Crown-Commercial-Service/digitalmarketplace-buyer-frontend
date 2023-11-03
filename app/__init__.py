@@ -103,11 +103,11 @@ def create_app(config_name):
     # direct_award_blueprint and direct_award_public_blueprint cover the same url prefix - direct_award_blueprint takes
     # precedence
     application.register_blueprint(direct_award_public_blueprint)
+    application.register_blueprint(healthcheck_blueprint, url_prefix='/healthcheck')
 
     # Must be registered last so that any routes declared in the app are registered first (i.e. take precedence over
     # the external NotImplemented routes in the dm-utils external blueprint).
     application.register_blueprint(external_blueprint)
-    application.register_blueprint(healthcheck_blueprint, url_prefix='/healthcheck')
 
     # In native AWS we need to stipulate the absolute login URL as per:
     # https://flask-login.readthedocs.io/en/latest/#flask_login.LoginManager.login_view
