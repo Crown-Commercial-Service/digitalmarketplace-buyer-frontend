@@ -1,3 +1,4 @@
+import os
 from copy import deepcopy
 
 from flask import Flask, request, redirect, session, abort
@@ -93,6 +94,7 @@ def create_app(config_name):
     from .main import direct_award as direct_award_blueprint
     from .main import direct_award_public as direct_award_public_blueprint
     from .status import status as status_blueprint
+    from .healthcheck import healthcheck as healthcheck_blueprint
 
     application.register_blueprint(metrics_blueprint)
     application.register_blueprint(status_blueprint)
@@ -105,8 +107,11 @@ def create_app(config_name):
     # Must be registered last so that any routes declared in the app are registered first (i.e. take precedence over
     # the external NotImplemented routes in the dm-utils external blueprint).
     application.register_blueprint(external_blueprint)
+    application.register_blueprint(healthcheck_blueprint, url_prefix='/healthcheck')
 
-    login_manager.login_view = '/user/login'
+    # In native AWS we need to stipulate the absolute login URL as per:
+    # https://flask-login.readthedocs.io/en/latest/#flask_login.LoginManager.login_view
+    login_manager.login_view = os.getenv('DM_LOGIN_URL', '/user/login')
     login_manager.login_message = None  # don't flash message to user
     gds_metrics.init_app(application)
     csrf.init_app(application)
