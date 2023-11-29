@@ -146,22 +146,9 @@ class Development(Config):
     GOOGLE_SITE_VERIFICATION = "NotARealVerificationKey"
 
 
-class NativeAWS(Config):
+class SharedLive(Config):
+    """Base config for deployed environments shared between GPaaS and AWS"""
     DEBUG = False
-    DM_APP_NAME = 'buyer-frontend'
-    DM_HTTP_PROTO = 'https'
-    # DM_LOGIN_URL will be read from env vars - used to avoid incorrect host/port
-    # redirect from Flask-Login package
-    DM_LOGIN_URL = None
-    # SESSION_COOKIE_DOMAIN will be read from env vars - set to subdomain to
-    # allow session share between "www.' and "admin."
-    SESSION_COOKIE_DOMAIN = None
-
-
-class Live(Config):
-    """Base config for deployed environments"""
-    DEBUG = False
-    DM_LOG_PATH = '/var/log/digitalmarketplace/application.log'
     DM_HTTP_PROTO = 'https'
 
     # use of invalid email addresses with live api keys annoys Notify
@@ -170,6 +157,21 @@ class Live(Config):
         "example.gov.uk": "success@simulator.amazonses.com",
         "user.marketplace.team": "success@simulator.amazonses.com",
     }
+
+
+class NativeAWS(SharedLive):
+    DM_APP_NAME = 'buyer-frontend'
+    # DM_LOGIN_URL will be read from env vars - used to avoid incorrect host/port
+    # redirect from Flask-Login package
+    DM_LOGIN_URL = None
+    # SESSION_COOKIE_DOMAIN will be read from env vars - set to subdomain to
+    # allow session share between "www.' and "admin."
+    SESSION_COOKIE_DOMAIN = None
+
+
+class Live(SharedLive):
+    """Base config for deployed environments"""
+    DM_LOG_PATH = '/var/log/digitalmarketplace/application.log'
 
 
 class Preview(Live):
